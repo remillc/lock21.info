@@ -11,10 +11,12 @@ Mode de capture: **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution a
     <figcaption>Comparaison des résolutions offertes en mode vidéo par la caméra GoPro Hero 6. Source: <cite><a href="https://gopro.com/content/dam/help/hero6-black/manuals/HERO6Black_UM_ENG_REVB.pdf">Hero 6 Black User Manual</a></cite></figcaption>
 </figure>
 
-## Paramètres de capture vidéo
+### Paramètres de capture vidéo
 
 | Paramètre                                              |                                 |
 | ------------------------------------------------------ | ------------------------------- |
+| Résolution                                             | 4k 4:3                          |
+| Images par seconde                                     | 29.97                           |
 | Stabilisation vidéo                                    | désactivé                       |
 | Faible luminosité automatique (_Auto low light_)       | _non disponible_                |
 | _Protune_                                              | activé                          |
