@@ -11,3 +11,4 @@ lerna-debug.log*
 node_modules/
 
 Thumbs.db
+*.code-workspace
