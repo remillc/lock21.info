@@ -11,8 +11,23 @@ Distance lentille <-> sol: 70cm
 La prise de mesures des dimensions du champs de vision de la lentille de la GoPro s'est avéré plus difficile que prévu. En effet, il
 
 <figure>
-    <img src="../assets/images/plan-plongee-champs-vision.webp" alt="Plan de plongée dessiné dans un carnet immergeable" width="800">
+    <img src="./assets/plan-plongee-champs-vision.webp" alt="Plan de plongée dessiné dans un carnet immergeable" width="500">
     <figcaption>Plan de plongée dessiné dans un carnet immergeable</figcaption>
+</figure>
+
+<figure>
+    <img src="./assets/mesurage-champ-vision-GoPro-horizontal.webp" alt="Image utilisée pour mesurer le champs de vision horizontal" width="500">
+    <figcaption>Image utilisée pour mesurer le champs de vision horizontal</figcaption>
+</figure>
+
+<figure>
+    <img src="./assets/mesurage-champ-vision-GoPro-vertical.webp" alt="Image utilisée pour mesurer le champs de vision vertical" width="500">
+    <figcaption>Image utilisée pour mesurer le champs de vision vertical</figcaption>
+</figure>
+
+<figure>
+    <img src="./assets/mesurage-champ-vision-GoPro-diagonal.webp" alt="Image utilisée pour mesurer le champs de vision diagonal" width="500">
+    <figcaption>Image utilisée pour mesurer le champs de vision diagonal</figcaption>
 </figure>
 
 Côté long "B": 125cm mesuré + 1,5cm, soit la demi largeur du cercle noir de la cible en excédent (à gauche) = 126,5cm
@@ -53,7 +68,9 @@ La mesure la plus fiable est celle horizontale puisque les cibles sont les mieux
 
 ### Angle des lampes
 
-120cm de diagonale lorsque la caméra eist situé à 70cm, soit: 81,2 degrés.
+81,2 degrés de diagonale.
+
+Les mesures ont été effectuées en utilisant un trépied immergé sous l'eau et posé sur un fond rocailleux plat. La lampe était située à 70 cm de la surface mesurée. La diagonale mesurée est de 120 cm.
 
 ## Rig
 

@@ -1,0 +1,19 @@
+{
+  "name": "lock21.info",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "img-comparison-slider": "^8.0.6"
+  }
+}
