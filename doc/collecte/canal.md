@@ -18,6 +18,6 @@ J'ai fait un test (2024-06-08) en dérivant dans le canal entre les 2 portes, sa
 | Fin   | 8 minutes 9 secondes                 |
 | Durée | 7 minutes 43 secondes (463 secondes) |
 
-Vitesse estimée: 35 pieds/minute (10.7 mètre/minute)
+Vitesse estimée: **35 pieds/minute** (10.7 mètre/minute)
 
-Le [débit du lac Ontario enregistré pour cette journée est de 7 960 m3/s](https://ijc.org/fr/clofsl/bassin/debits).
+Le [débit du lac Ontario enregistré pour cette journée du 8 juin 2024 est de 7 880 m3/s](https://ijc.org/fr/clofsl/bassin/debits).
