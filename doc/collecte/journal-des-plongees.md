@@ -1,6 +1,6 @@
 # Journal des plongées
 
-| No  | Date | Zone | Durée | Participants | Notes |
-| --- | ---- | ---- | ----- | ------------ | ----- |
-| 1   |      |      |       |              |       |
-|     |      |      |       |              |       |
+| No  | Date       | Zones | Durée | Participants | Notes |
+| --- | ---------- | ----- | ----- | ------------ | ----- |
+| 1   |            |       |       |              |       |
+|     | 2024-06-24 | 1, 7  |       |              |       |
