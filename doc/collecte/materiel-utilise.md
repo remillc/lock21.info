@@ -32,5 +32,13 @@ Mode de capture: **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution a
 
 DaVinci Resolve
 
+Metashape
+
+Inkscape
+
+Blender?
+
+Script PowerShell
+
 [^1]: Disponible lorsque le paramètre Protune est activé
 [^2]: Choisi en fonction de la température de couleur des lampes,
