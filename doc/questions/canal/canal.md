@@ -8,8 +8,8 @@ Tester la collecte de données en conditions de fort courant avec la caméra mon
 J'ai fait un test (2024-06-08) en dérivant dans le canal entre les 2 portes, sachant qu'il fait 270 pieds de long. La durée du film donnera le temps écoulé, j'aurai une estimation de la vitesse de déplacement.
 
 <figure>
-      <a href="./assets/longueur-du-canal.webp"><img src="./assets/longueur-du-canal.webp" alt="Croquis (détail)) illustrant la longueur du canal de l'écluse." width="400"></a>
-      <figcaption>Croquis (détail)) illustrant la longueur du canal de l'écluse. Dessin original de Nick Baets (1988) Source: <a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks - Ottawa chapter</a><cite></cite></figcaption>
+      <a href="./assets/longueur-du-canal.webp"><img src="./assets/longueur-du-canal.webp" alt="Croquis (détail) illustrant la longueur du canal de l'écluse." width="400"></a>
+      <figcaption>Croquis (détail) illustrant la longueur du canal de l'écluse. Dessin original de Nick Baets (1988) Source: <a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks - Ottawa chapter</a><cite></cite></figcaption>
   </figure>
 
 |       |                                      |

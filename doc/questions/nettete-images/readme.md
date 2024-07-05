@@ -82,7 +82,7 @@ Extraire un nombre égal de frames pour chaque passage et lancer les tests suiva
 
 ## Augmenter la sensibilité ISO minimum
 
-Il n'est pas possible de régler manuellement la sensibilité de la caméra [(le numéro ISO](https://www.adobe.com/ca_fr/creativecloud/photography/discover/iso.html)) en mode vidéo. On peut cependant régler un intervalle via une valeur minimum et une maximum. Les valeurs pour la caméra utilisée, soit la GoPro Hero6 Black sont respectivement de 100 ISO et 6400 ISO.
+Il n'est pas possible de régler manuellement la sensibilité de la caméra [(le numéro ISO](https://www.adobe.com/ca_fr/creativecloud/photography/discover/iso.html) en mode vidéo. On peut cependant régler un intervalle via une valeur minimum et une maximum. Les valeurs pour la caméra utilisée, soit la GoPro Hero6 Black sont respectivement de 100 ISO et 6400 ISO.
 
 Puisque le calcul de l'exposition est automatique dans la GoPro, on peut forcer celle-ci à adopter une vitesse d'obturation plus grande en augmentant la sensibilité minimale, soit l'ISO minimum (l'autre paramètre de l'équation étant fixe, soit l'ouverture de la lentille).
 
