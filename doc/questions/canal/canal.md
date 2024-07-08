@@ -9,7 +9,7 @@ J'ai fait un test (2024-06-08) en dérivant dans le canal entre les 2 portes, sa
 
 <figure>
       <a href="./assets/longueur-du-canal.webp"><img src="./assets/longueur-du-canal.webp" alt="Croquis (détail) illustrant la longueur du canal de l'écluse." width="400"></a>
-      <figcaption>Croquis (détail) illustrant la longueur du canal de l'écluse. Dessin original de Nick Baets (1988) Source: <a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks - Ottawa chapter</a><cite></cite></figcaption>
+      <figcaption>Croquis (détail) illustrant la longueur du canal de l'écluse. Dessin original de Nick Baets (1988) Source: <cite><a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks - Ottawa chapter</a></cite></figcaption>
   </figure>
 
 |       |                                      |

@@ -1,10 +1,10 @@
 # Plan du site
 
-awef
+Voici le découpage du site de l'écluse en zones.
 
 <figure>
     <img src="./plan-du-site.webp" alt="Découpage du site en zones" width="800">
-    <figcaption>Découpage du site en zones</figcaption>
+    <figcaption>Découpage du site en zones. Dessin original de Nick Baets (1988) Source: <cite><a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks - Ottawa chapter</a></cite></figcaption>
 </figure>
 
 ## Description des zones
