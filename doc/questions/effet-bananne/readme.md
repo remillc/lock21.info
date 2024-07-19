@@ -21,6 +21,8 @@ Des tests effectuées sur un même jeu d'images - les fichiers `data/2024-05-18/
 
 Effectuer une collecte de données pour calibrer la lentille de la GoPro.
 
+Calibration Best Practices: [https://calib.io/blogs/knowledge-base/calibration-best-practices](https://calib.io/blogs/knowledge-base/calibration-best-practices)
+
 ### En détails
 
 Puisque la longueur focale de la lentille varie en fonction du milieu, le test doit se faire sous l'eau.
