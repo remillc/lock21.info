@@ -40,8 +40,8 @@ Diagonale "E": 155,6cm mesuré par règle de trois
 
 Spécifications du fabricant. 4:4 W (zoom=0%)
 
-|             | Angle        |
-| ----------- | ------------ |
+|             | Angle         |
+| ----------- | ------------- |
 | Diagonale   | 149.5 degrés |
 | Horizontale | 122.6 degrés |
 | Verticale   | 94.4 degrés  |
@@ -50,8 +50,8 @@ Source: [https://community.gopro.com/s/article/hero6-black-field-of-view-fov-inf
 
 D'après les mesures obtenues plus haut:
 
-|             | Angle     |
-| ----------- | --------- |
+|             | Angle      |
+| ----------- | ---------- |
 | Diagonale   | 96 degrés |
 | Horizontale | 84 degrés |
 | Verticale   | 72 degrés |
@@ -59,12 +59,14 @@ D'après les mesures obtenues plus haut:
 ### Ratios des angles du champs de vision expérimentation / spécification
 
 |             | Spécification | Mesurée | Ratio |
-| ----------- | ------------- | ------- | ----- |
-| Diagonale   | 149.5         | 96      | 0,642 |
-| Horizontale | 122.6         | 84      | 0,685 |
-| Verticale   | 94.4          | 72      | 0,763 |
+| ----------- | -------------- | -------- | ----- |
+| Diagonale   | 149.5          | 96       | 0,642 |
+| Horizontale | 122.6          | 84       | 0,685 |
+| Verticale   | 94.4           | 72       | 0,763 |
 
-[TODO: revoir cette section: la déformation de la lentille fait en sorte que l'angle de vue est plus grand sur les côtés. Pour le projet, j'ai choisis l'angle de vue utile, soit celui mesuré au centre de l'image.] La mesure la plus fiable est celle horizontale puisque les cibles sont les mieux positionnés à la prise de vue, et que la mesure a été faire au centre (par opposition à la mesure verticale qui a été faite sur l'extrémité du champs de vue de la caméra, là où la distorsion de la lentille est au plus fort).
+[TODO: revoir cette section: la déformation de la lentille fait en sorte que l'angle de vue est plus grand sur les côtés. Pour le projet, j'ai choisis l'angle de vue utile, soit celui mesuré au centre de l'image.] 
+
+La mesure la plus fiable est celle horizontale puisque les cibles sont les mieux positionnés à la prise de vue, et que la mesure a été faire au centre (par opposition à la mesure verticale qui a été faite sur l'extrémité du champs de vue de la caméra, là où la distorsion de la lentille est au plus fort).
 
 ### Angle des lampes
 
@@ -78,6 +80,6 @@ Mesurer, en centimètres, les distances entre les lampes du rig une fois les lam
 
 La mesure "X" est la distance horizontale entre les centres des 2 lampes du haut. La mesure "Y" est la distance verticale entre les 2 lampes de droite.
 
-1. Distance X:
-2. Distance Y:
-3. Distance entre la lentille de la caméra et le plan filmé:
+1. Distance X: 60cm
+2. Distance Y: 40cm
+3. Distance entre la lentille de la caméra et le plan filmé: 70cm
