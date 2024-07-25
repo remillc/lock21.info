@@ -10,6 +10,21 @@ lerna-debug.log*
 # Dependency directories
 node_modules/
 
+# Production
+/build
+
+# Generated files
+.docusaurus
+.cache-loader
+
+# Misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Project related stuff
 Thumbs.db
 ~$*.*
 *.code-workspace
