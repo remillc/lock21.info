@@ -38,7 +38,7 @@ const config = {
     [
       '@docusaurus/preset-classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
-      {
+      ({
         docs: {
           routeBasePath: '/', // Serve the docs at the site's root
           sidebarPath: './src/sidebars.js',
@@ -57,7 +57,7 @@ const config = {
         theme: {
           customCss: './src/css/custom.css',
         },
-      },
+      }),
     ],
   ],
 

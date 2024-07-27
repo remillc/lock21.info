@@ -13,12 +13,12 @@ Scans d'une bande horizontale de 50 pieds de long en variant le paramètre ISO m
 ## Configuration des lampes
 
 <figure>
-    <img src="./assets/lampes-alignement-centre.webp" alt="Illustration de la configuration des lampes centrée" width="400">
+    <img src="./assets/lampes-alignement-centre.webp" alt="Illustration de la configuration des lampes centrée" width="400" />
     <figcaption>Illustration de la configuration des lampes centrée</figcaption>
 </figure>
 
 <figure>
-    <img src="./assets/lampes-alignement-distribue.webp" alt="Illustration de la configuration des lampes distribuée" width="400">
+    <img src="./assets/lampes-alignement-distribue.webp" alt="Illustration de la configuration des lampes distribuée" width="400" />
     <figcaption>Illustration de la configuration des lampes distribuée</figcaption>
 </figure>
 
