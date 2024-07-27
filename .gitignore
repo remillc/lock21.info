@@ -15,5 +15,5 @@ Thumbs.db
 *.code-workspace
 *.blend1
 *.xcf
-doc/rig/modele/assets/materials/anodised-aluminium_fdf08bfc-c056-460e-be63-794eb9d8ae3e/anodised-aluminium_2K_caad6cbe-54d0-4507-b134-5285b8c5efa8.blend
-doc/rig/modele/rig-80cmx80cm.blend
+docs/rig/modele/rig-80cmx80cm.blend
+docs/rig/modele/assets/*
