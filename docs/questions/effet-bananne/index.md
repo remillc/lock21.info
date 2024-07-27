@@ -37,7 +37,7 @@ Afin de s'assurer une bonne collecte de données, et éviter que les images obte
 2. Faire de brèves vidéos (3 secondes) en 4K 4:3 du damier de tous les angles possibles. Couvrir tout le champ de vision de la caméra avec le damier
 
 <figure>
-    <img src="./assets/exemple-damier-GX010187.001.webp" alt="Image utilisée pour calculer la calibration de la lentille" width="400">
+    <img src="./assets/exemple-damier-GX010187.001.webp" alt="Image utilisée pour calculer la calibration de la lentille" width="400" />
     <figcaption>Image utilisée pour calculer la calibration de la lentille</figcaption>
 </figure>
 
@@ -46,7 +46,7 @@ Afin de s'assurer une bonne collecte de données, et éviter que les images obte
 3 échantillons de données ont été créés en filmant un segment de 100 pieds de long du plancher de bois situé derrière les évacuateurs. La distance de 100 pieds a été mesurée à l'aide d'un ruban à mesurer. Les positions 0' et 100' ont été identifiées à l'aide de 2 cibles.
 
 <figure>
-    <img src="./assets/exemple-cible-GX010197.007.webp" alt="Cible utilisée pour identifier la position à 100 pieds" width="400">
+    <img src="./assets/exemple-cible-GX010197.007.webp" alt="Cible utilisée pour identifier la position à 100 pieds" width="400" />
     <figcaption>Cible utilisée pour identifier la position à 100 pieds</figcaption>
 </figure>
 

@@ -7,7 +7,7 @@ Caméra GoPro Hero6 Black avec boîtier étanche d'origine.
 Mode de capture: **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution a été choisie en fonction d'une capture plein capteur.
 
 <figure>
-    <img src="./assets/gopro-hero6-video-resolutions.webp" alt="Comparaison des résolutions offertes en mode vidéo par la caméra GoPro Hero 6" width="400">
+    <img src="./assets/gopro-hero6-video-resolutions.webp" alt="Comparaison des résolutions offertes en mode vidéo par la caméra GoPro Hero 6" width="400" />
     <figcaption>Comparaison des résolutions offertes en mode vidéo par la caméra GoPro Hero 6. Source: <cite><a href="https://gopro.com/content/dam/help/hero6-black/manuals/HERO6Black_UM_ENG_REVB.pdf">Hero 6 Black User Manual</a></cite></figcaption>
 </figure>
 
