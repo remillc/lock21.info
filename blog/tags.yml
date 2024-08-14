@@ -1,16 +1,75 @@
-facebook:
-  label: Facebook
-  permalink: /facebook
-  description: Facebook tag description
-hello:
-  label: Hello
-  permalink: /hello
-  description: Hello tag description
-docusaurus:
-  label: Docusaurus
-  permalink: /docusaurus
-  description: Docusaurus tag description
-hola:
-  label: Hola
-  permalink: /hola
-  description: Hola tag description
+zone-1:
+  label: Zone 1
+  permalink: /zone-1
+zone-2:
+  label: Zone 2
+  permalink: /zone-2
+zone-3:
+  label: Zone 3
+  permalink: /zone-3
+zone-4:
+  label: Zone 4
+  permalink: /zone-4
+zone-5:
+  label: Zone 5
+  permalink: /zone-5
+zone-6:
+  label: Zone 6
+  permalink: /zone-6
+zone-7:
+  label: Zone 7
+  permalink: /zone-7
+zone-8:
+  label: Zone 8
+  permalink: /zone-8
+zone-9:
+  label: Zone 9
+  permalink: /zone-9
+zone-10:
+  label: Zone 10
+  permalink: /zone-10
+zone-11:
+  label: Zone 11
+  permalink: /zone-11
+zone-12:
+  label: Zone 12
+  permalink: /zone-12
+zone-13:
+  label: Zone 13
+  permalink: /zone-13
+zone-14:
+  label: Zone 14
+  permalink: /zone-14
+zone-15:
+  label: Zone 15
+  permalink: /zone-15
+zone-16:
+  label: Zone 16
+  permalink: /zone-16
+zone-17:
+  label: Zone 17
+  permalink: /zone-17
+zone-18:
+  label: Zone 18
+  permalink: /zone-18
+zone-19:
+  label: Zone 19
+  permalink: /zone-19
+zone-20:
+  label: Zone 20
+  permalink: /zone-20
+zone-21:
+  label: Zone 21
+  permalink: /zone-21
+zone-22:
+  label: Zone 22
+  permalink: /zone-22
+zone-23:
+  label: Zone 23
+  permalink: /zone-23
+zone-24:
+  label: Zone 24
+  permalink: /zone-24
+zone-25:
+  label: Zone 25
+  permalink: /zone-25
