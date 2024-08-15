@@ -30,8 +30,8 @@ const config = {
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
+    defaultLocale: 'fr',
+    locales: ['fr', 'en'],
   },
   future: {
     experimental_storage: {
@@ -86,11 +86,26 @@ const config = {
             type: 'docSidebar',
             sidebarId: 'makingOfSidebar',
             position: 'left',
-            label: 'Making of',
+            label: 'Projet',
           },
           { to: '/blog', label: 'Blog', position: 'left' },
+          // {
+          //   type: 'dropdown',
+          //   label: 'Langues',
+          //   position: 'right',
+          //   items: [
+          //     {
+          //       label: 'Français',
+          //       to: '/fr/',
+          //     },
+          //     {
+          //       label: 'English',
+          //       to: '/en/',
+          //     },
+          //   ],
+          // },
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://github.com/remillc/lock21.info',
             label: 'GitHub',
             position: 'right',
           },
