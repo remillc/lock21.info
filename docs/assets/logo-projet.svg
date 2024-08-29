@@ -16,20 +16,21 @@
   <style
      id="style3">
 text { 
+    text-anchor:middle;
     fill:#000;
     fill-opacity:1;
+    font-family:'Bodoni Moda SC';
     stroke:none;
     text-align:center;
-    text-anchor:middle;
 }
 .lock-21 { 
-    font-family:'Bodoni Moda SC';
     font-size:80px;
-    font-weight:400;
+    font-weight:500;
 }
 .projet { 
-    font-family:'Bodoni Moda SC';
-    font-size:8px;
+    font-family:'Bodoni Moda';
+    font-size:9px;
+    font-variant:small-caps;
     font-weight:500;
     letter-spacing:20px;
 }
@@ -44,13 +45,13 @@ text {
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="1"
-     inkscape:cx="490"
-     inkscape:cy="371.5"
-     inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     inkscape:window-x="1912"
-     inkscape:window-y="-8"
+     inkscape:zoom="0.7"
+     inkscape:cx="45.714286"
+     inkscape:cy="272.14286"
+     inkscape:window-width="3840"
+     inkscape:window-height="2054"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1" />
   <defs
@@ -69,7 +70,7 @@ text {
      transform="translate(-45.601171,-31.671695)">
     <text
        xml:space="preserve"
-       x="156.08217"
+       x="155.6862"
        y="62.661396"
        id="text2"
        inkscape:label="Projet"
@@ -78,7 +79,7 @@ text {
        transform="scale(0.99982044,1.0001796)"><tspan
          sodipodi:role="line"
          id="tspan2"
-         x="170.07967"
+         x="169.6837"
          y="62.661396"
          style="stroke-width:0.99982">Projet</tspan></text>
     <text
@@ -96,7 +97,7 @@ text {
          y="111.42361">Lock 21</tspan></text>
     <text
        xml:space="preserve"
-       x="157.28232"
+       x="156.88634"
        y="210.5356"
        id="text3"
        inkscape:label="Project"
@@ -105,7 +106,7 @@ text {
        transform="scale(0.99218831,1.0078732)"><tspan
          sodipodi:role="line"
          id="tspan3"
-         x="168.69247"
+         x="168.29649"
          y="210.5356"
          style="stroke-width:0.992188">Project</tspan></text>
   </g>
