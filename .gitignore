@@ -23,6 +23,7 @@ node_modules/
 # Project related stuff
 Thumbs.db
 ~$*.*
+temp.*
 *.code-workspace
 *.blend1
 *.xcf
