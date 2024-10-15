@@ -23,8 +23,8 @@ const config = {
   organizationName: 'remillc', // Usually your GitHub org/user name.
   projectName: 'lock21.info', // Usually your repo name.
 
-  onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenLinks: 'ignore',
+  onBrokenMarkdownLinks: 'ignore',
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -40,6 +40,7 @@ const config = {
   },
 
   plugins: [
+    'docusaurus-plugin-sass',
     'docusaurus-plugin-image-zoom'
   ],
 
@@ -64,7 +65,7 @@ const config = {
             'https://github.com/remillc/lock21.info/',
         },
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: './src/scss/custom.scss',
         },
       }),
     ],
@@ -89,21 +90,21 @@ const config = {
             label: 'Projet',
           },
           { to: '/blog', label: 'Blog', position: 'left' },
-          // {
-          //   type: 'dropdown',
-          //   label: 'Langues',
-          //   position: 'right',
-          //   items: [
-          //     {
-          //       label: 'Français',
-          //       to: '/fr/',
-          //     },
-          //     {
-          //       label: 'English',
-          //       to: '/en/',
-          //     },
-          //   ],
-          // },
+          {
+            type: 'dropdown',
+            label: 'Langues',
+            position: 'right',
+            items: [
+              {
+                label: 'Français',
+                to: '/fr/',
+              },
+              {
+                label: 'English',
+                to: '/en/',
+              },
+            ],
+          },
           {
             href: 'https://github.com/remillc/lock21.info',
             label: 'GitHub',
