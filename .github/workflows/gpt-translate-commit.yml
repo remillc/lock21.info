@@ -7,6 +7,7 @@ on:
 jobs:
   gpt_translate:
     runs-on: ubuntu-latest
+    permissions: write-all
 
     steps:
       - name: Checkout repository with two latest commits
