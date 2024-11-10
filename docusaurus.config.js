@@ -10,7 +10,7 @@ import { themes as prismThemes } from 'prism-react-renderer'
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Lock 21 3D',
-  tagline: 'Dinosaurs are cool',
+  tagline: 'Dive into history',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -77,13 +77,18 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      colorMode: {
+        defaultMode: 'light',
+        disableSwitch: false,
+        respectPrefersColorScheme: true,
+      },
       // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
+      image: 'images/docusaurus-social-card.jpg',
       navbar: {
         title: 'Lock21.info',
         logo: {
           alt: 'Lock21.info',
-          src: 'img/logo.svg',
+          src: 'images/logo.svg',
         },
         items: [
           {
@@ -100,7 +105,7 @@ const config = {
             items: [
               {
                 label: 'Français',
-                to: '/fr/',
+                to: '/',
               },
               {
                 label: 'English',
