@@ -19,6 +19,7 @@ node_modules/
 .env.development.local
 .env.test.local
 .env.production.local
+* copy*
 
 # Project related stuff
 Thumbs.db

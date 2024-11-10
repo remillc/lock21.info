@@ -1,5 +1,5 @@
 import { useRef, useEffect, memo } from 'react'
-import { Grid } from 'gridjs'
+// import { Grid } from 'gridjs'
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment'
 import { formatDuration } from 'date-fns'
 import { enCA, frCA } from 'date-fns/locale'
