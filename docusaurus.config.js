@@ -37,6 +37,7 @@ const config = {
     locales: ['fr', 'en'],
   },
   future: {
+    experimental_faster: true,
     experimental_storage: {
       type: 'localStorage',
     }
