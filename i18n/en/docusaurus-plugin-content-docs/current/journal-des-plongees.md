@@ -1,7 +1,3 @@
-Certainly! Here's the text translated into naturalistic English:
-
----
-
 # Dive Journal
 
 | No | Date       | Activity | Zones | Duration (minutes) | Participants | Notes |

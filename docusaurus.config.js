@@ -11,7 +11,7 @@ import { themes as prismThemes } from 'prism-react-renderer'
 const config = {
   title: 'Lock 21 3D',
   tagline: 'Dive into history',
-  favicon: 'img/favicon.ico',
+  favicon: 'images/favicon.ico',
 
   // Set the production url of your site here
   url: 'https://lock21.info',
