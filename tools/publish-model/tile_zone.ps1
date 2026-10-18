@@ -1,4 +1,4 @@
-# Tuile une zone préparée (OBJ + texture de prepare_zone.py) avec Obj2Tiles, puis l'inscrit dans le manifeste.
+﻿# Tuile une zone préparée (OBJ + texture de prepare_zone.py) avec Obj2Tiles, puis l'inscrit dans le manifeste.
 # Usage: .\tools\publish-model\tile_zone.ps1 -Zone zone-12 -Prepared O:\temp\zone-12\r010 [-Version 2026-10-18] [-Lods 3] [-Divisions 0]
 param(
     [Parameter(Mandatory)][string]$Zone,
@@ -10,6 +10,7 @@ param(
     [string]$Obj2Tiles = "O:\publishing\bin\obj2tiles-1.8.0\Obj2Tiles.exe"
 )
 $ErrorActionPreference = "Stop"
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 $out = Join-Path $TilesRoot "$Zone\$Version"
 if (Test-Path $out) { throw "$out existe déjà: choisir une autre -Version (les versions publiées sont immuables)" }

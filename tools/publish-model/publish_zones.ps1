@@ -1,9 +1,11 @@
-# Prépare et tuile une liste de zones depuis le .blend de travail, puis supprime les versions remplacées.
+﻿# Prépare et tuile une liste de zones depuis le .blend de travail, puis supprime les versions remplacées.
 # Usage: .\tools\publish-model\publish_zones.ps1 -Zones "zone 2","zone 3" [-Version 2026-10-18-1030] [-Density 3000]
 #        .\tools\publish-model\publish_zones.ps1 -Changed    # seulement les zones modifiées dans le .blend (check_changes.py)
+#        .\tools\publish-model\publish_zones.ps1 -Changed -DryRun    # liste les zones modifiées, sans publier
 param(
     [string[]]$Zones,
     [switch]$Changed,
+    [switch]$DryRun,
     [string]$Version = (Get-Date -Format "yyyy-MM-dd-HHmm"),
     [double]$Density = 3000,
     [string]$Blend = "$PSScriptRoot\..\..\modeles\lock-21-publishing.blend",
@@ -12,6 +14,7 @@ param(
     [string]$TilesRoot = "O:\publishing\tiles"
 )
 $ErrorActionPreference = "Stop"
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $Blend = (Resolve-Path $Blend).Path
 
 if ($Changed) {
@@ -20,6 +23,7 @@ if ($Changed) {
     $lines | Where-Object { $_ -like "zone *" } | ForEach-Object { Write-Host $_ }
     $Zones = (($lines | Select-Object -Last 1) -replace "^A_PUBLIER:\s*", "").Split(",") | ForEach-Object { $_.Trim() } | Where-Object { $_ }
     if (-not $Zones) { Write-Host "Rien à publier."; return }
+    if ($DryRun) { Write-Host "À publier: $($Zones -join ', ')"; return }
 }
 if (-not $Zones) { throw "Indiquer -Zones ou -Changed" }
 

@@ -1,4 +1,4 @@
-# Sert O:\publishing\tiles en local avec CORS, comme le fera R2 (origine différente du site).
+﻿# Sert O:\publishing\tiles en local avec CORS, comme le fera R2 (origine différente du site).
 # -Lan: écoute sur toutes les interfaces pour tester depuis un téléphone sur le même Wi-Fi.
 param(
     [string]$TilesRoot = "O:\publishing\tiles",

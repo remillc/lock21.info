@@ -1,4 +1,4 @@
-# Lance l'analyse de résolution des zones en arrière-plan (lecture seule).
+﻿# Lance l'analyse de résolution des zones en arrière-plan (lecture seule).
 # Usage: .\tools\model-analysis\run.ps1 [-Blend <fichier.blend>] [-Blender <blender.exe>]
 param(
     [string]$Blend = "$PSScriptRoot\..\..\modeles\lock-21-publishing.blend",

@@ -13,12 +13,18 @@ Chaîne de traitement qui transforme les modèles photogrammétriques de chaque 
 
 ## Étapes
 
-**En pratique**, après une retouche dans `lock-21-publishing.blend` (sauvegardé):
+**En pratique**, depuis la racine du dépôt, après une retouche dans `lock-21-publishing.blend` (sauvegardé):
 
-```powershell
-.\tools\publish-model\publish_zones.ps1 -Changed                 # seulement les zones modifiées
-.\tools\publish-model\publish_zones.ps1 -Zones "zone 2","zone 3"  # ou une liste explicite
-```
+| Commande | Effet |
+| --- | --- |
+| `npm run model:check` | liste les zones modifiées depuis leur dernière publication, sans rien publier |
+| `npm run model:postmodified` | republie seulement les zones modifiées |
+| `npm run model:publish -- -Zones "zone 2","zone 3"` | republie une liste de zones |
+| `npm run model:serve-tiles` | sert `O:\publishing\tiles` en local (port 8081, CORS) |
+| `npm run viewer:dev` | visualiseur sur `http://localhost:3100/` |
+| `npm run viewer:build` | construit le visualiseur dans `viewer/dist` |
+
+Ces scripts appellent `publish_zones.ps1` (options `-Zones`, `-Changed`, `-DryRun`, `-Version`, `-Density`), `serve-tiles.ps1` et le projet `viewer/`.
 
 Le script enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape 4 se fait automatiquement), puis supprime les versions de tuiles qui ne sont plus dans le manifeste. Journal par zone: `O:\temp\<zone>-publish.log`.
 
