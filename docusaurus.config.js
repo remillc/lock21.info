@@ -42,7 +42,9 @@ const config = {
     locales: ['fr', 'en'],
   },
   future: {
-    experimental_faster: true,
+    // Rspack 1.1 regularly crashes the dev server on hot reload ("Unable to access compilation"):
+    // DOCUSAURUS_FASTER=false falls back to webpack, slower but stable
+    experimental_faster: process.env.DOCUSAURUS_FASTER !== 'false',
     experimental_storage: {
       type: 'localStorage',
     }
