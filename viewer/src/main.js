@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js'
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js'
 import { TilesRenderer } from '3d-tiles-renderer'
 
 // Root of the published tiles (manifest.json + tilesets). Override with ?tiles=<url> (e.g. phone tests on the LAN)
@@ -41,6 +42,7 @@ async function main() {
     const tiles = new TilesRenderer(`${TILES_URL}/${entry.url}`)
     const gltfLoader = new GLTFLoader(tiles.manager)
     gltfLoader.setKTX2Loader(ktx2Loader)
+    gltfLoader.setMeshoptDecoder(MeshoptDecoder) // geometry compressed by tools/publish-model/compress_tiles.mjs
     tiles.manager.addHandler(/\.(gltf|glb)$/g, gltfLoader)
     // ?error=<pixels>: override the screen-space error target (testing; large values keep the coarse levels)
     tiles.errorTarget = Number(params.get('error')) || profile.errorTarget

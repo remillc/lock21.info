@@ -1,0 +1,12 @@
+{
+  "name": "lock21-publish-model",
+  "private": true,
+  "description": "Node tools of the model publishing pipeline (tile compression)",
+  "type": "module",
+  "dependencies": {
+    "@gltf-transform/core": "4.5.1",
+    "@gltf-transform/extensions": "4.5.1",
+    "@gltf-transform/functions": "4.5.1",
+    "meshoptimizer": "^1.0.1"
+  }
+}

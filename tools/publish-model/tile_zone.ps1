@@ -17,9 +17,14 @@ if (Test-Path $out) { throw "$out existe déjà: choisir une autre -Version (les
 # --preset standard: octree, --local, --zsplit, contenu glb (3D Tiles 1.1).
 # --max-texture-size 0: le plafond s'applique à la texture SOURCE avant découpage (le défaut 8192 dégrade une texture de 12k).
 # --divisions 0 avec octree: chaque LOD plus fin ajoute un niveau; au-delà de 3 LODs, le nombre de tuiles explose (8^n).
-& $Obj2Tiles --preset standard --texture-format Ktx2 --unlit --max-texture-size 0 --decimation-mode Standard `
+# --no-root-content: la racine dupliquait le niveau le plus grossier (zone 12: 10 Mo de plus à l'ouverture).
+& $Obj2Tiles --preset standard --texture-format Ktx2 --unlit --max-texture-size 0 --decimation-mode Standard --no-root-content `
     --lods $Lods --divisions $Divisions `
     (Join-Path $Prepared "$Zone.obj") $out
 if ($LASTEXITCODE -ne 0) { throw "Obj2Tiles a échoué ($LASTEXITCODE)" }
+
+# Compression meshopt de la géométrie de chaque tuile (glTF-Transform); les textures KTX2 restent telles quelles
+node "$PSScriptRoot\compress_tiles.mjs" $out
+if ($LASTEXITCODE -ne 0) { throw "compression échouée ($LASTEXITCODE)" }
 
 python -I "$PSScriptRoot\update_manifest.py" $TilesRoot $Zone "$Zone/$Version/tileset.json"

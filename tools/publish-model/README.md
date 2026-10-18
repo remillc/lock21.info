@@ -22,7 +22,7 @@ Chaîne de traitement qui transforme les modèles photogrammétriques de chaque 
 | 4 | Recalage (automatique à l'étape 5) | `register_zone.py` | export `source` + `.blend` | `transforms/<zone>.json` (cache) |
 | 5 | Préparation | `prepare_zone.py --zone "zone N" --ratio R --out …` | `.blend` (+ export `source`) | `O:\temp\<zone>\...\<zone>.obj` + `.jpg` + `<zone>-prepare.json` |
 | 6 | Tuilage + manifeste | `tile_zone.ps1` (+ `update_manifest.py`) | sortie de 5 | `O:\publishing\tiles\<zone>\<version>\` + `manifest.json` |
-| 7 | Aperçu local | `serve-tiles.ps1` + `npm run dev -- --port 3100` | `O:\publishing\tiles\` | `http://localhost:3100/model-preview` |
+| 7 | Aperçu local | `serve-tiles.ps1` + `viewer/`: `npm run dev` | `O:\publishing\tiles\` | `http://localhost:3100/` |
 | 8 | Mise en ligne | *à venir* (rclone vers Cloudflare R2) | | |
 
 ### 3. Vérification du repère
@@ -64,6 +64,8 @@ Essai sur la zone 10 (export 652 k de 2026 sur le mesh de 140 k): échelle 1,003
 
 `Obj2Tiles --preset standard --texture-format Ktx2 --unlit --max-texture-size 0 --decimation-mode Standard --lods 3 --divisions 0`: hiérarchie de niveaux de détail (octree, découpage en Z), coordonnées locales, contenu `.glb`, textures **KTX2** (restent compressées en mémoire graphique, indispensable sur téléphone). Chaque version est écrite dans un nouveau dossier daté et n'est plus jamais modifiée; `manifest.json` pointe vers la version active.
 
+Ensuite, `compress_tiles.mjs` (glTF-Transform) compresse la géométrie de chaque tuile en **meshopt** (quantification + `EXT_meshopt_compression`); le visualiseur la décode avec `MeshoptDecoder`. Avec `--no-root-content` (la racine dupliquait le niveau le plus grossier), l'ouverture du visualiseur (zones 10 et 12) passe de 61,2 Mo à **18,1 Mo**, sans différence visible.
+
 Leçons des essais sur la zone 12 (OBJ préparé de 1,2 M faces, texture 12 467 px):
 
 | Essai | Réglages | Tuiles | Triangles au niveau le plus fin | Textures au niveau le plus fin | Total | Constat |
@@ -78,10 +80,12 @@ Dans deux terminaux:
 
 ```powershell
 .\tools\publish-model\serve-tiles.ps1      # tuiles sur http://localhost:8081 (CORS, sans cache)
-npm run dev -- --port 3100                 # site sur http://localhost:3100/model-preview
+cd viewer; npm run dev                     # visualiseur sur http://localhost:3100/
 ```
 
-Pour un téléphone sur le même Wi-Fi: `serve-tiles.ps1 -Lan`, puis `$env:MODEL_TILES_URL = "http://<IP du PC>:8081"; npm run dev -- --port 3100 --host 0.0.0.0`, et ouvrir `http://<IP du PC>:3100/model-preview`. Windows demande une fois d'autoriser l'accès réseau.
+Paramètres de test du visualiseur: `?tiles=<url>` (autre serveur de tuiles), `?error=<pixels>` (force un niveau de détail; une grande valeur garde les niveaux grossiers).
+
+Pour un téléphone sur le même Wi-Fi: `serve-tiles.ps1 -Lan` (le visualiseur écoute déjà sur le réseau), puis ouvrir `http://<IP du PC>:3100/?tiles=http://<IP du PC>:8081`. Windows demande une fois d'autoriser l'accès réseau.
 
 ## Dossiers
 
@@ -108,6 +112,8 @@ Pour un téléphone sur le même Wi-Fi: `serve-tiles.ps1 -Lan`, puis `$env:MODEL
 | Obj2Tiles (OpenDroneMap) | 1.8.0 | `O:\publishing\bin\obj2tiles-1.8.0\`, de [github.com/OpenDroneMap/Obj2Tiles/releases](https://github.com/OpenDroneMap/Obj2Tiles/releases) (exécutable autonome + `ktx.dll`) | étape 6 |
 | Node.js / npm | 24.21.0 / 11.19.0 | | site, `npx` |
 | http-server | 14.1.1 (via `npx`) | npm | étape 7 |
+| glTF-Transform + meshoptimizer | 4.5.1 / 1.x | `tools/publish-model/package.json` (`npm install` dans ce dossier) | étape 6: compression meshopt des tuiles |
+| Vite | 8.x | `viewer/package.json` | visualiseur autonome (`viewer/`, `npm run dev` → `http://localhost:3100/`) |
 | three.js | 0.186.1 | npm (`package.json`) | rendu WebGL du visualiseur |
 | 3d-tiles-renderer (NASA-AMMOS) | 0.5.3 | npm (`package.json`) | chargement des tuiles dans three.js |
 | Transcodeur Basis (KTX2) | celui de three 0.186.1 | `static/vendor/basis/`, copié de `node_modules/three/examples/jsm/libs/basis/` | décodage des textures KTX2 dans le navigateur. À recopier à chaque mise à jour de three. |
