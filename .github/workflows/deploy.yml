@@ -45,15 +45,9 @@ jobs:
           # Vite 8 (3D viewer) needs Node 20.19+ or 22.12+
           node-version: 22
           cache: npm
-<<<<<<< HEAD
           cache-dependency-path: |
             package-lock.json
             viewer/package-lock.json
-      - uses: webfactory/ssh-agent@v0.5.0
-        with:
-          ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
-=======
->>>>>>> main
       - name: Deploy to GitHub Pages
         env:
           # The token GitHub provides to every workflow (permissions: contents: write) pushes to gh-pages:
