@@ -39,3 +39,6 @@ __pycache__/
 
 # Node dependencies of the publishing tools
 /tools/publish-model/node_modules
+
+# 3D viewer build copied into the site (npm run build:viewer)
+/static/modele

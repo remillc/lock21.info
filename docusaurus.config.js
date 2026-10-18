@@ -101,6 +101,8 @@ const config = {
             position: 'left',
             label: 'Projet',
           },
+          // 3D viewer, built separately (viewer/) into static/modele: pathname:// avoids the Docusaurus router
+          { href: 'pathname:///modele/', label: 'Modèle 3D', position: 'left', target: '_self' },
           { to: '/blog', label: 'Blog', position: 'left' },
           {
             type: 'dropdown',

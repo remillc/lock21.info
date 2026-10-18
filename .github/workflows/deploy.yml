@@ -19,10 +19,18 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          # Vite 8 (3D viewer) needs Node 20.19+ or 22.12+
+          node-version: 22
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            viewer/package-lock.json
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npm ci --prefix viewer
+      - name: Build the 3D viewer into static/modele
+        run: npm run build:viewer
       - name: Test build website
         run: npm run build
   deploy:
@@ -34,8 +42,12 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          # Vite 8 (3D viewer) needs Node 20.19+ or 22.12+
+          node-version: 22
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            viewer/package-lock.json
       - uses: webfactory/ssh-agent@v0.5.0
         with:
           ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
@@ -46,4 +58,7 @@ jobs:
           git config --global user.email "actions@github.com"
           git config --global user.name "gh-actions"
           npm ci
+          npm ci --prefix viewer
+          # The viewer (lock21.info/modele/) is built into static/, which Docusaurus publishes as is
+          npm run build:viewer
           npm run deploy

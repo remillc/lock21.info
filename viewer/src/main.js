@@ -40,7 +40,7 @@ let needsRender = true
 const requestRender = () => { needsRender = true }
 controls.addEventListener('change', requestRender)
 
-const ktx2Loader = new KTX2Loader().setTranscoderPath('./vendor/basis/').detectSupport(renderer)
+const ktx2Loader = new KTX2Loader().setTranscoderPath(`${import.meta.env.BASE_URL}vendor/basis/`).detectSupport(renderer)
 
 // Sharper textures on surfaces seen at a grazing angle (floors, walls along the line of sight)
 const maxAnisotropy = renderer.capabilities.getMaxAnisotropy()
