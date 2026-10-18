@@ -40,6 +40,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `blog/` | Mostly Docusaurus sample posts. `tags.yml` defines one tag per zone. |
 | `modeles/` | Blender mockup of the lock and textures |
 | `images/`, `static/images/` | Logos and screenshots |
+| `tools/model-analysis/` | Read-only resolution analysis of the `zones` meshes (headless Blender). Run `run.ps1`; thresholds in `thresholds.json`; dated reports (`.json` + `.md`) in `reports/`. Commit the reports, since they track how the model evolves. |
 
 Sidebar ordering of `workflow/` relies on the numeric filename prefix. Keep the `N. name.md` convention when you add steps.
 

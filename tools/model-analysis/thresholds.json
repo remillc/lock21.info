@@ -1,0 +1,23 @@
+{
+  "_comment": "Paramètres de l'analyse de résolution. Les seuils sont provisoires, à ajuster après le test de publication web.",
+  "collection": "zones",
+  "viewing": {
+    "_comment": "Conditions de visionnement les plus exigeantes: la caméra web la plus proche permise d'une surface.",
+    "min_view_distance_m": 1.5,
+    "vertical_fov_deg": 50,
+    "screen_height_px": 1080
+  },
+  "texture": {
+    "_comment": "Écart toléré (ratio) entre la taille de texel mesurée et la cible dérivée des conditions de visionnement.",
+    "tolerance": 1.25,
+    "max_nonuniformity_p90_p10": 1.5
+  },
+  "geometry": {
+    "_comment": "Sous ce nombre de texels par triangle, la géométrie est plus fine que la texture: candidate à la décimation.",
+    "min_texels_per_triangle": 32
+  },
+  "cleanup": {
+    "small_island_vertices": 100,
+    "max_small_islands": 100
+  }
+}
