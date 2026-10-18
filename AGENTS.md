@@ -81,7 +81,8 @@ Node >= 18. Builds use `@docusaurus/faster` (`future.experimental_faster`). The 
 ## Secrets and local environment
 
 - `.env.local` (gitignored, loaded through `dotenv/config` in `docusaurus.config.js`) holds Git deployment credentials. **Never print, copy or commit its values.**
-- The VS Code workspace also mounts `O:\`, which appears to hold the raw project data (footage, Metashape projects, workflow XMLs referenced in the docs, such as `config/workflows/1. Align cameras.xml`). Treat it as read-only unless the user says otherwise.
+- The VS Code workspace also mounts `O:\`, which appears to hold the raw project data (footage, Metashape projects, workflow XMLs referenced in the docs, such as `config/workflows/1. Align cameras.xml`). Treat it as read-only unless the user says otherwise. Exceptions: `O:\work\` holds working assets that are expensive to regenerate and are kept between sessions (Metashape working copies, retextured models, tiles, exports). `O:\temp\` holds disposable intermediates.
+- **Never modify the original Metashape projects in `O:\photogrammetry\`.** They are huge (zone 12 alone is about 134 GB) and are the reference. Open them read-only and save only the needed chunk into a working copy under `O:\work\`.
 
 ## Known leftovers from the Docusaurus template
 

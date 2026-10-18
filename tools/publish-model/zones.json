@@ -1,0 +1,68 @@
+{
+  "_comment": "Registre zone Blender <-> projet Metashape. BROUILLON du 2026-10-18, à confirmer par Christian. 'blender_source' = modèle Metashape exporté vers Blender (identifié par le nombre de faces). 'publish_candidate' = modèle texturé à plus haute résolution du même projet, proposé pour la publication. Chemins relatifs à O:\\photogrammetry.",
+  "zones": {
+    "zone 1": {
+      "project": "zone-1-temp-1.psx", "chunk": 13, "chunk_label": "zone 1 - lens corrected",
+      "blender_source": { "model": 2, "faces": 621872, "match": "exact" },
+      "publish_candidate": null,
+      "notes": "Aucun modèle haute résolution texturé: m0 (106,6 M) et m1 (8,7 M) sans texture. Retexturage à faire.",
+      "status": "à confirmer"
+    },
+    "zone 2": {
+      "project": "zone-2_tif.psx", "chunk": 15, "chunk_label": "zone 2 - lens corrected",
+      "blender_source": { "model": 4, "faces": 1276654, "match": "+0,06 %" },
+      "publish_candidate": { "model": 3, "faces": 17820000, "texture_px": 14006 },
+      "notes": "Le projet n'est pas zone-2.psx mais zone-2_tif.psx.",
+      "status": "à confirmer"
+    },
+    "zone 3": {
+      "project": "zone-3.psx", "chunk": 11, "chunk_label": "zone 3 - lens corrected - Align=highest - RU=15, PA=5, RE=0.7 - FINAL",
+      "blender_source": { "model": 3, "faces": 805321, "match": "-0,15 %" },
+      "publish_candidate": { "model": 1, "faces": 22950000, "texture_px": 15761 },
+      "notes": "Autre candidat plus léger: m5 (7,6 M, 10442 px).",
+      "status": "à confirmer"
+    },
+    "zone 4": {
+      "project": "zone-4.psx", "chunk": 12, "chunk_label": "zone 4 - lens corrected - Align=highest - DepthMapQuality=low;FaceCount=custom",
+      "blender_source": { "model": 8, "faces": 1512379, "match": "+0,03 %" },
+      "publish_candidate": { "chunk": 10, "model": 4, "faces": 38310000, "texture_px": 15168 },
+      "notes": "Le candidat haute résolution est dans un AUTRE chunk (10, DepthMapQuality=medium): vérifier que les deux chunks partagent le même repère. Le mesh Blender a aussi un modificateur Lattice (déformation à reporter?).",
+      "status": "à confirmer"
+    },
+    "zone 7": {
+      "project": "zone-7.psx", "chunk": 39, "chunk_label": "Copy of Copy of Copy of zone 7 - lens corrected - top + stairs",
+      "blender_source": { "model": 2, "faces": 1061739, "match": "+0,01 %" },
+      "publish_candidate": { "model": 1, "faces": 14800000, "texture_px": 12772 },
+      "notes": "",
+      "status": "à confirmer"
+    },
+    "zone 8": {
+      "project": "zone-8.psx", "chunk": 21, "chunk_label": "zone 8 - lens corrected",
+      "blender_source": { "model": 1, "faces": 199997, "match": "-0,37 %" },
+      "publish_candidate": { "model": 0, "faces": 20070000, "texture_px": 13071 },
+      "notes": "Ce chunk contient déjà un tiled model.",
+      "status": "à confirmer"
+    },
+    "zone 10": {
+      "project": "zone-10.psx", "chunk": 0, "chunk_label": "zone 10 - lens corrected",
+      "blender_source": null,
+      "publish_candidate": { "model": 0, "faces": 22620000, "texture_px": 10014 },
+      "notes": "AUCUNE correspondance par nombre de faces (Blender: 140 000, exactement: décimé dans Blender?). Projet présumé d'après le nom; vérification géométrique requise. Projet sauvegardé le 2026-06-28, après le .blend.",
+      "status": "à vérifier"
+    },
+    "zone 11": {
+      "project": "zone-11_tif.psx", "chunk": 6, "chunk_label": "zone 11 + zone 10 colonne sud - lens corrected",
+      "blender_source": { "model": 1, "faces": 185000, "match": "+0,01 %" },
+      "publish_candidate": { "model": 0, "faces": 11820000, "texture_px": 10008 },
+      "notes": "Le chunk inclut la colonne sud de la zone 10: chevauchement à rogner.",
+      "status": "à confirmer"
+    },
+    "zone 12": {
+      "project": "zone-12.psx", "chunk": 33, "chunk_label": "zone 12 - lens corrected  - ru=10, pa=5, er=10% - FINAL SPARSE CLOUD",
+      "blender_source": null,
+      "publish_candidate": { "model": 1, "faces": 13290000, "texture_px": 12467 },
+      "notes": "AUCUNE correspondance: le mesh Blender (1 361 554) vient probablement de m0 avant sa décimation à 269 877 faces (cible d'origine 1 362 249). Vérification géométrique requise. Autre candidat: m2 (4,6 M, 9207 px).",
+      "status": "à vérifier"
+    }
+  }
+}

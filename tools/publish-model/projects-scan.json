@@ -1,0 +1,1432 @@
+[
+  {
+    "file": "O:/photogrammetry\\lock-21.psx",
+    "last_saved": "2024:06:20 12:04:33",
+    "version": "1.7.1.11797",
+    "active_chunk": 0,
+    "chunks": [
+      {
+        "id": 0,
+        "label": "zone 1",
+        "cameras": 1642,
+        "models": [
+          {
+            "id": 0,
+            "path": "lock-21.files\\0\\0\\model.1\\model.zip",
+            "faces": 80614539,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2024:06:21 02:45:49",
+            "saved": "2024:06:21 08:56:47"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": true,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-1 test.psx",
+    "last_saved": "2024:06:26 09:26:50",
+    "version": "1.7.1.11797",
+    "active_chunk": 0,
+    "chunks": [
+      {
+        "id": 0,
+        "label": "Chunk 1",
+        "cameras": 0,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-1-temp-1.psx",
+    "last_saved": "2025:01:18 15:33:48",
+    "version": "1.7.1.11797",
+    "active_chunk": 14,
+    "chunks": [
+      {
+        "id": 11,
+        "label": "--- RAW sparse clouds -----------------------------",
+        "cameras": 0,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 0,
+        "label": "zone 1 - lens corrected",
+        "cameras": 2737,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 1,
+        "label": "Chunk 1",
+        "cameras": 151,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 2,
+        "label": "Chunk 2",
+        "cameras": 129,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 3,
+        "label": "Chunk 3",
+        "cameras": 144,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 4,
+        "label": "Chunk 4",
+        "cameras": 82,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 5,
+        "label": "Chunk 5",
+        "cameras": 65,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 6,
+        "label": "Chunk 6",
+        "cameras": 28,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 7,
+        "label": "Chunk 7",
+        "cameras": 7,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 8,
+        "label": "Chunk 8",
+        "cameras": 3,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 9,
+        "label": "Chunk 9",
+        "cameras": 2,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 10,
+        "label": "Chunk 10",
+        "cameras": 4,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 12,
+        "label": "--- FILTERED sparse clouds -----------------------------",
+        "cameras": 0,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 13,
+        "label": "zone 1 - lens corrected",
+        "cameras": 2737,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-1-temp-1.files\\13\\0\\model\\model.zip",
+            "faces": 106629433,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2025:01:17 20:26:06",
+            "saved": "2025:01:17 20:34:05"
+          },
+          {
+            "id": 1,
+            "path": "zone-1-temp-1.files\\13\\0\\model.1\\model.zip",
+            "faces": 8686480,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2025:01:17 20:26:06",
+            "saved": "2025:01:17 20:37:38"
+          },
+          {
+            "id": 2,
+            "path": "zone-1-temp-1.files\\13\\0\\model.3\\model.zip",
+            "faces": 621872,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 4096,
+            "pages": 1,
+            "built": "2025:01:17 20:26:06",
+            "saved": "2025:01:17 20:52:24"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 14,
+        "label": "Copy of zone 1 - lens corrected",
+        "cameras": 2737,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-1-temp-1.files\\14\\0\\model\\model.zip",
+            "faces": 112930472,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2025:01:18 20:16:59",
+            "saved": "2025:01:18 20:51:46"
+          },
+          {
+            "id": 1,
+            "path": "zone-1-temp-1.files\\14\\0\\model.1\\model.zip",
+            "faces": 33828787,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2025:01:18 21:40:24",
+            "saved": "2025:01:18 21:56:09"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-10.psx",
+    "last_saved": "2026:06:28 14:15:58",
+    "version": "1.7.1.11797",
+    "active_chunk": 0,
+    "chunks": [
+      {
+        "id": 0,
+        "label": "zone 10 - lens corrected",
+        "cameras": 12825,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-10.files\\0\\0\\model.1\\model.zip",
+            "faces": 22615424,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 10014,
+            "pages": 1,
+            "built": "2026:07:01 16:36:36",
+            "saved": "2026:07:02 13:30:08"
+          },
+          {
+            "id": 2,
+            "path": "zone-10.files\\0\\0\\model.2\\model.zip",
+            "faces": 3055531,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 6600,
+            "pages": 1,
+            "built": "2026:07:01 16:36:36",
+            "saved": "2026:07:02 14:07:25"
+          },
+          {
+            "id": 3,
+            "path": "zone-10.files\\0\\0\\model\\model.zip",
+            "faces": 652516,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 4096,
+            "pages": 1,
+            "built": "2026:07:01 16:36:36",
+            "saved": "2026:07:02 14:51:58"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": true,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-11.psx",
+    "last_saved": "2026:07:04 11:50:45",
+    "version": "1.7.1.11797",
+    "active_chunk": 1,
+    "chunks": [
+      {
+        "id": 0,
+        "label": "Chunk 1",
+        "cameras": 12825,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 1,
+        "label": "Copy of Chunk 1",
+        "cameras": 13398,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 3,
+        "label": "Copy of Chunk 1",
+        "cameras": 12825,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-11_tif.psx",
+    "last_saved": "2025:02:16 17:47:09",
+    "version": "1.7.1.11797",
+    "active_chunk": 6,
+    "chunks": [
+      {
+        "id": 6,
+        "label": "zone 11 + zone 10 colonne sud - lens corrected",
+        "cameras": 16423,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-11_tif.files\\6\\0\\model.1\\model.zip",
+            "faces": 11817878,
+            "textures": [
+              "texture0.tif",
+              "texture1.tif"
+            ],
+            "texture_size": 10008,
+            "pages": 1,
+            "built": "2024:12:10 15:12:33",
+            "saved": "2024:12:10 21:03:46"
+          },
+          {
+            "id": 1,
+            "path": "zone-11_tif.files\\6\\0\\model.2\\model.zip",
+            "faces": 185000,
+            "textures": [],
+            "texture_size": null,
+            "pages": 1,
+            "built": "2024:12:10 15:12:33",
+            "saved": "2024:12:10 21:08:02"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": true,
+        "has_tiled_model": false
+      },
+      {
+        "id": 7,
+        "label": "zone 11 - Colonne sud - lens corrected",
+        "cameras": 3599,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-12-t.psx",
+    "last_saved": "2025:02:16 17:42:27",
+    "version": "1.7.1.11797",
+    "active_chunk": 26,
+    "chunks": [
+      {
+        "id": 26,
+        "label": "zone 12 - lens corrected  - ru=10, pa=5, er=10% - FINAL SPARSE CLOUD",
+        "cameras": 17529,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-12-t.files\\26\\0\\model\\model.zip",
+            "faces": 4507852,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 8690,
+            "pages": 1,
+            "built": "2025:02:14 13:10:16",
+            "saved": "2025:02:16 14:41:09"
+          },
+          {
+            "id": 1,
+            "path": "zone-12-t.files\\26\\0\\model.1\\model.zip",
+            "faces": 215692,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": null,
+            "saved": "2025:02:14 15:20:02"
+          },
+          {
+            "id": 2,
+            "path": "zone-12-t.files\\26\\0\\model.2\\model.zip",
+            "faces": 92700185,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 12975,
+            "pages": 1,
+            "built": "2025:02:15 00:30:03",
+            "saved": "2025:02:16 00:08:44"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 28,
+        "label": "Copy of zone 12 - lens corrected - RAW SPARSE CLOUD",
+        "cameras": 17529,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 29,
+        "label": "Copy of zone 12 - lens corrected  - ru=10, pa=5, er=10% - FINAL SPARSE CLOUD",
+        "cameras": 21128,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-12.psx",
+    "last_saved": "2025:03:02 19:09:36",
+    "version": "1.7.1.11797",
+    "active_chunk": 33,
+    "chunks": [
+      {
+        "id": 32,
+        "label": "zone 12 - lens corrected - RAW SPARSE CLOUD",
+        "cameras": 21105,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 33,
+        "label": "zone 12 - lens corrected  - ru=10, pa=5, er=10% - FINAL SPARSE CLOUD",
+        "cameras": 21105,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-12.files\\33\\0\\model\\model.zip",
+            "faces": 269877,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2025:02:27 12:14:49",
+            "saved": "2025:02:27 12:19:18"
+          },
+          {
+            "id": 1,
+            "path": "zone-12.files\\33\\0\\model.2\\model.zip",
+            "faces": 13290173,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 12467,
+            "pages": 1,
+            "built": "2025:02:28 06:33:39",
+            "saved": "2025:03:02 19:09:34"
+          },
+          {
+            "id": 2,
+            "path": "zone-12.files\\33\\0\\model.3\\model.zip",
+            "faces": 4577682,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 9207,
+            "pages": 1,
+            "built": "2025:03:02 23:28:38",
+            "saved": "2025:03:03 18:55:00"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-13.psx",
+    "last_saved": "2025:03:15 14:45:01",
+    "version": "1.7.1.11797",
+    "active_chunk": null,
+    "chunks": [
+      {
+        "id": 2,
+        "label": "zone 13 - lens corrected - RAW SPARSE CLOUD",
+        "cameras": 3615,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-16.psx",
+    "last_saved": "2024:12:12 13:22:17",
+    "version": "1.7.1.11797",
+    "active_chunk": 2,
+    "chunks": [
+      {
+        "id": 1,
+        "label": "zone 16",
+        "cameras": 526,
+        "models": [
+          {
+            "id": 2,
+            "path": "zone-16.files\\1\\0\\model.2\\model.zip",
+            "faces": 7978202,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 4077,
+            "pages": 1,
+            "built": "2024:11:04 16:01:45",
+            "saved": "2024:11:04 21:26:34"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": true,
+        "has_tiled_model": false
+      },
+      {
+        "id": 2,
+        "label": "zone 16 - lens corrected",
+        "cameras": 526,
+        "models": [
+          {
+            "id": 1,
+            "path": "zone-16.files\\2\\0\\model.1\\model.zip",
+            "faces": 7579722,
+            "textures": [
+              "texture0.tif",
+              "texture1.tif"
+            ],
+            "texture_size": 4026,
+            "pages": 1,
+            "built": "2024:12:12 19:21:14",
+            "saved": "2024:12:12 20:41:41"
+          },
+          {
+            "id": 4,
+            "path": "zone-16.files\\2\\0\\model\\model.zip",
+            "faces": 100000,
+            "textures": [
+              "texture0.tif",
+              "texture1.tif",
+              "texture2.tif"
+            ],
+            "texture_size": 3924,
+            "pages": 1,
+            "built": "2024:12:12 19:21:14",
+            "saved": "2024:12:12 21:21:05"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": true,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-18.psx",
+    "last_saved": "2024:11:10 16:08:58",
+    "version": "1.7.1.11797",
+    "active_chunk": 2,
+    "chunks": [
+      {
+        "id": 0,
+        "label": "zone 18",
+        "cameras": 9135,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 1,
+        "label": "Chunk 1",
+        "cameras": 341,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 2,
+        "label": "zone 18 - lens corrected",
+        "cameras": 9747,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 3,
+        "label": "zone 18 - lens corrected - fixed camera calibration parameters",
+        "cameras": 9747,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-2.psx",
+    "last_saved": "2026:07:08 20:36:31",
+    "version": "1.7.1.11797",
+    "active_chunk": 3,
+    "chunks": [
+      {
+        "id": 0,
+        "label": "Chunk 1",
+        "cameras": 16303,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-2.files\\0\\0\\model\\model.zip",
+            "faces": 32538773,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2026:07:08 05:25:13",
+            "saved": "2026:07:08 20:11:27"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": true,
+        "has_tiled_model": false
+      },
+      {
+        "id": 1,
+        "label": "Chunk 2",
+        "cameras": 1261,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 2,
+        "label": "Chunk 3",
+        "cameras": 0,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 3,
+        "label": "Copy of Chunk 1",
+        "cameras": 16747,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-2_tif.psx",
+    "last_saved": "2025:01:11 21:25:45",
+    "version": "1.7.1.11797",
+    "active_chunk": 15,
+    "chunks": [
+      {
+        "id": 14,
+        "label": "zone 2 - lens corrected - raw sparse cloud",
+        "cameras": 15893,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 15,
+        "label": "zone 2 - lens corrected",
+        "cameras": 15893,
+        "models": [
+          {
+            "id": 2,
+            "path": "zone-2_tif.files\\15\\0\\model\\model.zip",
+            "faces": 317682294,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2025:01:10 04:59:12",
+            "saved": "2025:01:10 16:04:39"
+          },
+          {
+            "id": 3,
+            "path": "zone-2_tif.files\\15\\0\\model.2\\model.zip",
+            "faces": 17820127,
+            "textures": [
+              "texture0.tif",
+              "texture1.tif"
+            ],
+            "texture_size": 14006,
+            "pages": 1,
+            "built": "2025:01:10 04:59:12",
+            "saved": "2026:07:05 12:03:42"
+          },
+          {
+            "id": 4,
+            "path": "zone-2_tif.files\\15\\0\\model.3\\model.zip",
+            "faces": 1276654,
+            "textures": [
+              "texture0.tif",
+              "texture1.tif",
+              "texture2.tif"
+            ],
+            "texture_size": 4096,
+            "pages": 1,
+            "built": "2025:01:10 04:59:12",
+            "saved": "2025:01:11 16:34:49"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-3.psx",
+    "last_saved": "2025:01:31 20:56:45",
+    "version": "1.7.1.11797",
+    "active_chunk": 11,
+    "chunks": [
+      {
+        "id": 5,
+        "label": "zone 3 - lens corrected - clean RU=30, PA=5, RE=0.4",
+        "cameras": 30814,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-3.files\\5\\0\\model\\model.zip",
+            "faces": 524488533,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2025:01:05 18:13:00",
+            "saved": "2025:01:05 19:24:08"
+          },
+          {
+            "id": 1,
+            "path": "zone-3.files\\5\\0\\model.1\\model.zip",
+            "faces": 24320132,
+            "textures": [
+              "texture0.tif",
+              "texture1.tif",
+              "texture2.tif"
+            ],
+            "texture_size": 16206,
+            "pages": 1,
+            "built": "2025:01:05 18:13:00",
+            "saved": "2025:01:07 02:10:04"
+          },
+          {
+            "id": 2,
+            "path": "zone-3.files\\5\\0\\model.2\\model.zip",
+            "faces": 1709329,
+            "textures": [
+              "texture0.tif",
+              "texture1.tif",
+              "texture2.tif"
+            ],
+            "texture_size": 4096,
+            "pages": 1,
+            "built": "2025:01:05 18:13:00",
+            "saved": "2025:01:07 18:29:12"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": true,
+        "has_tiled_model": false
+      },
+      {
+        "id": 6,
+        "label": "zone 3 - lens corrected - Align=highest - RAW SPARSE CLOUD",
+        "cameras": 30814,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 11,
+        "label": "zone 3 - lens corrected - Align=highest - RU=15, PA=5, RE=0.7 - FINAL",
+        "cameras": 30814,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-3.files\\11\\0\\model\\model.zip",
+            "faces": 54401964,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2025:01:29 22:48:09",
+            "saved": "2025:01:31 14:16:58"
+          },
+          {
+            "id": 1,
+            "path": "zone-3.files\\11\\0\\model.2\\model.zip",
+            "faces": 22954125,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 15761,
+            "pages": 1,
+            "built": "2025:01:29 22:48:09",
+            "saved": "2025:01:31 12:46:21"
+          },
+          {
+            "id": 3,
+            "path": "zone-3.files\\11\\0\\model.1\\model.zip",
+            "faces": 805321,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 4096,
+            "pages": 1,
+            "built": "2025:01:29 22:48:09",
+            "saved": "2025:02:01 13:04:14"
+          },
+          {
+            "id": 5,
+            "path": "zone-3.files\\11\\0\\model.3\\model.zip",
+            "faces": 7638514,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 10442,
+            "pages": 1,
+            "built": "2025:01:29 22:48:09",
+            "saved": "2025:02:01 21:37:57"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-4.psx",
+    "last_saved": "2025:01:26 12:58:42",
+    "version": "1.7.1.11797",
+    "active_chunk": null,
+    "chunks": [
+      {
+        "id": 6,
+        "label": "zone 4 - lens corrected - raw sparse cloud",
+        "cameras": 10018,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 7,
+        "label": "zone 4 - lens corrected - filtered sparse cloud",
+        "cameras": 10018,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-4.files\\7\\0\\model\\model.zip",
+            "faces": 124346665,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2025:01:20 05:21:56",
+            "saved": "2025:01:20 12:13:30"
+          },
+          {
+            "id": 1,
+            "path": "zone-4.files\\7\\0\\model.2\\model.zip",
+            "faces": 1551062,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 4096,
+            "pages": 1,
+            "built": "2025:01:20 05:21:56",
+            "saved": "2025:01:20 12:58:46"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 9,
+        "label": "zone 4 - lens corrected - Align=highest - DepthMapQuality=lowest;FaceCount=medium",
+        "cameras": 10018,
+        "models": [
+          {
+            "id": 2,
+            "path": "zone-4.files\\9\\0\\model\\model.zip",
+            "faces": 1780309,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2025:01:20 18:43:32",
+            "saved": "2025:01:20 22:17:06"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 10,
+        "label": "zone 4 - lens corrected - Align=highest - DepthMapQuality=medium;FaceCount=high",
+        "cameras": 10018,
+        "models": [
+          {
+            "id": 3,
+            "path": "zone-4.files\\10\\0\\model\\model.zip",
+            "faces": 108432079,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2025:01:21 02:04:24",
+            "saved": "2025:01:26 12:56:22"
+          },
+          {
+            "id": 4,
+            "path": "zone-4.files\\10\\0\\model.2\\model.zip",
+            "faces": 38314810,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 15168,
+            "pages": 1,
+            "built": "2025:01:21 05:32:14",
+            "saved": "2025:01:23 12:55:32"
+          },
+          {
+            "id": 5,
+            "path": "zone-4.files\\10\\0\\model.3\\model.zip",
+            "faces": 3140325,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 4096,
+            "pages": 1,
+            "built": "2025:01:23 20:31:53",
+            "saved": "2025:01:23 23:02:14"
+          },
+          {
+            "id": 6,
+            "path": "zone-4.files\\10\\0\\model.1\\model.zip",
+            "faces": 1513512,
+            "textures": [],
+            "texture_size": null,
+            "pages": 1,
+            "built": "2025:01:23 20:31:53",
+            "saved": "2025:01:24 13:37:56"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 12,
+        "label": "zone 4 - lens corrected - Align=highest - DepthMapQuality=low;FaceCount=custom",
+        "cameras": 10018,
+        "models": [
+          {
+            "id": 7,
+            "path": "zone-4.files\\12\\0\\model.1\\model.zip",
+            "faces": 3338215,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 4096,
+            "pages": 1,
+            "built": "2025:01:24 15:18:30",
+            "saved": "2025:01:24 21:01:45"
+          },
+          {
+            "id": 8,
+            "path": "zone-4.files\\12\\0\\model.2\\model.zip",
+            "faces": 1512379,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 4096,
+            "pages": 1,
+            "built": "2025:01:24 15:18:30",
+            "saved": "2025:01:24 21:47:01"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-4_top.psx",
+    "last_saved": "2024:08:23 13:31:37",
+    "version": "1.7.1.11797",
+    "active_chunk": 1,
+    "chunks": [
+      {
+        "id": 1,
+        "label": "zone 4 &amp; camera calibration z18 v2 - clean",
+        "cameras": 10263,
+        "models": [
+          {
+            "id": 7,
+            "path": "zone-4_top.files\\1\\0\\model\\model.zip",
+            "faces": 1000000,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2024:08:23 14:03:43",
+            "saved": "2024:08:23 14:59:40"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": true,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-5.psx",
+    "last_saved": "2024:07:29 19:35:43",
+    "version": "1.7.1.11797",
+    "active_chunk": 0,
+    "chunks": [
+      {
+        "id": 0,
+        "label": "2024-07-28",
+        "cameras": 14266,
+        "models": [],
+        "has_depth_maps": true,
+        "has_dense_cloud": true,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-7-temp-1.psx",
+    "last_saved": "2025:01:11 21:32:02",
+    "version": "1.7.1.11797",
+    "active_chunk": 0,
+    "chunks": [
+      {
+        "id": 0,
+        "label": "zone 7 - lens corrected",
+        "cameras": 0,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-7.psx",
+    "last_saved": "2025:01:15 14:31:31",
+    "version": "1.7.1.11797",
+    "active_chunk": 39,
+    "chunks": [
+      {
+        "id": 6,
+        "label": "2024-06-21 + 2024-06-24 - part 1",
+        "cameras": 5313,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-7.files\\6\\0\\model\\model.zip",
+            "faces": 116922,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2024:07:06 06:23:21",
+            "saved": "2024:07:06 06:23:36"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": true,
+        "has_tiled_model": false
+      },
+      {
+        "id": 7,
+        "label": "2024-06-21 + 2024-06-24 - part 2",
+        "cameras": 3527,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-7.files\\7\\0\\model\\model.zip",
+            "faces": 34589,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2024:07:07 03:01:50",
+            "saved": "2024:07:07 03:01:56"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": true,
+        "has_tiled_model": false
+      },
+      {
+        "id": 8,
+        "label": "2024-06-21 + 2024-06-24 - part 3",
+        "cameras": 2313,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-7.files\\8\\0\\model\\model.zip",
+            "faces": 30951,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2024:07:07 10:32:02",
+            "saved": "2024:07:07 10:32:10"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": true,
+        "has_tiled_model": false
+      },
+      {
+        "id": 18,
+        "label": "escaliers",
+        "cameras": 4468,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 19,
+        "label": "zone 7",
+        "cameras": 15133,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 20,
+        "label": "2024-07-26 + 2024-08-11",
+        "cameras": 8053,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 23,
+        "label": "2024-08-11 - camera calibration z18 - fixed all",
+        "cameras": 3585,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 27,
+        "label": "Copy of 2024-08-11 - camera calibration z18 - fixed all",
+        "cameras": 3585,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 42,
+        "label": "------------------------------------------------------------------",
+        "cameras": 0,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 28,
+        "label": "zone 7 - lens corrected",
+        "cameras": 19206,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 30,
+        "label": "Copy of zone 7 - lens corrected",
+        "cameras": 19206,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 34,
+        "label": "zone 7 - lens corrected - top + stairs - raw",
+        "cameras": 8732,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 32,
+        "label": "zone 7 - lens corrected - top + stairs",
+        "cameras": 8732,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 35,
+        "label": "Copy of zone 7 - lens corrected - top + stairs",
+        "cameras": 8590,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-7.files\\35\\0\\model\\model.zip",
+            "faces": 236129402,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2025:01:13 15:30:07",
+            "saved": "2025:01:13 18:22:17"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 33,
+        "label": "zone 7 - lens corrected - front wall",
+        "cameras": 10474,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 37,
+        "label": "Chunk 1",
+        "cameras": 10477,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 40,
+        "label": "------------------------------------------------------------------",
+        "cameras": 0,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 38,
+        "label": "Copy of Copy of zone 7 - lens corrected - top + stairs",
+        "cameras": 8590,
+        "models": [
+          {
+            "id": 1,
+            "path": "zone-7.files\\38\\0\\model\\model.zip",
+            "faces": 225566362,
+            "textures": [],
+            "texture_size": null,
+            "pages": null,
+            "built": "2025:01:14 07:36:32",
+            "saved": "2025:01:14 12:02:07"
+          },
+          {
+            "id": 2,
+            "path": "zone-7.files\\38\\0\\model.2\\model.zip",
+            "faces": 38069764,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 12884,
+            "pages": 1,
+            "built": "2025:01:14 07:36:32",
+            "saved": "2025:01:14 14:56:31"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 39,
+        "label": "Copy of Copy of Copy of zone 7 - lens corrected - top + stairs",
+        "cameras": 8590,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-7.files\\39\\0\\model.1\\model.zip",
+            "faces": 67231962,
+            "textures": [],
+            "texture_size": null,
+            "pages": 1,
+            "built": "2025:01:15 03:21:20",
+            "saved": "2025:01:15 13:40:34"
+          },
+          {
+            "id": 1,
+            "path": "zone-7.files\\39\\0\\model.2\\model.zip",
+            "faces": 14795440,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 12772,
+            "pages": 1,
+            "built": "2025:01:15 03:21:20",
+            "saved": "2025:01:15 15:24:26"
+          },
+          {
+            "id": 2,
+            "path": "zone-7.files\\39\\0\\model.3\\model.zip",
+            "faces": 1061739,
+            "textures": [
+              "texture.tif"
+            ],
+            "texture_size": 4096,
+            "pages": 1,
+            "built": "2025:01:15 03:21:20",
+            "saved": "2025:01:15 16:16:56"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      }
+    ]
+  },
+  {
+    "file": "O:/photogrammetry\\zone-8.psx",
+    "last_saved": "2024:11:22 13:31:23",
+    "version": "1.7.1.11797",
+    "active_chunk": 21,
+    "chunks": [
+      {
+        "id": 18,
+        "label": "zone 8 with fixed calibration from zone 2",
+        "cameras": 15830,
+        "models": [],
+        "has_depth_maps": false,
+        "has_dense_cloud": false,
+        "has_tiled_model": false
+      },
+      {
+        "id": 21,
+        "label": "zone 8 - lens corrected",
+        "cameras": 15830,
+        "models": [
+          {
+            "id": 0,
+            "path": "zone-8.files\\21\\0\\model.1\\model.zip",
+            "faces": 20072828,
+            "textures": [
+              "texture0.tif",
+              "texture1.tif"
+            ],
+            "texture_size": 13071,
+            "pages": 1,
+            "built": "2024:11:24 14:46:11",
+            "saved": "2024:11:25 01:29:36"
+          },
+          {
+            "id": 1,
+            "path": "zone-8.files\\21\\0\\model.2\\model.zip",
+            "faces": 199997,
+            "textures": [],
+            "texture_size": null,
+            "pages": 1,
+            "built": "2024:11:24 14:46:11",
+            "saved": "2025:09:15 21:16:41"
+          }
+        ],
+        "has_depth_maps": true,
+        "has_dense_cloud": true,
+        "has_tiled_model": true
+      }
+    ]
+  }
+]
