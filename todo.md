@@ -26,13 +26,15 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 - [x] Zone 10: swapped to the 2026 export in `lock-21-publishing.blend`, prepared and tiled
 - [x] Zones 2, 3, 11: prepared and tiled
 - [x] Zone 1: prepared and tiled from the 621 k export
-- [ ] Zone 1: export a textured high-res model from Metashape (chunk 13 has none)
+- [ ] Textures to redo after the zone 13 dense cloud (published texel size vs 1.3 mm target):
+  - zone 4 (~6.3 mm): export chunk 10's 38 M model (15 168 px) or rebuild the texture
+  - zone 1 (~3 mm): build an 8 192 to 12 288 px texture on the high-res model (chunk 13)
+  - zone 10 (~2.3 mm): export the 22.6 M model (10 014 px)
+  - single texture page, max 16 384 px (the pipeline handles one texture per zone); then update `source` and run `model:post-modified`
 - [x] Zone 4: prepared and tiled, Lattice carried over
-- [ ] Zone 4: export a high-res model (chunk 10, 38 M faces, 15 168 px)
 - [x] Zone 8: swapped to a textured 200 k edit mesh (colour baked from the 20 M export), prepared and tiled
 - [x] Zone 7: exported (chunk 39, m1, 14.8 M faces) and published
 - [ ] Zone 13: partial data being generated; then import into the `.blend` with `source`
-- [ ] Zone 10: export the 22.6 M-face model (10 014 px texture) if the 3 M export (6 600 px) is too coarse
 - [ ] Zone 16: digitised (7 M faces) but not in the `.blend` yet
 - [ ] Textures: the analysis targets 1.3 mm per texel; current exports are 2 to 5 times coarser. Decide the viewing distance, then retexture in Metashape where needed
 
@@ -44,8 +46,8 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 
 ### Hosting and downloads
 
-- [ ] Cloudflare: create the R2 bucket and an API token (Christian)
-- [ ] Move `lock21.info` DNS from Porkbun to Cloudflare (needed for a custom domain such as `tiles.lock21.info`)
+- [ ] Cloudflare: enable R2, create the `lock21-tiles` bucket, then custom domain `tiles.lock21.info`, CORS, API token
+- [x] Move `lock21.info` DNS from Porkbun to Cloudflare (2026-10-18, records in DNS only)
 - [ ] Upload script (rclone), versioned folders, then delete superseded versions
 - [ ] Downloadable whole model (`.glb`, about 100 to 150 MB), generated from the manifest
 - [ ] KMZ for Google Earth: needs GPS coordinates of at least two points on the site, and a light COLLADA model
