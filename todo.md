@@ -12,8 +12,12 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 - [ ] If phones struggle: lower the texture resolution of the coarse levels
 - [x] Test on an Android phone (USB, `chrome://inspect` port forwarding 3100 and 8081): looks good (2026-10-18)
 - [ ] Test on an iPhone (Safari memory limit; Wi-Fi with `?tiles=http://<PC IP>:8081`, or Safari Web Inspector from a Mac)
+- [x] Anisotropic filtering and ambient occlusion (N8AO, `?ao=0`, `?aoRadius=`, `?aoIntensity=`, `?aoDebug=1`)
+- [x] Shared memory budget for all zones (zones were missing on the phone); `?stats=1` overlay: phone fully loaded at 280 / 450 MB
+- [ ] Choose default ambient occlusion settings (radius, intensity) after viewing close up
 - [ ] Initial camera and navigation (what the visitor sees first)
-- [ ] Show the mockups and terrain for the zones not yet digitised (hidden once a zone is scanned)
+- [x] Context published: `filler` objects and `terrain` collection, terrain materials baked (no cast shadows)
+- [ ] Show the mockups for the zones not yet digitised (hidden once a zone is scanned)
 - [ ] Publish the viewer build under `lock21.info/modele/` and link it from the site
 
 ### Zones
@@ -26,7 +30,8 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 - [x] Zone 4: prepared and tiled, Lattice carried over
 - [ ] Zone 4: export a high-res model (chunk 10, 38 M faces, 15 168 px)
 - [x] Zone 8: swapped to a textured 200 k edit mesh (colour baked from the 20 M export), prepared and tiled
-- [ ] Zone 7: export from Metashape (`zone-7.psx`, chunk 39, 14.8 M faces, 12 772 px) into `O:\modeles\zone-7\`, then set `source`
+- [x] Zone 7: exported (chunk 39, m1, 14.8 M faces) and published
+- [ ] Zone 13: partial data being generated; then import into the `.blend` with `source`
 - [ ] Zone 10: export the 22.6 M-face model (10 014 px texture) if the 3 M export (6 600 px) is too coarse
 - [ ] Zone 16: digitised (7 M faces) but not in the `.blend` yet
 - [ ] Textures: the analysis targets 1.3 mm per texel; current exports are 2 to 5 times coarser. Decide the viewing distance, then retexture in Metashape where needed
