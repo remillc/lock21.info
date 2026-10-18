@@ -26,6 +26,10 @@ const config = {
   deploymentBranch: 'gh-pages',
   trailingSlash: false,
 
+  // Not indexed by search engines for now: every page gets <meta name="robots" content="noindex, nofollow">.
+  // No robots.txt blocking crawling: engines must be able to read that tag for it to work.
+  noIndex: true,
+
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'ignore',
 
