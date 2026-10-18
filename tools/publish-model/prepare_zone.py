@@ -230,6 +230,15 @@ if (w16, h16) != (w, h):
 img.save(filepath=os.path.join(a.out, tex_name), quality=a.texture_quality)
 img.filepath = os.path.join(a.out, tex_name)
 img.source = 'FILE'
+# Matériau neuf, texture branchée directement sur la couleur: l'export OBJ n'écrit map_Kd que dans ce cas
+# (zone 11: le matériau importé passait par d'autres nœuds, l'OBJ est sorti sans texture et les tuiles en blanc)
+clean = bpy.data.materials.new(f"{slug}-texture")
+clean.use_nodes = True
+tex_node = clean.node_tree.nodes.new("ShaderNodeTexImage")
+tex_node.image = img
+clean.node_tree.links.new(tex_node.outputs["Color"], clean.node_tree.nodes["Principled BSDF"].inputs["Base Color"])
+hi.data.materials.clear()
+hi.data.materials.append(clean)
 obj_path = os.path.join(a.out, f"{slug}.obj")
 activate(hi)
 # Obj2Tiles lit l'OBJ comme Y vers le haut (convention OBJ/glTF) et le convertit lui-même en Z vers le haut

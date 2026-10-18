@@ -15,6 +15,10 @@ $ErrorActionPreference = "Stop"
 $out = Join-Path $TilesRoot "$Zone\$Version"
 if (Test-Path $out) { throw "$out existe déjà: choisir une autre -Version (les versions publiées sont immuables)" }
 
+# Garde-fou: sans map_Kd dans le MTL, Obj2Tiles produit des tuiles sans texture (blanches)
+$mtl = Join-Path $Prepared "$Zone.mtl"
+if (-not (Select-String -Path $mtl -Pattern "^map_Kd" -Quiet)) { throw "$mtl ne référence aucune texture (map_Kd)" }
+
 # --preset standard: octree, --local, --zsplit, contenu glb (3D Tiles 1.1).
 # --max-texture-size 0: le plafond s'applique à la texture SOURCE avant découpage (le défaut 8192 dégrade une texture de 12k).
 # --divisions 0 avec octree: chaque LOD plus fin ajoute un niveau; au-delà de 3 LODs, le nombre de tuiles explose (8^n).
