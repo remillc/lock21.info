@@ -30,3 +30,6 @@ temp.*
 *.xcf
 docs/rig/modele/rig-80cmx80cm.blend
 docs/rig/modele/assets/*
+
+# Python
+__pycache__/

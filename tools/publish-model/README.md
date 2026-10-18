@@ -6,8 +6,8 @@ Chaîne de traitement qui transforme les modèles photogrammétriques de chaque 
 
 ## Principes
 
-- **Les originaux ne sont jamais modifiés.** Les projets Metashape (`O:\photogrammetry\`), les exports (`O:\modeles\`) et le fichier Blender (`modeles/lock-21-mockup.blend`) ne sont ouverts qu'en lecture: aucun script ne les sauvegarde.
-- **Blender est la référence pour la mise en place.** L'échelle et la position de chaque zone dans `lock-21-mockup.blend` ont été ajustées à la main, et les modificateurs booléens définissent le rognage entre zones voisines.
+- **Les originaux ne sont jamais modifiés.** Les projets Metashape (`O:\photogrammetry\`), les exports (`O:\modeles\`) et les fichiers Blender (`modeles/*.blend`) ne sont ouverts qu'en lecture: aucun script ne les sauvegarde.
+- **Blender est la référence.** Le fichier de travail est **`modeles/lock-21-publishing.blend`** (copie de `lock-21-mockup.blend` du 2026-10-18, que la chaîne ne touche pas). Chaque objet de sa collection `zones` est importé d'un export de `O:\modeles\` et porte une propriété personnalisée **`source`**: le chemin de l'export `.glb` à publier (normalement le plus détaillé). Sa transformation (échelle, position, ajustées à la main) donne la mise en place; ses modificateurs donnent les retouches: **booléens** pour retirer le bruit et rogner entre zones voisines, **Lattice** pour corriger une déformation. La chaîne reporte ces retouches sur l'export haute résolution, sans jamais modifier le `.blend`.
 - **La texture porte le détail, la géométrie reste légère.** La texture photo contient déjà l'éclairage: le visualiseur l'affiche sans calcul de lumière. La géométrie est simplifiée tant que l'écart avec le maillage complet reste sous un seuil mesuré.
 - **Une zone = un tileset indépendant**, versionné par date et inscrit dans `manifest.json`. Mettre à jour une zone ne touche pas aux autres. Les zones sont un découpage de travail: le visiteur voit un seul modèle continu.
 
@@ -17,10 +17,10 @@ Chaîne de traitement qui transforme les modèles photogrammétriques de chaque 
 | --- | --- | --- | --- | --- |
 | 0 | Analyse de résolution | `../model-analysis/run.ps1` | `.blend` | `../model-analysis/reports/<date>.{json,md}` |
 | 1 | Inventaire des projets Metashape | `scan_projects.py` | `O:\photogrammetry\*.psx` | `projects-scan.json` |
-| 2 | Registre zone ↔ sources | `zones.json` (édité à la main, d'après 1 et 3) | | |
+| 2 | Source de chaque zone | propriété `source` des objets de zone dans le `.blend` (`zones.json`: inventaire de travail) | | |
 | 3 | Vérification du repère des exports | `verify_sources.py` | `O:\modeles\zone-*\*.glb` + `.blend` | `sources-check.json` |
-| 4 | Recalage (si repère différent) | `register_zone.py` | export `.glb` + `.blend` | `transforms/<zone>.json` |
-| 5 | Préparation | `prepare_zone.py` | export haute résolution + transformation + `.blend` | `O:\temp\<zone>\...\<zone>.obj` + `.jpg` + `<zone>-prepare.json` |
+| 4 | Recalage (automatique à l'étape 5) | `register_zone.py` | export `source` + `.blend` | `transforms/<zone>.json` (cache) |
+| 5 | Préparation | `prepare_zone.py --zone "zone N" --ratio R --out …` | `.blend` (+ export `source`) | `O:\temp\<zone>\...\<zone>.obj` + `.jpg` + `<zone>-prepare.json` |
 | 6 | Tuilage + manifeste | `tile_zone.ps1` (+ `update_manifest.py`) | sortie de 5 | `O:\publishing\tiles\<zone>\<version>\` + `manifest.json` |
 | 7 | Aperçu local | `serve-tiles.ps1` + `npm run dev -- --port 3100` | `O:\publishing\tiles\` | `http://localhost:3100/model-preview` |
 | 8 | Mise en ligne | *à venir* (rclone vers Cloudflare R2) | | |
@@ -37,17 +37,20 @@ Chaîne de traitement qui transforme les modèles photogrammétriques de chaque 
 
 Cherche d'abord la meilleure des 24 orientations à angle droit sur un petit échantillon, puis raffine par ICP (*iterative closest point*) avec estimation de l'échelle, en ignorant les 20 % de paires les plus éloignées (parties sans recouvrement). Le résultat donne la matrice export → coordonnées monde de la scène Blender, l'échelle, l'angle de rotation et le résidu. La même matrice vaut pour tous les exports du même chunk Metashape, ce que le script vérifie sur les exports passés en argument supplémentaire.
 
+`prepare_zone.py` l'appelle automatiquement et met le résultat en cache dans `transforms/<zone>.json`; il n'est recalculé que si l'export `source`, sa date ou le mesh de la zone changent.
+
 Résultat zone 12: échelle 0,977, rotation 0,57°, résidu médian 0,033 pi (1 cm), identique pour les exports 4,5 M et 13 M.
 
 ### 5. Préparation
 
-1. importe l'export haute résolution;
-2. applique la matrice de l'étape 4 (coordonnées monde, mètres);
-3. rogne: supprime les faces dont le centre est dans le volume (convexe) de chaque modificateur booléen `DIFFERENCE` de la zone, plutôt que d'appliquer le booléen, lent et peu fiable sur des maillages ouverts de plusieurs millions de faces;
-4. décime (`Decimate`, mode *collapse*) selon `--ratio`;
-5. retire les fragments de moins de `--min-island` sommets (100 par défaut);
-6. **mesure l'écart** entre le maillage décimé et le maillage complet, dans les deux sens (point le plus proche sur la surface), et le consigne dans le rapport;
-7. exporte en OBJ avec la texture en JPEG, **axe Y vers le haut**: Obj2Tiles suit la convention OBJ/glTF et convertit lui-même en Z vers le haut (3D Tiles). Un OBJ exporté Z vers le haut donne un modèle couché sur le côté.
+1. importe l'export désigné par la propriété `source` de la zone;
+2. le recale sur le mesh de la zone (étape 4, avec cache) et le place comme l'objet de la zone;
+3. copie et applique, dans l'ordre, les modificateurs de **déformation** de la zone (tout sauf les booléens, ex. Lattice): un Lattice déforme selon la position de l'objet Lattice dans la scène, donc la version haute résolution, placée au même endroit, reçoit exactement la même correction;
+4. **reporte le nettoyage par proximité**: Blender calcule le mesh final de la zone tel qu'affiché (tous modificateurs appliqués: booléens, etc.); les sommets de la version haute résolution à plus de `--max-distance` (5 cm par défaut) de ce mesh sont supprimés. Toute retouche faite dans le `.blend` (booléen de n'importe quelle forme, suppression à la main) est ainsi reportée, sans appliquer de booléen sur des maillages ouverts de plusieurs millions de faces (lent et peu fiable);
+5. décime (`Decimate`, mode *collapse*) selon `--ratio`;
+6. retire les fragments de moins de `--min-island` sommets (100 par défaut);
+7. **mesure l'écart** entre le maillage décimé et le maillage complet, dans les deux sens (point le plus proche sur la surface), et le consigne dans le rapport;
+8. exporte en OBJ avec la texture en JPEG, **axe Y vers le haut**: Obj2Tiles suit la convention OBJ/glTF et convertit lui-même en Z vers le haut (3D Tiles). Un OBJ exporté Z vers le haut donne un modèle couché sur le côté.
 
 ### 6. Tuilage
 
@@ -83,6 +86,8 @@ Pour un téléphone sur le même Wi-Fi: `serve-tiles.ps1 -Lan`, puis `$env:MODEL
 | `O:\publishing\tiles\` | tuiles générées + `manifest.json`, avant mise en ligne | oui |
 | `O:\publishing\downloads\` | modèle complet téléchargeable (`.glb`, `.kmz`) | oui |
 | `O:\temp\` | intermédiaires régénérables (OBJ préparés, journaux) | non |
+
+**Espace disque:** la chaîne produit beaucoup de données. Après chaque essai, supprimer ce qui est remplacé: versions de tuiles qui ne sont plus dans `manifest.json`, anciens OBJ préparés, journaux et captures. Ne garder que la version active, l'OBJ préparé courant (pour retuiler sans refaire la préparation) et les outils.
 
 ## Exécutables et bibliothèques
 
