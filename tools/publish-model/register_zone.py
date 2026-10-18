@@ -19,6 +19,8 @@ import os
 import sys
 
 import numpy as np
+from mathutils import Vector
+from mathutils.bvhtree import BVHTree
 from mathutils.kdtree import KDTree
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -73,6 +75,18 @@ def _rotations24():
     return out
 
 
+def _surface_residual(ob, points):
+    me = ob.data
+    me.calc_loop_triangles()
+    tri = np.empty(len(me.loop_triangles) * 3, np.int64)
+    me.loop_triangles.foreach_get("vertices", tri)
+    co = np.empty(len(me.vertices) * 3)
+    me.vertices.foreach_get("co", co)
+    bvh = BVHTree.FromPolygons(co.reshape(-1, 3).tolist(), tri.reshape(-1, 3).tolist())
+    d = np.array([bvh.find_nearest(Vector(p))[3] for p in points], dtype=float)
+    return dict(median=float(np.median(d)), p80=float(np.quantile(d, 0.8)), p95=float(np.quantile(d, 0.95)))
+
+
 def register(ob, src_path, extra=(), log=print):
     """Recale src_path sur le mesh (non modifié) de ob. Retourne un rapport avec la matrice."""
     rng = np.random.default_rng(0)
@@ -102,6 +116,9 @@ def register(ob, src_path, extra=(), log=print):
         translation=t.tolist(), matrix_source_to_blender_local=T.tolist(),
         matrix_source_to_world=(np.array(ob.matrix_world) @ T).tolist(),
         residual=dict(median=float(np.median(d)), p80=float(np.quantile(d, 0.8)), p95=float(np.quantile(d, 0.95))),
+        # Distance au point le plus proche de la SURFACE (et non du sommet le plus proche): ne dépend pas de la
+        # densité du mesh Blender (zone 8: arêtes de 59 mm, 0,129 au sommet le plus proche)
+        residual_surface=_surface_residual(ob, s * P @ R.T + t),
         checks=[],
     )
     for path in extra:
@@ -119,14 +136,14 @@ def transform_for(ob, src_path, log=print):
     if os.path.exists(path):
         cached = json.load(open(path, encoding="utf-8"))
         if (cached.get("source") == src_path and cached.get("source_mtime") == os.path.getmtime(src_path)
-                and cached.get("blender_vertices") == len(ob.data.vertices)):
+                and cached.get("blender_vertices") == len(ob.data.vertices) and "residual_surface" in cached):
             log(f"recalage {ob.name}: cache {path}")
             return cached
     report = register(ob, src_path, log=log)
     os.makedirs(TRANSFORMS_DIR, exist_ok=True)
     json.dump(report, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     log(f"recalage {ob.name}: échelle {report['scale']:.4f}, rotation {report['rotation_deg_from_identity']:.2f}°, "
-        f"résidu médian {report['residual']['median']:.4f}")
+        f"résidu médian {report['residual']['median']:.4f} (surface {report['residual_surface']['median']:.4f})")
     return report
 
 

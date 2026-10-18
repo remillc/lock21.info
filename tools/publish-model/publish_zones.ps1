@@ -36,8 +36,12 @@ foreach ($zone in $Zones) {
 
     # Préparation (remplace l'OBJ préparé précédent)
     if (Test-Path $prepared) { Remove-Item -Recurse -Force $prepared }
+    # Windows PowerShell 5.1 traite la sortie d'erreur d'un programme comme fatale sous "Stop":
+    # un échec de Blender sur une zone ne doit pas interrompre les suivantes
+    $ErrorActionPreference = "Continue"
     & $Blender -b $Blend --factory-startup --python "$PSScriptRoot\prepare_zone.py" -- `
         --zone $zone --density $Density --out $prepared *> $log
+    $ErrorActionPreference = "Stop"
     if (-not (Test-Path (Join-Path $prepared "$slug.obj"))) {
         Get-Content $log | Select-String "Error|assert|Traceback|line \d+" | ForEach-Object { Write-Host "   $($_.Line)" }
         Write-Host "   ÉCHEC de la préparation, voir $log"

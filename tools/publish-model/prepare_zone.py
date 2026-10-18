@@ -108,15 +108,15 @@ step("import", **counts(hi))
 
 # 2. recalage: coordonnées locales de la zone, puis même place que l'objet de la zone
 reg = transform_for(zone_ob, source, log=lambda m: print(m, flush=True))
-# Unités de l'export (pieds). Zone 12, même surface: 0,033. Au-delà, l'export n'est pas le même objet que le mesh de la zone.
-assert reg["residual"]["median"] <= a.max_residual, (
-    f"recalage de {source} sur {a.zone} trop imprécis (résidu médian {reg['residual']['median']:.3f} > {a.max_residual}): "
+# Distance à la surface du mesh de la zone, unités de l'export (pieds). Au-delà du seuil, l'export n'est pas le même objet.
+assert reg["residual_surface"]["median"] <= a.max_residual, (
+    f"recalage de {source} sur {a.zone} trop imprécis (résidu médian {reg['residual_surface']['median']:.3f} > {a.max_residual}): "
     "l'export n'est probablement pas la même reconstruction que le mesh de la zone dans le .blend")
 hi.data.transform(Matrix(reg["matrix_source_to_blender_local"]) @ hi.matrix_world)
 hi.parent = None
 hi.matrix_world = zone_ob.matrix_world.copy()
 step("register", scale=round(reg["scale"], 4), rotation_deg=round(reg["rotation_deg_from_identity"], 3),
-     residual_median=round(reg["residual"]["median"], 4))
+     residual_median=round(reg["residual"]["median"], 4), residual_surface_median=round(reg["residual_surface"]["median"], 4))
 
 # 3. modificateurs de déformation (tout sauf les booléens), copiés dans l'ordre puis appliqués
 copied = []
