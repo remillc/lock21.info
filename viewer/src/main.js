@@ -68,6 +68,23 @@ async function main() {
     return tiles
   })
 
+  // Non-tiled models (context: fillers, terrain), glTF is already Y-up
+  const contextLoader = new GLTFLoader()
+  contextLoader.setKTX2Loader(ktx2Loader)
+  contextLoader.setMeshoptDecoder(MeshoptDecoder)
+  for (const entry of manifest.models || []) {
+    contextLoader.load(`${TILES_URL}/${entry.url}`, ({ scene: model }) => {
+      model.traverse((child) => {
+        if (child.isMesh) {
+          const old = child.material
+          child.material = new THREE.MeshBasicMaterial({ map: old.map, color: old.map ? 0xffffff : old.color, side: THREE.DoubleSide })
+          old.dispose()
+        }
+      })
+      scene.add(model)
+    })
+  }
+
   // Frame the camera on all tilesets once every root is loaded
   const bounds = new THREE.Box3()
   let pending = tilesets.length

@@ -28,6 +28,22 @@ if ($Changed) {
 if (-not $Zones) { throw "Indiquer -Zones ou -Changed" }
 
 foreach ($zone in $Zones) {
+    if ($zone -eq "context") {
+        # Contexte (fillers + terrain): un .glb non tuilé
+        Write-Host "=== context"
+        $out = Join-Path $TilesRoot "context\$Version"
+        $log = Join-Path $TempRoot "context-publish.log"
+        $ErrorActionPreference = "Continue"
+        & $Blender -b $Blend --factory-startup --python "$PSScriptRoot\export_context.py" -- $out *> $log
+        node "$PSScriptRoot\compress_tiles.mjs" $out *>> $log
+        $ErrorActionPreference = "Stop"
+        if (-not (Test-Path (Join-Path $out "context.glb"))) { Write-Host "   ÉCHEC, voir $log"; continue }
+        python -I "$PSScriptRoot\update_manifest.py" $TilesRoot context "context/$Version/context.glb" model *>> $log
+        Get-Content $log | Select-String "^\[context\]|compression:|manifeste" | ForEach-Object { Write-Host "   $($_.Line)" }
+        Get-ChildItem (Join-Path $TilesRoot "context") -Directory | Where-Object { $_.Name -ne $Version } | ForEach-Object {
+            Remove-Item -Recurse -Force $_.FullName; Write-Host "   supprimé: $($_.Name)" }
+        continue
+    }
     $slug = $zone -replace " ", "-"
     $prepared = Join-Path $TempRoot "$slug\prox"
     $log = Join-Path $TempRoot "$slug-publish.log"

@@ -16,13 +16,13 @@ import sys
 import bpy
 
 sys.path.insert(0, os.path.dirname(__file__))
-from blend_state import fingerprint  # noqa: E402
+from blend_state import CONTEXT_ID, context_fingerprint, context_objects, fingerprint  # noqa: E402
 
 args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 tiles_root = args[0] if args else r"O:\publishing\tiles"
 manifest_path = os.path.join(tiles_root, "manifest.json")
 manifest = json.load(open(manifest_path, encoding="utf-8")) if os.path.exists(manifest_path) else {"tilesets": []}
-active = {t["id"]: t["url"] for t in manifest["tilesets"]}
+active = {t["id"]: t["url"] for t in manifest["tilesets"] + manifest.get("models", [])}
 
 
 def diff(old, new):
@@ -52,5 +52,25 @@ for ob in sorted(bpy.data.collections["zones"].objects, key=lambda o: o.name):
     print(f"{ob.name:8} {status or 'à jour'}", flush=True)
     if status:
         to_publish.append(ob.name)
+
+# Contexte (fillers + terrain): un seul modèle
+current = context_fingerprint(context_objects())
+if CONTEXT_ID not in active:
+    status = "jamais publié"
+else:
+    path = os.path.join(tiles_root, os.path.dirname(active[CONTEXT_ID]), "fingerprint.json")
+    published = json.load(open(path, encoding="utf-8")) if os.path.exists(path) else None
+    if published is None:
+        status = "publié sans empreinte"
+    elif published["fingerprint"] != current["fingerprint"]:
+        before = {o["zone"]: o for o in published["state"]["objects"]}
+        after = {o["zone"]: o for o in current["state"]["objects"]}
+        changed = sorted(n for n in before.keys() | after.keys() if before.get(n) != after.get(n))
+        status = "modifié: " + ", ".join(changed)
+    else:
+        status = None
+print(f"{CONTEXT_ID:8} {status or 'à jour'}", flush=True)
+if status:
+    to_publish.append(CONTEXT_ID)
 
 print("A_PUBLIER: " + ", ".join(to_publish), flush=True)

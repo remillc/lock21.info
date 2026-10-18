@@ -48,7 +48,7 @@ def _modifier_state(m):
 
 def zone_state(ob):
     source = ob.get("source", "")
-    return {
+    state = {
         "zone": ob.name,
         "source": source,
         "source_mtime": os.path.getmtime(source) if source and os.path.exists(source) else None,
@@ -56,6 +56,31 @@ def zone_state(ob):
         "mesh": _mesh_digest(ob),
         "modifiers": [_modifier_state(m) for m in ob.modifiers if m.show_viewport],
     }
+    baked = ob.get("baked_texture")
+    if baked:
+        import bpy
+        path = bpy.path.abspath(baked)
+        state["baked_texture"] = [baked, os.path.getmtime(path) if os.path.exists(path) else None]
+    return state
+
+
+CONTEXT_ID = "context"
+
+
+def context_objects():
+    """Objets du contexte: noms contenant « filler » et collection `terrain`."""
+    import bpy
+    terrain = bpy.data.collections.get("terrain")
+    objects = {o for o in bpy.data.objects if "filler" in o.name.lower() and o.type == 'MESH'}
+    if terrain:
+        objects |= {o for o in terrain.all_objects if o.type == 'MESH'}
+    return sorted(objects, key=lambda o: o.name)
+
+
+def context_fingerprint(objects):
+    states = [zone_state(o) for o in objects]
+    digest = hashlib.sha256(json.dumps(states, sort_keys=True).encode()).hexdigest()
+    return {"fingerprint": digest, "state": {"objects": states}}
 
 
 def fingerprint(ob):
