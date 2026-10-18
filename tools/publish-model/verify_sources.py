@@ -22,8 +22,6 @@ import sys
 import numpy as np
 from mathutils.kdtree import KDTree
 
-args = sys.argv[sys.argv.index("--") + 1:]
-models_dir, out_path = args[0], args[1]
 SAMPLES = 20000
 rng = np.random.default_rng(0)
 
@@ -66,27 +64,34 @@ def tree_for(zone):
     return trees[zone]
 
 
-results = []
-for path in sorted(glob.glob(os.path.join(models_dir, "zone-*", "*.glb"))):
-    zone = "zone " + re.match(r"zone-(\d+)", os.path.basename(os.path.dirname(path))).group(1)
-    t = tree_for(zone)
-    r = dict(file=os.path.relpath(path, models_dir), zone=zone)
-    if t is None:
-        r["verdict"] = "zone absente de Blender"
-    else:
-        pts = glb_positions(path)
-        sample = pts[rng.choice(len(pts), min(SAMPLES, len(pts)), replace=False)]
-        d = np.array([t.find(p)[2] for p in sample])
-        r.update(vertices=len(pts), median=float(np.median(d)), p90=float(np.percentile(d, 90)),
-                 identical_pct=float((d < 1e-4).mean() * 100))
-        if r["identical_pct"] > 90:
-            r["verdict"] = "même maillage"
-        elif r["median"] < 0.5:
-            r["verdict"] = "même repère"
-        else:
-            r["verdict"] = "repère différent"
-    results.append(r)
-    print(f"{zone:8} {r['verdict']:24} median={r.get('median', 0):9.4f} p90={r.get('p90', 0):9.4f} "
-          f"identiques={r.get('identical_pct', 0):5.1f}%  {r['file']}", flush=True)
 
-json.dump(results, open(out_path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+def main(models_dir, out_path):
+    results = []
+    for path in sorted(glob.glob(os.path.join(models_dir, "zone-*", "*.glb"))):
+        zone = "zone " + re.match(r"zone-(\d+)", os.path.basename(os.path.dirname(path))).group(1)
+        t = tree_for(zone)
+        r = dict(file=os.path.relpath(path, models_dir), zone=zone)
+        if t is None:
+            r["verdict"] = "zone absente de Blender"
+        else:
+            pts = glb_positions(path)
+            sample = pts[rng.choice(len(pts), min(SAMPLES, len(pts)), replace=False)]
+            d = np.array([t.find(p)[2] for p in sample])
+            r.update(vertices=len(pts), median=float(np.median(d)), p90=float(np.percentile(d, 90)),
+                     identical_pct=float((d < 1e-4).mean() * 100))
+            if r["identical_pct"] > 90:
+                r["verdict"] = "même maillage"
+            elif r["median"] < 0.5:
+                r["verdict"] = "même repère"
+            else:
+                r["verdict"] = "repère différent"
+        results.append(r)
+        print(f"{zone:8} {r['verdict']:24} median={r.get('median', 0):9.4f} p90={r.get('p90', 0):9.4f} "
+              f"identiques={r.get('identical_pct', 0):5.1f}%  {r['file']}", flush=True)
+
+    json.dump(results, open(out_path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+
+
+if __name__ == "__main__":
+    args = sys.argv[sys.argv.index("--") + 1:]
+    main(args[0], args[1])
