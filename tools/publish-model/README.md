@@ -13,7 +13,16 @@ Chaîne de traitement qui transforme les modèles photogrammétriques de chaque 
 
 ## Étapes
 
-**En pratique:** `.	ools\publish-model\publish_zones.ps1 -Zones "zone 2","zone 3" -Version <date>` enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape 4 se fait automatiquement), puis supprime les versions de tuiles qui ne sont plus dans le manifeste. Journal par zone: `O:	emp\<zone>-publish.log`.
+**En pratique**, après une retouche dans `lock-21-publishing.blend` (sauvegardé):
+
+```powershell
+.\tools\publish-model\publish_zones.ps1 -Changed                 # seulement les zones modifiées
+.\tools\publish-model\publish_zones.ps1 -Zones "zone 2","zone 3"  # ou une liste explicite
+```
+
+Le script enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape 4 se fait automatiquement), puis supprime les versions de tuiles qui ne sont plus dans le manifeste. Journal par zone: `O:\temp\<zone>-publish.log`.
+
+**Détection des changements:** à la préparation, `blend_state.py` calcule une empreinte de l'état de la zone dans le `.blend` (transformation, mesh, `source`, modificateurs visibles, et pour les volumes de coupe et lattices: position et forme). Elle est enregistrée avec les tuiles (`fingerprint.json`). `check_changes.py` la compare au `.blend` courant et liste les zones à republier, avec ce qui a changé. On peut donc retoucher le `.blend` pendant une publication: chaque zone garde l'empreinte de l'état qu'elle a réellement utilisé, et la prochaine exécution de `-Changed` rattrape les retouches arrivées entre-temps.
 
 | # | Étape | Script | Entrées | Sorties |
 | --- | --- | --- | --- | --- |
