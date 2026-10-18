@@ -96,7 +96,7 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
   workflow on every push; the `OPENAI_API_KEY` repository secret can then be deleted on GitHub
 
 - [ ] Before the switch: define the guidelines for frameworks and practices. Christian's preferences: simplicity,
-  plain DOM + CSS; Web Components with Lit when a component needs reactive state, native Custom Elements
+  plain DOM + CSS written in SCSS; Web Components with Lit when a component needs reactive state, native Custom Elements
   otherwise; no heavy UI framework (React, Vue...) unless a real need appears
 - [ ] Switch the site from Docusaurus to Astro (the 3D proof of concept is done): French docs and English
   translation, sidebar, blog, the dive log table with its total duration, `noindex` while not public, the
