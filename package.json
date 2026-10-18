@@ -25,7 +25,6 @@
     "@docusaurus/faster": "^3.6.1",
     "@docusaurus/preset-classic": "^3.6.1",
     "@mdx-js/react": "^3.0.0",
-    "3d-tiles-renderer": "^0.5.3",
     "clsx": "^2.0.0",
     "commander": "^13.1.0",
     "date-fns": "^4.1.0",
@@ -35,8 +34,7 @@
     "prism-react-renderer": "^2.3.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "sass": "^1.105.2",
-    "three": "^0.186.1"
+    "sass": "^1.105.2"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.5.2",

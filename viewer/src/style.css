@@ -1,0 +1,40 @@
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #0b1c26;
+  color: #d7e3ea;
+  font-family: system-ui, sans-serif;
+  overflow: hidden;
+}
+
+#viewer {
+  position: fixed;
+  inset: 0;
+  touch-action: none;
+}
+
+.status {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.status:empty {
+  display: none;
+}
+
+.home {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  left: max(12px, env(safe-area-inset-left));
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: rgb(4 20 24 / 70%);
+  color: inherit;
+  font-size: 0.85rem;
+  text-decoration: none;
+}

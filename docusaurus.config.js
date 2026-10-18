@@ -26,11 +26,6 @@ const config = {
   deploymentBranch: 'gh-pages',
   trailingSlash: false,
 
-  customFields: {
-    // Root of the published tiles (manifest.json + tilesets). Local dev: tools/publish-model/serve-tiles.ps1
-    modelTilesUrl: process.env.MODEL_TILES_URL || 'http://localhost:8081',
-  },
-
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'ignore',
 

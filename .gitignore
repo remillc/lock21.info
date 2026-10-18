@@ -33,3 +33,6 @@ docs/rig/modele/assets/*
 
 # Python
 __pycache__/
+
+# Standalone viewer build
+/viewer/dist
