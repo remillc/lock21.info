@@ -91,7 +91,9 @@ def world_vertices(ob):
 
 # 1. import
 before = set(bpy.data.objects)
-bpy.ops.import_scene.gltf(filepath=source)
+# merge_vertices: glTF duplique les sommets le long des coutures UV; sans fusion, chaque îlot UV devient un
+# fragment détaché que l'étape 6 supprime (trous). Les UV sont stockés par coin de face: la fusion ne les abîme pas.
+bpy.ops.import_scene.gltf(filepath=source, merge_vertices=True)
 imported = [o for o in bpy.data.objects if o not in before and o.type == 'MESH']
 assert len(imported) == 1, f"un seul mesh attendu, trouvé {len(imported)}"
 hi = imported[0]
