@@ -52,6 +52,14 @@ Résultat zone 12: échelle 0,977, rotation 0,57°, résidu médian 0,033 pi (1 
 7. **mesure l'écart** entre le maillage décimé et le maillage complet, dans les deux sens (point le plus proche sur la surface), et le consigne dans le rapport;
 8. exporte en OBJ avec la texture en JPEG, **axe Y vers le haut**: Obj2Tiles suit la convention OBJ/glTF et convertit lui-même en Z vers le haut (3D Tiles). Un OBJ exporté Z vers le haut donne un modèle couché sur le côté.
 
+### Zone refaite dans Metashape: `swap_zone_source.py`
+
+Quand une zone est retraitée, son nouvel export doit remplacer l'ancien mesh **dans le `.blend`**, pour que les retouches (booléens, lattice) soient vérifiées sur la nouvelle version avant publication. Publier directement le nouvel export avec le nettoyage de l'ancien mesh risquerait d'effacer des parties nouvellement reconstruites.
+
+À exécuter dans Blender, sur `lock-21-publishing.blend`: onglet **Scripting** → *Text* → *Open…* → `tools/publish-model/swap_zone_source.py`, régler `ZONE`, `EDIT_MESH` (export importé pour l'édition, de préférence léger) et `SOURCE` (export à publier, du même chunk), puis **Run Script**. Le script importe `EDIT_MESH`, le recale sur le mesh actuel de la zone, lui copie modificateurs, propriétés et enfants, met à jour `source` et range l'ancien mesh, caché, dans la collection `zones - archive`. Il ne sauvegarde pas: vérifier les volumes de coupe, ajuster, puis sauvegarder.
+
+Essai sur la zone 10 (export 652 k de 2026 sur le mesh de 140 k): échelle 1,003, rotation 1,2°, résidu médian 0,067 pi (2 cm). Ses deux booléens ne retirent rien, ni sur l'ancien mesh ni sur le nouveau.
+
 ### 6. Tuilage
 
 `Obj2Tiles --preset standard --texture-format Ktx2 --unlit --max-texture-size 0 --decimation-mode Standard --lods 3 --divisions 0`: hiérarchie de niveaux de détail (octree, découpage en Z), coordonnées locales, contenu `.glb`, textures **KTX2** (restent compressées en mémoire graphique, indispensable sur téléphone). Chaque version est écrite dans un nouveau dossier daté et n'est plus jamais modifiée; `manifest.json` pointe vers la version active.
