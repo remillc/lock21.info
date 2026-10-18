@@ -8,7 +8,7 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 
 - [x] Standalone viewer (Vite + three.js + 3d-tiles-renderer) in `viewer/`, outside Docusaurus
 - [x] Reduce the first-view weight: meshopt compression + no root content, 61 MB -> 18 MB for 2 zones
-- [ ] Lighten the coarse levels of detail further (zone 12 coarsest level: 418 k triangles, 3.9 MB)
+- [ ] Lighten the coarse levels of detail: the first view of the 8 zones loads 35.8 MB (each zone's coarsest level is about 20 % of its triangles)
 - [ ] Test on a phone (Wi-Fi, `?tiles=http://<PC IP>:8081`), especially an iPhone (Safari memory limit)
 - [ ] Initial camera and navigation (what the visitor sees first)
 - [ ] Show the mockups and terrain for the zones not yet digitised (hidden once a zone is scanned)
@@ -18,14 +18,22 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 
 - [x] Zone 12: prepared and tiled from the 13 M-face export
 - [x] Zone 10: swapped to the 2026 export in `lock-21-publishing.blend`, prepared and tiled
-- [ ] Zones 2, 3, 11: prepare and tile (high-res exports in the same frame)
-- [ ] Zone 1: prepare and tile (registration needed); export a textured high-res model from Metashape (chunk 13 has none)
-- [ ] Zone 4: prepare and tile (check that the Lattice is carried over correctly); export a high-res model (chunk 10, 38 M faces, 15 168 px)
-- [ ] Zone 8: prepare and tile (registration needed)
+- [x] Zones 2, 3, 11: prepared and tiled
+- [x] Zone 1: prepared and tiled from the 621 k export
+- [ ] Zone 1: export a textured high-res model from Metashape (chunk 13 has none)
+- [x] Zone 4: prepared and tiled, Lattice carried over
+- [ ] Zone 4: export a high-res model (chunk 10, 38 M faces, 15 168 px)
+- [x] Zone 8: swapped to a textured 200 k edit mesh (colour baked from the 20 M export), prepared and tiled
 - [ ] Zone 7: export from Metashape (`zone-7.psx`, chunk 39, 14.8 M faces, 12 772 px) into `O:\modeles\zone-7\`, then set `source`
 - [ ] Zone 10: export the 22.6 M-face model (10 014 px texture) if the 3 M export (6 600 px) is too coarse
 - [ ] Zone 16: digitised (7 M faces) but not in the `.blend` yet
 - [ ] Textures: the analysis targets 1.3 mm per texel; current exports are 2 to 5 times coarser. Decide the viewing distance, then retexture in Metashape where needed
+
+### Pipeline
+
+- [x] `.blend` as source of truth: `source` property, registration, deform modifiers, proximity cleanup
+- [x] Change detection (fingerprints) and npm scripts (`model:check`, `model:post-modified`, `model:publish`)
+- [ ] `model:post-modified` and others only run on Windows (PowerShell); fine for now
 
 ### Hosting and downloads
 
