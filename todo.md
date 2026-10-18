@@ -70,6 +70,14 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
   settings from each zone's Blender material and pass them through the manifest. Caveat: the photo textures already
   contain the lamps' lighting; adding lighting on top doubles it (de-lighting the textures helps)
 
+### Zebra mussel relief (idea)
+
+- [ ] The walls are covered with zebra mussels; their relief (1 to 3 cm) is in the high-res exports (zone 12: about
+  7 mm edges) but lost in the published mesh (about 2.5 cm edges). Bake it from the high-res export onto the published
+  mesh, per zone (same idea as bake_texture.py):
+  - cavity / ambient occlusion map multiplied into the colour: works with the current unlit display, no extra file
+  - normal map: needs lit materials (see Surface look) and one more texture per tile; ETC1S compresses normals poorly
+
 ### Virtual reality (idea)
 
 - [ ] VR option on lock21.info (WebXR, three.js): view the model in a headset, either
