@@ -34,6 +34,7 @@ from mathutils.bvhtree import BVHTree
 
 sys.path.insert(0, os.path.dirname(__file__))
 from register_zone import transform_for  # noqa: E402
+from blend_state import fingerprint  # noqa: E402
 
 p = argparse.ArgumentParser()
 p.add_argument("--zone", required=True)
@@ -52,6 +53,10 @@ zone_ob = bpy.data.objects[a.zone]
 source = zone_ob.get("source")
 assert source and os.path.exists(source), f"propriété 'source' absente ou fichier introuvable sur {a.zone}: {source}"
 report = dict(zone=a.zone, source=source, density=a.density, max_distance_m=a.max_distance, steps={})
+# Empreinte de l'état de la zone dans le .blend, avant toute opération: check_changes.py la compare au .blend courant
+state = fingerprint(zone_ob)
+report["fingerprint"] = state["fingerprint"]
+json.dump(state, open(os.path.join(a.out, f"{slug}-fingerprint.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=2)
 t0 = time.time()
 
 

@@ -3,7 +3,7 @@
 param(
     [Parameter(Mandatory)][string]$Zone,
     [Parameter(Mandatory)][string]$Prepared,
-    [string]$Version = (Get-Date -Format "yyyy-MM-dd"),
+    [string]$Version = (Get-Date -Format "yyyy-MM-dd-HHmm"),
     [int]$Lods = 3,
     [int]$Divisions = 0,
     [string]$TilesRoot = "O:\publishing\tiles",
@@ -26,5 +26,9 @@ if ($LASTEXITCODE -ne 0) { throw "Obj2Tiles a échoué ($LASTEXITCODE)" }
 # Compression meshopt de la géométrie de chaque tuile (glTF-Transform); les textures KTX2 restent telles quelles
 node "$PSScriptRoot\compress_tiles.mjs" $out
 if ($LASTEXITCODE -ne 0) { throw "compression échouée ($LASTEXITCODE)" }
+
+# Empreinte de l'état de la zone dans le .blend au moment de la préparation (voir check_changes.py)
+$fp = Join-Path $Prepared "$Zone-fingerprint.json"
+if (Test-Path $fp) { Copy-Item $fp (Join-Path $out "fingerprint.json") }
 
 python -I "$PSScriptRoot\update_manifest.py" $TilesRoot $Zone "$Zone/$Version/tileset.json"

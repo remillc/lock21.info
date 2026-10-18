@@ -1,8 +1,10 @@
 # Prépare et tuile une liste de zones depuis le .blend de travail, puis supprime les versions remplacées.
-# Usage: .\tools\publish-model\publish_zones.ps1 -Zones "zone 2","zone 3" [-Version 2026-10-18-v1] [-Density 3000]
+# Usage: .\tools\publish-model\publish_zones.ps1 -Zones "zone 2","zone 3" [-Version 2026-10-18-1030] [-Density 3000]
+#        .\tools\publish-model\publish_zones.ps1 -Changed    # seulement les zones modifiées dans le .blend (check_changes.py)
 param(
-    [Parameter(Mandatory)][string[]]$Zones,
-    [string]$Version = (Get-Date -Format "yyyy-MM-dd"),
+    [string[]]$Zones,
+    [switch]$Changed,
+    [string]$Version = (Get-Date -Format "yyyy-MM-dd-HHmm"),
     [double]$Density = 3000,
     [string]$Blend = "$PSScriptRoot\..\..\modeles\lock-21-publishing.blend",
     [string]$Blender = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe",
@@ -11,6 +13,15 @@ param(
 )
 $ErrorActionPreference = "Stop"
 $Blend = (Resolve-Path $Blend).Path
+
+if ($Changed) {
+    $lines = & $Blender -b $Blend --factory-startup --python "$PSScriptRoot\check_changes.py" -- $TilesRoot 2>$null |
+        Select-String "^(zone |A_PUBLIER)" | ForEach-Object { $_.Line }
+    $lines | Where-Object { $_ -like "zone *" } | ForEach-Object { Write-Host $_ }
+    $Zones = (($lines | Select-Object -Last 1) -replace "^A_PUBLIER:\s*", "").Split(",") | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+    if (-not $Zones) { Write-Host "Rien à publier."; return }
+}
+if (-not $Zones) { throw "Indiquer -Zones ou -Changed" }
 
 foreach ($zone in $Zones) {
     $slug = $zone -replace " ", "-"
