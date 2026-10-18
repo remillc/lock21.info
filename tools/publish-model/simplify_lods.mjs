@@ -11,12 +11,22 @@
 //
 // Usage: node simplify_lods.mjs <tileset folder> [--coarse-tris 40000] [--mid-tris 150000]
 //                                               [--coarse-error 0.02] [--mid-error 0.01]
+//        node simplify_lods.mjs -h | --help
 import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { Logger, NodeIO } from '@gltf-transform/core'
 import { ALL_EXTENSIONS } from '@gltf-transform/extensions'
 import { compactPrimitive, weld } from '@gltf-transform/functions'
 import { MeshoptDecoder, MeshoptEncoder, MeshoptSimplifier } from 'meshoptimizer'
+
+// -h/--help: print the header comment of this file
+if (process.argv.slice(2).some((a) => a === '-h' || a === '--help')) {
+  const { readFileSync } = await import('node:fs')
+  const { fileURLToPath } = await import('node:url')
+  const header = readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n').filter((l) => l.startsWith('//'))
+  console.log(header.map((l) => l.replace(/^\/\/ ?/, '')).join('\n'))
+  process.exit(0)
+}
 
 const argv = process.argv.slice(2)
 const dir = argv[0]

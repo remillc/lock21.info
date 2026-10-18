@@ -150,8 +150,15 @@ def transform_for(ob, src_path, log=print):
 if __name__ == "__main__":
     import bpy
 
-    args = sys.argv[sys.argv.index("--") + 1:]
-    zone, src_path, out_path, extra = args[0], args[1], args[2], args[3:]
+    from cli import parser, script_args
+
+    p = parser("register_zone.py", __doc__)
+    p.add_argument("zone", help='objet de zone dans le .blend, ex. "zone 12"')
+    p.add_argument("src", help="export .glb à recaler")
+    p.add_argument("out", help="rapport JSON (matrices, échelle, résidus)")
+    p.add_argument("extra", nargs="*", help="autres exports du même chunk à vérifier avec la même matrice")
+    a = p.parse_args(script_args())
+    zone, src_path, out_path, extra = a.zone, a.src, a.out, a.extra
     rep = register(bpy.data.objects[zone], src_path, extra)
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     json.dump(rep, open(out_path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)

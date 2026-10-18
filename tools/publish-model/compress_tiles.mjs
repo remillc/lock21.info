@@ -3,12 +3,22 @@
 // The viewer needs the meshopt decoder (GLTFLoader.setMeshoptDecoder).
 //
 // Usage: node compress_tiles.mjs <tileset folder>
+//        node compress_tiles.mjs -h | --help
 import { readdir, stat } from 'node:fs/promises'
 import { join } from 'node:path'
 import { Logger, NodeIO } from '@gltf-transform/core'
 import { ALL_EXTENSIONS } from '@gltf-transform/extensions'
 import { meshopt } from '@gltf-transform/functions'
 import { MeshoptEncoder, MeshoptDecoder } from 'meshoptimizer'
+
+// -h/--help: print the header comment of this file
+if (process.argv.slice(2).some((a) => a === '-h' || a === '--help')) {
+  const { readFileSync } = await import('node:fs')
+  const { fileURLToPath } = await import('node:url')
+  const header = readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n').filter((l) => l.startsWith('//'))
+  console.log(header.map((l) => l.replace(/^\/\/ ?/, '')).join('\n'))
+  process.exit(0)
+}
 
 const root = process.argv[2]
 if (!root) throw new Error('usage: node compress_tiles.mjs <tileset folder>')

@@ -11,6 +11,9 @@ import json
 import os
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from cli import parser, script_args  # noqa: E402
+
 EMPTY_ROOT_ERROR = 1.0e6  # mètres: toujours raffiner une racine vide
 
 
@@ -21,7 +24,9 @@ def clean(node):
         clean(child)
 
 
-path = os.path.join(sys.argv[1], "tileset.json")
+p = parser("fix_tileset.py", __doc__)
+p.add_argument("tileset_dir", help="dossier contenant tileset.json")
+path = os.path.join(p.parse_args(script_args()).tileset_dir, "tileset.json")
 tileset = json.load(open(path, encoding="utf-8"))
 root = tileset["root"]
 clean(root)

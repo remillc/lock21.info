@@ -36,17 +36,17 @@ sys.path.insert(0, os.path.dirname(__file__))
 from register_zone import transform_for  # noqa: E402
 from blend_state import fingerprint  # noqa: E402
 
-p = argparse.ArgumentParser()
-p.add_argument("--zone", required=True)
-p.add_argument("--density", type=float, default=3000, help="triangles visés par m² après décimation")
-p.add_argument("--ratio", type=float, help="ratio de décimation imposé (remplace --density)")
+p = argparse.ArgumentParser(prog="prepare_zone.py", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+p.add_argument("-z", "--zone", required=True, help='objet de zone, ex. "zone 12"')
+p.add_argument("-d", "--density", type=float, default=3000, help="triangles visés par m² après décimation (défaut 3000)")
+p.add_argument("-r", "--ratio", type=float, help="ratio de décimation imposé (remplace --density)")
 p.add_argument("--max-distance", type=float, default=0.05, help="mètres")
 p.add_argument("--max-residual", type=float, default=0.1, help="résidu médian maximal du recalage, unités de l'export")
 p.add_argument("--min-island", type=int, default=100)
 p.add_argument("--texture-quality", type=int, default=92)
 p.add_argument("--samples", type=int, default=100000)
-p.add_argument("--out", required=True)
-a = p.parse_args(sys.argv[sys.argv.index("--") + 1:])
+p.add_argument("-o", "--out", required=True, help="dossier de sortie (OBJ, texture, rapports)")
+a = p.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [])
 os.makedirs(a.out, exist_ok=True)
 slug = a.zone.replace(" ", "-")
 zone_ob = bpy.data.objects[a.zone]

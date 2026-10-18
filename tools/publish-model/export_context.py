@@ -12,7 +12,7 @@
 Lecture seule pour le .blend (jamais sauvegardé).
 
 Usage:
-    blender -b <fichier.blend> --factory-startup --python export_context.py -- <dossier de sortie> [--max-texture 4096] [--bake-size 4096]
+    blender -b <fichier.blend> --factory-startup --python export_context.py -- <dossier de sortie> [-t 4096] [-s 4096]
 """
 import json
 import os
@@ -22,10 +22,14 @@ import bpy
 
 sys.path.insert(0, os.path.dirname(__file__))
 from blend_state import context_fingerprint, context_objects  # noqa: E402
+from cli import parser, script_args  # noqa: E402
 
-args = sys.argv[sys.argv.index("--") + 1:]
-out_dir = args[0]
-max_texture = int(args[args.index("--max-texture") + 1]) if "--max-texture" in args else 4096
+p = parser("export_context.py", __doc__)
+p.add_argument("out_dir", help="dossier de sortie (context.glb, fingerprint.json)")
+p.add_argument("-t", "--max-texture", type=int, default=4096, help="côté maximal des images reprises telles quelles, px")
+p.add_argument("-s", "--bake-size", type=int, default=4096, help="taille des textures cuites, px")
+a = p.parse_args(script_args())
+out_dir, max_texture = a.out_dir, a.max_texture
 os.makedirs(out_dir, exist_ok=True)
 
 
@@ -35,7 +39,7 @@ print("[context] objets:", [o.name for o in objects], flush=True)
 fp = context_fingerprint(objects)
 
 SIMPLE_NODES = {'TEX_IMAGE', 'BSDF_PRINCIPLED', 'OUTPUT_MATERIAL'}
-bake_size = int(args[args.index("--bake-size") + 1]) if "--bake-size" in args else 4096
+bake_size = a.bake_size
 
 
 def procedural(material):

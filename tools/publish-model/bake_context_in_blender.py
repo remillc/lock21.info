@@ -12,10 +12,17 @@ Pour chaque objet du contexte (noms contenant « filler », collection `terrain`
   - chemin noté dans la propriété `baked_texture` de l'objet. export_context.py utilise alors cette image.
 Les matériaux de l'objet ne sont pas modifiés. Pour mettre à jour après une retouche de matériau: relancer.
 Sauvegarder ensuite le .blend (la propriété `baked_texture` y est stockée).
+
+Usage: dans Blender (Scripting > Run Script); aide: blender -b --python bake_context_in_blender.py -- -h
 """
 import os
+import sys
 
 import bpy
+
+if "--" in sys.argv and {"-h", "--help"} & set(sys.argv[sys.argv.index("--") + 1:]):
+    print(__doc__)
+    raise SystemExit(0)
 
 # ---------------------------------------------------------------- PARAMÈTRES
 TAILLE = 4096

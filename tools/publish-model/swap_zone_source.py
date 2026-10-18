@@ -35,9 +35,14 @@ MAX_RESIDUAL = 0.5
 # ----------------------------------------------------------------------------
 
 if "--" in sys.argv:  # appel en ligne de commande
-    args = sys.argv[sys.argv.index("--") + 1:]
-    ZONE, EDIT_MESH = args[0], args[1]
-    SOURCE = args[2] if len(args) > 2 else None
+    import argparse
+
+    p = argparse.ArgumentParser(prog="swap_zone_source.py", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("zone", help='objet de zone, ex. "zone 10"')
+    p.add_argument("edit_mesh", help="export importé pour l'édition")
+    p.add_argument("source", nargs="?", help="export à publier (défaut: edit_mesh)")
+    a = p.parse_args(sys.argv[sys.argv.index("--") + 1:])
+    ZONE, EDIT_MESH, SOURCE = a.zone, a.edit_mesh, a.source
 SOURCE = SOURCE or EDIT_MESH
 
 tools_dir = os.path.dirname(os.path.abspath(__file__)) if "__file__" in globals() and os.path.exists(__file__) \

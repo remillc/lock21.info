@@ -8,7 +8,7 @@ venir du même chunk (même repère). Le résultat est un .glb texturé, dans le
 de base du modèle détaillé vers une nouvelle texture du modèle léger; export .glb; image d'aperçu.
 
 Usage:
-    blender -b --factory-startup --python bake_texture.py -- <léger.glb> <détaillé.glb> <sortie.glb> [taille_px]
+    blender -b --factory-startup --python bake_texture.py -- <léger.glb> <détaillé.glb> <sortie.glb> [-s 8192] [-r]
 """
 import os
 import sys
@@ -18,11 +18,17 @@ import numpy as np
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
-args = sys.argv[sys.argv.index("--") + 1:]
-low_path, high_path, out_path = args[:3]
-size = int(args[3]) if len(args) > 3 else 8192
-# --reuse: reprend la texture déjà calculée (<sortie>.jpg) au lieu de refaire le bake
-reuse = "--reuse" in args
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from cli import parser, script_args  # noqa: E402
+p = parser("bake_texture.py", __doc__)
+p.add_argument("low", help="modèle léger .glb (coordonnées de texture, sans couleur)")
+p.add_argument("high", help="modèle détaillé .glb texturé (même chunk Metashape)")
+p.add_argument("out", help="modèle léger texturé .glb à écrire")
+p.add_argument("-s", "--size", type=int, default=8192, help="taille de la texture cuite, px (défaut 8192)")
+p.add_argument("-r", "--reuse", action="store_true", help="reprendre la texture déjà cuite (<sortie>.jpg)")
+a = p.parse_args(script_args())
+low_path, high_path, out_path, size = a.low, a.high, a.out, a.size
+reuse = a.reuse
 work = os.path.dirname(out_path)
 base = os.path.splitext(os.path.basename(out_path))[0]
 os.makedirs(work, exist_ok=True)

@@ -13,7 +13,13 @@ import re
 import sys
 import zipfile
 
-src, out = sys.argv[1], sys.argv[2]
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from cli import parser, script_args  # noqa: E402
+p = parser("scan_projects.py", __doc__)
+p.add_argument("src", help="dossier des projets .psx")
+p.add_argument("out", help="inventaire JSON à écrire")
+a = p.parse_args(script_args())
+src, out = a.src, a.out
 
 
 def doc(path, member="doc.xml"):

@@ -1,7 +1,40 @@
-﻿# Prépare et tuile une liste de zones depuis le .blend de travail, puis supprime les versions remplacées.
-# Usage: .\tools\publish-model\publish_zones.ps1 -Zones "zone 2","zone 3" [-Version 2026-10-18-1030] [-Density 3000]
-#        .\tools\publish-model\publish_zones.ps1 -Changed    # seulement les zones modifiées dans le .blend (check_changes.py)
-#        .\tools\publish-model\publish_zones.ps1 -Changed -DryRun    # liste les zones modifiées, sans publier
+﻿<#
+.SYNOPSIS
+Prépare et tuile des zones depuis le .blend de travail, puis supprime les versions de tuiles remplacées.
+
+.DESCRIPTION
+Pour chaque zone: prepare_zone.py (Blender), puis tile_zone.ps1 (Obj2Tiles, simplification, compression, manifeste).
+Le contexte (fillers + terrain) se publie avec la zone spéciale « context ». -Changed publie seulement ce qui a
+changé dans le .blend depuis la dernière publication (empreintes, check_changes.py).
+
+.PARAMETER Zones
+Zones à publier, ex. "zone 2","zone 3" ou context.
+
+.PARAMETER Changed
+Publier seulement les zones modifiées dans le .blend (npm run model:post-modified).
+
+.PARAMETER DryRun
+Avec -Changed: lister les zones modifiées sans publier (npm run model:check).
+
+.PARAMETER Version
+Nom du dossier de la nouvelle version (défaut: date et heure, yyyy-MM-dd-HHmm).
+
+.PARAMETER Density
+Triangles visés par m² après décimation (défaut 3000).
+
+.PARAMETER Blend
+Fichier .blend de travail (défaut modeles\lock-21-publishing.blend).
+
+.PARAMETER Help
+Afficher cette aide (-h, -Help ou --help).
+
+.EXAMPLE
+.\tools\publish-model\publish_zones.ps1 -Changed
+
+.EXAMPLE
+.\tools\publish-model\publish_zones.ps1 -Zones "zone 2",context
+
+#>
 param(
     [string[]]$Zones,
     [switch]$Changed,
@@ -11,8 +44,11 @@ param(
     [string]$Blend = "$PSScriptRoot\..\..\modeles\lock-21-publishing.blend",
     [string]$Blender = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe",
     [string]$TempRoot = "O:\temp",
-    [string]$TilesRoot = "O:\publishing\tiles"
+    [string]$TilesRoot = "O:\publishing\tiles",
+    [Alias('h')][switch]$Help,
+    [Parameter(ValueFromRemainingArguments = $true)][string[]]$Rest
 )
+if ($Help -or ($Rest -contains '--help') -or ($Zones -contains '--help')) { Get-Help $PSCommandPath -Detailed; return }
 $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $Blend = (Resolve-Path $Blend).Path

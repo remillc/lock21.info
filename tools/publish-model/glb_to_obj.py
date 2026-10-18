@@ -11,7 +11,13 @@ import sys
 
 import bpy
 
-src, dst = sys.argv[sys.argv.index("--") + 1:][:2]
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from cli import parser, script_args  # noqa: E402
+p = parser("glb_to_obj.py", __doc__)
+p.add_argument("src", help="export .glb")
+p.add_argument("dst", help="OBJ à écrire (MTL et texture à côté)")
+a = p.parse_args(script_args())
+src, dst = a.src, a.dst
 os.makedirs(os.path.dirname(dst), exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src)

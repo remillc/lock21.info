@@ -61,6 +61,7 @@ Node >= 18. Builds use `@docusaurus/faster` (`future.experimental_faster`). The 
 - Images: put them in an `assets/` folder next to the page, prefer `.webp`, and use the `<figure><img … width="400" /><figcaption>…</figcaption></figure>` pattern already used across the docs. `docusaurus-plugin-image-zoom` is enabled.
 - Cite the source in the figcaption with `<cite><a href=…>`, for example Nick Baets' 1988 drawing via Save Ontario Shipwrecks.
 - In `.md`/`.mdx`, escape `<` and `>` in prose (`&lt;-&gt;`), because MDX parses them as JSX.
+- Every script (Python, Node, PowerShell, npm targets) answers `-h` / `--help`; options have a short and a long form where it makes sense (`-z/--zone`). Python uses `argparse` (`tools/publish-model/cli.py`; Blender scripts read the arguments after `--`), PowerShell uses comment-based help with `-h`, `-Help` and `--help`.
 - Folder and file names are in **English** (new tools, scripts, data folders), even though doc content is French.
 - Placeholders such as `awef`, `[TODO: …]` and `[ICI INSÉRER …]` mark unfinished sections. Leave them unless asked to fill them in.
 - Dive log rows: `No | Date | Activité | Zones | Durée (minutes) | Participants | Notes`. Column 5 must stay a plain number, because `DataGrid` sums it.

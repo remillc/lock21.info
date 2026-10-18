@@ -93,5 +93,11 @@ def main(models_dir, out_path):
 
 
 if __name__ == "__main__":
-    args = sys.argv[sys.argv.index("--") + 1:]
-    main(args[0], args[1])
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from cli import parser, script_args
+
+    p = parser("verify_sources.py", __doc__)
+    p.add_argument("models_dir", help="dossier des exports (zone-N/*.glb)")
+    p.add_argument("out", help="rapport JSON à écrire")
+    a = p.parse_args(script_args())
+    main(a.models_dir, a.out)

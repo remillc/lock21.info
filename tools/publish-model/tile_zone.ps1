@@ -1,14 +1,46 @@
-﻿# Tuile une zone préparée (OBJ + texture de prepare_zone.py) avec Obj2Tiles, puis l'inscrit dans le manifeste.
-# Usage: .\tools\publish-model\tile_zone.ps1 -Zone zone-12 -Prepared O:\temp\zone-12\r010 [-Version 2026-10-18] [-Lods 3] [-Divisions 0]
+﻿<#
+.SYNOPSIS
+Tuile une zone préparée (OBJ + texture de prepare_zone.py) et l'inscrit dans le manifeste.
+
+.DESCRIPTION
+Obj2Tiles (3D Tiles 1.1, KTX2), simplification des niveaux grossiers, compression meshopt, correction du
+tileset.json, copie de l'empreinte, mise à jour du manifeste.
+
+.PARAMETER Zone
+Identifiant de la zone, ex. zone-12.
+
+.PARAMETER Prepared
+Dossier de l'OBJ préparé, ex. O:\temp\zone-12\prox.
+
+.PARAMETER Version
+Nom du dossier de la nouvelle version (défaut: date et heure).
+
+.PARAMETER Lods
+Niveaux de détail Obj2Tiles (défaut 3).
+
+.PARAMETER Divisions
+Profondeur de découpage du niveau le plus grossier (défaut 0).
+
+.PARAMETER Help
+Afficher cette aide (-h, -Help ou --help).
+
+.EXAMPLE
+.\tools\publish-model\tile_zone.ps1 -Zone zone-12 -Prepared O:\temp\zone-12\prox
+
+#>
 param(
-    [Parameter(Mandatory)][string]$Zone,
-    [Parameter(Mandatory)][string]$Prepared,
+    [string]$Zone,
+    [string]$Prepared,
     [string]$Version = (Get-Date -Format "yyyy-MM-dd-HHmm"),
     [int]$Lods = 3,
     [int]$Divisions = 0,
     [string]$TilesRoot = "O:\publishing\tiles",
-    [string]$Obj2Tiles = "O:\publishing\bin\obj2tiles-1.8.0\Obj2Tiles.exe"
+    [string]$Obj2Tiles = "O:\publishing\bin\obj2tiles-1.8.0\Obj2Tiles.exe",
+    [Alias('h')][switch]$Help,
+    [Parameter(ValueFromRemainingArguments = $true)][string[]]$Rest
 )
+if ($Help -or ($Rest -contains '--help') -or ($Zone -contains '--help')) { Get-Help $PSCommandPath -Detailed; return }
+if (-not $Zone -or -not $Prepared) { throw "-Zone et -Prepared sont requis (voir -h)" }
 $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 

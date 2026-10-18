@@ -20,9 +20,14 @@ from datetime import date
 
 import numpy as np
 
-args = sys.argv[sys.argv.index("--") + 1:]
-cfg = json.load(open(args[0], encoding="utf-8"))
-out_dir = args[1]
+import argparse  # noqa: E402
+
+p = argparse.ArgumentParser(prog="analyze_zones.py", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+p.add_argument("thresholds", help="thresholds.json")
+p.add_argument("out_dir", help="dossier des rapports")
+a = p.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [])
+cfg = json.load(open(a.thresholds, encoding="utf-8"))
+out_dir = a.out_dir
 
 view = cfg["viewing"]
 # Taille d'un pixel écran projeté sur la surface à la distance minimale de visionnement

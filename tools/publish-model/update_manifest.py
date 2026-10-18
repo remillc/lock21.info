@@ -10,8 +10,15 @@ import os
 import sys
 from datetime import datetime, timezone
 
-root, tileset_id, url = sys.argv[1:4]
-kind = sys.argv[4] if len(sys.argv) > 4 else "tileset"
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from cli import parser, script_args  # noqa: E402
+p = parser("update_manifest.py", __doc__)
+p.add_argument("root", help="racine des tuiles (contient manifest.json)")
+p.add_argument("id", help="identifiant, ex. zone-12 ou context")
+p.add_argument("url", help="chemin relatif du tileset.json ou du .glb")
+p.add_argument("kind", nargs="?", choices=("tileset", "model"), default="tileset", help="tileset (défaut) ou model")
+a = p.parse_args(script_args())
+root, tileset_id, url, kind = a.root, a.id, a.url, a.kind
 key = "models" if kind == "model" else "tilesets"
 path = os.path.join(root, "manifest.json")
 manifest = json.load(open(path, encoding="utf-8")) if os.path.exists(path) else {"version": 1, "tilesets": []}
