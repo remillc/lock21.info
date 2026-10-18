@@ -41,7 +41,7 @@ Le script enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape
 | 5 | Préparation | `prepare_zone.py --zone "zone N" [--density 3000] --out …` | `.blend` (+ export `source`) | `O:\temp\<zone>\...\<zone>.obj` + `.jpg` + `<zone>-prepare.json` |
 | 6 | Tuilage + manifeste | `tile_zone.ps1` (+ `update_manifest.py`) | sortie de 5 | `O:\publishing\tiles\<zone>\<version>\` + `manifest.json` |
 | 7 | Aperçu local | `serve-tiles.ps1` + `viewer/`: `npm run dev` | `O:\publishing\tiles\` | `http://localhost:3100/` |
-| 8 | Mise en ligne | `upload_r2.mjs` (`npm run model:upload`) | `O:\publishing	iles\` + `.env.local` | bucket R2 `lock21-tiles` |
+| 8 | Mise en ligne | `upload_r2.mjs` (`npm run model:upload`) | `O:\publishing\tiles\` + `.env.local` | bucket R2 `lock21-tiles` |
 
 ### 3. Vérification du repère
 
@@ -113,7 +113,7 @@ Pour un téléphone sur le même Wi-Fi (ex. iPhone): `serve-tiles.ps1 -Lan` (le 
 
 ## Mise en ligne (Cloudflare R2)
 
-`npm run model:upload` synchronise `O:\publishing	iles` avec le bucket R2 `lock21-tiles` (`-n` / `--dry-run` pour voir sans envoyer):
+`npm run model:upload` synchronise `O:\publishing\tiles` avec le bucket R2 `lock21-tiles` (`-n` / `--dry-run` pour voir sans envoyer):
 
 - une version n'est envoyée que si son fichier d'entrée (`tileset.json` ou `.glb`) manque dans le bucket; ses fichiers ont un cache d'un an (`immutable`): une version publiée ne change jamais;
 - `manifest.json` est envoyé en dernier, avec un cache d'une minute: la nouvelle version est visible en moins d'une minute;
