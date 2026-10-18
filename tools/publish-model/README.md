@@ -50,7 +50,7 @@ Résultat zone 12: échelle 0,977, rotation 0,57°, résidu médian 0,033 pi (1 
 5. décime (`Decimate`, mode *collapse*) selon `--ratio`;
 6. retire les fragments de moins de `--min-island` sommets (100 par défaut);
 7. **mesure l'écart** entre le maillage décimé et le maillage complet, dans les deux sens (point le plus proche sur la surface), et le consigne dans le rapport;
-8. exporte en OBJ avec la texture en JPEG, **axe Y vers le haut**: Obj2Tiles suit la convention OBJ/glTF et convertit lui-même en Z vers le haut (3D Tiles). Un OBJ exporté Z vers le haut donne un modèle couché sur le côté.
+8. exporte en OBJ avec la texture en JPEG, redimensionnée à un **multiple de 16 px**: Obj2Tiles divise la texture par 2 à chaque niveau de détail, et une texture compressée pour la carte graphique (KTX2) dont la taille n'est pas un multiple de 4 s'affiche en noir (zone 10: 6600 → 3300 → 1650 px). **Axe Y vers le haut**: Obj2Tiles suit la convention OBJ/glTF et convertit lui-même en Z vers le haut (3D Tiles). Un OBJ exporté Z vers le haut donne un modèle couché sur le côté.
 
 ### Zone refaite dans Metashape: `swap_zone_source.py`
 

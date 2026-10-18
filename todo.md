@@ -17,7 +17,6 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 
 - [x] Zone 12: prepared and tiled from the 13 M-face export
 - [x] Zone 10: swapped to the 2026 export in `lock-21-publishing.blend`, prepared and tiled
-- [ ] Zone 10: its two booleans (cutters `Cube.003`, `Cube.001`) remove nothing. Leftovers, or cutters to move?
 - [ ] Zones 2, 3, 11: prepare and tile (high-res exports in the same frame)
 - [ ] Zone 1: prepare and tile (registration needed); export a textured high-res model from Metashape (chunk 13 has none)
 - [ ] Zone 4: prepare and tile (check that the Lattice is carried over correctly); export a high-res model (chunk 10, 38 M faces, 15 168 px)
@@ -39,6 +38,7 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 
 ### Documentation
 
+- [ ] Document how the project's repositories and folders are organized (Git repo, `viewer/`, `tools/`, `O:\photogrammetry`, `O:\modeles`, `O:\publishing`, R2)
 - [ ] Add a workflow page to the site (`6. publication.md`) once the pipeline is stable
 - [ ] Rename the "zone N" Blender materials (`Material_0.00x`, `Empty.00x`) consistently
 

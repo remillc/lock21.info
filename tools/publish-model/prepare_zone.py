@@ -210,6 +210,13 @@ del full_tree, dec_tree
 # 8. export
 img = next(n.image for n in hi.data.materials[0].node_tree.nodes if n.type == 'TEX_IMAGE' and n.image)
 tex_name = f"{slug}.jpg"
+# Obj2Tiles halves the texture at each level of detail; GPU-compressed textures (KTX2 -> BC/ETC) need sizes in
+# multiples of 4, otherwise the browser draws the tile black (zone 10: 6600 -> 3300 -> 1650). A multiple of 16
+# keeps every level of a 3-level pyramid usable.
+w, h = img.size
+w16, h16 = w // 16 * 16, h // 16 * 16
+if (w16, h16) != (w, h):
+    img.scale(w16, h16)
 img.save(filepath=os.path.join(a.out, tex_name), quality=a.texture_quality)
 img.filepath = os.path.join(a.out, tex_name)
 img.source = 'FILE'
