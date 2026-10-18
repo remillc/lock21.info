@@ -13,6 +13,8 @@ Chaîne de traitement qui transforme les modèles photogrammétriques de chaque 
 
 ## Étapes
 
+**En pratique:** `.	ools\publish-model\publish_zones.ps1 -Zones "zone 2","zone 3" -Version <date>` enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape 4 se fait automatiquement), puis supprime les versions de tuiles qui ne sont plus dans le manifeste. Journal par zone: `O:	emp\<zone>-publish.log`.
+
 | # | Étape | Script | Entrées | Sorties |
 | --- | --- | --- | --- | --- |
 | 0 | Analyse de résolution | `../model-analysis/run.ps1` | `.blend` | `../model-analysis/reports/<date>.{json,md}` |
@@ -20,7 +22,7 @@ Chaîne de traitement qui transforme les modèles photogrammétriques de chaque 
 | 2 | Source de chaque zone | propriété `source` des objets de zone dans le `.blend` (`zones.json`: inventaire de travail) | | |
 | 3 | Vérification du repère des exports | `verify_sources.py` | `O:\modeles\zone-*\*.glb` + `.blend` | `sources-check.json` |
 | 4 | Recalage (automatique à l'étape 5) | `register_zone.py` | export `source` + `.blend` | `transforms/<zone>.json` (cache) |
-| 5 | Préparation | `prepare_zone.py --zone "zone N" --ratio R --out …` | `.blend` (+ export `source`) | `O:\temp\<zone>\...\<zone>.obj` + `.jpg` + `<zone>-prepare.json` |
+| 5 | Préparation | `prepare_zone.py --zone "zone N" [--density 3000] --out …` | `.blend` (+ export `source`) | `O:\temp\<zone>\...\<zone>.obj` + `.jpg` + `<zone>-prepare.json` |
 | 6 | Tuilage + manifeste | `tile_zone.ps1` (+ `update_manifest.py`) | sortie de 5 | `O:\publishing\tiles\<zone>\<version>\` + `manifest.json` |
 | 7 | Aperçu local | `serve-tiles.ps1` + `viewer/`: `npm run dev` | `O:\publishing\tiles\` | `http://localhost:3100/` |
 | 8 | Mise en ligne | *à venir* (rclone vers Cloudflare R2) | | |
@@ -47,7 +49,7 @@ Résultat zone 12: échelle 0,977, rotation 0,57°, résidu médian 0,033 pi (1 
 2. le recale sur le mesh de la zone (étape 4, avec cache) et le place comme l'objet de la zone;
 3. copie et applique, dans l'ordre, les modificateurs de **déformation** de la zone (tout sauf les booléens, ex. Lattice): un Lattice déforme selon la position de l'objet Lattice dans la scène, donc la version haute résolution, placée au même endroit, reçoit exactement la même correction;
 4. **reporte le nettoyage par proximité**: Blender calcule le mesh final de la zone tel qu'affiché (tous modificateurs appliqués: booléens, etc.); les sommets de la version haute résolution à plus de `--max-distance` (5 cm par défaut) de ce mesh sont supprimés. Toute retouche faite dans le `.blend` (booléen de n'importe quelle forme, suppression à la main) est ainsi reportée, sans appliquer de booléen sur des maillages ouverts de plusieurs millions de faces (lent et peu fiable);
-5. décime (`Decimate`, mode *collapse*) selon `--ratio`;
+5. décime (`Decimate`, mode *collapse*) vers `--density` triangles par m² de surface (3 000 par défaut: zones 10 et 12 restent à quelques millimètres du maillage complet), ou selon `--ratio`;
 6. retire les fragments de moins de `--min-island` sommets (100 par défaut);
 7. **mesure l'écart** entre le maillage décimé et le maillage complet, dans les deux sens (point le plus proche sur la surface), et le consigne dans le rapport;
 8. exporte en OBJ avec la texture en JPEG, redimensionnée à un **multiple de 16 px**: Obj2Tiles divise la texture par 2 à chaque niveau de détail, et une texture compressée pour la carte graphique (KTX2) dont la taille n'est pas un multiple de 4 s'affiche en noir (zone 10: 6600 → 3300 → 1650 px). **Axe Y vers le haut**: Obj2Tiles suit la convention OBJ/glTF et convertit lui-même en Z vers le haut (3D Tiles). Un OBJ exporté Z vers le haut donne un modèle couché sur le côté.

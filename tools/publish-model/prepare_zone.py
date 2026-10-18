@@ -9,7 +9,7 @@ et ses retouches (modificateurs). Étapes:
   3. copie et applique les modificateurs de DÉFORMATION de la zone (ex. Lattice), dans l'ordre;
   4. transfère le NETTOYAGE par proximité: retire les sommets à plus de --max-distance du mesh
      de la zone tel qu'affiché dans Blender (tous modificateurs appliqués: booléens, etc.);
-  5. décime (collapse) selon --ratio;
+  5. décime (collapse) vers --density triangles par m² (ou selon --ratio);
   6. retire les îlots de moins de --min-island sommets;
   7. mesure l'écart entre le maillage décimé et le maillage complet (dans les deux sens);
   8. exporte OBJ (Y vers le haut, convention OBJ) + texture JPEG + rapport JSON.
@@ -18,7 +18,7 @@ Lecture seule pour le .blend (jamais sauvegardé).
 
 Usage:
     blender -b <fichier.blend> --factory-startup --python prepare_zone.py -- \
-        --zone "zone 12" --ratio 0.1 --out O:\\temp\\zone-12
+        --zone "zone 12" [--density 3000] --out O:\\temp\\zone-12
 """
 import argparse
 import json
@@ -37,7 +37,8 @@ from register_zone import transform_for  # noqa: E402
 
 p = argparse.ArgumentParser()
 p.add_argument("--zone", required=True)
-p.add_argument("--ratio", type=float, required=True)
+p.add_argument("--density", type=float, default=3000, help="triangles visés par m² après décimation")
+p.add_argument("--ratio", type=float, help="ratio de décimation imposé (remplace --density)")
 p.add_argument("--max-distance", type=float, default=0.05, help="mètres")
 p.add_argument("--max-residual", type=float, default=0.1, help="résidu médian maximal du recalage, unités de l'export")
 p.add_argument("--min-island", type=int, default=100)
@@ -50,7 +51,7 @@ slug = a.zone.replace(" ", "-")
 zone_ob = bpy.data.objects[a.zone]
 source = zone_ob.get("source")
 assert source and os.path.exists(source), f"propriété 'source' absente ou fichier introuvable sur {a.zone}: {source}"
-report = dict(zone=a.zone, source=source, ratio=a.ratio, max_distance_m=a.max_distance, steps={})
+report = dict(zone=a.zone, source=source, density=a.density, max_distance_m=a.max_distance, steps={})
 t0 = time.time()
 
 
@@ -157,12 +158,16 @@ full_tree = BVHTree.FromBMesh(full_bm)
 full_co = world_vertices(hi)
 full_bm.free()
 
-# 5. décimation
-mod = hi.modifiers.new("decimate", 'DECIMATE')
-mod.decimate_type = 'COLLAPSE'
-mod.ratio = a.ratio
-bpy.ops.object.modifier_apply(modifier=mod.name)
-step("decimate", **counts(hi))
+# 5. décimation, vers la densité visée (triangles par m² de surface)
+area = np.empty(len(hi.data.polygons)); hi.data.polygons.foreach_get("area", area)
+area_m2 = float(area.sum())
+ratio = a.ratio if a.ratio else min(1.0, a.density * area_m2 / len(hi.data.polygons))
+if ratio < 1.0:
+    mod = hi.modifiers.new("decimate", 'DECIMATE')
+    mod.decimate_type = 'COLLAPSE'
+    mod.ratio = ratio
+    bpy.ops.object.modifier_apply(modifier=mod.name)
+step("decimate", area_m2=round(area_m2, 1), ratio=round(ratio, 4), **counts(hi))
 
 # 6. îlots
 bm = bmesh.new(); bm.from_mesh(hi.data)
