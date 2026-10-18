@@ -23,6 +23,7 @@ Chaîne de traitement qui transforme les modèles photogrammétriques de chaque 
 | `npm run model:serve-tiles` | sert `O:\publishing\tiles` en local (port 8081, CORS) |
 | `npm run viewer:dev` | visualiseur sur `http://localhost:3100/` |
 | `npm run viewer:build` | construit le visualiseur dans `viewer/dist` |
+| `npm run model:upload` | met en ligne les tuiles sur Cloudflare R2 (`-- --dry-run` pour voir sans envoyer) |
 
 Ces scripts appellent `publish_zones.ps1` (options `-Zones`, `-Changed`, `-DryRun`, `-Version`, `-Density`), `serve-tiles.ps1` et le projet `viewer/`.
 
@@ -40,7 +41,7 @@ Le script enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape
 | 5 | Préparation | `prepare_zone.py --zone "zone N" [--density 3000] --out …` | `.blend` (+ export `source`) | `O:\temp\<zone>\...\<zone>.obj` + `.jpg` + `<zone>-prepare.json` |
 | 6 | Tuilage + manifeste | `tile_zone.ps1` (+ `update_manifest.py`) | sortie de 5 | `O:\publishing\tiles\<zone>\<version>\` + `manifest.json` |
 | 7 | Aperçu local | `serve-tiles.ps1` + `viewer/`: `npm run dev` | `O:\publishing\tiles\` | `http://localhost:3100/` |
-| 8 | Mise en ligne | *à venir* (rclone vers Cloudflare R2) | | |
+| 8 | Mise en ligne | `upload_r2.mjs` (`npm run model:upload`) | `O:\publishing	iles\` + `.env.local` | bucket R2 `lock21-tiles` |
 
 ### 3. Vérification du repère
 
@@ -110,6 +111,17 @@ Pour un téléphone **Android** (le plus simple): débogage USB activé, câble 
 
 Pour un téléphone sur le même Wi-Fi (ex. iPhone): `serve-tiles.ps1 -Lan` (le visualiseur écoute déjà sur le réseau), puis ouvrir `http://<IP du PC>:3100/?tiles=http://<IP du PC>:8081`. Windows demande une fois d'autoriser l'accès réseau.
 
+## Mise en ligne (Cloudflare R2)
+
+`npm run model:upload` synchronise `O:\publishing	iles` avec le bucket R2 `lock21-tiles` (`-n` / `--dry-run` pour voir sans envoyer):
+
+- une version n'est envoyée que si son fichier d'entrée (`tileset.json` ou `.glb`) manque dans le bucket; ses fichiers ont un cache d'un an (`immutable`): une version publiée ne change jamais;
+- `manifest.json` est envoyé en dernier, avec un cache d'une minute: la nouvelle version est visible en moins d'une minute;
+- les versions référencées ni par le nouveau manifeste ni par le précédent sont supprimées du bucket (une génération gardée pour les visiteurs dont le manifeste est encore en cache; `--no-prune` garde tout);
+- identifiants dans `.env.local` (exclu de Git): `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`. Jamais affichés.
+
+Après une publication locale (`model:post-modified`), lancer `model:upload` pour mettre en ligne.
+
 ## Dossiers
 
 | Dossier | Contenu | Conservé? |
@@ -135,6 +147,7 @@ Pour un téléphone sur le même Wi-Fi (ex. iPhone): `serve-tiles.ps1 -Lan` (le 
 | Obj2Tiles (OpenDroneMap) | 1.8.0 | `O:\publishing\bin\obj2tiles-1.8.0\`, de [github.com/OpenDroneMap/Obj2Tiles/releases](https://github.com/OpenDroneMap/Obj2Tiles/releases) (exécutable autonome + `ktx.dll`) | étape 6 |
 | Node.js / npm | 24.21.0 / 11.19.0 | | site, `npx` |
 | http-server | 14.1.1 (via `npx`) | npm | étape 7 |
+| AWS SDK for JavaScript (`@aws-sdk/client-s3`) | 3.x | `tools/publish-model/package.json` | étape 8: envoi vers R2 (API compatible S3) |
 | glTF-Transform + meshoptimizer | 4.5.1 / 1.x | `tools/publish-model/package.json` (`npm install` dans ce dossier) | étape 6: compression meshopt des tuiles |
 | Vite | 8.x | `viewer/package.json` | visualiseur autonome (`viewer/`, `npm run dev` → `http://localhost:3100/`) |
 | three.js | 0.186.1 | npm (`package.json`) | rendu WebGL du visualiseur |

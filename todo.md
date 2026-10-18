@@ -48,7 +48,8 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 
 - [ ] Cloudflare: enable R2, create the `lock21-tiles` bucket, then custom domain `tiles.lock21.info`, CORS, API token
 - [x] Move `lock21.info` DNS from Porkbun to Cloudflare (2026-10-18, records in DNS only)
-- [ ] Upload script (rclone), versioned folders, then delete superseded versions
+- [x] Upload script `upload_r2.mjs` (`npm run model:upload`): 586 files, 369 MB uploaded on 2026-10-18
+- [ ] Viewer build pointing to `https://tiles.lock21.info`, published under `lock21.info/modele/`
 - [ ] Downloadable whole model (`.glb`, about 100 to 150 MB), generated from the manifest
 - [ ] KMZ for Google Earth: needs GPS coordinates of at least two points on the site, and a light COLLADA model
 - [ ] Choose a licence for the model data (CC BY 4.0 or CC BY-NC 4.0); the repo's MIT licence covers code only

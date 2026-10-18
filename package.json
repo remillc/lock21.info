@@ -21,7 +21,8 @@
     "model:publish": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/publish-model/publish_zones.ps1",
     "model:serve-tiles": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/publish-model/serve-tiles.ps1",
     "viewer:dev": "npm --prefix viewer run dev",
-    "viewer:build": "npm --prefix viewer run build"
+    "viewer:build": "npm --prefix viewer run build",
+    "model:upload": "node tools/publish-model/upload_r2.mjs"
   },
   "keywords": [],
   "author": "",
