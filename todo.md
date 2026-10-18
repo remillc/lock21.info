@@ -61,6 +61,14 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 - [ ] Add a workflow page to the site (`6. publication.md`) once the pipeline is stable
 - [ ] Rename the "zone N" Blender materials (`Material_0.00x`, `Empty.00x`) consistently
 
+### Surface look (idea)
+
+- [ ] Material look in the viewer like the Blender shaders (wet, metallic, roughness...): needs lit materials
+  (MeshStandardMaterial / MeshPhysicalMaterial) instead of the unlit display, an environment map for reflections,
+  and normals or normal maps (baked from the high-res exports: Metashape or bake_texture.py). Read the shader
+  settings from each zone's Blender material and pass them through the manifest. Caveat: the photo textures already
+  contain the lamps' lighting; adding lighting on top doubles it (de-lighting the textures helps)
+
 ### Virtual reality (idea)
 
 - [ ] VR option on lock21.info (WebXR, three.js): view the model in a headset, either
