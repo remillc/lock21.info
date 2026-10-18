@@ -106,7 +106,9 @@ cd viewer; npm run dev                     # visualiseur sur http://localhost:31
 
 Paramètres de test du visualiseur: `?tiles=<url>` (autre serveur de tuiles), `?error=<pixels>` (force un niveau de détail; une grande valeur garde les niveaux grossiers).
 
-Pour un téléphone sur le même Wi-Fi: `serve-tiles.ps1 -Lan` (le visualiseur écoute déjà sur le réseau), puis ouvrir `http://<IP du PC>:3100/?tiles=http://<IP du PC>:8081`. Windows demande une fois d'autoriser l'accès réseau.
+Pour un téléphone **Android** (le plus simple): débogage USB activé, câble branché, puis dans Chrome sur le PC `chrome://inspect/#devices` → *Port forwarding*: `3100` → `localhost:3100` et `8081` → `localhost:8081`. Sur le téléphone, ouvrir `http://localhost:3100/`; les outils de développement du téléphone (console, réseau, mémoire) s'ouvrent depuis `chrome://inspect`.
+
+Pour un téléphone sur le même Wi-Fi (ex. iPhone): `serve-tiles.ps1 -Lan` (le visualiseur écoute déjà sur le réseau), puis ouvrir `http://<IP du PC>:3100/?tiles=http://<IP du PC>:8081`. Windows demande une fois d'autoriser l'accès réseau.
 
 ## Dossiers
 

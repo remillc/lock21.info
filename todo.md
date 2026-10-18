@@ -10,7 +10,8 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 - [x] Reduce the first-view weight: meshopt compression + no root content, 61 MB -> 18 MB for 2 zones
 - [x] Lighten the coarse levels of detail: about 40 k / 150 k triangles per zone (meshoptimizer), first view of the 8 zones 35.8 MB -> 24.3 MB, mostly textures now
 - [ ] If phones struggle: lower the texture resolution of the coarse levels
-- [ ] Test on a phone (Wi-Fi, `?tiles=http://<PC IP>:8081`), especially an iPhone (Safari memory limit)
+- [x] Test on an Android phone (USB, `chrome://inspect` port forwarding 3100 and 8081): looks good (2026-10-18)
+- [ ] Test on an iPhone (Safari memory limit; Wi-Fi with `?tiles=http://<PC IP>:8081`, or Safari Web Inspector from a Mac)
 - [ ] Initial camera and navigation (what the visitor sees first)
 - [ ] Show the mockups and terrain for the zones not yet digitised (hidden once a zone is scanned)
 - [ ] Publish the viewer build under `lock21.info/modele/` and link it from the site
