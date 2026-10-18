@@ -67,16 +67,23 @@ async function startViewer(container, { tilesBaseUrl, transcoderPath, onStatus }
     return tiles
   })
 
-  // Frame the camera on the first tileset once its root is loaded
-  tilesets[0].addEventListener('load-root-tileset', () => {
-    const sphere = new THREE.Sphere()
-    tilesets[0].getBoundingSphere(sphere)
-    world.updateMatrixWorld(true)
-    sphere.applyMatrix4(world.matrixWorld)
-    controls.target.copy(sphere.center)
-    camera.position.copy(sphere.center).add(new THREE.Vector3(1, 0.6, 1).normalize().multiplyScalar(sphere.radius * 1.8))
-    controls.update()
-    onStatus(null)
+  // Frame the camera on all tilesets once every root is loaded
+  const bounds = new THREE.Box3()
+  let pending = tilesets.length
+  tilesets.forEach((tiles) => {
+    tiles.addEventListener('load-root-tileset', () => {
+      const sphere = new THREE.Sphere()
+      tiles.getBoundingSphere(sphere)
+      world.updateMatrixWorld(true)
+      sphere.applyMatrix4(world.matrixWorld)
+      bounds.union(sphere.getBoundingBox(new THREE.Box3()))
+      if (--pending > 0) return
+      const all = bounds.getBoundingSphere(new THREE.Sphere())
+      controls.target.copy(all.center)
+      camera.position.copy(all.center).add(new THREE.Vector3(1, 0.6, 1).normalize().multiplyScalar(all.radius * 1.8))
+      controls.update()
+      onStatus(null)
+    })
   })
 
   const resize = () => {
