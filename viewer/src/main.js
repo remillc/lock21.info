@@ -34,6 +34,12 @@ const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
 
+// Draw only when something changed (camera, tiles, size): a scene redrawn 60 times per second for nothing
+// kept the phone's GPU at 100 % and made it very hot.
+let needsRender = true
+const requestRender = () => { needsRender = true }
+controls.addEventListener('change', requestRender)
+
 const ktx2Loader = new KTX2Loader().setTranscoderPath('./vendor/basis/').detectSupport(renderer)
 
 // Sharper textures on surfaces seen at a grazing angle (floors, walls along the line of sight)
@@ -49,8 +55,8 @@ function unlitMaterial(old) {
 // Ambient occlusion (N8AO): darkens recesses and joints, giving depth to unlit surfaces. N8AO rebuilds the
 // normals from the depth buffer (the tiles carry none). Hardware antialiasing does not survive the
 // post-processing, hence SMAA. ?ao=0 disables it, ?aoRadius= / ?aoIntensity= tune it (metres / strength),
-// ?aoDebug=1 shows the occlusion alone. Phones: half resolution.
-const aoEnabled = params.get('ao') !== '0'
+// ?aoDebug=1 shows the occlusion alone. Off by default on phones (heat, battery): ?ao=1 forces it.
+const aoEnabled = params.has('ao') ? params.get('ao') !== '0' : !mobile
 let composer = null
 let aoPass = null
 if (aoEnabled) {
@@ -108,7 +114,11 @@ async function main() {
     })
     tiles.addEventListener('dispose-model', ({ scene: model }) => {
       model.traverse((child) => child.material?.dispose())
+      requestRender()
     })
+    tiles.addEventListener('load-model', requestRender)
+    tiles.addEventListener('tile-visibility-change', requestRender)
+    tiles.addEventListener('load-tile-set', requestRender)
     world.add(tiles.group)
     return tiles
   })
@@ -127,6 +137,7 @@ async function main() {
         }
       })
       scene.add(model)
+      requestRender()
     })
   }
 
@@ -142,8 +153,15 @@ async function main() {
       bounds.union(sphere.getBoundingBox(new THREE.Box3()))
       if (--pending > 0) return
       const all = bounds.getBoundingSphere(new THREE.Sphere())
-      controls.target.copy(all.center)
-      camera.position.copy(all.center).add(new THREE.Vector3(1, 0.6, 1).normalize().multiplyScalar(all.radius * 1.8))
+      // ?cam=x,y,z,tx,ty,tz: camera position and target (scene metres, y up), for identical or shared views
+      const cam = (params.get('cam') || '').split(',').map(Number)
+      if (cam.length === 6 && cam.every(Number.isFinite)) {
+        camera.position.set(cam[0], cam[1], cam[2])
+        controls.target.set(cam[3], cam[4], cam[5])
+      } else {
+        controls.target.copy(all.center)
+        camera.position.copy(all.center).add(new THREE.Vector3(1, 0.6, 1).normalize().multiplyScalar(all.radius * 1.8))
+      }
       controls.update()
       status.textContent = ''
     })
@@ -154,7 +172,16 @@ async function main() {
     camera.updateProjectionMatrix()
     renderer.setSize(container.clientWidth, container.clientHeight)
     composer?.setSize(container.clientWidth, container.clientHeight)
+    requestRender()
     tilesets.forEach((tiles) => tiles.setResolutionFromRenderer(camera, renderer))
+  })
+
+  // Key C: copy the current view as ?cam=... (to share a view or reproduce it)
+  window.addEventListener('keydown', (e) => {
+    if (e.key !== 'c' && e.key !== 'C') return
+    const v = [...camera.position.toArray(), ...controls.target.toArray()].map((n) => n.toFixed(2)).join(',')
+    console.log(`?cam=${v}`)
+    navigator.clipboard?.writeText(`${location.origin}${location.pathname}?cam=${v}`).catch(() => {})
   })
 
   // ?stats=1: memory used and tiles loaded per zone, on screen (readable on a phone)
@@ -163,7 +190,11 @@ async function main() {
   let lastStats = 0
 
   renderer.setAnimationLoop(() => {
-    controls.update()
+    // update() returns true while the camera moves (including the damping glide after a gesture)
+    if (controls.update()) needsRender = true
+    const loading = tilesets.some((t) => t.stats.queued + t.stats.downloading + t.stats.parsing > 0)
+    if (!needsRender && !loading) return
+    needsRender = false
     camera.updateMatrixWorld()
     tilesets.forEach((tiles) => tiles.update())
     if (composer) composer.render()
