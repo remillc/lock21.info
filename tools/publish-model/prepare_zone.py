@@ -7,7 +7,7 @@
   4. décime (collapse) selon --ratio;
   5. retire les îlots de moins de --min-island sommets;
   6. mesure l'écart entre le maillage décimé et le maillage complet (dans les deux sens);
-  7. exporte OBJ (Z vers le haut) + texture JPEG + rapport JSON.
+  7. exporte OBJ (Y vers le haut, convention OBJ) + texture JPEG + rapport JSON.
 
 Lecture seule pour le .blend (jamais sauvegardé).
 
@@ -176,7 +176,8 @@ img.save(filepath=os.path.join(a.out, tex_name), quality=a.texture_quality)
 img.filepath = os.path.join(a.out, tex_name)
 img.source = 'FILE'
 obj_path = os.path.join(a.out, f"{slug}.obj")
-bpy.ops.wm.obj_export(filepath=obj_path, export_selected_objects=True, forward_axis='Y', up_axis='Z',
+# Obj2Tiles lit l'OBJ comme Y vers le haut (convention OBJ/glTF) et le convertit lui-même en Z vers le haut
+bpy.ops.wm.obj_export(filepath=obj_path, export_selected_objects=True, forward_axis='NEGATIVE_Z', up_axis='Y',
                       export_normals=False, export_uv=True, export_materials=True, path_mode='STRIP',
                       apply_modifiers=False, export_triangulated_mesh=True)
 lo, hi = np.min(dec_co, 0), np.max(dec_co, 0)

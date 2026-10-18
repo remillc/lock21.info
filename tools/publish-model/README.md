@@ -47,7 +47,7 @@ Résultat zone 12: échelle 0,977, rotation 0,57°, résidu médian 0,033 pi (1 
 4. décime (`Decimate`, mode *collapse*) selon `--ratio`;
 5. retire les fragments de moins de `--min-island` sommets (100 par défaut);
 6. **mesure l'écart** entre le maillage décimé et le maillage complet, dans les deux sens (point le plus proche sur la surface), et le consigne dans le rapport;
-7. exporte en OBJ (axe Z vers le haut) avec la texture en JPEG.
+7. exporte en OBJ avec la texture en JPEG, **axe Y vers le haut**: Obj2Tiles suit la convention OBJ/glTF et convertit lui-même en Z vers le haut (3D Tiles). Un OBJ exporté Z vers le haut donne un modèle couché sur le côté.
 
 ### 6. Tuilage
 
