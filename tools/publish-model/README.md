@@ -18,7 +18,7 @@ Chaîne de traitement qui transforme les modèles photogrammétriques de chaque 
 | Commande | Effet |
 | --- | --- |
 | `npm run model:check` | liste les zones modifiées depuis leur dernière publication, sans rien publier |
-| `npm run model:publish-changed` | republie seulement les zones modifiées |
+| `npm run model:post-modified` | republie seulement les zones modifiées |
 | `npm run model:publish -- -Zones "zone 2","zone 3"` | republie une liste de zones |
 | `npm run model:serve-tiles` | sert `O:\publishing\tiles` en local (port 8081, CORS) |
 | `npm run viewer:dev` | visualiseur sur `http://localhost:3100/` |

@@ -17,7 +17,7 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "model:check": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/publish-model/publish_zones.ps1 -Changed -DryRun",
-    "model:publish-changed": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/publish-model/publish_zones.ps1 -Changed",
+    "model:post-modified": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/publish-model/publish_zones.ps1 -Changed",
     "model:publish": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/publish-model/publish_zones.ps1",
     "model:serve-tiles": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/publish-model/serve-tiles.ps1",
     "viewer:dev": "npm --prefix viewer run dev",
