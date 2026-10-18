@@ -1,11 +1,13 @@
 // Simplifies the coarse levels of detail of a tileset produced by Obj2Tiles, which keeps far too many
-// triangles there (zone 12: 418 k triangles in the coarsest level, about a third of the full mesh).
+// triangles there (zone 12: 326 k triangles in the coarsest level, about a third of the full mesh).
 //
 // - coarsest content level: down to about --coarse-tris triangles for the whole zone
 // - next level: down to about --mid-tris triangles, tile borders locked so neighbouring tiles still meet
 // - the finest level is left untouched
-// Simplification stops early if the error would exceed --*-error (fraction of each tile's extent).
-// Each simplified tile's geometricError is raised by that error bound, so the viewer refines in time.
+// Simplification stops early if the error would exceed --*-error (fraction of the tile's extent).
+// Each tile's geometricError is raised by the error meshoptimizer actually measured (not the bound):
+// an over-estimated error makes the viewer refine too early and load far more than needed.
+// Must run before compress_tiles.mjs (positions as plain floats).
 //
 // Usage: node simplify_lods.mjs <tileset folder> [--coarse-tris 40000] [--mid-tris 150000]
 //                                               [--coarse-error 0.02] [--mid-error 0.01]
@@ -13,7 +15,7 @@ import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { Logger, NodeIO } from '@gltf-transform/core'
 import { ALL_EXTENSIONS } from '@gltf-transform/extensions'
-import { simplify, weld } from '@gltf-transform/functions'
+import { compactPrimitive, weld } from '@gltf-transform/functions'
 import { MeshoptDecoder, MeshoptEncoder, MeshoptSimplifier } from 'meshoptimizer'
 
 const argv = process.argv.slice(2)
@@ -23,8 +25,8 @@ const option = (name, fallback) => {
   return i >= 0 ? Number(argv[i + 1]) : fallback
 }
 const levels = [
-  { name: 'coarse', tris: option('coarse-tris', 40000), error: option('coarse-error', 0.02), lockBorder: false },
-  { name: 'mid', tris: option('mid-tris', 150000), error: option('mid-error', 0.01), lockBorder: true },
+  { name: 'coarse', tris: option('coarse-tris', 40000), error: option('coarse-error', 0.02), flags: [] },
+  { name: 'mid', tris: option('mid-tris', 150000), error: option('mid-error', 0.01), flags: ['LockBorder'] },
 ]
 
 await Promise.all([MeshoptDecoder.ready, MeshoptEncoder.ready, MeshoptSimplifier.ready])
@@ -48,16 +50,24 @@ const depths = [...byDepth.keys()].sort((a, b) => a - b)
 function triangles(document) {
   let n = 0
   for (const mesh of document.getRoot().listMeshes())
-    for (const prim of mesh.listPrimitives()) n += (prim.getIndices()?.getCount() ?? prim.getAttribute('POSITION').getCount()) / 3
+    for (const prim of mesh.listPrimitives()) n += prim.getIndices().getCount() / 3
   return n
 }
 
-// Tile size from its bounding box in tileset.json: reliable even if the geometry is already quantized
-function extent(node) {
-  const box = node.boundingVolume?.box
-  if (!box) return 0
-  const axes = [box.slice(3, 6), box.slice(6, 9), box.slice(9, 12)]
-  return 2 * Math.max(...axes.map((a) => Math.hypot(...a)))
+// Simplifies every primitive of a tile; returns the largest absolute error (in tile units, metres)
+function simplifyDocument(document, ratio, relativeError, flags) {
+  let worst = 0
+  for (const mesh of document.getRoot().listMeshes())
+    for (const prim of mesh.listPrimitives()) {
+      const positions = new Float32Array(prim.getAttribute('POSITION').getArray())
+      const indices = new Uint32Array(prim.getIndices().getArray())
+      const target = Math.max(3, Math.floor((indices.length * ratio) / 3) * 3)
+      const [result, error] = MeshoptSimplifier.simplify(indices, positions, 3, target, relativeError, flags)
+      worst = Math.max(worst, error * MeshoptSimplifier.getScale(positions, 3))
+      prim.getIndices().setArray(result)
+      compactPrimitive(prim)
+    }
+  return worst
 }
 
 // Only the levels above the finest one are simplified
@@ -66,18 +76,20 @@ for (const [i, level] of levels.entries()) {
   if (depth === undefined || i >= depths.length - 1) break
   const nodes = byDepth.get(depth)
   const docs = await Promise.all(nodes.map((node) => io.read(join(dir, node.content.uri))))
+  for (const doc of docs) await doc.transform(weld())
   const total = docs.reduce((sum, doc) => sum + triangles(doc), 0)
   const ratio = Math.min(1, level.tris / total)
   let after = 0
+  let maxError = 0
   for (const [k, node] of nodes.entries()) {
-    const doc = docs[k]
-    const size = extent(node)
-    await doc.transform(weld(), simplify({ simplifier: MeshoptSimplifier, ratio, error: level.error, lockBorder: level.lockBorder }))
-    after += triangles(doc)
-    node.geometricError = (node.geometricError || 0) + level.error * size
-    await io.write(join(dir, node.content.uri), doc)
+    const error = simplifyDocument(docs[k], ratio, level.error, level.flags)
+    after += triangles(docs[k])
+    maxError = Math.max(maxError, error)
+    node.geometricError = (node.geometricError || 0) + error
+    await io.write(join(dir, node.content.uri), docs[k])
   }
-  console.log(`simplification ${level.name}: ${nodes.length} tuiles, ${Math.round(total).toLocaleString('fr-CA')} -> ${Math.round(after).toLocaleString('fr-CA')} triangles`)
+  console.log(`simplification ${level.name}: ${nodes.length} tuiles, ${Math.round(total).toLocaleString('fr-CA')} -> ` +
+    `${Math.round(after).toLocaleString('fr-CA')} triangles, erreur max ${(maxError * 100).toFixed(1)} cm`)
 }
 
 // A parent's error must never be below its children's
