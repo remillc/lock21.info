@@ -68,7 +68,7 @@ for ob in objects:
         print(f"[context] image cuite dans Blender: {ob.name} -> {rel}", flush=True)
 to_bake = [o for o in objects if o.name not in baked and any(procedural(sl.material) for sl in o.material_slots)]
 if to_bake:
-    setup_cycles_gpu(bpy.context.scene, 32)
+    setup_cycles_gpu(bpy.context.scene, 128)
 for ob in to_bake:
     image = bpy.data.images.new(f"context-bake-{ob.name}", bake_size, bake_size)
     for slot in ob.material_slots:
@@ -82,6 +82,9 @@ for ob in to_bake:
         slot.material = m
     for o in bpy.context.view_layer.objects:
         o.select_set(o is ob)
+        # Seuls l'objet et les lumières sont rendus: sinon les autres objets (volumes de coupe, maquettes,
+        # zones) projettent leurs ombres dans la texture
+        o.hide_render = not (o is ob or o.type == 'LIGHT')
     bpy.context.view_layer.objects.active = ob
     # Couleur + éclairage direct et indirect: le relief (Bump) n'est visible que sous la lumière
     bpy.ops.object.bake(type='DIFFUSE', pass_filter={'COLOR', 'DIRECT', 'INDIRECT'}, margin=16)

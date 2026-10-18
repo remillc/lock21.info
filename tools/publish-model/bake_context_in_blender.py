@@ -6,7 +6,8 @@
 
 Pour chaque objet du contexte (noms contenant « filler », collection `terrain`) dont un matériau est procédural:
   - rendu Cycles de la couleur sous l'éclairage de la scène (direct + indirect: le relief Bump n'est visible
-    que sous la lumière), dans une image de TAILLE px;
+    que sous la lumière), dans une image de TAILLE px; les autres objets sont exclus du rendu pendant la
+    cuisson (pas d'ombres portées), puis leur visibilité est rétablie;
   - image enregistrée dans modeles/textures/baked/<objet>.png (fichier externe: le .blend ne grossit pas);
   - chemin noté dans la propriété `baked_texture` de l'objet. export_context.py utilise alors cette image.
 Les matériaux de l'objet ne sont pas modifiés. Pour mettre à jour après une retouche de matériau: relancer.
@@ -18,7 +19,7 @@ import bpy
 
 # ---------------------------------------------------------------- PARAMÈTRES
 TAILLE = 4096
-ECHANTILLONS = 32
+ECHANTILLONS = 128
 # ----------------------------------------------------------------------------
 
 SIMPLE_NODES = {'TEX_IMAGE', 'BSDF_PRINCIPLED', 'OUTPUT_MATERIAL'}
@@ -41,6 +42,7 @@ out_dir = bpy.path.abspath("//textures/baked")
 os.makedirs(out_dir, exist_ok=True)
 saved_engine, saved_samples = scene.render.engine, scene.cycles.samples
 saved_selection = [o for o in bpy.context.view_layer.objects if o.select_get()]
+saved_hide_render = {o.name: o.hide_render for o in bpy.context.view_layer.objects}
 saved_active = bpy.context.view_layer.objects.active
 scene.render.engine = 'CYCLES'
 scene.cycles.samples = ECHANTILLONS
@@ -61,6 +63,9 @@ try:
             added.append((m, node, previous_active))
         for o in bpy.context.view_layer.objects:
             o.select_set(o is ob)
+            # Seuls l'objet et les lumières sont rendus: sinon les autres objets (volumes de coupe, maquettes,
+            # zones) projettent leurs ombres dans la texture
+            o.hide_render = not (o is ob or o.type == 'LIGHT')
         bpy.context.view_layer.objects.active = ob
         bpy.ops.object.bake(type='DIFFUSE', pass_filter={'COLOR', 'DIRECT', 'INDIRECT'}, margin=16)
         for m, node, previous_active in added:
@@ -75,6 +80,9 @@ try:
         print(f"[cuisson] {ob.name} -> {ob['baked_texture']}", flush=True)
 finally:
     scene.render.engine, scene.cycles.samples = saved_engine, saved_samples
+    for o in bpy.context.view_layer.objects:
+        if o.name in saved_hide_render:
+            o.hide_render = saved_hide_render[o.name]
     for o in bpy.context.view_layer.objects:
         o.select_set(o in saved_selection)
     bpy.context.view_layer.objects.active = saved_active
