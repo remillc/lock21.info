@@ -87,6 +87,10 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 
 ## Site
 
+- [x] Removed the GPT translation workflows (they had failed since 2025; last successful run 2024-11-10)
+- [ ] English version of the docs: translated by Claude on request (from `i18n/fr/...` to `i18n/en/...`), rather than by a
+  workflow on every push; the `OPENAI_API_KEY` repository secret can then be deleted on GitHub
+
 - [ ] Migrate the site from Docusaurus to Astro (after the 3D proof of concept)
 - [ ] Underwater look for the viewer: set aside on branch `feature/underwater-look`
 - [ ] Docusaurus template leftovers: footer links, home page, sample blog posts, `authors.yml`

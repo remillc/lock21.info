@@ -70,8 +70,7 @@ Node >= 18. Builds use `@docusaurus/faster` (`future.experimental_faster`). The 
 ## CI (`.github/workflows/`)
 
 - `deploy.yml` builds on PRs and deploys to the `gh-pages` branch over SSH on pushes to `main`.
-- `gpt-translate-commit.yml` translates the `.md` files changed in each push to `main` into English with `3ru/gpt-translate` (OpenAI). Check its output for chatty artefacts (e.g. a "Certainly! Here's the translation…" preamble) and remove them.
-- `gpt-translate.yml` runs a translation on demand when an issue comment contains `/gpt-translate` or `/gt`.
+- The former GPT translation workflows were removed (they had failed since 2025). English translations of the docs are done by Claude on request.
 
 ## Large and binary files: be careful
 
@@ -97,4 +96,4 @@ These are not bugs to fix unprompted, but don't copy them:
 ## Git
 
 - Commit messages in history are just `wip`. There is no enforced style.
-- Work happens directly on `main`, and pushing to `main` deploys **and** triggers paid GPT translation. Don't push without the user's explicit OK.
+- Pushing to `main` deploys the site. Don't push or merge into `main` without the user's explicit OK.
