@@ -8,7 +8,8 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 
 - [x] Standalone viewer (Vite + three.js + 3d-tiles-renderer) in `viewer/`, outside Docusaurus
 - [x] Reduce the first-view weight: meshopt compression + no root content, 61 MB -> 18 MB for 2 zones
-- [ ] Lighten the coarse levels of detail: the first view of the 8 zones loads 35.8 MB (each zone's coarsest level is about 20 % of its triangles)
+- [x] Lighten the coarse levels of detail: about 40 k / 150 k triangles per zone (meshoptimizer), first view of the 8 zones 35.8 MB -> 24.3 MB, mostly textures now
+- [ ] If phones struggle: lower the texture resolution of the coarse levels
 - [ ] Test on a phone (Wi-Fi, `?tiles=http://<PC IP>:8081`), especially an iPhone (Safari memory limit)
 - [ ] Initial camera and navigation (what the visitor sees first)
 - [ ] Show the mockups and terrain for the zones not yet digitised (hidden once a zone is scanned)
