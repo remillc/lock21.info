@@ -28,12 +28,16 @@ if (-not (Select-String -Path $mtl -Pattern "^map_Kd" -Quiet)) { throw "$mtl ne 
     (Join-Path $Prepared "$Zone.obj") $out
 if ($LASTEXITCODE -ne 0) { throw "Obj2Tiles a échoué ($LASTEXITCODE)" }
 
+# Simplification des niveaux grossiers (Obj2Tiles y garde beaucoup trop de triangles)
+node "$PSScriptRoot\simplify_lods.mjs" $out
+if ($LASTEXITCODE -ne 0) { throw "simplification échouée ($LASTEXITCODE)" }
+
 # Compression meshopt de la géométrie de chaque tuile (glTF-Transform); les textures KTX2 restent telles quelles
 node "$PSScriptRoot\compress_tiles.mjs" $out
 if ($LASTEXITCODE -ne 0) { throw "compression échouée ($LASTEXITCODE)" }
 
 # Racine vide: erreur géométrique très grande, sinon la zone disparaît vue de loin; champs null retirés
-python -I "$PSScriptRootix_tileset.py" $out
+python -I "$PSScriptRoot\fix_tileset.py" $out
 
 # Empreinte de l'état de la zone dans le .blend au moment de la préparation (voir check_changes.py)
 $fp = Join-Path $Prepared "$Zone-fingerprint.json"
