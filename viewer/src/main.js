@@ -16,11 +16,12 @@ const TILES_URL = params.get('tiles') || import.meta.env.VITE_TILES_URL || 'http
 const container = document.getElementById('viewer')
 const status = document.getElementById('status')
 
-// Phones: coarser detail and a smaller memory budget (Safari iOS reloads the page beyond ~1-1.5 GB)
-const mobile = window.matchMedia('(pointer: coarse)').matches
+// Phones: coarser detail and a smaller memory budget (Safari iOS reloads the page beyond ~1-1.5 GB).
+// ?profile=mobile|desktop forces a profile (tests on the PC).
+const mobile = params.get('profile') ? params.get('profile') === 'mobile' : window.matchMedia('(pointer: coarse)').matches
 const profile = mobile
-  ? { errorTarget: 12, maxBytes: 300e6, pixelRatio: Math.min(window.devicePixelRatio, 1.5) }
-  : { errorTarget: 6, maxBytes: 1000e6, pixelRatio: Math.min(window.devicePixelRatio, 2) }
+  ? { errorTarget: 12, maxBytes: 450e6, pixelRatio: Math.min(window.devicePixelRatio, 1.5) }
+  : { errorTarget: 6, maxBytes: 1200e6, pixelRatio: Math.min(window.devicePixelRatio, 2) }
 
 const renderer = new THREE.WebGLRenderer({ antialias: true })
 renderer.setPixelRatio(profile.pixelRatio)
@@ -74,15 +75,25 @@ scene.add(world)
 
 async function main() {
   const manifest = await (await fetch(`${TILES_URL}/manifest.json`, { cache: 'no-cache' })).json()
+  // One memory budget shared by all zones: a per-zone share (budget / zone count) filled up after 2 or 3
+  // large textures and stopped loading, leaving zones missing on phones.
+  let sharedCache = null
   const tilesets = manifest.tilesets.map((entry) => {
     const tiles = new TilesRenderer(`${TILES_URL}/${entry.url}`)
+    tiles.zoneId = entry.id
+    if (sharedCache) {
+      tiles.lruCache = sharedCache
+    } else {
+      sharedCache = tiles.lruCache
+      sharedCache.maxBytesSize = profile.maxBytes
+      sharedCache.minBytesSize = profile.maxBytes * 0.6
+    }
     const gltfLoader = new GLTFLoader(tiles.manager)
     gltfLoader.setKTX2Loader(ktx2Loader)
     gltfLoader.setMeshoptDecoder(MeshoptDecoder) // geometry compressed by tools/publish-model/compress_tiles.mjs
     tiles.manager.addHandler(/\.(gltf|glb)$/g, gltfLoader)
     // ?error=<pixels>: override the screen-space error target (testing; large values keep the coarse levels)
     tiles.errorTarget = Number(params.get('error')) || profile.errorTarget
-    tiles.lruCache.maxBytesSize = profile.maxBytes / manifest.tilesets.length
     tiles.setCamera(camera)
     tiles.setResolutionFromRenderer(camera, renderer)
 
@@ -146,12 +157,26 @@ async function main() {
     tilesets.forEach((tiles) => tiles.setResolutionFromRenderer(camera, renderer))
   })
 
+  // ?stats=1: memory used and tiles loaded per zone, on screen (readable on a phone)
+  const statsBox = params.get('stats') === '1' ? document.body.appendChild(document.createElement('pre')) : null
+  if (statsBox) statsBox.className = 'stats'
+  let lastStats = 0
+
   renderer.setAnimationLoop(() => {
     controls.update()
     camera.updateMatrixWorld()
     tilesets.forEach((tiles) => tiles.update())
     if (composer) composer.render()
     else renderer.render(scene, camera)
+    if (statsBox && performance.now() - lastStats > 500) {
+      lastStats = performance.now()
+      const cache = tilesets[0]?.lruCache
+      const lines = [
+        `${mobile ? 'téléphone' : 'ordinateur'} · mémoire ${((cache?.cachedBytes || 0) / 1e6).toFixed(0)} / ${(profile.maxBytes / 1e6).toFixed(0)} Mo${cache?.isFull() ? ' (PLEINE)' : ''}`,
+        ...tilesets.map((t) => `${t.zoneId.padEnd(8)} visibles ${String(t.visibleTiles.size).padStart(3)} · en cours ${t.stats.downloading + t.stats.parsing}`),
+      ]
+      statsBox.textContent = lines.join('\n')
+    }
   })
 }
 

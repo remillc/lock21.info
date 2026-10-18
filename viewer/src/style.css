@@ -38,3 +38,16 @@ body {
   font-size: 0.85rem;
   text-decoration: none;
 }
+
+.stats {
+  position: fixed;
+  right: 8px;
+  bottom: 8px;
+  margin: 0;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: rgb(4 20 24 / 75%);
+  color: #d7e3ea;
+  font-size: 11px;
+  pointer-events: none;
+}
