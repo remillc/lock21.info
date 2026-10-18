@@ -3,7 +3,11 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js'
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
+import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 import { TilesRenderer } from '3d-tiles-renderer'
+import { N8AOPass } from 'n8ao'
 
 // Root of the published tiles (manifest.json + tilesets). Override with ?tiles=<url> (e.g. phone tests on the LAN)
 const params = new URLSearchParams(location.search)
@@ -31,6 +35,38 @@ controls.enableDamping = true
 
 const ktx2Loader = new KTX2Loader().setTranscoderPath('./vendor/basis/').detectSupport(renderer)
 
+// Sharper textures on surfaces seen at a grazing angle (floors, walls along the line of sight)
+const maxAnisotropy = renderer.capabilities.getMaxAnisotropy()
+
+// The photogrammetry texture already contains the lighting: display it unlit.
+// Double-sided: photogrammetry surfaces are open and are seen from both sides.
+function unlitMaterial(old) {
+  if (old.map) old.map.anisotropy = maxAnisotropy
+  return new THREE.MeshBasicMaterial({ map: old.map, color: old.map ? 0xffffff : old.color, side: THREE.DoubleSide })
+}
+
+// Ambient occlusion (N8AO): darkens recesses and joints, giving depth to unlit surfaces. N8AO rebuilds the
+// normals from the depth buffer (the tiles carry none). Hardware antialiasing does not survive the
+// post-processing, hence SMAA. ?ao=0 disables it, ?aoRadius= / ?aoIntensity= tune it (metres / strength),
+// ?aoDebug=1 shows the occlusion alone. Phones: half resolution.
+const aoEnabled = params.get('ao') !== '0'
+let composer = null
+let aoPass = null
+if (aoEnabled) {
+  composer = new EffectComposer(renderer)
+  aoPass = new N8AOPass(scene, camera, container.clientWidth, container.clientHeight)
+  aoPass.configuration.aoRadius = Number(params.get('aoRadius')) || 1.0
+  aoPass.configuration.distanceFalloff = 1.0
+  aoPass.configuration.intensity = Number(params.get('aoIntensity')) || 3.0
+  aoPass.configuration.halfRes = mobile
+  aoPass.configuration.gammaCorrection = false // OutputPass converts to sRGB at the end
+  aoPass.setQualityMode(mobile ? 'Low' : 'Medium')
+  if (params.get('aoDebug') === '1') aoPass.setDisplayMode('AO')
+  composer.addPass(aoPass)
+  composer.addPass(new SMAAPass())
+  composer.addPass(new OutputPass())
+}
+
 // 3D Tiles are Z-up, three.js is Y-up
 const world = new THREE.Group()
 world.rotation.x = -Math.PI / 2
@@ -50,13 +86,11 @@ async function main() {
     tiles.setCamera(camera)
     tiles.setResolutionFromRenderer(camera, renderer)
 
-    // The photogrammetry texture already contains the lighting: display it unlit.
-    // Double-sided: photogrammetry surfaces are open and are seen from both sides.
     tiles.addEventListener('load-model', ({ scene: model }) => {
       model.traverse((child) => {
         if (child.isMesh) {
           const old = child.material
-          child.material = new THREE.MeshBasicMaterial({ map: old.map, side: THREE.DoubleSide })
+          child.material = unlitMaterial(old)
           old.dispose()
         }
       })
@@ -77,7 +111,7 @@ async function main() {
       model.traverse((child) => {
         if (child.isMesh) {
           const old = child.material
-          child.material = new THREE.MeshBasicMaterial({ map: old.map, color: old.map ? 0xffffff : old.color, side: THREE.DoubleSide })
+          child.material = unlitMaterial(old)
           old.dispose()
         }
       })
@@ -108,6 +142,7 @@ async function main() {
     camera.aspect = container.clientWidth / container.clientHeight
     camera.updateProjectionMatrix()
     renderer.setSize(container.clientWidth, container.clientHeight)
+    composer?.setSize(container.clientWidth, container.clientHeight)
     tilesets.forEach((tiles) => tiles.setResolutionFromRenderer(camera, renderer))
   })
 
@@ -115,7 +150,8 @@ async function main() {
     controls.update()
     camera.updateMatrixWorld()
     tilesets.forEach((tiles) => tiles.update())
-    renderer.render(scene, camera)
+    if (composer) composer.render()
+    else renderer.render(scene, camera)
   })
 }
 
