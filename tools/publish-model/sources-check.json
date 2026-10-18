@@ -1,0 +1,147 @@
+[
+  {
+    "file": "zone-10\\zone 10 - lens corrected - mesh - 3M faces.glb",
+    "zone": "zone 10",
+    "vertices": 1614625,
+    "median": 7.917844533920288,
+    "p90": 17.24905490875244,
+    "identical_pct": 0.0,
+    "verdict": "repère différent"
+  },
+  {
+    "file": "zone-10\\zone 10 - lens corrected - mesh - 652k faces.glb",
+    "zone": "zone 10",
+    "vertices": 351593,
+    "median": 8.033016204833984,
+    "p90": 17.246715927124022,
+    "identical_pct": 0.0,
+    "verdict": "repère différent"
+  },
+  {
+    "file": "zone-11\\zone 11 - lens corrected - mesh - high quality 11M faces.glb",
+    "zone": "zone 11",
+    "vertices": 6033771,
+    "median": 0.05667669139802456,
+    "p90": 0.09280389323830607,
+    "identical_pct": 0.0,
+    "verdict": "même repère"
+  },
+  {
+    "file": "zone-11\\zone 11 - lens corrected - mesh - high quality 185k faces.glb",
+    "zone": "zone 11",
+    "vertices": 99439,
+    "median": 0.0,
+    "p90": 0.0,
+    "identical_pct": 99.98,
+    "verdict": "même maillage"
+  },
+  {
+    "file": "zone-12\\zone-12 - lens corrected - mesh 13M faces.glb",
+    "zone": "zone 12",
+    "vertices": 6823688,
+    "median": 48.3054256439209,
+    "p90": 56.105055236816405,
+    "identical_pct": 0.0,
+    "verdict": "repère différent"
+  },
+  {
+    "file": "zone-12\\zone-12 - lens corrected - mesh 4.5M faces.glb",
+    "zone": "zone 12",
+    "vertices": 2410920,
+    "median": 48.117271423339844,
+    "p90": 55.851141357421874,
+    "identical_pct": 0.0,
+    "verdict": "repère différent"
+  },
+  {
+    "file": "zone-16\\zone 16 - lens corrected - mesh - 100k faces.glb",
+    "zone": "zone 16",
+    "verdict": "zone absente de Blender"
+  },
+  {
+    "file": "zone-16\\zone 16 - lens corrected - mesh - 7M faces.glb",
+    "zone": "zone 16",
+    "verdict": "zone absente de Blender"
+  },
+  {
+    "file": "zone-1\\zone-1 - lens corrected - mesh 621k faces.glb",
+    "zone": "zone 1",
+    "vertices": 344238,
+    "median": 158.36705017089844,
+    "p90": 172.36323852539064,
+    "identical_pct": 0.0,
+    "verdict": "repère différent"
+  },
+  {
+    "file": "zone-2\\zone-2 - lens corrected - mesh 1.2M faces.glb",
+    "zone": "zone 2",
+    "vertices": 700551,
+    "median": 0.0,
+    "p90": 0.0,
+    "identical_pct": 99.895,
+    "verdict": "même maillage"
+  },
+  {
+    "file": "zone-2\\zone-2 - lens corrected - mesh 17M faces.glb",
+    "zone": "zone 2",
+    "vertices": 9147044,
+    "median": 0.030382447876036167,
+    "p90": 0.05529499538242819,
+    "identical_pct": 0.13,
+    "verdict": "même repère"
+  },
+  {
+    "file": "zone-3\\zone-3 - lens corrected - mesh 24M faces.glb",
+    "zone": "zone 3",
+    "vertices": 12514816,
+    "median": 0.051018424332141876,
+    "p90": 0.08828495517373086,
+    "identical_pct": 0.0,
+    "verdict": "même repère"
+  },
+  {
+    "file": "zone-3\\zone-3 - lens corrected - mesh 808k faces.glb",
+    "zone": "zone 3",
+    "vertices": 434172,
+    "median": 0.0,
+    "p90": 0.0,
+    "identical_pct": 99.775,
+    "verdict": "même maillage"
+  },
+  {
+    "file": "zone-4\\zone 4 - lens corrected - Align=highest - DepthMapQuality=low;FaceCount=1.5M faces - mesh.glb",
+    "zone": "zone 4",
+    "vertices": 788087,
+    "median": 0.0,
+    "p90": 0.0,
+    "identical_pct": 99.985,
+    "verdict": "même maillage"
+  },
+  {
+    "file": "zone-4\\zone 4 - lens corrected - Align=highest - DepthMapQuality=medium;FaceCount=1.5M faces - mesh.glb",
+    "zone": "zone 4",
+    "vertices": 826867,
+    "median": 0.11885355785489082,
+    "p90": 0.3795549124479296,
+    "identical_pct": 0.0,
+    "verdict": "même repère"
+  },
+  {
+    "file": "zone-8\\zone 8 - lens corrected - mesh - high quality 200K faces.glb",
+    "zone": "zone 8",
+    "vertices": 104238,
+    "median": 23.291667938232422,
+    "p90": 42.864273834228534,
+    "identical_pct": 0.0,
+    "verdict": "repère différent"
+  },
+  {
+    "file": "zone-8\\zone 8 - lens corrected - mesh - high quality 20M faces.glb",
+    "zone": "zone 8",
+    "vertices": 10176875,
+    "median": 23.14533519744873,
+    "p90": 42.34346504211426,
+    "identical_pct": 0.0,
+    "verdict": "repère différent"
+  }
+]
