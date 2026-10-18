@@ -2,6 +2,11 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## 0.0.3 - 2026-10-18
+
+- Deployment works from GitHub Actions: it uses the workflow's own token instead of an SSH key that was never configured.
+- `static/CNAME` (lock21.info) is published with every deployment, so the custom domain survives it.
+
 ## 0.0.2 - 2026-10-18
 
 - The site is kept out of search engines: every page has `robots: noindex, nofollow` (Docusaurus `noIndex`).
