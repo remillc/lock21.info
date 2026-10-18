@@ -188,8 +188,20 @@ async function main() {
   const statsBox = params.get('stats') === '1' ? document.body.appendChild(document.createElement('pre')) : null
   if (statsBox) statsBox.className = 'stats'
   let lastStats = 0
+  // Refreshed even when nothing is redrawn (render on demand), otherwise the overlay shows stale numbers
+  function updateStats() {
+    if (!statsBox || performance.now() - lastStats < 500) return
+    lastStats = performance.now()
+    const cache = tilesets[0]?.lruCache
+    const lines = [
+      `${mobile ? 'téléphone' : 'ordinateur'} · mémoire ${((cache?.cachedBytes || 0) / 1e6).toFixed(0)} / ${(profile.maxBytes / 1e6).toFixed(0)} Mo${cache?.isFull() ? ' (PLEINE)' : ''}`,
+      ...tilesets.map((t) => `${t.zoneId.padEnd(8)} visibles ${String(t.visibleTiles.size).padStart(3)} · en cours ${t.stats.downloading + t.stats.parsing}`),
+    ]
+    statsBox.textContent = lines.join('\n')
+  }
 
   renderer.setAnimationLoop(() => {
+    updateStats()
     // update() returns true while the camera moves (including the damping glide after a gesture)
     if (controls.update()) needsRender = true
     const loading = tilesets.some((t) => t.stats.queued + t.stats.downloading + t.stats.parsing > 0)
@@ -199,15 +211,6 @@ async function main() {
     tilesets.forEach((tiles) => tiles.update())
     if (composer) composer.render()
     else renderer.render(scene, camera)
-    if (statsBox && performance.now() - lastStats > 500) {
-      lastStats = performance.now()
-      const cache = tilesets[0]?.lruCache
-      const lines = [
-        `${mobile ? 'téléphone' : 'ordinateur'} · mémoire ${((cache?.cachedBytes || 0) / 1e6).toFixed(0)} / ${(profile.maxBytes / 1e6).toFixed(0)} Mo${cache?.isFull() ? ' (PLEINE)' : ''}`,
-        ...tilesets.map((t) => `${t.zoneId.padEnd(8)} visibles ${String(t.visibleTiles.size).padStart(3)} · en cours ${t.stats.downloading + t.stats.parsing}`),
-      ]
-      statsBox.textContent = lines.join('\n')
-    }
   })
 }
 

@@ -46,7 +46,7 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 
 ### Hosting and downloads
 
-- [ ] Cloudflare: enable R2, create the `lock21-tiles` bucket, then custom domain `tiles.lock21.info`, CORS, API token
+- [x] Cloudflare R2: bucket `lock21-tiles`, CORS, API token, custom domain `tiles.lock21.info` (2026-10-18); first view loads 10.5 MB in about 1 s from the PC
 - [x] Move `lock21.info` DNS from Porkbun to Cloudflare (2026-10-18, records in DNS only)
 - [x] Upload script `upload_r2.mjs` (`npm run model:upload`): 586 files, 369 MB uploaded on 2026-10-18
 - [ ] Viewer build pointing to `https://tiles.lock21.info`, published under `lock21.info/modele/`
@@ -60,6 +60,13 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 - [ ] Document how the project's repositories and folders are organized (Git repo, `viewer/`, `tools/`, `O:\photogrammetry`, `O:\modeles`, `O:\publishing`, R2)
 - [ ] Add a workflow page to the site (`6. publication.md`) once the pipeline is stable
 - [ ] Rename the "zone N" Blender materials (`Material_0.00x`, `Empty.00x`) consistently
+
+### Virtual reality (idea)
+
+- [ ] VR option on lock21.info (WebXR, three.js): view the model in a headset, either
+  - at human scale, as if standing alongside the structures (immersive VR), or
+  - placed at its real GPS position (needs the site's georeferencing, same as the KMZ: GPS coordinates of at least two points)
+  - check headset memory and frame rate (stereo rendering doubles the GPU load; render on demand does not apply in VR)
 
 ## Site
 
