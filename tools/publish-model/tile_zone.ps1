@@ -32,6 +32,9 @@ if ($LASTEXITCODE -ne 0) { throw "Obj2Tiles a échoué ($LASTEXITCODE)" }
 node "$PSScriptRoot\compress_tiles.mjs" $out
 if ($LASTEXITCODE -ne 0) { throw "compression échouée ($LASTEXITCODE)" }
 
+# Racine vide: erreur géométrique très grande, sinon la zone disparaît vue de loin; champs null retirés
+python -I "$PSScriptRootix_tileset.py" $out
+
 # Empreinte de l'état de la zone dans le .blend au moment de la préparation (voir check_changes.py)
 $fp = Join-Path $Prepared "$Zone-fingerprint.json"
 if (Test-Path $fp) { Copy-Item $fp (Join-Path $out "fingerprint.json") }

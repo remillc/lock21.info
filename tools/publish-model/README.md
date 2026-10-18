@@ -81,6 +81,8 @@ Essai sur la zone 10 (export 652 k de 2026 sur le mesh de 140 k): échelle 1,003
 
 `Obj2Tiles --preset standard --texture-format Ktx2 --unlit --max-texture-size 0 --decimation-mode Standard --lods 3 --divisions 0`: hiérarchie de niveaux de détail (octree, découpage en Z), coordonnées locales, contenu `.glb`, textures **KTX2** (restent compressées en mémoire graphique, indispensable sur téléphone). Chaque version est écrite dans un nouveau dossier daté et n'est plus jamais modifiée; `manifest.json` pointe vers la version active.
 
+Puis `fix_tileset.py` corrige le `tileset.json`: la racine, vide avec `--no-root-content`, reçoit une très grande erreur géométrique (sinon, vue de loin, elle semble assez précise, le visualiseur ne descend pas vers le premier niveau qui a un contenu et la zone disparaît: c'est arrivé à la zone 8), et les champs `null` non conformes sont retirés.
+
 Ensuite, `compress_tiles.mjs` (glTF-Transform) compresse la géométrie de chaque tuile en **meshopt** (quantification + `EXT_meshopt_compression`); le visualiseur la décode avec `MeshoptDecoder`. Avec `--no-root-content` (la racine dupliquait le niveau le plus grossier), l'ouverture du visualiseur (zones 10 et 12) passe de 61,2 Mo à **18,1 Mo**, sans différence visible.
 
 Leçons des essais sur la zone 12 (OBJ préparé de 1,2 M faces, texture 12 467 px):
