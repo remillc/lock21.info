@@ -20,12 +20,15 @@ Afficher cette aide (-h, -Help ou --help).
 
 #>
 param(
-    [string]$Blend = "$PSScriptRoot\..\..\modeles\lock-21-publishing.blend",
+    [string]$Blend,
     [string]$Blender = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe",
     [Alias('h')][switch]$Help,
     [Parameter(ValueFromRemainingArguments = $true)][string[]]$Rest
 )
 if ($Help -or ($Rest -contains '--help') -or ($Blend -contains '--help')) { Get-Help $PSCommandPath -Detailed; return }
+# Défaut calculé ici: dans un script « avancé » (attribut [Parameter]), Windows PowerShell 5.1 laisse
+# $PSScriptRoot vide dans les valeurs par défaut des paramètres
+if (-not $Blend) { $Blend = Join-Path $PSScriptRoot "..\..\modeles\lock-21-publishing.blend" }
 
 & $Blender -b (Resolve-Path $Blend) --factory-startup `
     --python "$PSScriptRoot\analyze_zones.py" -- "$PSScriptRoot\thresholds.json" "$PSScriptRoot\reports" 2>$null |
