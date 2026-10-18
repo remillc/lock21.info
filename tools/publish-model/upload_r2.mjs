@@ -3,6 +3,7 @@
 // - Versions are immutable: a version folder is uploaded only if its entry file (tileset.json or .glb) is
 //   missing from the bucket. Its files get a one-year cache (Cache-Control: immutable).
 // - manifest.json is uploaded last, with a short cache, so a new version becomes visible within a minute.
+//   robots.txt (Disallow: /) is uploaded too: the tiles domain serves data only, nothing to index.
 // - Clean-up: version folders referenced neither by the new manifest nor by the previous one (read from
 //   the bucket before uploading) are deleted. The previous generation is kept for visitors whose
 //   manifest is still cached. --no-prune keeps everything.
@@ -41,7 +42,7 @@ const s3 = new S3Client({
   credentials: { accessKeyId: process.env.R2_ACCESS_KEY_ID, secretAccessKey: process.env.R2_SECRET_ACCESS_KEY },
 })
 
-const TYPES = { '.json': 'application/json', '.glb': 'model/gltf-binary', '.jpg': 'image/jpeg', '.png': 'image/png', '.ktx2': 'image/ktx2' }
+const TYPES = { '.txt': 'text/plain; charset=utf-8', '.json': 'application/json', '.glb': 'model/gltf-binary', '.jpg': 'image/jpeg', '.png': 'image/png', '.ktx2': 'image/ktx2' }
 const IMMUTABLE = 'public, max-age=31536000, immutable'
 const MANIFEST_CACHE = 'public, max-age=60'
 const toKey = (path) => relative(root, path).split(sep).join('/')
@@ -118,7 +119,13 @@ for (const entry of [...(local.tilesets || []), ...(local.models || [])]) {
   console.log(`  ${entry.id}: ${dryRun ? 'à envoyer' : 'envoyé'} (${paths.length} fichiers, ${entry.url})`)
 }
 
-// 2. Manifest last
+// 2. robots.txt (the tiles domain serves only data: nothing to index), then the manifest last
+try {
+  uploadedBytes += await put(join(root, 'robots.txt'), 'public, max-age=86400')
+  uploadedFiles++
+} catch (error) {
+  if (error.code !== 'ENOENT') throw error
+}
 uploadedBytes += await put(join(root, 'manifest.json'), MANIFEST_CACHE)
 uploadedFiles++
 console.log(`manifeste ${dryRun ? 'à envoyer' : 'envoyé'}; total ${uploadedFiles} fichiers, ${(uploadedBytes / 1e6).toFixed(1)} Mo`)
@@ -130,7 +137,7 @@ if (prune) {
   do {
     const page = await s3.send(new ListObjectsV2Command({ Bucket: bucket, ContinuationToken: token }))
     for (const object of page.Contents || []) {
-      if (object.Key === 'manifest.json') continue
+      if (object.Key === 'manifest.json' || object.Key === 'robots.txt') continue
       const version = object.Key.split('/').slice(0, 2).join('/') + '/'
       if (!keep.has(version)) stale.push(object.Key)
     }
