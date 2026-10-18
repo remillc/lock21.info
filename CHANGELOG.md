@@ -2,6 +2,18 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## 0.1.0 - unreleased (branch `feature/web-3d-model`)
+
+- 3D viewer of the lock at `lock21.info/modele/` (Vite, three.js, 3D Tiles), "Modèle 3D" menu entry: tiled model of
+  zones 1, 2, 3, 4, 7, 8, 10, 11, 12 and site context (terrain and fillers, baked materials), ambient occlusion,
+  anisotropic filtering, render on demand, phone profile, `?cam=` / `?stats=1` / `?ao=` parameters.
+- Tiles hosted on Cloudflare R2 (`tiles.lock21.info`, not indexed), uploaded with `npm run model:upload`.
+- Publishing pipeline in `tools/publish-model/`: the `.blend` is the source of truth (`source` property, registration,
+  deform modifiers, proximity cleanup), change detection (`npm run model:post-modified`), Obj2Tiles tiling,
+  coarse-level simplification, meshopt compression, KTX2 textures. All scripts answer `-h` / `--help`.
+- Resolution analysis of the zone meshes (`tools/model-analysis/`).
+- `TODO.md` working list.
+
 ## 0.0.2 - 2026-10-18
 
 - The site is kept out of search engines: every page has `robots: noindex, nofollow` (Docusaurus `noIndex`).

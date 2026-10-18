@@ -95,5 +95,7 @@ These are not bugs to fix unprompted, but don't copy them:
 
 ## Git
 
+- **Versioning:** semantic versioning below 1.0.0 while the site is not public (`package.json` `version`). Each release gets a `CHANGELOG.md` entry and an annotated tag `vX.Y.Z`. Patch for fixes, minor for features.
+
 - Commit messages in history are just `wip`. There is no enforced style.
 - Pushing to `main` deploys the site. Don't push or merge into `main` without the user's explicit OK.
