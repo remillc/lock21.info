@@ -64,6 +64,10 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 
 ### Surface look (idea)
 
+- [ ] Add lighting to the scene (viewer): today every surface is shown unlit, the photo texture carries its own
+  light. Options: directional sun + ambient/hemisphere light, or an environment map; needs lit materials and
+  normals (computed on load, or normal maps). Goes with the surface-look and zebra-mussel items; mind the lamp
+  lighting already baked into the textures (de-lighting)
 - [ ] Material look in the viewer like the Blender shaders (wet, metallic, roughness...): needs lit materials
   (MeshStandardMaterial / MeshPhysicalMaterial) instead of the unlit display, an environment map for reflections,
   and normals or normal maps (baked from the high-res exports: Metashape or bake_texture.py). Read the shader
