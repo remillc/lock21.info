@@ -41,7 +41,7 @@ export function settingsSchema({ mobile }) {
         { key: 'stats', label: 'Statistiques (mémoire, tuiles)', type: 'toggle', def: '0' },
         { key: 'aoDebug', label: 'Occlusion seule', type: 'toggle', def: '0', dependsOn: 'ao' },
         { key: 'tiles', label: 'Source des tuiles', hint: 'adresse, ex. http://localhost:8081', type: 'text', def: '' },
-        { key: 'relief', label: 'Relief (tuiles d’essai)', type: 'select', def: '0', options: [['0', 'non'], ['1', 'oui'], ['debug', 'carte de relief']] },
+        { key: 'relief', label: 'Relief (tuiles d’essai)', type: 'select', def: '0', options: [['0', 'non'], ['1', 'oui'], ['debug', 'normal map']] },
         { key: 'light', label: 'Soleil (azimut, hauteur)', type: 'angles', def: '135,45', ranges: [[0, 360, 5], [0, 90, 5]], unit: '°' },
         { key: 'shade', label: 'Part de lumière directe', type: 'range', min: 0, max: 1, step: 0.05, def: '0.6' },
         { key: 'wet', label: 'Aspect mouillé', type: 'range', min: 0, max: 1, step: 0.05, def: '0.15' },
