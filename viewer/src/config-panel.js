@@ -7,6 +7,7 @@
 //        panel.configure({ schema, values, live, button }); document.body.append(panel)
 
 // type: toggle | range | select | text | angles (two ranges stored as "a,b")
+// dependsOn: key of a toggle; the row is shown only while that toggle is on
 export function settingsSchema({ mobile }) {
   return [
     {
@@ -28,8 +29,8 @@ export function settingsSchema({ mobile }) {
       title: 'Occlusion ambiante',
       items: [
         { key: 'ao', label: 'Ombres dans les creux', type: 'toggle', def: mobile ? '0' : '1' },
-        { key: 'aoRadius', label: 'Rayon', type: 'range', min: 0.1, max: 5, step: 0.1, def: '1', unit: ' m' },
-        { key: 'aoIntensity', label: 'Force', type: 'range', min: 0, max: 10, step: 0.1, def: '3' },
+        { key: 'aoRadius', label: 'Rayon', type: 'range', min: 0.1, max: 5, step: 0.1, def: '1', unit: ' m', dependsOn: 'ao' },
+        { key: 'aoIntensity', label: 'Force', type: 'range', min: 0, max: 10, step: 0.1, def: '3', dependsOn: 'ao' },
       ],
     },
     {
@@ -38,7 +39,7 @@ export function settingsSchema({ mobile }) {
       items: [
         { key: 'profile', label: 'Profil', type: 'select', def: '', options: [['', 'automatique'], ['desktop', 'ordinateur'], ['mobile', 'téléphone']] },
         { key: 'stats', label: 'Statistiques (mémoire, tuiles)', type: 'toggle', def: '0' },
-        { key: 'aoDebug', label: 'Occlusion seule', type: 'toggle', def: '0' },
+        { key: 'aoDebug', label: 'Occlusion seule', type: 'toggle', def: '0', dependsOn: 'ao' },
         { key: 'tiles', label: 'Source des tuiles', hint: 'adresse, ex. http://localhost:8081', type: 'text', def: '' },
         { key: 'relief', label: 'Relief (tuiles d’essai)', type: 'select', def: '0', options: [['0', 'non'], ['1', 'oui'], ['debug', 'carte de relief']] },
         { key: 'light', label: 'Soleil (azimut, hauteur)', type: 'angles', def: '135,45', ranges: [[0, 360, 5], [0, 90, 5]], unit: '°' },
@@ -80,6 +81,20 @@ class SettingsPanel extends HTMLElement {
     if (value === item.def || value === '') this.params.delete(item.key)
     else this.params.set(item.key, value)
     this.live[item.key]?.(value)
+    this.showDependents()
+  }
+
+  // Rows with dependsOn: shown only while their toggle is on
+  showDependents() {
+    for (const item of this.schema.flatMap((section) => section.items)) {
+      if (!item.dependsOn) continue
+      const on = (this.params.get(item.dependsOn) ?? this.item(item.dependsOn).def) === '1'
+      this.querySelector(`[data-key="${item.key}"]`).hidden = !on
+    }
+  }
+
+  item(key) {
+    return this.schema.flatMap((section) => section.items).find((item) => item.key === key)
   }
 
   render() {
@@ -103,7 +118,9 @@ class SettingsPanel extends HTMLElement {
       heading.textContent = section.title
       box.append(heading)
       for (const item of section.items) {
-        box.append(control(item, this.params.get(item.key) ?? item.def, (v) => this.set(item, v)))
+        const row = control(item, this.params.get(item.key) ?? item.def, (v) => this.set(item, v))
+        row.dataset.key = item.key
+        box.append(row)
       }
       this.append(box)
     }
@@ -128,6 +145,7 @@ class SettingsPanel extends HTMLElement {
     })
     actions.append(copy, reset)
     this.append(actions)
+    this.showDependents()
   }
 }
 customElements.define('l21-settings-panel', SettingsPanel)

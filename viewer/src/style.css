@@ -170,6 +170,10 @@ l21-settings-panel[hidden] {
   cursor: pointer;
 }
 
+.settings-row[hidden] {
+  display: none;
+}
+
 .settings-row {
   display: flex;
   flex-wrap: wrap;
