@@ -161,12 +161,6 @@ class SettingsPanel extends HTMLElement {
 
     const actions = document.createElement('div')
     actions.className = 'settings-actions'
-    const copy = button('Copier le lien de cette vue', async () => {
-      const href = this.live.shareUrl ? this.live.shareUrl() : location.href
-      await navigator.clipboard?.writeText(href).catch(() => {})
-      copy.textContent = 'Lien copié'
-      setTimeout(() => (copy.textContent = 'Copier le lien de cette vue'), 1500)
-    })
     const reset = button('Réinitialiser', () => {
       // Back to the defaults, keeping the view; the controls are drawn again with their default values
       for (const item of this.schema.flatMap((section) => section.items)) {
@@ -178,7 +172,7 @@ class SettingsPanel extends HTMLElement {
       this.replaceChildren()
       this.render()
     })
-    actions.append(copy, reset)
+    actions.append(reset)
     this.append(actions)
     this.showDependents(false)
   }

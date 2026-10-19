@@ -581,8 +581,6 @@ function updateStats() {
 }
 
 // Settings panel (⚙, <l21-settings-panel>): one control per query parameter, starting from the values read above.
-// The link to share: the embedding page's address (it carries the same ?cam=), or the viewer's own
-live.shareUrl = () => (embedded ? window.top.location.href : viewUrl())
 const settings = document.createElement('l21-settings-panel')
 settings.configure({
   schema: settingsSchema({ mobile }),
