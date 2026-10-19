@@ -96,11 +96,13 @@ header.header {
   }
 }
 
-// Wide figure (e.g. the zone map): 80 % of the content column, height in proportion
+// Wide figure (e.g. the zone map): 80 % of the content column, height in proportion, centred
 .sl-markdown-content figure.figure-wide img {
+  display: block;
   width: 80%;
   max-width: 80%;
   height: auto;
+  margin-inline: auto;
 }
 
 // Full-size view opened by public/scripts/image-zoom.js
