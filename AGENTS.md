@@ -97,7 +97,7 @@ Node 22.12+ (Astro 7, Vite 8). If the sidebar or pages show stale entries after 
 
 ## Git
 
-- **Versioning:** semantic versioning below 1.0.0 while the site is not public (`package.json` `version`). Each release gets a `CHANGELOG.md` entry and an annotated tag `vX.Y.Z`. Patch for fixes, minor for features.
+- **Versioning:** semantic versioning below 1.0.0 while the site is not public (`package.json` `version`). Each release gets a `CHANGELOG.md` entry and an annotated tag `vX.Y.Z`. Patch for fixes, minor for features. **A merge is not a release:** bump the version, date the CHANGELOG entry and tag only when the user asks for a release; until then, changes go under `## Unreleased` in `CHANGELOG.md`.
 
 - Commit messages in history are just `wip`. There is no enforced style.
 - **Always push after committing or merging**, so the work is on GitHub too: `git push -u origin <branch>` for a feature branch. Merging into `main` still needs the user's explicit OK, because pushing `main` deploys the site; once a merge into `main` is approved, push it (with its tag, for a release) right away.
