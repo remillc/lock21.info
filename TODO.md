@@ -73,13 +73,10 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 - [ ] #28 English version of the docs: translated by Claude on request (from `i18n/fr/...` to `i18n/en/...`), rather
   than by a workflow on every push
-- [ ] #30 Switch the site from Docusaurus to Astro (the 3D proof of concept is done): French docs and English
+- [ ] #30 Switch the site from Docusaurus to Astro, on branch `feature/astro` (built and previewed; to merge): French docs and English
   translation, sidebar, blog, the dive log table with its total duration, `noindex` while not public, the viewer kept
   as its own app under `/modele/`, GitHub Pages deployment
 - [ ] #31 Underwater look for the viewer: set aside on branch `feature/underwater-look`
-- [ ] #32 Docusaurus template leftovers: footer links, home page, sample blog posts, `authors.yml`
-- [ ] #33 Move the English dive log to `collecte/` (it sits at the docs root) and add the `DataGrid` import
-- [ ] #34 `tests/` pages are not in the sidebar
 
 ## Other
 

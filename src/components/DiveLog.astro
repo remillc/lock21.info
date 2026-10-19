@@ -1,0 +1,36 @@
+---
+// Dive log table: adds a footer row with the total dive time (sum of column 5, "Durée (minutes)"), computed at
+// build time, so no JavaScript is shipped. Column 5 must stay a plain number of minutes.
+// Usage in MDX: <DiveLog> + the Markdown table + </DiveLog>
+const html = await Astro.slots.render('default')
+const rows = html.match(/<tbody>[\s\S]*?<\/tbody>/)?.[0].match(/<tr>[\s\S]*?<\/tr>/g) ?? []
+const minutes = rows
+  .map((row) => row.match(/<td[^>]*>([\s\S]*?)<\/td>/g)?.[4] ?? '')
+  .map((cell) => parseFloat(cell.replace(/<[^>]+>/g, '')))
+  .filter(Number.isFinite)
+  .reduce((sum, m) => sum + m, 0)
+
+const lang = Astro.currentLocale === 'en' ? 'en-CA' : 'fr-CA'
+const duration = { days: Math.floor(minutes / 1440), hours: Math.floor((minutes % 1440) / 60), minutes: Math.round(minutes % 60) }
+const total = 'DurationFormat' in Intl
+  ? new Intl.DurationFormat(lang, { style: 'long' }).format(duration)
+  : `${duration.days} j ${duration.hours} h ${duration.minutes} min`
+const columns = (html.match(/<thead>[\s\S]*?<\/thead>/)?.[0].match(/<th[\s>]/g) ?? []).length
+const cells = Array.from({ length: columns }, (_, i) => (i === 4 ? `<td>${total}</td>` : '<td></td>')).join('')
+const withFooter = html.replace('</table>', `<tfoot><tr>${cells}</tr></tfoot></table>`)
+---
+
+<div class="dive-log" set:html={withFooter} />
+
+<style lang="scss">
+  .dive-log :global(table) {
+    font-size: 0.875rem;
+  }
+  .dive-log :global(td:nth-child(n + 2):nth-child(-n + 6)),
+  .dive-log :global(th:nth-child(n + 2):nth-child(-n + 6)) {
+    white-space: nowrap;
+  }
+  .dive-log :global(tfoot td) {
+    font-weight: 600;
+  }
+</style>

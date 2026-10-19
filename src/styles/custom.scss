@@ -1,0 +1,49 @@
+// Global styles on top of Starlight (see GUIDELINES.md): override Starlight's CSS custom properties here.
+
+// Wide tables (dive log, zone tracking) scroll horizontally instead of stretching the page
+.sl-markdown-content table {
+  display: block;
+  overflow-x: auto;
+}
+
+// Figures: image, caption with the source in <cite>
+.sl-markdown-content figure {
+  margin-inline: 0;
+
+  figcaption {
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-3);
+  }
+}
+
+// Figure images keep the size they had on the old site (about 400 px), and grow on click (image-zoom)
+.sl-markdown-content figure img {
+  max-width: min(100%, 25rem);
+  height: auto;
+}
+
+.sl-markdown-content figure img {
+  cursor: zoom-in;
+}
+
+// Full-size view opened by public/scripts/image-zoom.js
+dialog.image-zoom {
+  margin: auto;
+  max-width: 95vw;
+  max-height: 95vh;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: zoom-out;
+
+  &::backdrop {
+    background: rgb(0 0 0 / 0.85);
+  }
+
+  img {
+    display: block;
+    max-width: 95vw;
+    max-height: 95vh;
+    object-fit: contain;
+  }
+}

@@ -10,16 +10,13 @@ permissions:
   contents: write
 
 jobs:
-  test-deploy:
-    if: github.event_name != 'push'
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          # Vite 8 (3D viewer) needs Node 20.19+ or 22.12+
+          # Astro 7 and Vite 8 (3D viewer) need Node 22.12+
           node-version: 22
           cache: npm
           cache-dependency-path: |
@@ -29,36 +26,23 @@ jobs:
         run: |
           npm ci
           npm ci --prefix viewer
-      - name: Build the 3D viewer into static/modele
+      # The viewer (lock21.info/modele/) is built into public/, which Astro copies as is
+      - name: Build the 3D viewer into public/modele
         run: npm run build:viewer
-      - name: Test build website
+      - name: Build the site
         run: npm run build
-  deploy:
-    if: github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          # Vite 8 (3D viewer) needs Node 20.19+ or 22.12+
-          node-version: 22
-          cache: npm
-          cache-dependency-path: |
-            package-lock.json
-            viewer/package-lock.json
-      - name: Deploy to GitHub Pages
+      # On pushes to main: publish dist/ on the gh-pages branch (GitHub Pages serves that branch). The workflow's own
+      # token (permissions: contents: write) is enough: no SSH key or personal secret.
+      - name: Deploy to the gh-pages branch
+        if: github.event_name == 'push'
         env:
-          # The token GitHub provides to every workflow (permissions: contents: write) pushes to gh-pages:
-          # no SSH key or personal secret needed
-          GIT_USER: ${{ github.actor }}
-          GIT_PASS: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "gh-actions"
-          npm ci
-          npm ci --prefix viewer
-          # The viewer (lock21.info/modele/) is built into static/, which Docusaurus publishes as is
-          npm run build:viewer
-          npm run deploy
+          cd dist
+          touch .nojekyll
+          git init -q -b gh-pages
+          git config user.name "gh-actions"
+          git config user.email "actions@github.com"
+          git add -A
+          git commit -q -m "Deploy ${GITHUB_SHA}"
+          git push -q -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages

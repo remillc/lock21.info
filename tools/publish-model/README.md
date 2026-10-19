@@ -22,7 +22,7 @@ Chaîne de traitement qui transforme les modèles photogrammétriques de chaque 
 | `npm run model:publish -- -Zones "zone 2","zone 3"` | republie une liste de zones |
 | `npm run model:serve-tiles` | sert `O:\publishing\tiles` en local (port 8081, CORS) |
 | `npm run viewer:dev` | visualiseur sur `http://localhost:3100/` |
-| `npm run viewer:build` | construit le visualiseur dans `viewer/dist` (`npm run build:viewer`: dans `static/modele`, pour le site; c'est ce que fait le déploiement) |
+| `npm run viewer:build` | construit le visualiseur dans `viewer/dist` (`npm run build:viewer`: dans `public/modele`, pour le site Astro; c'est ce que fait le déploiement) |
 | `npm run model:upload` | met en ligne les tuiles sur Cloudflare R2 (`-- --dry-run` pour voir sans envoyer) |
 
 Ces scripts appellent `publish_zones.ps1` (options `-Zones`, `-Changed`, `-DryRun`, `-Version`, `-Density`), `serve-tiles.ps1` et le projet `viewer/`.

@@ -1,0 +1,76 @@
+---
+title: Alignement des photos
+sidebar:
+  order: 2
+---
+Créer un nouveau fichier de projet pour la zone concernée. Nommez le fichier du nom de la zone, par exemple: zone-4.psx.
+
+Ajouter un `chunk`, puis le renommer `raw sparse cloud`.
+
+Ce dossier contiendra uniquement les données brut du projet.
+
+## Système de référence
+
+1. Sélectionner le `chunk` > right-click > `Reference settings`
+2. Coordinate System: `Local Coordinates (ft)`
+
+## Ajouter les images
+
+Ajouter toutes les images concernant de la zone.
+
+## Alignement
+
+L'étape d'alignement des images est définie en partie dans un fichier de batch workflow `1. Align cameras.xml`. Ce dernier s'occupe des étapes suivantes:
+
+1. Exécute un script python qui analyse la qualité des images et désactive celles dont le score est inférieur à 0.1
+2. Exécuter la tâche d'alignement des images avec le paramètre `Accuracy` à `Highest`.
+
+### Marche à suivre
+
+1. Sélectionner le(s) chunk(s) à aligner
+2. `Workflow` > `Batch Process...`
+3. `Load...`
+4. `config/workflows/1. Align cameras.xml`
+
+## Photos non alignées
+
+...
+
+## Tâches additionnelles
+
+Corriger l'orientation de l'objet dans les 3 axes.
+
+Ajuster l'orientation de la région en fonction de celle de l'objet. Redimensionner la région afin qu'elle couvre tout le nuage de points.
+
+### Aberrations
+
+Scruter le modèle à la recherche de parties mal alignées. Ces parties peuvent être réalignées de la façon suivante:
+
+1. Sélectionner les points de la partie mal alignée
+2. Right click > `Filter photos by Tie points`
+3. Afficher les caméras (`Show cameras`)
+4. Sélectionner toutes les caméras
+5. Dans le _chunk_, repérer le(s) groupe(s) d'images qui sont sélectionnées
+6. Pour s'assurer d'identifier toutes les images concernées, on peut sélectionner les images adjacentes et repérer dans le modèle quelle caméra est en surbriance
+7. Sélectionner toutes les images concernées
+8. Right-click > `Reset Camera Alignment`
+9. Right-click > `Align Selected Cameras`
+
+On peut aussi désactiver les caméras si l'alignement ne corrige pas le problème.
+
+## Optimisation
+
+Faire une copie de backup du chunk avant les étapes d'optimisation.
+
+### Tie Points optimisation
+
+Après chacune des étapes, exécuter une optimisation des données (menu `Tools > Optimize Camera Alignment`), en cochant les paramètres `f`, `k1`, `k2`, `k3`, `cx & cy`, `p1`, `p2` et additional corrections.
+
+`Model` > `Gradual Selection`
+
+1. `Reconstruction Uncertainty`: &lt;= 15 (recommandé: 10, max 25% points supprimés à la fois)
+2. `Tools` > `Optimize cameras...`, puis `Ok`
+3. `Projection Accuracy`: 5 (recommandé: 2 ou 3, max 50% points supprimés à la fois)
+4. `Reprojection Error`: 0.4 (10% of total points)
+
+`Tie Point Accuracy`: 0.1 (max 1)

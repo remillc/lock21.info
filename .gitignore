@@ -7,10 +7,10 @@ npm-debug.log*
 node_modules/
 
 # Production
-/build
+/dist
 
 # Generated files
-.docusaurus
+.astro
 .cache-loader
 
 # Misc
@@ -41,4 +41,4 @@ __pycache__/
 /tools/publish-model/node_modules
 
 # 3D viewer build copied into the site (npm run build:viewer)
-/static/modele
+/public/modele
