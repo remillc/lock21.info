@@ -48,9 +48,13 @@ foreach ($zone in $Zones) {
     Write-Host "=== $zone ($(Get-Date -Format HH:mm))"
     if (-not (Test-Path (Join-Path $prepared "$slug.obj"))) { Write-Host "   pas de mesh préparé: $prepared"; continue }
 
-    # Cuisson (réutilisée si plus récente que le mesh préparé)
+    # Cuisson, réutilisée si plus récente que le mesh préparé et cuite depuis le même export (noté à côté de la carte)
     $normal = Join-Path $relief "$slug-normal.png"
-    $fresh = (Test-Path $normal) -and ((Get-Item $normal).LastWriteTime -gt (Get-Item (Join-Path $prepared "$slug.obj")).LastWriteTime)
+    $from = Join-Path $relief "$slug-normal-from.txt"
+    $highPath = if ($High.ContainsKey($zone)) { $High[$zone] } else { "source" }
+    $fresh = (Test-Path $normal) -and (Test-Path $from) -and
+        ((Get-Item $normal).LastWriteTime -gt (Get-Item (Join-Path $prepared "$slug.obj")).LastWriteTime) -and
+        ((Get-Content $from -Raw -Encoding UTF8).Trim() -eq $highPath)
     if ($fresh -and -not $Rebake) {
         Write-Host "   carte existante réutilisée: $normal"
         "carte existante réutilisée" | Set-Content $log
@@ -62,6 +66,7 @@ foreach ($zone in $Zones) {
         $ErrorActionPreference = "Stop"
         Get-Content $log | Select-String "^\[relief\]|Error|assert|Traceback" | ForEach-Object { Write-Host "   $($_.Line)" }
         if (-not (Select-String -Path $log -Pattern "^\[relief\] done" -Quiet)) { Write-Host "   ÉCHEC de la cuisson, voir $log"; continue }
+        Set-Content $from $highPath -Encoding UTF8
     }
 
     # Tuilage avec la carte, manifeste local
