@@ -7,8 +7,9 @@ the high-res one and writes the high-res surface normal into a texture laid out 
 Object-space normals, expressed in the OBJ frame (Y up, as written by prepare_zone.py and read by Obj2Tiles):
 the viewer needs neither vertex normals nor tangents, which the tiles don't carry.
 
-The high-res export is placed like prepare_zone.py does it (transforms/<zone>.json, cached registration), so it
-must be the zone's `source` export (or come from the same Metashape chunk, already registered). Deform
+The high-res export is placed like prepare_zone.py places the zone's `source` (transforms/<zone>.json, cached
+registration): either the source itself, or (--high) a geometry-only export from the same Metashape chunk, which
+shares its frame. The gap check stops the bake if they don't match. Deform
 modifiers (Lattice) are not applied: use it on zones without one, or the two meshes won't match.
 
 Writes <out>/<slug>-normal.png and a copy of the .obj/.jpg with an .mtl that references it (map_Bump), ready
@@ -36,7 +37,9 @@ p.add_argument("-p", "--prepared", required=True, help="folder of the prepared z
 p.add_argument("-o", "--out", required=True, help="output folder")
 p.add_argument("-s", "--size", type=int, help="normal map size, px (default: the photo texture's size; Obj2Tiles packs each tile by texture size, so a different size breaks merge_normal_maps.mjs)")
 p.add_argument("-c", "--cage", type=float, help="cage extrusion, m (default: twice the 95th percentile of the gap, min 3 cm)")
-p.add_argument("--source", help="high-res export (default: the `source` recorded in <slug>-prepare.json)")
+p.add_argument("--source", help="the zone's source export (default: the one recorded in <slug>-prepare.json)")
+p.add_argument("--high", help="high-res geometry export from the SAME Metashape chunk as the source (same frame), when the "
+               "source is too coarse for the relief; placed with the source's registration (default: the source itself)")
 a = p.parse_args(script_args())
 slug = a.zone.replace(" ", "-")
 os.makedirs(a.out, exist_ok=True)
@@ -48,6 +51,7 @@ def log(msg):
 
 report = json.load(open(os.path.join(a.prepared, f"{slug}-prepare.json"), encoding="utf-8"))
 source = a.source or report["source"]
+high_path = a.high or source
 assert not report["steps"]["deform"]["modifiers"], (
     f"{a.zone} has deform modifiers {report['steps']['deform']['modifiers']}: not supported by this test script")
 transform = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "transforms", f"{slug}.json"),
@@ -65,7 +69,7 @@ low.matrix_world.identity()
 
 # High-res export, placed like prepare_zone.py: world = source_to_world @ glTF import matrix
 before = set(bpy.data.objects)
-bpy.ops.import_scene.gltf(filepath=source, merge_vertices=True)
+bpy.ops.import_scene.gltf(filepath=high_path, merge_vertices=True)
 high = next(o for o in bpy.data.objects if o not in before and o.type == 'MESH')
 high.data.transform(Matrix(transform["matrix_source_to_world"]) @ high.matrix_world)
 high.parent = None
