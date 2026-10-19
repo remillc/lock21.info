@@ -47,9 +47,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ### Relief, wet look and lamp bands (branch `feature/relief`, tested on zones 1 and 12)
 
-- [ ] #19 High-res geometry exports for the relief (edges about 1 cm or less, geometry only, same chunk as the source):
-  - zone 4: being rebuilt in Metashape with medium/high depth maps (the current ones are `low`); about 20 M faces
-- [ ] #21 Relief: bake zone 4 once its high-res export exists (`relief_zones.ps1 -High`), upload the relief tiles of
+- [ ] #21 Relief: upload the relief tiles of
   every zone (about x1.5 to x2 per zone; ask first), then fold the relief steps into `publish_zones.ps1`
 - [ ] #22 Relief on phones: memory, heat, smoothness; probably off by default there
 - [ ] #23 Default light direction and strength (`?light=`, `?shade=`), after viewing from several angles; the photos
