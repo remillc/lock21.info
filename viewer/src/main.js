@@ -47,23 +47,42 @@ const maxAnisotropy = renderer.capabilities.getMaxAnisotropy()
 
 // The photogrammetry texture already contains the lighting: display it unlit.
 // Double-sided: photogrammetry surfaces are open and are seen from both sides.
-// gain: the zone's colour balance (see colorBalance), multiplied with the texture.
-function unlitMaterial(old, gain) {
+// gain: the zone's colour balance (see colorBalance), multiplied with the texture. Zones (not the context)
+// also get the green removal (despill).
+function unlitMaterial(old, gain, zone = false) {
   if (old.map) old.map.anisotropy = maxAnisotropy
   const color = old.map ? gain || new THREE.Color(1, 1, 1) : old.color
-  return new THREE.MeshBasicMaterial({ map: old.map, color, side: THREE.DoubleSide })
+  const material = new THREE.MeshBasicMaterial({ map: old.map, color, side: THREE.DoubleSide })
+  if (zone && despill.value > 0) material.onBeforeCompile = addDespill
+  return material
+}
+
+// Green removal ("spill suppression", as for green screens): each pixel's green is capped at the larger of its
+// red and blue. Brown, beige and grey pixels (red >= green) are untouched; only pixels where green dominates
+// (algae, the water's cast in patches) turn olive or grey-brown. A per-zone colour gain cannot do that: it
+// shifts the whole zone, and the green patches stay green. ?despill=0..1 sets the strength (default 1).
+const despill = { value: params.has('despill') ? Number(params.get('despill')) : 1 }
+function addDespill(shader) {
+  shader.uniforms.despill = despill
+  shader.fragmentShader = shader.fragmentShader
+    .replace('void main() {', 'uniform float despill;\nvoid main() {')
+    .replace(
+      '#include <map_fragment>',
+      '#include <map_fragment>\n' +
+        'diffuseColor.g = mix(diffuseColor.g, min(diffuseColor.g, max(diffuseColor.r, diffuseColor.b)), despill);',
+    )
 }
 
 // Colour balance between zones. The water tints each zone differently (yellow-green, more or less dark,
 // depending on the dive). manifest.json gives each zone's average texture colour in linear light
 // (tools/publish-model/texture_stats.mjs); every zone is brought to the same target colour: the average of the
-// zones, from which ?neutral= (0 to 1, default 0.5) of the common tint is removed. Fully neutral looks grey or
+// zones, from which ?neutral= (0 to 1, default 0.3) of the common tint is removed. Fully neutral looks grey or
 // pink: the mussels and the sediment really are brown-green. ?balance=0 shows the textures as they are.
 function colorBalance(entries) {
   const gains = new Map()
   const measured = entries.filter((e) => e.color)
   if (params.get('balance') === '0' || !measured.length) return gains
-  const neutral = params.has('neutral') ? Number(params.get('neutral')) : 0.5
+  const neutral = params.has('neutral') ? Number(params.get('neutral')) : 0.3
   const average = [0, 1, 2].map((c) => measured.reduce((sum, e) => sum + e.color[c], 0) / measured.length)
   const luminance = 0.2126 * average[0] + 0.7152 * average[1] + 0.0722 * average[2]
   const target = average.map((c) => c + (luminance - c) * neutral)
@@ -129,7 +148,7 @@ async function main() {
       model.traverse((child) => {
         if (child.isMesh) {
           const old = child.material
-          child.material = unlitMaterial(old, gains.get(entry.id))
+          child.material = unlitMaterial(old, gains.get(entry.id), true)
           old.dispose()
         }
       })

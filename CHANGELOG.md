@@ -5,8 +5,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## 0.2.0 - unreleased (branches `feature/lod4`, `feature/color-balance`)
 
 - Viewer: colour balance between zones. Each zone's average texture colour goes in `manifest.json`; the
-  viewer brings every zone to a common colour and removes half of the water's yellow-green tint
+  viewer brings every zone to a common colour and removes 30 % of the water's yellow-green tint
   (`?neutral=0..1`, `?balance=0` to compare).
+- Viewer: green removal per pixel (spill suppression: green capped at max(red, blue)), which clears the green
+  patches a per-zone gain leaves (zone 4); `?despill=0..1`, default 1.
 - Tiling: 4 levels of detail for long zones (longest horizontal side > 25 m: zones 7 and 8), 3 otherwise; the
   overview of the whole model drops from 24.6 to 19.3 MB.
 

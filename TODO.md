@@ -16,8 +16,8 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 - [x] Shared memory budget for all zones (zones were missing on the phone); `?stats=1` overlay: phone fully loaded at 280 / 450 MB
 - [ ] Choose default ambient occlusion settings (radius, intensity) after viewing close up
 - [ ] Initial camera and navigation (what the visitor sees first)
-- [x] Colour balance between zones (water tint): gains per zone from the texture's average colour, `?neutral=` (default 0.5), `?balance=0`
-- [ ] Colour balance: bake the same gains into the downloadable model
+- [x] Colour balance between zones (water tint): gains per zone from the texture's average colour, `?neutral=` (default 0.3), `?balance=0`; green removal per pixel, `?despill=` (default 1)
+- [ ] Colour balance and green removal: bake them into the downloadable model
 - [x] Context published: `filler` objects and `terrain` collection, terrain materials baked (no cast shadows)
 - [ ] Show the mockups for the zones not yet digitised (hidden once a zone is scanned)
 - [ ] Publish the viewer build under `lock21.info/modele/` and link it from the site
