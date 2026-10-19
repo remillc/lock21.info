@@ -33,10 +33,12 @@ const withFooter = html.replace('</table>', `<tfoot><tr>${cells}</tr></tfoot></t
   .dive-log :global(th),
   .dive-log :global(td) {
     padding: 0.4rem 0.5rem;
+  }
+  .dive-log :global(td) {
     overflow-wrap: anywhere;
   }
   // No, Date, Activité, Zones, Durée, Participants; Notes (7th) gets the remaining width
-  $widths: 2.5rem, 6.5rem, 6rem, 4.5rem, 5rem, 9rem;
+  $widths: 3rem, 6.5rem, 6rem, 4.5rem, 6rem, 9rem;
   @for $i from 1 through length($widths) {
     .dive-log :global(th:nth-child(#{$i})) {
       width: nth($widths, $i);

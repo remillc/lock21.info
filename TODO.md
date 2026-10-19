@@ -77,9 +77,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #30 Switch the site from Docusaurus to Astro, on branch `feature/astro` (built and previewed; to merge): French docs and English
   translation, sidebar, blog, the dive log table with its total duration, `noindex` while not public, the viewer kept
   as its own app under `/modele/`, GitHub Pages deployment
-- [ ] #39 Apply `DESIGN.md` to the Astro site: MD3 tokens as CSS custom properties mapped to Starlight, self-hosted
-  fonts, header and footer bars, depth gauge, instrument panel (values from the dive log and the manifest), home page
-  (render frame, entry cards, journal excerpts); choose the logo (proposals on the design canvas)
+- [ ] #39 Design (branch `feature/design`): applied (tokens, fonts, header and footer bars, home page, logo, tables);
+  to do: a history page for the "L'histoire" entry (it points to the zone map for now), the 3D viewer in the same
+  palette and fonts, check contrast (WCAG AA) in both themes
 - [ ] #31 Underwater look for the viewer: set aside on branch `feature/underwater-look`
 
 ## Other

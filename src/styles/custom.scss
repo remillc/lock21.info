@@ -1,29 +1,99 @@
-// Global styles on top of Starlight (see GUIDELINES.md): override Starlight's CSS custom properties here.
+// Global styles on top of Starlight (DESIGN.md, GUIDELINES.md). Colours, fonts and radii come from tokens.scss.
 
-// Wide tables (dive log, zone tracking) scroll horizontally instead of stretching the page
+// --- Type: Archivo for text and titles (800 for headings), JetBrains Mono for data
+
+.sl-markdown-content :is(h1, h2, h3, h4) ,
+h1#_top {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.sl-markdown-content :is(table, code, kbd) {
+  font-variant-numeric: tabular-nums;
+}
+
+// --- Header bar: navy in both themes (MD3 inverse surface in light). Starlight's header components read the grey
+// scale, so it is redefined inside the bar.
+
+header.header {
+  background: var(--lk-bar);
+  border-bottom: 1px solid var(--lk-bar-outline);
+  --sl-color-white: var(--lk-bar-text);
+  --sl-color-gray-1: #d6e4e8;
+  --sl-color-gray-2: #c8d9df;
+  --sl-color-gray-3: var(--lk-bar-muted);
+  --sl-color-gray-4: #6b8794;
+  --sl-color-gray-5: #2a4a5a;
+  --sl-color-gray-6: #102a38;
+  --sl-color-black: #06121a;
+  --sl-color-text: var(--lk-bar-text);
+  --sl-color-text-accent: #3cc2bc;
+}
+
+// --- Links: secondary (teal), underlined on hover
+
+.sl-markdown-content a:not(:where(.not-content *)) {
+  color: var(--md-sys-color-secondary);
+  text-underline-offset: 0.2em;
+}
+
+// --- Tables: 2 px outline, rounded, navy header row
+
 .sl-markdown-content table {
   display: block;
   overflow-x: auto;
-}
+  width: max-content; // the outline hugs the table instead of the whole column
+  max-width: 100%;
+  border: 2px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-large);
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--md-sys-color-surface-container-lowest);
 
-// Figures: image, caption with the source in <cite>
-.sl-markdown-content figure {
-  margin-inline: 0;
+  th {
+    background: var(--lk-bar);
+    color: var(--lk-bar-text);
+    font-family: var(--lk-font-data);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    border-bottom: none;
+  }
 
-  figcaption {
-    font-size: var(--sl-text-sm);
-    color: var(--sl-color-gray-3);
+  th,
+  td {
+    padding: 0.5rem 1rem;
+  }
+
+  td {
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  // Tables written without a header row (only empty cells) don't show an empty navy band
+  thead:not(:has(th:not(:empty))) {
+    display: none;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
   }
 }
 
-// Figure images keep the size they had on the old site (about 400 px), and grow on click (image-zoom)
-.sl-markdown-content figure img {
-  max-width: min(100%, 25rem);
-  height: auto;
-}
+// --- Figures: rounded image, caption in the secondary text colour
 
-.sl-markdown-content figure img {
-  cursor: zoom-in;
+.sl-markdown-content figure {
+  margin-inline: 0;
+
+  img {
+    max-width: min(100%, 25rem);
+    height: auto;
+    border-radius: var(--md-sys-shape-large);
+    cursor: zoom-in;
+  }
+
+  figcaption {
+    font-size: var(--sl-text-sm);
+    color: var(--md-sys-color-on-surface-variant);
+  }
 }
 
 // Full-size view opened by public/scripts/image-zoom.js
@@ -45,16 +115,24 @@ dialog.image-zoom {
     max-width: 95vw;
     max-height: 95vh;
     object-fit: contain;
+    border-radius: var(--md-sys-shape-large);
   }
 }
 
+// --- Focus: visible ring in the secondary colour (MD3 focus state)
+
+:focus-visible {
+  outline: 2px solid var(--md-sys-color-secondary);
+  outline-offset: 2px;
+}
+
+// --- Layout
+
 // Right column ("Sur cette page"): Starlight makes it at least 18.75rem and gives it half of the spare width on wide
-// screens. A fixed, narrower column leaves the room to the page content (wide tables).
+// screens. A fixed column leaves the room to the page content (wide tables).
 :root {
   --lock21-toc-width: 20rem;
 }
-
-
 
 @media (min-width: 72rem) {
   .right-sidebar-container {
@@ -66,5 +144,26 @@ dialog.image-zoom {
   [data-has-sidebar][data-has-toc] .main-pane {
     width: calc(100% - var(--lock21-toc-width));
     --sl-content-width: 100%;
+  }
+}
+
+// Splash pages (home page) carry their own <h1>: Starlight's title panel stays empty, hide it and its divider
+.content-panel:has(> .sl-container:empty) {
+  display: none;
+
+  & + .content-panel {
+    border-top: 0;
+  }
+}
+
+// Pages without sidebar (home page): the 1200 px column of the design
+:root:not([data-has-sidebar]) {
+  --sl-content-width: 75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
   }
 }

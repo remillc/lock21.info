@@ -2,6 +2,13 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased (branch `feature/design`)
+
+- Site design applied (DESIGN.md: E2 look on the MD3 token system): Archivo and JetBrains Mono self-hosted, navy
+  header and footer bars with the S4 logo, the ÉCLUSE/21 wordmark and the lock's coordinates, "Modèle 3D" pill;
+  home page with depth gauge, instrument panel (dives, time underwater, zones online computed at build time),
+  render, entry cards and journal excerpts; outlined tables, rounded figures; light and dark themes.
+
 ## 0.4.0 - 2026-10-19
 
 - Site switched from Docusaurus to Astro + Starlight: same French pages and addresses, search (Pagefind), dive log

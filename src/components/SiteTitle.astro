@@ -1,0 +1,53 @@
+---
+// Header (DESIGN.md): logo "21 en écho", ÉCLUSE/21 wordmark, coordinates of the lock. The bar is navy in both
+// themes, so the logo is always its dark variant.
+import { Image } from 'astro:assets'
+import logo from '../assets/logo-dark.svg'
+import { site } from '../data/site'
+
+const { siteTitleHref, lang } = Astro.locals.starlightRoute
+const english = lang?.startsWith('en')
+---
+
+<a href={siteTitleHref} class="site-title">
+  <Image src={logo} alt="" width={36} height={36} class="logo" />
+  <span class="wordmark" translate="no">{english ? 'LOCK/21' : 'ÉCLUSE/21'}</span>
+  <span class="coordinates">{english ? site.coordinates.label.en : site.coordinates.label.fr}</span>
+</a>
+
+<style>
+  .site-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 48px;
+    text-decoration: none;
+    color: var(--lk-bar-text);
+    white-space: nowrap;
+    min-width: 0;
+  }
+  .logo {
+    width: 36px;
+    height: 36px;
+    flex: none;
+  }
+  .wordmark {
+    font-family: var(--lk-font-data);
+    font-weight: 800;
+    font-size: 1.125rem;
+    letter-spacing: 0.04em;
+  }
+  .coordinates {
+    font-family: var(--lk-font-data);
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+    color: var(--lk-bar-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @media (max-width: 72rem) {
+    .coordinates {
+      display: none;
+    }
+  }
+</style>

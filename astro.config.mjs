@@ -25,7 +25,25 @@ export default defineConfig({
         // Click a figure image to see it full size (public/scripts/image-zoom.js)
         { tag: 'script', attrs: { type: 'module', src: '/scripts/image-zoom.js' } },
       ],
-      customCss: ['./src/styles/custom.scss'],
+      // Fonts self-hosted (DESIGN.md), then the MD3 tokens, then the global styles
+      customCss: [
+        '@fontsource/archivo/400.css',
+        '@fontsource/archivo/500.css',
+        '@fontsource/archivo/700.css',
+        '@fontsource/archivo/800.css',
+        '@fontsource/jetbrains-mono/400.css',
+        '@fontsource/jetbrains-mono/500.css',
+        '@fontsource/jetbrains-mono/700.css',
+        '@fontsource/jetbrains-mono/800.css',
+        './src/styles/tokens.scss',
+        './src/styles/custom.scss',
+      ],
+      components: {
+        SiteTitle: './src/components/SiteTitle.astro',
+        SocialIcons: './src/components/HeaderActions.astro',
+        PageTitle: './src/components/PageTitle.astro',
+        Footer: './src/components/Footer.astro',
+      },
       sidebar: [
         { label: 'Modèle 3D', link: '/modele/', attrs: { target: '_self' } },
         { label: 'Découpage du site', link: '/decoupage-du-site/' },

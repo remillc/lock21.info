@@ -1,0 +1,103 @@
+// Design tokens (DESIGN.md): the E2 palette organised as Material Design 3 roles, then mapped onto the custom
+// properties Starlight reads. Dark is Starlight's default theme (:root); light is :root[data-theme='light'].
+
+:root {
+  // MD3 roles, dark
+  --md-sys-color-primary: #e6eff2;
+  --md-sys-color-on-primary: #0b1c26;
+  --md-sys-color-secondary: #3cc2bc;
+  --md-sys-color-on-secondary: #0b1c26;
+  --md-sys-color-tertiary: #f28c28;
+  --md-sys-color-on-tertiary: #0b1c26;
+  --md-sys-color-tertiary-text: #f28c28;
+  --md-sys-color-surface: #0b1c26;
+  --md-sys-color-on-surface: #e6eff2;
+  --md-sys-color-on-surface-variant: #b7cdd7;
+  --md-sys-color-surface-container-lowest: #06121a;
+  --md-sys-color-surface-container: #102a38;
+  --md-sys-color-outline: #2a4a5a;
+  --md-sys-color-outline-variant: #1d3e4f;
+  // Bars (header, footer) and the instrument panel: the deepest navy in dark
+  --lk-bar: #06121a;
+  --lk-bar-text: #e6eff2;
+  --lk-bar-muted: #9bb8c6;
+  --lk-bar-outline: #1d3e4f;
+  --lk-panel: #06121a;
+  --lk-panel-outline: #2a4a5a;
+
+  // MD3 shape scale
+  --md-sys-shape-small: 8px;
+  --md-sys-shape-medium: 12px;
+  --md-sys-shape-large: 16px;
+  --md-sys-shape-large-increased: 20px;
+  --md-sys-shape-extra-large: 28px;
+  --md-sys-shape-full: 999px;
+
+  // Fonts (self-hosted, @fontsource)
+  --lk-font-text: 'Archivo', system-ui, sans-serif;
+  --lk-font-data: 'JetBrains Mono', ui-monospace, monospace;
+
+  // Starlight, dark
+  --sl-font: var(--lk-font-text);
+  --sl-font-mono: var(--lk-font-data);
+  --sl-color-white: #e6eff2;
+  --sl-color-gray-1: #c8d9df;
+  --sl-color-gray-2: #b7cdd7;
+  --sl-color-gray-3: #9bb8c6;
+  --sl-color-gray-4: #6b8794;
+  --sl-color-gray-5: #2a4a5a;
+  --sl-color-gray-6: #102a38;
+  --sl-color-black: #0b1c26;
+  --sl-color-accent-low: #0e3b45;
+  --sl-color-accent: #3cc2bc;
+  --sl-color-accent-high: #a6ebe7;
+  --sl-color-bg-nav: var(--lk-bar);
+  --sl-color-bg-sidebar: #0b1c26;
+  --sl-color-hairline-light: #1d3e4f;
+  --sl-color-hairline: #1d3e4f;
+  --sl-color-hairline-shade: #06121a;
+}
+
+:root[data-theme='light'] {
+  // MD3 roles, light
+  --md-sys-color-primary: #0e2430;
+  --md-sys-color-on-primary: #f4f8f8;
+  --md-sys-color-secondary: #0b6e77;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-tertiary: #f28c28;
+  --md-sys-color-on-tertiary: #0e2430;
+  --md-sys-color-tertiary-text: #b4530c;
+  --md-sys-color-surface: #f4f8f8;
+  --md-sys-color-on-surface: #0e2430;
+  --md-sys-color-on-surface-variant: #3c5562;
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container: #e3ecee;
+  --md-sys-color-outline: #0e2430;
+  --md-sys-color-outline-variant: #d5e0e3;
+  // Bars and panel: MD3 inverse surface, so they stay navy in light
+  --lk-bar: #0e2430;
+  --lk-bar-text: #f4f8f8;
+  --lk-bar-muted: #9bb8c6;
+  --lk-bar-outline: #0e2430;
+  --lk-panel: #0e2430;
+  --lk-panel-outline: #0e2430;
+
+  // Starlight, light (its scale runs from white = strongest text to black = background)
+  --sl-color-white: #0e2430;
+  --sl-color-gray-1: #1d3442;
+  --sl-color-gray-2: #3c5562;
+  --sl-color-gray-3: #4c6470;
+  --sl-color-gray-4: #7d929c;
+  --sl-color-gray-5: #c9d6da;
+  --sl-color-gray-6: #e3ecee;
+  --sl-color-gray-7: #eef4f5;
+  --sl-color-black: #f4f8f8;
+  --sl-color-accent-low: #cdeeed;
+  --sl-color-accent: #0b6e77;
+  --sl-color-accent-high: #074c52;
+  --sl-color-bg-nav: var(--lk-bar);
+  --sl-color-bg-sidebar: #f4f8f8;
+  --sl-color-hairline-light: #e3ecee;
+  --sl-color-hairline: #d5e0e3;
+  --sl-color-hairline-shade: #c9d6da;
+}
