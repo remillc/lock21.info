@@ -109,7 +109,7 @@ Dans deux terminaux:
 cd viewer; npm run dev                     # visualiseur sur http://localhost:3100/
 ```
 
-Paramètres de test du visualiseur: `?tiles=<url>` (autre serveur de tuiles), `?error=<pixels>` (force un niveau de détail; une grande valeur garde les niveaux grossiers), `?neutral=0..1`, `?balance=0` et `?despill=0..1` (couleurs, voir l'étape 6).
+Paramètres de test du visualiseur: `?tiles=<url>` (autre serveur de tuiles), `?error=<pixels>` (force un niveau de détail; une grande valeur garde les niveaux grossiers), `?neutral=0..1`, `?balance=0` et `?despill=0..1` (couleurs, voir l'étape 6). La barre d'adresse suit la caméra (`?cam=x,y,z,cible x,y,z`, mise à jour à la fin de chaque geste): copier l'adresse suffit pour partager ou retrouver une vue; la touche C la copie.
 
 Pour un téléphone **Android** (le plus simple): débogage USB activé, câble branché, puis dans Chrome sur le PC `chrome://inspect/#devices` → *Port forwarding*: `3100` → `localhost:3100` et `8081` → `localhost:8081`. Sur le téléphone, ouvrir `http://localhost:3100/`; les outils de développement du téléphone (console, réseau, mémoire) s'ouvrent depuis `chrome://inspect`.
 

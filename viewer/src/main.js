@@ -217,12 +217,25 @@ async function main() {
     tilesets.forEach((tiles) => tiles.setResolutionFromRenderer(camera, renderer))
   })
 
-  // Key C: copy the current view as ?cam=... (to share a view or reproduce it)
+  // The address bar follows the camera: ?cam=x,y,z,tx,ty,tz is updated (other parameters kept) when a gesture
+  // ends, so the URL can be copied at any time to share or reproduce the view. replaceState: no history entry
+  // per move. Key C copies that URL.
+  const viewUrl = () => {
+    const v = [...camera.position.toArray(), ...controls.target.toArray()].map((n) => n.toFixed(2)).join(',')
+    const query = new URLSearchParams(location.search)
+    query.set('cam', v)
+    // Commas kept readable instead of %2C
+    return `${location.origin}${location.pathname}?${query.toString().replace(/%2C/g, ',')}`
+  }
+  let urlTimer = 0
+  controls.addEventListener('change', () => {
+    clearTimeout(urlTimer)
+    urlTimer = setTimeout(() => history.replaceState(null, '', viewUrl()), 300)
+  })
   window.addEventListener('keydown', (e) => {
     if (e.key !== 'c' && e.key !== 'C') return
-    const v = [...camera.position.toArray(), ...controls.target.toArray()].map((n) => n.toFixed(2)).join(',')
-    console.log(`?cam=${v}`)
-    navigator.clipboard?.writeText(`${location.origin}${location.pathname}?cam=${v}`).catch(() => {})
+    console.log(viewUrl())
+    navigator.clipboard?.writeText(viewUrl()).catch(() => {})
   })
 
   // ?stats=1: memory used and tiles loaded per zone, on screen (readable on a phone)
