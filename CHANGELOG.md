@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Development: the site's `/modele/` page forwards `/modele/viewer/` to the viewer's dev server (now at
+  `localhost:3100/modele/viewer/`), so it shows the viewer's source and reloads with it.
 - Viewer settings panel (⚙): one control per query parameter (detail, sky lighting, colours, ambient occlusion,
   advanced). Every setting applies live, sliders while they move: the page never reloads (a new tiles source
   reloads the model only, keeping the view). The address keeps only the camera (`?cam=`); other parameters in a

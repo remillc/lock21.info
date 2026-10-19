@@ -59,7 +59,7 @@ npm run dev                  # Astro dev server on http://localhost:4321/ (live 
 npm run build                # production build into dist/ (pages + Pagefind search index)
 npm run preview              # serve dist/ on http://localhost:4321/
 npm run build:viewer         # builds the 3D viewer into public/modele/viewer (needed before build/deploy)
-npm run viewer:dev           # viewer dev server on http://localhost:3100/
+npm run viewer:dev           # viewer dev server on http://localhost:3100/modele/viewer/ (also needed by /modele/ on 4321, which forwards to it and reloads with it)
 npm run model:check          # 3D zones changed in the .blend since their last publication
 npm run model:post-modified  # republish the changed zones locally (O:\publishing\tiles)
 npm run model:upload         # upload tiles to R2 (changes the live viewer: ask first)

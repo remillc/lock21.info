@@ -21,7 +21,7 @@ Chaîne de traitement qui transforme les modèles photogrammétriques de chaque 
 | `npm run model:post-modified` | republie seulement les zones modifiées |
 | `npm run model:publish -- -Zones "zone 2","zone 3"` | republie une liste de zones |
 | `npm run model:serve-tiles` | sert `O:\publishing\tiles` en local (port 8081, CORS) |
-| `npm run viewer:dev` | visualiseur sur `http://localhost:3100/` |
+| `npm run viewer:dev` | visualiseur sur `http://localhost:3100/modele/viewer/` |
 | `npm run viewer:build` | construit le visualiseur dans `viewer/dist` (`npm run build:viewer`: dans `public/modele`, pour le site Astro; c'est ce que fait le déploiement) |
 | `npm run model:upload` | met en ligne les tuiles sur Cloudflare R2 (`-- --dry-run` pour voir sans envoyer) |
 
@@ -42,7 +42,7 @@ Le script enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape
 | 5b | Relief (essai, facultatif) | `bake_relief.py` (Blender) | sortie de 5 + export détaillé (`--high`) | carte de normales + copie de la zone préparée |
 | 5c | Atténuation des lampes (essai, facultatif) | `delight_texture.py` (Blender) + `apply_shade.mjs` | sortie de 5 ou 5b | texture corrigée + copie de la zone préparée |
 | 6 | Tuilage + manifeste | `tile_zone.ps1` (+ `merge_normal_maps.mjs`, `texture_stats.mjs`, `update_manifest.py`) | sortie de 5 (ou 5b, 5c) | `O:\publishing\tiles\<zone>\<version>\` + `manifest.json` |
-| 7 | Aperçu local | `serve-tiles.ps1` + `viewer/`: `npm run dev` | `O:\publishing\tiles\` | `http://localhost:3100/` |
+| 7 | Aperçu local | `serve-tiles.ps1` + `viewer/`: `npm run dev` | `O:\publishing\tiles\` | `http://localhost:3100/modele/viewer/` |
 | 8 | Mise en ligne | `upload_r2.mjs` (`npm run model:upload`) | `O:\publishing\tiles\` + `.env.local` | bucket R2 `lock21-tiles` |
 
 ### 3. Vérification du repère
@@ -114,14 +114,14 @@ Dans deux terminaux:
 
 ```powershell
 .\tools\publish-model\serve-tiles.ps1      # tuiles sur http://localhost:8081 (CORS, sans cache)
-cd viewer; npm run dev                     # visualiseur sur http://localhost:3100/
+cd viewer; npm run dev                     # visualiseur sur http://localhost:3100/modele/viewer/
 ```
 
 Le bouton ⚙ du visualiseur ouvre un panneau de réglages (`<l21-settings-panel>`, `viewer/src/config-panel.js`) avec un contrôle par paramètre ci-dessous; chaque réglage s'applique aussitôt, sans recharger la page, mais ne s'écrit pas dans l'adresse. Les paramètres ci-dessous fonctionnent encore dans un lien (essais): lus au chargement, puis retirés de l'adresse, qui ne garde que la caméra. Paramètres du visualiseur: `?tiles=<url>` (autre serveur de tuiles), `?neutral=0..1` et `?despill=0..1` (couleurs, voir l'étape 6), `?relief=1`, `?light=`, `?shade=`, `?wet=` et `?relief=debug` (relief, voir plus haut), `?stats=1` (mémoire et tuiles par zone), `?ao=0` (sans occlusion ambiante), `?hdri=0`, `?hdriIntensity=` et `?sky=1` (éclairage par le ciel). Tuiles d'essai du relief: `serve-tiles.ps1 -TilesRoot O:\temp\relief-tiles -Port 8082`, puis `?tiles=http://localhost:8082&relief=1`. La barre d'adresse suit la caméra (`?cam=x,y,z,cible x,y,z`, son seul paramètre, mis à jour à la fin de chaque geste): copier l'adresse suffit pour partager ou retrouver une vue; la touche C la copie.
 
-Pour un téléphone **Android** (le plus simple): débogage USB activé, câble branché, puis dans Chrome sur le PC `chrome://inspect/#devices` → *Port forwarding*: `3100` → `localhost:3100` et `8081` → `localhost:8081`. Sur le téléphone, ouvrir `http://localhost:3100/`; les outils de développement du téléphone (console, réseau, mémoire) s'ouvrent depuis `chrome://inspect`.
+Pour un téléphone **Android** (le plus simple): débogage USB activé, câble branché, puis dans Chrome sur le PC `chrome://inspect/#devices` → *Port forwarding*: `3100` → `localhost:3100` et `8081` → `localhost:8081`. Sur le téléphone, ouvrir `http://localhost:3100/modele/viewer/`; les outils de développement du téléphone (console, réseau, mémoire) s'ouvrent depuis `chrome://inspect`.
 
-Pour un téléphone sur le même Wi-Fi (ex. iPhone): `serve-tiles.ps1 -Lan` (le visualiseur écoute déjà sur le réseau), puis ouvrir `http://<IP du PC>:3100/?tiles=http://<IP du PC>:8081`. Windows demande une fois d'autoriser l'accès réseau.
+Pour un téléphone sur le même Wi-Fi (ex. iPhone): `serve-tiles.ps1 -Lan` (le visualiseur écoute déjà sur le réseau), puis ouvrir `http://<IP du PC>:3100/modele/viewer/?tiles=http://<IP du PC>:8081`. Windows demande une fois d'autoriser l'accès réseau.
 
 ## Mise en ligne (Cloudflare R2)
 
@@ -130,7 +130,7 @@ Pour un téléphone sur le même Wi-Fi (ex. iPhone): `serve-tiles.ps1 -Lan` (le 
 - une version n'est envoyée que si son fichier d'entrée (`tileset.json` ou `.glb`) manque dans le bucket; ses fichiers ont un cache d'un an (`immutable`): une version publiée ne change jamais;
 - `manifest.json` est envoyé en dernier, avec un cache d'une minute: la nouvelle version est visible en moins d'une minute;
 - les versions référencées ni par le nouveau manifeste ni par le précédent sont supprimées du bucket (une génération gardée pour les visiteurs dont le manifeste est encore en cache; `--no-prune` garde tout);
-- CORS du bucket (tableau de bord Cloudflare, R2 → `lock21-tiles` → Settings → CORS Policy): `https://lock21.info`, `http://localhost:3100` (visualiseur en développement) et `http://localhost:4321` (site Astro en développement, qui sert le visualiseur sous `/modele/`).
+- CORS du bucket (tableau de bord Cloudflare, R2 → `lock21-tiles` → Settings → CORS Policy): `https://lock21.info`, `http://localhost:3100` (visualiseur en développement) et `http://localhost:4321` (site Astro en développement: sa page `/modele/` transmet `/modele/viewer/` au serveur du visualiseur, qui doit donc tourner).
 - identifiants dans `.env.local` (exclu de Git): `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`. Jamais affichés.
 
 Après une publication locale (`model:post-modified`), lancer `model:upload` pour mettre en ligne.
@@ -163,7 +163,7 @@ Après une publication locale (`model:post-modified`), lancer `model:upload` pou
 | AWS SDK for JavaScript (`@aws-sdk/client-s3`) | 3.x | `tools/publish-model/package.json` | étape 8: envoi vers R2 (API compatible S3) |
 | glTF-Transform + meshoptimizer | 4.5.1 / 1.x | `tools/publish-model/package.json` (`npm install` dans ce dossier) | étape 6: compression meshopt des tuiles |
 | sharp | 0.35.5 | `tools/publish-model/package.json` | étape 6: couleur moyenne des textures (`texture_stats.mjs`); étape 5c (`apply_shade.mjs`) |
-| Vite | 8.x | `viewer/package.json` | visualiseur autonome (`viewer/`, `npm run dev` → `http://localhost:3100/`) |
+| Vite | 8.x | `viewer/package.json` | visualiseur autonome (`viewer/`, `npm run dev` → `http://localhost:3100/modele/viewer/`) |
 | three.js | 0.186.1 | `viewer/package.json` | rendu WebGL du visualiseur |
 | 3d-tiles-renderer (NASA-AMMOS) | 0.5.3 | `viewer/package.json` | chargement des tuiles dans three.js |
 | N8AO | 2.0.1 | `viewer/package.json` | occlusion ambiante du visualiseur |

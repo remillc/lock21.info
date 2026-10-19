@@ -1,26 +1,17 @@
 // Site lock21.info: Astro + Starlight (see GUIDELINES.md). French is the root locale; the structure is ready for
 // English (/en/), which ships when pages are translated. The 3D viewer is a separate app (viewer/), built into
-// public/modele/ and served as is at /modele/.
+// public/modele/viewer/ and served as is at /modele/viewer/ (in development, forwarded to the viewer's dev server).
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 
-// Dev server only: Astro serves public/ files but not a folder's index.html, so /modele/viewer/ (the built viewer in
-// public/modele/viewer/, embedded by the /modele/ page) would be a 404 in development. GitHub Pages serves it normally
-// in production.
-const viewerIndex = {
-  name: 'viewer-index',
-  configureServer(server) {
-    server.middlewares.use((req, _res, next) => {
-      const [path, query] = (req.url ?? '').split('?')
-      if (path === '/modele/viewer' || path === '/modele/viewer/') req.url = '/modele/viewer/index.html' + (query ? `?${query}` : '')
-      next()
-    })
-  },
-}
+// Dev server only: /modele/viewer/ (embedded by the /modele/ page) is forwarded to the viewer's own dev server
+// (npm run viewer:dev, port 3100, same path), so the page shows the viewer's source and reloads with it, websocket
+// included. In production, GitHub Pages serves the built viewer from public/modele/viewer/.
+const viewerDev = { target: 'http://localhost:3100', changeOrigin: true, ws: true }
 
 export default defineConfig({
   site: 'https://lock21.info',
-  vite: { plugins: [viewerIndex] },
+  vite: { server: { proxy: { '/modele/viewer': viewerDev } } },
   integrations: [
     starlight({
       // Site name per language (SYSTEM-DESIGN.md): Écluse 21 in French, Lock 21 in English
