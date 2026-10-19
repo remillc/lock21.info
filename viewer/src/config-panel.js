@@ -1,11 +1,10 @@
 // <l21-settings-panel>: native Custom Element (GUIDELINES.md) with one control per query parameter of the viewer, opened
-// by the ⚙ button. Every change goes into the address (?neutral=0.5…), so a configuration can be shared like a view;
-// the page that embeds the viewer is told too. Every setting applies at once through its "live" handler (main.js),
-// sliders while they move: the page never reloads. A value equal to its default is removed from the address.
-// Labels in French, like the rest of the viewer.
+// by the ⚙ button. Every setting applies at once through its "live" handler (main.js), sliders while they move: the
+// page never reloads. The settings are not written into the address (it keeps only the camera); they start from the
+// query parameters read at load. Labels in French, like the rest of the viewer.
 //
 // Usage: const panel = document.createElement('l21-settings-panel')
-//        panel.configure({ schema, live, button, onAddressChange }); document.body.append(panel)
+//        panel.configure({ schema, values, live, button }); document.body.append(panel)
 
 // type: toggle | range | select | text | angles (two ranges stored as "a,b")
 export function settingsSchema({ mobile, errorDefault }) {
@@ -58,15 +57,15 @@ export function settingsSchema({ mobile, errorDefault }) {
 }
 
 class SettingsPanel extends HTMLElement {
-  configure({ schema, live, button, onAddressChange }) {
+  configure({ schema, values, live, button }) {
     this.schema = schema
+    // Current values (URLSearchParams); a setting at its default is absent
+    this.params = new URLSearchParams(values)
     this.live = live
     this.button = button
-    this.onAddressChange = onAddressChange
   }
 
   connectedCallback() {
-    this.params = new URLSearchParams(location.search)
     this.hidden = true
     this.setAttribute('role', 'dialog')
     this.setAttribute('aria-label', 'Réglages du visualiseur')
@@ -83,39 +82,11 @@ class SettingsPanel extends HTMLElement {
     this.button.setAttribute('aria-expanded', String(open))
   }
 
-  // Writes the value into the address (removed when it equals the default), then applies it
+  // Keeps the value (forgotten when it equals the default), then applies it
   set(item, value) {
     if (value === item.def || value === '') this.params.delete(item.key)
     else this.params.set(item.key, value)
-    this.updateAddress()
     this.live[item.key]?.(value)
-  }
-
-  // At most every 250 ms while a slider moves (Safari refuses more than ~100 replaceState calls in 30 s);
-  // the last value is always written
-  updateAddress() {
-    if (this.addressTimer) {
-      this.addressPending = true
-      return
-    }
-    this.writeAddress()
-    this.addressTimer = setTimeout(() => {
-      this.addressTimer = 0
-      if (this.addressPending) {
-        this.addressPending = false
-        this.writeAddress()
-      }
-    }, 250)
-  }
-
-  writeAddress() {
-    // The camera moves on its own (main.js writes ?cam=): the current address is the base
-    const cam = new URLSearchParams(location.search).get('cam')
-    if (cam) this.params.set('cam', cam)
-    const query = this.params.toString().replace(/%2C/g, ',')
-    const search = query ? `?${query}` : ''
-    history.replaceState(null, '', location.pathname + search)
-    this.onAddressChange?.(search)
   }
 
   render() {
@@ -159,7 +130,6 @@ class SettingsPanel extends HTMLElement {
         this.params.delete(item.key)
         this.live[item.key]?.(item.def)
       }
-      this.updateAddress()
       this.replaceChildren()
       this.render()
     })

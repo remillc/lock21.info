@@ -13,9 +13,11 @@ import { settingsSchema } from './config-panel.js'
 import { N8AOPass } from 'n8ao'
 
 // Every query parameter is read once here, then changed live by the settings panel (config-panel.js): no setting
-// reloads the page. `live` holds one handler per parameter.
+// reloads the page. `live` holds one handler per parameter. The address keeps only the camera (?cam=, see viewUrl):
+// the other parameters still work in a link (tests), and are removed from the address once read.
 const params = new URLSearchParams(location.search)
 const live = {}
+history.replaceState(null, '', location.pathname + (params.has('cam') ? `?cam=${params.get('cam')}` : ''))
 
 // Root of the published tiles (manifest.json + tilesets). Override with ?tiles=<url> (e.g. phone tests on the LAN)
 const DEFAULT_TILES_URL = import.meta.env.VITE_TILES_URL || 'http://localhost:8081'
@@ -537,15 +539,12 @@ function resize() {
 }
 window.addEventListener('resize', resize)
 
-// The address bar follows the camera: ?cam=x,y,z,tx,ty,tz is updated (other parameters kept) when a gesture
-// ends, so the URL can be copied at any time to share or reproduce the view. replaceState: no history entry
-// per move. Key C copies that URL.
+// The address bar follows the camera: ?cam=x,y,z,tx,ty,tz (its only parameter) is updated when a gesture ends,
+// so the URL can be copied at any time to share or reproduce the view. replaceState: no history entry per move.
+// Key C copies that URL.
 const viewUrl = () => {
   const v = [...camera.position.toArray(), ...controls.target.toArray()].map((n) => n.toFixed(2)).join(',')
-  const query = new URLSearchParams(location.search)
-  query.set('cam', v)
-  // Commas kept readable instead of %2C
-  return `${location.origin}${location.pathname}?${query.toString().replace(/%2C/g, ',')}`
+  return `${location.origin}${location.pathname}?cam=${v}`
 }
 let urlTimer = 0
 controls.addEventListener('change', () => {
@@ -588,17 +587,15 @@ function updateStats() {
   statsBox.textContent = lines.join('\n')
 }
 
-// Settings panel (⚙, <l21-settings-panel>): one control per query parameter.
-// The link to share: the embedding page's address (it carries the same parameters), or the viewer's own
+// Settings panel (⚙, <l21-settings-panel>): one control per query parameter, starting from the values read above.
+// The link to share: the embedding page's address (it carries the same ?cam=), or the viewer's own
 live.shareUrl = () => (embedded ? window.top.location.href : viewUrl())
 const settings = document.createElement('l21-settings-panel')
 settings.configure({
   schema: settingsSchema({ mobile, errorDefault: profile.errorTarget }),
+  values: params,
   live,
   button: document.querySelector('.settings-button'),
-  onAddressChange: (search) => {
-    if (embedded) window.parent.postMessage({ type: 'lock21:cam', search }, location.origin)
-  },
 })
 document.body.append(settings)
 
