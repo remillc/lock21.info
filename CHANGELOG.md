@@ -2,7 +2,9 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
-## Unreleased (branch `feature/relief`)
+## 0.3.0 - 2026-10-19
+
+- Zones online: 1, 3, 4 (new 16384 px texture), 8, 10 and 11 republished; context (terrain, fillers) updated.
 
 - Viewer: the address bar follows the camera (`?cam=`); key C copies the view.
 - Viewer: trilinear filtering of tile textures (less shimmering); gloss blurred where the relief varies within a pixel.
