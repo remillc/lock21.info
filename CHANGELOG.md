@@ -2,7 +2,7 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
-## 0.2.0 - unreleased (branches `feature/lod4`, `feature/color-balance`)
+## 0.2.0 - 2026-10-19
 
 - Viewer: colour balance between zones. Each zone's average texture colour goes in `manifest.json`; the
   viewer brings every zone to a common colour and removes 30 % of the water's yellow-green tint
