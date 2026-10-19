@@ -23,25 +23,42 @@ const withFooter = html.replace('</table>', `<tfoot><tr>${cells}</tr></tfoot></t
 <div class="dive-log" set:html={withFooter} />
 
 <style lang="scss">
+  // The table fits the content column: fixed widths for the short columns, Notes takes the rest and wraps
   .dive-log :global(table) {
-    font-size: 0.875rem;
+    display: table; // the global rule makes tables scrollable blocks; this one must fit instead
+    width: 100%;
+    table-layout: fixed;
+    font-size: 0.8125rem;
   }
-  .dive-log :global(td:nth-child(n + 2):nth-child(-n + 6)),
-  .dive-log :global(th:nth-child(n + 2):nth-child(-n + 6)) {
+  .dive-log :global(th),
+  .dive-log :global(td) {
+    padding: 0.4rem 0.5rem;
+    overflow-wrap: anywhere;
+  }
+  // No, Date, Activité, Zones, Durée, Participants; Notes (7th) gets the remaining width
+  $widths: 2.5rem, 6.5rem, 6rem, 4.5rem, 5rem, 9rem;
+  @for $i from 1 through length($widths) {
+    .dive-log :global(th:nth-child(#{$i})) {
+      width: nth($widths, $i);
+    }
+  }
+  .dive-log :global(td:nth-child(2)) {
     white-space: nowrap;
-  }
-  // Notes: a readable width, otherwise the column is squeezed and each row grows hundreds of pixels tall
-  // (min-width is ignored on table cells: a fixed width, and the table as wide as its columns need)
-  .dive-log :global(table) {
-    width: max-content;
-    max-width: 100%;
-  }
-  .dive-log :global(td:nth-child(7)),
-  .dive-log :global(th:nth-child(7)) {
-    width: 28rem;
-    min-width: 28rem;
   }
   .dive-log :global(tfoot td) {
     font-weight: 600;
+  }
+  // Phones: the columns can't fit, the table scrolls sideways with Notes at a readable width
+  @media (max-width: 50rem) {
+    .dive-log {
+      overflow-x: auto;
+    }
+    .dive-log :global(table) {
+      width: 52rem;
+    }
+    .dive-log :global(th),
+    .dive-log :global(td) {
+      overflow-wrap: normal;
+    }
   }
 </style>
