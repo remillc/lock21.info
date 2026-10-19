@@ -86,7 +86,8 @@ const shade = params.has('shade') ? Number(params.get('shade')) : 0.6
 // Wet look (test, ?wet=0..1, needs ?relief=1): glossy surface with a clear-coat film (sharp highlights that slide
 // over the relief when the camera moves), reflections of a neutral environment, colours slightly darker and more
 // saturated. The photos already hold the lamps' real reflections: keep it subtle.
-const wet = Math.min(Math.max(Number(params.get('wet')) || 0, 0), 1)
+// Default 0.15 (chosen on zone 12); ?wet=0 turns it off
+const wet = Math.min(Math.max(params.has('wet') ? Number(params.get('wet')) || 0 : 0.15, 0), 1)
 function reliefMaterial(old, gain) {
   if (old.map) old.map.anisotropy = maxAnisotropy
   // Obj2Tiles tags every KTX2 texture sRGB, normal maps included: the GPU would then apply the sRGB curve to

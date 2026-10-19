@@ -25,6 +25,9 @@ Seuil en mètres pour passer à 4 niveaux (défaut 25).
 .PARAMETER Divisions
 Profondeur de découpage du niveau le plus grossier (défaut 0).
 
+.PARAMETER NormalUastc
+Carte de relief (map_Bump) en UASTC plutôt qu'en ETC1S qualité maximale: plus fidèle, 6 fois plus lourde.
+
 .PARAMETER Help
 Afficher cette aide (-h, -Help ou --help).
 
@@ -39,6 +42,7 @@ param(
     [int]$Lods = 0,
     [double]$LongZone = 25,
     [int]$Divisions = 0,
+    [switch]$NormalUastc,
     [string]$TilesRoot = "O:\publishing\tiles",
     [string]$Obj2Tiles = "O:\publishing\bin\obj2tiles-1.8.0\Obj2Tiles.exe",
     [Alias('h')][switch]$Help,
@@ -89,7 +93,10 @@ if ($normalLine) {
     New-Item -ItemType HardLink -Path (Join-Path $normalSrc $normalMap) -Target (Join-Path $Prepared $normalMap) | Out-Null
     (Get-Content $mtl -Encoding UTF8 | Where-Object { $_ -notmatch "^map_(Kd|Bump)" }) + "map_Kd $normalMap" |
         Set-Content (Join-Path $normalSrc "$Zone.mtl") -Encoding UTF8
-    & $Obj2Tiles @obj2tilesArgs --ktx2-uastc --ktx2-zstd-level 18 (Join-Path $normalSrc "$Zone.obj") $normalOut
+    # ETC1S à qualité maximale (255) par défaut: proche de la taille des photos; -NormalUastc: UASTC, plus fidèle
+    # mais 6 fois plus lourd (zone 12: 296 Mo au lieu de 48) et 1 h 20 d'encodage au lieu de 10 min
+    $normalFormat = if ($NormalUastc) { @('--ktx2-uastc', '--ktx2-zstd-level', '18') } else { @('--ktx2-quality', '255') }
+    & $Obj2Tiles @obj2tilesArgs @normalFormat (Join-Path $normalSrc "$Zone.obj") $normalOut
     if ($LASTEXITCODE -ne 0) { throw "Obj2Tiles (carte de relief) a échoué ($LASTEXITCODE)" }
     node "$PSScriptRoot\merge_normal_maps.mjs" $out $normalOut
     if ($LASTEXITCODE -ne 0) { throw "merge_normal_maps.mjs a échoué" }
