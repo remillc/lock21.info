@@ -100,4 +100,4 @@ Node 22.12+ (Astro 7, Vite 8). If the sidebar or pages show stale entries after 
 - **Versioning:** semantic versioning below 1.0.0 while the site is not public (`package.json` `version`). Each release gets a `CHANGELOG.md` entry and an annotated tag `vX.Y.Z`. Patch for fixes, minor for features.
 
 - Commit messages in history are just `wip`. There is no enforced style.
-- Pushing to `main` deploys the site. Don't push or merge into `main` without the user's explicit OK.
+- **Always push after committing or merging**, so the work is on GitHub too: `git push -u origin <branch>` for a feature branch. Merging into `main` still needs the user's explicit OK, because pushing `main` deploys the site; once a merge into `main` is approved, push it (with its tag, for a release) right away.
