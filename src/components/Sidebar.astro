@@ -29,6 +29,8 @@ const marks = [0, 15, 30, 45, site.bottomDepthFt]
      4rem of margin on each side */
   @media (min-width: 106.75rem) {
     .depth-ruler {
+      /* Paler than the home page's gauge: here it frames the navigation, it doesn't lead the page */
+      --ruler-line: color-mix(in srgb, var(--md-sys-color-secondary) 40%, transparent);
       display: block;
       position: fixed;
       top: calc(var(--sl-nav-height) + 1.5rem);
@@ -36,7 +38,7 @@ const marks = [0, 15, 30, 45, site.bottomDepthFt]
       /* The line sits on the navigation column's left edge; the labels hang in the margin to its left */
       left: calc(var(--lock21-margin, 0px) - 1px);
       width: 0;
-      border-left: 2px solid var(--md-sys-color-secondary);
+      border-left: 2px solid var(--ruler-line);
     }
     .mark {
       position: absolute;
@@ -54,7 +56,7 @@ const marks = [0, 15, 30, 45, site.bottomDepthFt]
       top: 50%;
       right: -0.625rem;
       width: 0.375rem;
-      border-top: 2px solid var(--md-sys-color-secondary);
+      border-top: 2px solid var(--ruler-line);
     }
     .bottom {
       color: var(--md-sys-color-tertiary-text);
