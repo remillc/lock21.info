@@ -16,7 +16,11 @@ Dossier de l'OBJ préparé, ex. O:\temp\zone-12\prox.
 Nom du dossier de la nouvelle version (défaut: date et heure).
 
 .PARAMETER Lods
-Niveaux de détail Obj2Tiles (défaut 3).
+Niveaux de détail Obj2Tiles. Par défaut: 4 si le plus grand côté horizontal de la zone dépasse -LongZone mètres
+(zones longues, ex. 7 et 8: le visiteur n'en regarde qu'une partie de près), 3 sinon.
+
+.PARAMETER LongZone
+Seuil en mètres pour passer à 4 niveaux (défaut 25).
 
 .PARAMETER Divisions
 Profondeur de découpage du niveau le plus grossier (défaut 0).
@@ -32,7 +36,8 @@ param(
     [string]$Zone,
     [string]$Prepared,
     [string]$Version = (Get-Date -Format "yyyy-MM-dd-HHmm"),
-    [int]$Lods = 3,
+    [int]$Lods = 0,
+    [double]$LongZone = 25,
     [int]$Divisions = 0,
     [string]$TilesRoot = "O:\publishing\tiles",
     [string]$Obj2Tiles = "O:\publishing\bin\obj2tiles-1.8.0\Obj2Tiles.exe",
@@ -50,6 +55,17 @@ if (Test-Path $out) { throw "$out existe déjà: choisir une autre -Version (les
 # Garde-fou: sans map_Kd dans le MTL, Obj2Tiles produit des tuiles sans texture (blanches)
 $mtl = Join-Path $Prepared "$Zone.mtl"
 if (-not (Select-String -Path $mtl -Pattern "^map_Kd" -Quiet)) { throw "$mtl ne référence aucune texture (map_Kd)" }
+
+# Niveaux de détail selon la taille de la zone (rapport de prepare_zone.py: boîte englobante en mètres, Z vers le haut).
+# Test sur la zone 12 (10 m): un 4e niveau ne gagne que 9 % de téléchargement de près, pour 4 fois plus de requêtes;
+# il ne vaut que pour les zones longues.
+if ($Lods -le 0) {
+    $report = Get-Content (Join-Path $Prepared "$Zone-prepare.json") -Raw -Encoding UTF8 | ConvertFrom-Json
+    $export = $report.steps.export
+    $long = [Math]::Max($export.bbox_max[0] - $export.bbox_min[0], $export.bbox_max[1] - $export.bbox_min[1])
+    $Lods = if ($long -gt $LongZone) { 4 } else { 3 }
+    Write-Host ("   {0}: plus grand côté {1:N1} m -> {2} niveaux de détail" -f $Zone, $long, $Lods)
+}
 
 # --preset standard: octree, --local, --zsplit, contenu glb (3D Tiles 1.1).
 # --max-texture-size 0: le plafond s'applique à la texture SOURCE avant découpage (le défaut 8192 dégrade une texture de 12k).

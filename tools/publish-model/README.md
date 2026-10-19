@@ -88,6 +88,8 @@ Puis `fix_tileset.py` corrige le `tileset.json`: la racine, vide avec `--no-root
 
 Ensuite, `compress_tiles.mjs` (glTF-Transform) compresse la géométrie de chaque tuile en **meshopt** (quantification + `EXT_meshopt_compression`); le visualiseur la décode avec `MeshoptDecoder`. Avec `--no-root-content` (la racine dupliquait le niveau le plus grossier), l'ouverture du visualiseur (zones 10 et 12) passe de 61,2 Mo à **18,1 Mo**, sans différence visible.
 
+**Nombre de niveaux selon la taille de la zone:** 3 par défaut, **4 pour les zones longues** (plus grand côté horizontal > 25 m, ex. zones 7 et 8). Test sur la zone 12 (10 × 10 m): le 4e niveau ne réduit le téléchargement de près que de 9 % (38,9 Mo au lieu de 42,7), pour 4 fois plus de requêtes (253 au lieu de 57) et 33 % de stockage en plus. Sur une zone longue, le visiteur n'en regarde qu'une partie de près: des tuiles plus petites évitent de charger le reste. `tile_zone.ps1 -Lods N` impose un nombre de niveaux.
+
 Leçons des essais sur la zone 12 (OBJ préparé de 1,2 M faces, texture 12 467 px):
 
 | Essai | Réglages | Tuiles | Triangles au niveau le plus fin | Textures au niveau le plus fin | Total | Constat |

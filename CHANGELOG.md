@@ -2,6 +2,11 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## 0.1.1 - unreleased (branch `feature/lod4`)
+
+- Tiling: 4 levels of detail for long zones (longest horizontal side > 25 m: zones 7 and 8), 3 otherwise; the
+  overview of the whole model drops from 24.6 to 19.3 MB.
+
 ## 0.1.0 - 2026-10-18
 
 - 3D viewer of the lock at `lock21.info/modele/` (Vite, three.js, 3D Tiles), "Modèle 3D" menu entry: tiled model of
