@@ -2,13 +2,13 @@
 
 Chaîne de traitement qui transforme les modèles photogrammétriques de chaque zone en **tuiles 3D** (OGC 3D Tiles 1.1) affichées par le visualiseur du site, [lock21.info/modele/](https://lock21.info/modele/) (projet `viewer/`).
 
-> **État:** 9 zones en ligne (1, 2, 3, 4, 7, 8, 10, 11, 12) et le contexte (terrain, remplissages). Relief, aspect mouillé et atténuation des lampes: en essai sur les zones 1 et 12. Ce document décrit ce qui existe et le restera à mesure que la chaîne évolue.
+> **État:** 10 zones en ligne (1, 2, 3, 4, 7, 8, 10, 11, 12, 13) et le contexte (terrain, remplissages). Relief (carte des normales) et aspect mouillé: cuits pour toutes les zones sauf la 4 dans les tuiles locales (2026-10-19), pas encore mis en ligne. Atténuation des lampes: en essai sur la zone 12. Ce document décrit ce qui existe et le restera à mesure que la chaîne évolue.
 
 ## Principes
 
 - **Les originaux ne sont jamais modifiés.** Les projets Metashape (`O:\photogrammetry\`), les exports (`O:\modeles\`) et les fichiers Blender (`modeles/*.blend`) ne sont ouverts qu'en lecture: aucun script ne les sauvegarde.
 - **Blender est la référence.** Le fichier de travail est **`modeles/lock-21-publishing.blend`** (copie de `lock-21-mockup.blend` du 2026-10-18, que la chaîne ne touche pas). Chaque objet de sa collection `zones` est importé d'un export de `O:\modeles\` et porte une propriété personnalisée **`source`**: le chemin de l'export `.glb` à publier (normalement le plus détaillé). Sa transformation (échelle, position, ajustées à la main) donne la mise en place; ses modificateurs donnent les retouches: **booléens** pour retirer le bruit et rogner entre zones voisines, **Lattice** pour corriger une déformation. La chaîne reporte ces retouches sur l'export haute résolution, sans jamais modifier le `.blend`.
-- **La texture porte le détail, la géométrie reste légère.** La texture photo contient déjà l'éclairage: le visualiseur l'affiche sans calcul de lumière (en essai: un éclairage avec carte de relief, voir plus bas). La géométrie est simplifiée tant que l'écart avec le maillage complet reste sous un seuil mesuré.
+- **La texture porte le détail, la géométrie reste légère.** La texture photo contient déjà l'éclairage: le visualiseur l'éclaire par un ciel (HDRI) et, quand la zone a une carte des normales, par le relief qu'elle porte (voir plus bas). La géométrie est simplifiée tant que l'écart avec le maillage complet reste sous un seuil mesuré.
 - **Une zone = un tileset indépendant**, versionné par date et inscrit dans `manifest.json`. Mettre à jour une zone ne touche pas aux autres. Les zones sont un découpage de travail: le visiteur voit un seul modèle continu.
 
 ## Étapes
@@ -24,6 +24,7 @@ Chaîne de traitement qui transforme les modèles photogrammétriques de chaque 
 | `npm run viewer:dev` | visualiseur sur `http://localhost:3100/modele/viewer/` |
 | `npm run viewer:build` | construit le visualiseur dans `viewer/dist` (`npm run build:viewer`: dans `public/modele`, pour le site Astro; c'est ce que fait le déploiement) |
 | `npm run model:upload` | met en ligne les tuiles sur Cloudflare R2 (`-- --dry-run` pour voir sans envoyer) |
+| `.\tools\publish-model\relief_zones.ps1 -Zones "zone 2","zone 3" [-High @{"zone 1" = "<export>.glb"}] [-Rebake]` | relief: cuit la carte des normales puis retuile la zone avec (étapes 5b et 6), tuiles locales seulement |
 
 Ces scripts appellent `publish_zones.ps1` (options `-Zones`, `-Changed`, `-DryRun`, `-Version`, `-Density`), `serve-tiles.ps1` et le projet `viewer/`.
 
@@ -39,7 +40,7 @@ Le script enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape
 | 3 | Vérification du repère des exports | `verify_sources.py` | `O:\modeles\zone-*\*.glb` + `.blend` | `sources-check.json` |
 | 4 | Recalage (automatique à l'étape 5) | `register_zone.py` | export `source` + `.blend` | `transforms/<zone>.json` (cache) |
 | 5 | Préparation | `prepare_zone.py --zone "zone N" [--density 3000] --out …` | `.blend` (+ export `source`) | `O:\temp\<zone>\...\<zone>.obj` + `.jpg` + `<zone>-prepare.json` |
-| 5b | Relief (essai, facultatif) | `bake_relief.py` (Blender) | sortie de 5 + export détaillé (`--high`) | carte de normales + copie de la zone préparée |
+| 5b | Relief | `bake_relief.py` (Blender), enchaîné avec l'étape 6 par `relief_zones.ps1` | sortie de 5 + export détaillé (la source, ou `--high`) | carte des normales + copie de la zone préparée |
 | 5c | Atténuation des lampes (essai, facultatif) | `delight_texture.py` (Blender) + `apply_shade.mjs` | sortie de 5 ou 5b | texture corrigée + copie de la zone préparée |
 | 6 | Tuilage + manifeste | `tile_zone.ps1` (+ `merge_normal_maps.mjs`, `texture_stats.mjs`, `update_manifest.py`) | sortie de 5 (ou 5b, 5c) | `O:\publishing\tiles\<zone>\<version>\` + `manifest.json` |
 | 7 | Aperçu local | `serve-tiles.ps1` + `viewer/`: `npm run dev` | `O:\publishing\tiles\` | `http://localhost:3100/modele/viewer/` |
@@ -102,9 +103,30 @@ Leçons des essais sur la zone 12 (OBJ préparé de 1,2 M faces, texture 12 467 
 | poc2 | `--lods 3 --divisions 0 --max-texture-size 2048` | 70 | 1,27 M | 512 px | 64 Mo | `--max-texture-size` s'applique à la **texture source** avant découpage: résolution perdue |
 | poc3 | `--lods 3 --divisions 0 --max-texture-size 0 --decimation-mode Standard` | 70 | 1,27 M | 2048 et 4096 px | 103 Mo | résolution conservée. Reste à faire: niveaux éloignés trop lourds (400 k triangles à la racine), géométrie non compressée (51 Mo chargés à l'ouverture) |
 
-### Relief et textures sans lampes (essais sur la zone 12)
+### Relief et textures sans lampes
 
-- **Relief** (`bake_relief.py`): carte de normales en *espace objet* cuite depuis l'export détaillé sur le mesh préparé, à la taille exacte de la photo (Obj2Tiles range chaque tuile selon la taille de texture). `tile_zone.ps1` la tuile à part (2e passage Obj2Tiles, la carte donnée comme photo, ETC1S qualité 255) et `merge_normal_maps.mjs` la greffe dans les tuiles, marquée linéaire: le traitement des cartes de normales par Obj2Tiles les range mal (zones noires) et les marque sRGB. Zone 12: 48 Mo sans relief, 98 Mo avec (296 Mo en UASTC, `-NormalUastc`, 1 h 20 d'encodage). Visualiseur: `?relief=1`, `?light=azimut,élévation`, `?shade=0..1`, `?wet=0..1` (aspect mouillé, 0,15 par défaut), `?relief=debug`.
+- **Relief** (`bake_relief.py`): carte des normales en *espace objet* cuite depuis l'export détaillé sur le mesh préparé, à la taille exacte de la photo (Obj2Tiles range chaque tuile selon la taille de texture). `tile_zone.ps1` la tuile à part (2e passage Obj2Tiles, la carte donnée comme photo, ETC1S qualité 255) et `merge_normal_maps.mjs` la greffe dans les tuiles, marquée linéaire: le traitement des cartes de normales par Obj2Tiles les range mal (zones noires) et les marque sRGB. Zone 12: 48 Mo sans relief, 98 Mo avec (296 Mo en UASTC, `-NormalUastc`, 1 h 20 d'encodage).
+  - **Placement de l'export détaillé:** comme `prepare_zone.py`: recalage local de la source (`transforms/<zone>.json`, `matrix_source_to_blender_local`) puis position de la zone **au moment de la préparation** (`<zone>-fingerprint.json`). Le `matrix_source_to_world` du cache garde la position de la zone lors du recalage: périmé dès que la zone est déplacée (zone 8, 2026-10-19: écart médian de 12 cm, cuisson refusée).
+  - **Modificateurs de déformation** (Lattice, zone 4): l'objet de zone est ajouté depuis le `.blend` (lecture seule) avec son lattice, ses modificateurs copiés sur l'export détaillé et appliqués; un Lattice déforme selon la position dans le monde, d'où le même résultat que le mesh préparé. La cuisson s'arrête si les modificateurs du `.blend` ne sont plus ceux de la zone préparée (republier d'abord).
+  - **Cage:** deux fois le 95e centile de l'écart sur la **surface gardée** (sommets de l'export à moins de 10 cm du mesh préparé), 3 cm au minimum. Calculée sur tout l'export, elle montait à 3,9 m (zone 10): l'export garde les parties retirées de la zone (booléens, nettoyage), à des mètres, et la cuisson aurait projeté des surfaces lointaines. Avec la règle: 3 cm pour toutes les zones.
+  - **Export détaillé:** la source quand elle l'est (zones 2, 3, 7, 8, 11, 12, 13); sinon `--high`, un export du même chunk Metashape (même repère; la cuisson s'arrête si l'écart médian dépasse 2 cm): zone 1 (8,6 M faces, source de 621 k), zone 10 (22,6 M, source de 3 M). La géométrie suffit: pas besoin de texture.
+  - **Résultat (2026-10-19, tuiles locales):**
+
+    | Zone | Carte | Tuiles avec relief |
+    | --- | --- | --- |
+    | 1 | 8 192 px | 49 Mo |
+    | 2 | 14 000 px | 105 Mo |
+    | 3 | 16 192 px | 149 Mo |
+    | 7 | 12 768 px | 139 Mo |
+    | 8 | 13 056 px | 174 Mo |
+    | 10 | 12 288 px | 63 Mo |
+    | 11 | 10 000 px | 67 Mo |
+    | 12 | 12 464 px | 98 Mo |
+    | 13 | 16 384 px | 149 Mo |
+
+    Cuisson + tuilage: 2 à 7 min par zone (carte de 8 k à 16 k px, GPU OptiX).
+  - **Visualiseur:** sous l'éclairage par le ciel, une zone qui a une carte des normales est éclairée par elle; les autres surfaces par leurs normales calculées. `?relief=0` compare sans, `?relief=sun` reprend l'essai d'origine (lumière ambiante + soleil, `?light=azimut,élévation`, `?shade=0..1`), `?relief=debug` montre la carte comme couleur. Une surface vue de dos (un mur de l'autre côté) est retournée vers la caméra: sans cela, le ciel l'éclaire par derrière (sombre) et le brillant scintille.
+- **Aspect mouillé** (`?wet=0..1`, 0,15 par défaut, choisi sur la zone 12): sur les zones seulement, un vernis (*clear coat*) qui reflète le ciel, couleurs un peu plus sombres et saturées.
 - **Bandes des lampes** (`delight_texture.py` + `apply_shade.mjs`): la luminosité de la texture est moyennée sur la surface en 3D (rayon 1 m: l'atlas mélange des endroits éloignés), puis la texture est divisée par cette variation lente (force 0,8), en lumière linéaire. Les détails, les petites ombres et les couleurs restent. Zone 12: facteur de 0,69 à 1,14.
 - **Scintillement** au loin (reflets nets sur des moules plus petites qu'un pixel): le visualiseur floute le brillant là où la normale varie beaucoup d'un pixel à l'autre, et filtre les textures en trilinéaire (Obj2Tiles règle `NEAREST_MIPMAP_LINEAR`).
 
@@ -117,7 +139,7 @@ Dans deux terminaux:
 cd viewer; npm run dev                     # visualiseur sur http://localhost:3100/modele/viewer/
 ```
 
-Le bouton ⚙ du visualiseur ouvre un panneau de réglages (`<l21-settings-panel>`, `viewer/src/config-panel.js`) avec un contrôle par paramètre ci-dessous; chaque réglage s'applique aussitôt, sans recharger la page, mais ne s'écrit pas dans l'adresse. Les paramètres ci-dessous fonctionnent encore dans un lien (essais): lus au chargement, puis retirés de l'adresse, qui ne garde que la caméra. Paramètres du visualiseur: `?tiles=<url>` (autre serveur de tuiles), `?neutral=0..1` et `?despill=0..1` (couleurs, voir l'étape 6), `?relief=1`, `?light=`, `?shade=`, `?wet=` et `?relief=debug` (relief, voir plus haut), `?stats=1` (mémoire et tuiles par zone), `?ao=0` (sans occlusion ambiante), `?hdri=0`, `?hdriIntensity=` et `?sky=1` (éclairage par le ciel). Tuiles d'essai du relief: `serve-tiles.ps1 -TilesRoot O:\temp\relief-tiles -Port 8082`, puis `?tiles=http://localhost:8082&relief=1`. La barre d'adresse suit la caméra (`?cam=x,y,z,cible x,y,z`, son seul paramètre, mis à jour à la fin de chaque geste): copier l'adresse suffit pour partager ou retrouver une vue; la touche C la copie.
+Le bouton ⚙ du visualiseur ouvre un panneau de réglages (`<l21-settings-panel>`, `viewer/src/config-panel.js`) avec un contrôle par paramètre ci-dessous; chaque réglage s'applique aussitôt, sans recharger la page, mais ne s'écrit pas dans l'adresse. Les paramètres ci-dessous fonctionnent encore dans un lien (essais): lus au chargement, puis retirés de l'adresse, qui ne garde que la caméra. Paramètres du visualiseur: `?tiles=<url>` (autre serveur de tuiles), `?neutral=0..1` et `?despill=0..1` (couleurs, voir l'étape 6), `?relief=0|1|sun|debug`, `?light=`, `?shade=` et `?wet=` (relief et aspect mouillé, voir plus haut), `?stats=1` (mémoire et tuiles par zone), `?ao=0` (sans occlusion ambiante), `?hdri=0`, `?hdriIntensity=` et `?sky=1` (éclairage par le ciel). La barre d'adresse suit la caméra (`?cam=x,y,z,cible x,y,z`, son seul paramètre, mis à jour à la fin de chaque geste): copier l'adresse suffit pour partager ou retrouver une vue; la touche C la copie.
 
 Pour un téléphone **Android** (le plus simple): débogage USB activé, câble branché, puis dans Chrome sur le PC `chrome://inspect/#devices` → *Port forwarding*: `3100` → `localhost:3100` et `8081` → `localhost:8081`. Sur le téléphone, ouvrir `http://localhost:3100/modele/viewer/`; les outils de développement du téléphone (console, réseau, mémoire) s'ouvrent depuis `chrome://inspect`.
 
@@ -145,7 +167,7 @@ Après une publication locale (`model:post-modified`), lancer `model:upload` pou
 | `O:\publishing\metashape\<zone>\` | copies de travail Metashape (chunk FINAL seulement) | oui |
 | `O:\publishing\tiles\` | tuiles générées + `manifest.json`, avant mise en ligne | oui |
 | `O:\publishing\downloads\` | modèle complet téléchargeable (`.glb`, `.kmz`) | oui |
-| `O:\temp\` | intermédiaires régénérables (OBJ préparés, journaux; essais du relief: `<zone>\relief\`, `<zone>\delit\`, tuiles d'essai `relief-tiles\`) | non |
+| `O:\temp\` | intermédiaires régénérables (OBJ préparés, journaux; cartes des normales: `<zone>\relief\`; essais: `<zone>\delit\`) | non |
 
 **Espace disque:** la chaîne produit beaucoup de données. Après chaque essai, supprimer ce qui est remplacé: versions de tuiles qui ne sont plus dans `manifest.json`, anciens OBJ préparés, journaux et captures. Ne garder que la version active, l'OBJ préparé courant (pour retuiler sans refaire la préparation) et les outils.
 

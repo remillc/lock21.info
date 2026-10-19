@@ -4,6 +4,12 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Relief and wet look for every zone but zone 4 (local tiles, not uploaded yet): normal maps baked from the high-res
+  exports (zones 1 and 10 from their 8.6 M and 22.6 M exports), tiles rebuilt with them by the new
+  `relief_zones.ps1`. The viewer lights them under the sky with their normal map and a wet clear coat (0.15 by
+  default); walls seen from behind are turned towards the viewer. `?relief=sun` keeps the earlier sun test.
+- `bake_relief.py`: Lattice support (zone 4), the high-res export placed at the zone's prepared position (a moved
+  zone failed), cage sized on the kept surface (3 cm instead of up to 3.9 m).
 - Development: the site's `/modele/` page forwards `/modele/viewer/` to the viewer's dev server (now at
   `localhost:3100/modele/viewer/`), so it shows the viewer's source and reloads with it.
 - Viewer settings panel (⚙): one control per query parameter (detail, sky lighting, colours, ambient occlusion,
