@@ -61,16 +61,41 @@ mat = material.Material("material", "material", effect)
 dae.images.append(image)
 dae.effects.append(effect)
 dae.materials.append(mat)
-geom = geometry.Geometry(dae, "geometry", base, [
-    source.FloatSource("positions", positions.ravel(), ("X", "Y", "Z")),
-    source.FloatSource("uvs", uvs.ravel(), ("S", "T")),
-])
-inputs = source.InputList()
-inputs.addInput(0, "VERTEX", "#positions")
-inputs.addInput(1, "TEXCOORD", "#uvs", set="0")
-geom.primitives.append(geom.createTriangleSet(corners.ravel(), inputs, "material-ref"))
-dae.geometries.append(geom)
-node = scene.Node("model", children=[scene.GeometryNode(geom, [scene.MaterialNode("material-ref", mat, inputs=[("UVSET0", "TEXCOORD", "0")])])])
+# Google Earth crashes on a COLLADA mesh with more than 65,535 vertices (a vertex = a position + UV pair): the model
+# is split into meshes below that, each with its own, re-indexed positions and UVs.
+MAX_VERTICES = 60_000
+
+
+def chunks(corners):
+    start, seen = 0, set()
+    for t in range(0, len(corners), 3):
+        tri = {tuple(c) for c in corners[t:t + 3]}
+        if len(seen | tri) > MAX_VERTICES:
+            yield corners[start:t]
+            start, seen = t, set()
+        seen |= tri
+    yield corners[start:]
+
+
+geometry_nodes = []
+for n, part in enumerate(chunks(corners)):
+    pairs, index = {}, []
+    for pos, uv in part:
+        index.append(pairs.setdefault((pos, uv), len(pairs)))
+    order = np.array(list(pairs.keys()))
+    geom = geometry.Geometry(dae, f"geometry-{n}", f"{base}-{n}", [
+        source.FloatSource(f"positions-{n}", positions[order[:, 0]].ravel(), ("X", "Y", "Z")),
+        source.FloatSource(f"uvs-{n}", uvs[order[:, 1]].ravel(), ("S", "T")),
+    ])
+    inputs = source.InputList()
+    inputs.addInput(0, "VERTEX", f"#positions-{n}")
+    inputs.addInput(1, "TEXCOORD", f"#uvs-{n}", set="0")
+    # One index per corner: the same index for the position and the UV, both re-indexed per mesh
+    geom.primitives.append(geom.createTriangleSet(np.repeat(np.array(index), 2), inputs, "material-ref"))
+    dae.geometries.append(geom)
+    geometry_nodes.append(scene.GeometryNode(geom, [scene.MaterialNode("material-ref", mat, inputs=[("UVSET0", "TEXCOORD", "0")])]))
+    print(f"  mesh {n}: {len(index) // 3} triangles, {len(pairs)} vertices")
+node = scene.Node("model", children=geometry_nodes)
 dae.scenes.append(scene.Scene("scene", [node]))
 dae.scene = dae.scenes[0]
 dae_path = os.path.join(a.dir, f"{base}.dae")
