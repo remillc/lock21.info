@@ -83,7 +83,7 @@ Node 22.12+ (Astro 7, Vite 8). If the sidebar or pages show stale entries after 
 
 ## CI (`.github/workflows/`)
 
-- `deploy.yml` builds the viewer and the site on PRs and pushes; on pushes to `main` it force-pushes `dist/` to the `gh-pages` branch with the workflow's `GITHUB_TOKEN` (plain git commands, no SSH key, no third-party action).
+- `deploy.yml` builds the viewer and the site; it **deploys only on demand** (Actions tab, "Run workflow", or `gh workflow run deploy.yml`) or **when a version tag `v*` is pushed** (a release), by force-pushing `dist/` to the `gh-pages` branch with the workflow's `GITHUB_TOKEN` (plain git commands, no SSH key, no third-party action). Pushing or merging into `main` does not deploy; pull requests to `main` only run the build.
 - The former GPT translation workflows were removed (they had failed since 2025). English translations of the docs are done by Claude on request.
 
 ## Large and binary files: be careful
@@ -104,4 +104,4 @@ Node 22.12+ (Astro 7, Vite 8). If the sidebar or pages show stale entries after 
 - **Versioning:** semantic versioning below 1.0.0 while the site is not public (`package.json` `version`). Each release gets a `CHANGELOG.md` entry and an annotated tag `vX.Y.Z`. Patch for fixes, minor for features. **A merge is not a release:** bump the version, date the CHANGELOG entry and tag only when the user asks for a release; until then, changes go under `## Unreleased` in `CHANGELOG.md`.
 
 - Commit messages in history are just `wip`. There is no enforced style.
-- **Always push after committing or merging**, so the work is on GitHub too: `git push -u origin <branch>` for a feature branch. Merging into `main` still needs the user's explicit OK, because pushing `main` deploys the site; once a merge into `main` is approved, push it (with its tag, for a release) right away.
+- **Always push after committing or merging**, so the work is on GitHub too: `git push -u origin <branch>` for a feature branch. Merging into `main` still needs the user's explicit OK; once approved, push it right away (it doesn't deploy). Deploying is separate and also needs the user's OK: a release tag, or a manual run of the workflow.

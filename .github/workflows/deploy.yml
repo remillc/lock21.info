@@ -1,10 +1,13 @@
 name: Deploy to GitHub Pages
 
+# Deploys only on demand (Actions tab > "Deploy to GitHub Pages" > Run workflow) or when a version tag is pushed (a
+# release). Pushing or merging into main no longer publishes the site. Pull requests to main only run the build.
 on:
   pull_request:
     branches: [main]
   push:
-    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -31,10 +34,10 @@ jobs:
         run: npm run build:viewer
       - name: Build the site
         run: npm run build
-      # On pushes to main: publish dist/ on the gh-pages branch (GitHub Pages serves that branch). The workflow's own
+      # On a version tag or a manual run: publish dist/ on the gh-pages branch (GitHub Pages serves that branch). The workflow's own
       # token (permissions: contents: write) is enough: no SSH key or personal secret.
       - name: Deploy to the gh-pages branch
-        if: github.event_name == 'push'
+        if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
