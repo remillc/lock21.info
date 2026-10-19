@@ -104,9 +104,10 @@ Tabular figures in tables and data.
 Heavy UI frameworks, the Material Web component library, animation libraries, stock photos, cartoon underwater
 clichés, decoration that competes with the 3D viewer on a phone.
 
-## Name, logo, open question
+## Name, logo, coordinates
 
 - **Name**: **Écluse 21** in French (the site's language), **Lock 21** in English. The wordmark in the mockups,
   `LOCK/21`, becomes `ÉCLUSE/21`.
 - **Logo**: a new one, replacing the yellow "21" badge; proposals on the design canvas (row "Logo").
-- **Coordinates in the header**: to be determined (placeholder until then).
+- **Coordinates in the header**: Lock 21 is at **44°59'50.021" N, 74°53'57.365" W** (decimal 44.997228, −74.899268).
+  The header shows them rounded to the second: `44°59′50″ N · 74°53′57″ W`.

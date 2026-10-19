@@ -33,7 +33,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   tiles.lock21.info → Eligible for cache, edge TTL: use the origin's Cache-Control). Today every request reaches R2
   (`cf-cache-status: DYNAMIC`, .json and .glb are not cached by default); check `cf-cache-status: HIT` afterwards
 - [ ] #12 Downloadable whole model (`.glb`, about 100 to 150 MB), generated from the manifest
-- [ ] #13 KMZ for Google Earth: needs GPS coordinates of at least two points on the site, and a light COLLADA model
+- [ ] #13 KMZ for Google Earth: needs GPS coordinates of at least two points on the site (one known: Lock 21 at
+  44°59'50.021" N, 74°53'57.365" W; a second one gives the orientation), and a light COLLADA model
 - [ ] #14 Choose a licence for the model data (CC BY 4.0 or CC BY-NC 4.0); the repo's MIT licence covers code only
 - [ ] #15 Check whether publishing a downloadable model of the site needs any approval (Ontario marine archaeology
   rules, SOS Ottawa for the Baets drawings)
@@ -78,7 +79,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   as its own app under `/modele/`, GitHub Pages deployment
 - [ ] #39 Apply `DESIGN.md` to the Astro site: MD3 tokens as CSS custom properties mapped to Starlight, self-hosted
   fonts, header and footer bars, depth gauge, instrument panel (values from the dive log and the manifest), home page
-  (render frame, entry cards, journal excerpts); answer the brief's open questions (logo, name, coordinates)
+  (render frame, entry cards, journal excerpts); choose the logo (proposals on the design canvas)
 - [ ] #31 Underwater look for the viewer: set aside on branch `feature/underwater-look`
 
 ## Other
