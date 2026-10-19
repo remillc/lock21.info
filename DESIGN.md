@@ -108,6 +108,10 @@ clichés, decoration that competes with the 3D viewer on a phone.
 
 - **Name**: **Écluse 21** in French (the site's language), **Lock 21** in English. The wordmark in the mockups,
   `LOCK/21`, becomes `ÉCLUSE/21`.
-- **Logo**: a new one, replacing the yellow "21" badge; proposals on the design canvas (row "Logo").
+- **Logo**: **S4 · "21 en écho"** (chosen 2026-10-19 on the design canvas): the 21 in JetBrains Mono ExtraBold on a
+  rounded navy square (14/64 corners), with two teal echoes below it (30 % and 60 %) and the orange point top right,
+  like a sonar reading. Files: `src/assets/logo.svg` (light), `src/assets/logo-dark.svg` (dark: deeper navy, outline),
+  `public/favicon.svg` (tab icon: one echo, larger figures for 16 px). The figures are outlines, so no font is needed;
+  the generator is described in `src/assets/README.md`.
 - **Coordinates in the header**: Lock 21 is at **44°59'50.021" N, 74°53'57.365" W** (decimal 44.997228, −74.899268).
   The header shows them rounded to the second: `44°59′50″ N · 74°53′57″ W`.

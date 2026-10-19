@@ -11,8 +11,9 @@ export default defineConfig({
       // Site name per language (DESIGN.md): Écluse 21 in French, Lock 21 in English
       title: { fr: 'Écluse 21', en: 'Lock 21' },
       description: "Photogrammétrie sous-marine de l'écluse 21 (Dickinson Landing): carnet de terrain et modèle 3D",
-      logo: { src: './src/assets/logo.svg', alt: 'Écluse 21' },
-      favicon: '/images/favicon.ico',
+      // Logo S4 "21 en écho" (DESIGN.md); figures drawn as outlines, no font needed
+      logo: { light: './src/assets/logo.svg', dark: './src/assets/logo-dark.svg', alt: 'Écluse 21' },
+      favicon: '/favicon.svg',
       defaultLocale: 'root',
       locales: {
         root: { label: 'Français', lang: 'fr' },
