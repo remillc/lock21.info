@@ -4,11 +4,11 @@ export const site = {
   bottomDepthFt: 55,
   bottomDepthM: 16.8,
   zonesTotal: 25,
-  // Lock 21: 44°59'50.021" N, 74°53'57.365" W
+  // Lock 21: 44°59.809' N, 74°53.997' W (degrees and decimal minutes)
   coordinates: {
-    lat: 44.997228,
-    lon: -74.899268,
-    label: { fr: '44°59′50″ N · 74°53′57″ O', en: '44°59′50″ N · 74°53′57″ W' },
+    lat: 44.996817,
+    lon: -74.89995,
+    label: { fr: '44°59.809′ N · 74°53.997′ O', en: '44°59.809′ N · 74°53.997′ W' },
   },
   viewer: '/modele/',
   manifest: 'https://tiles.lock21.info/manifest.json',

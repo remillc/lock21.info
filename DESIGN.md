@@ -115,5 +115,5 @@ clichés, decoration that competes with the 3D viewer on a phone.
   like a sonar reading. Files: `src/assets/logo.svg` (light), `src/assets/logo-dark.svg` (dark: deeper navy, outline),
   `public/favicon.svg` (tab icon: one echo, larger figures for 16 px). The figures are outlines, so no font is needed;
   the generator is described in `src/assets/README.md`.
-- **Coordinates in the header**: Lock 21 is at **44°59'50.021" N, 74°53'57.365" W** (decimal 44.997228, −74.899268).
-  The header shows them rounded to the second: `44°59′50″ N · 74°53′57″ W`.
+- **Coordinates in the header**: Lock 21 is at **44°59.809′ N, 74°53.997′ W** (degrees and decimal minutes;
+  decimal 44.996817, −74.899950). The header shows them in that form: `44°59.809′ N · 74°53.997′ O` (W in English).
