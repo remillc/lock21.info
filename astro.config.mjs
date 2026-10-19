@@ -4,8 +4,22 @@
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 
+// Dev server only: Astro serves public/ files but not a folder's index.html, so /modele/ (the built viewer in
+// public/modele/) would be a 404 in development. GitHub Pages serves it normally in production.
+const viewerIndex = {
+  name: 'viewer-index',
+  configureServer(server) {
+    server.middlewares.use((req, _res, next) => {
+      const [path, query] = (req.url ?? '').split('?')
+      if (path === '/modele' || path === '/modele/') req.url = '/modele/index.html' + (query ? `?${query}` : '')
+      next()
+    })
+  },
+}
+
 export default defineConfig({
   site: 'https://lock21.info',
+  vite: { plugins: [viewerIndex] },
   integrations: [
     starlight({
       // Site name per language (DESIGN.md): Écluse 21 in French, Lock 21 in English
