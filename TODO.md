@@ -78,6 +78,16 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 
 ### Zebra mussel relief (idea)
 
+- [x] Test on zone 12: object-space normal map baked from the high-res export (`bake_relief.py`), tiled in a second
+  Obj2Tiles run and merged (`merge_normal_maps.mjs`), lit in the viewer (`?relief=1`, wet look `?wet=`, default 0.15).
+  ETC1S max quality: zone 12 48 MB -> 98 MB
+- [ ] High-res geometry exports for the relief (edges about 1 cm or less, geometry only, same chunk as the source):
+  - zone 1: chunk 13, 8.7 M faces (about 5 to 6 mm)
+  - zone 4: being rebuilt in Metashape with medium/high depth maps (the current ones are `low`); about 20 M faces
+  - zone 10 (optional): chunk 0, 22.6 M faces
+- [ ] `bake_relief.py`: take a geometry-only export other than `source` (aligned on the source), apply the Lattice (zone 4)
+- [ ] Decide: relief on by default for all zones (download about x2 per zone)
+
 - [ ] The walls are covered with zebra mussels; their relief (1 to 3 cm) is in the high-res exports (zone 12: about
   7 mm edges) but lost in the published mesh (about 2.5 cm edges). Bake it from the high-res export onto the published
   mesh, per zone (same idea as bake_texture.py):
