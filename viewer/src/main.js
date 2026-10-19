@@ -6,6 +6,7 @@ import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.j
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 import { TilesRenderer } from '3d-tiles-renderer'
 import { N8AOPass } from 'n8ao'
 
@@ -71,6 +72,84 @@ function addDespill(shader) {
       '#include <map_fragment>\n' +
         'diffuseColor.g = mix(diffuseColor.g, min(diffuseColor.g, max(diffuseColor.r, diffuseColor.b)), despill);',
     )
+}
+
+// Relief (test, ?relief=1): tiles that carry a normal map (tools/publish-model/bake_relief.py: object-space
+// normals of the high-res export, zebra mussels included) are lit instead of shown unlit. Object space: no
+// vertex normals or tangents needed, the tiles have none. Lambert lighting divides by pi, hence the factor.
+// Ambient + one directional light; ?light=azimuth,elevation (degrees, default 135,45) orients it,
+// ?shade=0..1 (default 0.6) is the directional share: 0 is flat, 1 is hard shadows-like contrast.
+// ?relief=debug shows the normal map itself as the colour (checks that it lines up with the photo texture)
+const relief = params.get('relief') === '1' || params.get('relief') === 'debug'
+const [lightAzimuth, lightElevation] = (params.get('light') || '135,45').split(',').map(Number)
+const shade = params.has('shade') ? Number(params.get('shade')) : 0.6
+// Wet look (test, ?wet=0..1, needs ?relief=1): glossy surface with a clear-coat film (sharp highlights that slide
+// over the relief when the camera moves), reflections of a neutral environment, colours slightly darker and more
+// saturated. The photos already hold the lamps' real reflections: keep it subtle.
+const wet = Math.min(Math.max(Number(params.get('wet')) || 0, 0), 1)
+function reliefMaterial(old, gain) {
+  if (old.map) old.map.anisotropy = maxAnisotropy
+  // Obj2Tiles tags every KTX2 texture sRGB, normal maps included: the GPU would then apply the sRGB curve to
+  // the normals and bend them. Data, not colour (set before the first upload, which picks the GPU format).
+  old.normalMap.colorSpace = THREE.NoColorSpace
+  if (params.get('relief') === 'debug') return new THREE.MeshBasicMaterial({ map: old.normalMap, side: THREE.DoubleSide })
+  const options = {
+    map: old.map,
+    normalMap: old.normalMap,
+    normalMapType: THREE.ObjectSpaceNormalMap,
+    color: gain || new THREE.Color(1, 1, 1),
+    side: THREE.DoubleSide,
+    // The tiles have no vertex normals: face normals from screen derivatives keep the unperturbed normal valid
+    // (three.js uses it for specular antialiasing); the object-space normal map replaces it for lighting
+    flatShading: true,
+  }
+  const material = wet > 0
+    ? new THREE.MeshPhysicalMaterial({
+      ...options,
+      metalness: 0,
+      roughness: 0.9 - 0.5 * wet,
+      clearcoat: wet,
+      clearcoatRoughness: 0.08,
+      envMapIntensity: 0.6 * wet,
+    })
+    : new THREE.MeshLambertMaterial(options)
+  material.onBeforeCompile = (shader) => {
+    if (despill.value > 0) addDespill(shader)
+    if (wet > 0) {
+      shader.fragmentShader = shader.fragmentShader
+        // Wet colours: darker and more saturated
+        .replace('#include <map_fragment>', `#include <map_fragment>
+          float wetLuma = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+          diffuseColor.rgb = mix(vec3(wetLuma), diffuseColor.rgb, ${(1 + 0.35 * wet).toFixed(3)}) * ${(1 - 0.2 * wet).toFixed(3)};`)
+        // The clear coat follows the relief (by default it would use the flat face normal: faceted highlights)
+        .replace('#include <clearcoat_normal_fragment_begin>', 'vec3 clearcoatNormal = normal;')
+    }
+    // Double-sided: three.js flips the normal of faces seen from behind. The triangle winding of the
+    // photogrammetry meshes is not consistent from one texture chart to the next, so whole charts came out
+    // inverted (dark patches with sharp edges). An object-space normal is already the true orientation: no flip.
+    shader.fragmentShader = shader.fragmentShader.replace(
+      '#include <normal_fragment_maps>',
+      THREE.ShaderChunk.normal_fragment_maps.replace('normal = normal * faceDirection;', ''),
+    )
+  }
+  return material
+}
+if (relief) {
+  // On average a lit surface faces the light at ~45 degrees: the directional part is scaled so that the overall
+  // brightness stays close to the unlit display
+  scene.add(new THREE.AmbientLight(0xffffff, Math.PI * (1 - shade)))
+  const sun = new THREE.DirectionalLight(0xffffff, Math.PI * shade * 1.4)
+  const az = THREE.MathUtils.degToRad(lightAzimuth)
+  const el = THREE.MathUtils.degToRad(lightElevation)
+  sun.position.set(Math.cos(el) * Math.sin(az), Math.sin(el), Math.cos(el) * Math.cos(az))
+  scene.add(sun)
+  // Something to reflect: a neutral studio-like environment (lit and standard materials only; the unlit
+  // zones and the context ignore it)
+  if (wet > 0) {
+    const pmrem = new THREE.PMREMGenerator(renderer)
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
+    pmrem.dispose()
+  }
 }
 
 // Colour balance between zones. The water tints each zone differently (yellow-green, more or less dark,
@@ -148,7 +227,9 @@ async function main() {
       model.traverse((child) => {
         if (child.isMesh) {
           const old = child.material
-          child.material = unlitMaterial(old, gains.get(entry.id), true)
+          child.material = relief && old.normalMap
+            ? reliefMaterial(old, gains.get(entry.id))
+            : unlitMaterial(old, gains.get(entry.id), true)
           old.dispose()
         }
       })

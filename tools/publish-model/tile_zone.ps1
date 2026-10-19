@@ -71,10 +71,30 @@ if ($Lods -le 0) {
 # --max-texture-size 0: le plafond s'applique à la texture SOURCE avant découpage (le défaut 8192 dégrade une texture de 12k).
 # --divisions 0 avec octree: chaque LOD plus fin ajoute un niveau; au-delà de 3 LODs, le nombre de tuiles explose (8^n).
 # --no-root-content: la racine dupliquait le niveau le plus grossier (zone 12: 10 Mo de plus à l'ouverture).
-& $Obj2Tiles --preset standard --texture-format Ktx2 --unlit --max-texture-size 0 --decimation-mode Standard --no-root-content `
-    --lods $Lods --divisions $Divisions `
-    (Join-Path $Prepared "$Zone.obj") $out
+$obj2tilesArgs = @('--preset', 'standard', '--texture-format', 'Ktx2', '--unlit', '--max-texture-size', '0',
+    '--decimation-mode', 'Standard', '--no-root-content', '--lods', $Lods, '--divisions', $Divisions)
+# Carte de relief (map_Bump, bake_relief.py): Obj2Tiles la range mal dans chaque tuile (zones noires) et la
+# compresse comme une photo (ETC1S, sRGB). Elle est donc ignorée ici, puis tuilée à part comme si c'était la photo,
+# en UASTC, et greffée dans les tuiles par merge_normal_maps.mjs (même géométrie: même rangement).
+$normalLine = Select-String -Path $mtl -Pattern "^map_Bump\s+(.+)$"
+& $Obj2Tiles @obj2tilesArgs --ignore-normal-maps (Join-Path $Prepared "$Zone.obj") $out
 if ($LASTEXITCODE -ne 0) { throw "Obj2Tiles a échoué ($LASTEXITCODE)" }
+if ($normalLine) {
+    $normalMap = $normalLine.Matches[0].Groups[1].Value.Trim()
+    $normalSrc = "$out-normal-src"
+    $normalOut = "$out-normal"
+    New-Item -ItemType Directory -Force $normalSrc | Out-Null
+    # Liens physiques: pas de copie de l'OBJ (des centaines de Mo)
+    New-Item -ItemType HardLink -Path (Join-Path $normalSrc "$Zone.obj") -Target (Join-Path $Prepared "$Zone.obj") | Out-Null
+    New-Item -ItemType HardLink -Path (Join-Path $normalSrc $normalMap) -Target (Join-Path $Prepared $normalMap) | Out-Null
+    (Get-Content $mtl -Encoding UTF8 | Where-Object { $_ -notmatch "^map_(Kd|Bump)" }) + "map_Kd $normalMap" |
+        Set-Content (Join-Path $normalSrc "$Zone.mtl") -Encoding UTF8
+    & $Obj2Tiles @obj2tilesArgs --ktx2-uastc --ktx2-zstd-level 18 (Join-Path $normalSrc "$Zone.obj") $normalOut
+    if ($LASTEXITCODE -ne 0) { throw "Obj2Tiles (carte de relief) a échoué ($LASTEXITCODE)" }
+    node "$PSScriptRoot\merge_normal_maps.mjs" $out $normalOut
+    if ($LASTEXITCODE -ne 0) { throw "merge_normal_maps.mjs a échoué" }
+    Remove-Item -Recurse -Force $normalSrc, $normalOut
+}
 
 # Simplification des niveaux grossiers (Obj2Tiles y garde beaucoup trop de triangles)
 node "$PSScriptRoot\simplify_lods.mjs" $out

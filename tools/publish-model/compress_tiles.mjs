@@ -2,7 +2,7 @@
 // reordering and quantizing it (KHR_mesh_quantization). KTX2 textures are kept as they are.
 // The viewer needs the meshopt decoder (GLTFLoader.setMeshoptDecoder).
 //
-// Usage: node compress_tiles.mjs <tileset folder>
+// Usage: node compress_tiles.mjs <tileset folder> [--keep-unlit]
 //        node compress_tiles.mjs -h | --help
 import { readdir, stat } from 'node:fs/promises'
 import { join } from 'node:path'
@@ -21,6 +21,8 @@ if (process.argv.slice(2).some((a) => a === '-h' || a === '--help')) {
 }
 
 const root = process.argv[2]
+// --keep-unlit: leave the KHR_materials_unlit tag (default: removed, see below)
+const unlit = process.argv.includes('--keep-unlit')
 if (!root) throw new Error('usage: node compress_tiles.mjs <tileset folder>')
 
 await MeshoptEncoder.ready
@@ -44,6 +46,9 @@ let count = 0
 for await (const path of glbFiles(root)) {
   before += (await stat(path)).size
   const document = await io.read(path)
+  // Obj2Tiles --unlit tags every material KHR_materials_unlit; three.js then builds a MeshBasicMaterial and
+  // skips the normal map (relief, bake_relief.py). The viewer decides lit or unlit itself: drop the tag.
+  if (!unlit) document.getRoot().listExtensionsUsed().find((e) => e.extensionName === 'KHR_materials_unlit')?.dispose()
   await document.transform(meshopt({ encoder: MeshoptEncoder, level: 'medium' }))
   await io.write(path, document)
   after += (await stat(path)).size
