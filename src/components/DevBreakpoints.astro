@@ -1,7 +1,7 @@
 ---
 // Development aid, the same as OpenCaves' DebugBreakpoints (src/components/utils/DebugBreakpoints.jsx): a small red
-// label at the top left of the screen with the current breakpoint, using MUI's default breakpoints (xs 0, sm 600,
-// md 900, lg 1200, xl 1536 px). Rendered by SiteTitle.astro (header) on the dev server only, never in production.
+// label at the top left of the screen with the current breakpoint and, on a second line, its interval in px, using
+// MUI's default breakpoints (xs 0, sm 600, md 900, lg 1200, xl 1536 px). Rendered by SiteTitle.astro (header) on the dev server only, never in production.
 ---
 
 <dev-breakpoints class="dev-breakpoints" aria-hidden="true"></dev-breakpoints>
@@ -18,7 +18,12 @@
   class DevBreakpoints extends HTMLElement {
     connectedCallback() {
       const update = () => {
-        this.textContent = breakpoints.find(([, min]) => window.innerWidth >= min)![0]
+        // Breakpoint code, then its interval in px on a second line ("1200 - 1535"; the last one is open-ended)
+        const i = breakpoints.findIndex(([, min]) => window.innerWidth >= min)
+        const [name, min] = breakpoints[i]
+        const max = i > 0 ? breakpoints[i - 1][1] - 1 : '∞'
+        this.textContent = `${name}
+${min} - ${max}`
       }
       update()
       window.addEventListener('resize', update)
@@ -41,6 +46,8 @@
     color: #fff;
     background-color: red;
     line-height: 1;
+    white-space: pre; /* the interval on its own line */
+    text-align: center; /* the code centred over its interval */
     padding: 0.2em;
     opacity: 0.75;
     z-index: 1000000;
