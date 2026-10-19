@@ -88,7 +88,7 @@ Node >= 18. Builds use `@docusaurus/faster` (`future.experimental_faster`). The 
 ## Large and binary files: be careful
 
 - `.gitattributes` sends **only `*.blend`** to Git LFS.
-- The untracked files in `modeles/` (`.glb` up to about 190 MB, `.obj` about 480 MB) are **not** covered by LFS and exceed GitHub's 100 MB file limit. Do not `git add` them without first adding LFS rules (for example `*.glb`, `*.obj`), and ask the user before you do.
+- Model exports (`.glb`, `.obj`) are **not** covered by LFS and are often over GitHub's 100 MB file limit; they belong in `O:\modeles\`, not in the repo. Do not `git add` one without first adding LFS rules (for example `*.glb`, `*.obj`), and ask the user before you do.
 - `temp.blend` (about 2 GB) in the root and `*.blend1` are gitignored. Never commit them.
 - Do not try to read or edit `.blend`, `.glb`, `.obj`, `.tif`, `.xlsx` or `.pdf` files as text.
 
