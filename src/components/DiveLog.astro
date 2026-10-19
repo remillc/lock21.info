@@ -30,6 +30,17 @@ const withFooter = html.replace('</table>', `<tfoot><tr>${cells}</tr></tfoot></t
   .dive-log :global(th:nth-child(n + 2):nth-child(-n + 6)) {
     white-space: nowrap;
   }
+  // Notes: a readable width, otherwise the column is squeezed and each row grows hundreds of pixels tall
+  // (min-width is ignored on table cells: a fixed width, and the table as wide as its columns need)
+  .dive-log :global(table) {
+    width: max-content;
+    max-width: 100%;
+  }
+  .dive-log :global(td:nth-child(7)),
+  .dive-log :global(th:nth-child(7)) {
+    width: 28rem;
+    min-width: 28rem;
+  }
   .dive-log :global(tfoot td) {
     font-weight: 600;
   }

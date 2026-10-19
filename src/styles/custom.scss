@@ -47,3 +47,24 @@ dialog.image-zoom {
     object-fit: contain;
   }
 }
+
+// Right column ("Sur cette page"): Starlight makes it at least 18.75rem and gives it half of the spare width on wide
+// screens. A fixed, narrower column leaves the room to the page content (wide tables).
+:root {
+  --lock21-toc-width: 14rem;
+}
+
+
+
+@media (min-width: 72rem) {
+  .right-sidebar-container {
+    width: var(--lock21-toc-width);
+  }
+
+  // The content fills the space between the two sidebars (Starlight caps it at 45rem and right-aligns it,
+  // which left a wide empty margin on the left)
+  [data-has-sidebar][data-has-toc] .main-pane {
+    width: calc(100% - var(--lock21-toc-width));
+    --sl-content-width: 100%;
+  }
+}
