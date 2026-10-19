@@ -85,7 +85,13 @@ Tabular figures in tables and data.
 - Touch targets at least 48 px (links in the header, buttons, cards).
 - MD3 state layers on interactive elements: hover 8 %, focus 10 %, pressed 10 % of the content colour; visible focus
   ring (`secondary`).
-- Little motion; everything respects `prefers-reduced-motion`.
+- Little motion; everything respects `prefers-reduced-motion` (no animation then: the change is instant).
+- **Motion (MD3 tokens, `md.sys.motion`):** content that appears or disappears within a screen (hide / reveal) moves,
+  it doesn't jump: entering = `easing.emphasized-decelerate` `cubic-bezier(0.05, 0.7, 0.1, 1)` over `duration.medium4`
+  (400 ms); exiting = `easing.emphasized-accelerate` `cubic-bezier(0.3, 0, 0.8, 0.15)` over `duration.short4`
+  (200 ms), exits being shorter than entries. A section that opens animates its height and opacity, so what follows
+  slides instead of jumping. No animation on first display. Example: the viewer settings panel's ambient occlusion
+  rows (`viewer/src/config-panel.js`).
 
 ## Components
 

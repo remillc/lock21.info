@@ -84,12 +84,18 @@ class SettingsPanel extends HTMLElement {
     this.showDependents()
   }
 
-  // Rows with dependsOn: shown only while their toggle is on
-  showDependents() {
+  // Rows with dependsOn: shown only while their toggle is on. Revealed and hidden with the MD3 enter / exit motion
+  // (SYSTEM-DESIGN.md, Motion); instantly when the panel is drawn or when the system asks for reduced motion
+  showDependents(animate = true) {
+    const still = !animate || window.matchMedia('(prefers-reduced-motion: reduce)').matches
     for (const item of this.schema.flatMap((section) => section.items)) {
       if (!item.dependsOn) continue
       const on = (this.params.get(item.dependsOn) ?? this.item(item.dependsOn).def) === '1'
-      this.querySelector(`[data-key="${item.key}"]`).hidden = !on
+      const row = this.querySelector(`[data-key="${item.key}"]`)
+      if (row.dataset.shown === String(on)) continue
+      row.dataset.shown = String(on)
+      if (still) row.hidden = !on
+      else reveal(row, on)
     }
   }
 
@@ -145,10 +151,32 @@ class SettingsPanel extends HTMLElement {
     })
     actions.append(copy, reset)
     this.append(actions)
-    this.showDependents()
+    this.showDependents(false)
   }
 }
 customElements.define('l21-settings-panel', SettingsPanel)
+
+// MD3 motion tokens (material-web, md.sys.motion): entering content decelerates over a longer duration, exiting
+// content accelerates over a shorter one
+const MOTION = {
+  enter: { duration: 400, easing: 'cubic-bezier(0.05, 0.7, 0.1, 1)' }, // duration.medium4, easing.emphasized-decelerate
+  exit: { duration: 200, easing: 'cubic-bezier(0.3, 0, 0.8, 0.15)' }, // duration.short4, easing.emphasized-accelerate
+}
+
+// Opens or closes a row: its height (the rows below follow) and its opacity
+function reveal(row, show) {
+  row.getAnimations().forEach((a) => a.cancel())
+  row.hidden = false
+  const style = getComputedStyle(row)
+  const open = { height: `${row.offsetHeight}px`, paddingTop: style.paddingTop, paddingBottom: style.paddingBottom, opacity: 1 }
+  const closed = { height: '0px', paddingTop: '0px', paddingBottom: '0px', opacity: 0 }
+  row.style.overflow = 'hidden'
+  const animation = row.animate(show ? [closed, open] : [open, closed], show ? MOTION.enter : MOTION.exit)
+  animation.onfinish = () => {
+    row.style.overflow = ''
+    row.hidden = !show
+  }
+}
 
 function button(text, onClick) {
   const b = document.createElement('button')
