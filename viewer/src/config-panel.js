@@ -7,14 +7,8 @@
 //        panel.configure({ schema, values, live, button }); document.body.append(panel)
 
 // type: toggle | range | select | text | angles (two ranges stored as "a,b")
-export function settingsSchema({ mobile, errorDefault }) {
+export function settingsSchema({ mobile }) {
   return [
-    {
-      title: 'Affichage',
-      items: [
-        { key: 'error', label: 'Niveau de détail', hint: 'plus bas = plus net, plus lourd', type: 'range', min: 1, max: 40, step: 1, def: String(errorDefault), unit: ' px' },
-      ],
-    },
     {
       title: 'Éclairage',
       items: [
@@ -26,7 +20,6 @@ export function settingsSchema({ mobile, errorDefault }) {
     {
       title: 'Couleurs',
       items: [
-        { key: 'balance', label: 'Équilibre entre les zones', hint: 'ramène toutes les zones à une même couleur', type: 'toggle', def: '1' },
         { key: 'neutral', label: 'Neutralisation de la teinte', hint: "0 = teinte jaune-vert de l'eau gardée, 1 = gris neutre", type: 'range', min: 0, max: 1, step: 0.05, def: '0.3' },
         { key: 'despill', label: 'Retrait du vert', hint: 'retire le vert dominant pixel par pixel (algues, reflets)', type: 'range', min: 0, max: 1, step: 0.05, def: '1' },
       ],

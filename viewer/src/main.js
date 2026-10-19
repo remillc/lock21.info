@@ -52,9 +52,6 @@ const PROFILES = {
 const isMobile = (forced) => (forced ? forced === 'mobile' : window.matchMedia('(pointer: coarse)').matches)
 let mobile = isMobile(params.get('profile'))
 let profile = PROFILES[mobile ? 'mobile' : 'desktop']
-// ?error=<pixels>: override the screen-space error target (testing; large values keep the coarse levels)
-let errorOverride = Number(params.get('error')) || 0
-const errorTarget = () => errorOverride || profile.errorTarget
 
 const renderer = new THREE.WebGLRenderer({ antialias: true })
 renderer.setPixelRatio(profile.pixelRatio)
@@ -94,8 +91,7 @@ const look = {
   sky: params.get('hdri') !== '0',
   skyIntensity: params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : 1,
   skyBackground: params.get('sky') === '1',
-  // Colour balance between zones (?balance=0 off, ?neutral=0..1), see colorBalance
-  balance: params.get('balance') !== '0',
+  // Colour balance between zones (?neutral=0..1), see colorBalance
   neutral: params.has('neutral') ? Number(params.get('neutral')) : 0.3,
   // Relief test (?relief=1 | debug), its light (?light=azimuth,elevation, ?shade=0..1) and wet look (?wet=0..1)
   relief: ['1', 'debug'].includes(params.get('relief')) ? params.get('relief') : '0',
@@ -316,13 +312,13 @@ live.shade = (v) => { look.shade = Number(v); updateLights() }
 // depending on the dive). manifest.json gives each zone's average texture colour in linear light
 // (tools/publish-model/texture_stats.mjs); every zone is brought to the same target colour: the average of the
 // zones, from which ?neutral= (0 to 1, default 0.3) of the common tint is removed. Fully neutral looks grey or
-// pink: the mussels and the sediment really are brown-green. ?balance=0 shows the textures as they are.
+// pink: the mussels and the sediment really are brown-green.
 let zoneEntries = []
 let gains = new Map()
 function colorBalance() {
   gains = new Map()
   const measured = zoneEntries.filter((e) => e.color)
-  if (!look.balance || !measured.length) return
+  if (!measured.length) return
   const average = [0, 1, 2].map((c) => measured.reduce((sum, e) => sum + e.color[c], 0) / measured.length)
   const luminance = 0.2126 * average[0] + 0.7152 * average[1] + 0.0722 * average[2]
   const target = average.map((c) => c + (luminance - c) * look.neutral)
@@ -339,7 +335,6 @@ function updateZoneColors() {
   })
   requestRender()
 }
-live.balance = (v) => { look.balance = v === '1'; updateZoneColors() }
 live.neutral = (v) => { look.neutral = Number(v); updateZoneColors() }
 
 // Ambient occlusion (N8AO): darkens recesses and joints, giving depth to unlit surfaces. N8AO rebuilds the
@@ -419,7 +414,7 @@ async function loadModel() {
     gltfLoader.setKTX2Loader(ktx2Loader)
     gltfLoader.setMeshoptDecoder(MeshoptDecoder) // geometry compressed by tools/publish-model/compress_tiles.mjs
     tiles.manager.addHandler(/\.(gltf|glb)$/g, gltfLoader)
-    tiles.errorTarget = errorTarget()
+    tiles.errorTarget = profile.errorTarget
     tiles.setCamera(camera)
     tiles.setResolutionFromRenderer(camera, renderer)
 
@@ -509,11 +504,6 @@ function showError(error) {
 }
 
 live.tiles = (v) => { tilesUrl = v || DEFAULT_TILES_URL; loadModel().catch(showError) }
-live.error = (v) => {
-  errorOverride = Number(v)
-  tilesets.forEach((t) => { t.errorTarget = errorTarget() })
-  requestRender()
-}
 live.profile = (v) => {
   mobile = isMobile(v)
   profile = PROFILES[mobile ? 'mobile' : 'desktop']
@@ -524,7 +514,7 @@ live.profile = (v) => {
     cache.maxBytesSize = profile.maxBytes
     cache.minBytesSize = profile.maxBytes * 0.6
   }
-  tilesets.forEach((t) => { t.errorTarget = errorTarget() })
+  tilesets.forEach((t) => { t.errorTarget = profile.errorTarget })
   if (aoPass) aoQuality()
   resize()
 }
@@ -592,7 +582,7 @@ function updateStats() {
 live.shareUrl = () => (embedded ? window.top.location.href : viewUrl())
 const settings = document.createElement('l21-settings-panel')
 settings.configure({
-  schema: settingsSchema({ mobile, errorDefault: profile.errorTarget }),
+  schema: settingsSchema({ mobile }),
   values: params,
   live,
   button: document.querySelector('.settings-button'),

@@ -7,7 +7,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - Viewer settings panel (⚙): one control per query parameter (detail, sky lighting, colours, ambient occlusion,
   advanced). Every setting applies live, sliders while they move: the page never reloads (a new tiles source
   reloads the model only, keeping the view). The address keeps only the camera (`?cam=`); other parameters in a
-  link are still read, then removed from the address.
+  link are still read, then removed from the address. `?error=` (level of detail: discrete levels, no visible
+  effect from the overview) and `?balance=0` are removed; the colour balance is always on.
 - Custom Elements prefixed `l21-` (`l21-image-zoom`, `l21-dev-breakpoints`, `l21-settings-panel`).
 - Viewer lit by a partly cloudy sky (HDRI, Poly Haven, CC0) instead of the unlit display: volumes read better;
   `?hdri=0` compares, `?sky=1` shows the sky as background.
