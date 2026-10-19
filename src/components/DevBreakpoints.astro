@@ -1,0 +1,64 @@
+---
+// Development aid (like OpenCaves' DebugBreakpoints): a small red label, bottom left, with the MD3 window size class,
+// the viewport width and the layout state (which columns show). Rendered by Footer.astro on the dev server only,
+// never in a production build.
+---
+
+<dev-breakpoints class="dev-breakpoints" aria-hidden="true"></dev-breakpoints>
+
+<script>
+  // MD3 window size classes (min width in px) and this site's layout thresholds (custom.scss, Starlight)
+  const classes: [string, number][] = [
+    ['extra-large', 1600],
+    ['large', 1200],
+    ['expanded', 840],
+    ['medium', 600],
+    ['compact', 0],
+  ]
+  const rem = () => parseFloat(getComputedStyle(document.documentElement).fontSize)
+  // Length of a CSS custom property in px, or 0 when it isn't defined at this width
+  const cssLength = (name: string) => {
+    if (!getComputedStyle(document.documentElement).getPropertyValue(name).trim()) return 0
+    const probe = document.createElement('div')
+    probe.style.width = `var(${name})`
+    document.body.append(probe)
+    const px = probe.getBoundingClientRect().width
+    probe.remove()
+    return px
+  }
+
+  class DevBreakpoints extends HTMLElement {
+    connectedCallback() {
+      const update = () => {
+        const width = window.innerWidth
+        const size = classes.find(([, min]) => width >= min)![0]
+        const layout = []
+        if (width >= 50 * rem()) layout.push('nav')
+        if (width >= 72 * rem()) layout.push('toc')
+        const columns = cssLength('--lock21-layout-width')
+        if (columns && width >= columns) layout.push('centred')
+        this.textContent = `${size} · ${width}px${layout.length ? ' · ' + layout.join('+') : ''}`
+      }
+      update()
+      window.addEventListener('resize', update)
+    }
+  }
+  customElements.define('dev-breakpoints', DevBreakpoints)
+</script>
+
+<style>
+  .dev-breakpoints {
+    position: fixed;
+    left: 0.5rem;
+    bottom: 0.5rem;
+    z-index: 1000000;
+    padding: 0.2em 0.4em;
+    background: red;
+    color: #fff;
+    opacity: 0.75;
+    font-family: var(--lk-font-data);
+    font-size: 0.75rem;
+    line-height: 1;
+    pointer-events: none;
+  }
+</style>
