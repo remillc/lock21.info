@@ -2,11 +2,15 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
-## Unreleased (branch `feature/astro`)
+## 0.4.0 - 2026-10-19
 
 - Site switched from Docusaurus to Astro + Starlight: same French pages and addresses, search (Pagefind), dive log
   total computed at build time, image zoom (native Custom Element), `noindex` kept; blog samples and the partial
   English translation dropped; deployment pushes `dist/` to `gh-pages` with plain git commands.
+- Site name: Écluse 21 in French (Lock 21 in English). Layout: right column 20rem, content fills the space, the dive
+  log fits the column (scrolls sideways on phones).
+- Design brief (`DESIGN.md`, E2 look on the Material Design 3 token system) and front-end guidelines (`GUIDELINES.md`);
+  zone 13 online (12.5 M-face export, 16384 px texture).
 
 ## 0.3.0 - 2026-10-19
 
