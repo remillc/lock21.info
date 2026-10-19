@@ -1,6 +1,6 @@
 ---
-// Development aid (like OpenCaves' DebugBreakpoints): a small red label, bottom left, with the MD3 window size class,
-// the viewport width and the layout state (which columns show). Rendered by Footer.astro on the dev server only,
+// Development aid (like OpenCaves' DebugBreakpoints): a small red label, top left, with the MD3 window size class,
+// the viewport width and the layout state (which columns show). Rendered by SiteTitle.astro (header) on the dev server only,
 // never in a production build.
 ---
 
@@ -47,18 +47,19 @@
 </script>
 
 <style>
+  /* Same look and place as OpenCaves' DebugBreakpoints (src/components/utils/DebugBreakpoints.jsx): top left of the
+     screen. Fixed rather than absolute: here it is mounted in the header, not at the root of the page. */
   .dev-breakpoints {
     position: fixed;
-    left: 0.5rem;
-    bottom: 0.5rem;
-    z-index: 1000000;
-    padding: 0.2em 0.4em;
-    background: red;
-    color: #fff;
-    opacity: 0.75;
-    font-family: var(--lk-font-data);
+    left: 0.5em;
+    top: 0.5em;
     font-size: 0.75rem;
+    color: #fff;
+    background-color: red;
     line-height: 1;
+    padding: 0.2em;
+    opacity: 0.75;
+    z-index: 1000000;
     pointer-events: none;
   }
 </style>

@@ -4,6 +4,7 @@
 import { Image } from 'astro:assets'
 import logo from '../assets/logo-dark.svg'
 import { site } from '../data/site'
+import DevBreakpoints from './DevBreakpoints.astro'
 
 const { siteTitleHref, lang } = Astro.locals.starlightRoute
 const english = lang?.startsWith('en')
@@ -14,6 +15,10 @@ const english = lang?.startsWith('en')
   <span class="wordmark" translate="no">{english ? 'LOCK/21' : 'ÉCLUSE/21'}</span>
   <span class="coordinates">{english ? site.coordinates.label.en : site.coordinates.label.fr}</span>
 </a>
+{
+  /* Dev server only. Mounted in the header: in the page content, the header (a higher layer) would cover it */
+  import.meta.env.DEV && <DevBreakpoints />
+}
 
 <style>
   .site-title {

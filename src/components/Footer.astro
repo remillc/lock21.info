@@ -1,14 +1,12 @@
 ---
 // Footer: Starlight's (previous/next page links), then the navy bar of the design with the author and the credit for
-// Nick Baets' drawings. On the dev server, also the breakpoint label (DevBreakpoints).
+// Nick Baets' drawings.
 import Default from '@astrojs/starlight/components/Footer.astro'
-import DevBreakpoints from './DevBreakpoints.astro'
 
 const english = Astro.locals.starlightRoute.lang?.startsWith('en')
 ---
 
 <Default />
-{import.meta.env.DEV && <DevBreakpoints />}
 <div class="site-footer">
   <span translate="no">{english ? 'LOCK/21' : 'ÉCLUSE/21'} · {english ? 'field notebook by' : 'carnet de terrain de'} Christian Rémillard</span>
   <span>{english ? 'Original drawings' : "Dessins d'origine"}: Nick Baets (1988), via <a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks</a></span>
