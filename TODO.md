@@ -33,6 +33,7 @@ Working list for the lock21.info project. Remove items once they are done (the h
 
 ### Documentation
 
+- [ ] Update outdated information in the site's Markdown files (e.g. `workflow/4. modele.md`, `5. texture.md`: publishing pipeline, textures, relief, colour work)
 - [ ] Document how the project's repositories and folders are organized (Git repo, `viewer/`, `tools/`, `O:\photogrammetry`, `O:\modeles`, `O:\publishing`, R2)
 - [ ] Add a workflow page to the site (`6. publication.md`) once the pipeline is stable
 - [ ] Rename the "zone N" Blender materials (`Material_0.00x`, `Empty.00x`) consistently
