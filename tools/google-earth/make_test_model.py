@@ -1,8 +1,8 @@
 """Prepares a light test model of a zone for Google Earth (TODO #13): decimated mesh, texture resized, centred.
 
 Reads a prepared zone (prepare_zone.py: <slug>.obj + .jpg, Blender frame in metres, Z up), decimates it to
--t/--triangles, resizes the texture to -s/--size, moves it so that its horizontal centre is at x = y = 0 (z unchanged:
-z = 0 stays the lock's reference level), and writes:
+-t/--triangles, resizes the texture to -s/--size, moves it so that the site anchor is at x = y = 0 (z unchanged: z = 0
+stays the lock's reference level), and writes:
   <out>/<slug>-test.glb   for Google Earth on the web (import) and other 3D tools: texture embedded, no compression
   <out>/<slug>-test.obj   + .mtl + .jpg, read by make_kmz.py to build the COLLADA model of the KMZ
   <out>/<slug>-test.json  triangle count, size, offset applied
@@ -25,6 +25,13 @@ p.add_argument("-p", "--prepared", required=True, help="folder of the prepared z
 p.add_argument("-o", "--out", required=True, help="output folder")
 p.add_argument("-t", "--triangles", type=int, default=200_000, help="target triangle count (default 200000)")
 p.add_argument("-s", "--size", type=int, default=2048, help="texture size, px (default 2048)")
+# Site anchor: the point of the Blender frame pinned to the lock's coordinates in Google Earth. It is the horizontal
+# centre of all the zones as of 2026-10-19 (zones 1, 2, 3, 4, 7, 8, 10, 11, 12, 13: x -64.34..6.24, y 2.68..40.72),
+# frozen so that zones added later keep their place instead of shifting the whole lock.
+SITE_ANCHOR = (-29.05, 21.70)
+p.add_argument("-c", "--center", default=f"{SITE_ANCHOR[0]},{SITE_ANCHOR[1]}",
+               help=f"point x,y of the Blender frame (m) placed on the coordinates (default: site anchor {SITE_ANCHOR[0]},{SITE_ANCHOR[1]}; "
+                    "'zone' = this zone's own centre)")
 a = p.parse_args(script_args())
 slug = a.zone.replace(" ", "-")
 os.makedirs(a.out, exist_ok=True)
@@ -48,11 +55,15 @@ mod.ratio = min(1.0, a.triangles / max(before, 1))
 bpy.ops.object.modifier_apply(modifier=mod.name)
 after = len(ob.data.polygons)
 
-# Horizontal centre at the origin; z unchanged
+# Anchor at the origin; z unchanged
 xs = [v.co.x for v in ob.data.vertices]
 ys = [v.co.y for v in ob.data.vertices]
 zs = [v.co.z for v in ob.data.vertices]
-dx, dy = -(min(xs) + max(xs)) / 2, -(min(ys) + max(ys)) / 2
+if a.center == "zone":
+    dx, dy = -(min(xs) + max(xs)) / 2, -(min(ys) + max(ys)) / 2
+else:
+    cx, cy = (float(v) for v in a.center.split(","))
+    dx, dy = -cx, -cy
 for v in ob.data.vertices:
     v.co.x += dx
     v.co.y += dy

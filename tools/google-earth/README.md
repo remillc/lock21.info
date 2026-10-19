@@ -46,8 +46,11 @@ plupart des extensions glTF, compte dans le quota de stockage Google). D'où l'e
   maillages y est pour quelque chose.
 - **Échelle:** juste (zone 12, environ 10 m, apparaît à environ 10 m): le modèle est en mètres réels.
 - **Orientation:** juste avec `-H 0`: le repère du `.blend` est déjà aligné sur le nord.
-- **Position:** le centre de la zone 12 est posé sur les coordonnées. Pour le modèle complet, il faut savoir à quel
-  point de l'écluse correspondent les coordonnées (44°59.809′ N, 74°53.997′ O).
+- **Position:** décidé: les coordonnées (44°59.809′ N, 74°53.997′ O) épinglent le **centre de l'ensemble des zones**,
+  figé au 2026-10-19 comme **ancre du site**: (−29,05; 21,70) dans le repère du `.blend`, en mètres (zones 1, 2, 3, 4, 7,
+  8, 10, 11, 12 et 13: 70,6 × 38,0 m). Figé, pour que les zones ajoutées plus tard gardent leur place au lieu de
+  déplacer toute l'écluse. `make_test_model.py -c` le change (`-c zone`: centre de la zone seule). Essai
+  `t50000-anchor\`: la zone 12 doit apparaître à environ 8 m à l'ouest et 5 m au sud de l'épingle.
 
 ## À vérifier avec l'essai
 
