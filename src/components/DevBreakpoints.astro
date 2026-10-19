@@ -1,43 +1,24 @@
 ---
-// Development aid (like OpenCaves' DebugBreakpoints): a small red label, top left, with the MD3 window size class,
-// the viewport width and the layout state (which columns show). Rendered by SiteTitle.astro (header) on the dev server only,
-// never in a production build.
+// Development aid, the same as OpenCaves' DebugBreakpoints (src/components/utils/DebugBreakpoints.jsx): a small red
+// label at the top left of the screen with the current breakpoint, using MUI's default breakpoints (xs 0, sm 600,
+// md 900, lg 1200, xl 1536 px). Rendered by SiteTitle.astro (header) on the dev server only, never in production.
 ---
 
 <dev-breakpoints class="dev-breakpoints" aria-hidden="true"></dev-breakpoints>
 
 <script>
-  // MD3 window size classes (min width in px) and this site's layout thresholds (custom.scss, Starlight)
-  const classes: [string, number][] = [
-    ['extra-large', 1600],
-    ['large', 1200],
-    ['expanded', 840],
-    ['medium', 600],
-    ['compact', 0],
+  const breakpoints: [string, number][] = [
+    ['xl', 1536],
+    ['lg', 1200],
+    ['md', 900],
+    ['sm', 600],
+    ['xs', 0],
   ]
-  const rem = () => parseFloat(getComputedStyle(document.documentElement).fontSize)
-  // Length of a CSS custom property in px, or 0 when it isn't defined at this width
-  const cssLength = (name: string) => {
-    if (!getComputedStyle(document.documentElement).getPropertyValue(name).trim()) return 0
-    const probe = document.createElement('div')
-    probe.style.width = `var(${name})`
-    document.body.append(probe)
-    const px = probe.getBoundingClientRect().width
-    probe.remove()
-    return px
-  }
 
   class DevBreakpoints extends HTMLElement {
     connectedCallback() {
       const update = () => {
-        const width = window.innerWidth
-        const size = classes.find(([, min]) => width >= min)![0]
-        const layout = []
-        if (width >= 50 * rem()) layout.push('nav')
-        if (width >= 72 * rem()) layout.push('toc')
-        const columns = cssLength('--lock21-layout-width')
-        if (columns && width >= columns) layout.push('centred')
-        this.textContent = `${size} · ${width}px${layout.length ? ' · ' + layout.join('+') : ''}`
+        this.textContent = breakpoints.find(([, min]) => window.innerWidth >= min)![0]
       }
       update()
       window.addEventListener('resize', update)
@@ -47,13 +28,16 @@
 </script>
 
 <style>
-  /* Same look and place as OpenCaves' DebugBreakpoints (src/components/utils/DebugBreakpoints.jsx): top left of the
-     screen. Fixed rather than absolute: here it is mounted in the header, not at the root of the page. */
+  /* Same look and place as in OpenCaves. Fixed rather than absolute: here it is mounted in the header, not at the root
+     of the page. MUI's default font stack (OpenCaves loads Roboto; here the fallback applies). */
   .dev-breakpoints {
     position: fixed;
     left: 0.5em;
     top: 0.5em;
+    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
     font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: normal;
     color: #fff;
     background-color: red;
     line-height: 1;
