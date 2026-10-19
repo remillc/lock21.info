@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- `/modele/` page, Sketchfab-like: the viewer embedded in a large frame with a full-screen button, the camera
+  shared through the page's address, model facts, navigation help, licence CC BY 4.0. The viewer moves to
+  `/modele/viewer/`.
 - Deployment only on demand (Actions tab, Run workflow) or on a version tag; pushing `main` no longer deploys.
 - Site design applied (DESIGN.md: E2 look on the MD3 token system): Archivo and JetBrains Mono self-hosted, navy
   header and footer bars with the S4 logo, the ÉCLUSE/21 wordmark and the lock's coordinates, "Modèle 3D" pill;

@@ -4,14 +4,15 @@
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 
-// Dev server only: Astro serves public/ files but not a folder's index.html, so /modele/ (the built viewer in
-// public/modele/) would be a 404 in development. GitHub Pages serves it normally in production.
+// Dev server only: Astro serves public/ files but not a folder's index.html, so /modele/viewer/ (the built viewer in
+// public/modele/viewer/, embedded by the /modele/ page) would be a 404 in development. GitHub Pages serves it normally
+// in production.
 const viewerIndex = {
   name: 'viewer-index',
   configureServer(server) {
     server.middlewares.use((req, _res, next) => {
       const [path, query] = (req.url ?? '').split('?')
-      if (path === '/modele' || path === '/modele/') req.url = '/modele/index.html' + (query ? `?${query}` : '')
+      if (path === '/modele/viewer' || path === '/modele/viewer/') req.url = '/modele/viewer/index.html' + (query ? `?${query}` : '')
       next()
     })
   },
@@ -60,7 +61,7 @@ export default defineConfig({
         Sidebar: './src/components/Sidebar.astro',
       },
       sidebar: [
-        { label: 'Modèle 3D', link: '/modele/', attrs: { target: '_self' } },
+        { label: 'Modèle 3D', link: '/modele/' },
         { label: 'Découpage du site', link: '/decoupage-du-site/' },
         { label: 'La collecte des données', items: [{ autogenerate: { directory: 'collecte' } }] },
         { label: 'Workflow', items: [{ autogenerate: { directory: 'workflow' } }] },

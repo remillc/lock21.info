@@ -14,6 +14,23 @@ import { N8AOPass } from 'n8ao'
 const params = new URLSearchParams(location.search)
 const TILES_URL = params.get('tiles') || import.meta.env.VITE_TILES_URL || 'http://localhost:8081'
 
+// Embedded in the site's /modele/ page (an iframe): no "back" link, and the camera is reported to the page
+const embedded = window.self !== window.top
+document.documentElement.classList.toggle('embedded', embedded)
+
+// Full screen: works standalone and embedded (the iframe allows it)
+const fullscreenButton = document.querySelector('.fullscreen')
+if (document.fullscreenEnabled) {
+  fullscreenButton.hidden = false
+  fullscreenButton.addEventListener('click', () => {
+    if (document.fullscreenElement) document.exitFullscreen()
+    else document.documentElement.requestFullscreen()
+  })
+  document.addEventListener('fullscreenchange', () => {
+    fullscreenButton.setAttribute('aria-label', document.fullscreenElement ? 'Quitter le plein écran' : 'Plein écran')
+  })
+}
+
 const container = document.getElementById('viewer')
 const status = document.getElementById('status')
 
@@ -328,7 +345,11 @@ async function main() {
   let urlTimer = 0
   controls.addEventListener('change', () => {
     clearTimeout(urlTimer)
-    urlTimer = setTimeout(() => history.replaceState(null, '', viewUrl()), 300)
+    urlTimer = setTimeout(() => {
+      history.replaceState(null, '', viewUrl())
+      // The /modele/ page shows the same ?cam= in its own address, so that copying it shares this view
+      if (embedded) window.parent.postMessage({ type: 'lock21:cam', search: location.search }, location.origin)
+    }, 300)
   })
   window.addEventListener('keydown', (e) => {
     if (e.key !== 'c' && e.key !== 'C') return

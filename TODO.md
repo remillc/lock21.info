@@ -35,7 +35,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #12 Downloadable whole model (`.glb`, about 100 to 150 MB), generated from the manifest
 - [ ] #13 KMZ for Google Earth: needs GPS coordinates of at least two points on the site (one known: Lock 21 at
   44°59.809′ N, 74°53.997′ W; a second one gives the orientation), and a light COLLADA model
-- [ ] #14 Choose a licence for the model data (CC BY 4.0 or CC BY-NC 4.0); the repo's MIT licence covers code only
 - [ ] #15 Check whether publishing a downloadable model of the site needs any approval (Ontario marine archaeology
   rules, SOS Ottawa for the Baets drawings)
 

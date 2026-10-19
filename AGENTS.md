@@ -40,9 +40,10 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `src/components/DiveLog.astro` | Adds a total-duration footer row to the dive log table, computed at build time (sums column 5) |
 | `src/styles/custom.scss` | Global styles on top of Starlight: header bar, links, tables, figures, image zoom, layout |
 | `src/assets/` | Logo (`logo.svg`, `logo-dark.svg`, S4 "21 en écho") and home page images |
-| `public/` | Copied as is: `CNAME`, `robots.txt` (`Disallow: /`), `favicon.svg`, `scripts/image-zoom.js` (native Custom Element), and `modele/` (the built viewer, gitignored) |
+| `public/` | Copied as is: `CNAME`, `robots.txt` (`Disallow: /`), `favicon.svg`, `scripts/image-zoom.js` (native Custom Element), and `modele/viewer/` (the built viewer, gitignored) |
 | `modeles/` | Blender files: `lock-21-mockup.blend` (mockup) and `lock-21-publishing.blend`, the source of truth for 3D publishing (user-owned: never save it, read it only after the user says it is saved) |
-| `viewer/` | Standalone 3D viewer (Vite + three.js + 3d-tiles-renderer), built into `public/modele/` and served at `lock21.info/modele/`; tiles come from `tiles.lock21.info` (Cloudflare R2) |
+| `viewer/` | Standalone 3D viewer (Vite + three.js + 3d-tiles-renderer), built into `public/modele/viewer/` and served at `lock21.info/modele/viewer/`; tiles come from `tiles.lock21.info` (Cloudflare R2). Embedded by the `/modele/` page; reports its camera to it (postMessage) and has a full-screen button |
+| `src/content/docs/modele.mdx`, `src/components/model/ModelPage.astro` | The `/modele/` page, Sketchfab-like: viewer in a large frame, model facts (zones online, last update from the manifest), navigation help, CC BY 4.0 licence and credit, downloads (to come) |
 | `tools/publish-model/` | 3D publishing pipeline (headless Blender, Obj2Tiles, Node, PowerShell). Its `README.md` (French) documents every step, tool and lesson learned |
 | `tools/model-analysis/` | Read-only resolution analysis of the `zones` meshes (headless Blender). Run `run.ps1`; thresholds in `thresholds.json`; dated reports (`.json` + `.md`) in `reports/`. Commit the reports, since they track how the model evolves. |
 | `TODO.md`, `CHANGELOG.md`, `GUIDELINES.md`, `DESIGN.md` | Working list of what remains; release notes; front-end rules; design brief (E2 look on the Material Design 3 token system). Read the last two before writing site or UI code |
@@ -57,7 +58,7 @@ npm install
 npm run dev                  # Astro dev server on http://localhost:4321/ (live reload)
 npm run build                # production build into dist/ (pages + Pagefind search index)
 npm run preview              # serve dist/ on http://localhost:4321/
-npm run build:viewer         # builds the 3D viewer into public/modele (needed before build/deploy)
+npm run build:viewer         # builds the 3D viewer into public/modele/viewer (needed before build/deploy)
 npm run viewer:dev           # viewer dev server on http://localhost:3100/
 npm run model:check          # 3D zones changed in the .blend since their last publication
 npm run model:post-modified  # republish the changed zones locally (O:\publishing\tiles)

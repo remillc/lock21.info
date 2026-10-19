@@ -39,6 +39,31 @@ body {
   text-decoration: none;
 }
 
+/* Embedded in the site's /modele/ page: the page provides the way back */
+.embedded .home {
+  display: none;
+}
+
+.fullscreen {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: rgb(4 20 24 / 70%);
+  color: #d7e3ea;
+  cursor: pointer;
+}
+
+.fullscreen:hover {
+  background: rgb(4 20 24 / 90%);
+}
+
 .stats {
   position: fixed;
   right: 8px;
@@ -50,4 +75,9 @@ body {
   color: #d7e3ea;
   font-size: 11px;
   pointer-events: none;
+}
+
+/* The full-screen button takes the bottom-right corner: the stats overlay moves above it */
+.stats {
+  bottom: 64px;
 }

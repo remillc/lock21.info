@@ -15,6 +15,10 @@
     <div id="viewer"></div>
     <!-- Root of the site serving this page: lock21.info in production, the Astro dev server (localhost:4321) locally -->
     <a class="home" href="/">← Écluse 21</a>
+    <!-- Full screen (the site's /modele/ page embeds the viewer in an iframe with allow="fullscreen") -->
+    <button class="fullscreen" type="button" aria-label="Plein écran" title="Plein écran (Échap pour sortir)" hidden>
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg>
+    </button>
     <div id="status" class="status">Chargement…</div>
     <script type="module" src="./src/main.js"></script>
   </body>
