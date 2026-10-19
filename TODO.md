@@ -73,10 +73,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 - [ ] #28 English version of the docs: translated by Claude on request (from `i18n/fr/...` to `i18n/en/...`), rather
   than by a workflow on every push
-- [ ] #29 Before the switch: define the guidelines for frameworks and practices. Christian's preferences: simplicity,
-  plain DOM + CSS written in SCSS; Web Components with Lit when a component needs reactive state, native Custom
-  Elements otherwise; no heavy UI framework (React, Vue...) unless a real need appears. Candidate: Starlight for the
-  docs
 - [ ] #30 Switch the site from Docusaurus to Astro (the 3D proof of concept is done): French docs and English
   translation, sidebar, blog, the dive log table with its total duration, `noindex` while not public, the viewer kept
   as its own app under `/modele/`, GitHub Pages deployment
