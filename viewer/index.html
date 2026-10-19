@@ -2,7 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
-    <!-- Not indexed by search engines for now (same rule as the Docusaurus site: noIndex) -->
+    <!-- Not indexed by search engines for now (same rule as the site) -->
     <meta name="robots" content="noindex, nofollow" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Écluse 21 en 3D</title>
@@ -11,7 +11,8 @@
   </head>
   <body>
     <div id="viewer"></div>
-    <a class="home" href="https://lock21.info/">← lock21.info</a>
+    <!-- Root of the site serving this page: lock21.info in production, the Astro dev server (localhost:4321) locally -->
+    <a class="home" href="/">← Écluse 21</a>
     <div id="status" class="status">Chargement…</div>
     <script type="module" src="./src/main.js"></script>
   </body>

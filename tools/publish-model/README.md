@@ -130,6 +130,7 @@ Pour un téléphone sur le même Wi-Fi (ex. iPhone): `serve-tiles.ps1 -Lan` (le 
 - une version n'est envoyée que si son fichier d'entrée (`tileset.json` ou `.glb`) manque dans le bucket; ses fichiers ont un cache d'un an (`immutable`): une version publiée ne change jamais;
 - `manifest.json` est envoyé en dernier, avec un cache d'une minute: la nouvelle version est visible en moins d'une minute;
 - les versions référencées ni par le nouveau manifeste ni par le précédent sont supprimées du bucket (une génération gardée pour les visiteurs dont le manifeste est encore en cache; `--no-prune` garde tout);
+- CORS du bucket (tableau de bord Cloudflare, R2 → `lock21-tiles` → Settings → CORS Policy): `https://lock21.info`, `http://localhost:3100` (visualiseur en développement) et `http://localhost:4321` (site Astro en développement, qui sert le visualiseur sous `/modele/`).
 - identifiants dans `.env.local` (exclu de Git): `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`. Jamais affichés.
 
 Après une publication locale (`model:post-modified`), lancer `model:upload` pour mettre en ligne.
