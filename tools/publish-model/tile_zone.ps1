@@ -91,4 +91,9 @@ python -I "$PSScriptRoot\fix_tileset.py" $out
 $fp = Join-Path $Prepared "$Zone-fingerprint.json"
 if (Test-Path $fp) { Copy-Item $fp (Join-Path $out "fingerprint.json") }
 
-python -I "$PSScriptRoot\update_manifest.py" $TilesRoot $Zone "$Zone/$Version/tileset.json"
+# Couleur moyenne de la texture: le visualiseur en tire l'équilibre des couleurs de la zone (teinte verte de l'eau)
+$texture = Join-Path $Prepared ((Select-String -Path $mtl -Pattern "^map_Kd\s+(.+)$").Matches[0].Groups[1].Value.Trim())
+$color = (node "$PSScriptRoot\texture_stats.mjs" $texture) -split " "
+if ($LASTEXITCODE -ne 0) { throw "texture_stats.mjs a échoué sur $texture" }
+
+python -I "$PSScriptRoot\update_manifest.py" $TilesRoot $Zone "$Zone/$Version/tileset.json" --color @color

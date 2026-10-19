@@ -47,9 +47,30 @@ const maxAnisotropy = renderer.capabilities.getMaxAnisotropy()
 
 // The photogrammetry texture already contains the lighting: display it unlit.
 // Double-sided: photogrammetry surfaces are open and are seen from both sides.
-function unlitMaterial(old) {
+// gain: the zone's colour balance (see colorBalance), multiplied with the texture.
+function unlitMaterial(old, gain) {
   if (old.map) old.map.anisotropy = maxAnisotropy
-  return new THREE.MeshBasicMaterial({ map: old.map, color: old.map ? 0xffffff : old.color, side: THREE.DoubleSide })
+  const color = old.map ? gain || new THREE.Color(1, 1, 1) : old.color
+  return new THREE.MeshBasicMaterial({ map: old.map, color, side: THREE.DoubleSide })
+}
+
+// Colour balance between zones. The water tints each zone differently (yellow-green, more or less dark,
+// depending on the dive). manifest.json gives each zone's average texture colour in linear light
+// (tools/publish-model/texture_stats.mjs); every zone is brought to the same target colour: the average of the
+// zones, from which ?neutral= (0 to 1, default 0.5) of the common tint is removed. Fully neutral looks grey or
+// pink: the mussels and the sediment really are brown-green. ?balance=0 shows the textures as they are.
+function colorBalance(entries) {
+  const gains = new Map()
+  const measured = entries.filter((e) => e.color)
+  if (params.get('balance') === '0' || !measured.length) return gains
+  const neutral = params.has('neutral') ? Number(params.get('neutral')) : 0.5
+  const average = [0, 1, 2].map((c) => measured.reduce((sum, e) => sum + e.color[c], 0) / measured.length)
+  const luminance = 0.2126 * average[0] + 0.7152 * average[1] + 0.0722 * average[2]
+  const target = average.map((c) => c + (luminance - c) * neutral)
+  // Clamped: a very dark or very tinted texture would otherwise get extreme gains (noise, compression blocks)
+  const gain = (t, m) => Math.min(Math.max(t / m, 0.4), 3)
+  for (const e of measured) gains.set(e.id, new THREE.Color(...target.map((t, c) => gain(t, e.color[c]))))
+  return gains
 }
 
 // Ambient occlusion (N8AO): darkens recesses and joints, giving depth to unlit surfaces. N8AO rebuilds the
@@ -84,6 +105,7 @@ async function main() {
   // One memory budget shared by all zones: a per-zone share (budget / zone count) filled up after 2 or 3
   // large textures and stopped loading, leaving zones missing on phones.
   let sharedCache = null
+  const gains = colorBalance(manifest.tilesets)
   const tilesets = manifest.tilesets.map((entry) => {
     const tiles = new TilesRenderer(`${TILES_URL}/${entry.url}`)
     tiles.zoneId = entry.id
@@ -107,7 +129,7 @@ async function main() {
       model.traverse((child) => {
         if (child.isMesh) {
           const old = child.material
-          child.material = unlitMaterial(old)
+          child.material = unlitMaterial(old, gains.get(entry.id))
           old.dispose()
         }
       })

@@ -90,6 +90,8 @@ Ensuite, `compress_tiles.mjs` (glTF-Transform) compresse la géométrie de chaqu
 
 **Nombre de niveaux selon la taille de la zone:** 3 par défaut, **4 pour les zones longues** (plus grand côté horizontal > 25 m, ex. zones 7 et 8). Test sur la zone 12 (10 × 10 m): le 4e niveau ne réduit le téléchargement de près que de 9 % (38,9 Mo au lieu de 42,7), pour 4 fois plus de requêtes (253 au lieu de 57) et 33 % de stockage en plus. Sur une zone longue, le visiteur n'en regarde qu'une partie de près: des tuiles plus petites évitent de charger le reste. `tile_zone.ps1 -Lods N` impose un nombre de niveaux.
 
+**Équilibre des couleurs (teinte de l'eau):** l'eau absorbe d'abord le rouge puis le bleu; chaque zone sort jaune-vert, plus ou moins selon la plongée (profondeur, visibilité, distance des lampes), et la zone 4 est aussi plus sombre. `texture_stats.mjs` mesure la couleur moyenne de la texture (lumière linéaire, fond noir de l'atlas exclu) et `tile_zone.ps1` l'inscrit dans `manifest.json` (`color`). Les textures ne sont pas modifiées: c'est le visualiseur qui multiplie chaque zone par un gain, pour l'amener à une couleur commune, la moyenne des zones, dont il retire la moitié de la teinte commune. Réglage sans retuilage: `?neutral=0` (zones égalisées, teinte gardée) à `1` (neutre, gris-mauve: trop, les moules et les sédiments sont vraiment brun-vert), `?balance=0` montre les textures telles quelles. Seule la couleur d'ensemble de chaque zone est corrigée; les variations à l'intérieur d'une zone (bandes des lampes) relèvent du *de-lighting*.
+
 Leçons des essais sur la zone 12 (OBJ préparé de 1,2 M faces, texture 12 467 px):
 
 | Essai | Réglages | Tuiles | Triangles au niveau le plus fin | Textures au niveau le plus fin | Total | Constat |
@@ -107,7 +109,7 @@ Dans deux terminaux:
 cd viewer; npm run dev                     # visualiseur sur http://localhost:3100/
 ```
 
-Paramètres de test du visualiseur: `?tiles=<url>` (autre serveur de tuiles), `?error=<pixels>` (force un niveau de détail; une grande valeur garde les niveaux grossiers).
+Paramètres de test du visualiseur: `?tiles=<url>` (autre serveur de tuiles), `?error=<pixels>` (force un niveau de détail; une grande valeur garde les niveaux grossiers), `?neutral=0..1` et `?balance=0` (équilibre des couleurs, voir l'étape 6).
 
 Pour un téléphone **Android** (le plus simple): débogage USB activé, câble branché, puis dans Chrome sur le PC `chrome://inspect/#devices` → *Port forwarding*: `3100` → `localhost:3100` et `8081` → `localhost:8081`. Sur le téléphone, ouvrir `http://localhost:3100/`; les outils de développement du téléphone (console, réseau, mémoire) s'ouvrent depuis `chrome://inspect`.
 
@@ -151,6 +153,7 @@ Après une publication locale (`model:post-modified`), lancer `model:upload` pou
 | http-server | 14.1.1 (via `npx`) | npm | étape 7 |
 | AWS SDK for JavaScript (`@aws-sdk/client-s3`) | 3.x | `tools/publish-model/package.json` | étape 8: envoi vers R2 (API compatible S3) |
 | glTF-Transform + meshoptimizer | 4.5.1 / 1.x | `tools/publish-model/package.json` (`npm install` dans ce dossier) | étape 6: compression meshopt des tuiles |
+| sharp | 0.35.5 | `tools/publish-model/package.json` | étape 6: couleur moyenne des textures (`texture_stats.mjs`) |
 | Vite | 8.x | `viewer/package.json` | visualiseur autonome (`viewer/`, `npm run dev` → `http://localhost:3100/`) |
 | three.js | 0.186.1 | npm (`package.json`) | rendu WebGL du visualiseur |
 | 3d-tiles-renderer (NASA-AMMOS) | 0.5.3 | npm (`package.json`) | chargement des tuiles dans three.js |
