@@ -1,57 +1,30 @@
 # To do
 
-Working list for the lock21.info project. Check items off as they are done (`[x]`), and add new ones at the right place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
+Working list for the lock21.info project. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
-## 3D model publishing (branch `feature/web-3d-model`)
+## 3D model publishing
 
 ### Viewer
 
-- [x] Standalone viewer (Vite + three.js + 3d-tiles-renderer) in `viewer/`, outside Docusaurus
-- [x] Reduce the first-view weight: meshopt compression + no root content, 61 MB -> 18 MB for 2 zones
-- [x] Lighten the coarse levels of detail: about 40 k / 150 k triangles per zone (meshoptimizer), first view of the 8 zones 35.8 MB -> 24.3 MB, mostly textures now
 - [ ] If phones struggle: lower the texture resolution of the coarse levels
-- [x] Test on an Android phone (USB, `chrome://inspect` port forwarding 3100 and 8081): looks good (2026-10-18)
 - [ ] Test on an iPhone (Safari memory limit; Wi-Fi with `?tiles=http://<PC IP>:8081`, or Safari Web Inspector from a Mac)
-- [x] Anisotropic filtering and ambient occlusion (N8AO, `?ao=0`, `?aoRadius=`, `?aoIntensity=`, `?aoDebug=1`)
-- [x] Shared memory budget for all zones (zones were missing on the phone); `?stats=1` overlay: phone fully loaded at 280 / 450 MB
 - [ ] Choose default ambient occlusion settings (radius, intensity) after viewing close up
 - [ ] Initial camera and navigation (what the visitor sees first)
-- [x] Colour balance between zones (water tint): gains per zone from the texture's average colour, `?neutral=` (default 0.3), `?balance=0`; green removal per pixel, `?despill=` (default 1)
 - [ ] Colour balance and green removal: bake them into the downloadable model
-- [x] Context published: `filler` objects and `terrain` collection, terrain materials baked (no cast shadows)
 - [ ] Show the mockups for the zones not yet digitised (hidden once a zone is scanned)
-- [ ] Publish the viewer build under `lock21.info/modele/` and link it from the site
 
 ### Zones
 
-- [x] Zone 12: prepared and tiled from the 13 M-face export
-- [x] Zone 10: swapped to the 2026 export in `lock-21-publishing.blend`, prepared and tiled
-- [x] Zones 2, 3, 11: prepared and tiled
-- [x] Zone 1: prepared and tiled from the 621 k export
-- [ ] Textures to redo after the zone 13 dense cloud (published texel size vs 1.3 mm target):
-  - zone 4 (~6.3 mm): export chunk 10's 38 M model (15 168 px) or rebuild the texture
-  - zone 1 (~3 mm): build an 8 192 to 12 288 px texture on the high-res model (chunk 13)
-  - zone 10 (~2.3 mm): export the 22.6 M model (10 014 px)
-  - single texture page, max 16 384 px (the pipeline handles one texture per zone); then update `source` and run `model:post-modified`
-- [x] Zone 4: prepared and tiled, Lattice carried over
-- [x] Zone 8: swapped to a textured 200 k edit mesh (colour baked from the 20 M export), prepared and tiled
-- [x] Zone 7: exported (chunk 39, m1, 14.8 M faces) and published
 - [ ] Zone 13: partial data being generated; then import into the `.blend` with `source`
 - [ ] Zone 16: digitised (7 M faces) but not in the `.blend` yet
 - [ ] Textures: the analysis targets 1.3 mm per texel; current exports are 2 to 5 times coarser. Decide the viewing distance, then retexture in Metashape where needed
 
 ### Pipeline
 
-- [x] `.blend` as source of truth: `source` property, registration, deform modifiers, proximity cleanup
-- [x] Change detection (fingerprints) and npm scripts (`model:check`, `model:post-modified`, `model:publish`)
 - [ ] `model:post-modified` and others only run on Windows (PowerShell); fine for now
 
 ### Hosting and downloads
 
-- [x] Cloudflare R2: bucket `lock21-tiles`, CORS, API token, custom domain `tiles.lock21.info` (2026-10-18); first view loads 10.5 MB in about 1 s from the PC
-- [x] Move `lock21.info` DNS from Porkbun to Cloudflare (2026-10-18, records in DNS only)
-- [x] Upload script `upload_r2.mjs` (`npm run model:upload`): 586 files, 369 MB uploaded on 2026-10-18
-- [ ] Viewer build pointing to `https://tiles.lock21.info`, published under `lock21.info/modele/`
 - [ ] Cloudflare Cache Rule on `tiles.lock21.info` (lock21.info → Caching → Cache Rules: hostname equals tiles.lock21.info → Eligible for cache, edge TTL: use the origin's Cache-Control). Today every request reaches R2 (`cf-cache-status: DYNAMIC`, .json and .glb are not cached by default); check `cf-cache-status: HIT` afterwards
 - [ ] Downloadable whole model (`.glb`, about 100 to 150 MB), generated from the manifest
 - [ ] KMZ for Google Earth: needs GPS coordinates of at least two points on the site, and a light COLLADA model
@@ -78,9 +51,6 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 
 ### Zebra mussel relief (idea)
 
-- [x] Test on zone 12: object-space normal map baked from the high-res export (`bake_relief.py`), tiled in a second
-  Obj2Tiles run and merged (`merge_normal_maps.mjs`), lit in the viewer (`?relief=1`, wet look `?wet=`, default 0.15).
-  ETC1S max quality: zone 12 48 MB -> 98 MB
 - [ ] High-res geometry exports for the relief (edges about 1 cm or less, geometry only, same chunk as the source):
   - zone 1: chunk 13, 8.7 M faces (about 5 to 6 mm)
   - zone 4: being rebuilt in Metashape with medium/high depth maps (the current ones are `low`); about 20 M faces
@@ -103,7 +73,6 @@ Working list for the lock21.info project. Check items off as they are done (`[x]
 
 ## Site
 
-- [x] Removed the GPT translation workflows (they had failed since 2025; last successful run 2024-11-10)
 - [ ] English version of the docs: translated by Claude on request (from `i18n/fr/...` to `i18n/en/...`), rather than by a
   workflow on every push; the `OPENAI_API_KEY` repository secret can then be deleted on GitHub
 

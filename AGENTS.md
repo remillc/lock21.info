@@ -63,6 +63,7 @@ Node >= 18. Builds use `@docusaurus/faster` (`future.experimental_faster`). The 
 - In `.md`/`.mdx`, escape `<` and `>` in prose (`&lt;-&gt;`), because MDX parses them as JSX.
 - Every script (Python, Node, PowerShell, npm targets) answers `-h` / `--help`; options have a short and a long form where it makes sense (`-z/--zone`). Python uses `argparse` (`tools/publish-model/cli.py`; Blender scripts read the arguments after `--`), PowerShell uses comment-based help with `-h`, `-Help` and `--help`.
 - Folder and file names are in **English** (new tools, scripts, data folders), even though doc content is French.
+- `TODO.md` is the working list of what remains. When an item is done, **delete it** (don't check it off with `[x]`), in the same commit as the work; keep lasting results (numbers, decisions) in `tools/publish-model/README.md` or `CHANGELOG.md`.
 - Placeholders such as `awef`, `[TODO: …]` and `[ICI INSÉRER …]` mark unfinished sections. Leave them unless asked to fill them in.
 - Dive log rows: `No | Date | Activité | Zones | Durée (minutes) | Participants | Notes`. Column 5 must stay a plain number, because `DataGrid` sums it.
 - `onBrokenLinks` and `onBrokenMarkdownLinks` are set to `ignore`, so a passing build does **not** mean the links are valid. Check them yourself.
