@@ -42,3 +42,6 @@ __pycache__/
 
 # 3D viewer build copied into the site (npm run build:viewer)
 /public/modele
+
+# Python virtual environments of the tools (tools/google-earth/.venv: pycollada)
+.venv/
