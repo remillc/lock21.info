@@ -33,7 +33,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `  rig/modele/` | Rig Blender files and drawings |
 | `astro.config.mjs` | Site config: Starlight, locales, sidebar, `noindex` meta, image-zoom script |
 | `src/content.config.ts` | Docs collection definition |
-| `src/components/home/Home.astro` | Home page (DESIGN.md): depth gauge, instrument panel, render, entry cards, journal excerpts. Numbers come from `src/lib/diveLog.ts` (dive log parsed at build) and `src/lib/manifest.ts` (3D manifest fetched at build, fallback if offline); site facts in `src/data/site.ts` |
+| `src/components/home/Home.astro` | Home page (SYSTEM-DESIGN.md): depth gauge, instrument panel, render, entry cards, journal excerpts. Numbers come from `src/lib/diveLog.ts` (dive log parsed at build) and `src/lib/manifest.ts` (3D manifest fetched at build, fallback if offline); site facts in `src/data/site.ts` |
 | `src/components/SiteTitle.astro`, `HeaderActions.astro`, `PageTitle.astro`, `Footer.astro`, `Sidebar.astro` | Starlight overrides: header (logo, wordmark, coordinates), "Modèle 3D" pill, no page title on splash pages, footer bar, depth gauge on the navigation's left edge (wide screens, interior pages) |
 | `src/components/DevBreakpoints.astro` | Dev server only (mounted by `SiteTitle.astro`, in the header, under `import.meta.env.DEV`): the same red label as OpenCaves' DebugBreakpoints, top left, with the MUI breakpoint (`xs`, `sm`, `md`, `lg`, `xl`) and its interval in px; never in production builds |
 | `src/styles/tokens.scss` | MD3 colour roles and shape scale, mapped onto Starlight's custom properties (dark = `:root`, light = `[data-theme='light']`) |
@@ -46,7 +46,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `src/content/docs/modele.mdx`, `src/components/model/ModelPage.astro` | The `/modele/` page, Sketchfab-like: viewer in a large frame, model facts (zones online, last update from the manifest), navigation help, CC BY 4.0 licence and credit, downloads (to come) |
 | `tools/publish-model/` | 3D publishing pipeline (headless Blender, Obj2Tiles, Node, PowerShell). Its `README.md` (French) documents every step, tool and lesson learned |
 | `tools/model-analysis/` | Read-only resolution analysis of the `zones` meshes (headless Blender). Run `run.ps1`; thresholds in `thresholds.json`; dated reports (`.json` + `.md`) in `reports/`. Commit the reports, since they track how the model evolves. |
-| `TODO.md`, `CHANGELOG.md`, `GUIDELINES.md`, `DESIGN.md` | Working list of what remains; release notes; front-end rules; design brief (E2 look on the Material Design 3 token system). Read the last two before writing site or UI code |
+| `TODO.md`, `CHANGELOG.md`, `GUIDELINES.md`, `SYSTEM-DESIGN.md` | Working list of what remains; release notes; front-end rules; design brief (E2 look on the Material Design 3 token system). Read the last two before writing site or UI code |
 | `images/` | Logos and screenshots |
 
 Starlight requires a `title` in every page's frontmatter (it renders it as the page heading): don't start pages with a `# Title` line.

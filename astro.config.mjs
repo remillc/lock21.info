@@ -23,10 +23,10 @@ export default defineConfig({
   vite: { plugins: [viewerIndex] },
   integrations: [
     starlight({
-      // Site name per language (DESIGN.md): Écluse 21 in French, Lock 21 in English
+      // Site name per language (SYSTEM-DESIGN.md): Écluse 21 in French, Lock 21 in English
       title: { fr: 'Écluse 21', en: 'Lock 21' },
       description: "Photogrammétrie sous-marine de l'écluse 21 (Dickinson Landing): carnet de terrain et modèle 3D",
-      // Logo S4 "21 en écho" (DESIGN.md); figures drawn as outlines, no font needed
+      // Logo S4 "21 en écho" (SYSTEM-DESIGN.md); figures drawn as outlines, no font needed
       logo: { light: './src/assets/logo.svg', dark: './src/assets/logo-dark.svg', alt: 'Écluse 21' },
       favicon: '/favicon.svg',
       defaultLocale: 'root',
@@ -40,7 +40,7 @@ export default defineConfig({
         // Click a figure image to see it full size (public/scripts/image-zoom.js)
         { tag: 'script', attrs: { type: 'module', src: '/scripts/image-zoom.js' } },
       ],
-      // Fonts self-hosted (DESIGN.md), then the MD3 tokens, then the global styles
+      // Fonts self-hosted (SYSTEM-DESIGN.md), then the MD3 tokens, then the global styles
       customCss: [
         '@fontsource/archivo/400.css',
         '@fontsource/archivo/500.css',

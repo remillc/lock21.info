@@ -13,7 +13,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   shared through the page's address, model facts, navigation help, licence CC BY 4.0. The viewer moves to
   `/modele/viewer/`.
 - Deployment only on demand (Actions tab, Run workflow) or on a version tag; pushing `main` no longer deploys.
-- Site design applied (DESIGN.md: E2 look on the MD3 token system): Archivo and JetBrains Mono self-hosted, navy
+- Site design applied (SYSTEM-DESIGN.md: E2 look on the MD3 token system): Archivo and JetBrains Mono self-hosted, navy
   header and footer bars with the S4 logo, the ÉCLUSE/21 wordmark and the lock's coordinates, "Modèle 3D" pill;
   home page with depth gauge, instrument panel (dives, time underwater, zones online computed at build time),
   render, entry cards and journal excerpts; outlined tables, rounded figures; light and dark themes.
@@ -25,7 +25,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   English translation dropped; deployment pushes `dist/` to `gh-pages` with plain git commands.
 - Site name: Écluse 21 in French (Lock 21 in English). Layout: right column 20rem, content fills the space, the dive
   log fits the column (scrolls sideways on phones).
-- Design brief (`DESIGN.md`, E2 look on the Material Design 3 token system) and front-end guidelines (`GUIDELINES.md`);
+- Design brief (`SYSTEM-DESIGN.md`, E2 look on the Material Design 3 token system) and front-end guidelines (`GUIDELINES.md`);
   zone 13 online (12.5 M-face export, 16384 px texture).
 
 ## 0.3.0 - 2026-10-19

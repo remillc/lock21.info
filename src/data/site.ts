@@ -1,4 +1,4 @@
-// Facts about the site used across the pages (DESIGN.md). Values that change with the work (dives, zones online)
+// Facts about the site used across the pages (SYSTEM-DESIGN.md). Values that change with the work (dives, zones online)
 // are computed at build time instead: see src/lib/diveLog.ts and src/lib/manifest.ts.
 export const site = {
   bottomDepthFt: 55,
