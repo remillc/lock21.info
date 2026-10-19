@@ -9,11 +9,15 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js'
 import { TilesRenderer } from '3d-tiles-renderer'
+import { settingsSchema } from './config-panel.js'
 import { N8AOPass } from 'n8ao'
 
 // Root of the published tiles (manifest.json + tilesets). Override with ?tiles=<url> (e.g. phone tests on the LAN)
 const params = new URLSearchParams(location.search)
 const TILES_URL = params.get('tiles') || import.meta.env.VITE_TILES_URL || 'http://localhost:8081'
+
+// Settings applied without reloading, filled as the objects they act on are created (config-panel.js)
+const live = {}
 
 // Embedded in the site's /modele/ page (an iframe): no "back" link, and the camera is reported to the page
 const embedded = window.self !== window.top
@@ -90,6 +94,8 @@ function unlitMaterial(old, gain, zone = false) {
 // (algae, the water's cast in patches) turn olive or grey-brown. A per-zone colour gain cannot do that: it
 // shifts the whole zone, and the green patches stay green. ?despill=0..1 sets the strength (default 1).
 const despill = { value: params.has('despill') ? Number(params.get('despill')) : 1 }
+// Live only when the shader patch is in place (it is added when the removal is on at load)
+if (despill.value > 0) live.despill = (v) => { despill.value = Number(v); requestRender() }
 function addDespill(shader) {
   shader.uniforms.despill = despill
   shader.fragmentShader = shader.fragmentShader
@@ -172,12 +178,21 @@ function reliefMaterial(old, gain) {
 if (relief) {
   // On average a lit surface faces the light at ~45 degrees: the directional part is scaled so that the overall
   // brightness stays close to the unlit display
-  scene.add(new THREE.AmbientLight(0xffffff, Math.PI * (1 - shade)))
+  const ambient = new THREE.AmbientLight(0xffffff, Math.PI * (1 - shade))
   const sun = new THREE.DirectionalLight(0xffffff, Math.PI * shade * 1.4)
-  const az = THREE.MathUtils.degToRad(lightAzimuth)
-  const el = THREE.MathUtils.degToRad(lightElevation)
-  sun.position.set(Math.cos(el) * Math.sin(az), Math.sin(el), Math.cos(el) * Math.cos(az))
-  scene.add(sun)
+  const aim = (azimuth, elevation) => {
+    const az = THREE.MathUtils.degToRad(azimuth)
+    const el = THREE.MathUtils.degToRad(elevation)
+    sun.position.set(Math.cos(el) * Math.sin(az), Math.sin(el), Math.cos(el) * Math.cos(az))
+  }
+  aim(lightAzimuth, lightElevation)
+  scene.add(ambient, sun)
+  live.light = (v) => { aim(...v.split(',').map(Number)); requestRender() }
+  live.shade = (v) => {
+    ambient.intensity = Math.PI * (1 - Number(v))
+    sun.intensity = Math.PI * Number(v) * 1.4
+    requestRender()
+  }
   // Something to reflect: a neutral studio-like environment (lit and standard materials only; the unlit
   // zones and the context ignore it)
   if (wet > 0) {
@@ -214,8 +229,11 @@ if (hdri) {
     scene.environment = pmrem.fromEquirectangular(texture).texture
     scene.environmentIntensity = hdriIntensity
     pmrem.dispose()
+    // The texture is kept for the "sky as background" setting
+    const navy = scene.background
     if (params.get('sky') === '1') scene.background = texture
-    else texture.dispose()
+    live.hdriIntensity = (v) => { scene.environmentIntensity = Number(v); requestRender() }
+    live.sky = (v) => { scene.background = v === '1' ? texture : navy; requestRender() }
     requestRender()
   })
 }
@@ -256,6 +274,9 @@ if (aoEnabled) {
   aoPass.configuration.gammaCorrection = false // OutputPass converts to sRGB at the end
   aoPass.setQualityMode(mobile ? 'Low' : 'Medium')
   if (params.get('aoDebug') === '1') aoPass.setDisplayMode('AO')
+  live.aoRadius = (v) => { aoPass.configuration.aoRadius = Number(v); requestRender() }
+  live.aoIntensity = (v) => { aoPass.configuration.intensity = Number(v); requestRender() }
+  live.aoDebug = (v) => { aoPass.setDisplayMode(v === '1' ? 'AO' : 'Combined'); requestRender() }
   composer.addPass(aoPass)
   composer.addPass(new SMAAPass())
   composer.addPass(new OutputPass())
@@ -392,6 +413,21 @@ async function main() {
     console.log(viewUrl())
     navigator.clipboard?.writeText(viewUrl()).catch(() => {})
   })
+
+  // Settings panel (⚙, <l21-settings-panel>): one control per query parameter
+  live.error = (v) => { tilesets.forEach((t) => { t.errorTarget = Number(v) }); requestRender() }
+  // The link to share: the embedding page's address (it carries the same parameters), or the viewer's own
+  live.shareUrl = () => (embedded ? window.top.location.href : viewUrl())
+  const settings = document.createElement('l21-settings-panel')
+  settings.configure({
+    schema: settingsSchema({ mobile, errorDefault: profile.errorTarget }),
+    live,
+    button: document.querySelector('.settings-button'),
+    onAddressChange: (search) => {
+      if (embedded) window.parent.postMessage({ type: 'lock21:cam', search }, location.origin)
+    },
+  })
+  document.body.append(settings)
 
   // ?stats=1: memory used and tiles loaded per zone, on screen (readable on a phone)
   const statsBox = params.get('stats') === '1' ? document.body.appendChild(document.createElement('pre')) : null

@@ -81,3 +81,159 @@ body {
 .stats {
   bottom: 64px;
 }
+
+/* Settings (config-panel.js): ⚙ button top right, <l21-settings-panel> over the model */
+.settings-button {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: rgb(4 20 24 / 70%);
+  color: #d7e3ea;
+  cursor: pointer;
+}
+
+.settings-button:hover,
+.settings-button[aria-expanded="true"] {
+  background: rgb(4 20 24 / 90%);
+}
+
+l21-settings-panel {
+  position: fixed;
+  top: calc(max(12px, env(safe-area-inset-top)) + 52px);
+  right: max(12px, env(safe-area-inset-right));
+  bottom: 68px;
+  display: block;
+  width: min(320px, calc(100vw - 24px));
+  overflow-y: auto;
+  padding: 0 16px 16px;
+  border-radius: 16px;
+  background: rgb(6 18 26 / 92%);
+  color: #d7e3ea;
+  font-size: 14px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 40%);
+}
+
+l21-settings-panel[hidden] {
+  display: none;
+}
+
+.settings-head {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0 6px;
+  background: rgb(6 18 26 / 96%);
+}
+
+.settings-head h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.settings-close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.settings-section {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #1d3e4f;
+}
+
+.settings-section h3,
+.settings-section summary {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #3cc2bc;
+}
+
+.settings-section summary {
+  cursor: pointer;
+}
+
+.settings-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  padding: 6px 0;
+}
+
+.settings-row label {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.settings-row output {
+  color: #9bb8c6;
+  font-variant-numeric: tabular-nums;
+}
+
+.settings-row input[type="range"],
+.settings-row select,
+.settings-row input[type="url"] {
+  flex: 1 1 100%;
+  min-height: 32px;
+  accent-color: #3cc2bc;
+}
+
+.settings-row select,
+.settings-row input[type="url"] {
+  padding: 4px 8px;
+  border: 1px solid #2a4a5a;
+  border-radius: 8px;
+  background: #0b1c26;
+  color: inherit;
+}
+
+.settings-toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: #3cc2bc;
+}
+
+.settings-hint {
+  flex: 1 1 100%;
+  margin: 0;
+  font-size: 12px;
+  color: #9bb8c6;
+}
+
+.settings-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.settings-actions button {
+  flex: 1 1 auto;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid #2a4a5a;
+  border-radius: 10px;
+  background: #102a38;
+  color: inherit;
+  cursor: pointer;
+}

@@ -37,6 +37,13 @@ to any UI added to the 3D viewer. Decided with Christian on 2026-10-19.
 - **Dive log:** the total duration (sum of column 5) becomes an Astro component computed at build time, so no
   JavaScript is shipped; column 5 stays a plain number of minutes.
 
+## Custom Elements
+
+- **Every custom element name starts with `l21-`** (a pseudo-namespace for lock21), e.g. `<l21-image-zoom>`,
+  `<l21-settings-panel>`, `<l21-dev-breakpoints>`: no clash with other libraries' elements or future HTML tags. This
+  applies to the site and to the 3D viewer.
+- One element per file; the class is named after it in English (`ImageZoom`, `SettingsPanel`).
+
 ## Rules kept from today
 
 - `noindex` on every page while the site is not public (meta robots + `robots.txt`), including `/modele/`.

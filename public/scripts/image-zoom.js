@@ -15,5 +15,5 @@ class ImageZoom extends HTMLElement {
     })
   }
 }
-customElements.define('image-zoom', ImageZoom)
-document.body.append(document.createElement('image-zoom'))
+customElements.define('l21-image-zoom', ImageZoom)
+document.body.append(document.createElement('l21-image-zoom'))

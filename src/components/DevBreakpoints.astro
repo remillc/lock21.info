@@ -4,7 +4,7 @@
 // MUI's default breakpoints (xs 0, sm 600, md 900, lg 1200, xl 1536 px). Rendered by SiteTitle.astro (header) on the dev server only, never in production.
 ---
 
-<dev-breakpoints class="dev-breakpoints" aria-hidden="true"></dev-breakpoints>
+<l21-dev-breakpoints class="dev-breakpoints" aria-hidden="true"></l21-dev-breakpoints>
 
 <script>
   const breakpoints: [string, number][] = [
@@ -29,7 +29,7 @@ ${min} - ${max}`
       window.addEventListener('resize', update)
     }
   }
-  customElements.define('dev-breakpoints', DevBreakpoints)
+  customElements.define('l21-dev-breakpoints', DevBreakpoints)
 </script>
 
 <style>
