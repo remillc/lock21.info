@@ -90,7 +90,9 @@ Tabular figures in tables and data.
 ## Components
 
 - **Header**: navy bar, `LOCK/21`, place line, navigation (Site, Méthode, Histoire, Journal), "Modèle 3D" pill.
-- **Depth gauge**: left column, 0 / 15 / 30 / 45 / 55 ft, the last in the signal colour; hidden on phones.
+- **Depth gauge**: left column of the home page, 0 / 15 / 30 / 45 / 55 ft, the last in the signal colour; hidden on
+  phones. On interior pages it runs along the navigation column's left edge, marks in proportion to depth, on screens
+  wide enough for its labels.
 - **Instrument panel**: bottom depth (ft and m), dives, time underwater, zones online, latest zone; values from the
   dive log and the 3D manifest, not typed by hand.
 - **Render frame**: a render of the model, 28 px corners, label chip with zone and numbers.

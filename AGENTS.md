@@ -34,7 +34,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `astro.config.mjs` | Site config: Starlight, locales, sidebar, `noindex` meta, image-zoom script |
 | `src/content.config.ts` | Docs collection definition |
 | `src/components/home/Home.astro` | Home page (DESIGN.md): depth gauge, instrument panel, render, entry cards, journal excerpts. Numbers come from `src/lib/diveLog.ts` (dive log parsed at build) and `src/lib/manifest.ts` (3D manifest fetched at build, fallback if offline); site facts in `src/data/site.ts` |
-| `src/components/SiteTitle.astro`, `HeaderActions.astro`, `PageTitle.astro`, `Footer.astro` | Starlight overrides: header (logo, wordmark, coordinates), "Modèle 3D" pill, no page title on splash pages, footer bar |
+| `src/components/SiteTitle.astro`, `HeaderActions.astro`, `PageTitle.astro`, `Footer.astro`, `Sidebar.astro` | Starlight overrides: header (logo, wordmark, coordinates), "Modèle 3D" pill, no page title on splash pages, footer bar, depth gauge on the navigation's left edge (wide screens, interior pages) |
 | `src/components/DevBreakpoints.astro` | Dev server only (mounted by `SiteTitle.astro`, in the header, under `import.meta.env.DEV`): the same red label as OpenCaves' DebugBreakpoints, top left, with the MUI breakpoint (`xs`, `sm`, `md`, `lg`, `xl`) and its interval in px; never in production builds |
 | `src/styles/tokens.scss` | MD3 colour roles and shape scale, mapped onto Starlight's custom properties (dark = `:root`, light = `[data-theme='light']`) |
 | `src/components/DiveLog.astro` | Adds a total-duration footer row to the dive log table, computed at build time (sums column 5) |

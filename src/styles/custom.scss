@@ -158,9 +158,9 @@ dialog.image-zoom {
     --sl-content-inline-start: calc(var(--sl-sidebar-width) + var(--lock21-margin));
   }
 
+  // The navigation's left edge carries the depth gauge (Sidebar.astro) instead of a border
   [data-has-toc] .sidebar-pane {
     inset-inline-start: var(--lock21-margin);
-    border-inline-start: 1px solid var(--sl-color-hairline-shade);
   }
 
   [data-has-toc] header.header {

@@ -1,0 +1,64 @@
+---
+// Navigation column: Starlight's, with the home page's depth gauge along its left edge (DESIGN.md) in place of a
+// border. The gauge needs the margin on the left of the centred columns for its labels, so it only shows on screens
+// wide enough for them (custom.scss centres the columns; see .depth-ruler below).
+import Default from '@astrojs/starlight/components/Sidebar.astro'
+import { site } from '../data/site'
+
+// Depth marks, placed in proportion to the depth from the surface (top) to the bottom
+const marks = [0, 15, 30, 45, site.bottomDepthFt]
+---
+
+<Default />
+<div class="depth-ruler" aria-hidden="true">
+  {
+    marks.map((ft) => (
+      <span class:list={['mark', { bottom: ft === site.bottomDepthFt }]} style={`top: ${(ft / site.bottomDepthFt) * 100}%`}>
+        {ft} pi
+      </span>
+    ))
+  }
+</div>
+
+<style>
+  .depth-ruler {
+    display: none;
+  }
+
+  /* Wide enough for the labels: navigation 18.75rem + content 60rem + "Sur cette page" 20rem (custom.scss), plus
+     4rem of margin on each side */
+  @media (min-width: 106.75rem) {
+    .depth-ruler {
+      display: block;
+      position: fixed;
+      top: calc(var(--sl-nav-height) + 1.5rem);
+      bottom: 2rem;
+      /* The line sits on the navigation column's left edge; the labels hang in the margin to its left */
+      left: calc(var(--lock21-margin, 0px) - 1px);
+      width: 0;
+      border-left: 2px solid var(--md-sys-color-secondary);
+    }
+    .mark {
+      position: absolute;
+      right: 0.625rem;
+      transform: translateY(-50%);
+      font-family: var(--lk-font-data);
+      font-size: 0.75rem;
+      color: var(--md-sys-color-on-surface-variant);
+      white-space: nowrap;
+    }
+    .mark::after {
+      /* tick on the line */
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -0.625rem;
+      width: 0.375rem;
+      border-top: 2px solid var(--md-sys-color-secondary);
+    }
+    .bottom {
+      color: var(--md-sys-color-tertiary-text);
+      font-weight: 700;
+    }
+  }
+</style>

@@ -57,6 +57,7 @@ export default defineConfig({
         SocialIcons: './src/components/HeaderActions.astro',
         PageTitle: './src/components/PageTitle.astro',
         Footer: './src/components/Footer.astro',
+        Sidebar: './src/components/Sidebar.astro',
       },
       sidebar: [
         { label: 'Modèle 3D', link: '/modele/', attrs: { target: '_self' } },
