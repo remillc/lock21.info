@@ -148,6 +148,24 @@ dialog.image-zoom {
     flex: 0 0 auto;
     width: var(--lock21-toc-width);
   }
+
+  // The three columns centred in the viewport: the same margin on both sides once the screen is wider than
+  // navigation + content + "Sur cette page". Starlight pins the navigation to the left edge; it moves by that margin,
+  // and so do the content (via --sl-content-inline-start) and the header's contents. The navy bar stays full width.
+  :root[data-has-sidebar][data-has-toc] {
+    --lock21-layout-width: calc(var(--sl-sidebar-width) + var(--lock21-content-width) + var(--lock21-toc-width));
+    --lock21-margin: max(0px, (100vw - var(--lock21-layout-width)) / 2);
+    --sl-content-inline-start: calc(var(--sl-sidebar-width) + var(--lock21-margin));
+  }
+
+  [data-has-toc] .sidebar-pane {
+    inset-inline-start: var(--lock21-margin);
+    border-inline-start: 1px solid var(--sl-color-hairline-shade);
+  }
+
+  [data-has-toc] header.header {
+    padding-inline: calc(var(--sl-nav-pad-x) + var(--lock21-margin));
+  }
 }
 
 // Splash pages (home page) carry their own <h1>: Starlight's title panel stays empty, hide it and its divider
