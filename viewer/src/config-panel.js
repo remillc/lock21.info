@@ -7,7 +7,8 @@
 //        panel.configure({ schema, values, live, button }); document.body.append(panel)
 
 // type: toggle | range | select | text | angles (two ranges stored as "a,b")
-// dependsOn: key of a toggle; the row is shown only while that toggle is on
+// dependsOn: key of a toggle (the row is shown only while it is on), or [key, value] (shown only while that setting
+// has that value)
 export function settingsSchema({ mobile }) {
   return [
     {
@@ -16,6 +17,7 @@ export function settingsSchema({ mobile }) {
         { key: 'hdri', label: 'Éclairage par le ciel', type: 'toggle', def: '1' },
         { key: 'hdriIntensity', label: 'Force du ciel', type: 'range', min: 0, max: 3, step: 0.05, def: '1' },
         { key: 'sky', label: 'Ciel en arrière-plan', type: 'toggle', def: '0' },
+        { key: 'wet', label: 'Aspect mouillé', hint: 'zones seulement: reflets du ciel, couleurs plus saturées', type: 'range', min: 0, max: 1, step: 0.05, def: '0.15', dependsOn: 'hdri' },
       ],
     },
     {
@@ -41,10 +43,9 @@ export function settingsSchema({ mobile }) {
         { key: 'stats', label: 'Statistiques (mémoire, tuiles)', type: 'toggle', def: '0' },
         { key: 'aoDebug', label: 'Occlusion seule', type: 'toggle', def: '0', dependsOn: 'ao' },
         { key: 'tiles', label: 'Source des tuiles', hint: 'adresse, ex. http://localhost:8081', type: 'text', def: '' },
-        { key: 'relief', label: 'Relief (tuiles d’essai)', type: 'select', def: '0', options: [['0', 'non'], ['1', 'oui'], ['debug', 'normal map']] },
-        { key: 'light', label: 'Soleil (azimut, hauteur)', type: 'angles', def: '135,45', ranges: [[0, 360, 5], [0, 90, 5]], unit: '°' },
-        { key: 'shade', label: 'Part de lumière directe', type: 'range', min: 0, max: 1, step: 0.05, def: '0.6' },
-        { key: 'wet', label: 'Aspect mouillé', type: 'range', min: 0, max: 1, step: 0.05, def: '0.15' },
+        { key: 'relief', label: 'Relief (normal maps des zones)', type: 'select', def: '1', options: [['1', 'oui'], ['0', 'non'], ['sun', 'soleil (essai)'], ['debug', 'normal map']] },
+        { key: 'light', label: 'Soleil (azimut, hauteur)', type: 'angles', def: '135,45', ranges: [[0, 360, 5], [0, 90, 5]], unit: '°', dependsOn: ['relief', 'sun'] },
+        { key: 'shade', label: 'Part de lumière directe', type: 'range', min: 0, max: 1, step: 0.05, def: '0.6', dependsOn: ['relief', 'sun'] },
       ],
     },
   ]
@@ -90,7 +91,8 @@ class SettingsPanel extends HTMLElement {
     const still = !animate || window.matchMedia('(prefers-reduced-motion: reduce)').matches
     for (const item of this.schema.flatMap((section) => section.items)) {
       if (!item.dependsOn) continue
-      const on = (this.params.get(item.dependsOn) ?? this.item(item.dependsOn).def) === '1'
+      const [key, value] = Array.isArray(item.dependsOn) ? item.dependsOn : [item.dependsOn, '1']
+      const on = (this.params.get(key) ?? this.item(key).def) === value
       const row = this.querySelector(`[data-key="${item.key}"]`)
       if (row.dataset.shown === String(on)) continue
       row.dataset.shown = String(on)

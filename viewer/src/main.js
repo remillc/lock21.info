@@ -93,8 +93,9 @@ const look = {
   skyBackground: params.get('sky') === '1',
   // Colour balance between zones (?neutral=0..1), see colorBalance
   neutral: params.has('neutral') ? Number(params.get('neutral')) : 0.3,
-  // Relief test (?relief=1 | debug), its light (?light=azimuth,elevation, ?shade=0..1) and wet look (?wet=0..1)
-  relief: ['1', 'debug'].includes(params.get('relief')) ? params.get('relief') : '0',
+  // Relief from the zones' normal maps (?relief=1 default, 0 = without), the sun test (?relief=sun, with
+  // ?light=azimuth,elevation and ?shade=0..1) or the normal map shown as the colour (?relief=debug); wet look (?wet=0..1)
+  relief: ['0', 'sun', 'debug'].includes(params.get('relief')) ? params.get('relief') : '1',
   light: (params.get('light') || '135,45').split(',').map(Number),
   shade: params.has('shade') ? Number(params.get('shade')) : 0.6,
   wet: wetness(params.has('wet') ? params.get('wet') : 0.15),
@@ -121,8 +122,10 @@ function initSurface(mesh, zoneId) {
 
 function surfaceMaterial(mesh) {
   const surface = mesh.userData.surface
-  if (look.relief !== '0' && surface.normalMap) return reliefMaterial(surface)
-  if (look.sky && look.relief === '0') return skyMaterial(surface, mesh)
+  const normalMap = look.relief !== '0' ? surface.normalMap : null
+  if (normalMap && look.relief === 'debug') return new THREE.MeshBasicMaterial({ map: normalMap, side: THREE.DoubleSide })
+  if (look.relief === 'sun') return normalMap ? litMaterial(surface, mesh, normalMap, false) : unlitMaterial(surface)
+  if (look.sky) return litMaterial(surface, mesh, normalMap, true)
   return unlitMaterial(surface)
 }
 
@@ -175,41 +178,30 @@ function addDespill(shader) {
 // by its orientation (tops brighter than sides). The tiles carry no normals: they are computed on demand
 // (double-sided rendering turns them outward even where the photogrammetry winding is inconsistent).
 // ?hdriIntensity= sets the strength (default 1), ?sky=1 shows the sky as the background.
-function skyMaterial(surface, mesh) {
-  if (!mesh.geometry.attributes.normal) mesh.geometry.computeVertexNormals()
-  const material = new THREE.MeshStandardMaterial({
-    map: surface.map,
-    color: surfaceColor(surface),
-    roughness: 1,
-    metalness: 0,
-    side: THREE.DoubleSide,
-  })
-  if (surface.zoneId) material.onBeforeCompile = addDespill
-  return material
-}
-
-// Relief (test, ?relief=1): tiles that carry a normal map (tools/publish-model/bake_relief.py: object-space
-// normals of the high-res export, zebra mussels included) are lit instead of shown unlit. Object space: no
-// vertex normals or tangents needed, the tiles have none. Lambert lighting divides by pi, hence the factor.
-// Ambient + one directional light; ?light=azimuth,elevation (degrees, default 135,45) orients it,
-// ?shade=0..1 (default 0.6) is the directional share: 0 is flat, 1 is hard shadows-like contrast.
-// ?relief=debug shows the normal map itself as the colour (checks that it lines up with the photo texture)
-// Wet look (test, ?wet=0..1, needs ?relief=1): glossy surface with a clear-coat film (sharp highlights that slide
-// over the relief when the camera moves), reflections of a neutral environment, colours slightly darker and more
-// saturated. The photos already hold the lamps' real reflections: keep it subtle.
-// Default 0.15 (chosen on zone 12); ?wet=0 turns it off
-function reliefMaterial(surface) {
-  if (look.relief === 'debug') return new THREE.MeshBasicMaterial({ map: surface.normalMap, side: THREE.DoubleSide })
-  const wet = look.wet
-  const options = {
-    map: surface.map,
-    normalMap: surface.normalMap,
-    normalMapType: THREE.ObjectSpaceNormalMap,
-    color: surfaceColor(surface),
-    side: THREE.DoubleSide,
-    // The tiles have no vertex normals: face normals from screen derivatives keep the unperturbed normal valid
-    // (three.js uses it for specular antialiasing); the object-space normal map replaces it for lighting
-    flatShading: true,
+//
+// Relief: zones whose tiles carry a normal map (tools/publish-model/bake_relief.py: object-space normals of the
+// high-res export, zebra mussels included) are lit through it instead of their computed normals. Object space: no
+// vertex normals or tangents needed. ?relief=0 compares without it. ?relief=sun: the earlier test, lit by an
+// ambient + one directional light instead of the sky (zones without a normal map stay unlit): ?light=azimuth,elevation
+// (degrees, default 135,45) orients it, ?shade=0..1 (default 0.6) is the directional share; Lambert lighting divides
+// by pi, hence the factors in updateLights. ?relief=debug shows the normal map itself as the colour (checks that it
+// lines up with the photo texture).
+//
+// Wet look (?wet=0..1, default 0.15, chosen on zone 12; 0 turns it off), zones only: glossy surface with a clear-coat
+// film (sharp highlights that slide over the relief when the camera moves) reflecting the sky, colours slightly
+// darker and more saturated. The photos already hold the lamps' real reflections: keep it subtle.
+function litMaterial(surface, mesh, normalMap, sky) {
+  const wet = surface.zoneId ? look.wet : 0
+  if (!normalMap && !mesh.geometry.attributes.normal) mesh.geometry.computeVertexNormals()
+  const options = { map: surface.map, color: surfaceColor(surface), side: THREE.DoubleSide }
+  if (normalMap) {
+    Object.assign(options, {
+      normalMap,
+      normalMapType: THREE.ObjectSpaceNormalMap,
+      // Face normals from screen derivatives keep the unperturbed normal valid (three.js uses it for specular
+      // antialiasing); the object-space normal map replaces it for lighting
+      flatShading: true,
+    })
   }
   const material = wet > 0
     ? new THREE.MeshPhysicalMaterial({
@@ -218,11 +210,14 @@ function reliefMaterial(surface) {
       roughness: 0.9 - 0.5 * wet,
       clearcoat: wet,
       clearcoatRoughness: 0.08,
-      envMapIntensity: 0.6 * wet,
+      // Under the sky, the environment is the whole lighting; under the sun test, only the reflections
+      envMapIntensity: sky ? 1 : 0.6 * wet,
     })
-    : new THREE.MeshLambertMaterial(options)
+    : sky
+      ? new THREE.MeshStandardMaterial({ ...options, roughness: 1, metalness: 0 })
+      : new THREE.MeshLambertMaterial(options)
   material.onBeforeCompile = (shader) => {
-    addDespill(shader)
+    if (surface.zoneId) addDespill(shader)
     if (wet > 0) {
       shader.fragmentShader = shader.fragmentShader
         // Wet colours: darker and more saturated
@@ -230,7 +225,7 @@ function reliefMaterial(surface) {
           float wetLuma = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
           diffuseColor.rgb = mix(vec3(wetLuma), diffuseColor.rgb, ${(1 + 0.35 * wet).toFixed(3)}) * ${(1 - 0.2 * wet).toFixed(3)};`)
         // The clear coat follows the relief (by default it would use the flat face normal: faceted highlights)
-        .replace('#include <clearcoat_normal_fragment_begin>', 'vec3 clearcoatNormal = normal;')
+        .replace('#include <clearcoat_normal_fragment_begin>', normalMap ? 'vec3 clearcoatNormal = normal;' : '#include <clearcoat_normal_fragment_begin>')
         // Specular antialiasing: seen from afar, one pixel covers many mussels and the sharp highlights sparkle.
         // Where the normal varies a lot from one pixel to the next, the gloss is blurred accordingly.
         .replace('#include <lights_physical_fragment>', `#include <lights_physical_fragment>
@@ -240,15 +235,21 @@ function reliefMaterial(surface) {
     }
     // Double-sided: three.js flips the normal of faces seen from behind. The triangle winding of the
     // photogrammetry meshes is not consistent from one texture chart to the next, so whole charts came out
-    // inverted (dark patches with sharp edges). An object-space normal is already the true orientation: no flip.
-    shader.fragmentShader = shader.fragmentShader.replace(
-      '#include <normal_fragment_maps>',
-      THREE.ShaderChunk.normal_fragment_maps.replace('normal = normal * faceDirection;', ''),
-    )
+    // inverted (dark patches with sharp edges). An object-space normal is already the true orientation: no flip by
+    // winding. But a surface seen from behind (a wall from the other side) must face the viewer, like the computed
+    // normals: flipped when it points away from the face actually seen (the flat-shading normal, from screen
+    // derivatives, always faces the camera). Otherwise the sky lights it from behind (dark) and the gloss sparkles.
+    if (normalMap) {
+      shader.fragmentShader = shader.fragmentShader.replace(
+        '#include <normal_fragment_maps>',
+        THREE.ShaderChunk.normal_fragment_maps.replace('normal = normal * faceDirection;', '') +
+          '\nif (dot(normal, nonPerturbedNormal) < 0.0) normal = -normal;',
+      )
+    }
   }
-  // The wetness is written into the shader: one compiled program per value (three.js would otherwise reuse the
-  // first one, its cache key being the function's source)
-  material.customProgramCacheKey = () => `relief-wet-${wet.toFixed(3)}`
+  // The patches depend on these values (the wetness is written into the shader): one compiled program per
+  // combination (three.js would otherwise reuse the first one, its cache key being the function's source)
+  material.customProgramCacheKey = () => `lit-${sky}-${Boolean(normalMap)}-${Boolean(surface.zoneId)}-${wet.toFixed(3)}`
   return material
 }
 
@@ -264,18 +265,18 @@ function updateLights() {
   sun.position.set(Math.cos(elevation) * Math.sin(azimuth), Math.sin(elevation), Math.cos(elevation) * Math.cos(azimuth))
   ambient.intensity = Math.PI * (1 - look.shade)
   sun.intensity = Math.PI * look.shade * 1.4
-  reliefLights.visible = look.relief !== '0'
+  reliefLights.visible = look.relief === 'sun'
   requestRender()
 }
 updateLights()
 
 // What the lit materials reflect, and the background: the sky (loaded even when its lighting is off at start), or
-// for the wet look a neutral studio-like environment (the unlit zones and the context ignore both)
+// for the wet look under the sun test a neutral studio-like environment (the unlit surfaces ignore both)
 let skyTexture = null
 let skyEnvironment = null
 let roomEnvironment = null
 function updateEnvironment() {
-  if (look.relief !== '0') {
+  if (look.relief === 'sun') {
     if (look.wet > 0 && !roomEnvironment) {
       const pmrem = new THREE.PMREMGenerator(renderer)
       roomEnvironment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
