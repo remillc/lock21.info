@@ -128,22 +128,25 @@ dialog.image-zoom {
 
 // --- Layout
 
-// Right column ("Sur cette page"): Starlight makes it at least 18.75rem and gives it half of the spare width on wide
-// screens. A fixed column leaves the room to the page content (wide tables).
+// Notebook pages, three columns: navigation, content at a fixed width, and "Sur cette page" right next to it. On wide
+// screens the spare space goes to the right of the page (Starlight spreads it between the columns instead).
 :root {
+  --lock21-content-width: 60rem;
   --lock21-toc-width: 20rem;
 }
 
 @media (min-width: 72rem) {
-  .right-sidebar-container {
-    width: var(--lock21-toc-width);
+  [data-has-sidebar][data-has-toc] .main-pane {
+    flex: 0 0 auto;
+    // Fixed width, but never so wide that "Sur cette page" is pushed off narrower screens
+    width: min(var(--lock21-content-width), 100% - var(--lock21-toc-width));
+    --sl-content-width: 100%;
+    --sl-content-margin-inline: 0;
   }
 
-  // The content fills the space between the two sidebars (Starlight caps it at 45rem and right-aligns it,
-  // which left a wide empty margin on the left)
-  [data-has-sidebar][data-has-toc] .main-pane {
-    width: calc(100% - var(--lock21-toc-width));
-    --sl-content-width: 100%;
+  .right-sidebar-container {
+    flex: 0 0 auto;
+    width: var(--lock21-toc-width);
   }
 }
 
