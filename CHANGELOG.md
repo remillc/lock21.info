@@ -4,7 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- Relief and wet look for every zone but zone 4 (local tiles, not uploaded yet): normal maps baked from the high-res
+- Relief and wet look for every zone (local tiles, not uploaded yet; zone 4 from its 1.5 M export until the high-res one): normal maps baked from the high-res
   exports (zones 1 and 10 from their 8.6 M and 22.6 M exports), tiles rebuilt with them by the new
   `relief_zones.ps1`. The viewer lights them under the sky with their normal map and a wet clear coat (0.15 by
   default); walls seen from behind are turned towards the viewer. `?relief=sun` keeps the earlier sun test.
