@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#39**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#40**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -76,6 +76,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #30 Switch the site from Docusaurus to Astro, on branch `feature/astro` (built and previewed; to merge): French docs and English
   translation, sidebar, blog, the dive log table with its total duration, `noindex` while not public, the viewer kept
   as its own app under `/modele/`, GitHub Pages deployment
+- [ ] #39 Apply `DESIGN.md` to the Astro site: MD3 tokens as CSS custom properties mapped to Starlight, self-hosted
+  fonts, header and footer bars, depth gauge, instrument panel (values from the dive log and the manifest), home page
+  (render frame, entry cards, journal excerpts); answer the brief's open questions (logo, name, coordinates)
 - [ ] #31 Underwater look for the viewer: set aside on branch `feature/underwater-look`
 
 ## Other

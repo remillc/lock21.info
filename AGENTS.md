@@ -41,7 +41,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `viewer/` | Standalone 3D viewer (Vite + three.js + 3d-tiles-renderer), built into `public/modele/` and served at `lock21.info/modele/`; tiles come from `tiles.lock21.info` (Cloudflare R2) |
 | `tools/publish-model/` | 3D publishing pipeline (headless Blender, Obj2Tiles, Node, PowerShell). Its `README.md` (French) documents every step, tool and lesson learned |
 | `tools/model-analysis/` | Read-only resolution analysis of the `zones` meshes (headless Blender). Run `run.ps1`; thresholds in `thresholds.json`; dated reports (`.json` + `.md`) in `reports/`. Commit the reports, since they track how the model evolves. |
-| `TODO.md`, `CHANGELOG.md`, `GUIDELINES.md` | Working list of what remains; release notes; front-end rules for the site (read before writing site or UI code) |
+| `TODO.md`, `CHANGELOG.md`, `GUIDELINES.md`, `DESIGN.md` | Working list of what remains; release notes; front-end rules; design brief (E2 look on the Material Design 3 token system). Read the last two before writing site or UI code |
 | `images/` | Logos and screenshots |
 
 Starlight requires a `title` in every page's frontmatter (it renders it as the page heading): don't start pages with a `# Title` line.
