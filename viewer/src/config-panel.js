@@ -55,7 +55,7 @@ export function settingsSchema({ mobile }) {
     {
       title: 'Occlusion ambiante',
       items: [
-        { key: 'ao', label: 'Ombres dans les creux', type: 'toggle', def: mobile ? '0' : '1' },
+        { key: 'ao', label: 'Occlusion', type: 'toggle', def: mobile ? '0' : '1' },
         { key: 'aoRadius', label: 'Rayon', type: 'range', min: 0.1, max: 5, step: 0.1, def: '1', unit: ' m', dependsOn: 'ao' },
         { key: 'aoIntensity', label: 'Force', type: 'range', min: 0, max: 10, step: 0.1, def: '3', dependsOn: 'ao' },
       ],
