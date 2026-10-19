@@ -1,7 +1,8 @@
 // <l21-settings-panel>: native Custom Element (GUIDELINES.md) with one control per query parameter of the viewer, opened
 // by the ⚙ button. Every setting applies at once through its "live" handler (main.js), sliders while they move: the
-// page never reloads. The settings are not written into the address (it keeps only the camera); they start from the
-// query parameters read at load. Labels in French, like the rest of the viewer.
+// page never reloads. The settings are not written into the address (it keeps only the camera): the browser keeps
+// them between visits (localStorage, see savedSettings), and a link's query parameters override them at load.
+// Labels in French, like the rest of the viewer.
 //
 // Usage: const panel = document.createElement('l21-settings-panel')
 //        panel.configure({ schema, values, live, button }); document.body.append(panel)
@@ -9,6 +10,30 @@
 // type: toggle | range | select | text | angles (two ranges stored as "a,b")
 // dependsOn: key of a toggle (the row is shown only while it is on), or [key, value] (shown only while that setting
 // has that value)
+// Settings kept by the browser between page loads (localStorage of this origin: lock21.info, where the /modele/ page
+// embeds the viewer). Saved at every change, cleared by "Réinitialiser"; unavailable storage (private browsing,
+// blocked site data) only means nothing is kept.
+const STORAGE_KEY = 'l21-viewer-settings'
+
+export function savedSettings() {
+  try {
+    return new URLSearchParams(localStorage.getItem(STORAGE_KEY) ?? '')
+  } catch {
+    return new URLSearchParams()
+  }
+}
+
+function saveSettings(params, schema) {
+  const keys = new Set(schema.flatMap((section) => section.items).map((item) => item.key))
+  const kept = new URLSearchParams([...params].filter(([key]) => keys.has(key)))
+  try {
+    if (kept.size) localStorage.setItem(STORAGE_KEY, kept.toString())
+    else localStorage.removeItem(STORAGE_KEY)
+  } catch {
+    // Storage unavailable: the settings last until the page is closed
+  }
+}
+
 export function settingsSchema({ mobile }) {
   return [
     {
@@ -82,6 +107,7 @@ class SettingsPanel extends HTMLElement {
     if (value === item.def || value === '') this.params.delete(item.key)
     else this.params.set(item.key, value)
     this.live[item.key]?.(value)
+    saveSettings(this.params, this.schema)
     this.showDependents()
   }
 
@@ -148,6 +174,7 @@ class SettingsPanel extends HTMLElement {
         this.params.delete(item.key)
         this.live[item.key]?.(item.def)
       }
+      saveSettings(this.params, this.schema)
       this.replaceChildren()
       this.render()
     })

@@ -9,13 +9,15 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js'
 import { TilesRenderer } from '3d-tiles-renderer'
-import { settingsSchema } from './config-panel.js'
+import { savedSettings, settingsSchema } from './config-panel.js'
 import { N8AOPass } from 'n8ao'
 
 // Every query parameter is read once here, then changed live by the settings panel (config-panel.js): no setting
 // reloads the page. `live` holds one handler per parameter. The address keeps only the camera (?cam=, see viewUrl):
 // the other parameters still work in a link (tests), and are removed from the address once read.
 const params = new URLSearchParams(location.search)
+// Settings saved by the browser (config-panel.js) where the link doesn't set them
+for (const [key, value] of savedSettings()) if (!params.has(key)) params.set(key, value)
 const live = {}
 history.replaceState(null, '', location.pathname + (params.has('cam') ? `?cam=${params.get('cam')}` : ''))
 
