@@ -61,16 +61,18 @@ mat = material.Material("material", "material", effect)
 dae.images.append(image)
 dae.effects.append(effect)
 dae.materials.append(mat)
-# Google Earth crashes on a COLLADA mesh with more than 65,535 vertices (a vertex = a position + UV pair): the model
-# is split into meshes below that, each with its own, re-indexed positions and UVs.
-MAX_VERTICES = 60_000
+# Google Earth Pro drops or crashes on large COLLADA meshes: a single mesh of 30,000 vertices / 50,000 triangles
+# shows, meshes of 60,000 vertices / 90,000 triangles don't (2026-10-19 tests). The model is split into meshes below
+# the size that works (a vertex = a position + UV pair), each with its own, re-indexed positions and UVs.
+MAX_VERTICES = 30_000
+MAX_TRIANGLES = 45_000
 
 
 def chunks(corners):
     start, seen = 0, set()
     for t in range(0, len(corners), 3):
         tri = {tuple(c) for c in corners[t:t + 3]}
-        if len(seen | tri) > MAX_VERTICES:
+        if len(seen | tri) > MAX_VERTICES or (t - start) // 3 >= MAX_TRIANGLES:
             yield corners[start:t]
             start, seen = t, set()
         seen |= tri

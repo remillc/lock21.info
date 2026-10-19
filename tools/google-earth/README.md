@@ -28,9 +28,11 @@ Options: `-t/--triangles` et `-s/--size` (taille de texture) pour le modèle; `-
 `tools\google-earth\.venv\Scripts\python -m pip install pycollada==0.9.2 numpy`. Blender 5 n'exporte plus le COLLADA
 (format des modèles dans un KMZ): `make_kmz.py` l'écrit avec pycollada à partir de l'OBJ.
 
-**Limite connue:** Google Earth Pro plante sur un maillage COLLADA de plus de 65 535 sommets (un sommet = une
-position + une coordonnée de texture). `make_kmz.py` découpe donc le modèle en maillages de 60 000 sommets au plus
-(zone 12 à 200 000 triangles: 3 maillages). Le premier essai, en un seul maillage de 122 803 sommets, a planté.
+**Limite par maillage:** Google Earth Pro ignore ou plante sur les gros maillages COLLADA. Un maillage de 30 000 sommets
+(50 000 triangles) s'affiche; des maillages de 60 000 sommets (90 000 triangles) ne s'affichent pas (100 000 triangles au
+total) ou font planter (150 000 et plus); un seul maillage de 122 803 sommets plante aussi. `make_kmz.py` découpe donc
+le modèle en maillages de 30 000 sommets et 45 000 triangles au plus (un sommet = une position + une coordonnée de
+texture).
 
 ## Ce que l'on sait des limites
 
