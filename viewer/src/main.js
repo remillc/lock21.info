@@ -50,8 +50,17 @@ const maxAnisotropy = renderer.capabilities.getMaxAnisotropy()
 // Double-sided: photogrammetry surfaces are open and are seen from both sides.
 // gain: the zone's colour balance (see colorBalance), multiplied with the texture. Zones (not the context)
 // also get the green removal (despill).
+// Obj2Tiles sets the tiles' textures to NEAREST_MIPMAP_LINEAR (nearest texel within a mipmap level), which
+// shimmers when the camera moves: trilinear filtering instead
+function smoothFiltering(texture) {
+  if (!texture) return
+  texture.anisotropy = maxAnisotropy
+  texture.minFilter = THREE.LinearMipmapLinearFilter
+  texture.magFilter = THREE.LinearFilter
+}
+
 function unlitMaterial(old, gain, zone = false) {
-  if (old.map) old.map.anisotropy = maxAnisotropy
+  smoothFiltering(old.map)
   const color = old.map ? gain || new THREE.Color(1, 1, 1) : old.color
   const material = new THREE.MeshBasicMaterial({ map: old.map, color, side: THREE.DoubleSide })
   if (zone && despill.value > 0) material.onBeforeCompile = addDespill
@@ -89,7 +98,8 @@ const shade = params.has('shade') ? Number(params.get('shade')) : 0.6
 // Default 0.15 (chosen on zone 12); ?wet=0 turns it off
 const wet = Math.min(Math.max(params.has('wet') ? Number(params.get('wet')) || 0 : 0.15, 0), 1)
 function reliefMaterial(old, gain) {
-  if (old.map) old.map.anisotropy = maxAnisotropy
+  smoothFiltering(old.map)
+  smoothFiltering(old.normalMap)
   // Obj2Tiles tags every KTX2 texture sRGB, normal maps included: the GPU would then apply the sRGB curve to
   // the normals and bend them. Data, not colour (set before the first upload, which picks the GPU format).
   old.normalMap.colorSpace = THREE.NoColorSpace
@@ -124,6 +134,12 @@ function reliefMaterial(old, gain) {
           diffuseColor.rgb = mix(vec3(wetLuma), diffuseColor.rgb, ${(1 + 0.35 * wet).toFixed(3)}) * ${(1 - 0.2 * wet).toFixed(3)};`)
         // The clear coat follows the relief (by default it would use the flat face normal: faceted highlights)
         .replace('#include <clearcoat_normal_fragment_begin>', 'vec3 clearcoatNormal = normal;')
+        // Specular antialiasing: seen from afar, one pixel covers many mussels and the sharp highlights sparkle.
+        // Where the normal varies a lot from one pixel to the next, the gloss is blurred accordingly.
+        .replace('#include <lights_physical_fragment>', `#include <lights_physical_fragment>
+          float normalVariation = clamp(length(fwidth(normal)) * 4.0, 0.0, 1.0);
+          material.roughness = max(material.roughness, normalVariation);
+          material.clearcoatRoughness = max(material.clearcoatRoughness, normalVariation);`)
     }
     // Double-sided: three.js flips the normal of faces seen from behind. The triangle winding of the
     // photogrammetry meshes is not consistent from one texture chart to the next, so whole charts came out

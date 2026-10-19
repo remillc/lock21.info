@@ -57,6 +57,8 @@ Working list for the lock21.info project. Remove items once they are done (the h
   - zone 10 (optional): chunk 0, 22.6 M faces
 - [ ] `bake_relief.py`: take a geometry-only export other than `source` (aligned on the source), apply the Lattice (zone 4)
 - [ ] Decide: relief on by default for all zones (download about x2 per zone)
+- [ ] De-lighting of the lamp bands (`delight_texture.py`, tested on zone 12): run it on zone 10 (strongest bands), then decide whether it goes into the pipeline for every zone
+- [ ] Relief on phones: memory, heat, smoothness; probably off by default there
 
 - [ ] The walls are covered with zebra mussels; their relief (1 to 3 cm) is in the high-res exports (zone 12: about
   7 mm edges) but lost in the published mesh (about 2.5 cm edges). Bake it from the high-res export onto the published

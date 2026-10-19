@@ -100,6 +100,12 @@ Leçons des essais sur la zone 12 (OBJ préparé de 1,2 M faces, texture 12 467 
 | poc2 | `--lods 3 --divisions 0 --max-texture-size 2048` | 70 | 1,27 M | 512 px | 64 Mo | `--max-texture-size` s'applique à la **texture source** avant découpage: résolution perdue |
 | poc3 | `--lods 3 --divisions 0 --max-texture-size 0 --decimation-mode Standard` | 70 | 1,27 M | 2048 et 4096 px | 103 Mo | résolution conservée. Reste à faire: niveaux éloignés trop lourds (400 k triangles à la racine), géométrie non compressée (51 Mo chargés à l'ouverture) |
 
+### Relief et textures sans lampes (essais sur la zone 12)
+
+- **Relief** (`bake_relief.py`): carte de normales en *espace objet* cuite depuis l'export détaillé sur le mesh préparé, à la taille exacte de la photo (Obj2Tiles range chaque tuile selon la taille de texture). `tile_zone.ps1` la tuile à part (2e passage Obj2Tiles, la carte donnée comme photo, ETC1S qualité 255) et `merge_normal_maps.mjs` la greffe dans les tuiles, marquée linéaire: le traitement des cartes de normales par Obj2Tiles les range mal (zones noires) et les marque sRGB. Zone 12: 48 Mo sans relief, 98 Mo avec (296 Mo en UASTC, `-NormalUastc`, 1 h 20 d'encodage). Visualiseur: `?relief=1`, `?light=azimut,élévation`, `?shade=0..1`, `?wet=0..1` (aspect mouillé, 0,15 par défaut), `?relief=debug`.
+- **Bandes des lampes** (`delight_texture.py` + `apply_shade.mjs`): la luminosité de la texture est moyennée sur la surface en 3D (rayon 1 m: l'atlas mélange des endroits éloignés), puis la texture est divisée par cette variation lente (force 0,8), en lumière linéaire. Les détails, les petites ombres et les couleurs restent. Zone 12: facteur de 0,69 à 1,14.
+- **Scintillement** au loin (reflets nets sur des moules plus petites qu'un pixel): le visualiseur floute le brillant là où la normale varie beaucoup d'un pixel à l'autre, et filtre les textures en trilinéaire (Obj2Tiles règle `NEAREST_MIPMAP_LINEAR`).
+
 ### 7. Aperçu local
 
 Dans deux terminaux:
