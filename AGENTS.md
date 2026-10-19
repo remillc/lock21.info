@@ -17,7 +17,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 ## Language
 
 - **French is the source language.** All docs are written in French (`defaultLocale: 'fr'`). Write new doc content in French unless asked otherwise, and match the existing informal first-person field-notes tone.
-- English (`en`) is a secondary locale. It is mostly machine-translated (see CI below) and largely incomplete.
+- English (`en`) is a secondary locale. It was machine-translated by a former CI workflow and is largely incomplete; translations are now done by Claude on request.
 - Units mix imperial and metric (feet for depths and distances on site, cm for the rig). Keep whatever unit the surrounding text uses, and add the metric equivalent in parentheses where the text already does that.
 
 ## Layout
@@ -38,7 +38,11 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `src/scss/custom.scss` | Global styles in use (the theme `customCss`). `src/css/custom.css` is the unused template version. |
 | `src/pages/` | Home pages (`index.js`, `en/index.js`). Still Docusaurus boilerplate. |
 | `blog/` | Mostly Docusaurus sample posts. `tags.yml` defines one tag per zone. |
-| `modeles/` | Blender mockup of the lock and textures |
+| `modeles/` | Blender files: `lock-21-mockup.blend` (mockup) and `lock-21-publishing.blend`, the source of truth for 3D publishing (user-owned: never save it, read it only after the user says it is saved) |
+| `viewer/` | Standalone 3D viewer (Vite + three.js + 3d-tiles-renderer), built into `static/modele/` and served at `lock21.info/modele/`; tiles come from `tiles.lock21.info` (Cloudflare R2) |
+| `tools/publish-model/` | 3D publishing pipeline (headless Blender, Obj2Tiles, Node, PowerShell). Its `README.md` (French) documents every step, tool and lesson learned |
+| `TODO.md`, `CHANGELOG.md` | Working list of what remains; release notes |
+| `static/CNAME` | Custom domain for GitHub Pages |
 | `images/`, `static/images/` | Logos and screenshots |
 | `tools/model-analysis/` | Read-only resolution analysis of the `zones` meshes (headless Blender). Run `run.ps1`; thresholds in `thresholds.json`; dated reports (`.json` + `.md`) in `reports/`. Commit the reports, since they track how the model evolves. |
 
@@ -52,7 +56,14 @@ npm run dev      # dev server, does not open a browser
 npm run build    # production build into /build
 npm run serve    # serve the build
 npm run write-translations -- --locale en
+npm run build:viewer       # builds the 3D viewer into static/modele (needed before build/deploy)
+npm run viewer:dev         # viewer dev server on http://localhost:3100/
+npm run model:check        # 3D zones changed in the .blend since their last publication
+npm run model:post-modified  # republish the changed zones locally (O:\publishing\tiles)
+npm run model:upload       # upload tiles to R2 (changes the live viewer: ask first)
 ```
+
+See `tools/publish-model/README.md` for the whole 3D pipeline.
 
 Node >= 18. Builds use `@docusaurus/faster` (`future.experimental_faster`). The platform is Windows: Git warns about LF→CRLF on Markdown files, and that is expected.
 
@@ -71,7 +82,7 @@ Node >= 18. Builds use `@docusaurus/faster` (`future.experimental_faster`). The 
 
 ## CI (`.github/workflows/`)
 
-- `deploy.yml` builds on PRs and deploys to the `gh-pages` branch over SSH on pushes to `main`.
+- `deploy.yml` builds on PRs, and on pushes to `main` builds the viewer and the site and deploys to the `gh-pages` branch with the workflow's `GITHUB_TOKEN` (no SSH key).
 - The former GPT translation workflows were removed (they had failed since 2025). English translations of the docs are done by Claude on request.
 
 ## Large and binary files: be careful
@@ -83,7 +94,7 @@ Node >= 18. Builds use `@docusaurus/faster` (`future.experimental_faster`). The 
 
 ## Secrets and local environment
 
-- `.env.local` (gitignored, loaded through `dotenv/config` in `docusaurus.config.js`) holds Git deployment credentials. **Never print, copy or commit its values.**
+- `.env.local` (gitignored, loaded through `dotenv/config` in `docusaurus.config.js`) holds credentials, including the Cloudflare R2 keys used by `tools/publish-model/upload_r2.mjs`. **Never print, copy or commit its values.**
 - The VS Code workspace also mounts `O:\`, which appears to hold the raw project data (footage, Metashape projects, workflow XMLs referenced in the docs, such as `config/workflows/1. Align cameras.xml`). Treat it as read-only unless the user says otherwise. Exceptions: `O:\publishing\` holds working assets that are expensive to regenerate and are kept between sessions: `metashape\<zone>\` (working copies, FINAL chunk only), `tiles\` (generated before upload), `downloads\` (whole-model `.glb` and `.kmz`). `O:\temp\` holds disposable intermediates.
 - **Never modify the original Metashape projects in `O:\photogrammetry\`.** They are huge (zone 12 alone is about 134 GB) and are the reference. Open them read-only and save only the needed chunk into a working copy under `O:\publishing\metashape\`.
 

@@ -1,14 +1,14 @@
 # Publication du modèle 3D
 
-Chaîne de traitement qui transforme les modèles photogrammétriques de chaque zone en **tuiles 3D** (OGC 3D Tiles 1.1) affichées par le visualiseur du site (`/model-preview` pour l'instant).
+Chaîne de traitement qui transforme les modèles photogrammétriques de chaque zone en **tuiles 3D** (OGC 3D Tiles 1.1) affichées par le visualiseur du site, [lock21.info/modele/](https://lock21.info/modele/) (projet `viewer/`).
 
-> **État:** preuve de concept sur la zone 12, en cours. Ce document décrit ce qui existe et le restera à mesure que la chaîne évolue.
+> **État:** 9 zones en ligne (1, 2, 3, 4, 7, 8, 10, 11, 12) et le contexte (terrain, remplissages). Relief, aspect mouillé et atténuation des lampes: en essai sur les zones 1 et 12. Ce document décrit ce qui existe et le restera à mesure que la chaîne évolue.
 
 ## Principes
 
 - **Les originaux ne sont jamais modifiés.** Les projets Metashape (`O:\photogrammetry\`), les exports (`O:\modeles\`) et les fichiers Blender (`modeles/*.blend`) ne sont ouverts qu'en lecture: aucun script ne les sauvegarde.
 - **Blender est la référence.** Le fichier de travail est **`modeles/lock-21-publishing.blend`** (copie de `lock-21-mockup.blend` du 2026-10-18, que la chaîne ne touche pas). Chaque objet de sa collection `zones` est importé d'un export de `O:\modeles\` et porte une propriété personnalisée **`source`**: le chemin de l'export `.glb` à publier (normalement le plus détaillé). Sa transformation (échelle, position, ajustées à la main) donne la mise en place; ses modificateurs donnent les retouches: **booléens** pour retirer le bruit et rogner entre zones voisines, **Lattice** pour corriger une déformation. La chaîne reporte ces retouches sur l'export haute résolution, sans jamais modifier le `.blend`.
-- **La texture porte le détail, la géométrie reste légère.** La texture photo contient déjà l'éclairage: le visualiseur l'affiche sans calcul de lumière. La géométrie est simplifiée tant que l'écart avec le maillage complet reste sous un seuil mesuré.
+- **La texture porte le détail, la géométrie reste légère.** La texture photo contient déjà l'éclairage: le visualiseur l'affiche sans calcul de lumière (en essai: un éclairage avec carte de relief, voir plus bas). La géométrie est simplifiée tant que l'écart avec le maillage complet reste sous un seuil mesuré.
 - **Une zone = un tileset indépendant**, versionné par date et inscrit dans `manifest.json`. Mettre à jour une zone ne touche pas aux autres. Les zones sont un découpage de travail: le visiteur voit un seul modèle continu.
 
 ## Étapes
@@ -22,7 +22,7 @@ Chaîne de traitement qui transforme les modèles photogrammétriques de chaque 
 | `npm run model:publish -- -Zones "zone 2","zone 3"` | republie une liste de zones |
 | `npm run model:serve-tiles` | sert `O:\publishing\tiles` en local (port 8081, CORS) |
 | `npm run viewer:dev` | visualiseur sur `http://localhost:3100/` |
-| `npm run viewer:build` | construit le visualiseur dans `viewer/dist` |
+| `npm run viewer:build` | construit le visualiseur dans `viewer/dist` (`npm run build:viewer`: dans `static/modele`, pour le site; c'est ce que fait le déploiement) |
 | `npm run model:upload` | met en ligne les tuiles sur Cloudflare R2 (`-- --dry-run` pour voir sans envoyer) |
 
 Ces scripts appellent `publish_zones.ps1` (options `-Zones`, `-Changed`, `-DryRun`, `-Version`, `-Density`), `serve-tiles.ps1` et le projet `viewer/`.
@@ -39,7 +39,9 @@ Le script enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape
 | 3 | Vérification du repère des exports | `verify_sources.py` | `O:\modeles\zone-*\*.glb` + `.blend` | `sources-check.json` |
 | 4 | Recalage (automatique à l'étape 5) | `register_zone.py` | export `source` + `.blend` | `transforms/<zone>.json` (cache) |
 | 5 | Préparation | `prepare_zone.py --zone "zone N" [--density 3000] --out …` | `.blend` (+ export `source`) | `O:\temp\<zone>\...\<zone>.obj` + `.jpg` + `<zone>-prepare.json` |
-| 6 | Tuilage + manifeste | `tile_zone.ps1` (+ `update_manifest.py`) | sortie de 5 | `O:\publishing\tiles\<zone>\<version>\` + `manifest.json` |
+| 5b | Relief (essai, facultatif) | `bake_relief.py` (Blender) | sortie de 5 + export détaillé (`--high`) | carte de normales + copie de la zone préparée |
+| 5c | Atténuation des lampes (essai, facultatif) | `delight_texture.py` (Blender) + `apply_shade.mjs` | sortie de 5 ou 5b | texture corrigée + copie de la zone préparée |
+| 6 | Tuilage + manifeste | `tile_zone.ps1` (+ `merge_normal_maps.mjs`, `texture_stats.mjs`, `update_manifest.py`) | sortie de 5 (ou 5b, 5c) | `O:\publishing\tiles\<zone>\<version>\` + `manifest.json` |
 | 7 | Aperçu local | `serve-tiles.ps1` + `viewer/`: `npm run dev` | `O:\publishing\tiles\` | `http://localhost:3100/` |
 | 8 | Mise en ligne | `upload_r2.mjs` (`npm run model:upload`) | `O:\publishing\tiles\` + `.env.local` | bucket R2 `lock21-tiles` |
 
@@ -80,13 +82,13 @@ Essai sur la zone 10 (export 652 k de 2026 sur le mesh de 140 k): échelle 1,003
 
 ### 6. Tuilage
 
-`Obj2Tiles --preset standard --texture-format Ktx2 --unlit --max-texture-size 0 --decimation-mode Standard --lods 3 --divisions 0`: hiérarchie de niveaux de détail (octree, découpage en Z), coordonnées locales, contenu `.glb`, textures **KTX2** (restent compressées en mémoire graphique, indispensable sur téléphone). Chaque version est écrite dans un nouveau dossier daté et n'est plus jamais modifiée; `manifest.json` pointe vers la version active.
+`Obj2Tiles --preset standard --texture-format Ktx2 --unlit --max-texture-size 0 --decimation-mode Standard --no-root-content --ignore-normal-maps --lods 3|4 --divisions 0`: hiérarchie de niveaux de détail (octree, découpage en Z), coordonnées locales, contenu `.glb`, textures **KTX2** (restent compressées en mémoire graphique, indispensable sur téléphone). Chaque version est écrite dans un nouveau dossier daté et n'est plus jamais modifiée; `manifest.json` pointe vers la version active.
 
 Obj2Tiles garde beaucoup trop de triangles dans les niveaux grossiers (zone 12: 418 k au niveau le plus grossier). `simplify_lods.mjs` (meshoptimizer) les ramène à environ **40 k** triangles par zone pour le niveau le plus grossier et **150 k** pour l'intermédiaire (bords des tuiles verrouillés, pour qu'elles restent jointives); le niveau le plus fin n'est pas touché. L'erreur géométrique de chaque tuile simplifiée est augmentée de l'erreur **mesurée** par meshoptimizer (zone 12: 2,8 cm et 3,0 cm), pour que le visualiseur passe au niveau détaillé à la bonne distance. Une première version ajoutait la borne maximale (2 % de la taille de la tuile, environ 50 cm): le visualiseur jugeait les tuiles grossières trop imprécises et chargeait tout de suite le niveau intermédiaire de chaque zone (83 Mo à l'ouverture).
 
 Puis `fix_tileset.py` corrige le `tileset.json`: la racine, vide avec `--no-root-content`, reçoit une très grande erreur géométrique (sinon, vue de loin, elle semble assez précise, le visualiseur ne descend pas vers le premier niveau qui a un contenu et la zone disparaît: c'est arrivé à la zone 8), et les champs `null` non conformes sont retirés.
 
-Ensuite, `compress_tiles.mjs` (glTF-Transform) compresse la géométrie de chaque tuile en **meshopt** (quantification + `EXT_meshopt_compression`); le visualiseur la décode avec `MeshoptDecoder`. Avec `--no-root-content` (la racine dupliquait le niveau le plus grossier), l'ouverture du visualiseur (zones 10 et 12) passe de 61,2 Mo à **18,1 Mo**, sans différence visible.
+Ensuite, `compress_tiles.mjs` (glTF-Transform) compresse la géométrie de chaque tuile en **meshopt** (quantification + `EXT_meshopt_compression`); le visualiseur la décode avec `MeshoptDecoder`. Il retire aussi la marque `KHR_materials_unlit` posée par `--unlit`: avec elle, three.js ignore la carte de relief; c'est le visualiseur qui choisit l'affichage avec ou sans lumière. Avec `--no-root-content` (la racine dupliquait le niveau le plus grossier), l'ouverture du visualiseur (zones 10 et 12) passe de 61,2 Mo à **18,1 Mo**, sans différence visible.
 
 **Nombre de niveaux selon la taille de la zone:** 3 par défaut, **4 pour les zones longues** (plus grand côté horizontal > 25 m, ex. zones 7 et 8). Test sur la zone 12 (10 × 10 m): le 4e niveau ne réduit le téléchargement de près que de 9 % (38,9 Mo au lieu de 42,7), pour 4 fois plus de requêtes (253 au lieu de 57) et 33 % de stockage en plus. Sur une zone longue, le visiteur n'en regarde qu'une partie de près: des tuiles plus petites évitent de charger le reste. `tile_zone.ps1 -Lods N` impose un nombre de niveaux.
 
@@ -115,7 +117,7 @@ Dans deux terminaux:
 cd viewer; npm run dev                     # visualiseur sur http://localhost:3100/
 ```
 
-Paramètres de test du visualiseur: `?tiles=<url>` (autre serveur de tuiles), `?error=<pixels>` (force un niveau de détail; une grande valeur garde les niveaux grossiers), `?neutral=0..1`, `?balance=0` et `?despill=0..1` (couleurs, voir l'étape 6). La barre d'adresse suit la caméra (`?cam=x,y,z,cible x,y,z`, mise à jour à la fin de chaque geste): copier l'adresse suffit pour partager ou retrouver une vue; la touche C la copie.
+Paramètres de test du visualiseur: `?tiles=<url>` (autre serveur de tuiles), `?error=<pixels>` (force un niveau de détail; une grande valeur garde les niveaux grossiers), `?neutral=0..1`, `?balance=0` et `?despill=0..1` (couleurs, voir l'étape 6), `?relief=1`, `?light=`, `?shade=`, `?wet=` et `?relief=debug` (relief, voir plus haut), `?stats=1` (mémoire et tuiles par zone), `?ao=0` (sans occlusion ambiante). Tuiles d'essai du relief: `serve-tiles.ps1 -TilesRoot O:\temp\relief-tiles -Port 8082`, puis `?tiles=http://localhost:8082&relief=1`. La barre d'adresse suit la caméra (`?cam=x,y,z,cible x,y,z`, mise à jour à la fin de chaque geste): copier l'adresse suffit pour partager ou retrouver une vue; la touche C la copie.
 
 Pour un téléphone **Android** (le plus simple): débogage USB activé, câble branché, puis dans Chrome sur le PC `chrome://inspect/#devices` → *Port forwarding*: `3100` → `localhost:3100` et `8081` → `localhost:8081`. Sur le téléphone, ouvrir `http://localhost:3100/`; les outils de développement du téléphone (console, réseau, mémoire) s'ouvrent depuis `chrome://inspect`.
 
@@ -142,7 +144,7 @@ Après une publication locale (`model:post-modified`), lancer `model:upload` pou
 | `O:\publishing\metashape\<zone>\` | copies de travail Metashape (chunk FINAL seulement) | oui |
 | `O:\publishing\tiles\` | tuiles générées + `manifest.json`, avant mise en ligne | oui |
 | `O:\publishing\downloads\` | modèle complet téléchargeable (`.glb`, `.kmz`) | oui |
-| `O:\temp\` | intermédiaires régénérables (OBJ préparés, journaux) | non |
+| `O:\temp\` | intermédiaires régénérables (OBJ préparés, journaux; essais du relief: `<zone>\relief\`, `<zone>\delit\`, tuiles d'essai `relief-tiles\`) | non |
 
 **Espace disque:** la chaîne produit beaucoup de données. Après chaque essai, supprimer ce qui est remplacé: versions de tuiles qui ne sont plus dans `manifest.json`, anciens OBJ préparés, journaux et captures. Ne garder que la version active, l'OBJ préparé courant (pour retuiler sans refaire la préparation) et les outils.
 
@@ -150,19 +152,19 @@ Après une publication locale (`model:post-modified`), lancer `model:upload` pou
 
 | Outil | Version | Emplacement / source | Utilisé pour |
 | --- | --- | --- | --- |
-| Blender | 5.2.0 LTS | `C:\Program Files\Blender Foundation\Blender 5.2\blender.exe` | étapes 0, 3, 4, 5, toujours en arrière-plan (`-b --factory-startup`) et sans sauvegarde. Le `.blend` a été enregistré avec Blender 4.4. |
+| Blender | 5.2.0 LTS | `C:\Program Files\Blender Foundation\Blender 5.2\blender.exe` | étapes 0, 3, 4, 5, 5b, 5c (bakes Cycles sur la carte graphique, OptiX), toujours en arrière-plan (`-b --factory-startup`) et sans sauvegarde. Le `.blend` a été enregistré avec Blender 4.4. |
 | ↳ numpy, `mathutils` (KDTree, BVHTree), `bmesh` | fournis avec Blender | | calculs de distance, ICP, îlots |
 | Python | 3.12.10 (Microsoft Store) | `python` | étapes 1 et 6, bibliothèque standard seulement, lancé avec `-I` |
-| Agisoft Metashape Professional | 1.7.1 | lancer d'abord le serveur de licence RLM: `C:\Users\chris\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\rlm.lnk` | exports d'origine; retexturage à venir |
+| Agisoft Metashape Professional | 1.7.1 | lancer d'abord le serveur de licence RLM: `C:\Users\chris\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\rlm.lnk` | exports d'origine; textures refaites (zones 1, 4, 10), modèles détaillés pour le relief |
 | Obj2Tiles (OpenDroneMap) | 1.8.0 | `O:\publishing\bin\obj2tiles-1.8.0\`, de [github.com/OpenDroneMap/Obj2Tiles/releases](https://github.com/OpenDroneMap/Obj2Tiles/releases) (exécutable autonome + `ktx.dll`) | étape 6 |
 | Node.js / npm | 24.21.0 / 11.19.0 | | site, `npx` |
 | http-server | 14.1.1 (via `npx`) | npm | étape 7 |
 | AWS SDK for JavaScript (`@aws-sdk/client-s3`) | 3.x | `tools/publish-model/package.json` | étape 8: envoi vers R2 (API compatible S3) |
 | glTF-Transform + meshoptimizer | 4.5.1 / 1.x | `tools/publish-model/package.json` (`npm install` dans ce dossier) | étape 6: compression meshopt des tuiles |
-| sharp | 0.35.5 | `tools/publish-model/package.json` | étape 6: couleur moyenne des textures (`texture_stats.mjs`) |
+| sharp | 0.35.5 | `tools/publish-model/package.json` | étape 6: couleur moyenne des textures (`texture_stats.mjs`); étape 5c (`apply_shade.mjs`) |
 | Vite | 8.x | `viewer/package.json` | visualiseur autonome (`viewer/`, `npm run dev` → `http://localhost:3100/`) |
-| three.js | 0.186.1 | npm (`package.json`) | rendu WebGL du visualiseur |
-| 3d-tiles-renderer (NASA-AMMOS) | 0.5.3 | npm (`package.json`) | chargement des tuiles dans three.js |
-| Transcodeur Basis (KTX2) | celui de three 0.186.1 | `static/vendor/basis/`, copié de `node_modules/three/examples/jsm/libs/basis/` | décodage des textures KTX2 dans le navigateur. À recopier à chaque mise à jour de three. |
+| three.js | 0.186.1 | `viewer/package.json` | rendu WebGL du visualiseur |
+| 3d-tiles-renderer (NASA-AMMOS) | 0.5.3 | `viewer/package.json` | chargement des tuiles dans three.js |
+| N8AO | 2.0.1 | `viewer/package.json` | occlusion ambiante du visualiseur |
+| Transcodeur Basis (KTX2) | celui de three 0.186.1 | `viewer/public/vendor/basis/`, copié de `node_modules/three/examples/jsm/libs/basis/` | décodage des textures KTX2 dans le navigateur. À recopier à chaque mise à jour de three. |
 
-`.npmrc` active `legacy-peer-deps`: 3d-tiles-renderer déclare des dépendances optionnelles (React Three Fiber, Babylon.js) qui entrent en conflit avec les types React de Docusaurus et ne sont pas utilisées.

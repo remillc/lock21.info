@@ -2,6 +2,15 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased (branch `feature/relief`)
+
+- Viewer: the address bar follows the camera (`?cam=`); key C copies the view.
+- Viewer: trilinear filtering of tile textures (less shimmering); gloss blurred where the relief varies within a pixel.
+- Relief test (zones 1 and 12): object-space normal maps baked from the high-res exports (`bake_relief.py`, `--high`),
+  tiled in a second Obj2Tiles run and merged (`merge_normal_maps.mjs`); viewer `?relief=1`, `?light=`, `?shade=`,
+  `?wet=` (default 0.15).
+- De-lighting test: lamp bands evened out (`delight_texture.py`, `apply_shade.mjs`).
+
 ## 0.2.0 - 2026-10-19
 
 - Viewer: colour balance between zones. Each zone's average texture colour goes in `manifest.json`; the

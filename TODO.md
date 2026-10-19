@@ -53,10 +53,9 @@ Working list for the lock21.info project. Remove items once they are done (the h
 ### Zebra mussel relief (idea)
 
 - [ ] High-res geometry exports for the relief (edges about 1 cm or less, geometry only, same chunk as the source):
-  - zone 1: chunk 13, 8.7 M faces (about 5 to 6 mm)
   - zone 4: being rebuilt in Metashape with medium/high depth maps (the current ones are `low`); about 20 M faces
   - zone 10 (optional): chunk 0, 22.6 M faces
-- [ ] `bake_relief.py`: take a geometry-only export other than `source` (aligned on the source), apply the Lattice (zone 4)
+- [ ] `bake_relief.py`: apply deform modifiers (Lattice, zone 4)
 - [ ] Decide: relief on by default for all zones (download about x2 per zone)
 - [ ] De-lighting of the lamp bands (`delight_texture.py`, tested on zone 12): run it on zone 10 (strongest bands), then decide whether it goes into the pipeline for every zone
 - [ ] Relief on phones: memory, heat, smoothness; probably off by default there
