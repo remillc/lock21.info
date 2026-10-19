@@ -7,6 +7,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
+import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js'
 import { TilesRenderer } from '3d-tiles-renderer'
 import { N8AOPass } from 'n8ao'
 
@@ -186,6 +187,39 @@ if (relief) {
   }
 }
 
+// Sky lighting (default; ?hdri=0 = the unlit display used before): a partly cloudy sky (HDRI "Kloofendal 48d Partly
+// Cloudy, Pure Sky", Poly Haven, CC0, public/hdri/sky.hdr) lights the zones and the context through lit materials:
+// each surface gets the sky's light by its orientation (tops brighter than sides). The tiles carry no normals: they
+// are computed on load (double-sided rendering turns them outward even where the photogrammetry winding is
+// inconsistent). ?hdriIntensity= sets the strength (default 1), ?sky=1 shows the sky as the background.
+const hdri = params.get('hdri') !== '0' && !relief
+const hdriIntensity = params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : 1
+function skyMaterial(old, gain, mesh, zone = false) {
+  if (!mesh.geometry.attributes.normal) mesh.geometry.computeVertexNormals()
+  smoothFiltering(old.map)
+  const material = new THREE.MeshStandardMaterial({
+    map: old.map,
+    color: old.map ? gain || new THREE.Color(1, 1, 1) : old.color,
+    roughness: 1,
+    metalness: 0,
+    side: THREE.DoubleSide,
+  })
+  if (zone && despill.value > 0) material.onBeforeCompile = addDespill
+  return material
+}
+if (hdri) {
+  new HDRLoader().load(`${import.meta.env.BASE_URL}hdri/sky.hdr`, (texture) => {
+    texture.mapping = THREE.EquirectangularReflectionMapping
+    const pmrem = new THREE.PMREMGenerator(renderer)
+    scene.environment = pmrem.fromEquirectangular(texture).texture
+    scene.environmentIntensity = hdriIntensity
+    pmrem.dispose()
+    if (params.get('sky') === '1') scene.background = texture
+    else texture.dispose()
+    requestRender()
+  })
+}
+
 // Colour balance between zones. The water tints each zone differently (yellow-green, more or less dark,
 // depending on the dive). manifest.json gives each zone's average texture colour in linear light
 // (tools/publish-model/texture_stats.mjs); every zone is brought to the same target colour: the average of the
@@ -263,7 +297,9 @@ async function main() {
           const old = child.material
           child.material = relief && old.normalMap
             ? reliefMaterial(old, gains.get(entry.id))
-            : unlitMaterial(old, gains.get(entry.id), true)
+            : hdri
+              ? skyMaterial(old, gains.get(entry.id), child, true)
+              : unlitMaterial(old, gains.get(entry.id), true)
           old.dispose()
         }
       })
@@ -288,7 +324,7 @@ async function main() {
       model.traverse((child) => {
         if (child.isMesh) {
           const old = child.material
-          child.material = unlitMaterial(old)
+          child.material = hdri ? skyMaterial(old, null, child) : unlitMaterial(old)
           old.dispose()
         }
       })

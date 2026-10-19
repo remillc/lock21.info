@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Viewer lit by a partly cloudy sky (HDRI, Poly Haven, CC0) instead of the unlit display: volumes read better;
+  `?hdri=0` compares, `?sky=1` shows the sky as background.
 - `/modele/` page, Sketchfab-like: the viewer embedded in a large frame with a full-screen button, the camera
   shared through the page's address, model facts, navigation help, licence CC BY 4.0. The viewer moves to
   `/modele/viewer/`.

@@ -117,7 +117,7 @@ Dans deux terminaux:
 cd viewer; npm run dev                     # visualiseur sur http://localhost:3100/
 ```
 
-Paramètres de test du visualiseur: `?tiles=<url>` (autre serveur de tuiles), `?error=<pixels>` (force un niveau de détail; une grande valeur garde les niveaux grossiers), `?neutral=0..1`, `?balance=0` et `?despill=0..1` (couleurs, voir l'étape 6), `?relief=1`, `?light=`, `?shade=`, `?wet=` et `?relief=debug` (relief, voir plus haut), `?stats=1` (mémoire et tuiles par zone), `?ao=0` (sans occlusion ambiante). Tuiles d'essai du relief: `serve-tiles.ps1 -TilesRoot O:\temp\relief-tiles -Port 8082`, puis `?tiles=http://localhost:8082&relief=1`. La barre d'adresse suit la caméra (`?cam=x,y,z,cible x,y,z`, mise à jour à la fin de chaque geste): copier l'adresse suffit pour partager ou retrouver une vue; la touche C la copie.
+Paramètres de test du visualiseur: `?tiles=<url>` (autre serveur de tuiles), `?error=<pixels>` (force un niveau de détail; une grande valeur garde les niveaux grossiers), `?neutral=0..1`, `?balance=0` et `?despill=0..1` (couleurs, voir l'étape 6), `?relief=1`, `?light=`, `?shade=`, `?wet=` et `?relief=debug` (relief, voir plus haut), `?stats=1` (mémoire et tuiles par zone), `?ao=0` (sans occlusion ambiante), `?hdri=0`, `?hdriIntensity=` et `?sky=1` (éclairage par le ciel). Tuiles d'essai du relief: `serve-tiles.ps1 -TilesRoot O:\temp\relief-tiles -Port 8082`, puis `?tiles=http://localhost:8082&relief=1`. La barre d'adresse suit la caméra (`?cam=x,y,z,cible x,y,z`, mise à jour à la fin de chaque geste): copier l'adresse suffit pour partager ou retrouver une vue; la touche C la copie.
 
 Pour un téléphone **Android** (le plus simple): débogage USB activé, câble branché, puis dans Chrome sur le PC `chrome://inspect/#devices` → *Port forwarding*: `3100` → `localhost:3100` et `8081` → `localhost:8081`. Sur le téléphone, ouvrir `http://localhost:3100/`; les outils de développement du téléphone (console, réseau, mémoire) s'ouvrent depuis `chrome://inspect`.
 
@@ -167,5 +167,6 @@ Après une publication locale (`model:post-modified`), lancer `model:upload` pou
 | three.js | 0.186.1 | `viewer/package.json` | rendu WebGL du visualiseur |
 | 3d-tiles-renderer (NASA-AMMOS) | 0.5.3 | `viewer/package.json` | chargement des tuiles dans three.js |
 | N8AO | 2.0.1 | `viewer/package.json` | occlusion ambiante du visualiseur |
+| HDRI « Kloofendal 48d Partly Cloudy (Pure Sky) », 1k | Poly Haven, CC0 | `viewer/public/hdri/sky.hdr` | éclairage du visualiseur par un ciel ensoleillé avec nuages (`?hdri=0` pour l'affichage sans éclairage, `?hdriIntensity=`, `?sky=1` pour le ciel en fond) |
 | Transcodeur Basis (KTX2) | celui de three 0.186.1 | `viewer/public/vendor/basis/`, copié de `node_modules/three/examples/jsm/libs/basis/` | décodage des textures KTX2 dans le navigateur. À recopier à chaque mise à jour de three. |
 
