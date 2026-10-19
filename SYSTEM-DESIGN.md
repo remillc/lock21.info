@@ -1,4 +1,4 @@
-# Design brief
+# System design
 
 The lock21.info design, decided with Christian on 2026-10-19: **the "E2 · Sonar" look on the Material Design 3
 system**. Mockups (private canvas): <https://claude.ai/artifact/LERqkcuQMq5wptfoz8uSFE> (E2 on the fourth row; E3, the
