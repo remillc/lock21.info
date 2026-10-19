@@ -7,7 +7,6 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - Viewer: colour balance between zones. Each zone's average texture colour goes in `manifest.json`; the
   viewer brings every zone to a common colour and removes half of the water's yellow-green tint
   (`?neutral=0..1`, `?balance=0` to compare).
-
 - Tiling: 4 levels of detail for long zones (longest horizontal side > 25 m: zones 7 and 8), 3 otherwise; the
   overview of the whole model drops from 24.6 to 19.3 MB.
 
