@@ -39,8 +39,17 @@ ni pour l'import GLB de Google Earth Web (expérimental: textures incluses dans 
 plupart des extensions glTF, compte dans le quota de stockage Google). D'où l'essai: zone 12 à 200 000 triangles et
 2048 px donne un GLB de 7,7 Mo et un KMZ de 4,5 Mo.
 
+## Résultats (2026-10-19, Google Earth Pro 7.3.6)
+
+- **Taille de modèle:** 14 143 et 50 000 triangles s'ouvrent; 200 000 triangles (3 maillages) font planter Google Earth Pro.
+  Essais à 100 000 et 150 000 triangles (`t100000\`, `t150000\`) pour trouver le plafond, et pour savoir si le découpage en
+  maillages y est pour quelque chose.
+- **Échelle:** juste (zone 12, environ 10 m, apparaît à environ 10 m): le modèle est en mètres réels.
+- **Orientation:** juste avec `-H 0`: le repère du `.blend` est déjà aligné sur le nord.
+- **Position:** le centre de la zone 12 est posé sur les coordonnées. Pour le modèle complet, il faut savoir à quel
+  point de l'écluse correspondent les coordonnées (44°59.809′ N, 74°53.997′ O).
+
 ## À vérifier avec l'essai
 
 - Le modèle s'affiche-t-il, avec sa texture, dans Google Earth Pro (KMZ) et dans Google Earth Web (GLB)?
 - Fluidité: jusqu'où monter en triangles et en taille de texture pour le modèle complet?
-- Orientation: inconnue avec un seul point. Ajuster `-H/--heading` à l'œil, ou relever un deuxième point sur le site.

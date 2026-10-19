@@ -33,10 +33,10 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   tiles.lock21.info → Eligible for cache, edge TTL: use the origin's Cache-Control). Today every request reaches R2
   (`cf-cache-status: DYNAMIC`, .json and .glb are not cached by default); check `cf-cache-status: HIT` afterwards
 - [ ] #12 Downloadable whole model (`.glb`, about 100 to 150 MB), generated from the manifest
-- [ ] #13 Google Earth: test files ready on branch `feature/google-earth-test` (zone 12, `tools/google-earth/`, outputs in
-  `O:\publishing\downloads\google-earth-test\`): try the KMZ in Google Earth Pro and the GLB in Google Earth Web; then
-  set the whole model's size, and the heading (a second point on the site, or by eye). The model sits on the ground
-  (Google Earth has no negative depth)
+- [ ] #13 Google Earth (branch `feature/google-earth-test`, `tools/google-earth/README.md`): format, scale and orientation
+  OK (heading 0); Google Earth Pro crashes at 200 000 triangles, opens 50 000: find the ceiling (100 000 and 150 000
+  to try); learn which point of the lock the coordinates mark; then build the whole model. The model sits on the
+  ground (Google Earth has no negative depth)
 - [ ] #14 Choose a licence for the model data (CC BY 4.0 or CC BY-NC 4.0); the repo's MIT licence covers code only
 - [ ] #15 Check whether publishing a downloadable model of the site needs any approval (Ontario marine archaeology
   rules, SOS Ottawa for the Baets drawings)
