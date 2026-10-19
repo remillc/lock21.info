@@ -104,8 +104,9 @@ Tabular figures in tables and data.
 Heavy UI frameworks, the Material Web component library, animation libraries, stock photos, cartoon underwater
 clichés, decoration that competes with the 3D viewer on a phone.
 
-## Open questions
+## Name, logo, open question
 
-- Logo: `LOCK/21` wordmark only, or redraw the yellow "21" badge in this palette?
-- Site name in French: keep "Lock 21", or "Écluse 21"?
-- Coordinates in the header: which position to show (or none)?
+- **Name**: **Écluse 21** in French (the site's language), **Lock 21** in English. The wordmark in the mockups,
+  `LOCK/21`, becomes `ÉCLUSE/21`.
+- **Logo**: a new one, replacing the yellow "21" badge; proposals on the design canvas (row "Logo").
+- **Coordinates in the header**: to be determined (placeholder until then).

@@ -8,9 +8,10 @@ export default defineConfig({
   site: 'https://lock21.info',
   integrations: [
     starlight({
-      title: 'Lock 21',
+      // Site name per language (DESIGN.md): Écluse 21 in French, Lock 21 in English
+      title: { fr: 'Écluse 21', en: 'Lock 21' },
       description: "Photogrammétrie sous-marine de l'écluse 21 (Dickinson Landing): carnet de terrain et modèle 3D",
-      logo: { src: './src/assets/logo.svg', alt: 'Lock 21' },
+      logo: { src: './src/assets/logo.svg', alt: 'Écluse 21' },
       favicon: '/images/favicon.ico',
       defaultLocale: 'root',
       locales: {
