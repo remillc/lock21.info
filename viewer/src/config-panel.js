@@ -1,8 +1,8 @@
 // <l21-settings-panel>: native Custom Element (GUIDELINES.md) with one control per query parameter of the viewer, opened
 // by the ⚙ button. Every change goes into the address (?neutral=0.5…), so a configuration can be shared like a view;
-// the page that embeds the viewer is told too. Settings with a "live" handler apply at once; the others decide
-// materials or loading, so the viewer reloads (the camera is in the address, so the view is kept). A value equal to
-// its default is removed from the address. Labels in French, like the rest of the viewer.
+// the page that embeds the viewer is told too. Every setting applies at once through its "live" handler (main.js),
+// sliders while they move: the page never reloads. A value equal to its default is removed from the address.
+// Labels in French, like the rest of the viewer.
 //
 // Usage: const panel = document.createElement('l21-settings-panel')
 //        panel.configure({ schema, live, button, onAddressChange }); document.body.append(panel)
@@ -88,11 +88,30 @@ class SettingsPanel extends HTMLElement {
     if (value === item.def || value === '') this.params.delete(item.key)
     else this.params.set(item.key, value)
     this.updateAddress()
-    if (this.live[item.key]) this.live[item.key](value)
-    else location.reload()
+    this.live[item.key]?.(value)
   }
 
+  // At most every 250 ms while a slider moves (Safari refuses more than ~100 replaceState calls in 30 s);
+  // the last value is always written
   updateAddress() {
+    if (this.addressTimer) {
+      this.addressPending = true
+      return
+    }
+    this.writeAddress()
+    this.addressTimer = setTimeout(() => {
+      this.addressTimer = 0
+      if (this.addressPending) {
+        this.addressPending = false
+        this.writeAddress()
+      }
+    }, 250)
+  }
+
+  writeAddress() {
+    // The camera moves on its own (main.js writes ?cam=): the current address is the base
+    const cam = new URLSearchParams(location.search).get('cam')
+    if (cam) this.params.set('cam', cam)
     const query = this.params.toString().replace(/%2C/g, ',')
     const search = query ? `?${query}` : ''
     history.replaceState(null, '', location.pathname + search)
@@ -134,11 +153,15 @@ class SettingsPanel extends HTMLElement {
       setTimeout(() => (copy.textContent = 'Copier le lien de cette vue'), 1500)
     })
     const reset = button('Réinitialiser', () => {
-      // Back to the defaults, keeping the view
-      const cam = this.params.get('cam')
-      this.params = new URLSearchParams(cam ? { cam } : {})
+      // Back to the defaults, keeping the view; the controls are drawn again with their default values
+      for (const item of this.schema.flatMap((section) => section.items)) {
+        if (!this.params.has(item.key)) continue
+        this.params.delete(item.key)
+        this.live[item.key]?.(item.def)
+      }
       this.updateAddress()
-      location.reload()
+      this.replaceChildren()
+      this.render()
     })
     actions.append(copy, reset)
     this.append(actions)
@@ -177,9 +200,13 @@ function control(item, value, onChange) {
     const inputs = ranges.map(([min, max, step], i) => rangeInput(i ? `${id}-${i + 1}` : id, min, max, step, values[i] ?? String(min)))
     const show = () => (output.textContent = inputs.map((r) => `${r.value}${item.unit ?? ''}`).join(', '))
     show()
+    const current = () => inputs.map((r) => r.value).join(',')
+    // Applied while the slider moves, not only when it is released
     for (const input of inputs) {
-      input.addEventListener('input', show)
-      input.addEventListener('change', () => onChange(inputs.map((r) => r.value).join(',')))
+      input.addEventListener('input', () => {
+        show()
+        onChange(current())
+      })
     }
     label.append(output)
     row.append(...inputs)

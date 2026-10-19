@@ -12,12 +12,14 @@ import { TilesRenderer } from '3d-tiles-renderer'
 import { settingsSchema } from './config-panel.js'
 import { N8AOPass } from 'n8ao'
 
-// Root of the published tiles (manifest.json + tilesets). Override with ?tiles=<url> (e.g. phone tests on the LAN)
+// Every query parameter is read once here, then changed live by the settings panel (config-panel.js): no setting
+// reloads the page. `live` holds one handler per parameter.
 const params = new URLSearchParams(location.search)
-const TILES_URL = params.get('tiles') || import.meta.env.VITE_TILES_URL || 'http://localhost:8081'
-
-// Settings applied without reloading, filled as the objects they act on are created (config-panel.js)
 const live = {}
+
+// Root of the published tiles (manifest.json + tilesets). Override with ?tiles=<url> (e.g. phone tests on the LAN)
+const DEFAULT_TILES_URL = import.meta.env.VITE_TILES_URL || 'http://localhost:8081'
+let tilesUrl = params.get('tiles') || DEFAULT_TILES_URL
 
 // Embedded in the site's /modele/ page (an iframe): no "back" link, and the camera is reported to the page
 const embedded = window.self !== window.top
@@ -41,10 +43,16 @@ const status = document.getElementById('status')
 
 // Phones: coarser detail and a smaller memory budget (Safari iOS reloads the page beyond ~1-1.5 GB).
 // ?profile=mobile|desktop forces a profile (tests on the PC).
-const mobile = params.get('profile') ? params.get('profile') === 'mobile' : window.matchMedia('(pointer: coarse)').matches
-const profile = mobile
-  ? { errorTarget: 12, maxBytes: 450e6, pixelRatio: Math.min(window.devicePixelRatio, 1.5) }
-  : { errorTarget: 6, maxBytes: 1200e6, pixelRatio: Math.min(window.devicePixelRatio, 2) }
+const PROFILES = {
+  mobile: { errorTarget: 12, maxBytes: 450e6, pixelRatio: Math.min(window.devicePixelRatio, 1.5) },
+  desktop: { errorTarget: 6, maxBytes: 1200e6, pixelRatio: Math.min(window.devicePixelRatio, 2) },
+}
+const isMobile = (forced) => (forced ? forced === 'mobile' : window.matchMedia('(pointer: coarse)').matches)
+let mobile = isMobile(params.get('profile'))
+let profile = PROFILES[mobile ? 'mobile' : 'desktop']
+// ?error=<pixels>: override the screen-space error target (testing; large values keep the coarse levels)
+let errorOverride = Number(params.get('error')) || 0
+const errorTarget = () => errorOverride || profile.errorTarget
 
 const renderer = new THREE.WebGLRenderer({ antialias: true })
 renderer.setPixelRatio(profile.pixelRatio)
@@ -52,7 +60,8 @@ renderer.setSize(container.clientWidth, container.clientHeight)
 container.appendChild(renderer.domElement)
 
 const scene = new THREE.Scene()
-scene.background = new THREE.Color(0x0b1c26)
+const navy = new THREE.Color(0x0b1c26)
+scene.background = navy
 const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.05, 2000)
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
@@ -68,10 +77,6 @@ const ktx2Loader = new KTX2Loader().setTranscoderPath(`${import.meta.env.BASE_UR
 // Sharper textures on surfaces seen at a grazing angle (floors, walls along the line of sight)
 const maxAnisotropy = renderer.capabilities.getMaxAnisotropy()
 
-// The photogrammetry texture already contains the lighting: display it unlit.
-// Double-sided: photogrammetry surfaces are open and are seen from both sides.
-// gain: the zone's colour balance (see colorBalance), multiplied with the texture. Zones (not the context)
-// also get the green removal (despill).
 // Obj2Tiles sets the tiles' textures to NEAREST_MIPMAP_LINEAR (nearest texel within a mipmap level), which
 // shimmers when the camera moves: trilinear filtering instead
 function smoothFiltering(texture) {
@@ -81,11 +86,71 @@ function smoothFiltering(texture) {
   texture.magFilter = THREE.LinearFilter
 }
 
-function unlitMaterial(old, gain, zone = false) {
+// How the surfaces look. Each setting below rebuilds or updates the materials in place.
+const look = {
+  // Sky lighting (default; ?hdri=0 = the unlit display used before), see skyMaterial
+  sky: params.get('hdri') !== '0',
+  skyIntensity: params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : 1,
+  skyBackground: params.get('sky') === '1',
+  // Colour balance between zones (?balance=0 off, ?neutral=0..1), see colorBalance
+  balance: params.get('balance') !== '0',
+  neutral: params.has('neutral') ? Number(params.get('neutral')) : 0.3,
+  // Relief test (?relief=1 | debug), its light (?light=azimuth,elevation, ?shade=0..1) and wet look (?wet=0..1)
+  relief: ['1', 'debug'].includes(params.get('relief')) ? params.get('relief') : '0',
+  light: (params.get('light') || '135,45').split(',').map(Number),
+  shade: params.has('shade') ? Number(params.get('shade')) : 0.6,
+  wet: wetness(params.has('wet') ? params.get('wet') : 0.15),
+}
+function wetness(v) {
+  return Math.min(Math.max(Number(v) || 0, 0), 1)
+}
+
+// Every mesh keeps in userData.surface what its material is built from: the original textures (the tiles'
+// material is replaced, so they would be lost otherwise), its colour, and its zone (null for the context).
+function initSurface(mesh, zoneId) {
+  const old = mesh.material
   smoothFiltering(old.map)
-  const color = old.map ? gain || new THREE.Color(1, 1, 1) : old.color
-  const material = new THREE.MeshBasicMaterial({ map: old.map, color, side: THREE.DoubleSide })
-  if (zone && despill.value > 0) material.onBeforeCompile = addDespill
+  if (old.normalMap) {
+    smoothFiltering(old.normalMap)
+    // Obj2Tiles tags every KTX2 texture sRGB, normal maps included: the GPU would then apply the sRGB curve to
+    // the normals and bend them. Data, not colour (set before the first upload, which picks the GPU format).
+    old.normalMap.colorSpace = THREE.NoColorSpace
+  }
+  mesh.userData.surface = { map: old.map, normalMap: old.normalMap, color: old.color.clone(), zoneId }
+  mesh.material = surfaceMaterial(mesh)
+  old.dispose()
+}
+
+function surfaceMaterial(mesh) {
+  const surface = mesh.userData.surface
+  if (look.relief !== '0' && surface.normalMap) return reliefMaterial(surface)
+  if (look.sky && look.relief === '0') return skyMaterial(surface, mesh)
+  return unlitMaterial(surface)
+}
+
+// Rebuilds every material after a change of display mode (sky, relief, wet)
+function rebuildMaterials() {
+  scene.traverse((child) => {
+    if (!child.isMesh || !child.userData.surface) return
+    const old = child.material
+    child.material = surfaceMaterial(child)
+    old.dispose()
+  })
+  requestRender()
+}
+
+// The surface's colour: white times the zone's colour balance for a texture, the material's own colour otherwise
+function surfaceColor(surface) {
+  if (!surface.map) return surface.color.clone()
+  return (surface.zoneId && gains.get(surface.zoneId)?.clone()) || new THREE.Color(1, 1, 1)
+}
+
+// The photogrammetry texture already contains the lighting: display it unlit.
+// Double-sided: photogrammetry surfaces are open and are seen from both sides.
+// Zones (not the context) also get the green removal (despill).
+function unlitMaterial(surface) {
+  const material = new THREE.MeshBasicMaterial({ map: surface.map, color: surfaceColor(surface), side: THREE.DoubleSide })
+  if (surface.zoneId) material.onBeforeCompile = addDespill
   return material
 }
 
@@ -93,9 +158,9 @@ function unlitMaterial(old, gain, zone = false) {
 // red and blue. Brown, beige and grey pixels (red >= green) are untouched; only pixels where green dominates
 // (algae, the water's cast in patches) turn olive or grey-brown. A per-zone colour gain cannot do that: it
 // shifts the whole zone, and the green patches stay green. ?despill=0..1 sets the strength (default 1).
+// Always in the zones' shaders (a uniform: 0 changes nothing), so the strength changes live.
 const despill = { value: params.has('despill') ? Number(params.get('despill')) : 1 }
-// Live only when the shader patch is in place (it is added when the removal is on at load)
-if (despill.value > 0) live.despill = (v) => { despill.value = Number(v); requestRender() }
+live.despill = (v) => { despill.value = Number(v); requestRender() }
 function addDespill(shader) {
   shader.uniforms.despill = despill
   shader.fragmentShader = shader.fragmentShader
@@ -107,32 +172,42 @@ function addDespill(shader) {
     )
 }
 
+// Sky lighting: a partly cloudy sky (HDRI "Kloofendal 48d Partly Cloudy, Pure Sky", Poly Haven, CC0,
+// public/hdri/sky.hdr) lights the zones and the context through lit materials: each surface gets the sky's light
+// by its orientation (tops brighter than sides). The tiles carry no normals: they are computed on demand
+// (double-sided rendering turns them outward even where the photogrammetry winding is inconsistent).
+// ?hdriIntensity= sets the strength (default 1), ?sky=1 shows the sky as the background.
+function skyMaterial(surface, mesh) {
+  if (!mesh.geometry.attributes.normal) mesh.geometry.computeVertexNormals()
+  const material = new THREE.MeshStandardMaterial({
+    map: surface.map,
+    color: surfaceColor(surface),
+    roughness: 1,
+    metalness: 0,
+    side: THREE.DoubleSide,
+  })
+  if (surface.zoneId) material.onBeforeCompile = addDespill
+  return material
+}
+
 // Relief (test, ?relief=1): tiles that carry a normal map (tools/publish-model/bake_relief.py: object-space
 // normals of the high-res export, zebra mussels included) are lit instead of shown unlit. Object space: no
 // vertex normals or tangents needed, the tiles have none. Lambert lighting divides by pi, hence the factor.
 // Ambient + one directional light; ?light=azimuth,elevation (degrees, default 135,45) orients it,
 // ?shade=0..1 (default 0.6) is the directional share: 0 is flat, 1 is hard shadows-like contrast.
 // ?relief=debug shows the normal map itself as the colour (checks that it lines up with the photo texture)
-const relief = params.get('relief') === '1' || params.get('relief') === 'debug'
-const [lightAzimuth, lightElevation] = (params.get('light') || '135,45').split(',').map(Number)
-const shade = params.has('shade') ? Number(params.get('shade')) : 0.6
 // Wet look (test, ?wet=0..1, needs ?relief=1): glossy surface with a clear-coat film (sharp highlights that slide
 // over the relief when the camera moves), reflections of a neutral environment, colours slightly darker and more
 // saturated. The photos already hold the lamps' real reflections: keep it subtle.
 // Default 0.15 (chosen on zone 12); ?wet=0 turns it off
-const wet = Math.min(Math.max(params.has('wet') ? Number(params.get('wet')) || 0 : 0.15, 0), 1)
-function reliefMaterial(old, gain) {
-  smoothFiltering(old.map)
-  smoothFiltering(old.normalMap)
-  // Obj2Tiles tags every KTX2 texture sRGB, normal maps included: the GPU would then apply the sRGB curve to
-  // the normals and bend them. Data, not colour (set before the first upload, which picks the GPU format).
-  old.normalMap.colorSpace = THREE.NoColorSpace
-  if (params.get('relief') === 'debug') return new THREE.MeshBasicMaterial({ map: old.normalMap, side: THREE.DoubleSide })
+function reliefMaterial(surface) {
+  if (look.relief === 'debug') return new THREE.MeshBasicMaterial({ map: surface.normalMap, side: THREE.DoubleSide })
+  const wet = look.wet
   const options = {
-    map: old.map,
-    normalMap: old.normalMap,
+    map: surface.map,
+    normalMap: surface.normalMap,
     normalMapType: THREE.ObjectSpaceNormalMap,
-    color: gain || new THREE.Color(1, 1, 1),
+    color: surfaceColor(surface),
     side: THREE.DoubleSide,
     // The tiles have no vertex normals: face normals from screen derivatives keep the unperturbed normal valid
     // (three.js uses it for specular antialiasing); the object-space normal map replaces it for lighting
@@ -149,7 +224,7 @@ function reliefMaterial(old, gain) {
     })
     : new THREE.MeshLambertMaterial(options)
   material.onBeforeCompile = (shader) => {
-    if (despill.value > 0) addDespill(shader)
+    addDespill(shader)
     if (wet > 0) {
       shader.fragmentShader = shader.fragmentShader
         // Wet colours: darker and more saturated
@@ -173,128 +248,163 @@ function reliefMaterial(old, gain) {
       THREE.ShaderChunk.normal_fragment_maps.replace('normal = normal * faceDirection;', ''),
     )
   }
+  // The wetness is written into the shader: one compiled program per value (three.js would otherwise reuse the
+  // first one, its cache key being the function's source)
+  material.customProgramCacheKey = () => `relief-wet-${wet.toFixed(3)}`
   return material
-}
-if (relief) {
-  // On average a lit surface faces the light at ~45 degrees: the directional part is scaled so that the overall
-  // brightness stays close to the unlit display
-  const ambient = new THREE.AmbientLight(0xffffff, Math.PI * (1 - shade))
-  const sun = new THREE.DirectionalLight(0xffffff, Math.PI * shade * 1.4)
-  const aim = (azimuth, elevation) => {
-    const az = THREE.MathUtils.degToRad(azimuth)
-    const el = THREE.MathUtils.degToRad(elevation)
-    sun.position.set(Math.cos(el) * Math.sin(az), Math.sin(el), Math.cos(el) * Math.cos(az))
-  }
-  aim(lightAzimuth, lightElevation)
-  scene.add(ambient, sun)
-  live.light = (v) => { aim(...v.split(',').map(Number)); requestRender() }
-  live.shade = (v) => {
-    ambient.intensity = Math.PI * (1 - Number(v))
-    sun.intensity = Math.PI * Number(v) * 1.4
-    requestRender()
-  }
-  // Something to reflect: a neutral studio-like environment (lit and standard materials only; the unlit
-  // zones and the context ignore it)
-  if (wet > 0) {
-    const pmrem = new THREE.PMREMGenerator(renderer)
-    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
-    pmrem.dispose()
-  }
 }
 
-// Sky lighting (default; ?hdri=0 = the unlit display used before): a partly cloudy sky (HDRI "Kloofendal 48d Partly
-// Cloudy, Pure Sky", Poly Haven, CC0, public/hdri/sky.hdr) lights the zones and the context through lit materials:
-// each surface gets the sky's light by its orientation (tops brighter than sides). The tiles carry no normals: they
-// are computed on load (double-sided rendering turns them outward even where the photogrammetry winding is
-// inconsistent). ?hdriIntensity= sets the strength (default 1), ?sky=1 shows the sky as the background.
-const hdri = params.get('hdri') !== '0' && !relief
-const hdriIntensity = params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : 1
-function skyMaterial(old, gain, mesh, zone = false) {
-  if (!mesh.geometry.attributes.normal) mesh.geometry.computeVertexNormals()
-  smoothFiltering(old.map)
-  const material = new THREE.MeshStandardMaterial({
-    map: old.map,
-    color: old.map ? gain || new THREE.Color(1, 1, 1) : old.color,
-    roughness: 1,
-    metalness: 0,
-    side: THREE.DoubleSide,
-  })
-  if (zone && despill.value > 0) material.onBeforeCompile = addDespill
-  return material
+// The relief's lights: on average a lit surface faces the light at ~45 degrees, so the directional part is
+// scaled to keep the overall brightness close to the unlit display
+const reliefLights = new THREE.Group()
+const ambient = new THREE.AmbientLight(0xffffff)
+const sun = new THREE.DirectionalLight(0xffffff)
+reliefLights.add(ambient, sun)
+scene.add(reliefLights)
+function updateLights() {
+  const [azimuth, elevation] = look.light.map(THREE.MathUtils.degToRad)
+  sun.position.set(Math.cos(elevation) * Math.sin(azimuth), Math.sin(elevation), Math.cos(elevation) * Math.cos(azimuth))
+  ambient.intensity = Math.PI * (1 - look.shade)
+  sun.intensity = Math.PI * look.shade * 1.4
+  reliefLights.visible = look.relief !== '0'
+  requestRender()
 }
-if (hdri) {
-  new HDRLoader().load(`${import.meta.env.BASE_URL}hdri/sky.hdr`, (texture) => {
-    texture.mapping = THREE.EquirectangularReflectionMapping
-    const pmrem = new THREE.PMREMGenerator(renderer)
-    scene.environment = pmrem.fromEquirectangular(texture).texture
-    scene.environmentIntensity = hdriIntensity
-    pmrem.dispose()
-    // The texture is kept for the "sky as background" setting
-    const navy = scene.background
-    if (params.get('sky') === '1') scene.background = texture
-    live.hdriIntensity = (v) => { scene.environmentIntensity = Number(v); requestRender() }
-    live.sky = (v) => { scene.background = v === '1' ? texture : navy; requestRender() }
-    requestRender()
-  })
+updateLights()
+
+// What the lit materials reflect, and the background: the sky (loaded even when its lighting is off at start), or
+// for the wet look a neutral studio-like environment (the unlit zones and the context ignore both)
+let skyTexture = null
+let skyEnvironment = null
+let roomEnvironment = null
+function updateEnvironment() {
+  if (look.relief !== '0') {
+    if (look.wet > 0 && !roomEnvironment) {
+      const pmrem = new THREE.PMREMGenerator(renderer)
+      roomEnvironment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
+      pmrem.dispose()
+    }
+    scene.environment = look.wet > 0 ? roomEnvironment : null
+    scene.environmentIntensity = 1
+  } else {
+    scene.environment = look.sky ? skyEnvironment : null
+    scene.environmentIntensity = look.skyIntensity
+  }
+  scene.background = look.skyBackground && skyTexture ? skyTexture : navy
+  requestRender()
 }
+updateEnvironment()
+new HDRLoader().load(`${import.meta.env.BASE_URL}hdri/sky.hdr`, (texture) => {
+  texture.mapping = THREE.EquirectangularReflectionMapping
+  const pmrem = new THREE.PMREMGenerator(renderer)
+  skyEnvironment = pmrem.fromEquirectangular(texture).texture
+  pmrem.dispose()
+  skyTexture = texture
+  updateEnvironment()
+})
+
+live.hdri = (v) => { look.sky = v === '1'; rebuildMaterials(); updateEnvironment() }
+live.hdriIntensity = (v) => { look.skyIntensity = Number(v); updateEnvironment() }
+live.sky = (v) => { look.skyBackground = v === '1'; updateEnvironment() }
+live.relief = (v) => { look.relief = v; rebuildMaterials(); updateLights(); updateEnvironment() }
+live.wet = (v) => { look.wet = wetness(v); rebuildMaterials(); updateEnvironment() }
+live.light = (v) => { look.light = v.split(',').map(Number); updateLights() }
+live.shade = (v) => { look.shade = Number(v); updateLights() }
 
 // Colour balance between zones. The water tints each zone differently (yellow-green, more or less dark,
 // depending on the dive). manifest.json gives each zone's average texture colour in linear light
 // (tools/publish-model/texture_stats.mjs); every zone is brought to the same target colour: the average of the
 // zones, from which ?neutral= (0 to 1, default 0.3) of the common tint is removed. Fully neutral looks grey or
 // pink: the mussels and the sediment really are brown-green. ?balance=0 shows the textures as they are.
-function colorBalance(entries) {
-  const gains = new Map()
-  const measured = entries.filter((e) => e.color)
-  if (params.get('balance') === '0' || !measured.length) return gains
-  const neutral = params.has('neutral') ? Number(params.get('neutral')) : 0.3
+let zoneEntries = []
+let gains = new Map()
+function colorBalance() {
+  gains = new Map()
+  const measured = zoneEntries.filter((e) => e.color)
+  if (!look.balance || !measured.length) return
   const average = [0, 1, 2].map((c) => measured.reduce((sum, e) => sum + e.color[c], 0) / measured.length)
   const luminance = 0.2126 * average[0] + 0.7152 * average[1] + 0.0722 * average[2]
-  const target = average.map((c) => c + (luminance - c) * neutral)
+  const target = average.map((c) => c + (luminance - c) * look.neutral)
   // Clamped: a very dark or very tinted texture would otherwise get extreme gains (noise, compression blocks)
   const gain = (t, m) => Math.min(Math.max(t / m, 0.4), 3)
   for (const e of measured) gains.set(e.id, new THREE.Color(...target.map((t, c) => gain(t, e.color[c]))))
-  return gains
 }
+// New gains: only the zones' material colours change
+function updateZoneColors() {
+  colorBalance()
+  scene.traverse((child) => {
+    const surface = child.isMesh && child.userData.surface
+    if (surface?.zoneId && child.material.map === surface.map) child.material.color.copy(surfaceColor(surface))
+  })
+  requestRender()
+}
+live.balance = (v) => { look.balance = v === '1'; updateZoneColors() }
+live.neutral = (v) => { look.neutral = Number(v); updateZoneColors() }
 
 // Ambient occlusion (N8AO): darkens recesses and joints, giving depth to unlit surfaces. N8AO rebuilds the
 // normals from the depth buffer (the tiles carry none). Hardware antialiasing does not survive the
 // post-processing, hence SMAA. ?ao=0 disables it, ?aoRadius= / ?aoIntensity= tune it (metres / strength),
 // ?aoDebug=1 shows the occlusion alone. Off by default on phones (heat, battery): ?ao=1 forces it.
-const aoEnabled = params.has('ao') ? params.get('ao') !== '0' : !mobile
+// The passes are created the first time it is on.
+const ao = {
+  on: params.has('ao') ? params.get('ao') !== '0' : !mobile,
+  radius: Number(params.get('aoRadius')) || 1.0,
+  intensity: Number(params.get('aoIntensity')) || 3.0,
+  debug: params.get('aoDebug') === '1',
+}
 let composer = null
 let aoPass = null
-if (aoEnabled) {
-  composer = new EffectComposer(renderer)
-  aoPass = new N8AOPass(scene, camera, container.clientWidth, container.clientHeight)
-  aoPass.configuration.aoRadius = Number(params.get('aoRadius')) || 1.0
-  aoPass.configuration.distanceFalloff = 1.0
-  aoPass.configuration.intensity = Number(params.get('aoIntensity')) || 3.0
-  aoPass.configuration.halfRes = mobile
-  aoPass.configuration.gammaCorrection = false // OutputPass converts to sRGB at the end
-  aoPass.setQualityMode(mobile ? 'Low' : 'Medium')
-  if (params.get('aoDebug') === '1') aoPass.setDisplayMode('AO')
-  live.aoRadius = (v) => { aoPass.configuration.aoRadius = Number(v); requestRender() }
-  live.aoIntensity = (v) => { aoPass.configuration.intensity = Number(v); requestRender() }
-  live.aoDebug = (v) => { aoPass.setDisplayMode(v === '1' ? 'AO' : 'Combined'); requestRender() }
-  composer.addPass(aoPass)
-  composer.addPass(new SMAAPass())
-  composer.addPass(new OutputPass())
+function updateAO() {
+  if (ao.on && !composer) {
+    composer = new EffectComposer(renderer)
+    aoPass = new N8AOPass(scene, camera, container.clientWidth, container.clientHeight)
+    aoPass.configuration.distanceFalloff = 1.0
+    aoPass.configuration.gammaCorrection = false // OutputPass converts to sRGB at the end
+    aoQuality()
+    composer.addPass(aoPass)
+    composer.addPass(new SMAAPass())
+    composer.addPass(new OutputPass())
+  }
+  if (aoPass) {
+    aoPass.configuration.aoRadius = ao.radius
+    aoPass.configuration.intensity = ao.intensity
+    aoPass.setDisplayMode(ao.debug ? 'AO' : 'Combined')
+  }
+  requestRender()
 }
+function aoQuality() {
+  aoPass.configuration.halfRes = mobile
+  aoPass.setQualityMode(mobile ? 'Low' : 'Medium')
+}
+updateAO()
+live.ao = (v) => { ao.on = v === '1'; updateAO() }
+live.aoRadius = (v) => { ao.radius = Number(v); updateAO() }
+live.aoIntensity = (v) => { ao.intensity = Number(v); updateAO() }
+live.aoDebug = (v) => { ao.debug = v === '1'; updateAO() }
 
 // 3D Tiles are Z-up, three.js is Y-up
 const world = new THREE.Group()
 world.rotation.x = -Math.PI / 2
 scene.add(world)
 
-async function main() {
-  const manifest = await (await fetch(`${TILES_URL}/manifest.json`, { cache: 'no-cache' })).json()
+// The model: one tileset per zone plus the non-tiled context. Loaded again (camera kept) when the tiles' source
+// changes; a load started later wins over one still running.
+let tilesets = []
+let contextModels = []
+let framed = false
+let loadCount = 0
+async function loadModel() {
+  const load = ++loadCount
+  status.textContent = 'Chargement…'
+  const manifest = await (await fetch(`${tilesUrl}/manifest.json`, { cache: 'no-cache' })).json()
+  if (load !== loadCount) return
+  unloadModel()
+  zoneEntries = manifest.tilesets
+  colorBalance()
   // One memory budget shared by all zones: a per-zone share (budget / zone count) filled up after 2 or 3
   // large textures and stopped loading, leaving zones missing on phones.
   let sharedCache = null
-  const gains = colorBalance(manifest.tilesets)
-  const tilesets = manifest.tilesets.map((entry) => {
-    const tiles = new TilesRenderer(`${TILES_URL}/${entry.url}`)
+  tilesets = manifest.tilesets.map((entry) => {
+    const tiles = new TilesRenderer(`${tilesUrl}/${entry.url}`)
     tiles.zoneId = entry.id
     if (sharedCache) {
       tiles.lruCache = sharedCache
@@ -307,22 +417,13 @@ async function main() {
     gltfLoader.setKTX2Loader(ktx2Loader)
     gltfLoader.setMeshoptDecoder(MeshoptDecoder) // geometry compressed by tools/publish-model/compress_tiles.mjs
     tiles.manager.addHandler(/\.(gltf|glb)$/g, gltfLoader)
-    // ?error=<pixels>: override the screen-space error target (testing; large values keep the coarse levels)
-    tiles.errorTarget = Number(params.get('error')) || profile.errorTarget
+    tiles.errorTarget = errorTarget()
     tiles.setCamera(camera)
     tiles.setResolutionFromRenderer(camera, renderer)
 
     tiles.addEventListener('load-model', ({ scene: model }) => {
       model.traverse((child) => {
-        if (child.isMesh) {
-          const old = child.material
-          child.material = relief && old.normalMap
-            ? reliefMaterial(old, gains.get(entry.id))
-            : hdri
-              ? skyMaterial(old, gains.get(entry.id), child, true)
-              : unlitMaterial(old, gains.get(entry.id), true)
-          old.dispose()
-        }
+        if (child.isMesh) initSurface(child, entry.id)
       })
     })
     tiles.addEventListener('dispose-model', ({ scene: model }) => {
@@ -341,20 +442,18 @@ async function main() {
   contextLoader.setKTX2Loader(ktx2Loader)
   contextLoader.setMeshoptDecoder(MeshoptDecoder)
   for (const entry of manifest.models || []) {
-    contextLoader.load(`${TILES_URL}/${entry.url}`, ({ scene: model }) => {
+    contextLoader.load(`${tilesUrl}/${entry.url}`, ({ scene: model }) => {
+      if (load !== loadCount) return
       model.traverse((child) => {
-        if (child.isMesh) {
-          const old = child.material
-          child.material = hdri ? skyMaterial(old, null, child) : unlitMaterial(old)
-          old.dispose()
-        }
+        if (child.isMesh) initSurface(child, null)
       })
       scene.add(model)
+      contextModels.push(model)
       requestRender()
     })
   }
 
-  // Frame the camera on all tilesets once every root is loaded
+  // Frame the camera on all tilesets once every root is loaded (first load only: a new source keeps the view)
   const bounds = new THREE.Box3()
   let pending = tilesets.length
   tilesets.forEach((tiles) => {
@@ -365,6 +464,9 @@ async function main() {
       sphere.applyMatrix4(world.matrixWorld)
       bounds.union(sphere.getBoundingBox(new THREE.Box3()))
       if (--pending > 0) return
+      status.textContent = ''
+      if (framed) return
+      framed = true
       const all = bounds.getBoundingSphere(new THREE.Sphere())
       // ?cam=x,y,z,tx,ty,tz: camera position and target (scene metres, y up), for identical or shared views
       const cam = (params.get('cam') || '').split(',').map(Number)
@@ -376,90 +478,141 @@ async function main() {
         camera.position.copy(all.center).add(new THREE.Vector3(1, 0.6, 1).normalize().multiplyScalar(all.radius * 1.8))
       }
       controls.update()
-      status.textContent = ''
     })
-  })
-
-  window.addEventListener('resize', () => {
-    camera.aspect = container.clientWidth / container.clientHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(container.clientWidth, container.clientHeight)
-    composer?.setSize(container.clientWidth, container.clientHeight)
-    requestRender()
-    tilesets.forEach((tiles) => tiles.setResolutionFromRenderer(camera, renderer))
-  })
-
-  // The address bar follows the camera: ?cam=x,y,z,tx,ty,tz is updated (other parameters kept) when a gesture
-  // ends, so the URL can be copied at any time to share or reproduce the view. replaceState: no history entry
-  // per move. Key C copies that URL.
-  const viewUrl = () => {
-    const v = [...camera.position.toArray(), ...controls.target.toArray()].map((n) => n.toFixed(2)).join(',')
-    const query = new URLSearchParams(location.search)
-    query.set('cam', v)
-    // Commas kept readable instead of %2C
-    return `${location.origin}${location.pathname}?${query.toString().replace(/%2C/g, ',')}`
-  }
-  let urlTimer = 0
-  controls.addEventListener('change', () => {
-    clearTimeout(urlTimer)
-    urlTimer = setTimeout(() => {
-      history.replaceState(null, '', viewUrl())
-      // The /modele/ page shows the same ?cam= in its own address, so that copying it shares this view
-      if (embedded) window.parent.postMessage({ type: 'lock21:cam', search: location.search }, location.origin)
-    }, 300)
-  })
-  window.addEventListener('keydown', (e) => {
-    if (e.key !== 'c' && e.key !== 'C') return
-    console.log(viewUrl())
-    navigator.clipboard?.writeText(viewUrl()).catch(() => {})
-  })
-
-  // Settings panel (⚙, <l21-settings-panel>): one control per query parameter
-  live.error = (v) => { tilesets.forEach((t) => { t.errorTarget = Number(v) }); requestRender() }
-  // The link to share: the embedding page's address (it carries the same parameters), or the viewer's own
-  live.shareUrl = () => (embedded ? window.top.location.href : viewUrl())
-  const settings = document.createElement('l21-settings-panel')
-  settings.configure({
-    schema: settingsSchema({ mobile, errorDefault: profile.errorTarget }),
-    live,
-    button: document.querySelector('.settings-button'),
-    onAddressChange: (search) => {
-      if (embedded) window.parent.postMessage({ type: 'lock21:cam', search }, location.origin)
-    },
-  })
-  document.body.append(settings)
-
-  // ?stats=1: memory used and tiles loaded per zone, on screen (readable on a phone)
-  const statsBox = params.get('stats') === '1' ? document.body.appendChild(document.createElement('pre')) : null
-  if (statsBox) statsBox.className = 'stats'
-  let lastStats = 0
-  // Refreshed even when nothing is redrawn (render on demand), otherwise the overlay shows stale numbers
-  function updateStats() {
-    if (!statsBox || performance.now() - lastStats < 500) return
-    lastStats = performance.now()
-    const cache = tilesets[0]?.lruCache
-    const lines = [
-      `${mobile ? 'téléphone' : 'ordinateur'} · mémoire ${((cache?.cachedBytes || 0) / 1e6).toFixed(0)} / ${(profile.maxBytes / 1e6).toFixed(0)} Mo${cache?.isFull() ? ' (PLEINE)' : ''}`,
-      ...tilesets.map((t) => `${t.zoneId.padEnd(8)} visibles ${String(t.visibleTiles.size).padStart(3)} · en cours ${t.stats.downloading + t.stats.parsing}`),
-    ]
-    statsBox.textContent = lines.join('\n')
-  }
-
-  renderer.setAnimationLoop(() => {
-    updateStats()
-    // update() returns true while the camera moves (including the damping glide after a gesture)
-    if (controls.update()) needsRender = true
-    const loading = tilesets.some((t) => t.stats.queued + t.stats.downloading + t.stats.parsing > 0)
-    if (!needsRender && !loading) return
-    needsRender = false
-    camera.updateMatrixWorld()
-    tilesets.forEach((tiles) => tiles.update())
-    if (composer) composer.render()
-    else renderer.render(scene, camera)
   })
 }
 
-main().catch((error) => {
+function unloadModel() {
+  for (const tiles of tilesets) {
+    world.remove(tiles.group)
+    tiles.dispose()
+  }
+  for (const model of contextModels) {
+    scene.remove(model)
+    model.traverse((child) => {
+      if (!child.isMesh) return
+      child.geometry.dispose()
+      child.material.dispose()
+      child.userData.surface?.map?.dispose()
+    })
+  }
+  tilesets = []
+  contextModels = []
+  requestRender()
+}
+
+function showError(error) {
   status.textContent = `Erreur: ${error.message}`
   console.error(error)
+}
+
+live.tiles = (v) => { tilesUrl = v || DEFAULT_TILES_URL; loadModel().catch(showError) }
+live.error = (v) => {
+  errorOverride = Number(v)
+  tilesets.forEach((t) => { t.errorTarget = errorTarget() })
+  requestRender()
+}
+live.profile = (v) => {
+  mobile = isMobile(v)
+  profile = PROFILES[mobile ? 'mobile' : 'desktop']
+  renderer.setPixelRatio(profile.pixelRatio)
+  composer?.setPixelRatio(profile.pixelRatio)
+  const cache = tilesets[0]?.lruCache
+  if (cache) {
+    cache.maxBytesSize = profile.maxBytes
+    cache.minBytesSize = profile.maxBytes * 0.6
+  }
+  tilesets.forEach((t) => { t.errorTarget = errorTarget() })
+  if (aoPass) aoQuality()
+  resize()
+}
+
+function resize() {
+  camera.aspect = container.clientWidth / container.clientHeight
+  camera.updateProjectionMatrix()
+  renderer.setSize(container.clientWidth, container.clientHeight)
+  composer?.setSize(container.clientWidth, container.clientHeight)
+  tilesets.forEach((tiles) => tiles.setResolutionFromRenderer(camera, renderer))
+  requestRender()
+}
+window.addEventListener('resize', resize)
+
+// The address bar follows the camera: ?cam=x,y,z,tx,ty,tz is updated (other parameters kept) when a gesture
+// ends, so the URL can be copied at any time to share or reproduce the view. replaceState: no history entry
+// per move. Key C copies that URL.
+const viewUrl = () => {
+  const v = [...camera.position.toArray(), ...controls.target.toArray()].map((n) => n.toFixed(2)).join(',')
+  const query = new URLSearchParams(location.search)
+  query.set('cam', v)
+  // Commas kept readable instead of %2C
+  return `${location.origin}${location.pathname}?${query.toString().replace(/%2C/g, ',')}`
+}
+let urlTimer = 0
+controls.addEventListener('change', () => {
+  clearTimeout(urlTimer)
+  urlTimer = setTimeout(() => {
+    history.replaceState(null, '', viewUrl())
+    // The /modele/ page shows the same ?cam= in its own address, so that copying it shares this view
+    if (embedded) window.parent.postMessage({ type: 'lock21:cam', search: location.search }, location.origin)
+  }, 300)
 })
+window.addEventListener('keydown', (e) => {
+  if (e.key !== 'c' && e.key !== 'C') return
+  console.log(viewUrl())
+  navigator.clipboard?.writeText(viewUrl()).catch(() => {})
+})
+
+// ?stats=1: memory used and tiles loaded per zone, on screen (readable on a phone)
+let statsBox = null
+let lastStats = 0
+live.stats = (v) => {
+  if (v === '1' && !statsBox) {
+    statsBox = document.body.appendChild(document.createElement('pre'))
+    statsBox.className = 'stats'
+    lastStats = 0
+  } else if (v !== '1' && statsBox) {
+    statsBox.remove()
+    statsBox = null
+  }
+}
+live.stats(params.get('stats') ?? '0')
+// Refreshed even when nothing is redrawn (render on demand), otherwise the overlay shows stale numbers
+function updateStats() {
+  if (!statsBox || performance.now() - lastStats < 500) return
+  lastStats = performance.now()
+  const cache = tilesets[0]?.lruCache
+  const lines = [
+    `${mobile ? 'téléphone' : 'ordinateur'} · mémoire ${((cache?.cachedBytes || 0) / 1e6).toFixed(0)} / ${(profile.maxBytes / 1e6).toFixed(0)} Mo${cache?.isFull() ? ' (PLEINE)' : ''}`,
+    ...tilesets.map((t) => `${t.zoneId.padEnd(8)} visibles ${String(t.visibleTiles.size).padStart(3)} · en cours ${t.stats.downloading + t.stats.parsing}`),
+  ]
+  statsBox.textContent = lines.join('\n')
+}
+
+// Settings panel (⚙, <l21-settings-panel>): one control per query parameter.
+// The link to share: the embedding page's address (it carries the same parameters), or the viewer's own
+live.shareUrl = () => (embedded ? window.top.location.href : viewUrl())
+const settings = document.createElement('l21-settings-panel')
+settings.configure({
+  schema: settingsSchema({ mobile, errorDefault: profile.errorTarget }),
+  live,
+  button: document.querySelector('.settings-button'),
+  onAddressChange: (search) => {
+    if (embedded) window.parent.postMessage({ type: 'lock21:cam', search }, location.origin)
+  },
+})
+document.body.append(settings)
+
+renderer.setAnimationLoop(() => {
+  updateStats()
+  // update() returns true while the camera moves (including the damping glide after a gesture)
+  if (controls.update()) needsRender = true
+  const loading = tilesets.some((t) => t.stats.queued + t.stats.downloading + t.stats.parsing > 0)
+  if (!needsRender && !loading) return
+  needsRender = false
+  camera.updateMatrixWorld()
+  tilesets.forEach((tiles) => tiles.update())
+  if (ao.on && composer) composer.render()
+  else renderer.render(scene, camera)
+})
+
+loadModel().catch(showError)

@@ -5,7 +5,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - Viewer settings panel (⚙): one control per query parameter (detail, sky lighting, colours, ambient occlusion,
-  advanced), written into the address; live where possible, otherwise the viewer reloads keeping the view.
+  advanced), written into the address. Every setting applies live, sliders while they move: the page never
+  reloads (a new tiles source reloads the model only, keeping the view).
 - Custom Elements prefixed `l21-` (`l21-image-zoom`, `l21-dev-breakpoints`, `l21-settings-panel`).
 - Viewer lit by a partly cloudy sky (HDRI, Poly Haven, CC0) instead of the unlit display: volumes read better;
   `?hdri=0` compares, `?sky=1` shows the sky as background.
