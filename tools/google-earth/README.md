@@ -43,9 +43,10 @@ plupart des extensions glTF, compte dans le quota de stockage Google). D'où l'e
 
 ## Résultats (2026-10-19, Google Earth Pro 7.3.6)
 
-- **Taille de modèle:** 14 143 et 50 000 triangles s'ouvrent; 200 000 triangles (3 maillages) font planter Google Earth Pro.
-  Essais à 100 000 et 150 000 triangles (`t100000\`, `t150000\`) pour trouver le plafond, et pour savoir si le découpage en
-  maillages y est pour quelque chose.
+- **Taille de modèle:** avec des maillages de 30 000 sommets au plus, 100 000, 150 000 et 200 000 triangles s'affichent
+  (200 000: la meilleure qualité). Les échecs venaient de maillages trop gros (60 000 sommets). Google Earth Pro plante
+  aussi parfois sans raison après des plantages précédents: le relancer avant de conclure (`t100000` a planté une
+  fois, puis s'est ouvert). Essais suivants: 400 000 et 800 000 triangles (`t400000\`, `t800000\`).
 - **Échelle:** juste (zone 12, environ 10 m, apparaît à environ 10 m): le modèle est en mètres réels.
 - **Orientation:** juste avec `-H 0`: le repère du `.blend` est déjà aligné sur le nord.
 - **Position:** décidé: les coordonnées (44°59.809′ N, 74°53.997′ O) épinglent le **centre de l'ensemble des zones**,
