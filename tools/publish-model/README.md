@@ -109,7 +109,7 @@ Leçons des essais sur la zone 12 (OBJ préparé de 1,2 M faces, texture 12 467 
   - **Placement de l'export détaillé:** comme `prepare_zone.py`: recalage local de la source (`transforms/<zone>.json`, `matrix_source_to_blender_local`) puis position de la zone **au moment de la préparation** (`<zone>-fingerprint.json`). Le `matrix_source_to_world` du cache garde la position de la zone lors du recalage: périmé dès que la zone est déplacée (zone 8, 2026-10-19: écart médian de 12 cm, cuisson refusée).
   - **Modificateurs de déformation** (Lattice, zone 4): l'objet de zone est ajouté depuis le `.blend` (lecture seule) avec son lattice, ses modificateurs copiés sur l'export détaillé et appliqués; un Lattice déforme selon la position dans le monde, d'où le même résultat que le mesh préparé. La cuisson s'arrête si les modificateurs du `.blend` ne sont plus ceux de la zone préparée (republier d'abord).
   - **Cage:** deux fois le 95e centile de l'écart sur la **surface gardée** (sommets de l'export à moins de 10 cm du mesh préparé), 3 cm au minimum. Calculée sur tout l'export, elle montait à 3,9 m (zone 10): l'export garde les parties retirées de la zone (booléens, nettoyage), à des mètres, et la cuisson aurait projeté des surfaces lointaines. Avec la règle: 3 cm pour toutes les zones.
-  - **Export détaillé:** la source quand elle l'est (zones 2, 3, 7, 8, 11, 12, 13); sinon `--high`, un export du même chunk Metashape (même repère; la cuisson s'arrête si l'écart médian dépasse 2 cm): zone 1 (8,6 M faces, source de 621 k), zone 4 (36 M, source de 1,5 M; 8 min), zone 10 (22,6 M, source de 3 M). La géométrie suffit: pas besoin de texture.
+  - **Export détaillé:** la source quand elle l'est (zones 2, 3, 4, 7, 8, 11, 12, 13); sinon `--high`, un export du même chunk Metashape (même repère; la cuisson s'arrête si l'écart médian dépasse 2 cm): zone 1 (8,6 M faces, source de 621 k), zone 10 (22,6 M, source de 3 M). La géométrie suffit: pas besoin de texture.
   - **Résultat (2026-10-19, tuiles locales):**
 
     | Zone | Carte | Tuiles avec relief |
@@ -117,7 +117,7 @@ Leçons des essais sur la zone 12 (OBJ préparé de 1,2 M faces, texture 12 467 
     | 1 | 8 192 px | 49 Mo |
     | 2 | 14 000 px | 105 Mo |
     | 3 | 16 192 px | 149 Mo |
-    | 4 | 16 384 px | 157 Mo (export de 36 M, Lattice appliqué) |
+    | 4 | 16 384 px | 149 Mo (source de 36 M depuis le 2026-10-20, Lattice appliqué) |
     | 7 | 12 768 px | 139 Mo |
     | 8 | 13 056 px | 174 Mo |
     | 10 | 12 288 px | 63 Mo |
