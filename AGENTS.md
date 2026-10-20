@@ -31,7 +31,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `  questions/` | One page per problem (`<name>.md`), its images in `<name>/assets/`; shown as "Problèmes rencontrés" |
 | `  tests/` | Test write-ups, same layout. **Not in the sidebar** (see `astro.config.mjs`). |
 | `  rig/modele/` | Rig Blender files and drawings |
-| `astro.config.mjs` | Site config: Starlight, locales, sidebar, `noindex` meta, image-zoom script |
+| `astro.config.mjs` | Site config: Starlight, locales, sidebar, image-zoom script |
 | `src/content.config.ts` | Docs collection definition |
 | `src/components/home/Home.astro` | Home page (SYSTEM-DESIGN.md): depth gauge, instrument panel, render, entry cards, journal excerpts. Numbers come from `src/lib/diveLog.ts` (dive log parsed at build) and `src/lib/manifest.ts` (3D manifest fetched at build, fallback if offline); site facts in `src/data/site.ts` |
 | `src/components/Head.astro`, `Search.astro` | Starlight overrides for client-side routing (Astro `ClientRouter`): theme and sidebar scroll kept across pages, search kept across pages. Rules for scripts under the router, and prefetch: `GUIDELINES.md` |
@@ -42,7 +42,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `src/components/DiveLog.astro` | Adds a total-duration footer row to the dive log table, computed at build time (sums column 5) |
 | `src/styles/custom.scss` | Global styles on top of Starlight: header bar, links, tables, figures, image zoom, layout |
 | `src/assets/` | Logo (`logo.svg`, `logo-dark.svg`, S4 "21 en écho") and home page images |
-| `public/` | Copied as is: `CNAME`, `robots.txt` (`Disallow: /`), `favicon.svg`, `scripts/image-zoom.js` (native Custom Element), and `modele/viewer/` (the built viewer, gitignored) |
+| `public/` | Copied as is: `CNAME`, `robots.txt` (everything indexable except the bare viewer `/modele/viewer/`; points to Starlight's `sitemap-index.xml`), `favicon.svg`, `scripts/image-zoom.js` (native Custom Element), and `modele/viewer/` (the built viewer, gitignored) |
 | `modeles/` | Blender files: `lock-21-mockup.blend` (mockup) and `lock-21-publishing.blend`, the source of truth for 3D publishing (user-owned: never save it, read it only after the user says it is saved) |
 | `viewer/` | Standalone 3D viewer (Vite + three.js + 3d-tiles-renderer), built into `public/modele/viewer/` and served at `lock21.info/modele/viewer/`; tiles come from `tiles.lock21.info` (Cloudflare R2). Embedded by the `/modele/` page; reports its camera to it (postMessage), has a full-screen button and a settings panel (⚙, `<l21-settings-panel>` in `src/config-panel.js`: one control per query parameter, applied live and kept by the browser in `localStorage`; the address keeps only the camera, `?cam=`) |
 | `src/content/docs/modele.mdx`, `src/components/model/ModelPage.astro` | The `/modele/` page, Sketchfab-like: viewer in a large frame, model facts (zones online, last update from the manifest), navigation help, CC BY 4.0 licence and credit, downloads (to come) |

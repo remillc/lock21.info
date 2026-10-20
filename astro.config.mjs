@@ -27,9 +27,7 @@ export default defineConfig({
         root: { label: 'Français', lang: 'fr' },
         en: { label: 'English', lang: 'en' },
       },
-      // Not public yet: no indexing (robots.txt does the same for crawlers that read it first)
       head: [
-        { tag: 'meta', attrs: { name: 'robots', content: 'noindex, nofollow' } },
         // Click a figure image to see it full size (public/scripts/image-zoom.js)
         { tag: 'script', attrs: { type: 'module', src: '/scripts/image-zoom.js' } },
       ],
