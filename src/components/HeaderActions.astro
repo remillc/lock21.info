@@ -1,15 +1,18 @@
 ---
 // Right side of the header (replaces Starlight's social icons, which the site doesn't use): the "Modèle 3D" pill,
-// the one place where the signal colour (MD3 tertiary) is used in the bar.
+// the one place where the signal colour (MD3 tertiary) is used in the bar. The /modele/ page is prefetched as soon as
+// the pill is on screen (Astro prefetch, "viewport"), and the viewer's files once a /modele/ link is hovered (ViewerWarmup).
 import { site } from '../data/site'
+import ViewerWarmup from './ViewerWarmup.astro'
 
 const english = Astro.locals.starlightRoute.lang?.startsWith('en')
 ---
 
-<a href={site.viewer} class="model-pill">
+<a href={site.viewer} class="model-pill" data-astro-prefetch="viewport">
   <svg aria-hidden="true" width="10" height="12" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z" fill="currentColor"></path></svg>
   {english ? '3D model' : 'Modèle 3D'}
 </a>
+<ViewerWarmup />
 
 <style>
   .model-pill {

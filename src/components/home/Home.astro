@@ -1,6 +1,7 @@
 ---
 // Home page (SYSTEM-DESIGN.md, "E2 · Sonar"): depth gauge, title and instrument panel, framed render of the model, three
-// entry cards, journal excerpts. Every number comes from the dive log or the 3D manifest at build time.
+// entry cards, journal excerpts. Every number comes from the dive log or the 3D manifest at build time. The links to the
+// next steps (buttons, render, cards, journal) are prefetched as soon as they are on screen (Astro prefetch, "viewport").
 import { Image } from 'astro:assets'
 import render from '../../assets/home/render-zone12.webp'
 import { site } from '../../data/site'
@@ -34,8 +35,8 @@ const entries = [
         <h1 id="_top">L'écluse 21,<br />mesurée sous l'eau.</h1>
         <p class="lead">Chaque plongée, chaque réglage, chaque zone, jusqu'au modèle 3D de l'écluse submergée.</p>
         <div class="actions">
-          <a class="button filled" href={site.viewer}>Explorer le modèle 3D</a>
-          <a class="button outlined" href={journal}>Journal des plongées</a>
+          <a class="button filled" href={site.viewer} data-astro-prefetch="viewport">Explorer le modèle 3D</a>
+          <a class="button outlined" href={journal} data-astro-prefetch="viewport">Journal des plongées</a>
         </div>
       </div>
 
@@ -56,7 +57,7 @@ const entries = [
       </section>
     </section>
 
-    <a class="render" href={site.viewer}>
+    <a class="render" href={site.viewer} data-astro-prefetch="viewport">
       <Image src={render} alt="Rendu du modèle 3D de la zone 12: pilier de maçonnerie, poutre et marches couverts de moules zébrées" widths={[640, 960, 1280]} sizes="(min-width: 75rem) 1100px, 100vw" />
       <span class="chip">ZONE 12 · 13 M FACES · TEX 12 464 PX</span>
     </a>
@@ -66,7 +67,7 @@ const entries = [
       <p class="sub">Trois portes d'entrée, selon ce qui vous amène.</p>
       <div class="cards">
         {entries.map((e) => (
-          <a class="card" href={e.href}>
+          <a class="card" href={e.href} data-astro-prefetch="viewport">
             <span class="card-no">{e.no}</span>
             <span class="card-title">{e.title}</span>
             <span class="card-text">{e.text}</span>
@@ -79,7 +80,7 @@ const entries = [
     <section class="block">
       <div class="block-head">
         <h2>Extraits du journal</h2>
-        <a class="more" href={journal}>Les {dives.length} plongées →</a>
+        <a class="more" href={journal} data-astro-prefetch="viewport">Les {dives.length} plongées →</a>
       </div>
       <ol class="timeline">
         {excerpts.map((d) => (

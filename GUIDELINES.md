@@ -55,6 +55,11 @@ content. Scripts must survive that:
 - **Elements added by script to `<body>`** are moved into the new body on `astro:after-swap` (`image-zoom.js`).
 - **`history.replaceState` keeps `history.state`** (`history.replaceState(history.state, '', url)`): the router stores
   its entry there; `null` breaks the back and forward buttons.
+- **Prefetch:** the router prefetches every link's page on hover or focus (Astro's default with `ClientRouter`; on
+  tap with data saver or a slow connection). Links to the likely next step also get `data-astro-prefetch="viewport"`
+  (prefetched once on screen): home buttons and cards, the "Modèle 3D" pill, previous / next page. Not every link:
+  the sidebar alone would fetch about 600 kB per page. The 3D viewer's own files (about 3 MB) are warmed up on
+  intent only, by `<l21-viewer-warmup>` (`src/components/ViewerWarmup.astro`).
 - Starlight doesn't support the router officially: `Head.astro` (theme, sidebar scroll) and `Search.astro` (search
   kept across pages) fill the gaps. Check them after a Starlight upgrade.
 

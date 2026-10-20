@@ -6,6 +6,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 - Client-side routing (Astro `ClientRouter`): pages change without a full reload, with an MD3 fade-through on the
   content; theme, sidebar scroll and search kept across pages; `/modele/` frame as `<l21-model-frame>`.
+- Prefetch: every page on link hover (router default), the likely next steps as soon as they are on screen (home
+  buttons and cards, "Modèle 3D", previous / next page), and the 3D viewer's files (about 3 MB) when a `/modele/` link
+  is hovered, so the viewer starts at once. `astro preview` serves the built viewer again (it inherited the dev
+  forwarding to the viewer's dev server).
 - Zone 4 republished from its 36 M export (shape, photo and relief).
 - Viewer settings kept by the browser between page loads (`localStorage`); a link's parameters override them,
   "Réinitialiser" clears them.
