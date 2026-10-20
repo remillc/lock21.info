@@ -12,10 +12,11 @@ export const site = {
   },
   viewer: '/modele/',
   manifest: 'https://tiles.lock21.info/manifest.json',
-  // Downloads on R2 (tools/publish-model/upload_downloads.mjs, built by tools/google-earth/): the KMZ only links to the
-  // parts on the server, so zones added later show up without a new download
+  // Downloads (built by tools/google-earth/). The KMZ, on the site (public/downloads/), only links to the list of parts
+  // on R2 (tools/publish-model/upload_downloads.mjs), so zones added later show up without a new download or a site
+  // deploy; the GLB is on R2
   downloads: {
-    kmz: 'https://tiles.lock21.info/downloads/google-earth/lock-21.kmz',
+    kmz: '/downloads/lock-21.kmz',
     kmzTriangles: '600 000',
     glb: 'https://tiles.lock21.info/downloads/lock-21.glb',
     glbSize: '108 Mo',

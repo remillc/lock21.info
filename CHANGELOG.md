@@ -4,8 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- Downloads on `/modele/`: a KMZ for Google Earth Pro (600 000 triangles, one model per zone and piece of context)
-  that only links to its parts on the server, so zones added later show up without a new download; and the whole
+- Downloads on `/modele/`: a KMZ for Google Earth Pro, served by the site (`/downloads/lock-21.kmz`), that only links
+  to its parts on R2 (600 000 triangles, one model per zone and piece of context), so zones added later show up
+  without a new download; it opens on a landing view over the lock; and the whole
   model as a GLB (2 M triangles, 108 MB). Built by `tools/google-earth/`, uploaded by `upload_downloads.mjs`;
   the tiles upload no longer touches `downloads/`.
 - The site opens to search engines: `noindex` removed from every page, `robots.txt` allows everything but the bare

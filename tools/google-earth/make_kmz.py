@@ -1,16 +1,18 @@
-"""Builds the KMZ of the lock for Google Earth Pro (TODO #13) from the model of make_model.py.
+"""Builds the KMZ of the lock for Google Earth Pro (TODO #13) from the model of make_model.py: a network KMZ, for a
+model that grows zone by zone.
 
-Converts <name>.obj (+ .mtl and its .jpg textures, one material per zone and per piece of context) into a COLLADA
-model (pycollada; Blender 5 no longer exports COLLADA) and wraps it in a KMZ with, at the lock's coordinates, a pin and
-the model sitting on Google Earth's ground (relativeToGround, altitude 0): Google Earth has no negative depth, so the
-lock is shown at depth 0 rather than 55 ft under the water. -H/--heading turns the model (degrees clockwise from
-north): 0, the .blend's frame is aligned on north.
+Converts <name>.obj (+ .mtl and its .jpg textures, one material per zone and per piece of context) into one COLLADA model
+per part (pycollada; Blender 5 no longer exports COLLADA), sitting on Google Earth's ground at the lock's coordinates
+(relativeToGround, altitude 0: Google Earth has no negative depth, so the lock is shown at depth 0 rather than 55 ft
+under the water). -H/--heading turns the model (degrees clockwise from north): 0, the .blend's frame is aligned on north.
 
---network <url>: the network version, for a model that grows zone by zone. The downloaded lock-21.kmz only holds a
-link to <url>/lock-21.kml, which lists one small KMZ per zone and per piece of context (<url>/parts/<part>-<hash>.kmz,
-the hash changing with the part, so Google Earth never keeps a stale copy). Adding or updating a zone means uploading
-its part and the new lock-21.kml: users see it the next time they open the file, without downloading it again.
-Written in <dir>/network/ (lock-21.kmz, lock-21.kml, parts/), to serve or upload as is.
+Written in <dir>/network/:
+  lock-21.kmz   the downloaded file (lock21.info/downloads/, copied into public/downloads/): only a link to the list
+  lock-21.kml   the list (on R2, <url>/lock-21.kml): the pin, the landing view, a link per part, in two folders
+  parts/        one small KMZ per zone and per piece of context (<url>/parts/<part>-<hash>.kmz, the hash changing
+                only with the content, so Google Earth never keeps a stale copy)
+Adding or updating a zone means uploading its part and the new list to R2: users see it the next time they open the
+file, without downloading it again, and without a site deploy.
 
 Runs with the tool's own Python (pycollada): tools/google-earth/.venv/Scripts/python.exe make_kmz.py -h
 Setup once: python -m venv tools/google-earth/.venv; tools/google-earth/.venv/Scripts/python -m pip install pycollada==0.9.2 numpy
@@ -31,8 +33,16 @@ p.add_argument("-n", "--name", default="lock-21", help="base name of the files (
 p.add_argument("--lat", type=float, default=44.996817, help="latitude (default: Lock 21, 44°59.809' N)")
 p.add_argument("--lon", type=float, default=-74.89995, help="longitude (default: Lock 21, 74°53.997' W)")
 p.add_argument("-H", "--heading", type=float, default=0, help="model heading, degrees clockwise from north (default 0)")
-p.add_argument("--network", metavar="URL", help="also write the network version, served from URL (e.g. https://tiles.lock21.info/downloads/google-earth)")
+# Landing view, set in Google Earth Pro by Christian (2026-10-20): over the lock, looking west-northwest
+p.add_argument("--view", default="44.996863,-74.899940,66,-70,60", metavar="LAT,LON,RANGE,HEADING,TILT",
+               help="view when the file opens: latitude, longitude, distance (m), direction and tilt (degrees), as in "
+                    "Google Earth's camera properties (default 44.996863,-74.899940,66,-70,60)")
+p.add_argument("--network", metavar="URL", default="https://tiles.lock21.info/downloads/google-earth",
+               help="where the list and the parts are served (default https://tiles.lock21.info/downloads/google-earth)")
 a = p.parse_args()
+view_lat, view_lon, view_range, view_heading, view_tilt = (float(v) for v in a.view.split(","))
+look_at = (f"<LookAt><longitude>{view_lon}</longitude><latitude>{view_lat}</latitude><altitude>0</altitude>"
+           f"<heading>{view_heading}</heading><tilt>{view_tilt}</tilt><range>{view_range}</range></LookAt>")
 
 
 def read_mtl(path):
@@ -179,37 +189,8 @@ zones.sort(key=lambda z: int(z[5:]) if z[5:].isdigit() else 0)
 print(f"  {len(zones) + len(context)} models, {meshes} meshes, {len(textures)} textures")
 newline = "\n"
 
-kml = f"""<?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
-<Document>
-  <name>Écluse 21</name>
-  <description>Modèle 3D de l'écluse 21 (Dickinson Landing), photogrammétrie sous-marine de Christian Rémillard, lock21.info, licence CC BY 4.0. {triangles:,} triangles. Posé au sol (profondeur 0): l'écluse est en réalité à 55 pi (16,8 m) sous l'eau.</description>
-  <Placemark>
-    <name>Écluse 21</name>
-    <Point><coordinates>{a.lon},{a.lat},0</coordinates></Point>
-  </Placemark>
-  <Folder>
-    <name>Zones</name>
-{newline.join(placemark(z) for z in zones)}
-  </Folder>
-  <Folder>
-    <name>Contexte (maquette)</name>
-{newline.join(placemark(c) for c in context)}
-  </Folder>
-</Document>
-</kml>
-"""
-kmz_path = os.path.join(a.dir, f"{a.name}.kmz")
-with zipfile.ZipFile(kmz_path, "w", zipfile.ZIP_DEFLATED) as kmz:
-    kmz.writestr("doc.kml", kml)
-    for mat_name in zones + context:
-        kmz.write(os.path.join(a.dir, f"{mat_name}.dae"), f"models/{mat_name}.dae")
-    for texture in textures:
-        kmz.write(os.path.join(a.dir, texture), f"models/{texture}")
-print(f"{kmz_path}: {os.path.getsize(kmz_path) / 1e6:.1f} MB, {triangles:,} triangles")
-
-# Network version: one small KMZ per part, a list of links, and the downloadable file that points to the list
-if a.network:
+def write_network():
+    """One small KMZ per part, the list of links, and the downloadable file that points to the list"""
     base = a.network.rstrip("/")
     net = os.path.join(a.dir, "network")
     shutil.rmtree(net, ignore_errors=True)
@@ -251,7 +232,7 @@ if a.network:
 <kml xmlns="http://www.opengis.net/kml/2.2">
 <Document>
   <name>Écluse 21</name>
-  <LookAt><longitude>{a.lon}</longitude><latitude>{a.lat}</latitude><altitude>0</altitude><heading>0</heading><tilt>45</tilt><range>120</range></LookAt>
+  {look_at}
   <description>Modèle 3D de l'écluse 21 (Dickinson Landing), photogrammétrie sous-marine de Christian Rémillard, lock21.info, licence CC BY 4.0. {len(zones)} zones, {triangles:,} triangles; les zones s'ajoutent au fil des plongées. Posé au sol (profondeur 0): l'écluse est en réalité à 55 pi (16,8 m) sous l'eau.</description>
   <Placemark>
     <name>Écluse 21</name>
@@ -285,3 +266,6 @@ if a.network:
     size = sum(os.path.getsize(os.path.join(net, "parts", f)) for f in os.listdir(os.path.join(net, "parts")))
     print(f"{net}: {a.name}.kmz ({os.path.getsize(os.path.join(net, f'{a.name}.kmz'))} bytes) -> {base}/{a.name}.kml, "
           f"{len(links)} parts, {size / 1e6:.1f} MB")
+
+
+write_network()

@@ -1,7 +1,8 @@
 // Synchronises the downloads (O:\publishing\downloads\online) with downloads/ in the Cloudflare R2 bucket, served at
 // https://tiles.lock21.info/downloads/ and linked from the /modele/ page.
 //
-// - Every local file is uploaded (sizes compared: an unchanged file is skipped).
+// - Every local file is uploaded, except unchanged ones (same size) and parts already online (their name carries a
+//   hash of the content: same name, same part).
 // - google-earth/parts/*.kmz (one per zone and piece of context, the name carries a hash of the content, see
 //   tools/google-earth/make_kmz.py --network): one-year cache. google-earth/lock-21.kml, the list of parts read by
 //   the downloaded KMZ: 5-minute cache, so an added zone shows up quickly. Other files: one-hour cache.
@@ -74,7 +75,7 @@ let sent = 0
 let bytes = 0
 for (const { path, key } of local) {
   const size = (await stat(path)).size
-  if (remote.get(key) === size && !key.endsWith('.kml')) continue
+  if ((remote.get(key) === size && !key.endsWith('.kml')) || (key.includes('/parts/') && remote.has(key))) continue
   if (!dryRun) {
     await s3.send(new PutObjectCommand({
       Bucket: bucket, Key: key, Body: await readFile(path), ContentType: typeOf(key), CacheControl: cacheOf(key),
