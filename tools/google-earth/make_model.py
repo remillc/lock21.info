@@ -32,6 +32,7 @@ p.add_argument("-s", "--size", type=int, default=2048, help="largest texture siz
 p.add_argument("-c", "--context-share", type=float, default=0.1, help="share of the budget for the context (default 0.1)")
 p.add_argument("--context", help="uncompressed context.glb (export_context.py); without it, the zones only")
 p.add_argument("--zones", nargs="*", help='zones, e.g. "zone 12" (default: those of the local manifest)')
+p.add_argument("--context-only", action="store_true", help="the context without any zone (tests)")
 p.add_argument("--tiles-root", default=r"O:\publishing\tiles", help="local tiles, for the list of zones")
 p.add_argument("--temp-root", default=r"O:\temp", help="prepared zones: <temp>/<slug>/prox/")
 p.add_argument("-q", "--quality", type=int, default=88, help="JPEG quality (default 88)")
@@ -94,7 +95,9 @@ def decimate(ob, target):
 bpy.ops.wm.read_factory_settings(use_empty=True)
 
 # Zones of the local manifest, with their surface area
-if a.zones:
+if a.context_only:
+    slugs = []
+elif a.zones:
     slugs = [z.replace(" ", "-") for z in a.zones]
 else:
     manifest = json.load(open(os.path.join(a.tiles_root, "manifest.json"), encoding="utf-8"))
@@ -116,9 +119,9 @@ if a.context:
         ob.parent = None
         ob.matrix_world.identity()
 context_faces = sum(len(o.data.polygons) for o in context_obs)
-context_budget = min(context_faces, int(a.triangles * a.context_share)) if context_obs else 0
+context_budget = min(context_faces, int(a.triangles * (1 if a.context_only else a.context_share))) if context_obs else 0
 zone_budget = a.triangles - context_budget
-total_area = sum(z["area"] for z in zones)
+total_area = sum(z["area"] for z in zones) or 1
 parts = []
 
 for z in zones:

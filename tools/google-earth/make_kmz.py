@@ -70,11 +70,6 @@ def read_obj(path):
 materials = read_mtl(os.path.join(a.dir, f"{a.name}.mtl"))
 positions, uvs, groups = read_obj(os.path.join(a.dir, f"{a.name}.obj"))
 
-# COLLADA: Z up, metres
-dae = Collada()
-dae.assetInfo.upaxis = asset.UP_AXIS.Z_UP
-dae.assetInfo.unitmeter = 1.0
-dae.assetInfo.unitname = "meter"
 # Google Earth Pro drops or crashes on large COLLADA meshes: a single mesh of 30,000 vertices / 50,000 triangles
 # shows, meshes of 60,000 vertices / 90,000 triangles don't (2026-10-19 tests). Each material's triangles are split
 # into meshes below the size that works (a vertex = a position + UV pair), each with its own, re-indexed positions and UVs.
@@ -93,23 +88,28 @@ def chunks(corners):
     yield corners[start:]
 
 
-geometry_nodes, textures, n, triangles = [], [], 0, 0
-for m, (mat_name, corners) in enumerate(groups.items()):
-    spec = materials.get(mat_name, {"color": (0.8, 0.8, 0.8)})
+def write_model(mat_name, corners, spec):
+    """One COLLADA model (Z up, metres) per material: a zone, or a piece of context. Google Earth Pro crashed on the
+    whole lock as one model (zones + context, 15 textures, 2026-10-20) but opens a zone alone or the context alone:
+    one model per part, each in its own placemark, loaded separately (and shown or hidden one by one)."""
+    dae = Collada()
+    dae.assetInfo.upaxis = asset.UP_AXIS.Z_UP
+    dae.assetInfo.unitmeter = 1.0
+    dae.assetInfo.unitname = "meter"
     textured = "texture" in spec
     if textured:
-        image = material.CImage(f"image-{m}", spec["texture"])
-        surface = material.Surface(f"surface-{m}", image)
-        sampler = material.Sampler2D(f"sampler-{m}", surface)
-        effect = material.Effect(f"effect-{m}", [surface, sampler], "lambert", diffuse=material.Map(sampler, "UVSET0"))
+        image = material.CImage("image", spec["texture"])
+        surface = material.Surface("surface", image)
+        sampler = material.Sampler2D("sampler", surface)
+        effect = material.Effect("effect", [surface, sampler], "lambert", diffuse=material.Map(sampler, "UVSET0"))
         dae.images.append(image)
-        textures.append(spec["texture"])
     else:
-        effect = material.Effect(f"effect-{m}", [], "lambert", diffuse=(*spec["color"], 1.0))
-    mat = material.Material(f"material-{m}", mat_name, effect)
+        effect = material.Effect("effect", [], "lambert", diffuse=(*spec["color"], 1.0))
+    mat = material.Material("material", mat_name, effect)
     dae.effects.append(effect)
     dae.materials.append(mat)
-    for part in chunks(corners):
+    nodes, triangles = [], 0
+    for n, part in enumerate(chunks(corners)):
         pairs, index = {}, []
         for corner in part:
             index.append(pairs.setdefault(corner, len(pairs)))
@@ -120,21 +120,53 @@ for m, (mat_name, corners) in enumerate(groups.items()):
         if textured:
             sources.append(source.FloatSource(f"uvs-{n}", uvs[np.maximum(order[:, 1], 0)].ravel(), ("S", "T")))
             inputs.addInput(1, "TEXCOORD", f"#uvs-{n}", set="0")
-        geom = geometry.Geometry(dae, f"geometry-{n}", f"{a.name}-{n}", sources)
+        geom = geometry.Geometry(dae, f"geometry-{n}", f"{mat_name}-{n}", sources)
         # One index per corner: the same index for the position and the UV, both re-indexed per mesh
         indices = np.repeat(np.array(index), 2) if textured else np.array(index)
-        geom.primitives.append(geom.createTriangleSet(indices, inputs, f"material-ref-{m}"))
+        geom.primitives.append(geom.createTriangleSet(indices, inputs, "material-ref"))
         dae.geometries.append(geom)
         bind = [("UVSET0", "TEXCOORD", "0")] if textured else []
-        geometry_nodes.append(scene.GeometryNode(geom, [scene.MaterialNode(f"material-ref-{m}", mat, inputs=bind)]))
+        nodes.append(scene.GeometryNode(geom, [scene.MaterialNode("material-ref", mat, inputs=bind)]))
         triangles += len(index) // 3
-        n += 1
-    print(f"  {mat_name}: {len(corners) // 3:,} triangles")
-print(f"  {n} meshes, {len(textures)} textures")
-dae.scenes.append(scene.Scene("scene", [scene.Node("model", children=geometry_nodes)]))
-dae.scene = dae.scenes[0]
-dae_path = os.path.join(a.dir, f"{a.name}.dae")
-dae.write(dae_path)
+    dae.scenes.append(scene.Scene("scene", [scene.Node("model", children=nodes)]))
+    dae.scene = dae.scenes[0]
+    dae.write(os.path.join(a.dir, f"{mat_name}.dae"))
+    return triangles, len(nodes)
+
+
+def label(mat_name):
+    """zone-12 -> Zone 12; context-talus-nord-0 -> talus nord"""
+    if mat_name.startswith("zone-"):
+        return "Zone " + mat_name[5:]
+    return mat_name.removeprefix("context-").rsplit("-", 1)[0].replace("-", " ")
+
+
+def placemark(mat_name):
+    return f"""    <Placemark>
+      <name>{label(mat_name)}</name>
+      <Model>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <Location><longitude>{a.lon}</longitude><latitude>{a.lat}</latitude><altitude>0</altitude></Location>
+        <Orientation><heading>{a.heading}</heading><tilt>0</tilt><roll>0</roll></Orientation>
+        <Scale><x>1</x><y>1</y><z>1</z></Scale>
+        <Link><href>models/{mat_name}.dae</href></Link>
+      </Model>
+    </Placemark>"""
+
+
+textures, triangles, meshes, zones, context = [], 0, 0, [], []
+for mat_name, corners in groups.items():
+    spec = materials.get(mat_name, {"color": (0.8, 0.8, 0.8)})
+    t, m = write_model(mat_name, corners, spec)
+    triangles += t
+    meshes += m
+    if "texture" in spec:
+        textures.append(spec["texture"])
+    (zones if mat_name.startswith("zone-") else context).append(mat_name)
+    print(f"  {label(mat_name)}: {t:,} triangles, {m} meshes")
+zones.sort(key=lambda z: int(z[5:]) if z[5:].isdigit() else 0)
+print(f"  {len(zones) + len(context)} models, {meshes} meshes, {len(textures)} textures")
+newline = "\n"
 
 kml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
@@ -145,23 +177,22 @@ kml = f"""<?xml version="1.0" encoding="UTF-8"?>
     <name>Écluse 21</name>
     <Point><coordinates>{a.lon},{a.lat},0</coordinates></Point>
   </Placemark>
-  <Placemark>
-    <name>Modèle 3D</name>
-    <Model>
-      <altitudeMode>relativeToGround</altitudeMode>
-      <Location><longitude>{a.lon}</longitude><latitude>{a.lat}</latitude><altitude>0</altitude></Location>
-      <Orientation><heading>{a.heading}</heading><tilt>0</tilt><roll>0</roll></Orientation>
-      <Scale><x>1</x><y>1</y><z>1</z></Scale>
-      <Link><href>models/{a.name}.dae</href></Link>
-    </Model>
-  </Placemark>
+  <Folder>
+    <name>Zones</name>
+{newline.join(placemark(z) for z in zones)}
+  </Folder>
+  <Folder>
+    <name>Contexte (maquette)</name>
+{newline.join(placemark(c) for c in context)}
+  </Folder>
 </Document>
 </kml>
 """
 kmz_path = os.path.join(a.dir, f"{a.name}.kmz")
 with zipfile.ZipFile(kmz_path, "w", zipfile.ZIP_DEFLATED) as kmz:
     kmz.writestr("doc.kml", kml)
-    kmz.write(dae_path, f"models/{a.name}.dae")
+    for mat_name in zones + context:
+        kmz.write(os.path.join(a.dir, f"{mat_name}.dae"), f"models/{mat_name}.dae")
     for texture in textures:
         kmz.write(os.path.join(a.dir, texture), f"models/{texture}")
 print(f"{kmz_path}: {os.path.getsize(kmz_path) / 1e6:.1f} MB, {triangles:,} triangles")

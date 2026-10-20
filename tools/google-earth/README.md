@@ -52,6 +52,12 @@ total) ou font planter (150 000 et plus); un seul maillage de 122 803 sommets pl
 chaque matériau en maillages de 30 000 sommets et 45 000 triangles au plus (un sommet = une position + une coordonnée
 de texture).
 
+**Un modèle par partie:** Google Earth Pro plante sur le modèle complet en un seul COLLADA (zones et contexte, 15
+textures), même à 200 000 triangles et en textures de 1024 px, alors qu'il ouvre les zones seules (textures de 1024 px)
+ou le contexte seul (2026-10-20). `make_kmz.py` écrit donc un modèle COLLADA par zone et par pièce du contexte, chacun
+dans son repère (`<Placemark>`) et rangés dans deux dossiers, « Zones » et « Contexte (maquette) »: Google Earth les
+charge séparément, et chacun s'affiche ou se masque dans le panneau de gauche.
+
 **Au total:** Google ne publie aucune limite chiffrée (taille de fichier, triangles, textures), ni pour les KMZ de
 Google Earth Pro, ni pour l'import GLB de Google Earth Web (expérimental: textures incluses dans le GLB, pas de
 compression ni de la plupart des extensions glTF, compte dans le quota de stockage Google). D'où les essais.
@@ -72,5 +78,5 @@ Essais sur la zone 12 seule (2026-10-19, Google Earth Pro 7.3.6):
   toute l'écluse.
 
 Modèle complet (2026-10-20), dans `O:\publishing\downloads\google-earth\`: `t200k\`, `t400k\` et `t800k\` (KMZ à
-essayer dans Google Earth Pro, textures de 2048 px) et `glb\` (GLB moyen: 2 M triangles, textures de 4096 px). À
-vérifier: jusqu'où Google Earth Pro reste fluide; le GLB dans Google Earth Web.
+essayer dans Google Earth Pro, textures de 2048 px) et `glb\` (GLB moyen: 2 M triangles, textures de 4096 px). Premier essai, un seul modèle: 200 000 et 800 000 triangles plantent, 400 000 s'ouvre sans rien montrer; d'où un
+modèle par partie. À vérifier: jusqu'où Google Earth Pro reste fluide; le GLB dans Google Earth Web.
