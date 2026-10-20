@@ -115,11 +115,15 @@ const updated = zones.updated
   }
 
   .frame {
+    /* Wider than the text column (1200 px): up to 1600 px, or the window minus a 24 px margin on each side, centred
+       on the column (the title and the text below keep the column's width) */
+    --frame-width: min(100rem, 100vw - 3rem);
     display: block;
     aspect-ratio: 16 / 9;
     max-height: calc(100vh - var(--sl-nav-height) - 8rem);
     min-height: 20rem;
-    width: 100%;
+    width: max(100%, var(--frame-width));
+    margin-inline: min(0px, (100% - var(--frame-width)) / 2);
     border: 2px solid var(--md-sys-color-outline);
     border-radius: var(--md-sys-shape-extra-large);
     overflow: hidden;

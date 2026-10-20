@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- `/modele/`: the viewer frame is wider than the text column, up to 1600 px (or the window minus 24 px margins).
 - Footer at the bottom of the window on short pages; its bar now reads `ÉCLUSE/21 · carnet de terrain` and
   `© 2024–2026 Christian Rémillard · Licence CC BY 4.0` (the Baets drawings stay credited in their captions).
 - Client-side routing (Astro `ClientRouter`): pages change without a full reload, with an MD3 fade-through on the
