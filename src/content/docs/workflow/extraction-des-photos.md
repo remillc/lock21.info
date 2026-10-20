@@ -17,7 +17,12 @@ La documentation de Metashape recommande un chevauchement de 80% frontal et 60% 
 
 Le chevauchement latéral est contrôlé au moment de la collecte des données. Il est donc important qu'au moment où on filme un objet on garde en tête la trajectoire qu'on est en train de dessiner afin de prévoir celle qui suit en fonction d'obtenir un recoupement des trajets d'environ 80%.
 
-[ICI INSÉRER UN CROQUIS QUI ILLUSTRE 2 PASSAGES RECOUPÉS À 80%]
+<figure>
+
+![Deux passages parallèles de la caméra, décalés de 25 cm, qui ont 80 % de leur largeur en commun](./extraction-des-photos/assets/chevauchement-lateral.svg)
+
+<figcaption>Deux passages recoupés à 80 %: à 70 cm du sujet, chaque passage couvre une bande de 1,25 m; on décale le suivant de 25 cm (voir <a href="/questions/dimensions-rig/">Dimensions du rig de caméra</a>).</figcaption>
+</figure>
 
 ### Chevauchement frontal
 
@@ -25,7 +30,12 @@ Le chevauchement frontal, lui, est obtenu au moment d'extraire les images des vi
 
 [Expliquer comment j'utilise les effets dans Davinci Resolve pour afficher un cadre à 85% qui aide à évaluer le facteur d'échantillonage.]
 
-[ICI INSÉRER UN CROQUIS D'UN FILM OÙ ON CHOISIS 2 IMAGES QUI SE RECOUPENT À 85%]
+<figure>
+
+![Une bande de film où l'on garde l'image 1 et l'image 9; les zones filmées par ces deux images ont 85 % en commun](./extraction-des-photos/assets/chevauchement-frontal.svg)
+
+<figcaption>Deux images d'un film qui se recoupent à 85 %: entre les images gardées (ici à 8 images d'intervalle, n8), la caméra n'a avancé que de 15 % de la zone filmée.</figcaption>
+</figure>
 
 Règle du pouce:
 

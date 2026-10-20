@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500" role="img" aria-labelledby="t d">
+  <title id="t">Deux passages recoupés à 80 %</title>
+  <desc id="d">Vue de dessus de deux passages parallèles de la caméra. Chaque passage couvre une bande de 1,25 m de large à 70 cm du sujet; le second est décalé de 25 cm, ce qui laisse 1 m de recouvrement, soit 80 %.</desc>
+  <rect width="800" height="500" rx="16" fill="#06121a"/>
+  <text x="32" y="44" fill="#9bb8c6" font-family="JetBrains Mono, ui-monospace, monospace" font-size="15" letter-spacing="1">CHEVAUCHEMENT LATÉRAL · VUE DE DESSUS</text>
+
+  <!-- Passage 1: band 1.25 m wide (2 px/cm), y 100 to 350 -->
+  <rect x="40" y="100" width="560" height="250" fill="#3cc2bc" fill-opacity="0.22" stroke="#3cc2bc" stroke-width="2"/>
+  <!-- Passage 2: shifted 25 cm (50 px), y 150 to 400 -->
+  <rect x="40" y="150" width="560" height="250" fill="#f28c28" fill-opacity="0.18" stroke="#f28c28" stroke-width="2" stroke-dasharray="10 6"/>
+
+  <!-- Camera path (centre line of each band) and direction -->
+  <g stroke-width="2" fill="none">
+    <line x1="60" y1="225" x2="560" y2="225" stroke="#3cc2bc" stroke-dasharray="4 6"/>
+    <line x1="60" y1="275" x2="560" y2="275" stroke="#f28c28" stroke-dasharray="4 6"/>
+  </g>
+  <path d="M560 217 L578 225 L560 233 Z" fill="#3cc2bc"/>
+  <path d="M560 267 L578 275 L560 283 Z" fill="#f28c28"/>
+  <g font-family="Archivo, system-ui, sans-serif" font-size="17" font-weight="700">
+    <text x="58" y="128" fill="#3cc2bc">Passage 1 →</text>
+    <text x="58" y="390" fill="#f28c28">Passage 2 →</text>
+  </g>
+
+  <!-- Dimensions on the right -->
+  <g stroke="#e6eff2" stroke-width="1.5" fill="none">
+    <line x1="604" y1="100" x2="640" y2="100"/>
+    <line x1="604" y1="150" x2="700" y2="150"/>
+    <line x1="604" y1="350" x2="700" y2="350"/>
+    <line x1="604" y1="400" x2="640" y2="400"/>
+    <!-- width of a band -->
+    <line x1="630" y1="100" x2="630" y2="350"/>
+    <!-- overlap -->
+    <line x1="690" y1="150" x2="690" y2="350"/>
+    <!-- shift -->
+    <line x1="630" y1="350" x2="630" y2="400"/>
+  </g>
+  <g fill="#e6eff2">
+    <path d="M626 108 L630 100 L634 108 Z"/><path d="M626 342 L630 350 L634 342 Z"/>
+    <path d="M686 158 L690 150 L694 158 Z"/><path d="M686 342 L690 350 L694 342 Z"/>
+    <path d="M626 358 L630 350 L634 358 Z"/><path d="M626 392 L630 400 L634 392 Z"/>
+  </g>
+  <g font-family="JetBrains Mono, ui-monospace, monospace" font-size="15" fill="#e6eff2">
+    <text x="622" y="230" text-anchor="end" transform="rotate(-90 622 230)">1,25 m</text>
+    <text x="704" y="244" font-weight="700" fill="#e6eff2">1 m</text>
+    <text x="704" y="264" fill="#9bb8c6">= 80 %</text>
+    <text x="640" y="380" fill="#9bb8c6">25 cm</text>
+  </g>
+
+  <text x="32" y="460" fill="#9bb8c6" font-family="Archivo, system-ui, sans-serif" font-size="15">Caméra à 70 cm du sujet, champ utile de 84° : chaque passage couvre 1,25 m.</text>
+  <text x="32" y="482" fill="#9bb8c6" font-family="Archivo, system-ui, sans-serif" font-size="15">Décaler le passage suivant de 25 cm laisse 1 m en commun, soit 80 %.</text>
+</svg>
