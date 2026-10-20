@@ -29,6 +29,8 @@ p.add_argument("-o", "--out", required=True, help="output folder")
 p.add_argument("-n", "--name", default="lock-21", help="base name of the files (default lock-21)")
 p.add_argument("-t", "--triangles", type=int, default=400_000, help="total triangle budget (default 400000)")
 p.add_argument("-s", "--size", type=int, default=2048, help="largest texture size, px (default 2048)")
+p.add_argument("--zone-size", nargs="*", default=[], metavar="ZONE=PX",
+               help="texture size for some zones, e.g. zone-3=4096 zone-7=4096 (zones whose atlas is cut into many small charts)")
 p.add_argument("-c", "--context-share", type=float, default=0.1, help="share of the budget for the context (default 0.1)")
 p.add_argument("--context", help="uncompressed context.glb (export_context.py); without it, the zones only")
 p.add_argument("--zones", nargs="*", help='zones, e.g. "zone 12" (default: those of the local manifest)')
@@ -49,10 +51,13 @@ def log(msg):
     print(f"[earth] {msg}", flush=True)
 
 
+zone_sizes = {k: int(v) for k, v in (item.split("=") for item in a.zone_size)}
+
+
 def save_texture(image, name):
-    """Resized to at most --size px (power-of-two-friendly, kept square or proportional), saved as JPEG in the output"""
+    """Resized to at most --size px (or --zone-size for this name; proportional, sides multiple of 4), saved as JPEG"""
     w, h = image.size
-    scale = min(1.0, a.size / max(w, h))
+    scale = min(1.0, zone_sizes.get(name, a.size) / max(w, h))
     if scale < 1:
         image.scale(max(4, round(w * scale / 4) * 4), max(4, round(h * scale / 4) * 4))
     image.filepath_raw = os.path.join(a.out, f"{name}.jpg")
