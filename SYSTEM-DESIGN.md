@@ -92,6 +92,10 @@ Tabular figures in tables and data.
   (200 ms), exits being shorter than entries. A section that opens animates its height and opacity, so what follows
   slides instead of jumping. No animation on first display. Example: the viewer settings panel's ambient occlusion
   rows (`viewer/src/config-panel.js`).
+- **Page transitions** (client-side navigation): MD3 *fade through* on the content (article and table of contents),
+  over `duration.long1` (450 ms), `easing.emphasized` `cubic-bezier(0.2, 0, 0, 1)`: the old content fades out over the
+  first 35 %, then the new one fades in while growing from 92 %, without overlap. The header and the sidebar change
+  without moving. Tokens in `tokens.scss`, styles in `custom.scss`.
 
 ## Components
 
@@ -107,7 +111,8 @@ Tabular figures in tables and data.
 - **Footer**: navy bar, author, credit for the Baets drawings.
 - Existing pages (docs) keep Starlight's layout, restyled with these tokens.
 - **Custom Elements** are named with the `l21-` prefix (rule in `GUIDELINES.md`): `<l21-image-zoom>` (figures, full
-  size on click), `<l21-dev-breakpoints>` (dev server only), `<l21-settings-panel>` (the 3D viewer's settings, ⚙).
+  size on click), `<l21-dev-breakpoints>` (dev server only), `<l21-settings-panel>` (the 3D viewer's settings, ⚙),
+  `<l21-model-frame>` (the viewer's frame on `/modele/`).
 
 ## Not wanted
 

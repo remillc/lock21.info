@@ -33,6 +33,14 @@
   --md-sys-shape-extra-large: 28px;
   --md-sys-shape-full: 999px;
 
+  // MD3 motion (material-web md.sys.motion; SYSTEM-DESIGN.md, Motion)
+  --md-sys-motion-duration-short4: 200ms;
+  --md-sys-motion-duration-medium4: 400ms;
+  --md-sys-motion-duration-long1: 450ms;
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+
   // Fonts (self-hosted, @fontsource)
   --lk-font-text: 'Archivo', system-ui, sans-serif;
   --lk-font-data: 'JetBrains Mono', ui-monospace, monospace;

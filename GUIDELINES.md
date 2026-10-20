@@ -44,6 +44,20 @@ to any UI added to the 3D viewer. Decided with Christian on 2026-10-19.
   applies to the site and to the 3D viewer.
 - One element per file; the class is named after it in English (`ImageZoom`, `SettingsPanel`).
 
+## Client-side routing
+
+The site navigates without full page loads (Astro `ClientRouter`, `src/components/Head.astro`): links swap the page's
+content. Scripts must survive that:
+
+- **Page behaviour goes in Custom Elements**, set up in `connectedCallback` and undone in `disconnectedCallback`
+  (global listeners): they run on every page where the element appears, after a full load as after a swap. A plain
+  page script runs once only (e.g. `<l21-model-frame>` on `/modele/`).
+- **Elements added by script to `<body>`** are moved into the new body on `astro:after-swap` (`image-zoom.js`).
+- **`history.replaceState` keeps `history.state`** (`history.replaceState(history.state, '', url)`): the router stores
+  its entry there; `null` breaks the back and forward buttons.
+- Starlight doesn't support the router officially: `Head.astro` (theme, sidebar scroll) and `Search.astro` (search
+  kept across pages) fill the gaps. Check them after a Starlight upgrade.
+
 ## Rules kept from today
 
 - `noindex` on every page while the site is not public (meta robots + `robots.txt`), including `/modele/`.

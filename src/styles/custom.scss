@@ -182,6 +182,42 @@ dialog.image-zoom {
   --sl-content-width: 75rem;
 }
 
+// Page transitions (client-side routing, src/components/Head.astro): MD3 "fade through" on the content (article and
+// table of contents); the header and the sidebar change without moving. Over duration.long1 (450 ms), emphasized: the
+// old content fades out over the first 35 %, then the new one fades in while growing from 92 %, with no overlap
+// (material-components-android, MaterialFadeThrough). Astro turns every view transition off with reduced motion.
+::view-transition-old(root),
+::view-transition-new(root),
+::view-transition-group(lock21-content) {
+  animation: none;
+}
+
+.main-frame {
+  view-transition-name: lock21-content;
+}
+
+::view-transition-old(lock21-content) {
+  animation: lock21-fade-out calc(var(--md-sys-motion-duration-long1) * 0.35) var(--md-sys-motion-easing-emphasized) both;
+}
+
+::view-transition-new(lock21-content) {
+  animation: lock21-fade-through-in calc(var(--md-sys-motion-duration-long1) * 0.65)
+    var(--md-sys-motion-easing-emphasized) calc(var(--md-sys-motion-duration-long1) * 0.35) both;
+}
+
+@keyframes lock21-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes lock21-fade-through-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;

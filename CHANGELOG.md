@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Client-side routing (Astro `ClientRouter`): pages change without a full reload, with an MD3 fade-through on the
+  content; theme, sidebar scroll and search kept across pages; `/modele/` frame as `<l21-model-frame>`.
+- Zone 4 republished from its 36 M export (shape, photo and relief).
 - Viewer settings kept by the browser between page loads (`localStorage`); a link's parameters override them,
   "Réinitialiser" clears them.
 - Relief and wet look for every zone (local tiles, not uploaded yet): normal maps baked from the high-res

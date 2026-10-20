@@ -45,6 +45,9 @@ export default defineConfig({
         './src/styles/custom.scss',
       ],
       components: {
+        // Client-side routing (ClientRouter) and the search kept across pages
+        Head: './src/components/Head.astro',
+        Search: './src/components/Search.astro',
         SiteTitle: './src/components/SiteTitle.astro',
         SocialIcons: './src/components/HeaderActions.astro',
         PageTitle: './src/components/PageTitle.astro',

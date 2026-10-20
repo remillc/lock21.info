@@ -1,0 +1,16 @@
+---
+// Starlight's search, kept across client-side navigations (Head.astro, ClientRouter): Starlight sets up Pagefind once,
+// on DOMContentLoaded, which doesn't fire again after a swap; a new search element would stay empty. The same element
+// (and its open/close shortcut, Ctrl+K) moves from page to page instead.
+import Default from '@astrojs/starlight/components/Search.astro'
+---
+
+<div class="search-persist" transition:persist="site-search">
+  <Default {...Astro.props} />
+</div>
+
+<style>
+  .search-persist {
+    display: contents;
+  }
+</style>

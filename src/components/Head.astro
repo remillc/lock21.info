@@ -1,0 +1,33 @@
+---
+// Starlight's <head> plus Astro's client-side router (ClientRouter): links swap the page without a full reload.
+// Starlight doesn't support the router officially; the gaps are filled here and in Search.astro:
+// - theme: the new document arrives without data-theme (Starlight sets it in a script at full load): copied over
+//   before the swap, so there is no flash;
+// - sidebar: its scroll position is kept (Starlight saves it only when the page unloads);
+// - search: kept across pages (Search.astro); the new page's copy is emptied before the swap, and the dialog is
+//   closed after a navigation from a result.
+// Page transition: SYSTEM-DESIGN.md (Motion), styles in custom.scss.
+import Default from '@astrojs/starlight/components/Head.astro'
+import { ClientRouter } from 'astro:transitions'
+---
+
+<Default />
+<ClientRouter />
+<script is:inline>
+  if (!window.lock21Router) {
+    window.lock21Router = true
+    let sidebarScroll = 0
+    document.addEventListener('astro:before-swap', (event) => {
+      event.newDocument.documentElement.dataset.theme = document.documentElement.dataset.theme
+      // The kept search replaces the new page's: emptied first, so that its element is never built (its constructor
+      // would add a Ctrl+K listener bound to a dialog that leaves the page)
+      event.newDocument.querySelector('[data-astro-transition-persist="site-search"]')?.replaceChildren()
+      sidebarScroll = document.getElementById('starlight__sidebar')?.scrollTop ?? 0
+    })
+    document.addEventListener('astro:after-swap', () => {
+      const sidebar = document.getElementById('starlight__sidebar')
+      if (sidebar) sidebar.scrollTop = sidebarScroll
+      document.querySelector('site-search dialog[open]')?.close()
+    })
+  }
+</script>

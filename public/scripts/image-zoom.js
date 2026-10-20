@@ -2,8 +2,10 @@
 // closes it. Native Custom Element (see GUIDELINES.md), added once to the page.
 class ImageZoom extends HTMLElement {
   connectedCallback() {
+    // Moved into the new <body> after a client-side navigation: already set up
+    if (this.dialog) return
     this.innerHTML = '<dialog class="image-zoom"><img alt="" /></dialog>'
-    const dialog = this.querySelector('dialog')
+    const dialog = (this.dialog = this.querySelector('dialog'))
     const big = dialog.querySelector('img')
     dialog.addEventListener('click', () => dialog.close())
     document.addEventListener('click', (event) => {
@@ -16,4 +18,6 @@ class ImageZoom extends HTMLElement {
   }
 }
 customElements.define('l21-image-zoom', ImageZoom)
-document.body.append(document.createElement('l21-image-zoom'))
+const zoom = document.body.appendChild(document.createElement('l21-image-zoom'))
+// Client-side navigation (ClientRouter, src/components/Head.astro) replaces <body>: the same element goes into the new one
+document.addEventListener('astro:after-swap', () => document.body.append(zoom))

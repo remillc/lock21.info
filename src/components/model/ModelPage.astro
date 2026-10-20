@@ -13,7 +13,7 @@ const updated = zones.updated
 ---
 
 <div class="model-page not-content">
-  <div class="frame">
+  <l21-model-frame class="frame">
     <iframe
       id="viewer-frame"
       title="Visualiseur 3D de l'écluse 21"
@@ -21,7 +21,7 @@ const updated = zones.updated
       allow="fullscreen"
       allowfullscreen
       loading="eager"></iframe>
-  </div>
+  </l21-model-frame>
 
   <div class="under-frame">
     <div class="heading">
@@ -79,18 +79,33 @@ const updated = zones.updated
 </div>
 
 <script>
-  // The page's own query string (?cam=…, plus test settings) goes to the viewer, and the viewer's camera comes back
-  // into the page's address, so that the page URL always shares the current view. The address keeps only ?cam=.
-  const frame = document.getElementById('viewer-frame') as HTMLIFrameElement
-  frame.src = (frame.dataset.src ?? '') + location.search
-  const cam = new URLSearchParams(location.search).get('cam')
-  history.replaceState(null, '', location.pathname + (cam ? `?cam=${cam}` : ''))
-  window.addEventListener('message', (event) => {
-    if (event.origin !== location.origin || event.source !== frame.contentWindow) return
-    if (event.data?.type === 'lock21:cam' && typeof event.data.search === 'string') {
-      history.replaceState(null, '', location.pathname + event.data.search)
+  // <l21-model-frame>: the viewer's iframe. The page's own query string (?cam=…, plus test settings) goes to the
+  // viewer, and the viewer's camera comes back into the page's address, so that the page URL always shares the current
+  // view. The address keeps only ?cam=. A Custom Element (GUIDELINES.md): set up each time it is inserted, on a full
+  // load as after a client-side navigation (ClientRouter, Head.astro), where a plain page script would run only once.
+  // replaceState keeps history.state: the router stores its own entry there (back and forward buttons).
+  class ModelFrame extends HTMLElement {
+    onMessage = (event: MessageEvent) => {
+      const frame = this.querySelector('iframe')
+      if (event.origin !== location.origin || event.source !== frame?.contentWindow) return
+      if (event.data?.type === 'lock21:cam' && typeof event.data.search === 'string') {
+        history.replaceState(history.state, '', location.pathname + event.data.search)
+      }
     }
-  })
+
+    connectedCallback() {
+      const frame = this.querySelector('iframe') as HTMLIFrameElement
+      frame.src = (frame.dataset.src ?? '') + location.search
+      const cam = new URLSearchParams(location.search).get('cam')
+      history.replaceState(history.state, '', location.pathname + (cam ? `?cam=${cam}` : ''))
+      window.addEventListener('message', this.onMessage)
+    }
+
+    disconnectedCallback() {
+      window.removeEventListener('message', this.onMessage)
+    }
+  }
+  customElements.define('l21-model-frame', ModelFrame)
 </script>
 
 <style>
@@ -100,6 +115,7 @@ const updated = zones.updated
   }
 
   .frame {
+    display: block;
     aspect-ratio: 16 / 9;
     max-height: calc(100vh - var(--sl-nav-height) - 8rem);
     min-height: 20rem;

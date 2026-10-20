@@ -16,17 +16,23 @@
   ]
 
   class DevBreakpoints extends HTMLElement {
-    connectedCallback() {
-      const update = () => {
-        // Breakpoint code, then its interval in px on a second line ("1200 - 1535"; the last one is open-ended)
-        const i = breakpoints.findIndex(([, min]) => window.innerWidth >= min)
-        const [name, min] = breakpoints[i]
-        const max = i > 0 ? breakpoints[i - 1][1] - 1 : '∞'
-        this.textContent = `${name}
+    update = () => {
+      // Breakpoint code, then its interval in px on a second line ("1200 - 1535"; the last one is open-ended)
+      const i = breakpoints.findIndex(([, min]) => window.innerWidth >= min)
+      const [name, min] = breakpoints[i]
+      const max = i > 0 ? breakpoints[i - 1][1] - 1 : '∞'
+      this.textContent = `${name}
 ${min} - ${max}`
-      }
-      update()
-      window.addEventListener('resize', update)
+    }
+
+    connectedCallback() {
+      this.update()
+      window.addEventListener('resize', this.update)
+    }
+
+    // A client-side navigation replaces the header: the old label stops listening
+    disconnectedCallback() {
+      window.removeEventListener('resize', this.update)
     }
   }
   customElements.define('l21-dev-breakpoints', DevBreakpoints)
