@@ -35,6 +35,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - `/modele/` page, Sketchfab-like: the viewer embedded in a large frame with a full-screen button, the camera
   shared through the page's address, model facts, navigation help, licence CC BY 4.0. The viewer moves to
   `/modele/viewer/`.
+- Wide figures (`figure-wide`): the zone map shown at 80 % of the column, centred.
+- Google Earth test (zone 12): light GLB for Google Earth Web and other 3D tools, KMZ (COLLADA) for Google Earth Pro,
+  model on the ground at the lock's coordinates (`tools/google-earth/`).
 - Deployment only on demand (Actions tab, Run workflow) or on a version tag; pushing `main` no longer deploys.
 - Site design applied (SYSTEM-DESIGN.md: E2 look on the MD3 token system): Archivo and JetBrains Mono self-hosted, navy
   header and footer bars with the S4 logo, the ÉCLUSE/21 wordmark and the lock's coordinates, "Modèle 3D" pill;
