@@ -3,6 +3,7 @@ title: Alignement des photos
 sidebar:
   order: 2
 ---
+
 Créer un nouveau fichier de projet pour la zone concernée. Nommez le fichier du nom de la zone, par exemple: zone-4.psx.
 
 Ajouter un `chunk`, puis le renommer `raw sparse cloud`.
@@ -60,9 +61,12 @@ On peut aussi désactiver les caméras si l'alignement ne corrige pas le problè
 
 ## Optimisation
 
-Faire une copie de backup du chunk avant les étapes d'optimisation.
+Faire une copie de backup du chunk avant les étapes d'optimisation:
 
-### Tie Points optimisation
+- Premier chunk: `[Nom du­ chunk] - RAW SPARSE`
+- Deuxième chunk: `[Nom du­ chunk]`
+
+Tie Points optimisation
 
 Après chacune des étapes, exécuter une optimisation des données (menu `Tools > Optimize Camera Alignment`), en cochant les paramètres `f`, `k1`, `k2`, `k3`, `cx & cy`, `p1`, `p2` et additional corrections.
 
