@@ -1,11 +1,16 @@
 ---
-// Footer: Starlight's (previous/next page links), then the navy bar of the design with the author and the credit for
-// Nick Baets' drawings.
+// Footer: Starlight's (previous/next page links), then the navy bar of the design with the site's name, the copyright and
+// the licence (CC BY 4.0, as for the 3D model: /modele/).
+// Both stay together at the bottom of the window on short pages (margin-top: auto; the flex columns in custom.scss).
 import Default from '@astrojs/starlight/components/Footer.astro'
 
 const english = Astro.locals.starlightRoute.lang?.startsWith('en')
+// From the first dive (2024) to the year of the build
+const years = `2024–${new Date().getFullYear()}`
+const licence = `https://creativecommons.org/licenses/by/4.0/deed.${english ? 'en' : 'fr'}`
 ---
 
+<div class="page-end">
 <Default />
 <script is:inline>
   // Previous / next page (Starlight's links): prefetched as soon as they are on screen (Astro prefetch, "viewport"),
@@ -14,11 +19,16 @@ const english = Astro.locals.starlightRoute.lang?.startsWith('en')
   for (const link of document.querySelectorAll('.pagination-links a')) link.dataset.astroPrefetch = 'viewport'
 </script>
 <div class="site-footer">
-  <span translate="no">{english ? 'LOCK/21' : 'ÉCLUSE/21'} · {english ? 'field notebook by' : 'carnet de terrain de'} Christian Rémillard</span>
-  <span>{english ? 'Original drawings' : "Dessins d'origine"}: Nick Baets (1988), via <a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks</a></span>
+  <span translate="no">{english ? 'LOCK/21' : 'ÉCLUSE/21'} · {english ? 'field notebook' : 'carnet de terrain'}</span>
+  <span>© {years} Christian Rémillard · {english ? 'License' : 'Licence'} <a href={licence} rel="license">CC BY 4.0</a></span>
+</div>
 </div>
 
 <style>
+  .page-end {
+    margin-top: auto;
+  }
+
   .site-footer {
     display: flex;
     flex-wrap: wrap;

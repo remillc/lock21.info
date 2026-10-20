@@ -177,6 +177,53 @@ dialog.image-zoom {
   }
 }
 
+// Footer at the bottom of the window on short pages (Footer.astro: previous / next and the navy bar, pushed down by
+// margin-top: auto); right after the content on long pages, as before. Starlight's .page fills the window's height:
+// that height is passed down to the last content panel through flex columns.
+.main-frame {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+
+  // The row "content + Sur cette page" on wide screens (Starlight: .lg:sl-flex), stacked below
+  > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+
+    @media (min-width: 72rem) {
+      flex-direction: row;
+    }
+  }
+}
+
+.main-pane,
+.main-pane > main,
+main > .content-panel:last-child,
+main > .content-panel:last-child > .sl-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-pane > main,
+main > .content-panel:last-child,
+main > .content-panel:last-child > .sl-container {
+  flex: 1 0 auto;
+}
+
+// Stacked (narrow screens), the content column grows too; side by side, the row already stretches it to full height
+@media not (min-width: 72rem) {
+  .main-pane {
+    flex: 1 0 auto;
+  }
+}
+
+// A flex item with auto side margins would shrink to its content: the container keeps its full width (max-width and
+// centring unchanged)
+main > .content-panel:last-child > .sl-container {
+  width: 100%;
+}
+
 // Pages without sidebar (home page): the 1200 px column of the design
 :root:not([data-has-sidebar]) {
   --sl-content-width: 75rem;
