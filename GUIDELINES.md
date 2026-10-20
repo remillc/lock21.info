@@ -65,7 +65,8 @@ content. Scripts must survive that:
 
 ## Rules kept from today
 
-- `noindex` on every page while the site is not public (meta robots + `robots.txt`), including `/modele/`.
+- Indexing: every page is open to search engines (no `noindex`); `robots.txt` only keeps out the bare viewer
+  `/modele/viewer/` (embedded by `/modele/`) and points to the sitemap that Starlight generates.
 - Custom domain `lock21.info` (`CNAME`), GitHub Pages deployment from `main` with the workflow's `GITHUB_TOKEN`.
 - Escape `<` and `>` in MDX prose.
 - Folder and file names in English (except existing French content slugs, kept to preserve the page addresses as

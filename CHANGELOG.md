@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- The site opens to search engines: `noindex` removed from every page, `robots.txt` allows everything but the bare
+  viewer (`/modele/viewer/`) and points to the sitemap.
 - `/modele/`: the viewer frame is wider than the text column, up to 1600 px (or the window minus 24 px margins).
 - Footer at the bottom of the window on short pages; its bar now reads `ÉCLUSE/21 · carnet de terrain` and
   `© 2024–2026 Christian Rémillard · Licence CC BY 4.0` (the Baets drawings stay credited in their captions).

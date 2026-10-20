@@ -1,2 +1,5 @@
 User-agent: *
-Disallow: /
+# The 3D viewer alone, embedded by /modele/: not a page of its own (visitors only see /modele/)
+Disallow: /modele/viewer/
+
+Sitemap: https://lock21.info/sitemap-index.xml
