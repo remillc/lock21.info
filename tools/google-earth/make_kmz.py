@@ -6,11 +6,19 @@ the model sitting on Google Earth's ground (relativeToGround, altitude 0): Googl
 lock is shown at depth 0 rather than 55 ft under the water. -H/--heading turns the model (degrees clockwise from
 north): 0, the .blend's frame is aligned on north.
 
+--network <url>: the network version, for a model that grows zone by zone. The downloaded lock-21.kmz only holds a
+link to <url>/lock-21.kml, which lists one small KMZ per zone and per piece of context (<url>/parts/<part>-<hash>.kmz,
+the hash changing with the part, so Google Earth never keeps a stale copy). Adding or updating a zone means uploading
+its part and the new lock-21.kml: users see it the next time they open the file, without downloading it again.
+Written in <dir>/network/ (lock-21.kmz, lock-21.kml, parts/), to serve or upload as is.
+
 Runs with the tool's own Python (pycollada): tools/google-earth/.venv/Scripts/python.exe make_kmz.py -h
 Setup once: python -m venv tools/google-earth/.venv; tools/google-earth/.venv/Scripts/python -m pip install pycollada==0.9.2 numpy
 """
 import argparse
+import hashlib
 import os
+import shutil
 import zipfile
 
 import numpy as np
@@ -22,6 +30,7 @@ p.add_argument("-n", "--name", default="lock-21", help="base name of the files (
 p.add_argument("--lat", type=float, default=44.996817, help="latitude (default: Lock 21, 44°59.809' N)")
 p.add_argument("--lon", type=float, default=-74.89995, help="longitude (default: Lock 21, 74°53.997' W)")
 p.add_argument("-H", "--heading", type=float, default=0, help="model heading, degrees clockwise from north (default 0)")
+p.add_argument("--network", metavar="URL", help="also write the network version, served from URL (e.g. https://tiles.lock21.info/downloads/google-earth)")
 a = p.parse_args()
 
 
@@ -154,12 +163,13 @@ def placemark(mat_name):
     </Placemark>"""
 
 
-textures, triangles, meshes, zones, context = [], 0, 0, [], []
+textures, triangles, meshes, zones, context, part_texture = [], 0, 0, [], [], {}
 for mat_name, corners in groups.items():
     spec = materials.get(mat_name, {"color": (0.8, 0.8, 0.8)})
     t, m = write_model(mat_name, corners, spec)
     triangles += t
     meshes += m
+    part_texture[mat_name] = spec.get("texture")
     if "texture" in spec:
         textures.append(spec["texture"])
     (zones if mat_name.startswith("zone-") else context).append(mat_name)
@@ -196,3 +206,76 @@ with zipfile.ZipFile(kmz_path, "w", zipfile.ZIP_DEFLATED) as kmz:
     for texture in textures:
         kmz.write(os.path.join(a.dir, texture), f"models/{texture}")
 print(f"{kmz_path}: {os.path.getsize(kmz_path) / 1e6:.1f} MB, {triangles:,} triangles")
+
+# Network version: one small KMZ per part, a list of links, and the downloadable file that points to the list
+if a.network:
+    base = a.network.rstrip("/")
+    net = os.path.join(a.dir, "network")
+    shutil.rmtree(net, ignore_errors=True)
+    os.makedirs(os.path.join(net, "parts"))
+    links = {}
+    for mat_name in zones + context:
+        files = [(os.path.join(a.dir, f"{mat_name}.dae"), f"models/{mat_name}.dae")]
+        if part_texture[mat_name]:
+            files.append((os.path.join(a.dir, part_texture[mat_name]), f"models/{part_texture[mat_name]}"))
+        digest = hashlib.sha256()
+        for path, _ in files:
+            digest.update(open(path, "rb").read())
+        part = f"{mat_name}-{digest.hexdigest()[:8]}.kmz"
+        doc = f"""<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+{placemark(mat_name)}
+</Document>
+</kml>
+"""
+        with zipfile.ZipFile(os.path.join(net, "parts", part), "w", zipfile.ZIP_DEFLATED) as kmz:
+            kmz.writestr("doc.kml", doc)
+            for path, arcname in files:
+                kmz.write(path, arcname)
+        links[mat_name] = f"{base}/parts/{part}"
+
+    def network_link(mat_name):
+        return f"""    <NetworkLink>
+      <name>{label(mat_name)}</name>
+      <Link><href>{links[mat_name]}</href></Link>
+    </NetworkLink>"""
+
+    listing = f"""<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <name>Écluse 21</name>
+  <LookAt><longitude>{a.lon}</longitude><latitude>{a.lat}</latitude><altitude>0</altitude><heading>0</heading><tilt>45</tilt><range>120</range></LookAt>
+  <description>Modèle 3D de l'écluse 21 (Dickinson Landing), photogrammétrie sous-marine de Christian Rémillard, lock21.info, licence CC BY 4.0. {len(zones)} zones, {triangles:,} triangles; les zones s'ajoutent au fil des plongées. Posé au sol (profondeur 0): l'écluse est en réalité à 55 pi (16,8 m) sous l'eau.</description>
+  <Placemark>
+    <name>Écluse 21</name>
+    <Point><coordinates>{a.lon},{a.lat},0</coordinates></Point>
+  </Placemark>
+  <Folder>
+    <name>Zones</name>
+{newline.join(network_link(z) for z in zones)}
+  </Folder>
+  <Folder>
+    <name>Contexte (maquette)</name>
+{newline.join(network_link(c) for c in context)}
+  </Folder>
+</Document>
+</kml>
+"""
+    open(os.path.join(net, f"{a.name}.kml"), "w", encoding="utf-8").write(listing)
+    # The downloaded file: a link to the list, fetched again each time Google Earth opens it
+    entry = f"""<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<NetworkLink>
+  <name>Écluse 21</name>
+  <open>1</open>
+  <flyToView>1</flyToView>
+  <Link><href>{base}/{a.name}.kml</href></Link>
+</NetworkLink>
+</kml>
+"""
+    with zipfile.ZipFile(os.path.join(net, f"{a.name}.kmz"), "w", zipfile.ZIP_DEFLATED) as kmz:
+        kmz.writestr("doc.kml", entry)
+    size = sum(os.path.getsize(os.path.join(net, "parts", f)) for f in os.listdir(os.path.join(net, "parts")))
+    print(f"{net}: {a.name}.kmz ({os.path.getsize(os.path.join(net, f'{a.name}.kmz'))} bytes) -> {base}/{a.name}.kml, "
+          f"{len(links)} parts, {size / 1e6:.1f} MB")
