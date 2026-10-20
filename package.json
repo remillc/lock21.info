@@ -12,6 +12,7 @@
     "viewer:dev": "npm --prefix viewer run dev",
     "viewer:build": "npm --prefix viewer run build",
     "model:upload": "node tools/publish-model/upload_r2.mjs",
+    "downloads:upload": "node tools/publish-model/upload_downloads.mjs",
     "build:viewer": "npm --prefix viewer run build -- --outDir ../public/modele/viewer --emptyOutDir",
     "preview": "astro preview"
   },

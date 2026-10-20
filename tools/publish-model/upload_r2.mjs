@@ -6,7 +6,7 @@
 //   robots.txt (Disallow: /) is uploaded too: the tiles domain serves data only, nothing to index.
 // - Clean-up: version folders referenced neither by the new manifest nor by the previous one (read from
 //   the bucket before uploading) are deleted. The previous generation is kept for visitors whose
-//   manifest is still cached. --no-prune keeps everything.
+//   manifest is still cached. --no-prune keeps everything. downloads/ (upload_downloads.mjs) is never touched.
 // - Credentials come from .env.local at the repository root (R2_ENDPOINT, R2_ACCESS_KEY_ID,
 //   R2_SECRET_ACCESS_KEY, R2_BUCKET) and are never printed.
 //
@@ -137,7 +137,7 @@ if (prune) {
   do {
     const page = await s3.send(new ListObjectsV2Command({ Bucket: bucket, ContinuationToken: token }))
     for (const object of page.Contents || []) {
-      if (object.Key === 'manifest.json' || object.Key === 'robots.txt') continue
+      if (object.Key === 'manifest.json' || object.Key === 'robots.txt' || object.Key.startsWith('downloads/')) continue
       const version = object.Key.split('/').slice(0, 2).join('/') + '/'
       if (!keep.has(version)) stale.push(object.Key)
     }

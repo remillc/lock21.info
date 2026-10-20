@@ -18,6 +18,7 @@ Setup once: python -m venv tools/google-earth/.venv; tools/google-earth/.venv/Sc
 import argparse
 import hashlib
 import os
+import re
 import shutil
 import zipfile
 
@@ -218,9 +219,14 @@ if a.network:
         files = [(os.path.join(a.dir, f"{mat_name}.dae"), f"models/{mat_name}.dae")]
         if part_texture[mat_name]:
             files.append((os.path.join(a.dir, part_texture[mat_name]), f"models/{part_texture[mat_name]}"))
+        # Hash of the content, without the dates pycollada writes into each file (<created>, <modified>): a rebuild
+        # of an unchanged part keeps its name, and isn't uploaded again
         digest = hashlib.sha256()
         for path, _ in files:
-            digest.update(open(path, "rb").read())
+            data = open(path, "rb").read()
+            if path.endswith(".dae"):
+                data = re.sub(rb"<(created|modified)>[^<]*</\1>", b"", data)
+            digest.update(data)
         part = f"{mat_name}-{digest.hexdigest()[:8]}.kmz"
         doc = f"""<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">

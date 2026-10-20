@@ -66,6 +66,7 @@ npm run viewer:dev           # viewer dev server on http://localhost:3100/modele
 npm run model:check          # 3D zones changed in the .blend since their last publication
 npm run model:post-modified  # republish the changed zones locally (O:\publishing\tiles)
 npm run model:upload         # upload tiles to R2 (changes the live viewer: ask first)
+npm run downloads:upload     # upload O:\publishing\downloads\online to R2 downloads/ (KMZ, GLB; ask first)
 ```
 
 See `tools/publish-model/README.md` for the whole 3D pipeline.

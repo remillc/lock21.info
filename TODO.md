@@ -33,11 +33,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   tiles.lock21.info → Eligible for cache, edge TTL: use the origin's Cache-Control). Today every request reaches R2
   (`cf-cache-status: DYNAMIC`, .json and .glb are not cached by default); check `cf-cache-status: HIT` afterwards
 - [ ] #12 Downloadable whole model (`.glb`, about 100 to 150 MB), generated from the manifest
-- [ ] #13 Google Earth (`feature/google-earth`, `tools/google-earth/README.md`): format, scale, orientation (heading 0)
-  and position (site anchor) settled on zone 12; meshes of at most 30 000 vertices. Next: the whole model (zones +
-  context) as a KMZ (test 200k, 400k, 800k triangles in Google Earth Pro, keep the largest that runs smoothly) and a
-  medium GLB (~2 M triangles, 4096 px textures, ~100 MB); upload to R2 `downloads/` (ask first) and fill the
-  downloads section of `/modele/`
+- [ ] #13 Google Earth and downloads (`tools/google-earth/README.md`): online on R2 (network KMZ at 600 000 triangles,
+  GLB of 2 M triangles). To check: the online KMZ in Google Earth Pro (only tested from a local server), the GLB in
+  Google Earth Web; whether 700 000 triangles still open (600 000 opens, 800 000 crashes)
 - [ ] #15 Check whether publishing a downloadable model of the site needs any approval (Ontario marine archaeology
   rules, SOS Ottawa for the Baets drawings)
 

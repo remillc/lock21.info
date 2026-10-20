@@ -70,9 +70,26 @@ const updated = zones.updated
         libre de le réutiliser, de l'adapter et de le partager, y compris commercialement, en citant la source:
       </p>
       <p class="credit">Écluse 21, modèle 3D par Christian Rémillard (lock21.info), CC BY 4.0</p>
+      <ul class="downloads">
+        <li>
+          <a href={site.downloads.kmz}>Google Earth Pro</a> <span>KMZ</span>
+          <p>
+            Ouvre l'écluse à sa place sur la carte ({site.downloads.kmzTriangles} triangles). Le fichier ne contient qu'un
+            lien: les zones sont chargées depuis le site, et celles qui s'ajoutent apparaissent à la prochaine ouverture.
+            Posé au sol: Google Earth ne descend pas sous l'eau.
+          </p>
+        </li>
+        <li>
+          <a href={site.downloads.glb}>Modèle complet</a> <span>GLB · {site.downloads.glbSize}</span>
+          <p>
+            Zones et maquette du site, {site.downloads.glbTriangles} de triangles: pour Blender, Sketchfab, la visionneuse
+            3D de Windows ou l'import de Google Earth Web.
+          </p>
+        </li>
+      </ul>
       <p>
-        Téléchargements bientôt: le modèle complet (GLB) et une version pour Google Earth (KMZ). Dessins d'origine du
-        site: Nick Baets (1988), via <a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks</a>.
+        Dessins d'origine du site: Nick Baets (1988), via
+        <a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks</a>.
       </p>
     </section>
   </div>
@@ -222,6 +239,26 @@ const updated = zones.updated
     margin: 0;
     font-size: 0.9375rem;
     color: var(--md-sys-color-on-surface-variant);
+  }
+  .downloads {
+    margin: 0 0 0.75rem;
+    padding: 0;
+    list-style: none;
+  }
+  .downloads li {
+    margin: 0 0 0.75rem;
+  }
+  .downloads a {
+    font-weight: 700;
+  }
+  .downloads span {
+    font-family: var(--lk-font-data);
+    font-size: 0.75rem;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  .downloads p {
+    margin: 0.25rem 0 0;
+    font-size: 0.9375rem;
   }
   .credit {
     padding: 0.75rem 1rem;

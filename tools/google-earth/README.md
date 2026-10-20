@@ -80,3 +80,29 @@ Essais sur la zone 12 seule (2026-10-19, Google Earth Pro 7.3.6):
 Modèle complet (2026-10-20), dans `O:\publishing\downloads\google-earth\`: `t200k\`, `t400k\` et `t800k\` (KMZ à
 essayer dans Google Earth Pro, textures de 2048 px) et `glb\` (GLB moyen: 2 M triangles, textures de 4096 px). Premier essai, un seul modèle: 200 000 et 800 000 triangles plantent, 400 000 s'ouvre sans rien montrer; d'où un
 modèle par partie. À vérifier: jusqu'où Google Earth Pro reste fluide; le GLB dans Google Earth Web.
+
+## En ligne (2026-10-20)
+
+Choix: **600 000 triangles**, textures de 2048 px (`t600k`: s'ouvre, zones 3 et 7 nettes; 400 000: zones 3 et 7
+grossières, faute de triangles et non de texture, des textures de 4096 px n'y changent rien; 800 000 plante).
+
+**Version réseau** (`make_kmz.py --network <url>`): le KMZ téléchargé (311 octets) ne contient qu'un lien vers
+`<url>/lock-21.kml`, la liste des parties, un petit KMZ par zone et par pièce du contexte (`parts/<partie>-<hash>.kmz`;
+le hash, calculé sans les dates que pycollada écrit, ne change qu'avec le contenu). Ajouter ou refaire une zone: refaire
+le modèle et le réseau, puis `npm run downloads:upload`, qui envoie les parties nouvelles, puis la liste (cache de 5 min)
+et supprime les parties qui n'y sont plus. Ceux qui ont le fichier voient la zone à la prochaine ouverture.
+
+```powershell
+# Modèle à 600 000 triangles, réseau, téléchargements assemblés, mise en ligne (demander avant)
+& "C:\Program Files\Blender Foundation\Blender 5.2lender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth	600k -t 600000 -s 2048 --context O:	emp\google-earth\context\context.glb
+tools\google-earth\.venv\Scripts\python.exe tools\google-earth\make_kmz.py -d O:\publishing\downloads\google-earth	600k --network https://tiles.lock21.info/downloads/google-earth
+# online\google-earth\ = t600k
+etwork\ ; online\lock-21.glb = le GLB de 2 M triangles (make_model.py -t 2000000 -s 4096)
+npm run downloads:upload
+```
+
+Adresses: `https://tiles.lock21.info/downloads/google-earth/lock-21.kmz` (Google Earth Pro) et
+`https://tiles.lock21.info/downloads/lock-21.glb` (108 Mo). Liés depuis la page `/modele/` (`src/data/site.ts`,
+`downloads`). Pour un essai local de la version réseau: `--network http://localhost:8083`, puis
+`serve-tiles.ps1 -TilesRoot <dossier>
+etwork -Port 8083`.
