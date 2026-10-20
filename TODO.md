@@ -36,8 +36,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #13 Google Earth and downloads (`tools/google-earth/README.md`): online on R2 (network KMZ at 600 000 triangles,
   GLB of 2 M triangles). To check: the online KMZ in Google Earth Pro (only tested from a local server), the GLB in
   Google Earth Web; whether 700 000 triangles still open (600 000 opens, 800 000 crashes)
-- [ ] #15 Check whether publishing a downloadable model of the site needs any approval (Ontario marine archaeology
-  rules, SOS Ottawa for the Baets drawings)
 
 ### Documentation
 
