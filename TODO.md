@@ -29,9 +29,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ### Hosting and downloads
 
-- [ ] #11 Cloudflare Cache Rule on `tiles.lock21.info` (lock21.info → Caching → Cache Rules: hostname equals
-  tiles.lock21.info → Eligible for cache, edge TTL: use the origin's Cache-Control). Today every request reaches R2
-  (`cf-cache-status: DYNAMIC`, .json and .glb are not cached by default); check `cf-cache-status: HIT` afterwards
 - [ ] #13 Google Earth and downloads (`tools/google-earth/README.md`): online on R2 (network KMZ at 600 000 triangles,
   GLB of 2 M triangles). To check: the online KMZ in Google Earth Pro (only tested from a local server), the GLB in
   Google Earth Web; whether 700 000 triangles still open (600 000 opens, 800 000 crashes)

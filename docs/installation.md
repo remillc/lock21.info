@@ -131,6 +131,12 @@ autorisées (**CORS**). Sont autorisées `https://lock21.info`, `http://localhos
 Si un visualiseur lancé sur un autre port affiche une erreur « blocked by CORS policy », ajouter son adresse dans le
 tableau de bord Cloudflare: **R2** › `lock21-tiles` › **Settings** › **CORS Policy**.
 
+Le cache de Cloudflare garde les fichiers de `tiles.lock21.info` près des visiteurs: règle **Tuiles R2** (domaine
+`lock21.info` › **Caching** › **Cache Rules**: *Hostname equals `tiles.lock21.info`*, *Eligible for cache*). Il suit
+l'en-tête `Cache-Control` des fichiers: un an pour les tuiles (chaque publication a son propre dossier daté),
+60 secondes pour `manifest.json`. Pour vérifier, faire une requête GET (`curl -s -o NUL -D - <adresse>`), deux fois:
+`cf-cache-status: HIT` la deuxième fois. Une requête HEAD (`curl -I`) affiche toujours `DYNAMIC`.
+
 ## 8. Vérifier que tout fonctionne
 
 ```powershell
