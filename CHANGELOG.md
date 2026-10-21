@@ -2,6 +2,11 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased
+
+- Home page render: no more light patch at the bottom right (slanted sunlight slipped past the surface's edge into
+  the water volume).
+
 ## 0.6.0 - 2026-10-21
 
 - Translation tracking: `npm run i18n:status` (`tools/i18n/status.mjs`) lists the English pages to create, update or
