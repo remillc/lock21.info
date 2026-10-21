@@ -52,13 +52,17 @@ if (document.fullscreenEnabled) {
 // at the address the phone used to reach the viewer: tested on the phone before going online
 const AR_URL = import.meta.env.VITE_AR_URL ||
   (import.meta.env.DEV ? `http://${location.hostname}:8084` : 'https://tiles.lock21.info/downloads/ar')
+// ?ar=full: the lock at its real size (70 m) instead of on a table (the /modele/ page's "Taille réelle" QR code and link)
+const arFull = params.get('ar') === 'full'
+const arName = arFull ? 'lock-21-ar-full' : 'lock-21-ar'
 const arLink = document.querySelector('.ar-button')
+if (arFull) arLink.title = 'Voir en réalité augmentée (taille réelle)'
 if (arLink.relList?.supports?.('ar')) {
-  arLink.href = `${AR_URL}/lock-21-ar.usdz`
+  arLink.href = `${AR_URL}/${arName}.usdz`
   arLink.hidden = false
 } else if (/Android/i.test(navigator.userAgent)) {
-  const glb = `${AR_URL}/lock-21-ar.glb`
-  const title = 'Écluse 21 · 1:100'
+  const glb = `${AR_URL}/${arName}.glb`
+  const title = arFull ? 'Écluse 21 · taille réelle' : 'Écluse 21 · 1:100'
   arLink.removeAttribute('rel')
   arLink.target = '_top'
   arLink.href = `intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glb)}&mode=ar_preferred&resizable=true` +

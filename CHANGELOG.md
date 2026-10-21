@@ -7,8 +7,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - Augmented reality: a button in the 3D viewer, on phones and tablets only, puts the whole lock on a table at 1:100
   (70 cm): AR Quick Look on iPhone and iPad (USDZ), Scene Viewer on Android (GLB). No library. Model built by
   `make_model.py -x 0.01 --usdz` (400 000 triangles), copyright in both files.
-- `/modele/` on a computer: a QR code (made at build time, `qrcode`) to open the page on a phone and try augmented
-  reality; hidden on phones.
+- `/modele/`: a "Réalité augmentée" section under the downloads. On a computer, two QR codes (made at build time,
+  `qrcode`) open the page on a phone: on a table (1:100) or at real size (70 m, `?ar=full`, read by the viewer); on a
+  phone, the same two choices as links.
 - Every public model file carries the copyright (© 2024–2026 Christian Rémillard, CC BY 4.0): the GLB in glTF's
   `asset.copyright`, with the origin's coordinates (44.996817° N, 74.89995° W) and orientation in `asset.extras`
   (`glb_metadata.py`); the KMZ, its list, each part and each COLLADA model. `/modele/`: the "Posé au sol" sentence
