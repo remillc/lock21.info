@@ -1,0 +1,102 @@
+---
+// <l21-analytics-optout>, on the privacy page: Google Analytics measures every visit (no banner), and this button lets a
+// visitor refuse, or accept again. The choice is kept in localStorage ('l21-consent': denied, or granted) and announced
+// with a document event 'l21-consent' (Analytics.astro stops or starts measuring). Refusing also deletes Google
+// Analytics' cookies. Shown only when analytics are on (production build, an ID in src/data/site.ts).
+import { site } from '../data/site'
+---
+
+{
+  import.meta.env.PROD && site.analytics.ga4 ? (
+    <l21-analytics-optout>
+      <p class="status" aria-live="polite" />
+      <button type="button" />
+    </l21-analytics-optout>
+  ) : (
+    <p>
+      <em>(Le bouton pour refuser la mesure n'apparaît que sur le site publié.)</em>
+    </p>
+  )
+}
+
+<script>
+  const KEY = 'l21-consent'
+
+  function stored(): string | null {
+    try {
+      return localStorage.getItem(KEY)
+    } catch {
+      return null
+    }
+  }
+
+  class AnalyticsOptOut extends HTMLElement {
+    onClick = () => {
+      const value = stored() === 'denied' ? 'granted' : 'denied'
+      try {
+        localStorage.setItem(KEY, value)
+      } catch {
+        // Storage unavailable: the choice lasts until the page is closed
+      }
+      if (value === 'denied') {
+        // Google Analytics' cookies (_ga, _ga_<id>), on this host and on the domain
+        for (const name of document.cookie.split(';').map((c) => c.split('=')[0].trim()).filter((n) => n.startsWith('_ga'))) {
+          for (const domain of ['', `; domain=.${location.hostname}`]) document.cookie = `${name}=; Max-Age=0; path=/${domain}`
+        }
+      }
+      document.dispatchEvent(new CustomEvent('l21-consent', { detail: value }))
+      this.render()
+    }
+
+    connectedCallback() {
+      this.querySelector('button')?.addEventListener('click', this.onClick)
+      this.render()
+    }
+
+    disconnectedCallback() {
+      this.querySelector('button')?.removeEventListener('click', this.onClick)
+    }
+
+    render() {
+      const refused = stored() === 'denied'
+      const status = this.querySelector('.status')
+      const button = this.querySelector('button')
+      if (status) status.textContent = refused ? 'Vos visites ne sont pas mesurées.' : 'Vos visites sont mesurées.'
+      if (button) button.textContent = refused ? 'Accepter la mesure' : 'Ne plus être mesuré'
+    }
+  }
+  if (!customElements.get('l21-analytics-optout')) customElements.define('l21-analytics-optout', AnalyticsOptOut)
+</script>
+
+<style>
+  l21-analytics-optout {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    margin-block: 1rem;
+  }
+  .status {
+    margin: 0;
+  }
+  /* MD3 outlined button, as in the rest of the site */
+  button {
+    min-height: 40px;
+    padding: 0 1.25rem;
+    border: 2px solid var(--md-sys-color-primary);
+    border-radius: var(--md-sys-shape-medium);
+    background: transparent;
+    color: var(--md-sys-color-primary);
+    font-family: var(--lk-font-data);
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  button:hover {
+    box-shadow: inset 0 0 0 100px color-mix(in srgb, currentColor 8%, transparent);
+  }
+  button:focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: 2px;
+  }
+</style>

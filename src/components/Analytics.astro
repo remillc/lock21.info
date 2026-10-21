@@ -1,9 +1,9 @@
 ---
-// Google Analytics 4, only after consent (Québec's Loi 25: Google Analytics uses cookies). Included in every page's
-// <head> by Head.astro. Without an ID (src/data/site.ts, analytics.ga4) nothing is loaded and no banner shows.
-// - Consent: <l21-consent> (Footer.astro) asks once; the choice is kept in localStorage ('l21-consent': granted or
-//   denied) and can be changed from the footer. Google's script is only loaded once consent is granted (Consent Mode
-//   v2, everything denied by default).
+// Google Analytics 4, for every visit, with its cookies (no consent banner since 2026-10-21, at Christian's request).
+// Included in every page's <head> by Head.astro. Without an ID (src/data/site.ts, analytics.ga4) nothing is loaded.
+// - Refusing (Québec's Loi 25: Google Analytics uses cookies): the privacy page's button (<l21-analytics-optout>,
+//   AnalyticsOptOut.astro) keeps the choice in localStorage ('l21-consent': denied, or granted to accept again).
+//   Nothing is loaded for a visitor who refused, including those who refused in the former banner.
 // - Page views: sent by hand, on the first load and after each client-side navigation (astro:page-load); automatic
 //   ones would also count every ?cam= update of the /modele/ page as a page.
 // - The arrival address is kept before /modele/ cleans its own (l21-model-frame keeps only ?cam=), so that the QR
@@ -78,8 +78,8 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
 
   if (id && !w.lock21Analytics) {
     w.lock21Analytics = true
-    if (choice() === 'granted') load()
-    // Consent given or withdrawn from the banner
+    if (choice() !== 'denied') load()
+    // Measurement refused or accepted again from the privacy page
     document.addEventListener('l21-consent', (event) => {
       const granted = (event as CustomEvent<string>).detail === 'granted'
       if (granted) load()

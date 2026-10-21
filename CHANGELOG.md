@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- No consent banner anymore: Google Analytics measures every visit, with its cookies. A visitor can refuse (or accept
+  again) with the button on `/confidentialite/` (`<l21-analytics-optout>`), which also deletes the GA cookies; those
+  who refused in the former banner stay unmeasured. The footer's "Témoins" button is gone; the privacy page rewritten.
 - **New terrain online** (context): the canal floor at 60 ft, the north bank in two pitches (2 : 1 then 1 1/2 : 1,
   crest about 28 ft as the scans show), the south bank at 2 1/2 : 1 down to the river bed at 70 ft, earth banks past
   the south wall's ends, the floor flat in front of the walls and the ground just under the zones (zone 8's stairs
