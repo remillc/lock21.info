@@ -10,9 +10,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   withdrawal), page views on client-side navigations, `file_download` (KMZ, GLB), `ar_launch` (table / real size), and
   the QR codes as campaigns (`utm_campaign=ra-table`, `ra-taille-reelle`). Off until the measurement ID is set in
   `src/data/site.ts`. New page `/confidentialite/` (draft: contact and retention to complete).
-- Augmented reality: a button in the 3D viewer, on phones and tablets only, puts the whole lock on a table at 1:100
-  (70 cm): AR Quick Look on iPhone and iPad (USDZ), Scene Viewer on Android (GLB). No library. Model built by
-  `make_model.py -x 0.01 --usdz` (400 000 triangles), copyright in both files.
+- Augmented reality: a button in the 3D viewer, on phones and tablets only, puts the surveyed zones (without the
+  mockup terrain) on a table at 1:100 (about 70 cm), or at real size with `?ar=full`: AR Quick Look on iPhone and iPad
+  (USDZ), Scene Viewer on Android (GLB). No library. Models built by `make_model.py -x 0.01 --usdz` and `-x 1`
+  (400 000 triangles), copyright in the files.
 - `/modele/`: a "Réalité augmentée" section under the downloads. On a computer, two QR codes (made at build time,
   `qrcode`) open the page on a phone: on a table (1:100) or at real size (70 m, `?ar=full`, read by the viewer); on a
   phone, the same two choices as links.
@@ -23,6 +24,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - Guide `docs/processing-the-blend-file.md` (French): the steps after a change to the `.blend`, from the check to the
   live model, the downloads and the site.
 - Guide `docs/installation.md` (French): preparing a computer for the project, by kind of work.
+- 3D viewer loading indicator (`<l21-loading>`): "Chargement" with dots appearing one by one, the share of tiles
+  loaded on an MD3 progress bar (never backwards), on a dark card readable over the terrain; it leaves (MD3 exit) once
+  the first view is complete, not as soon as the roots are in.
 - `/modele/`: "Licence" and "Téléchargements" are two sections, the licence under "Le modèle"; the two downloads as
   filled buttons in the signal colour (tertiary), with an icon (globe for Google Earth, arrow for the GLB); the KMZ link carries `download`, so the client-side router leaves it to the browser; missing
   space restored in "via Save Ontario Shipwrecks".

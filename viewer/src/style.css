@@ -14,17 +14,103 @@ body {
   touch-action: none;
 }
 
-.status {
+/* Loading indicator (loading.js): centred over the model, label then an MD3 linear progress indicator */
+l21-loading {
   position: fixed;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  font-variant-numeric: tabular-nums;
 }
 
-.status:empty {
+/* Its own dark card (as the viewer's buttons): readable over the light terrain as over the background */
+.loading-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px 16px;
+  border-radius: 12px;
+  background: rgb(4 20 24 / 85%);
+  color: #d7e3ea;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 30%);
+}
+
+l21-loading[hidden] {
   display: none;
+}
+
+.loading-percent {
+  margin-left: 0.5em;
+  color: #9bb8c6;
+}
+
+.loading-bar {
+  width: min(240px, 60vw);
+  height: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: rgb(60 194 188 / 25%);
+}
+
+.loading-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: #3cc2bc;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 200ms linear;
+}
+
+/* The dots: the first appears, then the second, then the third, then all go, and again */
+.loading-dots i {
+  font-style: normal;
+  animation: 1.6s step-end infinite;
+}
+
+.loading-dots i:nth-child(1) {
+  animation-name: loading-dot-1;
+}
+
+.loading-dots i:nth-child(2) {
+  animation-name: loading-dot-2;
+}
+
+.loading-dots i:nth-child(3) {
+  animation-name: loading-dot-3;
+}
+
+@keyframes loading-dot-1 {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+}
+
+@keyframes loading-dot-2 {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+@keyframes loading-dot-3 {
+  0% { opacity: 0; }
+  75% { opacity: 1; }
+}
+
+l21-loading.error .loading-dots,
+l21-loading.error .loading-percent,
+l21-loading.error .loading-bar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-dots i {
+    animation: none;
+  }
+
+  .loading-fill {
+    transition: none;
+  }
 }
 
 .home {
