@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Home page render: sunlight rays through the water (a thin scattering volume and a rippled surface casting the
+  shafts), and its link opens the viewer at the same point of view (`/modele/?cam=…`).
 - **English version of the site** (`/en/`): every page translated (docs, tests, privacy), the home page, the model
   page, the header, footer, depth gauges (ft), the opt-out button and the sidebar labels in English; the home page's
   dive log excerpts from the English log (`src/lib/i18n.ts`, `src/lib/diveLog.ts`).
