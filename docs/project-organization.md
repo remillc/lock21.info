@@ -47,8 +47,6 @@ traitement). Le détail: le guide **Installation**, section 5.
 
 - **`main`**: la version de référence du code et des pages. La pousser ne publie rien.
 - **Une branche par travail** (`feature/…`, `docs/…`), fusionnée dans `main` une fois terminée, puis supprimée.
-- **`gh-pages`**: le site construit, écrit par la publication vers GitHub Pages (jusqu'à la bascule vers Cloudflare);
-  on n'y touche pas.
 - **Les versions**: `0.x.y` tant que le site n'est pas public. Une version (« release ») a sa section datée dans
   `CHANGELOG.md` et une étiquette Git `vX.Y.Z`; l'étiquette déclenche la publication du site.
 - **Publier sans version**: sur GitHub, onglet **Actions**, **Deploy**, **Run workflow** sur `main`.
@@ -62,8 +60,8 @@ même version. Ne pas changer de branche pendant qu'un outil lit le `.blend`, ni
 
 | Service | Rôle | Adresse |
 | --- | --- | --- |
-| **GitHub** | le code (dépôt `remillc/lock21.info`) et l'hébergement du site (GitHub Pages) | <https://github.com/remillc/lock21.info>, <https://lock21.info/> |
-| **Cloudflare** | l'hébergement du site (Worker `lock21-info`, fichiers statiques; en essai jusqu'à la bascule), le nom de domaine `lock21.info`, l'adresse `info@lock21.info` (Email Routing: renvoyée vers la boîte Gmail de Christian), et le stockage R2 (bucket `lock21-tiles`): tuiles, téléchargements, réalité augmentée | <https://tiles.lock21.info/> |
+| **GitHub** | le code (dépôt `remillc/lock21.info`) et la publication (action **Deploy**, qui envoie le site à Cloudflare) | <https://github.com/remillc/lock21.info> |
+| **Cloudflare** | l'hébergement du site (Worker `lock21-info`, fichiers statiques, domaine `lock21.info`), le nom de domaine `lock21.info`, l'adresse `info@lock21.info` (Email Routing: renvoyée vers la boîte Gmail de Christian), et le stockage R2 (bucket `lock21-tiles`): tuiles, téléchargements, réalité augmentée | <https://lock21.info/>, <https://tiles.lock21.info/> |
 | **Google Analytics** | la mesure d'audience, avec témoins; les visiteurs peuvent la refuser sur la page Confidentialité (propriété `G-796S6VL5P8`) | <https://analytics.google.com/> |
 
 Les identifiants du stockage R2 sont dans `.env.local`, à la racine du projet, hors de Git (guide **Installation**,

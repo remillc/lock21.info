@@ -12,7 +12,7 @@ const viewerDev = { target: 'http://localhost:3100', changeOrigin: true, ws: tru
 export default defineConfig({
   site: 'https://lock21.info',
   // preview.proxy: {} because Vite's preview server would otherwise inherit the forwarding and serve the dev viewer
-  // instead of the build (astro preview must show what GitHub Pages serves)
+  // instead of the build (astro preview must show what the hosting serves)
   vite: { server: { proxy: { '/modele/viewer': viewerDev } }, preview: { proxy: {} } },
   integrations: [
     starlight({

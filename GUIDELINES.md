@@ -9,7 +9,7 @@ to any UI added to the 3D viewer. Decided with Christian on 2026-10-19.
   framework (React, Vue, Svelte...) unless a real need appears and is agreed first.
 - **Content is Markdown.** Pages stay Markdown/MDX files, written in French (source language), in the informal
   first-person field-notebook tone.
-- **Static output.** The site is built to static files and deployed to GitHub Pages; no server code.
+- **Static output.** The site is built to static files and served as static assets by Cloudflare (Workers static assets); no server code.
 
 ## Stack
 
@@ -67,7 +67,7 @@ content. Scripts must survive that:
 
 - Indexing: every page is open to search engines (no `noindex`); `robots.txt` only keeps out the bare viewer
   `/modele/viewer/` (embedded by `/modele/`) and points to the sitemap that Starlight generates.
-- Custom domain `lock21.info` (`CNAME`), GitHub Pages deployment from `main` with the workflow's `GITHUB_TOKEN`.
+- Custom domain `lock21.info` on the Cloudflare Worker `lock21-info` (`wrangler.jsonc`), deployed by the workflow on a release tag or a manual run.
 - Escape `<` and `>` in MDX prose.
 - Folder and file names in English (except existing French content slugs, kept to preserve the page addresses as
   much as practical; addresses may change while the site is not indexed).

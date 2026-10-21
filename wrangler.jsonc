@@ -1,4 +1,5 @@
-// Cloudflare hosting of the site (Workers static assets): the built site (dist/, from npm run build) served as is.
+// Cloudflare hosting of lock21.info (Workers static assets, custom domain lock21.info): the built site (dist/, from
+// npm run build) served as is.
 // Deployed by .github/workflows/deploy.yml with Wrangler (on a version tag or a manual run), never on a push.
 {
   "$schema": "node_modules/wrangler/config-schema.json",

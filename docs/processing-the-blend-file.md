@@ -207,7 +207,7 @@ Le nombre de zones en ligne et la date de mise à jour se mettent à jour seuls 
 - `tools/publish-model/README.md`: la ligne **État** en haut, si une zone s'ajoute;
 - `CHANGELOG.md`: une ligne sous **Unreleased**.
 
-Puis enregistrer le travail dans Git (`git add`, `git commit`, `git push`) et **publier le site**: sur GitHub, onglet **Actions**, flux **Deploy to GitHub Pages**, bouton **Run workflow**. Ou, en ligne de commande:
+Puis enregistrer le travail dans Git (`git add`, `git commit`, `git push`) et **publier le site**: sur GitHub, onglet **Actions**, flux **Deploy**, bouton **Run workflow**. Ou, en ligne de commande:
 
 ```powershell
 gh workflow run deploy.yml --ref main
