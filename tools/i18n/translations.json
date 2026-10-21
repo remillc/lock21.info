@@ -61,8 +61,8 @@
       "recorded": "2026-10-21"
     },
     "questions/nettete-images.md": {
-      "source": "aacadf8add8434300c2371b6ac5e472134c23b4f",
-      "commit": "9d608a8",
+      "source": "40590ce0ff6a223844b9b2c3578f7465ced953bc",
+      "commit": "5576b4b",
       "recorded": "2026-10-21"
     },
     "tests/calibration-couleurs.md": {
@@ -91,8 +91,8 @@
       "recorded": "2026-10-21"
     },
     "workflow/extraction-des-photos.md": {
-      "source": "7ccc01a3c12e62b2e105b1c150d135010046832f",
-      "commit": "9d608a8",
+      "source": "c1fdc9c4e95c9933a8ab656c2ca2158768ca76a9",
+      "commit": "5576b4b",
       "recorded": "2026-10-21"
     },
     "workflow/generation-du-dense-cloud.md": {
@@ -101,8 +101,8 @@
       "recorded": "2026-10-21"
     },
     "workflow/modele.md": {
-      "source": "c40ebd5d125360442d19cfec8af64b670fb8391a",
-      "commit": "9d608a8",
+      "source": "2ac7d0eebfdd2a0a326ec8d4b1cd5008eed1225e",
+      "commit": "5576b4b",
       "recorded": "2026-10-21"
     },
     "workflow/suivi.md": {
