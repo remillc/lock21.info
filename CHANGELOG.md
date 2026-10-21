@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- What the site is for: an « À propos » / « About » page (`/about`, first in the navigation) and a short block on
+  the home page (show the lock to non-divers, help divers plan their dives, document the method).
 - Hosting moved from GitHub Pages to Cloudflare (Workers static assets, `wrangler.jsonc`, custom domain `lock21.info`):
   the deploy workflow sends the site there with Wrangler, and a manual run on a branch other than `main` gives a preview
   address (`<branch>-lock21-info.lock21.workers.dev`). `public/CNAME` and the `gh-pages` branch are gone.
