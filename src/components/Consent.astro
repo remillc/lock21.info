@@ -9,7 +9,7 @@ import { site } from '../data/site'
 ---
 
 {
-  site.analytics.ga4 && (
+  import.meta.env.PROD && site.analytics.ga4 && (
     <l21-consent hidden>
       <div class="consent-card" role="dialog" aria-label="Mesure d'audience">
         <p>

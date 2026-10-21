@@ -23,7 +23,7 @@ const licence = `https://creativecommons.org/licenses/by/4.0/deed.${english ? 'e
 <div class="site-footer">
   <span translate="no">{english ? 'LOCK/21' : 'ÉCLUSE/21'} · {english ? 'field notebook' : 'carnet de terrain'}</span>
   <span>© {years} Christian Rémillard · {english ? 'License' : 'Licence'} <a href={licence} rel="license">CC BY 4.0</a>
-    · <a href="/confidentialite/">{english ? 'Privacy' : 'Confidentialité'}</a>{site.analytics.ga4 && (
+    · <a href="/confidentialite/">{english ? 'Privacy' : 'Confidentialité'}</a>{import.meta.env.PROD && site.analytics.ga4 && (
       <> · <button type="button" class="consent-open" data-consent-open>{english ? 'Cookies' : 'Témoins'}</button></>
     )}</span>
 </div>

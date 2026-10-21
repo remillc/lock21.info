@@ -12,7 +12,8 @@
 //   sent by the viewer to this page: ar_size table or full).
 import { site } from '../data/site'
 
-const id = site.analytics.ga4
+// Not in development (npm run dev): tests on the PC and the phone would count as visits
+const id = import.meta.env.PROD ? site.analytics.ga4 : ''
 ---
 
 {
