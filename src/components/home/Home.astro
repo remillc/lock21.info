@@ -108,12 +108,16 @@ const entries = [
     color: var(--md-sys-color-on-surface);
   }
 
-  /* Depth gauge: hidden on phones */
+  /* Depth gauge: as high as the window below the bar (like the navigation's ruler on the other pages), its marks
+     spread evenly from the surface to the bottom, and it stays in view while scrolling; hidden on phones */
   .gauge {
     flex: 0 0 4.5rem;
     display: flex;
     flex-direction: column;
-    gap: 7.5rem;
+    justify-content: space-between;
+    position: sticky;
+    top: calc(var(--sl-nav-height) + 1.5rem);
+    height: calc(100dvh - var(--sl-nav-height) - 3.5rem);
     align-self: flex-start;
     margin-top: 0.5rem;
     padding-left: 0.75rem;
