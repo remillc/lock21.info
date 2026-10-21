@@ -228,7 +228,8 @@ gh workflow run deploy.yml --ref main
 | ----------------------------- | ------------------------------------------------------------------------------------------ |
 | Le fichier de travail         | `modeles\lock-21-publishing.blend`                                                         |
 | Les exports des zones         | `O:\modeles\zone-N\`                                                                       |
-| Les zones préparées, journaux | `O:\temp\` (refaisable)                                                                    |
+| Les zones préparées           | `O:\publishing\prepared\`                                                                  |
+| Les journaux, intermédiaires  | `O:\temp\` (jetable)                                                                       |
 | Les tuiles avant envoi        | `O:\publishing\tiles\`                                                                     |
 | Les téléchargements           | `O:\publishing\downloads\` (`online\`: ce qui est envoyé)                                  |
 | En ligne                      | `https://tiles.lock21.info/` (tuiles, téléchargements), `https://lock21.info/` (site, KMZ) |

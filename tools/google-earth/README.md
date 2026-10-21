@@ -86,7 +86,7 @@ change. Essai local du réseau: `make_kmz.py ... --network http://localhost:8083
 `make_model.py`: `-t/--triangles` (budget total), `-s/--size` (côté maximal des textures), `--zone-size zone-3=4096`
 (texture d'une zone), `-c/--context-share` (part du budget pour le contexte, 0,1 par défaut), `--zones` (par défaut
 celles du manifeste local, comme les tuiles publiées), `--context-only` (essais), `-n/--name` (`lock-21`). Les zones
-viennent de leurs maillages préparés (`O:\temp\<zone>\prox\`, les mêmes que les tuiles). `make_kmz.py`: `--network`
+viennent de leurs maillages préparés (`O:\publishing\prepared\<zone>\`, les mêmes que les tuiles). `make_kmz.py`: `--network`
 (adresse de la liste et des parties, R2 par défaut), `--view`, `--lat`, `--lon`, `-H/--heading`.
 
 **Installation, une fois:** `python -m venv tools\google-earth\.venv`, puis

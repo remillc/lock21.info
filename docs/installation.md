@@ -102,7 +102,8 @@ pèsent des centaines de gigaoctets.
 | `O:\publishing\bin\` | Obj2Tiles |
 | `O:\publishing\tiles\` | tuiles produites sur l'ordinateur, avant leur mise en ligne |
 | `O:\publishing\downloads\` | téléchargements produits (Google Earth, GLB) |
-| `O:\temp\` | fichiers intermédiaires et journaux, qu'on peut effacer et refaire |
+| `O:\publishing\prepared\` | zones préparées (une par dossier, celles des tuiles en ligne): les téléchargements, la réalité augmentée et le relief en sont faits. À garder: les refaire prend plus d'une heure |
+| `O:\temp\` | fichiers intermédiaires et journaux: on peut tout effacer à tout moment (sauf pendant un traitement) |
 
 Sur un autre ordinateur sans le disque `O:`, on peut encore travailler sur le site et le visualiseur (avec les tuiles en
 ligne, voir plus bas), mais pas publier le modèle.

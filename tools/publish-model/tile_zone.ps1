@@ -10,7 +10,7 @@ tileset.json, copie de l'empreinte, mise à jour du manifeste.
 Identifiant de la zone, ex. zone-12.
 
 .PARAMETER Prepared
-Dossier de l'OBJ préparé, ex. O:\temp\zone-12\prox.
+Dossier de l'OBJ préparé, ex. O:\publishing\prepared\zone-12.
 
 .PARAMETER Version
 Nom du dossier de la nouvelle version (défaut: date et heure).
@@ -32,7 +32,7 @@ Carte de relief (map_Bump) en UASTC plutôt qu'en ETC1S qualité maximale: plus 
 Afficher cette aide (-h, -Help ou --help).
 
 .EXAMPLE
-.\tools\publish-model\tile_zone.ps1 -Zone zone-12 -Prepared O:\temp\zone-12\prox
+.\tools\publish-model\tile_zone.ps1 -Zone zone-12 -Prepared O:\publishing\prepared\zone-12
 
 #>
 param(

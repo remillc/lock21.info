@@ -2,6 +2,12 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased
+
+- Prepared zones moved from `O:	emp<zone>prox` to `O:publishingprepared<zone>` (`-PreparedRoot`,
+  `--prepared-root`): the relief, the downloads and the AR models are made from them. `O:	emp` can now be emptied
+  at any time, except while a job runs.
+
 ## 0.5.0 - 2026-10-21
 
 - Zone 18 online (tiles, relief from its 26.6 M export, 16 384 px normal map), and in the downloads and AR models:

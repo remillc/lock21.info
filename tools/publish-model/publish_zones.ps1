@@ -44,6 +44,7 @@ param(
     [string]$Blend,
     [string]$Blender = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe",
     [string]$TempRoot = "O:\temp",
+    [string]$PreparedRoot = "O:\publishing\prepared",
     [string]$TilesRoot = "O:\publishing\tiles",
     [Alias('h')][switch]$Help,
     [Parameter(ValueFromRemainingArguments = $true)][string[]]$Rest
@@ -84,7 +85,7 @@ foreach ($zone in $Zones) {
         continue
     }
     $slug = $zone -replace " ", "-"
-    $prepared = Join-Path $TempRoot "$slug\prox"
+    $prepared = Join-Path $PreparedRoot $slug
     $log = Join-Path $TempRoot "$slug-publish.log"
     $started = Get-Date
     Write-Host "=== $zone"

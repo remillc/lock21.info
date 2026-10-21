@@ -40,7 +40,7 @@ Le script enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape
 | 2 | Source de chaque zone | propriété `source` des objets de zone dans le `.blend` (`zones.json`: inventaire de travail) | | |
 | 3 | Vérification du repère des exports | `verify_sources.py` | `O:\modeles\zone-*\*.glb` + `.blend` | `sources-check.json` |
 | 4 | Recalage (automatique à l'étape 5) | `register_zone.py` | export `source` + `.blend` | `transforms/<zone>.json` (cache) |
-| 5 | Préparation | `prepare_zone.py --zone "zone N" [--density 3000] --out …` | `.blend` (+ export `source`) | `O:\temp\<zone>\...\<zone>.obj` + `.jpg` + `<zone>-prepare.json` |
+| 5 | Préparation | `prepare_zone.py --zone "zone N" [--density 3000] --out …` | `.blend` (+ export `source`) | `O:\publishing\prepared\<zone>\<zone>.obj` + `.jpg` + `<zone>-prepare.json` |
 | 5b | Relief | `bake_relief.py` (Blender), enchaîné avec l'étape 6 par `relief_zones.ps1` | sortie de 5 + export détaillé (la source, ou `--high`) | carte des normales + copie de la zone préparée |
 | 5c | Atténuation des lampes (essai, facultatif) | `delight_texture.py` (Blender) + `apply_shade.mjs` | sortie de 5 ou 5b | texture corrigée + copie de la zone préparée |
 | 6 | Tuilage + manifeste | `tile_zone.ps1` (+ `merge_normal_maps.mjs`, `texture_stats.mjs`, `update_manifest.py`) | sortie de 5 (ou 5b, 5c) | `O:\publishing\tiles\<zone>\<version>\` + `manifest.json` |
@@ -169,9 +169,10 @@ Après une publication locale (`model:post-modified`), lancer `model:upload` pou
 | `O:\publishing\metashape\<zone>\` | copies de travail Metashape (chunk FINAL seulement) | oui |
 | `O:\publishing\tiles\` | tuiles générées + `manifest.json`, avant mise en ligne | oui |
 | `O:\publishing\downloads\` | modèle complet téléchargeable (`.glb`, `.kmz`) | oui |
-| `O:\temp\` | intermédiaires régénérables (OBJ préparés, journaux; cartes des normales: `<zone>\relief\`; essais: `<zone>\delit\`) | non |
+| `O:\publishing\prepared\<zone>\` | zone préparée (OBJ, texture, rapport, empreinte) des tuiles actives: le relief, les téléchargements et la réalité augmentée en sont faits | oui |
+| `O:\temp\` | intermédiaires jetables (journaux; cartes des normales: `<zone>\relief\`; essais: `<zone>\delit\`), à vider à tout moment hors traitement | non |
 
-**Espace disque:** la chaîne produit beaucoup de données. Après chaque essai, supprimer ce qui est remplacé: versions de tuiles qui ne sont plus dans `manifest.json`, anciens OBJ préparés, journaux et captures. Ne garder que la version active, l'OBJ préparé courant (pour retuiler sans refaire la préparation) et les outils.
+**Espace disque:** la chaîne produit beaucoup de données. Après chaque essai, supprimer ce qui est remplacé: versions de tuiles qui ne sont plus dans `manifest.json`, journaux et captures. Ne garder que la version active, la zone préparée courante (pour retuiler sans refaire la préparation) et les outils.
 
 ## Exécutables et bibliothèques
 

@@ -1,7 +1,7 @@
 """Builds the whole model of the lock for downloads and Google Earth (TODO #13): every published zone plus the
 context (terrain, walls, fillers), decimated to a triangle budget, textures resized, placed on the site anchor.
 
-Zones: their prepared meshes (prepare_zone.py: <temp>/<slug>/prox/<slug>.obj + .jpg, Blender frame in metres, Z up),
+Zones: their prepared meshes (prepare_zone.py: O:\publishing\prepared\<slug>\<slug>.obj + .jpg, Blender frame in metres, Z up),
 the ones in the local manifest (the same as the published tiles). Context: an uncompressed context.glb written by
 tools/publish-model/export_context.py (the published one has KTX2 textures, which Blender can't read).
 Budget: -c/--context-share of the triangles for the context (at most its own count), the rest spread over the zones by
@@ -41,7 +41,7 @@ p.add_argument("--context", help="uncompressed context.glb (export_context.py); 
 p.add_argument("--zones", nargs="*", help='zones, e.g. "zone 12" (default: those of the local manifest)')
 p.add_argument("--context-only", action="store_true", help="the context without any zone (tests)")
 p.add_argument("--tiles-root", default=r"O:\publishing\tiles", help="local tiles, for the list of zones")
-p.add_argument("--temp-root", default=r"O:\temp", help="prepared zones: <temp>/<slug>/prox/")
+p.add_argument("--prepared-root", default=r"O:\publishing\prepared", help="prepared zones: <root>/<slug>/")
 p.add_argument("-q", "--quality", type=int, default=88, help="JPEG quality (default 88)")
 p.add_argument("-x", "--scale", type=float, default=1.0, help="model scale (default 1; 0.01 = 1:100, for augmented reality on a table)")
 p.add_argument("--usdz", action="store_true", help="also write <name>.usdz (AR Quick Look on iPhone and iPad)")
@@ -123,7 +123,7 @@ else:
     slugs = [t["id"] for t in manifest["tilesets"]]
 zones = []
 for slug in slugs:
-    prox = os.path.join(a.temp_root, slug, "prox")
+    prox = os.path.join(a.prepared_root, slug)
     report = json.load(open(os.path.join(prox, f"{slug}-prepare.json"), encoding="utf-8"))
     zones.append(dict(slug=slug, prox=prox, area=report["steps"]["decimate"]["area_m2"]))
 

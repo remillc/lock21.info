@@ -40,7 +40,8 @@ Le détail des étapes: le guide **Traiter le fichier .blend**.
 
 Hors de Git, car elles pèsent des centaines de gigaoctets: les projets Metashape (`O:\photogrammetry\`, à ne jamais
 modifier), les exports des zones (`O:\modeles\`), et ce que produisent les outils avant la mise en ligne
-(`O:\publishing\`) ou en passant (`O:\temp\`, qu'on peut effacer). Le détail: le guide **Installation**, section 5.
+(`O:\publishing\`, dont les zones préparées) ou en passant (`O:\temp\`, qu'on peut vider à tout moment hors
+traitement). Le détail: le guide **Installation**, section 5.
 
 ## Les branches et les versions
 
