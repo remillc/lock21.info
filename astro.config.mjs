@@ -6,13 +6,13 @@ import starlight from '@astrojs/starlight'
 
 // Dev server only: /modele/viewer/ (embedded by the /modele/ page) is forwarded to the viewer's own dev server
 // (npm run viewer:dev, port 3100, same path), so the page shows the viewer's source and reloads with it, websocket
-// included. In production, GitHub Pages serves the built viewer from public/modele/viewer/.
+// included. In production, the hosting serves the built viewer from public/modele/viewer/.
 const viewerDev = { target: 'http://localhost:3100', changeOrigin: true, ws: true }
 
 export default defineConfig({
   site: 'https://lock21.info',
   // preview.proxy: {} because Vite's preview server would otherwise inherit the forwarding and serve the dev viewer
-  // instead of the build (astro preview must show what GitHub Pages serves)
+  // instead of the build (astro preview must show what the hosting serves)
   vite: { server: { proxy: { '/modele/viewer': viewerDev } }, preview: { proxy: {} } },
   integrations: [
     starlight({

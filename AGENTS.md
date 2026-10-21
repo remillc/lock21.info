@@ -4,7 +4,7 @@ Guidance for AI coding agents working in this repository.
 
 ## What this project is
 
-**lock21.info** documents an underwater photogrammetry project. The goal is a 3D model of the submerged **Lock 21** site (an old canal lock with spillways/sluice gates, cut into numbered zones). The site is an [Astro](https://astro.build/) + [Starlight](https://starlight.astro.build/) site deployed to GitHub Pages at <https://lock21.info> (it was Docusaurus until 2026-10; see `GUIDELINES.md` for the front-end rules).
+**lock21.info** documents an underwater photogrammetry project. The goal is a 3D model of the submerged **Lock 21** site (an old canal lock with spillways/sluice gates, cut into numbered zones). The site is an [Astro](https://astro.build/) + [Starlight](https://starlight.astro.build/) site hosted on Cloudflare (Workers static assets, `wrangler.jsonc`) at <https://lock21.info> (GitHub Pages until 2026-10-21; it was Docusaurus until 2026-10; see `GUIDELINES.md` for the front-end rules).
 
 The content is a field notebook and "making of" for the project:
 
@@ -42,7 +42,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `src/components/DiveLog.astro` | Adds a total-duration footer row to the dive log table, computed at build time (sums column 5) |
 | `src/styles/custom.scss` | Global styles on top of Starlight: header bar, links, tables, figures, image zoom, layout |
 | `src/assets/` | Logo (`logo.svg`, `logo-dark.svg`, S4 "21 en écho") and home page images |
-| `public/` | Copied as is: `CNAME`, `robots.txt` (everything indexable except the bare viewer `/modele/viewer/`; points to Starlight's `sitemap-index.xml`), `favicon.svg`, `scripts/image-zoom.js` (native Custom Element), `downloads/lock-21.kmz` (the Google Earth KMZ: only a link to its parts on R2, see `tools/google-earth/README.md`), and `modele/viewer/` (the built viewer, gitignored) |
+| `public/` | Copied as is: `_headers` (Cloudflare cache headers: a year for hashed files), `robots.txt` (everything indexable except the bare viewer `/modele/viewer/`; points to Starlight's `sitemap-index.xml`), `favicon.svg`, `scripts/image-zoom.js` (native Custom Element), `downloads/lock-21.kmz` (the Google Earth KMZ: only a link to its parts on R2, see `tools/google-earth/README.md`), and `modele/viewer/` (the built viewer, gitignored) |
 | `modeles/` | Blender files: `lock-21-mockup.blend` (mockup) and `lock-21-publishing.blend`, the source of truth for 3D publishing (user-owned: never save it, read it only after the user says it is saved) |
 | `viewer/` | Standalone 3D viewer (Vite + three.js + 3d-tiles-renderer), built into `public/modele/viewer/` and served at `lock21.info/modele/viewer/`; tiles come from `tiles.lock21.info` (Cloudflare R2). Embedded by the `/modele/` page; reports its camera to it (postMessage), has a full-screen button, an augmented reality button (phones only: AR Quick Look with a USDZ on iPhone/iPad, Scene Viewer with a GLB on Android; the lock at 1:100 on a table, files on R2 `downloads/ar/`, see `tools/google-earth/README.md`) and a settings panel (⚙, `<l21-settings-panel>` in `src/config-panel.js`: one control per query parameter, applied live and kept by the browser in `localStorage`; the address keeps only the camera, `?cam=`) |
 | `src/content/docs/modele.mdx`, `src/components/model/ModelPage.astro` | The `/modele/` page, Sketchfab-like: viewer in a large frame, model facts (zones online, last update from the manifest), navigation help, CC BY 4.0 licence and credit, downloads (to come) |
@@ -89,7 +89,9 @@ Node 22.12+ (Astro 7, Vite 8). If the sidebar or pages show stale entries after 
 
 ## CI (`.github/workflows/`)
 
-- `deploy.yml` builds the viewer and the site; it **deploys only on demand** (Actions tab, "Run workflow", or `gh workflow run deploy.yml`) or **when a version tag `v*` is pushed** (a release), by force-pushing `dist/` to the `gh-pages` branch with the workflow's `GITHUB_TOKEN` (plain git commands, no SSH key, no third-party action). Pushing or merging into `main` does not deploy; pull requests to `main` only run the build.
+- `deploy.yml` builds the viewer and the site; it **deploys only on demand** (Actions tab, "Run workflow", or `gh workflow run deploy.yml`) or **when a version tag `v*` is pushed** (a release). Pushing or merging into `main` does not deploy; pull requests to `main` only run the build.
+- On a tag or a manual run on `main` it deploys to Cloudflare with `npx wrangler deploy` (Worker `lock21-info`, custom domain `lock21.info`, also at `lock21-info.lock21.workers.dev`; secrets `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`; config `wrangler.jsonc`, cache headers `public/_headers`). A manual run on another branch only uploads a Cloudflare preview (`wrangler versions upload --preview-alias <branch>`, address in the log).
+- Trailing slash: the hosting redirects `/modele` to `/modele/` (Cloudflare `html_handling: auto-trailing-slash`, a 307); in development the viewer's Vite config does it for `/modele/viewer`.
 - The former GPT translation workflows were removed (they had failed since 2025). English translations of the docs are done by Claude on request.
 
 ## Large and binary files: be careful
