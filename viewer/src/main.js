@@ -64,7 +64,9 @@ if (arLink.relList?.supports?.('ar')) {
   const title = arFull ? 'Écluse 21 · taille réelle' : 'Écluse 21 · 1:100'
   arLink.removeAttribute('rel')
   arLink.target = '_top'
-  arLink.href = `intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glb)}&mode=ar_preferred&resizable=true` +
+  // resizable=false for the real size: otherwise Scene Viewer shrinks a model too big for the view (179 x 143 m with the
+  // terrain) to fit it, and the "real size" isn't
+  arLink.href = `intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glb)}&mode=ar_preferred&resizable=${!arFull}` +
     `&title=${encodeURIComponent(title)}#Intent;scheme=https;package=com.google.android.googlequicksearchbox;` +
     `action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(location.href)};end;`
   arLink.hidden = false
