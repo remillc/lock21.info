@@ -18,7 +18,7 @@ Writes <out>/<slug>-normal.png and a copy of the .obj/.jpg with an .mtl that ref
 for tile_zone.ps1.
 
 Usage:
-    blender -b --factory-startup --python bake_relief.py -- -z "zone 12" -p O:\\temp\\zone-12\\prox -o O:\\temp\\zone-12\\relief [-s <px>]
+    blender -b --factory-startup --python bake_relief.py -- -z "zone 12" -p O:\\publishing\\prepared\\zone-12 -o O:\\temp\\zone-12\\relief [-s <px>]
 """
 import json
 import os

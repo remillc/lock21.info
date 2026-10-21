@@ -1,7 +1,7 @@
 """Builds the whole model of the lock for downloads and Google Earth (TODO #13): every published zone plus the
 context (terrain, walls, fillers), decimated to a triangle budget, textures resized, placed on the site anchor.
 
-Zones: their prepared meshes (prepare_zone.py: <temp>/<slug>/prox/<slug>.obj + .jpg, Blender frame in metres, Z up),
+Zones: their prepared meshes (prepare_zone.py: O:\publishing\prepared\<slug>\<slug>.obj + .jpg, Blender frame in metres, Z up),
 the ones in the local manifest (the same as the published tiles). Context: an uncompressed context.glb written by
 tools/publish-model/export_context.py (the published one has KTX2 textures, which Blender can't read).
 Budget: -c/--context-share of the triangles for the context (at most its own count), the rest spread over the zones by
@@ -18,6 +18,7 @@ Writes, in -o/--out:
 Usage:
     blender -b --factory-startup --python make_model.py -- -o O:\\publishing\\downloads\\google-earth\\t400k -t 400000 -s 2048 --context O:\\temp\\google-earth\\context\\context.glb
 """
+import fnmatch
 import json
 import os
 import sys
@@ -38,10 +39,12 @@ p.add_argument("--zone-size", nargs="*", default=[], metavar="ZONE=PX",
                help="texture size for some zones, e.g. zone-3=4096 zone-7=4096 (zones whose atlas is cut into many small charts)")
 p.add_argument("-c", "--context-share", type=float, default=0.1, help="share of the budget for the context (default 0.1)")
 p.add_argument("--context", help="uncompressed context.glb (export_context.py); without it, the zones only")
+p.add_argument("--context-objects", nargs="*", metavar="PATTERN",
+               help='context objects to keep, by name pattern, e.g. "filler*" (the fillers, for augmented reality; default: all)')
 p.add_argument("--zones", nargs="*", help='zones, e.g. "zone 12" (default: those of the local manifest)')
 p.add_argument("--context-only", action="store_true", help="the context without any zone (tests)")
 p.add_argument("--tiles-root", default=r"O:\publishing\tiles", help="local tiles, for the list of zones")
-p.add_argument("--temp-root", default=r"O:\temp", help="prepared zones: <temp>/<slug>/prox/")
+p.add_argument("--prepared-root", default=r"O:\publishing\prepared", help="prepared zones: <root>/<slug>/")
 p.add_argument("-q", "--quality", type=int, default=88, help="JPEG quality (default 88)")
 p.add_argument("-x", "--scale", type=float, default=1.0, help="model scale (default 1; 0.01 = 1:100, for augmented reality on a table)")
 p.add_argument("--usdz", action="store_true", help="also write <name>.usdz (AR Quick Look on iPhone and iPad)")
@@ -123,7 +126,7 @@ else:
     slugs = [t["id"] for t in manifest["tilesets"]]
 zones = []
 for slug in slugs:
-    prox = os.path.join(a.temp_root, slug, "prox")
+    prox = os.path.join(a.prepared_root, slug)
     report = json.load(open(os.path.join(prox, f"{slug}-prepare.json"), encoding="utf-8"))
     zones.append(dict(slug=slug, prox=prox, area=report["steps"]["decimate"]["area_m2"]))
 
@@ -133,6 +136,12 @@ if a.context:
     before = set(bpy.data.objects)
     bpy.ops.import_scene.gltf(filepath=a.context)
     context_obs = [o for o in bpy.data.objects if o not in before and o.type == 'MESH']
+    if a.context_objects:
+        dropped = [o for o in context_obs if not any(fnmatch.fnmatch(o.name, pat) for pat in a.context_objects)]
+        context_obs = [o for o in context_obs if o not in dropped]
+        for ob in dropped:
+            bpy.data.objects.remove(ob)
+        log(f"context: kept {sorted(o.name for o in context_obs)}")
     for ob in context_obs:
         ob.data.transform(ob.matrix_world)
         ob.parent = None

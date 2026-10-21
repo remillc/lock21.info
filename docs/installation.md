@@ -6,6 +6,35 @@ description: Préparer un ordinateur pour travailler sur lock21.info, du site au
 Ce guide prépare un ordinateur (Windows) pour travailler sur le projet: un nouvel ordinateur, ou une personne qui se
 joint au projet. Il n'est pas nécessaire de tout installer: le tableau ci-dessous dit quoi installer selon le travail.
 
+## Prérequis
+
+**Système:** Windows 10 ou 11. Les scripts de publication sont écrits pour PowerShell (inclus dans Windows). Le site
+et le visualiseur fonctionnent aussi sur macOS ou Linux, mais pas la publication du modèle 3D.
+
+**Matériel**, selon le travail:
+
+| Travail | Mémoire vive | Carte graphique | Espace disque |
+| --- | --- | --- | --- |
+| Le site et le visualiseur | 8 Go | n'importe laquelle qui affiche du WebGL 2 (tout navigateur récent) | environ 3 Go: le projet, ses bibliothèques et les fichiers `.blend` |
+| La publication du modèle 3D et les téléchargements | 64 Go (Blender charge des zones jusqu'à 36 millions de faces) | NVIDIA RTX avec 16 Go de mémoire, pour cuire le relief en 16 384 px (OptiX) | environ 5 Go dans `O:\publishing\`, en plus des exports des zones |
+| Les exports des zones (Metashape) | selon Agisoft: beaucoup, pour les grandes zones | NVIDIA recommandée | des centaines de gigaoctets dans `O:\photogrammetry\` et `O:\modeles\` |
+
+L'ordinateur du projet: Windows 11 Pro, Intel Core i9-13900K (24 cœurs), 64 Go de mémoire, NVIDIA GeForce RTX 4080
+SUPER (16 Go). La cuisson du relief en 16 384 px y occupe presque toute la mémoire de la carte: elle échoue si un
+autre Blender utilise la carte en même temps (fenêtre ouverte, rendu). Fermer Blender pendant les cuissons.
+
+**Accès:**
+
+| Service | Pour | Remarque |
+| --- | --- | --- |
+| **GitHub**, dépôt `remillc/lock21.info` | récupérer le projet; enregistrer et publier le travail | droits d'écriture pour pousser |
+| **Cloudflare**, compte du domaine `lock21.info` | mettre le modèle et les téléchargements en ligne (R2); domaine, cache, courriel `info@lock21.info` | les clés R2 vont dans `.env.local` (section 4) |
+| **Agisoft Metashape Professional** | produire les exports des zones | licence du projet |
+| **Google Analytics** | consulter la mesure d'audience | facultatif |
+
+**Connexion Internet:** le clone télécharge environ 2 Go (fichiers `.blend` compris), et une mise en ligne du modèle
+envoie de quelques centaines de mégaoctets à plus d'un gigaoctet.
+
 ## Quoi installer selon le travail
 
 | Travail | Git + Git LFS | Node.js | Blender | Python | Obj2Tiles | Disque `O:` | `.env.local` | Metashape |
@@ -102,7 +131,8 @@ pèsent des centaines de gigaoctets.
 | `O:\publishing\bin\` | Obj2Tiles |
 | `O:\publishing\tiles\` | tuiles produites sur l'ordinateur, avant leur mise en ligne |
 | `O:\publishing\downloads\` | téléchargements produits (Google Earth, GLB) |
-| `O:\temp\` | fichiers intermédiaires et journaux, qu'on peut effacer et refaire |
+| `O:\publishing\prepared\` | zones préparées (une par dossier, celles des tuiles en ligne): les téléchargements, la réalité augmentée et le relief en sont faits. À garder: les refaire prend plus d'une heure |
+| `O:\temp\` | fichiers intermédiaires et journaux: on peut tout effacer à tout moment (sauf pendant un traitement) |
 
 Sur un autre ordinateur sans le disque `O:`, on peut encore travailler sur le site et le visualiseur (avec les tuiles en
 ligne, voir plus bas), mais pas publier le modèle.
@@ -136,6 +166,11 @@ Le cache de Cloudflare garde les fichiers de `tiles.lock21.info` près des visit
 l'en-tête `Cache-Control` des fichiers: un an pour les tuiles (chaque publication a son propre dossier daté),
 60 secondes pour `manifest.json`. Pour vérifier, faire une requête GET (`curl -s -o NUL -D - <adresse>`), deux fois:
 `cf-cache-status: HIT` la deuxième fois. Une requête HEAD (`curl -I`) affiche toujours `DYNAMIC`.
+
+Les navigateurs et Google Earth reçoivent les mêmes durées: **Caching** › **Configuration** › **Browser Cache TTL**
+est réglé sur *Respect Existing Headers*. Avec une durée fixe (4 heures par défaut), Cloudflare remplaçait les
+5 minutes de la liste Google Earth (`lock-21.kml`) et les 60 secondes du manifeste: après un envoi, Google Earth Pro
+pouvait garder l'ancienne liste pendant 4 heures.
 
 ## 8. Vérifier que tout fonctionne
 

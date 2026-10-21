@@ -1,8 +1,8 @@
 // Facts about the site used across the pages (SYSTEM-DESIGN.md). Values that change with the work (dives, zones online)
 // are computed at build time instead: see src/lib/diveLog.ts and src/lib/manifest.ts.
 export const site = {
-  bottomDepthFt: 55,
-  bottomDepthM: 16.8,
+  bottomDepthFt: 60, // canal floor: 60 ft (SOS Ottawa, 1989: lock floor and base of the approach cribs; docs/sos-ottawa-files.md)
+  bottomDepthM: 18.3,
   zonesTotal: 25,
   // Lock 21: 44°59.809' N, 74°53.997' W (degrees and decimal minutes)
   coordinates: {

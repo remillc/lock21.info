@@ -2,6 +2,29 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased
+
+- **New terrain online** (context): the canal floor at 60 ft, the north bank in two pitches (2 : 1 then 1 1/2 : 1,
+  crest about 28 ft as the scans show), the south bank at 2 1/2 : 1 down to the river bed at 70 ft, earth banks past
+  the south wall's ends, the floor flat in front of the walls and the ground just under the zones (zone 8's stairs
+  climb the bank). Texture: seamless tiles cut from the scans (zone 1's silt and zebra mussels; riprap on the slopes
+  from zone 18's crib fill), baked at 4096 px (about 2 in per pixel). The south and north lock walls published with
+  it; the drawn base map and banks no longer.
+- Relief online for zones 1, 4, 8, 10, 13, 18 (the bakes of 4, 13 and 18 had crashed on a GPU shared with another
+  Blender); zones 1, 8 and 10 republished (cutting volumes). Downloads and AR rebuilt with the new context.
+- The context (`blend_state.py`, `bake_context_in_blender.py`) never takes the `terrain - drawings` collection (the
+  pieces drawn from the plans), even objects named "filler". New terrain in the `terrain` collection (SOS data).
+- Depth of the bottom: 60 ft (18.3 m) instead of 55 ft, as in the SOS Ottawa documents (lock floor, base of the
+  approach cribs, 1989): home page depth gauge, model page, navigation gauge.
+- Augmented reality: the fillers are back in both models (zones and fillers, still without the mockup terrain, walls
+  and banks), with `make_model.py --context-objects "filler*"`.
+- Registration (`register_zone.py`) tries the identity first: an export of the same Metashape chunk is already in
+  place. Zone 18 had been fitted 0.8° off, and the 5 cm clean-up cut its walls; zones 1, 4, 7 and 13 were 1 to 1.5 cm
+  off. Now 0 to 3.6 mm; the five zones republished.
+- Prepared zones moved from `O:\temp\<zone>\prox\` to `O:\publishing\prepared\<zone>\` (`-PreparedRoot`,
+  `--prepared-root`): the relief, the downloads and the AR models are made from them. `O:\temp\` can now be emptied
+  at any time, except while a job runs.
+
 ## 0.5.0 - 2026-10-21
 
 - Zone 18 online (tiles, relief from its 26.6 M export, 16 384 px normal map), and in the downloads and AR models:

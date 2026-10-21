@@ -97,9 +97,13 @@ def register(ob, src_path, extra=(), log=print):
     coarse = P[:3000]
     cB, cP = np.median(B, 0), np.median(P, 0)
 
+    # Starting points: the identity (an export of the same chunk is already in place: the usual case, and the 24
+    # centred rotations can settle beside it, 0.8° off for zone 18 on 2026-10-21, cutting its walls), then the 24
+    # axis rotations centred on the medians (an export in another frame)
+    starts = [(np.eye(3), np.zeros(3))] + [(R0, cB - R0 @ cP) for R0 in _rotations24()]
     trials = []
-    for R0 in _rotations24():
-        s, R, t, d = _icp(tree, B, coarse, 1.0, R0, cB - R0 @ cP, 15)
+    for R0, t0 in starts:
+        s, R, t, d = _icp(tree, B, coarse, 1.0, R0, t0, 15)
         trials.append((float(np.median(d)), s, R, t))
     trials.sort(key=lambda x: x[0])
     log(f"recalage {ob.name}: meilleurs essais (médiane) {[round(x[0], 4) for x in trials[:3]]}")

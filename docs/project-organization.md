@@ -30,7 +30,7 @@ Le détail des étapes: le guide **Traiter le fichier .blend**.
 | `tools\google-earth\` | Le modèle complet pour Google Earth, le GLB téléchargeable, les modèles de réalité augmentée |
 | `tools\model-analysis\` | Analyse de la résolution des zones; ses rapports datés sont gardés |
 | `modeles\` | Les fichiers Blender, stockés avec Git LFS: `lock-21-publishing.blend` (le fichier de travail de la publication) et `lock-21-mockup.blend` (la maquette) |
-| `docs\` | Les guides pour les personnes: celui-ci, **Installation**, **Traiter le fichier .blend**, **Réalité augmentée** |
+| `docs\` | Les guides pour les personnes: celui-ci, **Installation**, **Traiter le fichier .blend**, **Réalité augmentée**, **Documents de SOS Ottawa** (`sos-ottawa-files.md`, résumé des documents numérisés de `docs\sos-files\`) |
 | `AGENTS.md` | Les consignes pour les assistants d'IA (Claude) qui travaillent dans le projet |
 | `GUIDELINES.md`, `SYSTEM-DESIGN.md` | Les règles du code du site, et le design (couleurs, typographie, mouvement) |
 | `TODO.md` | Ce qui reste à faire, numéroté |
@@ -40,7 +40,8 @@ Le détail des étapes: le guide **Traiter le fichier .blend**.
 
 Hors de Git, car elles pèsent des centaines de gigaoctets: les projets Metashape (`O:\photogrammetry\`, à ne jamais
 modifier), les exports des zones (`O:\modeles\`), et ce que produisent les outils avant la mise en ligne
-(`O:\publishing\`) ou en passant (`O:\temp\`, qu'on peut effacer). Le détail: le guide **Installation**, section 5.
+(`O:\publishing\`, dont les zones préparées) ou en passant (`O:\temp\`, qu'on peut vider à tout moment hors
+traitement). Le détail: le guide **Installation**, section 5.
 
 ## Les branches et les versions
 

@@ -40,7 +40,7 @@ Le script enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape
 | 2 | Source de chaque zone | propriété `source` des objets de zone dans le `.blend` (`zones.json`: inventaire de travail) | | |
 | 3 | Vérification du repère des exports | `verify_sources.py` | `O:\modeles\zone-*\*.glb` + `.blend` | `sources-check.json` |
 | 4 | Recalage (automatique à l'étape 5) | `register_zone.py` | export `source` + `.blend` | `transforms/<zone>.json` (cache) |
-| 5 | Préparation | `prepare_zone.py --zone "zone N" [--density 3000] --out …` | `.blend` (+ export `source`) | `O:\temp\<zone>\...\<zone>.obj` + `.jpg` + `<zone>-prepare.json` |
+| 5 | Préparation | `prepare_zone.py --zone "zone N" [--density 3000] --out …` | `.blend` (+ export `source`) | `O:\publishing\prepared\<zone>\<zone>.obj` + `.jpg` + `<zone>-prepare.json` |
 | 5b | Relief | `bake_relief.py` (Blender), enchaîné avec l'étape 6 par `relief_zones.ps1` | sortie de 5 + export détaillé (la source, ou `--high`) | carte des normales + copie de la zone préparée |
 | 5c | Atténuation des lampes (essai, facultatif) | `delight_texture.py` (Blender) + `apply_shade.mjs` | sortie de 5 ou 5b | texture corrigée + copie de la zone préparée |
 | 6 | Tuilage + manifeste | `tile_zone.ps1` (+ `merge_normal_maps.mjs`, `texture_stats.mjs`, `update_manifest.py`) | sortie de 5 (ou 5b, 5c) | `O:\publishing\tiles\<zone>\<version>\` + `manifest.json` |
@@ -57,7 +57,9 @@ Le script enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape
 
 ### 4. Recalage
 
-Cherche d'abord la meilleure des 24 orientations à angle droit sur un petit échantillon, puis raffine par ICP (*iterative closest point*) avec estimation de l'échelle, en ignorant les 20 % de paires les plus éloignées (parties sans recouvrement). Le résultat donne la matrice export → coordonnées monde de la scène Blender, l'échelle, l'angle de rotation et le résidu. La même matrice vaut pour tous les exports du même chunk Metashape, ce que le script vérifie sur les exports passés en argument supplémentaire.
+Cherche d'abord le meilleur point de départ sur un petit échantillon: l'identité (export dans le même repère que le mesh de la zone, le cas habituel: tous les exports d'une zone viennent du même chunk), puis les 24 orientations à angle droit centrées sur les médianes (export dans un autre repère, ex. zones 8 et 12); puis raffine par ICP (*iterative closest point*) avec estimation de l'échelle, en ignorant les 20 % de paires les plus éloignées (parties sans recouvrement). Le résultat donne la matrice export → coordonnées monde de la scène Blender, l'échelle, l'angle de rotation et le résidu. La même matrice vaut pour tous les exports du même chunk Metashape, ce que le script vérifie sur les exports passés en argument supplémentaire.
+
+**Leçon (2026-10-21):** sans le départ à l'identité, les 24 orientations centrées s'arrêtaient parfois à côté de la bonne position: zone 18 tournée de 0,8° (écart de surface 4,8 cm), donc 14 % de l'export retiré par le nettoyage à 5 cm, murs compris; zones 1, 4, 7 et 13 décalées de 1 à 1,5 cm. Avec l'identité: 0 à 3,6 mm. Un écart de surface au-delà de 1 cm pour un export du même chunk signale un mauvais recalage.
 
 `prepare_zone.py` l'appelle automatiquement et met le résultat en cache dans `transforms/<zone>.json`; il n'est recalculé que si l'export `source`, sa date ou le mesh de la zone changent.
 
@@ -169,9 +171,10 @@ Après une publication locale (`model:post-modified`), lancer `model:upload` pou
 | `O:\publishing\metashape\<zone>\` | copies de travail Metashape (chunk FINAL seulement) | oui |
 | `O:\publishing\tiles\` | tuiles générées + `manifest.json`, avant mise en ligne | oui |
 | `O:\publishing\downloads\` | modèle complet téléchargeable (`.glb`, `.kmz`) | oui |
-| `O:\temp\` | intermédiaires régénérables (OBJ préparés, journaux; cartes des normales: `<zone>\relief\`; essais: `<zone>\delit\`) | non |
+| `O:\publishing\prepared\<zone>\` | zone préparée (OBJ, texture, rapport, empreinte) des tuiles actives: le relief, les téléchargements et la réalité augmentée en sont faits | oui |
+| `O:\temp\` | intermédiaires jetables (journaux; cartes des normales: `<zone>\relief\`; essais: `<zone>\delit\`), à vider à tout moment hors traitement | non |
 
-**Espace disque:** la chaîne produit beaucoup de données. Après chaque essai, supprimer ce qui est remplacé: versions de tuiles qui ne sont plus dans `manifest.json`, anciens OBJ préparés, journaux et captures. Ne garder que la version active, l'OBJ préparé courant (pour retuiler sans refaire la préparation) et les outils.
+**Espace disque:** la chaîne produit beaucoup de données. Après chaque essai, supprimer ce qui est remplacé: versions de tuiles qui ne sont plus dans `manifest.json`, journaux et captures. Ne garder que la version active, la zone préparée courante (pour retuiler sans refaire la préparation) et les outils.
 
 ## Exécutables et bibliothèques
 

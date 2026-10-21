@@ -4,7 +4,7 @@ Relief des zones: cuit la carte des normales (bake_relief.py) puis retuile la zo
 
 .DESCRIPTION
 Pour chaque zone: cuisson de la carte des normales depuis l'export détaillé sur le mesh préparé
-(<TempRoot>\<zone>\prox, celui des tuiles publiées), dans <TempRoot>\<zone>\relief; puis tuilage avec la carte
+(<PreparedRoot>\<zone>, celui des tuiles publiées), dans <TempRoot>\<zone>\relief; puis tuilage avec la carte
 greffée (manifeste local mis à jour) et ménage des anciennes versions de la zone, comme publish_zones.ps1.
 Rien n'est envoyé vers R2 (upload_r2.mjs, à part). Une zone en échec n'arrête pas les suivantes.
 
@@ -32,6 +32,7 @@ param(
     [switch]$Rebake,
     [string]$Blender = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe",
     [string]$TempRoot = "O:\temp",
+    [string]$PreparedRoot = "O:\publishing\prepared",
     [string]$TilesRoot = "O:\publishing\tiles",
     [Alias('h')][switch]$Help,
     [Parameter(ValueFromRemainingArguments = $true)]$Rest
@@ -41,7 +42,7 @@ $ErrorActionPreference = "Stop"
 
 foreach ($zone in $Zones) {
     $slug = $zone -replace " ", "-"
-    $prepared = Join-Path $TempRoot "$slug\prox"
+    $prepared = Join-Path $PreparedRoot $slug
     $relief = Join-Path $TempRoot "$slug\relief"
     $log = Join-Path $TempRoot "$slug-relief.log"
     $started = Get-Date
