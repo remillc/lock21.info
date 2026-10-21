@@ -22,8 +22,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           # Astro 7 and Vite 8 (3D viewer) need Node 22.12+
           node-version: 22
@@ -56,6 +56,11 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
+          # A preview needs an existing Worker: the very first run creates it (only on …workers.dev while lock21.info
+          # isn't routed to it)
+          if ! npx wrangler deployments list > /dev/null 2>&1; then
+            npx wrangler deploy --message "first deploy ${GITHUB_REF_NAME} ${GITHUB_SHA::7}"
+          fi
           alias=$(echo "${GITHUB_REF_NAME}" | tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9\n' '-' | cut -c1-40)
           npx wrangler versions upload --preview-alias "$alias" --message "preview ${GITHUB_REF_NAME} ${GITHUB_SHA::7}"
 
