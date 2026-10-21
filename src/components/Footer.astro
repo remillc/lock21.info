@@ -3,6 +3,8 @@
 // the licence (CC BY 4.0, as for the 3D model: /modele/).
 // Both stay together at the bottom of the window on short pages (margin-top: auto; the flex columns in custom.scss).
 import Default from '@astrojs/starlight/components/Footer.astro'
+import { site } from '../data/site'
+import Consent from './Consent.astro'
 
 const english = Astro.locals.starlightRoute.lang?.startsWith('en')
 // From the first dive (2024) to the year of the build
@@ -20,8 +22,12 @@ const licence = `https://creativecommons.org/licenses/by/4.0/deed.${english ? 'e
 </script>
 <div class="site-footer">
   <span translate="no">{english ? 'LOCK/21' : 'ÉCLUSE/21'} · {english ? 'field notebook' : 'carnet de terrain'}</span>
-  <span>© {years} Christian Rémillard · {english ? 'License' : 'Licence'} <a href={licence} rel="license">CC BY 4.0</a></span>
+  <span>© {years} Christian Rémillard · {english ? 'License' : 'Licence'} <a href={licence} rel="license">CC BY 4.0</a>
+    · <a href="/confidentialite/">{english ? 'Privacy' : 'Confidentialité'}</a>{site.analytics.ga4 && (
+      <> · <button type="button" class="consent-open" data-consent-open>{english ? 'Cookies' : 'Témoins'}</button></>
+    )}</span>
 </div>
+<Consent />
 </div>
 
 <style>
@@ -42,6 +48,15 @@ const licence = `https://creativecommons.org/licenses/by/4.0/deed.${english ? 'e
     font-family: var(--lk-font-data);
     font-size: 0.8125rem;
     line-height: 1.5;
+  }
+  .consent-open {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #3cc2bc;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
   }
   .site-footer a {
     color: #3cc2bc;

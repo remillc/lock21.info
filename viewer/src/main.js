@@ -71,6 +71,10 @@ if (arLink.relList?.supports?.('ar')) {
     `action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(location.href)};end;`
   arLink.hidden = false
 }
+// Analytics: the page that embeds the viewer counts the AR launches (src/components/Analytics.astro, after consent)
+arLink.addEventListener('click', () => {
+  if (window.self !== window.top) window.parent.postMessage({ type: 'lock21:ar', size: arFull ? 'full' : 'table' }, location.origin)
+})
 
 const container = document.getElementById('viewer')
 const status = document.getElementById('status')

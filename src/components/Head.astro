@@ -9,10 +9,12 @@
 // Page transition: SYSTEM-DESIGN.md (Motion), styles in custom.scss.
 import Default from '@astrojs/starlight/components/Head.astro'
 import { ClientRouter } from 'astro:transitions'
+import Analytics from './Analytics.astro'
 ---
 
 <Default />
 <ClientRouter />
+<Analytics />
 <script is:inline>
   if (!window.lock21Router) {
     window.lock21Router = true

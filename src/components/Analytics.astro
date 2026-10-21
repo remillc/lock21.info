@@ -1,0 +1,106 @@
+---
+// Google Analytics 4, only after consent (Québec's Loi 25: Google Analytics uses cookies). Included in every page's
+// <head> by Head.astro. Without an ID (src/data/site.ts, analytics.ga4) nothing is loaded and no banner shows.
+// - Consent: <l21-consent> (Footer.astro) asks once; the choice is kept in localStorage ('l21-consent': granted or
+//   denied) and can be changed from the footer. Google's script is only loaded once consent is granted (Consent Mode
+//   v2, everything denied by default).
+// - Page views: sent by hand, on the first load and after each client-side navigation (astro:page-load); automatic
+//   ones would also count every ?cam= update of the /modele/ page as a page.
+// - The arrival address is kept before /modele/ cleans its own (l21-model-frame keeps only ?cam=), so that the QR
+//   codes' campaigns (utm_source=qr, utm_campaign=ra-table / ra-taille-reelle) reach the first page view.
+// - Events: file_download (links with data-track-download: the KMZ and the GLB), ar_launch (the viewer's AR button,
+//   sent by the viewer to this page: ar_size table or full).
+import { site } from '../data/site'
+
+const id = site.analytics.ga4
+---
+
+{
+  id && (
+    <>
+      <meta name="lock21-ga4" content={id} />
+      <script is:inline set:html="window.lock21Landing = window.lock21Landing || location.href" />
+    </>
+  )
+}
+
+<script>
+  const id = document.querySelector<HTMLMetaElement>('meta[name="lock21-ga4"]')?.content
+  const KEY = 'l21-consent'
+
+  type Gtag = (...args: unknown[]) => void
+  const w = window as unknown as { dataLayer: unknown[]; gtag?: Gtag; lock21Landing?: string; lock21Analytics?: boolean }
+
+  function choice(): string | null {
+    try {
+      return localStorage.getItem(KEY)
+    } catch {
+      return null
+    }
+  }
+
+  let loaded = false
+  let firstView = true
+  let lastPath = ''
+
+  function load() {
+    if (loaded || !id) return
+    loaded = true
+    w.dataLayer = w.dataLayer || []
+    w.gtag = function gtag() {
+      // eslint-disable-next-line prefer-rest-params
+      w.dataLayer.push(arguments)
+    }
+    w.gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' })
+    w.gtag('consent', 'update', { analytics_storage: 'granted' })
+    w.gtag('js', new Date())
+    w.gtag('config', id, { send_page_view: false })
+    const script = document.createElement('script')
+    script.async = true
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${id}`
+    document.head.append(script)
+    pageView()
+  }
+
+  function pageView() {
+    if (!loaded || !w.gtag) return
+    // The first one with the arrival address (QR code campaigns), the next ones with the current address
+    const location = firstView && w.lock21Landing ? w.lock21Landing : window.location.href
+    firstView = false
+    lastPath = window.location.pathname
+    w.gtag('event', 'page_view', { page_location: location, page_title: document.title })
+  }
+
+  function track(name: string, params: Record<string, string>) {
+    if (loaded && w.gtag) w.gtag('event', name, params)
+  }
+
+  if (id && !w.lock21Analytics) {
+    w.lock21Analytics = true
+    if (choice() === 'granted') load()
+    // Consent given or withdrawn from the banner
+    document.addEventListener('l21-consent', (event) => {
+      const granted = (event as CustomEvent<string>).detail === 'granted'
+      if (granted) load()
+      else if (loaded && w.gtag) w.gtag('consent', 'update', { analytics_storage: 'denied' })
+    })
+    // Client-side navigations (ClientRouter): one page view per new path (astro:page-load also fires on the first
+    // load, already counted by load())
+    document.addEventListener('astro:page-load', () => {
+      if (window.location.pathname !== lastPath) pageView()
+    })
+    // Downloads
+    document.addEventListener('click', (event) => {
+      const link = (event.target as Element | null)?.closest?.<HTMLAnchorElement>('a[data-track-download]')
+      if (!link) return
+      const url = new URL(link.href, location.href)
+      const file = url.pathname.split('/').pop() ?? ''
+      track('file_download', { file_name: file, file_extension: file.split('.').pop() ?? '', link_url: url.href })
+    })
+    // Augmented reality, launched from the viewer (iframe of /modele/)
+    window.addEventListener('message', (event) => {
+      if (event.origin !== location.origin || event.data?.type !== 'lock21:ar') return
+      track('ar_launch', { ar_size: event.data.size === 'full' ? 'full' : 'table' })
+    })
+  }
+</script>

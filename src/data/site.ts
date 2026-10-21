@@ -15,6 +15,11 @@ export const site = {
   // Downloads (built by tools/google-earth/). The KMZ, on the site (public/downloads/), only links to the list of parts
   // on R2 (tools/publish-model/upload_downloads.mjs), so zones added later show up without a new download or a site
   // deploy; the GLB is on R2
+  // Google Analytics 4 measurement ID (G-...), public; empty: no analytics, no consent banner (Analytics.astro,
+  // Consent.astro)
+  analytics: {
+    ga4: '',
+  },
   downloads: {
     kmz: '/downloads/lock-21.kmz',
     kmzTriangles: '600 000',

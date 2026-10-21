@@ -4,6 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Audience measurement with Google Analytics 4, only after consent (Québec's Loi 25): a consent banner
+  (`<l21-consent>`, refusing as easy as accepting, "Témoins" in the footer to change one's mind, cookies deleted on
+  withdrawal), page views on client-side navigations, `file_download` (KMZ, GLB), `ar_launch` (table / real size), and
+  the QR codes as campaigns (`utm_campaign=ra-table`, `ra-taille-reelle`). Off until the measurement ID is set in
+  `src/data/site.ts`. New page `/confidentialite/` (draft: contact and retention to complete).
 - Augmented reality: a button in the 3D viewer, on phones and tablets only, puts the whole lock on a table at 1:100
   (70 cm): AR Quick Look on iPhone and iPad (USDZ), Scene Viewer on Android (GLB). No library. Model built by
   `make_model.py -x 0.01 --usdz` (400 000 triangles), copyright in both files.
