@@ -9,7 +9,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   (`<l21-consent>`, refusing as easy as accepting, "Témoins" in the footer to change one's mind, cookies deleted on
   withdrawal), page views on client-side navigations, `file_download` (KMZ, GLB), `ar_launch` (table / real size), and
   the QR codes as campaigns (`utm_campaign=ra-table`, `ra-taille-reelle`). Off until the measurement ID is set in
-  `src/data/site.ts`. New page `/confidentialite/` (draft: contact and retention to complete).
+  `src/data/site.ts`. New page `/confidentialite/`: what is measured and why, 14-month retention, contact info@lock21.info.
 - Augmented reality: a button in the 3D viewer, on phones and tablets only, puts the surveyed zones (without the
   mockup terrain) on a table at 1:100 (about 70 cm), or at real size with `?ar=full`: AR Quick Look on iPhone and iPad
   (USDZ), Scene Viewer on Android (GLB). No library. Models built by `make_model.py -x 0.01 --usdz` and `-x 1`

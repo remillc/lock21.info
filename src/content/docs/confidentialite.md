@@ -22,7 +22,7 @@ viennent les visiteurs, pour décider de la suite du projet.
 
 **Témoins (cookies):** Google Analytics dépose des témoins (`_ga`, `_ga_…`) pour reconnaître une visite qui se poursuit.
 Les données sont traitées par Google, hors du Québec (États-Unis), selon ses propres règles. Elles sont gardées
-[À COMPLÉTER: durée de conservation réglée dans Google Analytics, 2 ou 14 mois].
+14 mois, puis effacées par Google.
 
 **Changer d'avis:** le bouton **Témoins**, en bas de chaque page, rouvre la question. Si vous retirez votre accord, la
 mesure s'arrête et les témoins de Google Analytics sont effacés.
@@ -39,5 +39,5 @@ reçoivent votre adresse IP pour vous envoyer les pages; ce site n'y a pas accè
 
 ## Responsable
 
-Responsable de la protection des renseignements personnels: [À COMPLÉTER: nom et titre]. Pour toute question, ou pour
-exercer vos droits (accès, rectification, retrait du consentement): [À COMPLÉTER: courriel de contact].
+Responsable de la protection des renseignements personnels: Christian Rémillard, auteur du site. Pour toute question, ou
+pour exercer vos droits (accès, rectification, retrait du consentement): [info@lock21.info](mailto:info@lock21.info).
