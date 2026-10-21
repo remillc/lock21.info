@@ -142,7 +142,7 @@ Les visiteurs voient les nouvelles zones **dans la minute**. Les anciennes versi
 
 ## Étape 6 · Refaire les téléchargements
 
-Les téléchargements de la page `/modele/` contiennent tout le modèle: à refaire dès qu'une zone ou le contexte change.
+Les téléchargements de la page `/modele/` et les modèles de réalité augmentée contiennent tout le modèle: à refaire dès qu'une zone ou le contexte change.
 
 **1. Exporter le contexte** (terrain, murs, remplissages), sans compression:
 
@@ -163,18 +163,27 @@ tools\google-earth\.venv\Scripts\python.exe tools\google-earth\make_kmz.py -d O:
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\glb -t 2000000 -s 4096 --context O:\temp\google-earth\context\context.glb
 ```
 
-**4. Rassembler ce qui part en ligne** dans `O:\publishing\downloads\online\`:
+**4. Les modèles de réalité augmentée** (zones seulement, sans le terrain; sur une table à 1:100 et à la taille réelle; le détail: guide **Réalité augmentée**):
+
+```powershell
+Remove-Item -Recurse -Force O:\publishing\downloads\google-earth\ar -ErrorAction SilentlyContinue
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar-full -t 400000 -s 2048 -x 1 --usdz
+```
+
+**5. Rassembler ce qui part en ligne** dans `O:\publishing\downloads\online\`:
 
 ```powershell
 $online = "O:\publishing\downloads\online"
 Remove-Item -Recurse -Force "$online\google-earth" -ErrorAction SilentlyContinue
-New-Item -ItemType Directory -Force "$online\google-earth" | Out-Null
+New-Item -ItemType Directory -Force "$online\google-earth", "$online\ar" | Out-Null
 Copy-Item O:\publishing\downloads\google-earth\t600k\network\lock-21.kml "$online\google-earth\"
 Copy-Item -Recurse O:\publishing\downloads\google-earth\t600k\network\parts "$online\google-earth\"
 Copy-Item O:\publishing\downloads\google-earth\glb\lock-21.glb "$online\"
+Copy-Item O:\publishing\downloads\google-earth\ar\lock-21-ar*.glb, O:\publishing\downloads\google-earth\ar\lock-21-ar*.usdz "$online\ar\"
 ```
 
-**5. Envoyer** (un essai d'abord):
+**6. Envoyer** (un essai d'abord):
 
 ```powershell
 npm run downloads:upload -- --dry-run
