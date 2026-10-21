@@ -53,6 +53,7 @@ export default defineConfig({
         PageTitle: './src/components/PageTitle.astro',
         Footer: './src/components/Footer.astro',
         Sidebar: './src/components/Sidebar.astro',
+        MobileMenuFooter: './src/components/MobileMenuFooter.astro',
       },
       sidebar: [
         { label: 'Modèle 3D', link: '/modele/' },

@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Mobile: the "Modèle 3D" button at the top of the menu (it was at the bottom, next to the theme).
 - **New terrain online** (context): the canal floor at 60 ft, the north bank in two pitches (2 : 1 then 1 1/2 : 1,
   crest about 28 ft as the scans show), the south bank at 2 1/2 : 1 down to the river bed at 70 ft, earth banks past
   the south wall's ends, the floor flat in front of the walls and the ground just under the zones (zone 8's stairs
