@@ -49,6 +49,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `tools/publish-model/` | 3D publishing pipeline (headless Blender, Obj2Tiles, Node, PowerShell). Its `README.md` (French) documents every step, tool and lesson learned |
 | `tools/google-earth/` | Whole-model downloads and Google Earth (TODO #13): `make_model.py` (Blender: every published zone + the context, decimated to a triangle budget, textures resized, on the site anchor; GLB + OBJ), `make_kmz.py` (COLLADA via pycollada in `tools/google-earth/.venv`, one material per zone/context piece, meshes of at most 30,000 vertices; KMZ with the model on the ground at the lock's coordinates). Outputs in `O:\publishing\downloads\google-earth\`; see its `README.md` (French) |
 | `tools/model-analysis/` | Read-only resolution analysis of the `zones` meshes (headless Blender). Run `run.ps1`; thresholds in `thresholds.json`; dated reports (`.json` + `.md`) in `reports/`. Commit the reports, since they track how the model evolves. |
+| `docs/` | Human guides, French, ready for a documentation section (Starlight frontmatter): `processing-the-blend-file.md`, the steps after a change to the `.blend`, up to the live model and downloads. Keep it in step with the scripts |
 | `TODO.md`, `CHANGELOG.md`, `GUIDELINES.md`, `SYSTEM-DESIGN.md` | Working list of what remains; release notes; front-end rules; design brief (E2 look on the Material Design 3 token system). Read the last two before writing site or UI code |
 | `images/` | Logos and screenshots |
 
