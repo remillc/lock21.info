@@ -2,7 +2,7 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
-## Unreleased
+## 0.6.0 - 2026-10-21
 
 - Translation tracking: `npm run i18n:status` (`tools/i18n/status.mjs`) lists the English pages to create, update or
   rename after French changes; `tools/i18n/translations.json` records the French version each was translated from.
