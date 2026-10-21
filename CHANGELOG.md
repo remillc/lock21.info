@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Guide `docs/project-organization.md` (French): folders, branches and versions, online services, where to look.
 - Guide `docs/augmented-reality.md` (French): how AR works, rebuilding its files, testing on a phone.
 - Audience measurement with Google Analytics 4, only after consent (Québec's Loi 25): a consent banner
   (`<l21-consent>`, refusing as easy as accepting, "Témoins" in the footer to change one's mind, cookies deleted on

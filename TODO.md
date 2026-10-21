@@ -38,8 +38,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ### Documentation
 
-- [ ] #16 Document how the project's repositories and folders are organized (Git repo, `viewer/`, `tools/`,
-  `O:\photogrammetry`, `O:\modeles`, `O:\publishing`, R2)
 - [ ] #17 Add a workflow page to the site (`6. publication.md`) once the pipeline is stable
 - [ ] #18 Rename the "zone N" Blender materials (`Material_0.00x`, `Empty.00x`) consistently
 
