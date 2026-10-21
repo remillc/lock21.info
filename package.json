@@ -14,7 +14,8 @@
     "model:upload": "node tools/publish-model/upload_r2.mjs",
     "downloads:upload": "node tools/publish-model/upload_downloads.mjs",
     "build:viewer": "npm --prefix viewer run build -- --outDir ../public/modele/viewer --emptyOutDir",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "i18n:status": "node tools/i18n/status.mjs"
   },
   "keywords": [],
   "author": "",

@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Translation tracking: `npm run i18n:status` (`tools/i18n/status.mjs`) lists the English pages to create, update or
+  rename after French changes; `tools/i18n/translations.json` records the French version each was translated from.
 - Home page render: sunlight rays through the water (a thin scattering volume and a rippled surface casting the
   shafts), and its link opens the viewer at the same point of view (`/modele/?cam=…`).
 - **English version of the site** (`/en/`): every page translated (docs, tests, privacy), the home page, the model
