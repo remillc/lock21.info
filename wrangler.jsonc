@@ -5,7 +5,11 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "lock21-info",
   "compatibility_date": "2026-10-01",
+  // A small script only for the English home page, /en/ (worker/index.js); every other address is a static file
+  "main": "worker/index.js",
   "assets": {
+    "binding": "ASSETS",
+    "run_worker_first": ["/en", "/en/"],
     "directory": "./dist",
     // Addresses without a final slash (astro.config.mjs, trailingSlash): <path>/index.html is served at <path>, and
     // <path>/ redirects there

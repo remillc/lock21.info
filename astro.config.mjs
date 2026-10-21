@@ -3,6 +3,7 @@
 // public/modele/viewer/ and served as is at /modele/viewer (in development, forwarded to the viewer's dev server).
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
+import homeSlash from './src/integrations/home-slash.mjs'
 
 // Dev server only: /modele/viewer (embedded by the /modele page) is forwarded to the viewer's own dev server
 // (npm run viewer:dev, port 3100, same path), so the page shows the viewer's source and reloads with it, websocket
@@ -12,6 +13,7 @@ const viewerDev = { target: 'http://localhost:3100', changeOrigin: true, ws: tru
 export default defineConfig({
   site: 'https://lock21.info',
   // Page addresses without a final slash (/modele, /collecte/materiel-utilise): a page is a resource, not a folder.
+  // The two home pages are collections and keep it, / and /en/ (homeSlash below, worker/index.js).
   // Pages are still built as <path>/index.html; the hosting serves them at <path> and redirects <path>/ there
   // (wrangler.jsonc, html_handling)
   trailingSlash: 'never',
@@ -61,13 +63,15 @@ export default defineConfig({
         PageFrame: './src/components/PageFrame.astro',
       },
       sidebar: [
-        { label: 'Modèle 3D', translations: { en: '3D model' }, link: '/modele/' },
-        { label: 'Découpage du site', translations: { en: 'Site zones' }, link: '/decoupage-du-site/' },
+        { label: 'Modèle 3D', translations: { en: '3D model' }, link: '/modele' },
+        { label: 'Découpage du site', translations: { en: 'Site zones' }, link: '/decoupage-du-site' },
         { label: 'La collecte des données', translations: { en: 'Data collection' }, items: [{ autogenerate: { directory: 'collecte' } }] },
         { label: 'Workflow', translations: { en: 'Workflow' }, items: [{ autogenerate: { directory: 'workflow' } }] },
         { label: 'Problèmes rencontrés', translations: { en: 'Problems encountered' }, items: [{ autogenerate: { directory: 'questions' } }] },
         // tests/ stays out of the sidebar, as before
       ],
     }),
+    // After Starlight (and its search index): / and /en/ for the home pages
+    homeSlash(),
   ],
 })

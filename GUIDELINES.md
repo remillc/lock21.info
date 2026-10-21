@@ -9,7 +9,7 @@ to any UI added to the 3D viewer. Decided with Christian on 2026-10-19.
   framework (React, Vue, Svelte...) unless a real need appears and is agreed first.
 - **Content is Markdown.** Pages stay Markdown/MDX files, written in French (source language), in the informal
   first-person field-notebook tone.
-- **Static output.** The site is built to static files and served as static assets by Cloudflare (Workers static assets); no server code.
+- **Static output.** The site is built to static files and served as static assets by Cloudflare (Workers static assets); no server code, except `worker/index.js` (a few lines, only for the English home page's address `/en/`).
 
 ## Stack
 
