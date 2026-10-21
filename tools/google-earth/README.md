@@ -20,11 +20,11 @@ visionneuse. Le modèle: zones et contexte, 400 000 triangles, textures de 2048 
 exporté en USDZ par `make_model.py` (`-x 0.01 --usdz`):
 
 ```powershell
-& "C:\Program Files\Blender Foundation\Blender 5.2lender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earthr -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz --context O:	emp\google-earth\context\context.glb
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz --context O:\temp\google-earth\context\context.glb
 ```
 
 En ligne sous `https://tiles.lock21.info/downloads/ar/` (`lock-21-ar.usdz`, `lock-21-ar.glb`): les copier dans
-`O:\publishing\downloads\onliner\` avant `npm run downloads:upload` (le USDZ part avec le type
+`O:\publishing\downloads\online\ar\` avant `npm run downloads:upload` (le USDZ part avec le type
 `model/vnd.usdz+zip`, exigé par Quick Look). Le copyright est dans les deux fichiers: champs glTF du GLB, propriétés USD
 (`userProperties:lock21:copyright`) de chaque objet du USDZ. À vérifier sur un vrai téléphone: la réalité augmentée ne
 s'essaie pas sur un ordinateur.
