@@ -24,6 +24,7 @@
     "@fontsource/archivo": "5.3.0",
     "@fontsource/jetbrains-mono": "5.3.0",
     "astro": "7.4.1",
+    "qrcode": "^1.5.4",
     "sass": "^1.105.2"
   },
   "engines": {
