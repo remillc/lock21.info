@@ -5,6 +5,7 @@
 import Default from '@astrojs/starlight/components/Footer.astro'
 
 const english = Astro.locals.starlightRoute.lang?.startsWith('en')
+const privacy = english ? '/en/confidentialite/' : '/confidentialite/'
 // From the first dive (2024) to the year of the build
 const years = `2024–${new Date().getFullYear()}`
 const licence = `https://creativecommons.org/licenses/by/4.0/deed.${english ? 'en' : 'fr'}`
@@ -21,7 +22,7 @@ const licence = `https://creativecommons.org/licenses/by/4.0/deed.${english ? 'e
 <div class="site-footer">
   <span translate="no">{english ? 'LOCK/21' : 'ÉCLUSE/21'} · {english ? 'field notebook' : 'carnet de terrain'}</span>
   <span>© {years} Christian Rémillard · {english ? 'License' : 'Licence'} <a href={licence} rel="license">CC BY 4.0</a>
-    · <a href="/confidentialite/">{english ? 'Privacy' : 'Confidentialité'}</a></span>
+    · <a href={privacy}>{english ? 'Privacy' : 'Confidentialité'}</a></span>
 </div>
 </div>
 

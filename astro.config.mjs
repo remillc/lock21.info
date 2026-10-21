@@ -57,11 +57,11 @@ export default defineConfig({
         PageFrame: './src/components/PageFrame.astro',
       },
       sidebar: [
-        { label: 'Modèle 3D', link: '/modele/' },
-        { label: 'Découpage du site', link: '/decoupage-du-site/' },
-        { label: 'La collecte des données', items: [{ autogenerate: { directory: 'collecte' } }] },
-        { label: 'Workflow', items: [{ autogenerate: { directory: 'workflow' } }] },
-        { label: 'Problèmes rencontrés', items: [{ autogenerate: { directory: 'questions' } }] },
+        { label: 'Modèle 3D', translations: { en: '3D model' }, link: '/modele/' },
+        { label: 'Découpage du site', translations: { en: 'Site zones' }, link: '/decoupage-du-site/' },
+        { label: 'La collecte des données', translations: { en: 'Data collection' }, items: [{ autogenerate: { directory: 'collecte' } }] },
+        { label: 'Workflow', translations: { en: 'Workflow' }, items: [{ autogenerate: { directory: 'workflow' } }] },
+        { label: 'Problèmes rencontrés', translations: { en: 'Problems encountered' }, items: [{ autogenerate: { directory: 'questions' } }] },
         // tests/ stays out of the sidebar, as before
       ],
     }),

@@ -9,6 +9,7 @@ import ModelPill from './ModelPill.astro'
 
 // Depth marks, placed in proportion to the depth from the surface (top) to the bottom
 const marks = [0, 15, 30, 45, site.bottomDepthFt]
+const unit = Astro.locals.starlightRoute.lang?.startsWith('en') ? 'ft' : 'pi'
 ---
 
 <div class="mobile-model md:sl-hidden">
@@ -19,7 +20,7 @@ const marks = [0, 15, 30, 45, site.bottomDepthFt]
   {
     marks.map((ft) => (
       <span class:list={['mark', { bottom: ft === site.bottomDepthFt }]} style={`top: ${(ft / site.bottomDepthFt) * 100}%`}>
-        {ft} pi
+        {ft} {unit}
       </span>
     ))
   }

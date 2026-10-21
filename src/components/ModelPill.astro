@@ -3,11 +3,13 @@
 // top of the mobile menu on small ones (Sidebar.astro). The /modele/ page is prefetched as soon as the pill is on
 // screen (Astro prefetch, "viewport").
 import { site } from '../data/site'
+import { localPath, pageLang } from '../lib/i18n'
 
-const english = Astro.locals.starlightRoute.lang?.startsWith('en')
+const lang = pageLang(Astro.locals)
+const english = lang === 'en'
 ---
 
-<a href={site.viewer} class="model-pill" data-astro-prefetch="viewport">
+<a href={localPath(site.viewer, lang)} class="model-pill" data-astro-prefetch="viewport">
   <svg aria-hidden="true" width="10" height="12" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z" fill="currentColor"></path></svg>
   {english ? '3D model' : 'Modèle 3D'}
 </a>

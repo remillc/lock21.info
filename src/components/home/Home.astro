@@ -2,69 +2,127 @@
 // Home page (SYSTEM-DESIGN.md, "E2 · Sonar"): depth gauge, title and instrument panel, framed render of the model, three
 // entry cards, journal excerpts. Every number comes from the dive log or the 3D manifest at build time. The links to the
 // next steps (buttons, render, cards, journal) are prefetched as soon as they are on screen (Astro prefetch, "viewport").
+// French at /, English at /en/ (src/lib/i18n.ts): the text below in both languages.
 import { Image } from 'astro:assets'
 import render from '../../assets/home/render-zone12.webp'
 import { site } from '../../data/site'
 import { dives, totalMinutes, formatDuration, latestWithNotes } from '../../lib/diveLog'
+import { pageLang, localPath, locale } from '../../lib/i18n'
 import { zonesOnline } from '../../lib/manifest'
 
+const lang = pageLang(Astro.locals)
+const en = lang === 'en'
 const zones = await zonesOnline()
-const excerpts = latestWithNotes(3)
-const journal = '/collecte/journal-des-plongees/'
+const excerpts = latestWithNotes(3, lang)
+const journal = localPath('/collecte/journal-des-plongees/', lang)
+const viewer = localPath(site.viewer, lang)
+const ft = en ? 'ft' : 'pi'
 
-const entries = [
-  { no: '01', title: 'Plonger le site', text: 'Zones, profondeurs, courant du canal.', label: 'plongeurs', href: '/decoupage-du-site/' },
-  { no: '02', title: 'La méthode', text: 'GoPro Hero6, Metashape, Blender.', label: 'photogrammétrie', href: '/workflow/extraction-des-photos/' },
-  { no: '03', title: "L'histoire", text: "L'écluse, 1958, les dessins de 1988.", label: 'patrimoine', href: '/decoupage-du-site/' },
-]
+const t = en
+  ? {
+      eyebrow: 'FIELD NOTEBOOK · UNDERWATER PHOTOGRAMMETRY',
+      title: ['Lock 21,', 'measured underwater.'],
+      lead: 'Every dive, every setting, every zone, up to the 3D model of the submerged lock.',
+      explore: 'Explore the 3D model',
+      journal: 'Dive log',
+      survey: 'Survey',
+      surveyTitle: 'SURVEY',
+      status: 'IN PROGRESS',
+      depth: 'BOTTOM DEPTH',
+      dives: 'DIVES',
+      under: 'UNDERWATER',
+      online: 'ZONES ONLINE',
+      latest: 'LATEST',
+      alt: 'Render of the 3D model of zone 12 seen from the west: masonry pier, spillway sluice gates and walkway, covered in zebra mussels',
+      start: 'Where to start',
+      startSub: 'Three ways in, depending on what brings you here.',
+      excerptsTitle: 'From the dive log',
+      all: (n: number) => `All ${n} dives →`,
+      total: (n: number, d: string) => `Total: ${n} dives · ${d}`,
+    }
+  : {
+      eyebrow: 'CARNET DE TERRAIN · PHOTOGRAMMÉTRIE SOUS-MARINE',
+      title: ["L'écluse 21,", "mesurée sous l'eau."],
+      lead: "Chaque plongée, chaque réglage, chaque zone, jusqu'au modèle 3D de l'écluse submergée.",
+      explore: 'Explorer le modèle 3D',
+      journal: 'Journal des plongées',
+      survey: 'Relevé',
+      surveyTitle: 'RELEVÉ',
+      status: 'EN COURS',
+      depth: 'PROFONDEUR DU FOND',
+      dives: 'PLONGÉES',
+      under: "SOUS L'EAU",
+      online: 'ZONES EN LIGNE',
+      latest: 'DERNIÈRE',
+      alt: "Rendu du modèle 3D de la zone 12 vu de l'ouest: pilier de maçonnerie, vannes du déversoir et passerelle, couverts de moules zébrées",
+      start: 'Par où commencer',
+      startSub: "Trois portes d'entrée, selon ce qui vous amène.",
+      excerptsTitle: 'Extraits du journal',
+      all: (n: number) => `Les ${n} plongées →`,
+      total: (n: number, d: string) => `Total: ${n} plongées · ${d}`,
+    }
+
+const entries = (
+  en
+    ? [
+        { no: '01', title: 'Diving the site', text: 'Zones, depths, the current in the canal.', label: 'divers', href: '/decoupage-du-site/' },
+        { no: '02', title: 'The method', text: 'GoPro Hero6, Metashape, Blender.', label: 'photogrammetry', href: '/workflow/extraction-des-photos/' },
+        { no: '03', title: 'The history', text: 'The lock, 1958, the 1988 drawings.', label: 'heritage', href: '/decoupage-du-site/' },
+      ]
+    : [
+        { no: '01', title: 'Plonger le site', text: 'Zones, profondeurs, courant du canal.', label: 'plongeurs', href: '/decoupage-du-site/' },
+        { no: '02', title: 'La méthode', text: 'GoPro Hero6, Metashape, Blender.', label: 'photogrammétrie', href: '/workflow/extraction-des-photos/' },
+        { no: '03', title: "L'histoire", text: "L'écluse, 1958, les dessins de 1988.", label: 'patrimoine', href: '/decoupage-du-site/' },
+      ]
+).map((e) => ({ ...e, href: localPath(e.href, lang) }))
 ---
 
 <div class="home not-content">
   <div class="gauge" aria-hidden="true">
-    <span>0 pi</span>
-    <span>15 pi</span>
-    <span>30 pi</span>
-    <span>45 pi</span>
-    <span class="bottom">{site.bottomDepthFt} pi</span>
+    <span>0 {ft}</span>
+    <span>15 {ft}</span>
+    <span>30 {ft}</span>
+    <span>45 {ft}</span>
+    <span class="bottom">{site.bottomDepthFt} {ft}</span>
   </div>
 
   <div class="main">
     <section class="hero">
       <div class="intro">
-        <p class="eyebrow">CARNET DE TERRAIN · PHOTOGRAMMÉTRIE SOUS-MARINE</p>
-        <h1 id="_top">L'écluse 21,<br />mesurée sous l'eau.</h1>
-        <p class="lead">Chaque plongée, chaque réglage, chaque zone, jusqu'au modèle 3D de l'écluse submergée.</p>
+        <p class="eyebrow">{t.eyebrow}</p>
+        <h1 id="_top">{t.title[0]}<br />{t.title[1]}</h1>
+        <p class="lead">{t.lead}</p>
         <div class="actions">
-          <a class="button filled" href={site.viewer} data-astro-prefetch="viewport">Explorer le modèle 3D</a>
-          <a class="button outlined" href={journal} data-astro-prefetch="viewport">Journal des plongées</a>
+          <a class="button filled" href={viewer} data-astro-prefetch="viewport">{t.explore}</a>
+          <a class="button outlined" href={journal} data-astro-prefetch="viewport">{t.journal}</a>
         </div>
       </div>
 
-      <section class="panel" aria-label="Relevé">
+      <section class="panel" aria-label={t.survey}>
         <div class="panel-head">
-          <span>RELEVÉ</span>
-          <span class="status"><span class="dot"></span>EN COURS</span>
+          <span>{t.surveyTitle}</span>
+          <span class="status"><span class="dot"></span>{t.status}</span>
         </div>
         <div class="wide">
-          <div class="label">PROFONDEUR DU FOND</div>
-          <div class="depth">{site.bottomDepthFt}<span> pi</span></div>
-          <div class="label">{site.bottomDepthM.toLocaleString('fr-CA')} m</div>
+          <div class="label">{t.depth}</div>
+          <div class="depth">{site.bottomDepthFt}<span> {ft}</span></div>
+          <div class="label">{site.bottomDepthM.toLocaleString(locale(lang))} m</div>
         </div>
-        <div><div class="label">PLONGÉES</div><div class="reading">{dives.length}</div></div>
-        <div><div class="label">SOUS L'EAU</div><div class="reading">{formatDuration(totalMinutes)}</div></div>
-        <div><div class="label">ZONES EN LIGNE</div><div class="reading">{zones.count}<span class="of"> / {site.zonesTotal}</span></div></div>
-        <div><div class="label">DERNIÈRE</div><div class="reading">Z{zones.latest}</div></div>
+        <div><div class="label">{t.dives}</div><div class="reading">{dives.length}</div></div>
+        <div><div class="label">{t.under}</div><div class="reading">{formatDuration(totalMinutes, false, lang)}</div></div>
+        <div><div class="label">{t.online}</div><div class="reading">{zones.count}<span class="of"> / {site.zonesTotal}</span></div></div>
+        <div><div class="label">{t.latest}</div><div class="reading">Z{zones.latest}</div></div>
       </section>
     </section>
 
-    <a class="render" href={site.viewer} data-astro-prefetch="viewport">
-      <Image src={render} alt="Rendu du modèle 3D de la zone 12 vu de l'ouest: pilier de maçonnerie, vannes du déversoir et passerelle, couverts de moules zébrées" widths={[640, 960, 1280]} sizes="(min-width: 75rem) 1100px, 100vw" />
+    <a class="render" href={viewer} data-astro-prefetch="viewport">
+      <Image src={render} alt={t.alt} widths={[640, 960, 1280]} sizes="(min-width: 75rem) 1100px, 100vw" />
       <span class="chip">ZONE 12 · 13 M FACES · TEX 12 464 PX</span>
     </a>
 
     <section class="block">
-      <h2>Par où commencer</h2>
-      <p class="sub">Trois portes d'entrée, selon ce qui vous amène.</p>
+      <h2>{t.start}</h2>
+      <p class="sub">{t.startSub}</p>
       <div class="cards">
         {entries.map((e) => (
           <a class="card" href={e.href} data-astro-prefetch="viewport">
@@ -79,8 +137,8 @@ const entries = [
 
     <section class="block">
       <div class="block-head">
-        <h2>Extraits du journal</h2>
-        <a class="more" href={journal} data-astro-prefetch="viewport">Les {dives.length} plongées →</a>
+        <h2>{t.excerptsTitle}</h2>
+        <a class="more" href={journal} data-astro-prefetch="viewport">{t.all(dives.length)}</a>
       </div>
       <ol class="timeline">
         {excerpts.map((d) => (
@@ -95,7 +153,7 @@ const entries = [
           </li>
         ))}
       </ol>
-      <p class="total">Total: {dives.length} plongées · {formatDuration(totalMinutes, true)}</p>
+      <p class="total">{t.total(dives.length, formatDuration(totalMinutes, true, lang))}</p>
     </section>
   </div>
 </div>
