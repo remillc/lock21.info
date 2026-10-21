@@ -57,7 +57,9 @@ Le script enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape
 
 ### 4. Recalage
 
-Cherche d'abord la meilleure des 24 orientations à angle droit sur un petit échantillon, puis raffine par ICP (*iterative closest point*) avec estimation de l'échelle, en ignorant les 20 % de paires les plus éloignées (parties sans recouvrement). Le résultat donne la matrice export → coordonnées monde de la scène Blender, l'échelle, l'angle de rotation et le résidu. La même matrice vaut pour tous les exports du même chunk Metashape, ce que le script vérifie sur les exports passés en argument supplémentaire.
+Cherche d'abord le meilleur point de départ sur un petit échantillon: l'identité (export dans le même repère que le mesh de la zone, le cas habituel: tous les exports d'une zone viennent du même chunk), puis les 24 orientations à angle droit centrées sur les médianes (export dans un autre repère, ex. zones 8 et 12); puis raffine par ICP (*iterative closest point*) avec estimation de l'échelle, en ignorant les 20 % de paires les plus éloignées (parties sans recouvrement). Le résultat donne la matrice export → coordonnées monde de la scène Blender, l'échelle, l'angle de rotation et le résidu. La même matrice vaut pour tous les exports du même chunk Metashape, ce que le script vérifie sur les exports passés en argument supplémentaire.
+
+**Leçon (2026-10-21):** sans le départ à l'identité, les 24 orientations centrées s'arrêtaient parfois à côté de la bonne position: zone 18 tournée de 0,8° (écart de surface 4,8 cm), donc 14 % de l'export retiré par le nettoyage à 5 cm, murs compris; zones 1, 4, 7 et 13 décalées de 1 à 1,5 cm. Avec l'identité: 0 à 3,6 mm. Un écart de surface au-delà de 1 cm pour un export du même chunk signale un mauvais recalage.
 
 `prepare_zone.py` l'appelle automatiquement et met le résultat en cache dans `transforms/<zone>.json`; il n'est recalculé que si l'export `source`, sa date ou le mesh de la zone changent.
 

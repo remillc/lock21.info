@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Registration (`register_zone.py`) tries the identity first: an export of the same Metashape chunk is already in
+  place. Zone 18 had been fitted 0.8° off, and the 5 cm clean-up cut its walls; zones 1, 4, 7 and 13 were 1 to 1.5 cm
+  off. Now 0 to 3.6 mm; the five zones republished.
 - Prepared zones moved from `O:\temp\<zone>\prox\` to `O:\publishing\prepared\<zone>\` (`-PreparedRoot`,
   `--prepared-root`): the relief, the downloads and the AR models are made from them. `O:\temp\` can now be emptied
   at any time, except while a job runs.
