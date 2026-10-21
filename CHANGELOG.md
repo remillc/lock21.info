@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Hosting on Cloudflare (Workers static assets, `wrangler.jsonc`): the deploy workflow also sends the site there, and a
+  manual run on a branch other than `main` gives a preview address. GitHub Pages stays until `lock21.info` is switched.
+  Built files with hashed names (`/_astro/`, the viewer's assets) are cached for a year (`public/_headers`).
+- Viewer dev server: `/modele/viewer` (no trailing slash) redirects to `/modele/viewer/` instead of a 404.
 - Home page render: no more light patch at the bottom right (slanted sunlight slipped past the surface's edge into
   the water volume).
 

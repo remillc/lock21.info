@@ -1,0 +1,17 @@
+// Cloudflare hosting of the site (Workers static assets): the built site (dist/, from npm run build) served as is.
+// Deployed by .github/workflows/deploy.yml with Wrangler (on a version tag or a manual run), never on a push.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lock21-info",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    // /modele -> /modele/ (Astro builds every page as <path>/index.html)
+    "html_handling": "auto-trailing-slash",
+    // unknown addresses get Starlight's 404 page, with a 404 status
+    "not_found_handling": "404-page"
+  },
+  // Preview deployments of branches (manual runs on a branch other than main) get their own address
+  "preview_urls": true,
+  "workers_dev": true
+}

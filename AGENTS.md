@@ -4,7 +4,7 @@ Guidance for AI coding agents working in this repository.
 
 ## What this project is
 
-**lock21.info** documents an underwater photogrammetry project. The goal is a 3D model of the submerged **Lock 21** site (an old canal lock with spillways/sluice gates, cut into numbered zones). The site is an [Astro](https://astro.build/) + [Starlight](https://starlight.astro.build/) site deployed to GitHub Pages at <https://lock21.info> (it was Docusaurus until 2026-10; see `GUIDELINES.md` for the front-end rules).
+**lock21.info** documents an underwater photogrammetry project. The goal is a 3D model of the submerged **Lock 21** site (an old canal lock with spillways/sluice gates, cut into numbered zones). The site is an [Astro](https://astro.build/) + [Starlight](https://starlight.astro.build/) site deployed to GitHub Pages at <https://lock21.info>, moving to Cloudflare (Workers static assets, `wrangler.jsonc`) (it was Docusaurus until 2026-10; see `GUIDELINES.md` for the front-end rules).
 
 The content is a field notebook and "making of" for the project:
 
@@ -89,7 +89,9 @@ Node 22.12+ (Astro 7, Vite 8). If the sidebar or pages show stale entries after 
 
 ## CI (`.github/workflows/`)
 
-- `deploy.yml` builds the viewer and the site; it **deploys only on demand** (Actions tab, "Run workflow", or `gh workflow run deploy.yml`) or **when a version tag `v*` is pushed** (a release), by force-pushing `dist/` to the `gh-pages` branch with the workflow's `GITHUB_TOKEN` (plain git commands, no SSH key, no third-party action). Pushing or merging into `main` does not deploy; pull requests to `main` only run the build.
+- `deploy.yml` builds the viewer and the site; it **deploys only on demand** (Actions tab, "Run workflow", or `gh workflow run deploy.yml`) or **when a version tag `v*` is pushed** (a release). Pushing or merging into `main` does not deploy; pull requests to `main` only run the build.
+- On a tag or a manual run on `main` it deploys twice: to Cloudflare with `npx wrangler deploy` (secrets `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`; config `wrangler.jsonc`, cache headers `public/_headers`), and to GitHub Pages by force-pushing `dist/` to `gh-pages` with the workflow's `GITHUB_TOKEN`. The GitHub Pages step, `public/CNAME` and the `gh-pages` branch go once `lock21.info` points to the Worker. A manual run on another branch only uploads a Cloudflare preview (`wrangler versions upload --preview-alias <branch>`, address in the log).
+- Trailing slash: the hosting redirects `/modele` to `/modele/` (Cloudflare `html_handling: auto-trailing-slash`, GitHub Pages natively); in development the viewer's Vite config does it for `/modele/viewer`.
 - The former GPT translation workflows were removed (they had failed since 2025). English translations of the docs are done by Claude on request.
 
 ## Large and binary files: be careful

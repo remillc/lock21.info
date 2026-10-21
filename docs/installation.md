@@ -28,7 +28,7 @@ autre Blender utilise la carte en même temps (fenêtre ouverte, rendu). Fermer 
 | Service | Pour | Remarque |
 | --- | --- | --- |
 | **GitHub**, dépôt `remillc/lock21.info` | récupérer le projet; enregistrer et publier le travail | droits d'écriture pour pousser |
-| **Cloudflare**, compte du domaine `lock21.info` | mettre le modèle et les téléchargements en ligne (R2); domaine, cache, courriel `info@lock21.info` | les clés R2 vont dans `.env.local` (section 4) |
+| **Cloudflare**, compte du domaine `lock21.info` | mettre le modèle et les téléchargements en ligne (R2); domaine, cache, courriel `info@lock21.info` | les clés R2 vont dans `.env.local` (section 4); la publication du site utilise un jeton à part, rangé dans GitHub (section 7) |
 | **Agisoft Metashape Professional** | produire les exports des zones | licence du projet |
 | **Google Analytics** | consulter la mesure d'audience | facultatif |
 
@@ -171,6 +171,13 @@ Les navigateurs et Google Earth reçoivent les mêmes durées: **Caching** › *
 est réglé sur *Respect Existing Headers*. Avec une durée fixe (4 heures par défaut), Cloudflare remplaçait les
 5 minutes de la liste Google Earth (`lock-21.kml`) et les 60 secondes du manifeste: après un envoi, Google Earth Pro
 pouvait garder l'ancienne liste pendant 4 heures.
+
+**Publication du site.** L'action GitHub `Deploy` (`.github/workflows/deploy.yml`) envoie le site construit à Cloudflare
+avec Wrangler (réglages dans `wrangler.jsonc`, en-têtes de cache dans `public/_headers`). Elle lit deux secrets du dépôt
+(GitHub › **Settings** › **Secrets and variables** › **Actions**): `CLOUDFLARE_API_TOKEN`, un jeton Cloudflare
+(**My Profile** › **API Tokens**, modèle *Edit Cloudflare Workers*) et `CLOUDFLARE_ACCOUNT_ID`, l'identifiant du compte
+(page d'accueil du compte, **Account ID**). Rien à faire sur un nouvel ordinateur: ces valeurs ne sont pas dans
+`.env.local`. Pour essayer en local: `npm run build`, puis `npx wrangler dev` (le site tel que Cloudflare le sert).
 
 ## 8. Vérifier que tout fonctionne
 
