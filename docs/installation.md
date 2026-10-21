@@ -6,6 +6,35 @@ description: Préparer un ordinateur pour travailler sur lock21.info, du site au
 Ce guide prépare un ordinateur (Windows) pour travailler sur le projet: un nouvel ordinateur, ou une personne qui se
 joint au projet. Il n'est pas nécessaire de tout installer: le tableau ci-dessous dit quoi installer selon le travail.
 
+## Prérequis
+
+**Système:** Windows 10 ou 11. Les scripts de publication sont écrits pour PowerShell (inclus dans Windows). Le site
+et le visualiseur fonctionnent aussi sur macOS ou Linux, mais pas la publication du modèle 3D.
+
+**Matériel**, selon le travail:
+
+| Travail | Mémoire vive | Carte graphique | Espace disque |
+| --- | --- | --- | --- |
+| Le site et le visualiseur | 8 Go | n'importe laquelle qui affiche du WebGL 2 (tout navigateur récent) | environ 3 Go: le projet, ses bibliothèques et les fichiers `.blend` |
+| La publication du modèle 3D et les téléchargements | 64 Go (Blender charge des zones jusqu'à 36 millions de faces) | NVIDIA RTX avec 16 Go de mémoire, pour cuire le relief en 16 384 px (OptiX) | environ 5 Go dans `O:\publishing\`, en plus des exports des zones |
+| Les exports des zones (Metashape) | selon Agisoft: beaucoup, pour les grandes zones | NVIDIA recommandée | des centaines de gigaoctets dans `O:\photogrammetry\` et `O:\modeles\` |
+
+L'ordinateur du projet: Windows 11 Pro, Intel Core i9-13900K (24 cœurs), 64 Go de mémoire, NVIDIA GeForce RTX 4080
+SUPER (16 Go). La cuisson du relief en 16 384 px y occupe presque toute la mémoire de la carte: elle échoue si un
+autre Blender utilise la carte en même temps (fenêtre ouverte, rendu). Fermer Blender pendant les cuissons.
+
+**Accès:**
+
+| Service | Pour | Remarque |
+| --- | --- | --- |
+| **GitHub**, dépôt `remillc/lock21.info` | récupérer le projet; enregistrer et publier le travail | droits d'écriture pour pousser |
+| **Cloudflare**, compte du domaine `lock21.info` | mettre le modèle et les téléchargements en ligne (R2); domaine, cache, courriel `info@lock21.info` | les clés R2 vont dans `.env.local` (section 4) |
+| **Agisoft Metashape Professional** | produire les exports des zones | licence du projet |
+| **Google Analytics** | consulter la mesure d'audience | facultatif |
+
+**Connexion Internet:** le clone télécharge environ 2 Go (fichiers `.blend` compris), et une mise en ligne du modèle
+envoie de quelques centaines de mégaoctets à plus d'un gigaoctet.
+
 ## Quoi installer selon le travail
 
 | Travail | Git + Git LFS | Node.js | Blender | Python | Obj2Tiles | Disque `O:` | `.env.local` | Metashape |
