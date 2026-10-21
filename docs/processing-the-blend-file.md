@@ -25,7 +25,9 @@ Les étapes 1 à 4 ne changent rien en ligne: on peut les refaire autant de fois
 
 - [ ] **Le `.blend` est sauvegardé**, et **aucun objet n'est en mode Édition** au moment de la sauvegarde. Un objet sauvegardé en mode Édition est enregistré incomplet dans le fichier (sans ses sommets ni ses UV), et les exports échouent (erreur `foreach_get(..) sequence length mismatch`). En cas de doute: Tab pour revenir en mode Objet, puis sauvegarder.
 - [ ] **Blender peut rester ouvert**, mais il ne faut pas sauvegarder pendant que les étapes 1 à 3 et 6 lisent le fichier: la sauvegarde échouerait. Attendre la fin de l'étape en cours.
-- [ ] **Chaque zone porte sa propriété `source`**: le chemin de son export détaillé (`.glb`, avec sa texture) dans `O:\modeles\`. Le maillage de la zone dans le `.blend` peut être une version allégée, à condition de venir **de la même reconstruction** que la `source` (même chunk Metashape): c'est lui qui sert à placer la zone, à vérifier les découpes, et à rogner l'export détaillé.
+- [ ] **Chaque zone sait où se trouve sa version détaillée.** Dans le `.blend`, chaque zone est un objet de la collection `zones`. Son maillage peut être léger: il sert seulement à placer la zone et à dessiner ses découpes. La version qu'on publie est un autre fichier, détaillé: l'export `.glb` de Metashape, avec sa texture, rangé dans `O:\modeles\`. Son chemin est noté dans la **propriété personnalisée `source`** de l'objet (panneau *Object Properties*, section *Custom Properties*).
+
+  Une seule règle: le maillage léger et le fichier détaillé doivent venir **du même modèle Metashape** (le même chunk), par exemple un export à 1,5 M faces et un autre à 36 M faces du même modèle. Sinon les deux ne se superposent pas, et l'étape 2 s'arrête sur cette zone.
 - [ ] Le fichier `.env.local` (identifiants du serveur) est présent à la racine du projet. Il n'est jamais copié ni affiché.
 
 ## Étape 1 · Vérifier ce qui a changé
