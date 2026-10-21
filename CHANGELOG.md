@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- The context (`blend_state.py`, `bake_context_in_blender.py`) never takes the `terrain - drawings` collection (the
+  pieces drawn from the plans), even objects named "filler". New terrain in the `terrain` collection (SOS data).
 - Depth of the bottom: 60 ft (18.3 m) instead of 55 ft, as in the SOS Ottawa documents (lock floor, base of the
   approach cribs, 1989): home page depth gauge, model page, navigation gauge.
 - Augmented reality: the fillers are back in both models (zones and fillers, still without the mockup terrain, walls

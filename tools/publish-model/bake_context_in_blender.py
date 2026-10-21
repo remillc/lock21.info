@@ -37,6 +37,11 @@ def context_objects():
     objects = {o for o in bpy.data.objects if "filler" in o.name.lower() and o.type == 'MESH'}
     if terrain:
         objects |= {o for o in terrain.all_objects if o.type == 'MESH'}
+    # Les objets dessinés d'après les plans (collection « terrain - drawings ») ne sont jamais publiés, même nommés
+    # « filler »
+    drawings = bpy.data.collections.get("terrain - drawings")
+    if drawings:
+        objects -= set(drawings.all_objects)
     return sorted(objects, key=lambda o: o.name)
 
 

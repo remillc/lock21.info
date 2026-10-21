@@ -29,6 +29,7 @@ Les étapes 1 à 4 ne changent rien en ligne: on peut les refaire autant de fois
 - [ ] **Chaque zone sait où se trouve sa version haute résolution.** Dans le `.blend`, chaque zone est un objet de la collection `zones`. Son maillage peut être en basse résolution: il sert seulement à placer la zone et à dessiner ses découpes. La version qu'on publie est un autre fichier, en haute résolution: l'export `.glb` de Metashape, avec sa texture, rangé dans `O:\modeles\`. Son chemin est noté dans la **propriété personnalisée `source`** de l'objet (panneau *Object Properties*, section *Custom Properties*).
 
   Une seule règle: le fichier basse résolution et le fichier haute résolution doivent venir **du même modèle Metashape** (le même chunk), par exemple un export à 1,5 M faces et un autre à 36 M faces du même modèle. Sinon les deux ne se superposent pas, et l'étape 2 s'arrête sur cette zone.
+- [ ] **Le contexte** (ce qui entoure les zones) est fait des objets de la collection **`terrain`** et des objets dont le nom contient « filler ». La collection **`terrain - drawings`** (pièces dessinées d'après les plans, gardées comme référence) n'est jamais publiée, même pour un objet nommé « filler ».
 - [ ] Le fichier `.env.local` (identifiants du serveur) est présent à la racine du projet. Il n'est jamais copié ni affiché.
 
 ## Étape 1 · Vérifier ce qui a changé
