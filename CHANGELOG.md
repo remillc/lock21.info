@@ -20,6 +20,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   `asset.copyright`, with the origin's coordinates (44.996817° N, 74.89995° W) and orientation in `asset.extras`
   (`glb_metadata.py`); the KMZ, its list, each part and each COLLADA model. `/modele/`: the "Posé au sol" sentence
   removed.
+- Guide `docs/processing-the-blend-file.md` (French): the steps after a change to the `.blend`, from the check to the
+  live model, the downloads and the site.
+- Guide `docs/installation.md` (French): preparing a computer for the project, by kind of work.
 - `/modele/`: "Licence" and "Téléchargements" are two sections, the licence under "Le modèle"; the two downloads as
   filled buttons in the signal colour (tertiary), with an icon (globe for Google Earth, arrow for the GLB); the KMZ link carries `download`, so the client-side router leaves it to the browser; missing
   space restored in "via Save Ontario Shipwrecks".
