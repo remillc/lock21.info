@@ -6,6 +6,7 @@ description: Les étapes à suivre après une modification de lock-21-publishing
 Ce guide explique quoi faire **après avoir modifié le fichier `modeles/lock-21-publishing.blend`**: déplacer une zone, retoucher une découpe, ajouter une zone, changer l'export d'une zone, modifier le terrain. Il mène, étape par étape, jusqu'au modèle en ligne sur lock21.info et aux téléchargements (Google Earth, GLB).
 
 Toutes les commandes se lancent dans **PowerShell**, depuis le dossier du projet (`F:\projets\lock21.info`).
+L'ordinateur doit être prêt: voir le guide **Installation** (`docs/installation.md`).
 
 ## Vue d'ensemble
 
