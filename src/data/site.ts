@@ -24,7 +24,7 @@ export const site = {
     kmz: '/downloads/lock-21.kmz',
     kmzTriangles: '600 000',
     glb: 'https://tiles.lock21.info/downloads/lock-21.glb',
-    glbSize: '108 Mo',
+    glbSize: '114 Mo',
     glbTriangles: '2 millions',
   },
 }
