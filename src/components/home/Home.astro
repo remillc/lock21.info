@@ -16,6 +16,9 @@ const zones = await zonesOnline()
 const excerpts = latestWithNotes(3, lang)
 const journal = localPath('/collecte/journal-des-plongees/', lang)
 const viewer = localPath(site.viewer, lang)
+// The render's point of view in the viewer (?cam=x,y,z,tx,ty,tz: metres, y up; Blender's x, z, -y): zone 12 from the
+// west, 10 ft above the floor, as in the image
+const renderView = `${viewer}?cam=-53,3.64,-16.8,-37,5.09,-16.8`
 const ft = en ? 'ft' : 'pi'
 
 const t = en
@@ -33,7 +36,7 @@ const t = en
       under: 'UNDERWATER',
       online: 'ZONES ONLINE',
       latest: 'LATEST',
-      alt: 'Render of the 3D model of zone 12 seen from the west: masonry pier, spillway sluice gates and walkway, covered in zebra mussels',
+      alt: 'Render of the 3D model of zone 12 seen from the west, sunlight rays falling through the water: masonry pier, spillway sluice gates and walkway, covered in zebra mussels',
       start: 'Where to start',
       startSub: 'Three ways in, depending on what brings you here.',
       excerptsTitle: 'From the dive log',
@@ -54,7 +57,7 @@ const t = en
       under: "SOUS L'EAU",
       online: 'ZONES EN LIGNE',
       latest: 'DERNIÈRE',
-      alt: "Rendu du modèle 3D de la zone 12 vu de l'ouest: pilier de maçonnerie, vannes du déversoir et passerelle, couverts de moules zébrées",
+      alt: "Rendu du modèle 3D de la zone 12 vu de l'ouest, des rayons de soleil traversant l'eau: pilier de maçonnerie, vannes du déversoir et passerelle, couverts de moules zébrées",
       start: 'Par où commencer',
       startSub: "Trois portes d'entrée, selon ce qui vous amène.",
       excerptsTitle: 'Extraits du journal',
@@ -115,7 +118,7 @@ const entries = (
       </section>
     </section>
 
-    <a class="render" href={viewer} data-astro-prefetch="viewport">
+    <a class="render" href={renderView} data-astro-prefetch="viewport">
       <Image src={render} alt={t.alt} widths={[640, 960, 1280]} sizes="(min-width: 75rem) 1100px, 100vw" />
       <span class="chip">ZONE 12 · 13 M FACES · TEX 12 464 PX</span>
     </a>
