@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Depth of the bottom: 60 ft (18.3 m) instead of 55 ft, as in the SOS Ottawa documents (lock floor, base of the
+  approach cribs, 1989): home page depth gauge, model page, navigation gauge.
 - Augmented reality: the fillers are back in both models (zones and fillers, still without the mockup terrain, walls
   and banks), with `make_model.py --context-objects "filler*"`.
 - Registration (`register_zone.py`) tries the identity first: an export of the same Metashape chunk is already in

@@ -49,8 +49,8 @@ particuliers: ne pas les publier. Les deux photos couleur img393 et img394 ne mo
 | Base des caissons d'approche | 60 pi | img401 |
 | Plancher de bois du sas | 60 pi (18,3 m) | guide n° 2 (img380, img383) |
 
-Le modèle met le fond du canal à 55 pi (`src\data\site.ts`). Les documents ne donnent jamais cette valeur: ils
-donnent 60 pi pour le sas et le pied des caissons.
+Le modèle met maintenant le fond du canal à **60 pi** (`src\data\site.ts`, avant: 55 pi), comme le sas et le pied
+des caissons selon SOS. La rivière, au sud de la digue, descend plus bas: le terrain y va jusqu'à 70 pi.
 
 ### Avant l'ennoiement
 
@@ -169,8 +169,8 @@ Débris notés (img395, img397, img401, img422):
 - **Les pentes.**
   - Les documents donnent environ 34° puis 27° au nord, 22° au sud.
   - Le modèle prend 35° (l'angle de la zone 7), et 32° à 40° au sud.
-- **La profondeur.** Le sas et le pied des caissons sont à 60 pi selon SOS, contre 55 pi pour le fond du canal dans
-  le modèle. Les 70 pi de la pente sud ne sont ni confirmés ni contredits.
+- **La profondeur.** Réglée: le fond du canal est à 60 pi, comme le sas et le pied des caissons selon SOS. Les 70 pi
+  du lit de la rivière, au sud, ne sont ni confirmés ni contredits par les documents.
 - **Les dimensions du sas** dans la maquette: à comparer avec 270 pi × 45 pi.
 - **L'épaisseur des murs:** le mur nord à 10 pi 8 po en haut et le mur sud à 4 pi (img419), à vérifier.
 - **Les sources d'origine:**
