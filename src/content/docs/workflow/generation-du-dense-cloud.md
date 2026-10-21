@@ -10,7 +10,7 @@ sidebar:
 
 ## Filtration du dense point cloud
 
-### Filter by conficence
+### Filter by confidence
 
 1. `Tools > Dense cloud > Filter by Confidence...`
 2. Min: 0, `Max: 2`

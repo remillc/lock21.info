@@ -47,7 +47,7 @@ Diagonal "E": 155,6cm, worked out with the rule of three
 
 ## Lens angles of view
 
-Manufacturer's specifications. 4:4 W (zoom=0%)
+Manufacturer's specifications. 4:3 W (zoom=0%)
 
 |            | Angle          |
 | ---------- | -------------- |

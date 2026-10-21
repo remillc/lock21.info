@@ -23,4 +23,4 @@ I ran a test (2024-06-08) by drifting through the canal between the 2 gates, kno
 
 Estimated speed: **35 feet/minute** (10.7 metres/minute)
 
-The [Lake Ontario outflow recorded for that day, June 8, 2024, is 7,880 m3/s](https://ijc.org/fr/clofsl/bassin/debits).
+The [Lake Ontario outflow recorded for that day, June 8, 2024, is 7,880 m3/s](https://ijc.org/en/loslrb/watershed/flows).

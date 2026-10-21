@@ -47,7 +47,7 @@ Diagonale "E": 155,6cm mesuré par règle de trois
 
 ## Angles de vue de la lentille
 
-Spécifications du fabricant. 4:4 W (zoom=0%)
+Spécifications du fabricant. 4:3 W (zoom=0%)
 
 |             | Angle         |
 | ----------- | ------------- |

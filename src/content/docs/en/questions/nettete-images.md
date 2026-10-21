@@ -37,7 +37,7 @@ See the [full list of settings used](/en/collecte/materiel-utilise/#camera).
 
 ### Slowing down
 
-Moving more slowly underwater means longer dives, so more of the gas mix used up and getting closer to the no-decompression limit. It also means less area covered and more data collected, which adds up to more dives, longer processing times and more storage space. In short, better to test solution 1 - Increase the shutter speed first!
+Moving more slowly underwater means longer dives, so more of the gas mix used up and getting closer to the no-decompression limit. It also means less area covered and more data collected, which adds up to more dives, longer processing times and more storage space. In short, better to test solution 2 - Increase the shutter speed first!
 
 ### Increasing the shutter speed
 
@@ -91,4 +91,4 @@ Since exposure is calculated automatically in the GoPro, you can force it to use
 
 The test consisted of filming a section of the wooden floor downstream of the spillways (_sluice gates_) over a distance of 50 feet (15,24 metres) at a constant speed, changing only the minimum ISO from one pass to the next.
 
-A Seacraft Future 1000 scooter was used at speed 1, a speed measured in the videos at 1,2 feet/second (0,37 m/s), to ensure a constant speed. For reference, I often use 50 feet/minute (15,2 m/s), i.e. 0,8 feet/second (0,25 m/s), as my reference finning speed in conditions with no current. The scooter at speed 1, in the test conditions, was therefore moving 1.5 times faster than finning. Note that the speeds on this scooter model are programmable, so they can be changed if need be.
+A Seacraft Future 1000 scooter was used at speed 1, a speed measured in the videos at 1,2 feet/second (0,37 m/s), to ensure a constant speed. For reference, I often use 50 feet/minute (15,2 m/min), i.e. 0,8 feet/second (0,25 m/s), as my reference finning speed in conditions with no current. The scooter at speed 1, in the test conditions, was therefore moving 1.5 times faster than finning. Note that the speeds on this scooter model are programmable, so they can be changed if need be.
