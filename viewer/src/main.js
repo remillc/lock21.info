@@ -48,10 +48,9 @@ if (document.fullscreenEnabled) {
 // - Android: Scene Viewer (Google), through an intent link with the GLB; without ARCore it shows the model in 3D.
 // The button stays hidden elsewhere (computers, other browsers). Opened at the top of the page, out of the /modele/
 // iframe. To check on a real phone: AR can't be tested on a computer.
-// In development, the AR files come from the PC on port 8084 (serve-tiles.ps1 -Lan, see tools/google-earth/README.md),
-// at the address the phone used to reach the viewer: tested on the phone before going online
-const AR_URL = import.meta.env.VITE_AR_URL ||
-  (import.meta.env.DEV ? `http://${location.hostname}:8084` : 'https://tiles.lock21.info/downloads/ar')
+// The AR files are always the online ones, in development too: Scene Viewer doesn't load a model from the local network
+// (tested on a Pixel, 2026-10-21: the phone never asked for the file)
+const AR_URL = import.meta.env.VITE_AR_URL || 'https://tiles.lock21.info/downloads/ar'
 // ?ar=full: the lock at its real size (70 m) instead of on a table (the /modele/ page's "Taille réelle" QR code and link)
 const arFull = params.get('ar') === 'full'
 const arName = arFull ? 'lock-21-ar-full' : 'lock-21-ar'
