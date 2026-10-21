@@ -7,6 +7,9 @@ tools/publish-model/export_context.py (the published one has KTX2 textures, whic
 Budget: -c/--context-share of the triangles for the context (at most its own count), the rest spread over the zones by
 surface area (prepare_zone.py's area_m2), so every zone gets the same density.
 
+-x/--scale: a scale model (0.01 = 1:100, the 70 m lock becomes 70 cm), e.g. for augmented reality on a table.
+--usdz: also writes <name>.usdz, for iPhone and iPad (AR Quick Look).
+
 Writes, in -o/--out:
   <name>.glb    for Google Earth on the web (import), Blender, Sketchfab...: textures embedded, no compression
   <name>.obj    + .mtl + one .jpg per material, read by make_kmz.py to build the KMZ for Google Earth Pro
@@ -40,6 +43,8 @@ p.add_argument("--context-only", action="store_true", help="the context without 
 p.add_argument("--tiles-root", default=r"O:\publishing\tiles", help="local tiles, for the list of zones")
 p.add_argument("--temp-root", default=r"O:\temp", help="prepared zones: <temp>/<slug>/prox/")
 p.add_argument("-q", "--quality", type=int, default=88, help="JPEG quality (default 88)")
+p.add_argument("-x", "--scale", type=float, default=1.0, help="model scale (default 1; 0.01 = 1:100, for augmented reality on a table)")
+p.add_argument("--usdz", action="store_true", help="also write <name>.usdz (AR Quick Look on iPhone and iPad)")
 # Site anchor: the point of the Blender frame pinned to the lock's coordinates in Google Earth. It is the horizontal
 # centre of all the zones as of 2026-10-19 (zones 1, 2, 3, 4, 7, 8, 10, 11, 12, 13: x -64.34..6.24, y 2.68..40.72),
 # frozen so that zones added later keep their place instead of shifting the whole lock. z unchanged (z = 0 is the
@@ -176,12 +181,16 @@ for ob in context_obs:
     parts.append(dict(part=f"context: {ob.name}", triangles_before=before, triangles=after))
     log(f"context {ob.name}: {before:,} -> {after:,} triangles")
 
-# Site anchor at the origin
+# Site anchor at the origin, then the scale (--scale)
 for ob in bpy.data.objects:
     if ob.type == 'MESH':
         for v in ob.data.vertices:
-            v.co.x -= SITE_ANCHOR[0]
-            v.co.y -= SITE_ANCHOR[1]
+            v.co.x = (v.co.x - SITE_ANCHOR[0]) * a.scale
+            v.co.y = (v.co.y - SITE_ANCHOR[1]) * a.scale
+            v.co.z *= a.scale
+        # Copyright on every object: exported as USD properties (userProperties:lock21:...) in the USDZ
+        ob["lock21:copyright"] = copyright_line()
+        ob["lock21:source"] = "https://lock21.info/modele/"
 
 bpy.ops.object.select_all(action='DESELECT')
 for ob in bpy.data.objects:
@@ -191,7 +200,14 @@ bpy.ops.export_scene.gltf(filepath=glb, export_format='GLB', use_selection=True,
                           export_jpeg_quality=a.quality, export_normals=True, export_draco_mesh_compression_enable=False,
                           export_copyright=copyright_line())
 # Copyright, licence, origin coordinates and orientation in the file (glb_metadata.py): every public file carries them
-tag(glb)
+tag(glb, scale=a.scale)
+if a.usdz:
+    # AR Quick Look (iPhone, iPad): USDZ, Y up, metres, textures packed in the file; the copyright travels as USD
+    # properties of each object (custom properties), Quick Look shows the file name as title
+    bpy.ops.wm.usd_export(filepath=os.path.join(a.out, f"{a.name}.usdz"), selected_objects_only=True, export_materials=True,
+                          convert_orientation=True, export_global_up_selection='Y', export_global_forward_selection='NEGATIVE_Z',
+                          export_custom_properties=True, custom_properties_namespace="userProperties",
+                          convert_scene_units='METERS')
 obj = os.path.join(a.out, f"{a.name}.obj")
 bpy.ops.wm.obj_export(filepath=obj, export_selected_objects=True, forward_axis='Y', up_axis='Z', export_normals=False,
                       export_uv=True, export_materials=True, path_mode='STRIP', export_triangulated_mesh=True)

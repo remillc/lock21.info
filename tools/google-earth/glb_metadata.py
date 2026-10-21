@@ -23,7 +23,7 @@ def copyright_line(year=None):
     return f"© {FIRST_YEAR}–{year or datetime.date.today().year} Christian Rémillard · CC BY 4.0 · lock21.info"
 
 
-def metadata(year=None):
+def metadata(year=None, scale=1.0):
     return {
         "title": "Écluse 21 (Dickinson Landing), modèle 3D / Lock 21, 3D model",
         "author": "Christian Rémillard",
@@ -37,12 +37,13 @@ def metadata(year=None):
             "note": "the model's origin (0, 0, 0) is at these coordinates (WGS 84): the site anchor, centre of the zones",
         },
         "orientation": "glTF axes: +Y up, -Z north, +X east",
-        "units": "metres",
+        "units": "metres" if scale == 1 else f"metres at 1:{round(1 / scale)} (1 unit = {1 / scale:g} m on the site)",
+        "scale": scale,
         "vertical": "y = 0 is the lock's reference level; the lock lies about 55 ft (16.8 m) under water",
     }
 
 
-def tag(path, year=None):
+def tag(path, year=None, scale=1.0):
     """Rewrites the GLB's JSON chunk with asset.copyright and asset.extras (the binary chunk is untouched)"""
     data = open(path, "rb").read()
     magic, version, _ = struct.unpack_from("<4sII", data, 0)
@@ -52,7 +53,7 @@ def tag(path, year=None):
     gltf = json.loads(data[20:20 + json_length])
     rest = data[20 + json_length:]  # the BIN chunk, unchanged
     gltf["asset"]["copyright"] = copyright_line(year)
-    gltf["asset"].setdefault("extras", {})["lock21"] = metadata(year)
+    gltf["asset"].setdefault("extras", {})["lock21"] = metadata(year, scale)
     chunk = json.dumps(gltf, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
     chunk += b" " * (-len(chunk) % 4)  # JSON chunk padded with spaces to 4 bytes
     out = struct.pack("<4sII", b"glTF", 2, 12 + 8 + len(chunk) + len(rest)) + struct.pack("<I4s", len(chunk), b"JSON")

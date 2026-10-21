@@ -42,6 +42,28 @@ if (document.fullscreenEnabled) {
   })
 }
 
+// Augmented reality: the whole lock on a table, at 1:100 (70 cm), from the viewer's button. No library: each phone's
+// own AR viewer, with the same model (tools/google-earth/make_model.py -x 0.01, on R2 under downloads/ar/):
+// - iPhone and iPad: AR Quick Look opens a USDZ from a link with rel="ar" (Safari only);
+// - Android: Scene Viewer (Google), through an intent link with the GLB; without ARCore it shows the model in 3D.
+// The button stays hidden elsewhere (computers, other browsers). Opened at the top of the page, out of the /modele/
+// iframe. To check on a real phone: AR can't be tested on a computer.
+const AR_URL = import.meta.env.VITE_AR_URL || 'https://tiles.lock21.info/downloads/ar'
+const arLink = document.querySelector('.ar-button')
+if (arLink.relList?.supports?.('ar')) {
+  arLink.href = `${AR_URL}/lock-21-ar.usdz`
+  arLink.hidden = false
+} else if (/Android/i.test(navigator.userAgent)) {
+  const glb = `${AR_URL}/lock-21-ar.glb`
+  const title = 'Écluse 21 · 1:100'
+  arLink.removeAttribute('rel')
+  arLink.target = '_top'
+  arLink.href = `intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glb)}&mode=ar_preferred&resizable=true` +
+    `&title=${encodeURIComponent(title)}#Intent;scheme=https;package=com.google.android.googlequicksearchbox;` +
+    `action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(location.href)};end;`
+  arLink.hidden = false
+}
+
 const container = document.getElementById('viewer')
 const status = document.getElementById('status')
 

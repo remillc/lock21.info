@@ -11,6 +11,24 @@ téléchargements de `/modele/` et pour Google Earth (TODO #13). Deux téléchar
 Liés depuis la page `/modele/` (`src/data/site.ts`, `downloads`). Le modèle est posé **au sol** (profondeur 0): Google
 Earth n'a pas de profondeur négative, l'écluse y est montrée au niveau du sol plutôt qu'à 55 pi (16,8 m) sous l'eau.
 
+## Réalité augmentée
+
+Le bouton du visualiseur (à gauche du plein écran, sur téléphone et tablette seulement) pose l'écluse **sur une table,
+au 1:100** (70 cm): sur iPhone et iPad avec AR Quick Look (fichier USDZ, Safari), sur Android avec Scene Viewer (fichier
+GLB; sans ARCore, le modèle s'affiche en 3D). Pas de bibliothèque: chaque téléphone ouvre le modèle dans sa propre
+visionneuse. Le modèle: zones et contexte, 400 000 triangles, textures de 2048 px, même ancre, mis à l'échelle et
+exporté en USDZ par `make_model.py` (`-x 0.01 --usdz`):
+
+```powershell
+& "C:\Program Files\Blender Foundation\Blender 5.2lender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earthr -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz --context O:	emp\google-earth\context\context.glb
+```
+
+En ligne sous `https://tiles.lock21.info/downloads/ar/` (`lock-21-ar.usdz`, `lock-21-ar.glb`): les copier dans
+`O:\publishing\downloads\onliner\` avant `npm run downloads:upload` (le USDZ part avec le type
+`model/vnd.usdz+zip`, exigé par Quick Look). Le copyright est dans les deux fichiers: champs glTF du GLB, propriétés USD
+(`userProperties:lock21:copyright`) de chaque objet du USDZ. À vérifier sur un vrai téléphone: la réalité augmentée ne
+s'essaie pas sur un ordinateur.
+
 ## Copyright et métadonnées
 
 Chaque fichier public porte le copyright de Christian Rémillard: `© 2024–<année> Christian Rémillard · CC BY 4.0 ·

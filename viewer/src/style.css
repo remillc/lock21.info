@@ -64,6 +64,28 @@ body {
   background: rgb(4 20 24 / 90%);
 }
 
+/* Augmented reality (main.js): left of the full-screen button, same look */
+.ar-button {
+  position: fixed;
+  right: calc(max(12px, env(safe-area-inset-right)) + 52px);
+  bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgb(4 20 24 / 70%);
+}
+
+.ar-button:hover {
+  background: rgb(4 20 24 / 90%);
+}
+
+.ar-button[hidden] {
+  display: none;
+}
+
 .stats {
   position: fixed;
   right: 8px;

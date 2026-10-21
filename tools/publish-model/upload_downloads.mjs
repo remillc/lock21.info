@@ -44,6 +44,8 @@ const TYPES = {
   '.kml': 'application/vnd.google-earth.kml+xml',
   '.kmz': 'application/vnd.google-earth.kmz',
   '.glb': 'model/gltf-binary',
+  // AR Quick Look (iPhone, iPad) refuses a USDZ served with another type
+  '.usdz': 'model/vnd.usdz+zip',
   '.txt': 'text/plain; charset=utf-8',
 }
 const typeOf = (key) => TYPES[key.slice(key.lastIndexOf('.'))] || 'application/octet-stream'
