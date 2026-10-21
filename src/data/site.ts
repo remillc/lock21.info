@@ -18,7 +18,7 @@ export const site = {
   // Google Analytics 4 measurement ID (G-...), public; empty: no analytics, no consent banner (Analytics.astro,
   // Consent.astro)
   analytics: {
-    ga4: '',
+    ga4: 'G-796S6VL5P8',
   },
   downloads: {
     kmz: '/downloads/lock-21.kmz',
