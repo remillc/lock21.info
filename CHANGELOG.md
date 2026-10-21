@@ -4,6 +4,14 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- **New terrain online** (context): the canal floor at 60 ft, the north bank in two pitches (2 : 1 then 1 1/2 : 1,
+  crest about 28 ft as the scans show), the south bank at 2 1/2 : 1 down to the river bed at 70 ft, earth banks past
+  the south wall's ends, the floor flat in front of the walls and the ground just under the zones (zone 8's stairs
+  climb the bank). Texture: seamless tiles cut from the scans (zone 1's silt and zebra mussels; riprap on the slopes
+  from zone 18's crib fill), baked at 4096 px (about 2 in per pixel). The south and north lock walls published with
+  it; the drawn base map and banks no longer.
+- Relief online for zones 1, 4, 8, 10, 13, 18 (the bakes of 4, 13 and 18 had crashed on a GPU shared with another
+  Blender); zones 1, 8 and 10 republished (cutting volumes). Downloads and AR rebuilt with the new context.
 - The context (`blend_state.py`, `bake_context_in_blender.py`) never takes the `terrain - drawings` collection (the
   pieces drawn from the plans), even objects named "filler". New terrain in the `terrain` collection (SOS data).
 - Depth of the bottom: 60 ft (18.3 m) instead of 55 ft, as in the SOS Ottawa documents (lock floor, base of the
