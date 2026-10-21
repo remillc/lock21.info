@@ -28,9 +28,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ### Hosting and downloads
 
-- [ ] #13 Google Earth and downloads (`tools/google-earth/README.md`): online on R2 (network KMZ at 600 000 triangles,
-  GLB of 2 M triangles). To check: the online KMZ in Google Earth Pro (only tested from a local server), the GLB in
-  Google Earth Web; whether 700 000 triangles still open (600 000 opens, 800 000 crashes)
+- [ ] #13 Google Earth and downloads (`tools/google-earth/README.md`): the online KMZ opens in Google Earth Pro
+  (2026-10-21). To check: zone 18's sides with the double-sided models; the GLB in Google Earth Web; whether 700 000
+  triangles still open (600 000 opens, 800 000 crashes)
 
 ### Documentation
 

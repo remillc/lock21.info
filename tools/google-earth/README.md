@@ -115,6 +115,15 @@ textures), même à 200 000 triangles et en textures de 1024 px, alors qu'il ouv
 ou le contexte seul (2026-10-20). D'où un modèle COLLADA par zone et par pièce du contexte, chacun dans son repère:
 Google Earth les charge séparément, et chacun s'affiche ou se masque dans le panneau de gauche.
 
+**Faces vues de dos:** Google Earth Pro n'affiche pas une face vue de dos. Des murs de la zone 18 ont leurs faces
+tournées vers l'intérieur et n'apparaissaient pas (2026-10-21). Les modèles sont donc marqués double face
+(`<double_sided>1</double_sided>`, extension COLLADA `GOOGLEEARTH`), comme le visualiseur du site, qui retourne ces
+faces vers la caméra.
+
+**Temps de chargement:** les 21 parties pèsent 25 Mo en tout (1,6 à 2,8 Mo par zone). L'essentiel du temps tient à
+Google Earth Pro, qui ouvre, décompresse et lit chaque COLLADA (du XML) une partie après l'autre; à la deuxième
+ouverture, il lit son cache.
+
 **Au total:** Google ne publie aucune limite chiffrée (taille de fichier, triangles, textures), ni pour les KMZ de
 Google Earth Pro, ni pour l'import GLB de Google Earth Web (expérimental: textures incluses dans le GLB, pas de
 compression ni de la plupart des extensions glTF, compte dans le quota de stockage Google). D'où les essais.
