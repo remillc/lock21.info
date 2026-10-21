@@ -25,9 +25,9 @@ Les étapes 1 à 4 ne changent rien en ligne: on peut les refaire autant de fois
 
 - [ ] **Le `.blend` est sauvegardé**, et **aucun objet n'est en mode Édition** au moment de la sauvegarde. Un objet sauvegardé en mode Édition est enregistré incomplet dans le fichier (sans ses sommets ni ses UV), et les exports échouent (erreur `foreach_get(..) sequence length mismatch`). En cas de doute: Tab pour revenir en mode Objet, puis sauvegarder.
 - [ ] **Blender peut rester ouvert**, mais il ne faut pas sauvegarder pendant que les étapes 1 à 3 et 6 lisent le fichier: la sauvegarde échouerait. Attendre la fin de l'étape en cours.
-- [ ] **Chaque zone sait où se trouve sa version détaillée.** Dans le `.blend`, chaque zone est un objet de la collection `zones`. Son maillage peut être léger: il sert seulement à placer la zone et à dessiner ses découpes. La version qu'on publie est un autre fichier, détaillé: l'export `.glb` de Metashape, avec sa texture, rangé dans `O:\modeles\`. Son chemin est noté dans la **propriété personnalisée `source`** de l'objet (panneau *Object Properties*, section *Custom Properties*).
+- [ ] **Chaque zone sait où se trouve sa version haute résolution.** Dans le `.blend`, chaque zone est un objet de la collection `zones`. Son maillage peut être léger: il sert seulement à placer la zone et à dessiner ses découpes. La version qu'on publie est un autre fichier, en haute résolution: l'export `.glb` de Metashape, avec sa texture, rangé dans `O:\modeles\`. Son chemin est noté dans la **propriété personnalisée `source`** de l'objet (panneau *Object Properties*, section *Custom Properties*).
 
-  Une seule règle: le maillage léger et le fichier détaillé doivent venir **du même modèle Metashape** (le même chunk), par exemple un export à 1,5 M faces et un autre à 36 M faces du même modèle. Sinon les deux ne se superposent pas, et l'étape 2 s'arrête sur cette zone.
+  Une seule règle: le maillage léger et le fichier haute résolution doivent venir **du même modèle Metashape** (le même chunk), par exemple un export à 1,5 M faces et un autre à 36 M faces du même modèle. Sinon les deux ne se superposent pas, et l'étape 2 s'arrête sur cette zone.
 - [ ] Le fichier `.env.local` (identifiants du serveur) est présent à la racine du projet. Il n'est jamais copié ni affiché.
 
 ## Étape 1 · Vérifier ce qui a changé
@@ -57,7 +57,7 @@ Rien n'est modifié à cette étape.
 npm run model:post-modified
 ```
 
-Refait **seulement** les zones listées à l'étape 1, et le contexte s'il a changé. Pour chaque zone: recalage de l'export détaillé sur la zone du `.blend`, application du Lattice, rognage, simplification, texture, tuilage. Le résultat va dans `O:\publishing\tiles\` (sur l'ordinateur seulement).
+Refait **seulement** les zones listées à l'étape 1, et le contexte s'il a changé. Pour chaque zone: recalage de l'export haute résolution sur la zone du `.blend`, application du Lattice, rognage, simplification, texture, tuilage. Le résultat va dans `O:\publishing\tiles\` (sur l'ordinateur seulement).
 
 Ce qu'il faut regarder dans le résultat, pour chaque zone:
 
@@ -80,7 +80,7 @@ Le relief (la carte des normales: moules, joints, pierres) est cuit à part, pou
 .\tools\publish-model\relief_zones.ps1 -Zones "zone 8"
 ```
 
-Plusieurs zones: `-Zones "zone 2","zone 8"`. Les zones dont la `source` est une version allégée prennent leur export le plus détaillé avec `-High` (aujourd'hui, les zones 1 et 10):
+Plusieurs zones: `-Zones "zone 2","zone 8"`. Les zones dont la `source` est une version allégée prennent leur export haute résolution avec `-High` (aujourd'hui, les zones 1 et 10):
 
 ```powershell
 .\tools\publish-model\relief_zones.ps1 -Zones "zone 1","zone 10" -High @{
@@ -89,7 +89,7 @@ Plusieurs zones: `-Zones "zone 2","zone 8"`. Les zones dont la `source` est une 
 }
 ```
 
-Chaque zone affiche son écart (`gap ... median`, normalement autour de 1 mm) et sa cage (`cage 0.030 m`). Un écart médian au-dessus de 2 cm arrête la cuisson: l'export détaillé ne correspond pas à la zone.
+Chaque zone affiche son écart (`gap ... median`, normalement autour de 1 mm) et sa cage (`cage 0.030 m`). Un écart médian au-dessus de 2 cm arrête la cuisson: l'export haute résolution ne correspond pas à la zone.
 
 ## Étape 4 · Contrôler sur l'ordinateur
 
@@ -183,7 +183,7 @@ gh workflow run deploy.yml --ref main
 
 ## Cas particuliers
 
-**Ajouter une zone.** Dans le `.blend`, mettre la zone dans la collection `zones`, nommée `zone N`, avec sa propriété `source` (l'export détaillé, avec sa texture) et un maillage allégé de la même reconstruction. Placer la zone, ajouter ses découpes, sauvegarder. L'étape 1 la liste comme nouvelle; la suite est la même. Pour la texture dans Metashape: 16 384 px pour une grande zone (environ 300 m² et plus), une seule texture.
+**Ajouter une zone.** Dans le `.blend`, mettre la zone dans la collection `zones`, nommée `zone N`, avec sa propriété `source` (l'export haute résolution, avec sa texture) et un maillage allégé de la même reconstruction. Placer la zone, ajouter ses découpes, sauvegarder. L'étape 1 la liste comme nouvelle; la suite est la même. Pour la texture dans Metashape: 16 384 px pour une grande zone (environ 300 m² et plus), une seule texture.
 
 **Changer l'export d'une zone.** Remplacer d'abord le maillage de la zone dans le `.blend` par une version de la nouvelle reconstruction, vérifier ses découpes, puis changer sa `source`. Sinon le rognage, calé sur l'ancien maillage, risque d'effacer des parties nouvellement reconstruites.
 
