@@ -32,6 +32,12 @@ const unit = Astro.locals.starlightRoute.lang?.startsWith('en') ? 'ft' : 'pi'
     justify-content: flex-end; /* on the right, under the menu button */
     padding-block: 0.5rem 1rem;
   }
+  /* Wide screens: the pill is in the header (this rule outranks Starlight's md:sl-hidden) */
+  @media (min-width: 50rem) {
+    .mobile-model {
+      display: none;
+    }
+  }
   .depth-ruler {
     display: none;
   }
