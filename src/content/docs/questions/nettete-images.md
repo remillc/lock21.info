@@ -37,7 +37,7 @@ Consultez la [liste complète des paramètres utilisés](/collecte/materiel-util
 
 ### Diminuer la vitesse de déplacement
 
-Réduite la vitesse de déplacement sous l'eau implique un plus long temps de plongée, donc une consommation accrue du mélange de gas et s'approcher d'avantage de la limite de non-décompression. Ça implique aussi une diminution de la surface couverte et une augmentation de la taille des données collectées résultant dans une augmentation du nombre de plongées nécessaires et de plus longs temps de traitement des données et un espace de stockage plus grand. Bref, vaut mieux tester la solution 1 - Augmenter la vitesse d'obturation d'abord!
+Réduite la vitesse de déplacement sous l'eau implique un plus long temps de plongée, donc une consommation accrue du mélange de gas et s'approcher d'avantage de la limite de non-décompression. Ça implique aussi une diminution de la surface couverte et une augmentation de la taille des données collectées résultant dans une augmentation du nombre de plongées nécessaires et de plus longs temps de traitement des données et un espace de stockage plus grand. Bref, vaut mieux tester la solution 2 - Augmenter la vitesse d'obturation d'abord!
 
 ### Augmenter la vitesse d'obturation
 
@@ -91,4 +91,4 @@ Puisque le calcul de l'exposition est automatique dans la GoPro, on peut forcer 
 
 Le test consistait à filmer une portion du plancher de bois situé en aval des évacuateurs d'eau (_sluice gates_) sur une distance de 50 pieds (15,24 mètres) à une vitesse constante en ne variant que l'ISO minimum d'un passage à l'autre.
 
-Un scooter Seacraft Future 1000 a été utilisé à la vitesse 1, soit une vitesse mesurée dans les vidéos de 1,2 pied/seconde (0,37 m/s) afin d'assurer une vitesse constante. Pour référence, j'utilise souvent 50 pieds/minute (15,2 m/s), soit 0,8 pied/seconde (0,25 m/s), comme vitesse de déplacement à la palme dans des conditions sans courant comme vitesse de référence. Le scooter à la vitesse 1, dans les conditions du test, se déplaçait donc 1.5 fois plus vite qu'à la palme. À noter que les vitesse sur ce modèle de scooter sont programmables. On pourra donc les modifier si besoin est.
+Un scooter Seacraft Future 1000 a été utilisé à la vitesse 1, soit une vitesse mesurée dans les vidéos de 1,2 pied/seconde (0,37 m/s) afin d'assurer une vitesse constante. Pour référence, j'utilise souvent 50 pieds/minute (15,2 m/min), soit 0,8 pied/seconde (0,25 m/s), comme vitesse de déplacement à la palme dans des conditions sans courant comme vitesse de référence. Le scooter à la vitesse 1, dans les conditions du test, se déplaçait donc 1.5 fois plus vite qu'à la palme. À noter que les vitesse sur ce modèle de scooter sont programmables. On pourra donc les modifier si besoin est.

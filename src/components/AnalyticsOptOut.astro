@@ -8,13 +8,13 @@ import { site } from '../data/site'
 
 {
   import.meta.env.PROD && site.analytics.ga4 ? (
-    <l21-analytics-optout>
+    <l21-analytics-optout data-lang={Astro.locals.starlightRoute.lang?.startsWith('en') ? 'en' : 'fr'}>
       <p class="status" aria-live="polite" />
       <button type="button" />
     </l21-analytics-optout>
   ) : (
     <p>
-      <em>(Le bouton pour refuser la mesure n'apparaît que sur le site publié.)</em>
+      <em>{Astro.locals.starlightRoute.lang?.startsWith('en') ? '(The button to refuse the measurement only shows on the published site.)' : "(Le bouton pour refuser la mesure n'apparaît que sur le site publié.)"}</em>
     </p>
   )
 }
@@ -61,8 +61,12 @@ import { site } from '../data/site'
       const refused = stored() === 'denied'
       const status = this.querySelector('.status')
       const button = this.querySelector('button')
-      if (status) status.textContent = refused ? 'Vos visites ne sont pas mesurées.' : 'Vos visites sont mesurées.'
-      if (button) button.textContent = refused ? 'Accepter la mesure' : 'Ne plus être mesuré'
+      const en = this.dataset.lang === 'en'
+      const text = en
+        ? { off: 'Your visits are not measured.', on: 'Your visits are measured.', accept: 'Accept the measurement', refuse: 'Stop measuring me' }
+        : { off: 'Vos visites ne sont pas mesurées.', on: 'Vos visites sont mesurées.', accept: 'Accepter la mesure', refuse: 'Ne plus être mesuré' }
+      if (status) status.textContent = refused ? text.off : text.on
+      if (button) button.textContent = refused ? text.accept : text.refuse
     }
   }
   if (!customElements.get('l21-analytics-optout')) customElements.define('l21-analytics-optout', AnalyticsOptOut)

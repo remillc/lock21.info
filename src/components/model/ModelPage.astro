@@ -2,22 +2,112 @@
 // The /modele/ page, in the spirit of a Sketchfab page: the 3D viewer embedded in a large frame (its own button
 // goes full screen), then the model's information, how to navigate, the licence and the downloads. The viewer is a
 // separate app (viewer/), published at /modele/viewer/; the page doesn't link to that address, visitors only see /modele/.
+// French at /modele/, English at /en/modele/ (src/lib/i18n.ts): the text below in both languages. The viewer itself
+// (/modele/viewer/) is the same for both.
 import QRCode from 'qrcode'
 import { site } from '../../data/site'
+import { localPath, locale, pageLang } from '../../lib/i18n'
 import { zonesOnline } from '../../lib/manifest'
+
+const lang = pageLang(Astro.locals)
+const en = lang === 'en'
+const pagePath = localPath(site.viewer, lang)
+const t = en
+  ? {
+      frame: '3D viewer of Lock 21',
+      title: '3D model of Lock 21',
+      byline: 'Christian Rémillard · underwater photogrammetry',
+      brief: 'The model at a glance',
+      online: 'Zones online',
+      latest: 'Latest zone',
+      updated: 'Updated',
+      depth: 'Depth',
+      ft: 'ft',
+      licence: 'License',
+      modelTitle: 'The model',
+      model1:
+        'Lock 21 at Dickinson Landing, under the St. Lawrence since 1958, surveyed zone by zone with underwater photogrammetry. Every zone is assembled into a single model; the zones not yet digitised are added dive after dive. The ground around is modelled, not surveyed.',
+      model2: 'Detail loads as you get closer: from afar, a lighter version; up close, the zones\' full texture (up to 16,384 px).',
+      licenceTitle: 'License',
+      licenceText: 'The model is licensed under',
+      licenceRest: 'free to reuse, adapt and share it, commercially too, as long as you credit the source:',
+      credit: 'Lock 21, 3D model by Christian Rémillard (lock21.info), CC BY 4.0',
+      drawings: 'Original drawings of the site: Nick Baets (1988), via',
+      navigate: 'Navigating',
+      controls: [
+        ['Rotate', 'drag with the left button · one finger'],
+        ['Pan', 'drag with the right button · two fingers'],
+        ['Zoom', 'wheel · pinch'],
+        ['Full screen', 'button at the bottom right of the model · Esc to exit'],
+        ['Share a view', "copy the page's address: it keeps the camera position"],
+      ],
+      downloads: 'Downloads',
+      kmzText: (n: string) =>
+        `Opens the lock in its place on the map (${n} triangles). The file only holds a link: the zones load from the site, and the ones added later show up the next time it is opened.`,
+      glbName: 'Full model',
+      glbText: (n: string) => `Zones and the site's model, ${n} triangles: for Blender, Sketchfab, Windows' 3D Viewer or Google Earth Web's import.`,
+      arTitle: 'Augmented reality',
+      arText: 'Place the lock in front of you with a phone or a tablet: on a table, at 1:100 (70 cm), or at its real size (70 m), in a large open space.',
+      table: 'On a table',
+      full: 'Real size',
+      arPhone: 'Tap the augmented reality button (the cube, at the bottom right of the model). Model size:',
+      arTable: 'on a table',
+      arFull: 'real size',
+    }
+  : {
+      frame: "Visualiseur 3D de l'écluse 21",
+      title: "Modèle 3D de l'écluse 21",
+      byline: 'Christian Rémillard · photogrammétrie sous-marine',
+      brief: 'Le modèle en bref',
+      online: 'Zones en ligne',
+      latest: 'Dernière zone',
+      updated: 'Mis à jour',
+      depth: 'Profondeur',
+      ft: 'pi',
+      licence: 'Licence',
+      modelTitle: 'Le modèle',
+      model1:
+        "L'écluse 21 de Dickinson Landing, submergée depuis 1958 dans le Saint-Laurent, relevée zone par zone en photogrammétrie sous-marine. Chaque zone est assemblée dans un seul modèle; les zones pas encore numérisées s'ajoutent au fil des plongées. Le terrain autour est une maquette, pas un relevé.",
+      model2: "Le détail se charge à mesure qu'on s'approche: de loin, une version allégée; de près, la texture complète des zones (jusqu'à 16 384 px).",
+      licenceTitle: 'Licence',
+      licenceText: 'Le modèle est sous licence',
+      licenceRest: "libre de le réutiliser, de l'adapter et de le partager, y compris commercialement, en citant la source:",
+      credit: 'Écluse 21, modèle 3D par Christian Rémillard (lock21.info), CC BY 4.0',
+      drawings: "Dessins d'origine du site: Nick Baets (1988), via",
+      navigate: 'Naviguer',
+      controls: [
+        ['Tourner', 'glisser avec le bouton gauche · un doigt'],
+        ['Déplacer', 'glisser avec le bouton droit · deux doigts'],
+        ['Zoomer', 'molette · pincer'],
+        ['Plein écran', 'bouton en bas à droite du modèle · Échap pour sortir'],
+        ['Partager une vue', "copier l'adresse de la page: elle garde la position de la caméra"],
+      ],
+      downloads: 'Téléchargements',
+      kmzText: (n: string) =>
+        `Ouvre l'écluse à sa place sur la carte (${n} triangles). Le fichier ne contient qu'un lien: les zones sont chargées depuis le site, et celles qui s'ajoutent apparaissent à la prochaine ouverture.`,
+      glbName: 'Modèle complet',
+      glbText: (n: string) => `Zones et maquette du site, ${n} de triangles: pour Blender, Sketchfab, la visionneuse 3D de Windows ou l'import de Google Earth Web.`,
+      arTitle: 'Réalité augmentée',
+      arText: "Posez l'écluse devant vous avec un téléphone ou une tablette: sur une table, au 1:100 (70 cm), ou à sa taille réelle (70 m), dans un grand espace dégagé.",
+      table: 'Sur une table',
+      full: 'Taille réelle',
+      arPhone: 'Touchez le bouton de réalité augmentée (le cube, en bas à droite du modèle). Taille du modèle:',
+      arTable: 'sur une table',
+      arFull: 'taille réelle',
+    }
 
 const zones = await zonesOnline()
 const viewer = `${site.viewer}viewer/`
 // QR codes of this page's public address, one per augmented reality size (?ar=full: real size, read by the viewer);
 // SVG, dark on white so they scan in both themes
 const qrOptions = { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#0e2430', light: '#ffffff' } } as const
-const page = new URL(site.viewer, Astro.site).href
+const page = new URL(pagePath, Astro.site).href
 // utm_*: each code is a Google Analytics campaign (Acquisition reports), read before the page cleans its address
 const campaign = (name: string) => `utm_source=qr&utm_medium=qr&utm_campaign=${name}`
 const qrTable = await QRCode.toString(`${page}?${campaign('ra-table')}`, qrOptions)
 const qrFull = await QRCode.toString(`${page}?ar=full&${campaign('ra-taille-reelle')}`, qrOptions)
 const updated = zones.updated
-  ? new Date(`${zones.updated}T12:00:00`).toLocaleDateString('fr-CA', { day: 'numeric', month: 'long', year: 'numeric' })
+  ? new Date(`${zones.updated}T12:00:00`).toLocaleDateString(locale(lang), { day: 'numeric', month: 'long', year: 'numeric' })
   : null
 ---
 
@@ -25,7 +115,7 @@ const updated = zones.updated
   <l21-model-frame class="frame">
     <iframe
       id="viewer-frame"
-      title="Visualiseur 3D de l'écluse 21"
+      title={t.frame}
       data-src={viewer}
       allow="fullscreen"
       allowfullscreen
@@ -34,63 +124,51 @@ const updated = zones.updated
 
   <div class="under-frame">
     <div class="heading">
-      <h1 id="_top">Modèle 3D de l'écluse 21</h1>
-      <p class="byline">Christian Rémillard · photogrammétrie sous-marine</p>
+      <h1 id="_top">{t.title}</h1>
+      <p class="byline">{t.byline}</p>
     </div>
   </div>
 
-  <ul class="chips" aria-label="Le modèle en bref">
-    <li><span>Zones en ligne</span>{zones.count} / {site.zonesTotal}</li>
-    <li><span>Dernière zone</span>Z{zones.latest}</li>
-    {updated && <li><span>Mis à jour</span>{updated}</li>}
-    <li><span>Profondeur</span>{site.bottomDepthFt} pi ({site.bottomDepthM.toLocaleString('fr-CA')} m)</li>
-    <li><span>Licence</span>CC BY 4.0</li>
+  <ul class="chips" aria-label={t.brief}>
+    <li><span>{t.online}</span>{zones.count} / {site.zonesTotal}</li>
+    <li><span>{t.latest}</span>Z{zones.latest}</li>
+    {updated && <li><span>{t.updated}</span>{updated}</li>}
+    <li><span>{t.depth}</span>{site.bottomDepthFt} {t.ft} ({site.bottomDepthM.toLocaleString(locale(lang))} m)</li>
+    <li><span>{t.licence}</span>CC BY 4.0</li>
   </ul>
 
   <div class="columns">
     <!-- First column: the model, then its licence -->
     <div class="stack">
       <section>
-        <h2>Le modèle</h2>
-        <p>
-          L'écluse 21 de Dickinson Landing, submergée depuis 1958 dans le Saint-Laurent, relevée zone par zone en
-          photogrammétrie sous-marine. Chaque zone est assemblée dans un seul modèle; les zones pas encore numérisées
-          s'ajoutent au fil des plongées. Le terrain autour est une maquette, pas un relevé.
-        </p>
-        <p>
-          Le détail se charge à mesure qu'on s'approche: de loin, une version allégée; de près, la texture complète des
-          zones (jusqu'à 16 384 px).
-        </p>
+        <h2>{t.modelTitle}</h2>
+        <p>{t.model1}</p>
+        <p>{t.model2}</p>
       </section>
-
       <section>
-        <h2>Licence</h2>
+        <h2>{t.licenceTitle}</h2>
         <p>
-          Le modèle est sous licence <a href="https://creativecommons.org/licenses/by/4.0/deed.fr">CC BY 4.0</a>:
-          libre de le réutiliser, de l'adapter et de le partager, y compris commercialement, en citant la source:
+          {t.licenceText} <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>:
+          {t.licenceRest}
         </p>
-        <p class="credit">Écluse 21, modèle 3D par Christian Rémillard (lock21.info), CC BY 4.0</p>
+        <p class="credit">{t.credit}</p>
         <p class="note">
-          Dessins d'origine du site: Nick Baets (1988), via{' '}
+          {t.drawings}{' '}
           <a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks</a>.
         </p>
       </section>
     </div>
 
     <section>
-      <h2>Naviguer</h2>
+      <h2>{t.navigate}</h2>
       <dl class="controls">
-        <dt>Tourner</dt><dd>glisser avec le bouton gauche · un doigt</dd>
-        <dt>Déplacer</dt><dd>glisser avec le bouton droit · deux doigts</dd>
-        <dt>Zoomer</dt><dd>molette · pincer</dd>
-        <dt>Plein écran</dt><dd>bouton en bas à droite du modèle · Échap pour sortir</dd>
-        <dt>Partager une vue</dt><dd>copier l'adresse de la page: elle garde la position de la caméra</dd>
+        {t.controls.map(([term, how]) => (<><dt>{term}</dt><dd>{how}</dd></>))}
       </dl>
     </section>
 
     <div class="stack">
       <section>
-        <h2>Téléchargements</h2>
+        <h2>{t.downloads}</h2>
         <ul class="downloads">
           <li>
             <!-- download: Astro's router (ClientRouter) leaves the link to the browser instead of loading it as a page -->
@@ -99,18 +177,16 @@ const updated = zones.updated
               Google Earth Pro <span>KMZ</span>
             </a>
             <p>
-              Ouvre l'écluse à sa place sur la carte ({site.downloads.kmzTriangles} triangles). Le fichier ne contient qu'un
-              lien: les zones sont chargées depuis le site, et celles qui s'ajoutent apparaissent à la prochaine ouverture.
+              {t.kmzText(site.downloads.kmzTriangles)}
             </p>
           </li>
           <li>
             <a class="download" href={site.downloads.glb} download data-track-download>
               <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              Modèle complet <span>GLB · {site.downloads.glbSize}</span>
+              {t.glbName} <span>GLB · {site.downloads.glbSize}</span>
             </a>
             <p>
-              Zones et maquette du site, {site.downloads.glbTriangles} de triangles: pour Blender, Sketchfab, la visionneuse
-              3D de Windows ou l'import de Google Earth Web.
+              {t.glbText(site.downloads.glbTriangles)}
             </p>
           </li>
         </ul>
@@ -118,27 +194,26 @@ const updated = zones.updated
       </section>
 
       <section>
-        <h2>Réalité augmentée</h2>
+        <h2>{t.arTitle}</h2>
         <p>
-          Posez l'écluse devant vous avec un téléphone ou une tablette: sur une table, au 1:100 (70 cm), ou à sa taille
-          réelle (70 m), dans un grand espace dégagé.
+          {t.arText}
         </p>
         <!-- Computers: a QR code per size, to open the page on a phone (made at build time) -->
         <div class="qr-codes">
           <figure>
             <div class="qr" set:html={qrTable} />
-            <figcaption>Sur une table <span>1:100</span></figcaption>
+            <figcaption>{t.table} <span>1:100</span></figcaption>
           </figure>
           <figure>
             <div class="qr" set:html={qrFull} />
-            <figcaption>Taille réelle <span>70 m</span></figcaption>
+            <figcaption>{t.full} <span>70 m</span></figcaption>
           </figure>
         </div>
         <!-- Phones: the viewer's button; ?ar=full reaches the viewer through the page's address (full reload) -->
         <p class="ar-on-phone">
-          Touchez le bouton de réalité augmentée (le cube, en bas à droite du modèle). Taille du modèle:
-          <a href={site.viewer} data-astro-reload>sur une table</a> ·
-          <a href={`${site.viewer}?ar=full`} data-astro-reload>taille réelle</a>.
+          {t.arPhone}
+          <a href={pagePath} data-astro-reload>{t.arTable}</a> ·
+          <a href={`${pagePath}?ar=full`} data-astro-reload>{t.arFull}</a>.
         </p>
       </section>
     </div>

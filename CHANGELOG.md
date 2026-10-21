@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- **English version of the site** (`/en/`): every page translated (docs, tests, privacy), the home page, the model
+  page, the header, footer, depth gauges (ft), the opt-out button and the sidebar labels in English; the home page's
+  dive log excerpts from the English log (`src/lib/i18n.ts`, `src/lib/diveLog.ts`).
 - Home page: a new render of zone 12, seen from the west (the sluice gates side) at 10 ft above the floor, warmer
   colours, in the frame's proportions (it showed the back of the zone).
 - Home page: the depth gauge as high as the window below the bar (marks spread from the surface to the bottom), and
