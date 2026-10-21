@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- `/modele/`: the two downloads as outlined buttons with an icon (globe for Google Earth, arrow for the GLB); the
+  KMZ link carries `download`, so the client-side router leaves it to the browser; missing space restored in
+  "via Save Ontario Shipwrecks".
 - Downloads on `/modele/`: a KMZ for Google Earth Pro, served by the site (`/downloads/lock-21.kmz`), that only links
   to its parts on R2 (600 000 triangles, one model per zone and piece of context), so zones added later show up
   without a new download; it opens on a landing view over the lock; and the whole
