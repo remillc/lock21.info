@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#41**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#43**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -18,7 +18,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ### Zones
 
-- [ ] #7 Zone 13: partial data being generated; then import into the `.blend` with `source`
+- [ ] #42 Zone 18: textured (16 384 px), low-res version to bring into the `.blend`; in release 0.5.0
 - [ ] #8 Zone 16: digitised (7 M faces) but not in the `.blend` yet
 - [ ] #9 Textures: the analysis targets 1.3 mm per texel; current exports are 2 to 5 times coarser. Decide the viewing
   distance, then retexture in Metashape where needed
@@ -32,7 +32,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #11 Cloudflare Cache Rule on `tiles.lock21.info` (lock21.info → Caching → Cache Rules: hostname equals
   tiles.lock21.info → Eligible for cache, edge TTL: use the origin's Cache-Control). Today every request reaches R2
   (`cf-cache-status: DYNAMIC`, .json and .glb are not cached by default); check `cf-cache-status: HIT` afterwards
-- [ ] #12 Downloadable whole model (`.glb`, about 100 to 150 MB), generated from the manifest
 - [ ] #13 Google Earth and downloads (`tools/google-earth/README.md`): online on R2 (network KMZ at 600 000 triangles,
   GLB of 2 M triangles). To check: the online KMZ in Google Earth Pro (only tested from a local server), the GLB in
   Google Earth Web; whether 700 000 triangles still open (600 000 opens, 800 000 crashes)
@@ -44,10 +43,10 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #17 Add a workflow page to the site (`6. publication.md`) once the pipeline is stable
 - [ ] #18 Rename the "zone N" Blender materials (`Material_0.00x`, `Empty.00x`) consistently
 
-### Relief, wet look and lamp bands (branch `feature/relief`, tested on zones 1 and 12)
+### Relief, wet look and lamp bands (relief and wet look on every zone since 2026-10-19)
 
-- [ ] #21 Relief: upload the relief tiles of
-  every zone (about x1.5 to x2 per zone; ask first), then fold the relief steps into `publish_zones.ps1`
+- [ ] #21 Relief: fold the relief steps (`relief_zones.ps1`) into `publish_zones.ps1`, so that one command republishes a
+  zone with its relief
 - [ ] #22 Relief on phones: memory, heat, smoothness; probably off by default there
 - [ ] #23 Default light direction and strength (`?light=`, `?shade=`), after viewing from several angles; the photos
   already contain the lamps' light, so some directions may look odd
@@ -77,7 +76,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 ## Other
 
 - [ ] #35 lock21.ca: owner contacted on 2026-10-18 through CIRA; reminder in Google Calendar on 2027-03-14 (expiry)
-- [ ] #36 Delete the merged branch `feature/web-3d-model` (identical to `main`)
 - [ ] #37 Delete the `OPENAI_API_KEY` repository secret on GitHub (the translation workflows are gone)
 - [ ] #38 Slim `lock-21-publishing.blend`: Blender → File → Clean Up → Purge Unused Data (e.g. the unused
   `sandstone_blocks_05` material and its packed 8K textures)
