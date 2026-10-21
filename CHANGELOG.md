@@ -24,6 +24,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - Prepared zones moved from `O:\temp\<zone>\prox\` to `O:\publishing\prepared\<zone>\` (`-PreparedRoot`,
   `--prepared-root`): the relief, the downloads and the AR models are made from them. `O:\temp\` can now be emptied
   at any time, except while a job runs.
+- Google Earth: double-sided models (`make_kmz.py`, COLLADA `GOOGLEEARTH` extension); walls of zone 18 that face
+  inward were hidden.
 
 ## 0.5.0 - 2026-10-21
 

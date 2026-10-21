@@ -123,15 +123,18 @@ def write_model(mat_name, corners, spec):
     dae.assetInfo.unitname = "meter"
     dae.assetInfo.contributors.append(asset.Contributor(
         author="Christian Rémillard", copyright=COPYRIGHT, source_data="https://lock21.info/modele/"))
+    # Double-sided (Google Earth's COLLADA extension, <extra><technique profile="GOOGLEEARTH">): some walls face inward
+    # (zone 18), and Google Earth hides a face seen from behind
     textured = "texture" in spec
     if textured:
         image = material.CImage("image", spec["texture"])
         surface = material.Surface("surface", image)
         sampler = material.Sampler2D("sampler", surface)
-        effect = material.Effect("effect", [surface, sampler], "lambert", diffuse=material.Map(sampler, "UVSET0"))
+        effect = material.Effect("effect", [surface, sampler], "lambert", diffuse=material.Map(sampler, "UVSET0"),
+                                 double_sided=True)
         dae.images.append(image)
     else:
-        effect = material.Effect("effect", [], "lambert", diffuse=(*spec["color"], 1.0))
+        effect = material.Effect("effect", [], "lambert", diffuse=(*spec["color"], 1.0), double_sided=True)
     mat = material.Material("material", mat_name, effect)
     dae.effects.append(effect)
     dae.materials.append(mat)
