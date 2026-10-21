@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer loading indicator (`<l21-loading>`): "Chargement" with dots appearing one by one, the share of tiles
+  loaded on an MD3 progress bar (never backwards), on a dark card readable over the terrain; it leaves (MD3 exit) once
+  the first view is complete, not as soon as the roots are in.
 - `/modele/`: "Licence" and "Téléchargements" are two sections, the licence under "Le modèle"; the two downloads as
   filled buttons in the signal colour (tertiary), with an icon (globe for Google Earth, arrow for the GLB); the KMZ link carries `download`, so the client-side router leaves it to the browser; missing
   space restored in "via Save Ontario Shipwrecks".

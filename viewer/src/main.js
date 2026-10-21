@@ -10,6 +10,7 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js'
 import { TilesRenderer } from '3d-tiles-renderer'
 import { savedSettings, settingsSchema } from './config-panel.js'
+import './loading.js'
 import { N8AOPass } from 'n8ao'
 
 // Every query parameter is read once here, then changed live by the settings panel (config-panel.js): no setting
@@ -392,9 +393,12 @@ let tilesets = []
 let contextModels = []
 let framed = false
 let loadCount = 0
+// Every zone's root tileset is in: from then on, the loading indicator ends as soon as no tile is pending
+let rootsLoaded = false
 async function loadModel() {
   const load = ++loadCount
-  status.textContent = 'Chargement…'
+  status.start()
+  rootsLoaded = false
   const manifest = await (await fetch(`${tilesUrl}/manifest.json`, { cache: 'no-cache' })).json()
   if (load !== loadCount) return
   unloadModel()
@@ -464,7 +468,7 @@ async function loadModel() {
       sphere.applyMatrix4(world.matrixWorld)
       bounds.union(sphere.getBoundingBox(new THREE.Box3()))
       if (--pending > 0) return
-      status.textContent = ''
+      rootsLoaded = true
       if (framed) return
       framed = true
       const all = bounds.getBoundingSphere(new THREE.Sphere())
@@ -502,7 +506,7 @@ function unloadModel() {
 }
 
 function showError(error) {
-  status.textContent = `Erreur: ${error.message}`
+  status.showError(error.message)
   console.error(error)
 }
 
@@ -590,11 +594,31 @@ settings.configure({
 })
 document.body.append(settings)
 
+// Loading indicator: share of the tiles loaded among those the first view asks for, all zones together; done once every
+// root is in and nothing has been pending for a moment
+function updateLoading() {
+  if (!status.active) return
+  let loaded = 0
+  let pending = 0
+  for (const t of tilesets) {
+    loaded += t.stats.loaded
+    pending += t.stats.queued + t.stats.downloading + t.stats.parsing
+  }
+  if (loaded + pending > 0) status.progress = loaded / (loaded + pending)
+  // Right after the roots, nothing is queued for a moment (the next tiles are only asked on the next update): done
+  // once nothing has been pending for 800 ms in a row
+  if (!rootsLoaded || pending > 0) idleSince = 0
+  else if (!idleSince) idleSince = performance.now()
+  else if (performance.now() - idleSince > 800) status.done()
+}
+let idleSince = 0
+
 renderer.setAnimationLoop(() => {
   updateStats()
   // update() returns true while the camera moves (including the damping glide after a gesture)
   if (controls.update()) needsRender = true
   const loading = tilesets.some((t) => t.stats.queued + t.stats.downloading + t.stats.parsing > 0)
+  updateLoading()
   if (!needsRender && !loading) return
   needsRender = false
   camera.updateMatrixWorld()
