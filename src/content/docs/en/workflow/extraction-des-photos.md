@@ -21,7 +21,7 @@ Side overlap is controlled during data collection. So while filming an object, i
 
 ![Two parallel camera passes, offset by 25 cm, sharing 80 % of their width](../../workflow/extraction-des-photos/assets/chevauchement-lateral.svg)
 
-<figcaption>Two passes with 80 % overlap: at 70 cm from the subject, each pass covers a 1.25 m strip; the next one is shifted by 25 cm (see <a href="/en/questions/dimensions-rig/">Camera rig dimensions</a>).</figcaption>
+<figcaption>Two passes with 80 % overlap: at 70 cm from the subject, each pass covers a 1.25 m strip; the next one is shifted by 25 cm (see <a href="/en/questions/dimensions-rig">Camera rig dimensions</a>).</figcaption>
 </figure>
 
 ### Frontal overlap

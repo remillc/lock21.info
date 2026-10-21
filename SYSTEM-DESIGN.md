@@ -114,8 +114,8 @@ Tabular figures in tables and data.
 - Existing pages (docs) keep Starlight's layout, restyled with these tokens.
 - **Custom Elements** are named with the `l21-` prefix (rule in `GUIDELINES.md`): `<l21-image-zoom>` (figures, full
   size on click), `<l21-dev-breakpoints>` (dev server only), `<l21-settings-panel>` (the 3D viewer's settings, ⚙),
-  `<l21-model-frame>` (the viewer's frame on `/modele/`), `<l21-viewer-warmup>` (prefetches the viewer's files when a
-  `/modele/` link is hovered).
+  `<l21-model-frame>` (the viewer's frame on `/modele`), `<l21-viewer-warmup>` (prefetches the viewer's files when a
+  `/modele` link is hovered).
 
 ## Not wanted
 

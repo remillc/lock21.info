@@ -4,7 +4,7 @@ Field notebook and 3D model of the submerged Lock 21 (Dickinson Landing, St. Law
 project by Christian Rémillard. Site: <https://lock21.info> (not indexed yet).
 
 - Site: [Astro](https://astro.build/) + [Starlight](https://starlight.astro.build/), French content in `src/content/docs/`
-- 3D viewer: `viewer/` (three.js, 3D Tiles), served at `/modele/`
+- 3D viewer: `viewer/` (three.js, 3D Tiles), served at `/modele`
 - 3D publishing pipeline: `tools/publish-model/` (see its README, in French)
 
 ```sh

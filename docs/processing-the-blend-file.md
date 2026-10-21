@@ -118,7 +118,7 @@ rien taper dedans. D'où deux fenêtres.
    Il affiche une adresse `http://localhost:3100/...` et reste en marche aussi. Laisser cette fenêtre ouverte.
 
 3. Dans le navigateur, ouvrir
-   [http://localhost:3100/modele/viewer/?tiles=http://localhost:8081](http://localhost:3100/modele/viewer/?tiles=http://localhost:8081)
+   [http://localhost:3100/modele/viewer?tiles=http://localhost:8081](http://localhost:3100/modele/viewer?tiles=http://localhost:8081)
    (la fin de l'adresse dit au visualiseur de prendre les tuiles de l'ordinateur plutôt que celles en ligne), et regarder
    les zones refaites: leur place, leurs découpes, leur texture, leur relief de près.
 
@@ -143,7 +143,7 @@ Les visiteurs voient les nouvelles zones **dans la minute**. Les anciennes versi
 
 ## Étape 6 · Refaire les téléchargements
 
-Les téléchargements de la page `/modele/` et les modèles de réalité augmentée contiennent tout le modèle: à refaire dès qu'une zone ou le contexte change.
+Les téléchargements de la page `/modele` et les modèles de réalité augmentée contiennent tout le modèle: à refaire dès qu'une zone ou le contexte change.
 
 **1. Exporter le contexte** (terrain, murs, remplissages), sans compression:
 

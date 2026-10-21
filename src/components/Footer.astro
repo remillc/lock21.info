@@ -5,7 +5,7 @@
 import Default from '@astrojs/starlight/components/Footer.astro'
 
 const english = Astro.locals.starlightRoute.lang?.startsWith('en')
-const privacy = english ? '/en/confidentialite/' : '/confidentialite/'
+const privacy = english ? '/en/confidentialite' : '/confidentialite'
 // From the first dive (2024) to the year of the build
 const years = `2024–${new Date().getFullYear()}`
 const licence = `https://creativecommons.org/licenses/by/4.0/deed.${english ? 'en' : 'fr'}`

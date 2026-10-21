@@ -8,9 +8,10 @@ export function pageLang(locals: { starlightRoute?: { lang?: string } }): Lang {
   return locals.starlightRoute?.lang?.startsWith('en') ? 'en' : 'fr'
 }
 
-/** A site path in the page's language: /modele/ stays /modele/ in French, becomes /en/modele/ in English */
+/** A site path in the page's language: /modele stays /modele in French, becomes /en/modele in English (/ becomes /en) */
 export function localPath(path: string, lang: Lang): string {
-  return lang === 'en' && path.startsWith('/') && !path.startsWith('/en/') ? `/en${path}` : path
+  if (lang !== 'en' || !path.startsWith('/') || path === '/en' || path.startsWith('/en/')) return path
+  return path === '/' ? '/en' : `/en${path}`
 }
 
 /** Numbers and dates in the page's language */

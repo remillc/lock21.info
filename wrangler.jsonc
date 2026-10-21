@@ -7,8 +7,9 @@
   "compatibility_date": "2026-10-01",
   "assets": {
     "directory": "./dist",
-    // /modele -> /modele/ (Astro builds every page as <path>/index.html)
-    "html_handling": "auto-trailing-slash",
+    // Addresses without a final slash (astro.config.mjs, trailingSlash): <path>/index.html is served at <path>, and
+    // <path>/ redirects there
+    "html_handling": "drop-trailing-slash",
     // unknown addresses get Starlight's 404 page, with a 404 status
     "not_found_handling": "404-page"
   },

@@ -24,7 +24,7 @@ La caméra a été réglée de façon à limiter le plus possible les traitement
 
 Il y a cependant un point
 
-Consultez la [liste complète des paramètres utilisés](/collecte/materiel-utilise/#caméra).
+Consultez la [liste complète des paramètres utilisés](/collecte/materiel-utilise#caméra).
 
 ### Éclairage
 

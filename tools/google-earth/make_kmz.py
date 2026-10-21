@@ -122,7 +122,7 @@ def write_model(mat_name, corners, spec):
     dae.assetInfo.unitmeter = 1.0
     dae.assetInfo.unitname = "meter"
     dae.assetInfo.contributors.append(asset.Contributor(
-        author="Christian Rémillard", copyright=COPYRIGHT, source_data="https://lock21.info/modele/"))
+        author="Christian Rémillard", copyright=COPYRIGHT, source_data="https://lock21.info/modele"))
     # Double-sided (Google Earth's COLLADA extension, <extra><technique profile="GOOGLEEARTH">): some walls face inward
     # (zone 18), and Google Earth hides a face seen from behind
     textured = "texture" in spec
@@ -266,7 +266,7 @@ def write_network():
 <kml xmlns="http://www.opengis.net/kml/2.2">
 <NetworkLink>
   <name>Écluse 21</name>
-  <description>{COPYRIGHT}. Modèle 3D de l'écluse 21 (Dickinson Landing), https://lock21.info/modele/</description>
+  <description>{COPYRIGHT}. Modèle 3D de l'écluse 21 (Dickinson Landing), https://lock21.info/modele</description>
   <open>1</open>
   <flyToView>1</flyToView>
   <Link><href>{base}/{a.name}.kml</href></Link>

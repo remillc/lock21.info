@@ -30,7 +30,7 @@ def metadata(year=None, scale=1.0):
         "copyright": copyright_line(year),
         "license": "CC BY 4.0, https://creativecommons.org/licenses/by/4.0/",
         "credit": "Écluse 21, modèle 3D par Christian Rémillard (lock21.info), CC BY 4.0",
-        "source": "https://lock21.info/modele/",
+        "source": "https://lock21.info/modele",
         "origin": {
             "latitude": LATITUDE,
             "longitude": LONGITUDE,

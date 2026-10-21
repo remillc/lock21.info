@@ -20,7 +20,7 @@ to any UI added to the 3D viewer. Decided with Christian on 2026-10-19.
 | Styles | **SCSS** (`sass` package) | Overrides of Starlight's CSS custom properties; component styles scoped in `.astro` files |
 | Components | **Astro components** first | Rendered at build time, no JavaScript shipped |
 | Interactive components | **Web Components** | **Lit** when a component has reactive state (re-renders when its data changes, e.g. a filterable dive log); **native Custom Elements** otherwise. Responsive layout is done in CSS either way |
-| 3D viewer | Separate app (`viewer/`, Vite + three.js) | Built into the site's `public/modele/`, served at `/modele/`; not an Astro page |
+| 3D viewer | Separate app (`viewer/`, Vite + three.js) | Built into the site's `public/modele/`, served at `/modele`; not an Astro page |
 | Search | Pagefind (built into Starlight) | Static index generated at build |
 
 ## Content and structure
@@ -51,7 +51,7 @@ content. Scripts must survive that:
 
 - **Page behaviour goes in Custom Elements**, set up in `connectedCallback` and undone in `disconnectedCallback`
   (global listeners): they run on every page where the element appears, after a full load as after a swap. A plain
-  page script runs once only (e.g. `<l21-model-frame>` on `/modele/`).
+  page script runs once only (e.g. `<l21-model-frame>` on `/modele`).
 - **Elements added by script to `<body>`** are moved into the new body on `astro:after-swap` (`image-zoom.js`).
 - **`history.replaceState` keeps `history.state`** (`history.replaceState(history.state, '', url)`): the router stores
   its entry there; `null` breaks the back and forward buttons.
@@ -66,7 +66,7 @@ content. Scripts must survive that:
 ## Rules kept from today
 
 - Indexing: every page is open to search engines (no `noindex`); `robots.txt` only keeps out the bare viewer
-  `/modele/viewer/` (embedded by `/modele/`) and points to the sitemap that Starlight generates.
+  `/modele/viewer` (embedded by `/modele`) and points to the sitemap that Starlight generates.
 - Custom domain `lock21.info` on the Cloudflare Worker `lock21-info` (`wrangler.jsonc`), deployed by the workflow on a release tag or a manual run.
 - Escape `<` and `>` in MDX prose.
 - Folder and file names in English (except existing French content slugs, kept to preserve the page addresses as

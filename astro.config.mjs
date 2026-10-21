@@ -1,16 +1,20 @@
 // Site lock21.info: Astro + Starlight (see GUIDELINES.md). French is the root locale; the structure is ready for
 // English (/en/), which ships when pages are translated. The 3D viewer is a separate app (viewer/), built into
-// public/modele/viewer/ and served as is at /modele/viewer/ (in development, forwarded to the viewer's dev server).
+// public/modele/viewer/ and served as is at /modele/viewer (in development, forwarded to the viewer's dev server).
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 
-// Dev server only: /modele/viewer/ (embedded by the /modele/ page) is forwarded to the viewer's own dev server
+// Dev server only: /modele/viewer (embedded by the /modele page) is forwarded to the viewer's own dev server
 // (npm run viewer:dev, port 3100, same path), so the page shows the viewer's source and reloads with it, websocket
 // included. In production, the hosting serves the built viewer from public/modele/viewer/.
 const viewerDev = { target: 'http://localhost:3100', changeOrigin: true, ws: true }
 
 export default defineConfig({
   site: 'https://lock21.info',
+  // Page addresses without a final slash (/modele, /collecte/materiel-utilise): a page is a resource, not a folder.
+  // Pages are still built as <path>/index.html; the hosting serves them at <path> and redirects <path>/ there
+  // (wrangler.jsonc, html_handling)
+  trailingSlash: 'never',
   // preview.proxy: {} because Vite's preview server would otherwise inherit the forwarding and serve the dev viewer
   // instead of the build (astro preview must show what the hosting serves)
   vite: { server: { proxy: { '/modele/viewer': viewerDev } }, preview: { proxy: {} } },

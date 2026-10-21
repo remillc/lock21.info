@@ -1,8 +1,8 @@
 ---
-// <l21-viewer-warmup>: when a link to /modele/ is hovered, focused or touched, the browser fetches the 3D viewer's
+// <l21-viewer-warmup>: when a link to /modele (or /en/modele) is hovered, focused or touched, the browser fetches the 3D viewer's
 // heavy files in the background (<link rel="prefetch">: about 3 MB, JavaScript bundle, sky HDR, KTX2 transcoder), so
-// that the viewer starts at once on /modele/. Astro's own prefetch (ClientRouter) only fetches the page's HTML, not
-// what its iframe loads. Once per visit; not on /modele/ itself, nor with data saver or a 2G connection.
+// that the viewer starts at once on /modele. Astro's own prefetch (ClientRouter) only fetches the page's HTML, not
+// what its iframe loads. Once per visit; not on /modele itself, nor with data saver or a 2G connection.
 // The bundle's file names change with each build: read here from the built viewer (public/modele/viewer/index.html,
 // npm run build:viewer, run before the site's build). Nothing in development, where the viewer is its own dev server.
 import fs from 'node:fs'
@@ -26,8 +26,9 @@ if (import.meta.env.PROD) {
 <script>
   class ViewerWarmup extends HTMLElement {
     onIntent = (event: Event) => {
-      const link = (event.target as Element | null)?.closest?.('a[href^="/modele/"]')
-      if (!link || (window as any).lock21ViewerWarm || location.pathname.startsWith('/modele/')) return
+      const link = (event.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | undefined
+      const toModel = (path: string) => /^(\/en)?\/modele$/.test(path)
+      if (!link || !toModel(new URL(link.href).pathname) || (window as any).lock21ViewerWarm || toModel(location.pathname)) return
       const connection = (navigator as any).connection
       if (connection?.saveData || /2g/.test(connection?.effectiveType ?? '')) return
       ;(window as any).lock21ViewerWarm = true

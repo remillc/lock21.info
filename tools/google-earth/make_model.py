@@ -206,7 +206,7 @@ for ob in bpy.data.objects:
             v.co.z *= a.scale
         # Copyright on every object: exported as USD properties (userProperties:lock21:...) in the USDZ
         ob["lock21:copyright"] = copyright_line()
-        ob["lock21:source"] = "https://lock21.info/modele/"
+        ob["lock21:source"] = "https://lock21.info/modele"
 
 bpy.ops.object.select_all(action='DESELECT')
 for ob in bpy.data.objects:

@@ -1,9 +1,9 @@
 ---
-// The /modele/ page, in the spirit of a Sketchfab page: the 3D viewer embedded in a large frame (its own button
+// The /modele page, in the spirit of a Sketchfab page: the 3D viewer embedded in a large frame (its own button
 // goes full screen), then the model's information, how to navigate, the licence and the downloads. The viewer is a
-// separate app (viewer/), published at /modele/viewer/; the page doesn't link to that address, visitors only see /modele/.
-// French at /modele/, English at /en/modele/ (src/lib/i18n.ts): the text below in both languages. The viewer itself
-// (/modele/viewer/) is the same for both.
+// separate app (viewer/), published at /modele/viewer; the page doesn't link to that address, visitors only see /modele.
+// French at /modele, English at /en/modele (src/lib/i18n.ts): the text below in both languages. The viewer itself
+// (/modele/viewer) is the same for both.
 import QRCode from 'qrcode'
 import { site } from '../../data/site'
 import { localPath, locale, pageLang } from '../../lib/i18n'
@@ -97,7 +97,7 @@ const t = en
     }
 
 const zones = await zonesOnline()
-const viewer = `${site.viewer}viewer/`
+const viewer = `${site.viewer}/viewer`
 // QR codes of this page's public address, one per augmented reality size (?ar=full: real size, read by the viewer);
 // SVG, dark on white so they scan in both themes
 const qrOptions = { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#0e2430', light: '#ffffff' } } as const
