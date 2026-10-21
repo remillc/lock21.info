@@ -29,7 +29,7 @@ autre dossier, remplacer ce chemin partout.
 | **Python** | 3.12 | Microsoft Store, ou [python.org](https://www.python.org/) | seulement pour les outils; pas de bibliothèque à installer, sauf pour Google Earth (étape 3) |
 | **Obj2Tiles** | 1.8.0 | [github.com/OpenDroneMap/Obj2Tiles/releases](https://github.com/OpenDroneMap/Obj2Tiles/releases) | décompresser dans `O:\publishing\bin\obj2tiles-1.8.0\` (l'exécutable et `ktx.dll`) |
 | **GitHub CLI** (`gh`) | récente | [cli.github.com](https://cli.github.com/) | facultatif: publier le site en ligne de commande. Se connecter une fois: `gh auth login` |
-| **Agisoft Metashape Professional** | 1.7.1 | licence du projet | lancer d'abord le serveur de licence RLM (raccourci `rlm` du menu Démarrer) |
+| **Agisoft Metashape Professional** | 1.7.1 | licence du projet |  |
 
 Pour vérifier, dans PowerShell:
 
