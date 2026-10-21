@@ -67,9 +67,16 @@ def save_texture(image, name):
     scale = min(1.0, zone_sizes.get(name, a.size) / max(w, h))
     if scale < 1:
         image.scale(max(4, round(w * scale / 4) * 4), max(4, round(h * scale / 4) * 4))
-    image.filepath_raw = os.path.join(a.out, f"{name}.jpg")
+    path = os.path.join(a.out, f"{name}.jpg")
+    image.filepath_raw = path
     image.file_format = 'JPEG'
     image.save(quality=a.quality)
+    # Images imported from a GLB (the context) are packed in Blender: the USD export can't copy them into the USDZ.
+    # Once written, the image points to its file like the zones' textures
+    if image.packed_file:
+        image.unpack(method='REMOVE')
+        image.filepath = path
+        image.reload()
     return image
 
 
