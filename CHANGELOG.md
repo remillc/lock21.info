@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Augmented reality: the fillers are back in both models (zones and fillers, still without the mockup terrain, walls
+  and banks), with `make_model.py --context-objects "filler*"`.
 - Registration (`register_zone.py`) tries the identity first: an export of the same Metashape chunk is already in
   place. Zone 18 had been fitted 0.8° off, and the 5 cm clean-up cut its walls; zones 1, 4, 7 and 13 were 1 to 1.5 cm
   off. Now 0 to 3.6 mm; the five zones republished.

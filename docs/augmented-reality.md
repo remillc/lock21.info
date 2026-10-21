@@ -10,7 +10,8 @@ La réalité augmentée (RA) pose l'écluse devant soi, avec un téléphone ou u
 | **Sur une table** | 1:100 (environ 70 × 38 cm) | une table, un bureau, le sol d'une pièce |
 | **Taille réelle** | 1:1 (environ 70 × 38 m) | un grand espace dégagé: parc, terrain, plage |
 
-Les deux ne montrent que **les zones relevées en plongée**, sans la maquette du terrain autour.
+Les deux montrent **les zones relevées en plongée et les remplissages** (les pièces de la maquette qui comblent les
+trous entre les zones), sans le terrain, les murs ni les talus de la maquette autour.
 
 ## Comment ça marche
 
@@ -49,18 +50,19 @@ de Christian Rémillard (CC BY 4.0).
 ## Refaire les fichiers
 
 À refaire quand une zone change ou s'ajoute, après les tuiles (guide **Traiter le fichier .blend**, étapes 2 et 3):
-les modèles RA sont faits à partir des mêmes zones préparées.
+les modèles RA sont faits à partir des mêmes zones préparées, et des remplissages du contexte exporté à l'étape 6.1.
 
 ```powershell
 # Sur une table: 1:100
-& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*"
 
 # Taille réelle: 1:1
-& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar-full -t 400000 -s 2048 -x 1 --usdz
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar-full -t 400000 -s 2048 -x 1 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*"
 ```
 
 Les options: `-t` le nombre de triangles (400 000), `-s` la taille des textures (2048 px), `-x` l'échelle, `--usdz`
-pour le fichier d'Apple. Sans `--context`, le modèle ne contient que les zones.
+pour le fichier d'Apple, `--context` le contexte, `--context-objects "filler*"` pour n'en garder que les remplissages.
+Sans `--context`, le modèle ne contient que les zones.
 
 Puis copier les quatre fichiers dans `O:\publishing\downloads\online\ar\` et les mettre en ligne:
 

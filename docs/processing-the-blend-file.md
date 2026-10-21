@@ -163,12 +163,12 @@ tools\google-earth\.venv\Scripts\python.exe tools\google-earth\make_kmz.py -d O:
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\glb -t 2000000 -s 4096 --context O:\temp\google-earth\context\context.glb
 ```
 
-**4. Les modèles de réalité augmentée** (zones seulement, sans le terrain; sur une table à 1:100 et à la taille réelle; le détail: guide **Réalité augmentée**):
+**4. Les modèles de réalité augmentée** (zones et remplissages, sans le terrain; sur une table à 1:100 et à la taille réelle; le détail: guide **Réalité augmentée**):
 
 ```powershell
 Remove-Item -Recurse -Force O:\publishing\downloads\google-earth\ar -ErrorAction SilentlyContinue
-& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz
-& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar-full -t 400000 -s 2048 -x 1 --usdz
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*"
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar-full -t 400000 -s 2048 -x 1 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*"
 ```
 
 **5. Rassembler ce qui part en ligne** dans `O:\publishing\downloads\online\`:

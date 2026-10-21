@@ -16,12 +16,12 @@ Earth n'a pas de profondeur négative, l'écluse y est montrée au niveau du sol
 Le bouton du visualiseur (à gauche du plein écran, sur téléphone et tablette seulement) pose l'écluse **sur une table,
 au 1:100** (70 cm): sur iPhone et iPad avec AR Quick Look (fichier USDZ, Safari), sur Android avec Scene Viewer (fichier
 GLB; sans ARCore, le modèle s'affiche en 3D). Pas de bibliothèque: chaque téléphone ouvre le modèle dans sa propre
-visionneuse. Le modèle: zones et contexte, 400 000 triangles, textures de 2048 px, même ancre, mis à l'échelle et
+visionneuse. Le modèle: zones et remplissages du contexte (`--context-objects "filler*"`: sans terrain, murs ni talus), 400 000 triangles, textures de 2048 px, même ancre, mis à l'échelle et
 exporté en USDZ par `make_model.py` (`-x 0.01 --usdz`). Une seconde version, **à la taille réelle** (70 m, `-x 1`,
 `lock-21-ar-full`), s'ouvre avec `?ar=full` (le second code QR de `/modele/`, section « Réalité augmentée »):
 
 ```powershell
-& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz --context O:\temp\google-earth\context\context.glb
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*"
 ```
 
 En ligne sous `https://tiles.lock21.info/downloads/ar/` (`lock-21-ar.usdz`, `lock-21-ar.glb`): les copier dans

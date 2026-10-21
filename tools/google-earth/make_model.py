@@ -18,6 +18,7 @@ Writes, in -o/--out:
 Usage:
     blender -b --factory-startup --python make_model.py -- -o O:\\publishing\\downloads\\google-earth\\t400k -t 400000 -s 2048 --context O:\\temp\\google-earth\\context\\context.glb
 """
+import fnmatch
 import json
 import os
 import sys
@@ -38,6 +39,8 @@ p.add_argument("--zone-size", nargs="*", default=[], metavar="ZONE=PX",
                help="texture size for some zones, e.g. zone-3=4096 zone-7=4096 (zones whose atlas is cut into many small charts)")
 p.add_argument("-c", "--context-share", type=float, default=0.1, help="share of the budget for the context (default 0.1)")
 p.add_argument("--context", help="uncompressed context.glb (export_context.py); without it, the zones only")
+p.add_argument("--context-objects", nargs="*", metavar="PATTERN",
+               help='context objects to keep, by name pattern, e.g. "filler*" (the fillers, for augmented reality; default: all)')
 p.add_argument("--zones", nargs="*", help='zones, e.g. "zone 12" (default: those of the local manifest)')
 p.add_argument("--context-only", action="store_true", help="the context without any zone (tests)")
 p.add_argument("--tiles-root", default=r"O:\publishing\tiles", help="local tiles, for the list of zones")
@@ -133,6 +136,12 @@ if a.context:
     before = set(bpy.data.objects)
     bpy.ops.import_scene.gltf(filepath=a.context)
     context_obs = [o for o in bpy.data.objects if o not in before and o.type == 'MESH']
+    if a.context_objects:
+        dropped = [o for o in context_obs if not any(fnmatch.fnmatch(o.name, pat) for pat in a.context_objects)]
+        context_obs = [o for o in context_obs if o not in dropped]
+        for ob in dropped:
+            bpy.data.objects.remove(ob)
+        log(f"context: kept {sorted(o.name for o in context_obs)}")
     for ob in context_obs:
         ob.data.transform(ob.matrix_world)
         ob.parent = None
