@@ -1,0 +1,119 @@
+{
+  "pages": {
+    "collecte/journal-des-plongees.mdx": {
+      "source": "7cd41bfffa22c6e349d9cc2afa0dd396cc57ed8e",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "collecte/materiel-utilise.md": {
+      "source": "1ff2c6c259bc519be3867987e35c8c2264137f39",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "confidentialite.mdx": {
+      "source": "f1b59a76f0843a348e7f81428d2ee2d4ebbb0ff7",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "decoupage-du-site.mdx": {
+      "source": "083e6b590f4e5c1ce3d3f2312c97187c196cfc37",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "index.mdx": {
+      "source": "ab001c48f43f7d226a71d8de6fb079f4fef28777",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "modele.mdx": {
+      "source": "d6285b4d040f7da7e38e0e5a00e7b0b17c57304e",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "questions/alignement-chunks.md": {
+      "source": "af902550337db2ef625b44db2a57c9fd62f99e70",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "questions/calibration-couleurs.md": {
+      "source": "b713e954cf17fb86b895fa3d8602eb464d7dcb30",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "questions/canal.md": {
+      "source": "26d8f463b00f8746bf5d9fb5688e96d940cfa092",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "questions/charte-couleurs-surexposee.md": {
+      "source": "d5deaad4a48f7a0db1a17975a1a24f2d6bd03b3e",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "questions/dimensions-rig.md": {
+      "source": "a0e217f51bee5cecfd5fc16228cb684e2d4c1ebc",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "questions/effet-bananne.md": {
+      "source": "aafd99b7640d897795933cb09cf02095f7c399e8",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "questions/nettete-images.md": {
+      "source": "aacadf8add8434300c2371b6ac5e472134c23b4f",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "tests/calibration-couleurs.md": {
+      "source": "9ee8e4397dab8be204b3f31bf27af84af83645b7",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "tests/iso-minimum.md": {
+      "source": "c626df05902eefeeefd3476c432e3276dd1728bd",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "tests/journal-des-plongees.md": {
+      "source": "613b924aeeea5b9fcfbbd05bc597dd50b46c47f2",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "tests/lumiere-ambiante.md": {
+      "source": "72893d2bbbdd76e4088f39c63efc68e16ca1b8b9",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "workflow/alignement-des-photos.md": {
+      "source": "b73c59af5859b51e4141fc82fd1c79e65fc6ea1a",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "workflow/extraction-des-photos.md": {
+      "source": "7ccc01a3c12e62b2e105b1c150d135010046832f",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "workflow/generation-du-dense-cloud.md": {
+      "source": "8e3a148f902c17087462722af2ef6cfef4302a26",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "workflow/modele.md": {
+      "source": "c40ebd5d125360442d19cfec8af64b670fb8391a",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "workflow/suivi.md": {
+      "source": "57802f11fc2777e0a828114685ad55d442a51a40",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    },
+    "workflow/texture.md": {
+      "source": "0bbad6b4356f4cc2d7d93b3b4e9029e1e23242e3",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
+    }
+  }
+}
