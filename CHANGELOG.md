@@ -4,8 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- Prepared zones moved from `O:	emp<zone>prox` to `O:publishingprepared<zone>` (`-PreparedRoot`,
-  `--prepared-root`): the relief, the downloads and the AR models are made from them. `O:	emp` can now be emptied
+- Prepared zones moved from `O:\temp\<zone>\prox\` to `O:\publishing\prepared\<zone>\` (`-PreparedRoot`,
+  `--prepared-root`): the relief, the downloads and the AR models are made from them. `O:\temp\` can now be emptied
   at any time, except while a job runs.
 
 ## 0.5.0 - 2026-10-21
