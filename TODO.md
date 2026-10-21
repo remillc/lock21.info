@@ -74,6 +74,5 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 ## Other
 
 - [ ] #35 lock21.ca: owner contacted on 2026-10-18 through CIRA; reminder in Google Calendar on 2027-03-14 (expiry)
-- [ ] #37 Delete the `OPENAI_API_KEY` repository secret on GitHub (the translation workflows are gone)
 - [ ] #38 Slim `lock-21-publishing.blend`: Blender → File → Clean Up → Purge Unused Data (e.g. the unused
   `sandstone_blocks_05` material and its packed 8K textures)
