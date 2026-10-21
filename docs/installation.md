@@ -138,6 +138,11 @@ l'en-tête `Cache-Control` des fichiers: un an pour les tuiles (chaque publicati
 60 secondes pour `manifest.json`. Pour vérifier, faire une requête GET (`curl -s -o NUL -D - <adresse>`), deux fois:
 `cf-cache-status: HIT` la deuxième fois. Une requête HEAD (`curl -I`) affiche toujours `DYNAMIC`.
 
+Les navigateurs et Google Earth reçoivent les mêmes durées: **Caching** › **Configuration** › **Browser Cache TTL**
+est réglé sur *Respect Existing Headers*. Avec une durée fixe (4 heures par défaut), Cloudflare remplaçait les
+5 minutes de la liste Google Earth (`lock-21.kml`) et les 60 secondes du manifeste: après un envoi, Google Earth Pro
+pouvait garder l'ancienne liste pendant 4 heures.
+
 ## 8. Vérifier que tout fonctionne
 
 ```powershell
