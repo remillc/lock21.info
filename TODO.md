@@ -63,8 +63,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ## Site
 
-- [ ] #40 Set up the `info@lock21.info` address (Cloudflare Email Routing: forwards to the usual mailbox), named as the
-  contact on `/confidentialite/`; before or with release 0.5.0
 - [ ] #28 English version of the docs: translated by Claude on request (pages in `src/content/docs/en/`), rather than
   by a workflow on every push
 - [ ] #39 Design: applied (tokens, fonts, header and footer bars, home page, logo, tables); to do: a history page for the "L'histoire" entry (it points to the zone map for now), the 3D viewer in the same
