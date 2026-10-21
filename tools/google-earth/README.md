@@ -11,6 +11,19 @@ téléchargements de `/modele/` et pour Google Earth (TODO #13). Deux téléchar
 Liés depuis la page `/modele/` (`src/data/site.ts`, `downloads`). Le modèle est posé **au sol** (profondeur 0): Google
 Earth n'a pas de profondeur négative, l'écluse y est montrée au niveau du sol plutôt qu'à 55 pi (16,8 m) sous l'eau.
 
+## Copyright et métadonnées
+
+Chaque fichier public porte le copyright de Christian Rémillard: `© 2024–<année> Christian Rémillard · CC BY 4.0 ·
+lock21.info`.
+
+- **GLB:** le champ `asset.copyright` de glTF, et `asset.extras.lock21`: titre, auteur, licence, crédit à citer, source,
+  et la **position de l'origine** (le modèle n'est pas géoréférencé: glTF n'a pas de coordonnées terrestres). L'origine
+  (0, 0, 0) est l'ancre du site, à 44,996817° N, 74,89995° O (WGS 84); axes glTF: +Y vers le haut, −Z vers le nord, +X
+  vers l'est; mètres; y = 0 au niveau de référence de l'écluse. Écrit par `glb_metadata.py`, que `make_model.py` appelle
+  après chaque export; seul, il marque un GLB existant (`python glb_metadata.py <fichier.glb>`).
+- **KMZ et KML:** dans la description du KMZ téléchargé, de la liste et de chaque partie, et dans chaque modèle COLLADA
+  (`<contributor>`: auteur, copyright, source).
+
 ## Le KMZ en réseau
 
 Le KMZ téléchargé ne contient qu'un lien (`<NetworkLink>`) vers la **liste** `lock-21.kml` sur R2

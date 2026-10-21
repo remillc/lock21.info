@@ -22,7 +22,9 @@ import sys
 import bpy
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "publish-model"))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from cli import parser, script_args  # noqa: E402
+from glb_metadata import copyright_line, tag  # noqa: E402
 
 p = parser("make_model.py", __doc__)
 p.add_argument("-o", "--out", required=True, help="output folder")
@@ -186,7 +188,10 @@ for ob in bpy.data.objects:
     ob.select_set(ob.type == 'MESH')
 glb = os.path.join(a.out, f"{a.name}.glb")
 bpy.ops.export_scene.gltf(filepath=glb, export_format='GLB', use_selection=True, export_image_format='JPEG',
-                          export_jpeg_quality=a.quality, export_normals=True, export_draco_mesh_compression_enable=False)
+                          export_jpeg_quality=a.quality, export_normals=True, export_draco_mesh_compression_enable=False,
+                          export_copyright=copyright_line())
+# Copyright, licence, origin coordinates and orientation in the file (glb_metadata.py): every public file carries them
+tag(glb)
 obj = os.path.join(a.out, f"{a.name}.obj")
 bpy.ops.wm.obj_export(filepath=obj, export_selected_objects=True, forward_axis='Y', up_axis='Z', export_normals=False,
                       export_uv=True, export_materials=True, path_mode='STRIP', export_triangulated_mesh=True)

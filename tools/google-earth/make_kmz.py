@@ -26,6 +26,11 @@ import zipfile
 
 import numpy as np
 from collada import Collada, asset, geometry, material, scene, source
+from glb_metadata import copyright_line
+
+# Every public file carries the copyright (Christian Rémillard, CC BY 4.0): the downloaded KMZ, the list, each part and
+# each COLLADA model
+COPYRIGHT = copyright_line()
 
 p = argparse.ArgumentParser(prog="make_kmz.py", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 p.add_argument("-d", "--dir", required=True, help="folder of <name>.obj/.mtl/.jpg (make_model.py output)")
@@ -116,6 +121,8 @@ def write_model(mat_name, corners, spec):
     dae.assetInfo.upaxis = asset.UP_AXIS.Z_UP
     dae.assetInfo.unitmeter = 1.0
     dae.assetInfo.unitname = "meter"
+    dae.assetInfo.contributors.append(asset.Contributor(
+        author="Christian Rémillard", copyright=COPYRIGHT, source_data="https://lock21.info/modele/"))
     textured = "texture" in spec
     if textured:
         image = material.CImage("image", spec["texture"])
@@ -164,6 +171,7 @@ def label(mat_name):
 def placemark(mat_name):
     return f"""    <Placemark>
       <name>{label(mat_name)}</name>
+      <description>{COPYRIGHT}</description>
       <Model>
         <altitudeMode>relativeToGround</altitudeMode>
         <Location><longitude>{a.lon}</longitude><latitude>{a.lat}</latitude><altitude>0</altitude></Location>
@@ -233,7 +241,7 @@ def write_network():
 <Document>
   <name>Écluse 21</name>
   {look_at}
-  <description>Modèle 3D de l'écluse 21 (Dickinson Landing), photogrammétrie sous-marine de Christian Rémillard, lock21.info, licence CC BY 4.0. {len(zones)} zones, {triangles:,} triangles; les zones s'ajoutent au fil des plongées. Posé au sol (profondeur 0): l'écluse est en réalité à 55 pi (16,8 m) sous l'eau.</description>
+  <description>{COPYRIGHT}. Modèle 3D de l'écluse 21 (Dickinson Landing), photogrammétrie sous-marine de Christian Rémillard, lock21.info, licence CC BY 4.0. {len(zones)} zones, {triangles:,} triangles; les zones s'ajoutent au fil des plongées. Posé au sol (profondeur 0): l'écluse est en réalité à 55 pi (16,8 m) sous l'eau.</description>
   <Placemark>
     <name>Écluse 21</name>
     <Point><coordinates>{a.lon},{a.lat},0</coordinates></Point>
@@ -255,6 +263,7 @@ def write_network():
 <kml xmlns="http://www.opengis.net/kml/2.2">
 <NetworkLink>
   <name>Écluse 21</name>
+  <description>{COPYRIGHT}. Modèle 3D de l'écluse 21 (Dickinson Landing), https://lock21.info/modele/</description>
   <open>1</open>
   <flyToView>1</flyToView>
   <Link><href>{base}/{a.name}.kml</href></Link>
