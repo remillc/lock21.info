@@ -1,0 +1,34 @@
+---
+// The "Modèle 3D" pill (MD3 tertiary, the signal colour): in the header on wide screens (HeaderActions.astro), at the
+// top of the mobile menu on small ones (Sidebar.astro). The /modele/ page is prefetched as soon as the pill is on
+// screen (Astro prefetch, "viewport").
+import { site } from '../data/site'
+
+const english = Astro.locals.starlightRoute.lang?.startsWith('en')
+---
+
+<a href={site.viewer} class="model-pill" data-astro-prefetch="viewport">
+  <svg aria-hidden="true" width="10" height="12" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z" fill="currentColor"></path></svg>
+  {english ? '3D model' : 'Modèle 3D'}
+</a>
+
+<style>
+  .model-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 40px;
+    padding: 0 1rem;
+    border-radius: var(--md-sys-shape-full);
+    background: var(--md-sys-color-tertiary);
+    color: #0e2430;
+    font-family: var(--lk-font-data);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .model-pill:hover {
+    box-shadow: inset 0 0 0 100px rgb(14 36 48 / 0.08); /* MD3 hover state layer */
+  }
+</style>
