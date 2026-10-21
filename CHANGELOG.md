@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Home page: the depth gauge as high as the window below the bar (marks spread from the surface to the bottom), and
+  it stays in view while scrolling, like the navigation's ruler on the other pages.
 - No consent banner anymore: Google Analytics measures every visit, with its cookies. A visitor can refuse (or accept
   again) with the button on `/confidentialite/` (`<l21-analytics-optout>`), which also deletes the GA cookies; those
   who refused in the former banner stay unmeasured. The footer's "Témoins" button is gone; the privacy page rewritten.
