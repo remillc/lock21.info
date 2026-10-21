@@ -28,7 +28,7 @@ Le visiteur lance la RA de deux façons:
 - **dans le visualiseur 3D**, avec le bouton en forme de cube, à gauche du bouton plein écran. Il n'apparaît que sur
   les téléphones et tablettes qui savent afficher la RA. Par défaut, il ouvre la version « sur une table »; avec
   `?ar=full` dans l'adresse de la page, la version « taille réelle »;
-- **depuis un ordinateur**, avec les deux codes QR de la section « Réalité augmentée » de la page `/modele/`: on les
+- **depuis un ordinateur**, avec les deux codes QR de la section « Réalité augmentée » de la page `/modele`: on les
   scanne avec le téléphone, qui ouvre la page à la bonne version.
 
 Chaque lancement est compté dans Google Analytics (événement `ar_launch`, avec la taille), si le visiteur l'a accepté.
@@ -77,7 +77,7 @@ Le USDZ part avec le type `model/vnd.usdz+zip`: sans lui, Quick Look refuse de l
 
 La RA ne s'essaie pas sur un ordinateur. Deux façons:
 
-**Le site en ligne:** ouvrir <https://lock21.info/modele/> sur le téléphone, ou scanner un des codes QR de la page
+**Le site en ligne:** ouvrir <https://lock21.info/modele> sur le téléphone, ou scanner un des codes QR de la page
 depuis l'ordinateur.
 
 **Le visualiseur de l'ordinateur, avant la mise en ligne du site:**

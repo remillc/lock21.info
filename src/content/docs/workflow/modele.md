@@ -18,7 +18,7 @@ La taille d'une face pour les modèles haute résolution a été définie 2mm `<
 
 ## Résolution pour publication Web
 
-La publication sur [lock21.info/modele](/modele/) part de l'export le plus détaillé de chaque zone. La chaîne de publication (`tools/publish-model/`) le simplifie elle-même: je n'ai plus à exporter un modèle « web » à part.
+La publication sur [lock21.info/modele](/modele) part de l'export le plus détaillé de chaque zone. La chaîne de publication (`tools/publish-model/`) le simplifie elle-même: je n'ai plus à exporter un modèle « web » à part.
 
 ### Ratio faces / surface
 

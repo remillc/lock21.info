@@ -146,13 +146,13 @@ Pour voir le site ou le visualiseur pendant qu'on travaille, on lance de petits 
 | Serveur | Commande | Adresse | Sert à |
 | --- | --- | --- | --- |
 | Le site | `npm run dev` | <http://localhost:4321/> | voir les pages; se recharge à chaque modification |
-| Le visualiseur 3D | `npm run viewer:dev` | <http://localhost:3100/modele/viewer/> | travailler sur le visualiseur; **nécessaire aussi pour la page `/modele/` du site** |
+| Le visualiseur 3D | `npm run viewer:dev` | <http://localhost:3100/modele/viewer> | travailler sur le visualiseur; **nécessaire aussi pour la page `/modele` du site** |
 | Les tuiles de l'ordinateur | `npm run model:serve-tiles` | <http://localhost:8081/> | montrer au visualiseur les tuiles produites sur l'ordinateur, avant leur mise en ligne |
 
 **D'où viennent les tuiles du visualiseur?** Pendant le travail, le visualiseur prend celles de l'ordinateur (port
 8081): lancer le troisième serveur. Pour voir plutôt le modèle en ligne, ajouter à l'adresse
 `?tiles=https://tiles.lock21.info`, par exemple
-<http://localhost:3100/modele/viewer/?tiles=https://tiles.lock21.info>.
+<http://localhost:3100/modele/viewer?tiles=https://tiles.lock21.info>.
 
 ## 7. Le serveur en ligne (Cloudflare R2)
 
@@ -205,4 +205,4 @@ Si tout cela fonctionne, l'ordinateur est prêt. La suite: le guide **Traiter le
 - **Le fichier `.blend` fait quelques centaines d'octets**: Git LFS n'était pas installé au moment du clone. Lancer
   `git lfs install`, puis `git lfs pull`.
 - **Blender est installé ailleurs**: les scripts prennent l'option `-Blender "<chemin vers blender.exe>"`.
-- **La page `/modele/` est vide en développement**: le serveur du visualiseur (`npm run viewer:dev`) ne tourne pas.
+- **La page `/modele` est vide en développement**: le serveur du visualiseur (`npm run viewer:dev`) ne tourne pas.

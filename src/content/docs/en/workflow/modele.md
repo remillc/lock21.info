@@ -18,7 +18,7 @@ The face size for the high-resolution models was set to 2mm `<sup>`2 `</sup>, th
 
 ## Resolution for web publishing
 
-Publishing on [lock21.info/modele](/en/modele/) starts from the most detailed export of each zone. The publishing pipeline (`tools/publish-model/`) simplifies it on its own: I no longer have to export a separate "web" model.
+Publishing on [lock21.info/modele](/en/modele) starts from the most detailed export of each zone. The publishing pipeline (`tools/publish-model/`) simplifies it on its own: I no longer have to export a separate "web" model.
 
 ### Faces / area ratio
 

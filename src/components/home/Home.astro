@@ -14,7 +14,7 @@ const lang = pageLang(Astro.locals)
 const en = lang === 'en'
 const zones = await zonesOnline()
 const excerpts = latestWithNotes(3, lang)
-const journal = localPath('/collecte/journal-des-plongees/', lang)
+const journal = localPath('/collecte/journal-des-plongees', lang)
 const viewer = localPath(site.viewer, lang)
 // The render's point of view in the viewer (?cam=x,y,z,tx,ty,tz: metres, y up; Blender's x, z, -y): zone 12 from the
 // west, 10 ft above the floor, as in the image
@@ -68,14 +68,14 @@ const t = en
 const entries = (
   en
     ? [
-        { no: '01', title: 'Diving the site', text: 'Zones, depths, the current in the canal.', label: 'divers', href: '/decoupage-du-site/' },
-        { no: '02', title: 'The method', text: 'GoPro Hero6, Metashape, Blender.', label: 'photogrammetry', href: '/workflow/extraction-des-photos/' },
-        { no: '03', title: 'The history', text: 'The lock, 1958, the 1988 drawings.', label: 'heritage', href: '/decoupage-du-site/' },
+        { no: '01', title: 'Diving the site', text: 'Zones, depths, the current in the canal.', label: 'divers', href: '/decoupage-du-site' },
+        { no: '02', title: 'The method', text: 'GoPro Hero6, Metashape, Blender.', label: 'photogrammetry', href: '/workflow/extraction-des-photos' },
+        { no: '03', title: 'The history', text: 'The lock, 1958, the 1988 drawings.', label: 'heritage', href: '/decoupage-du-site' },
       ]
     : [
-        { no: '01', title: 'Plonger le site', text: 'Zones, profondeurs, courant du canal.', label: 'plongeurs', href: '/decoupage-du-site/' },
-        { no: '02', title: 'La méthode', text: 'GoPro Hero6, Metashape, Blender.', label: 'photogrammétrie', href: '/workflow/extraction-des-photos/' },
-        { no: '03', title: "L'histoire", text: "L'écluse, 1958, les dessins de 1988.", label: 'patrimoine', href: '/decoupage-du-site/' },
+        { no: '01', title: 'Plonger le site', text: 'Zones, profondeurs, courant du canal.', label: 'plongeurs', href: '/decoupage-du-site' },
+        { no: '02', title: 'La méthode', text: 'GoPro Hero6, Metashape, Blender.', label: 'photogrammétrie', href: '/workflow/extraction-des-photos' },
+        { no: '03', title: "L'histoire", text: "L'écluse, 1958, les dessins de 1988.", label: 'patrimoine', href: '/decoupage-du-site' },
       ]
 ).map((e) => ({ ...e, href: localPath(e.href, lang) }))
 ---

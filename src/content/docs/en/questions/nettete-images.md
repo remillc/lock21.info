@@ -24,7 +24,7 @@ The camera was set up to keep post-capture processing to a minimum, the idea bei
 
 There is, however, one point
 
-See the [full list of settings used](/en/collecte/materiel-utilise/#camera).
+See the [full list of settings used](/en/collecte/materiel-utilise#camera).
 
 ### Lighting
 

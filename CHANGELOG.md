@@ -8,7 +8,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   the deploy workflow sends the site there with Wrangler, and a manual run on a branch other than `main` gives a preview
   address (`<branch>-lock21-info.lock21.workers.dev`). `public/CNAME` and the `gh-pages` branch are gone.
   Built files with hashed names (`/_astro/`, the viewer's assets) are cached for a year (`public/_headers`).
-- Viewer dev server: `/modele/viewer` (no trailing slash) redirects to `/modele/viewer/` instead of a 404.
+- Page addresses without a final slash (`/modele`, `/collecte/materiel-utilise`, the viewer at `/modele/viewer`): a
+  page is a resource, not a folder. The two home pages are collections and keep it: `/` and `/en/`. The old addresses with a slash redirect to the new ones. Links, canonical
+  addresses, the sitemap and search results follow.
 - Home page render: no more light patch at the bottom right (slanted sunlight slipped past the surface's edge into
   the water volume).
 

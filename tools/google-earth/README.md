@@ -1,14 +1,14 @@
 # Google Earth et téléchargements
 
 Export du modèle complet de l'écluse (toutes les zones publiées et le contexte: terrain, murs, remplissages) pour les
-téléchargements de `/modele/` et pour Google Earth (TODO #13). Deux téléchargements:
+téléchargements de `/modele` et pour Google Earth (TODO #13). Deux téléchargements:
 
 | Fichier | Où | Pour |
 | --- | --- | --- |
 | `lock-21.kmz` (311 octets) | sur le site: `https://lock21.info/downloads/lock-21.kmz` (`public/downloads/`) | **Google Earth Pro** (ordinateur): double-clic. Un lien vers les parties du modèle sur R2: les zones ajoutées apparaissent à la prochaine ouverture, sans nouveau téléchargement |
 | `lock-21.glb` (114 Mo) | sur R2: `https://tiles.lock21.info/downloads/lock-21.glb` | **Google Earth Web** (importer, puis placer à la main), Blender, visionneuse 3D de Windows, Sketchfab… |
 
-Liés depuis la page `/modele/` (`src/data/site.ts`, `downloads`). Le modèle est posé **au sol** (profondeur 0): Google
+Liés depuis la page `/modele` (`src/data/site.ts`, `downloads`). Le modèle est posé **au sol** (profondeur 0): Google
 Earth n'a pas de profondeur négative, l'écluse y est montrée au niveau du sol plutôt qu'à 55 pi (16,8 m) sous l'eau.
 
 ## Réalité augmentée
@@ -18,7 +18,7 @@ au 1:100** (70 cm): sur iPhone et iPad avec AR Quick Look (fichier USDZ, Safari)
 GLB; sans ARCore, le modèle s'affiche en 3D). Pas de bibliothèque: chaque téléphone ouvre le modèle dans sa propre
 visionneuse. Le modèle: zones et remplissages du contexte (`--context-objects "filler*"`: sans terrain, murs ni talus), 400 000 triangles, textures de 2048 px, même ancre, mis à l'échelle et
 exporté en USDZ par `make_model.py` (`-x 0.01 --usdz`). Une seconde version, **à la taille réelle** (70 m, `-x 1`,
-`lock-21-ar-full`), s'ouvre avec `?ar=full` (le second code QR de `/modele/`, section « Réalité augmentée »):
+`lock-21-ar-full`), s'ouvre avec `?ar=full` (le second code QR de `/modele`, section « Réalité augmentée »):
 
 ```powershell
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*"

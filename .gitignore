@@ -45,3 +45,6 @@ __pycache__/
 
 # Python virtual environments (e.g. tools/google-earth/.venv, pycollada)
 .venv/
+
+# Wrangler's local state and temporary files (wrangler dev)
+.wrangler/

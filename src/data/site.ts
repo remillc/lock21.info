@@ -10,7 +10,7 @@ export const site = {
     lon: -74.89995,
     label: { fr: '44°59.809′ N · 74°53.997′ O', en: '44°59.809′ N · 74°53.997′ W' },
   },
-  viewer: '/modele/',
+  viewer: '/modele',
   manifest: 'https://tiles.lock21.info/manifest.json',
   // Downloads (built by tools/google-earth/). The KMZ, on the site (public/downloads/), only links to the list of parts
   // on R2 (tools/publish-model/upload_downloads.mjs), so zones added later show up without a new download or a site

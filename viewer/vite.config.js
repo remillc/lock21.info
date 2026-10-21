@@ -1,27 +1,28 @@
 import { defineConfig } from 'vite'
 
-// Dev and preview servers: /modele/viewer (no trailing slash) redirects to /modele/viewer/, as the hosting does in
-// production. Vite answers 404 there otherwise, also through the site's dev server, which forwards that path here.
-const trailingSlash = {
-  name: 'l21-trailing-slash',
+// Dev and preview servers: the viewer's address is /modele/viewer (no final slash), as on the hosting. Vite only
+// serves its index.html at the base (/modele/viewer/): the address is passed on as that, without a redirect. The
+// site's dev server forwards /modele/viewer here.
+const viewerAddress = {
+  name: 'l21-viewer-index',
   configureServer(server) {
-    server.middlewares.use(redirect)
+    server.middlewares.use(viewerIndex)
   },
   configurePreviewServer(server) {
-    server.middlewares.use(redirect)
+    server.middlewares.use(viewerIndex)
   },
 }
-function redirect(req, res, next) {
+function viewerIndex(req, _res, next) {
   const [path, query] = req.url.split(/\?(.*)/s)
-  if (path !== '/modele/viewer') return next()
-  res.writeHead(301, { Location: `/modele/viewer/${query ? `?${query}` : ''}` }).end()
+  if (path === '/modele/viewer') req.url = `/modele/viewer/${query ? `?${query}` : ''}`
+  next()
 }
 
 export default defineConfig({
-  // Published at lock21.info/modele/viewer/ (embedded by the site's /modele/ page): absolute paths, so the page works
+  // Published at lock21.info/modele/viewer (embedded by the site's /modele page): absolute paths, so the page works
   // with or without the trailing slash (relative paths broke: assets resolved against the parent folder). Same path on
-  // the dev server (http://localhost:3100/modele/viewer/), so the site's dev server can forward that path to it.
+  // the dev server (http://localhost:3100/modele/viewer), so the site's dev server can forward that path to it.
   base: '/modele/viewer/',
   server: { host: true },
-  plugins: [trailingSlash],
+  plugins: [viewerAddress],
 })
