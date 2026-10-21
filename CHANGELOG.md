@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Zone 18 online (tiles, relief from its 26.6 M export, 16 384 px normal map), and in the downloads and AR models:
+  11 zones. Zone 8 moved and a terrain piece added in the `.blend`: zones 2, 3, 8, 12 and 13 republished. Google
+  Earth now in 21 parts.
 - Guide `docs/project-organization.md` (French): folders, branches and versions, online services, where to look.
 - Guide `docs/augmented-reality.md` (French): how AR works, rebuilding its files, testing on a phone.
 - Audience measurement with Google Analytics 4, only after consent (Québec's Loi 25): a consent banner
@@ -50,7 +53,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - Zone 4 republished from its 36 M export (shape, photo and relief).
 - Viewer settings kept by the browser between page loads (`localStorage`); a link's parameters override them,
   "Réinitialiser" clears them.
-- Relief and wet look for every zone (local tiles, not uploaded yet): normal maps baked from the high-res
+- Relief and wet look for every zone, online: normal maps baked from the high-res
   exports (zones 1, 4 and 10 from their 8.6 M, 36 M and 22.6 M exports), tiles rebuilt with them by the new
   `relief_zones.ps1`. The viewer lights them under the sky with their normal map and a wet clear coat (0.15 by
   default); walls seen from behind are turned towards the viewer. `?relief=sun` keeps the earlier sun test.

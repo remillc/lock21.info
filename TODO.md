@@ -18,7 +18,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ### Zones
 
-- [ ] #42 Zone 18: textured (16 384 px), low-res version to bring into the `.blend`; in release 0.5.0
 - [ ] #8 Zone 16: digitised (7 M faces) but not in the `.blend` yet
 - [ ] #9 Textures: the analysis targets 1.3 mm per texel; current exports are 2 to 5 times coarser. Decide the viewing
   distance, then retexture in Metashape where needed

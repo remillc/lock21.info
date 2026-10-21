@@ -43,7 +43,7 @@ En ligne sur le serveur des tuiles (Cloudflare R2), sous `https://tiles.lock21.i
 | `lock-21-ar-full.glb` | Android, taille réelle |
 | `lock-21-ar-full.usdz` | iPhone et iPad, taille réelle |
 
-Chaque téléphone ne télécharge qu'un fichier (environ 20 Mo en GLB, 30 Mo en USDZ). Les quatre portent le copyright
+Chaque téléphone ne télécharge qu'un fichier (environ 26 Mo en GLB, 37 Mo en USDZ). Les quatre portent le copyright
 de Christian Rémillard (CC BY 4.0).
 
 ## Refaire les fichiers
