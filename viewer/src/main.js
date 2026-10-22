@@ -209,11 +209,12 @@ const look = {
   // The sun's shadows (?shadows=0|1; default on computers, off on phones: one more render of the scene per frame)
   shadows: params.has('shadows') ? params.get('shadows') !== '0' : !mobile,
   // Tone mapping of the lit display (?tone=agx|aces|neutral|none) and its exposure (?exposure=). Default Khronos
-  // neutral at 1: it keeps the textures' hues and saturation (measured on zone 3 against the unlit textures: same
-  // brightness and saturation); AgX greyed the colours (saturation halved, even at exposure 1.4). The unlit display (?hdri=0) keeps none: the textures as they are
+  // neutral at 1.2: it keeps the textures' hues and saturation (on zone 3, with the wet look at 0.1: brightness 0.55
+  // and saturation 0.33, unlit textures 0.51 and 0.32; at exposure 1 it looked dark and too saturated); AgX greyed
+  // the colours (saturation halved, even at exposure 1.4). The unlit display (?hdri=0) keeps none: the textures as they are
   tone: ['agx', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'neutral',
-  exposure: params.has('exposure') ? Number(params.get('exposure')) : 1,
-  wet: wetness(params.has('wet') ? params.get('wet') : 0.15),
+  exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.2,
+  wet: wetness(params.has('wet') ? params.get('wet') : 0.1),
 }
 function wetness(v) {
   return Math.min(Math.max(Number(v) || 0, 0), 1)
@@ -312,7 +313,7 @@ function addDespill(shader) {
 // colour (checks that it lines up with the photo texture). The sun (updateLights) lights them too, through the same
 // normals: the relief shows from its direction.
 //
-// Wet look (?wet=0..1, default 0.15, chosen on zone 12; 0 turns it off), zones only: glossy surface with a clear-coat
+// Wet look (?wet=0..1, default 0.1, first chosen on zone 12 at 0.15, lowered with the neutral tone mapping; 0 turns it off), zones only: glossy surface with a clear-coat
 // film (sharp highlights that slide over the relief when the camera moves) reflecting the sky, colours slightly
 // darker and more saturated. The photos already hold the lamps' real reflections: keep it subtle.
 function litMaterial(surface, mesh, normalMap, sky) {

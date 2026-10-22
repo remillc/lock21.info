@@ -44,9 +44,9 @@ export function settingsSchema({ mobile }) {
         { key: 'sunIntensity', label: 'Force du soleil', hint: 'lumière directe, qui fait ressortir le relief', type: 'range', min: 0, max: 3, step: 0.05, def: '1', dependsOn: 'hdri' },
         { key: 'light', label: 'Soleil (azimut, hauteur)', hint: 'azimut 0 = du sud, 90 = de l’est', type: 'angles', def: '330,48', ranges: [[0, 360, 5], [0, 90, 5]], unit: '°', dependsOn: 'hdri' },
         { key: 'shadows', label: 'Ombres du soleil', type: 'toggle', def: mobile ? '0' : '1', dependsOn: 'hdri' },
-        { key: 'exposure', label: 'Exposition', type: 'range', min: 0.25, max: 3, step: 0.05, def: '1', dependsOn: 'hdri' },
+        { key: 'exposure', label: 'Exposition', type: 'range', min: 0.25, max: 3, step: 0.05, def: '1.2', dependsOn: 'hdri' },
         { key: 'sky', label: 'Ciel en arrière-plan', type: 'toggle', def: '1' },
-        { key: 'wet', label: 'Aspect mouillé', hint: 'zones seulement: reflets du ciel, couleurs plus saturées', type: 'range', min: 0, max: 1, step: 0.05, def: '0.15', dependsOn: 'hdri' },
+        { key: 'wet', label: 'Aspect mouillé', hint: 'zones seulement: reflets du ciel, couleurs plus saturées', type: 'range', min: 0, max: 1, step: 0.05, def: '0.1', dependsOn: 'hdri' },
       ],
     },
     {
