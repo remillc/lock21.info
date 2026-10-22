@@ -88,6 +88,9 @@ Tabular figures in tables and data.
 
 - 4 px grid (8, 12, 16, 24, 32, 48, 64).
 - Touch targets at least 48 px (links in the header, buttons, cards).
+- **Pointer cursor on every action widget** (Christian, 2026-10-22): buttons, links, selects, toggles, sliders, cards,
+  tabs, everything that acts on a click shows `cursor: pointer` (the hand); text fields keep the text cursor, disabled
+  controls `not-allowed`. On the site and in the 3D viewer alike.
 - **Buttons are always MD3-compliant** (Christian, 2026-10-22), on the site and in the 3D viewer alike: an MD3 button
   type (filled, filled tonal, outlined, text, or icon button), its sizes (an icon button: 40 dp container in a 48 dp
   touch target; a button: 40 dp high, full corners), **Material Symbols** icons at 24 dp (never a text character

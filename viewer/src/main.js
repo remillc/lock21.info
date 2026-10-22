@@ -12,7 +12,7 @@ import { TilesRenderer } from '3d-tiles-renderer'
 import { savedSettings, settingsSchema } from './config-panel.js'
 import './loading.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
-import { startWebXrAr, webxrArSupported } from './android-ar.js'
+import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
 
 // Every query parameter is read once here, then changed live by the settings panel (config-panel.js): no setting
@@ -65,6 +65,8 @@ const AR_VERSION = '2026-10-22-zone3-two-pass'
 const arFull = params.get('ar') === 'full'
 const arName = arFull ? 'lock-21-ar-full' : 'lock-21-ar'
 const arLink = document.querySelector('.ar-button')
+// Run once the 3D view has finished its first load (updateLoading): the AR model's background download waits for it
+const afterFirstLoad = []
 if (arFull) arLink.title = 'Voir en réalité augmentée (taille réelle)'
 if (arLink.relList?.supports?.('ar')) {
   arLink.href = `${AR_URL}/${arName}.usdz?v=${AR_VERSION}`
@@ -85,15 +87,27 @@ if (arLink.relList?.supports?.('ar')) {
   // WebXR in Chrome (android-ar.js): one tap opens the camera, the 1:100 model loads meanwhile; its size slider goes
   // up to 1:1 (?ar=full starts there)
   let webxr = false
+  const arSrc = `${AR_URL}/lock-21-ar.glb?v=${AR_VERSION}`
+  // With WebXR, the AR model downloads in the background once the 3D view has finished loading (about 30 MB, kept in
+  // memory by android-ar.js): a tap on AR then only waits for its preparation
+  let viewLoaded = false
+  const preloadWhenReady = () => {
+    if (webxr && viewLoaded) preloadArModel(arSrc)
+  }
+  afterFirstLoad.push(() => {
+    viewLoaded = true
+    preloadWhenReady()
+  })
   webxrArSupported().then((supported) => {
     webxr = supported
     arLink.dataset.mode = supported ? 'webxr' : 'sceneviewer'
+    preloadWhenReady()
   })
   arLink.addEventListener('click', (event) => {
     if (!webxr) return
     event.preventDefault()
     startWebXrAr({
-      src: `${AR_URL}/lock-21-ar.glb?v=${AR_VERSION}`,
+      src: arSrc,
       title: 'Écluse 21',
       scale: arFull ? 100 : 1,
       log,
@@ -704,6 +718,7 @@ function updateLoading() {
     if (!loadLogged) {
       loadLogged = true
       log('loaded', tileFacts())
+      for (const run of afterFirstLoad.splice(0)) run()
     }
   }
   const cache = tilesets[0]?.lruCache

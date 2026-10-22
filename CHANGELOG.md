@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Android AR: the AR model downloads in the background once the 3D view has finished loading (about 30 MB,
+  kept in memory), so a tap on AR only waits for its preparation.
 - AR models: their origin is a point on the lock chamber floor (`make_model.py --origin`, 4 m west of the
   `ar-origin` Empty, at the floor's height, 0.84 m above the reference level), so the floor no longer rises when the
   lock is enlarged in AR. Zone 3's texture is baked anew onto the simplified mesh with an xatlas UV layout

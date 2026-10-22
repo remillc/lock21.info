@@ -20,6 +20,43 @@ export async function webxrArSupported() {
   }
 }
 
+// The AR model, downloaded once and kept in memory (an ArrayBuffer, about 30 MB): main.js starts it in the background
+// once the 3D view has finished loading, so that AR doesn't wait for it; AR starts it itself if it hasn't begun. The
+// download in progress is shared: { promise, loaded, total, done, listeners }. A failed download is forgotten, so the
+// next tap tries again.
+let preload = null
+export function preloadArModel(src) {
+  if (preload) return preload
+  const state = { loaded: 0, total: 0, done: false, listeners: new Set() }
+  state.promise = (async () => {
+    const response = await fetch(src)
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
+    state.total = Number(response.headers.get('content-length')) || 0
+    const reader = response.body.getReader()
+    const chunks = []
+    for (;;) {
+      const { done, value } = await reader.read()
+      if (done) break
+      chunks.push(value)
+      state.loaded += value.length
+      for (const listener of state.listeners) listener()
+    }
+    const buffer = new Uint8Array(state.loaded)
+    let offset = 0
+    for (const chunk of chunks) {
+      buffer.set(chunk, offset)
+      offset += chunk.length
+    }
+    state.done = true
+    return buffer.buffer
+  })()
+  state.promise.catch(() => {
+    if (preload === state) preload = null
+  })
+  preload = state
+  return state
+}
+
 /**
  * Starts AR. Must be called straight from the tap's handler: the session is requested before anything else.
  * src: the 1:100 model; scale: its starting enlargement (1 = 1:100 on a table, 100 = real size), changed live by the
@@ -194,53 +231,65 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
   // The model, downloaded while the camera is already on
   let model = null
   say('Chargement du modèle…')
-  // Timing (telemetry, and shown a moment): the download, then the preparation (parsing, decoding the textures)
+  // The model: downloaded in the background since the 3D view finished loading (preloadArModel, main.js), or now if
+  // not yet; the download in progress is shown, then the preparation (parsing, decoding the textures). Timing logged.
   const started = performance.now()
-  let downloaded = 0
-  let bytes = 0
-  new GLTFLoader().load(
-    src,
-    (gltf) => {
-      const ready = performance.now()
-      model = gltf.scene
-      model.traverse((child) => {
-        if (!child.isMesh) return
-        const old = child.material
-        child.material = new THREE.MeshBasicMaterial({ map: old.map ?? null, color: old.map ? 0xffffff : old.color, side: THREE.DoubleSide })
-        old.dispose()
+  const download = preloadArModel(src)
+  const wasReady = download.done
+  const progress = () => {
+    const mb = (download.loaded / 1e6).toFixed(1)
+    say(download.total
+      ? `Chargement du modèle… ${Math.round((download.loaded / download.total) * 100)} % (${mb} Mo)`
+      : `Chargement du modèle… ${mb} Mo`)
+  }
+  if (!wasReady) {
+    progress()
+    download.listeners.add(progress)
+  }
+  download.promise.then(
+    (buffer) => {
+      download.listeners.delete(progress)
+      const downloaded = performance.now()
+      say('Préparation du modèle…')
+      new GLTFLoader().parse(buffer, '', (gltf) => {
+        model = gltf.scene
+        model.traverse((child) => {
+          if (!child.isMesh) return
+          const old = child.material
+          child.material = new THREE.MeshBasicMaterial({ map: old.map ?? null, color: old.map ? 0xffffff : old.color, side: THREE.DoubleSide })
+          old.dispose()
+        })
+        // Placed and scaled from its own origin: a point on the lock chamber's floor (make_model.py --origin, see
+        // docs/augmented-reality.md). The floor stays on the real surface at every size, and the lock grows from that
+        // point without moving; at 1:1 the walls rise about 35 ft.
+        const holder = new THREE.Group()
+        holder.add(model)
+        holder.visible = false
+        holder.scale.setScalar(scale)
+        scene.add(holder)
+        model = holder
+        const prepared = performance.now()
+        const downloadS = (downloaded - started) / 1000
+        const prepareS = (prepared - downloaded) / 1000
+        const connection = navigator.connection
+        log('ar-status', {
+          status: 'model-loaded', preloaded: wasReady, mb: Math.round(download.loaded / 1e5) / 10,
+          waitS: Math.round(downloadS * 10) / 10, prepareS: Math.round(prepareS * 10) / 10,
+          net: connection?.effectiveType ?? null, downlinkMbps: connection?.downlink ?? null,
+        })
+        say(wasReady
+          ? `Modèle prêt (préparation ${prepareS.toFixed(1)} s).`
+          : `Modèle chargé: attente ${downloadS.toFixed(1)} s, préparation ${prepareS.toFixed(1)} s.`)
+        setTimeout(() => {
+          if (!placed) say('Pointez le téléphone vers le sol ou une table, puis touchez l’écran pour placer l’écluse.')
+        }, 3000)
+      }, (error) => {
+        say('Le modèle n’a pas pu être préparé.')
+        log('ar-status', { status: 'failed', step: 'parse', msg: String(error?.message ?? error).slice(0, 300) })
       })
-      // Placed and scaled from its own origin: the site's reference point (make_model.py's site anchor, in the lock)
-      // on the canal floor (z 0, 60 ft deep). The canal floor stays on the real surface at every size, and the lock
-      // grows from that point without moving; at 1:1 the walls rise about 35 ft, the pits go about 5 ft below the
-      // surface. (Its bounding box, used before, put the deepest pit on the surface and lifted the floor with the size.)
-      const holder = new THREE.Group()
-      holder.add(model)
-      holder.visible = false
-      holder.scale.setScalar(scale)
-      scene.add(holder)
-      model = holder
-      const prepared = performance.now()
-      const downloadS = ((downloaded || ready) - started) / 1000
-      const prepareS = (prepared - (downloaded || ready)) / 1000
-      const connection = navigator.connection
-      log('ar-status', {
-        status: 'model-loaded', mb: Math.round(bytes / 1e5) / 10, downloadS: Math.round(downloadS * 10) / 10,
-        prepareS: Math.round(prepareS * 10) / 10, net: connection?.effectiveType ?? null, downlinkMbps: connection?.downlink ?? null,
-      })
-      say(`Modèle chargé: téléchargement ${downloadS.toFixed(1)} s, préparation ${prepareS.toFixed(1)} s.`)
-      setTimeout(() => {
-        if (!placed) say('Pointez le téléphone vers le sol ou une table, puis touchez l’écran pour placer l’écluse.')
-      }, 4000)
-    },
-    (event) => {
-      bytes = event.loaded
-      if (event.total && event.loaded >= event.total && !downloaded) downloaded = performance.now()
-      const mb = (event.loaded / 1e6).toFixed(1)
-      say(event.total
-        ? `Chargement du modèle… ${Math.round((event.loaded / event.total) * 100)} % (${mb} Mo)`
-        : `Chargement du modèle… ${mb} Mo`)
     },
     (error) => {
+      download.listeners.delete(progress)
       say('Le modèle n’a pas pu être chargé.')
       log('ar-status', { status: 'failed', step: 'model', msg: String(error?.message ?? error).slice(0, 300) })
     },
