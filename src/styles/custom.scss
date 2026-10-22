@@ -12,12 +12,21 @@ h1#_top {
   font-variant-numeric: tabular-nums;
 }
 
-// --- Header bar: navy in both themes (MD3 inverse surface in light). Starlight's header components read the grey
-// scale, so it is redefined inside the bar.
+// --- Header bar and footer bar: navy in both themes (MD3 inverse surface in light). Starlight's components in them
+// (search, theme and language selects) read the grey scale, so it is redefined inside the bars.
 
 header.header {
   background: var(--lk-bar);
   border-bottom: 1px solid var(--lk-bar-outline);
+}
+// The divider Starlight draws after the social-icons slot (the "Modèle 3D" pill) separated it from the theme and
+// language selects, now in the footer
+header.header .social-icons::after {
+  display: none;
+}
+
+header.header,
+.site-footer {
   --sl-color-white: var(--lk-bar-text);
   --sl-color-gray-1: #d6e4e8;
   --sl-color-gray-2: #c8d9df;
@@ -28,6 +37,8 @@ header.header {
   --sl-color-black: #06121a;
   --sl-color-text: var(--lk-bar-text);
   --sl-color-text-accent: #3cc2bc;
+  // The selects' dropdown lists
+  --sl-color-bg-nav: var(--lk-bar);
 }
 
 // --- Links: secondary (teal), underlined on hover
