@@ -53,19 +53,24 @@ const ratio = (scale) => `1:${Math.max(1, Math.round(MAX_SCALE / scale))}`
 function createOverlay(title, scale) {
   const root = document.createElement('div')
   root.className = 'xr-overlay'
+  // .xr-frame holds the controls; it turns a quarter turn with the phone (see trackTurn)
   root.innerHTML = `
-    <div class="xr-overlay-head">
-      <span class="xr-overlay-title"></span>
-      <button type="button" class="xr-overlay-close" aria-label="Quitter la réalité augmentée">×</button>
-    </div>
-    <div class="xr-overlay-foot">
-      <p class="xr-overlay-status" role="status">Ouverture de la caméra…</p>
-      <label class="xr-overlay-scale">
-        <span>Taille</span>
-        <input type="range" min="0" max="1" step="0.01" aria-label="Taille de l’écluse, de 1:100 (sur une table) à 1:1 (taille réelle)" />
-        <output></output>
-      </label>
+    <div class="xr-frame">
+      <div class="xr-overlay-head">
+        <span class="xr-overlay-title"></span>
+        <button type="button" class="xr-overlay-close" aria-label="Quitter la réalité augmentée">×</button>
+      </div>
+      <div class="xr-overlay-foot">
+        <p class="xr-overlay-status" role="status">Ouverture de la caméra…</p>
+        <label class="xr-overlay-scale">
+          <span>Taille</span>
+          <input type="range" min="0" max="1" step="0.01" aria-label="Taille de l’écluse, de 1:100 (sur une table) à 1:1 (taille réelle)" />
+          <output></output>
+        </label>
+      </div>
     </div>`
+  root.dataset.turn = '0'
+  root.dataset.layout = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait'
   root.querySelector('.xr-overlay-title').textContent = title
   const slider = root.querySelector('input')
   const shown = root.querySelector('output')
@@ -193,9 +198,34 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
 
   renderer.setAnimationLoop((_time, frame) => {
     if (!frame) return
-    const pose = frame.getHitTestResults(hitSource)[0]?.getPose(renderer.xr.getReferenceSpace())
+    const space = renderer.xr.getReferenceSpace()
+    const pose = frame.getHitTestResults(hitSource)[0]?.getPose(space)
     reticle.visible = Boolean(pose)
     if (pose) reticle.matrix.fromArray(pose.transform.matrix)
+    trackTurn(overlay.root, frame.getViewerPose(space))
     renderer.render(scene, camera)
   })
+}
+
+// Chrome keeps the screen in its starting orientation during an AR session: turning the phone doesn't rotate the
+// page. As camera apps do, the controls turn themselves: the world's up direction, seen from the phone (its viewer
+// pose), gives how the phone is held; held sideways (more than 60 degrees from the current position, so that it
+// doesn't flicker), the controls frame turns a quarter turn the other way and takes the landscape layout. Ignored while
+// the phone points almost straight down or up (the roll is then meaningless). Where the screen does rotate, the pose
+// follows the screen, and the controls stay as they are.
+const worldUp = new THREE.Vector3()
+const viewerTurn = new THREE.Quaternion()
+function trackTurn(root, viewerPose) {
+  if (!viewerPose) return
+  const o = viewerPose.transform.orientation
+  viewerTurn.set(o.x, o.y, o.z, o.w).invert()
+  worldUp.set(0, 1, 0).applyQuaternion(viewerTurn)
+  if (Math.hypot(worldUp.x, worldUp.y) < 0.5) return
+  const roll = THREE.MathUtils.radToDeg(Math.atan2(worldUp.x, worldUp.y))
+  const turn = Number(root.dataset.turn)
+  if (Math.abs(roll - turn) < 60) return
+  const next = Math.abs(roll) < 45 ? 0 : roll <= -45 && roll > -135 ? -90 : roll >= 45 && roll < 135 ? 90 : turn
+  if (next === turn) return
+  root.dataset.turn = String(next)
+  root.dataset.layout = next !== 0 || window.innerWidth > window.innerHeight ? 'landscape' : 'portrait'
 }

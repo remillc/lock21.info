@@ -365,12 +365,35 @@ l21-settings-panel[hidden] {
 .xr-overlay {
   position: fixed;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  overflow: hidden;
   pointer-events: none;
   color: #f2f3ea;
   font-family: system-ui, sans-serif;
+}
+/* The controls' frame: the screen, or a quarter turn of it when the phone is held sideways (android-ar.js,
+   trackTurn: Chrome keeps the screen's orientation during AR) */
+.xr-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transform: translate(-50%, -50%);
+  transition: transform 200ms ease;
+}
+.xr-overlay[data-turn='90'] .xr-frame,
+.xr-overlay[data-turn='-90'] .xr-frame {
+  width: 100vh;
+  height: 100vw;
+}
+.xr-overlay[data-turn='90'] .xr-frame {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.xr-overlay[data-turn='-90'] .xr-frame {
+  transform: translate(-50%, -50%) rotate(-90deg);
 }
 .xr-overlay-head,
 .xr-overlay-foot {
@@ -427,14 +450,12 @@ l21-settings-panel[hidden] {
   padding-left: calc(16px + env(safe-area-inset-left));
   padding-right: calc(16px + env(safe-area-inset-right));
 }
-/* Landscape: the status and the slider in a compact card at the bottom right (within the thumb's reach), the rest of
-   the camera view left clear; it follows the phone when it turns */
-@media (orientation: landscape) {
-  .xr-overlay-foot {
-    align-self: flex-end;
-    width: min(340px, 45vw);
-    margin: 0 calc(12px + env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) 0;
-    padding: 12px 16px;
-    border-radius: 16px;
-  }
+/* Landscape (phone held sideways, or a landscape screen): the status and the slider in a compact card at the bottom
+   right (within the thumb's reach), the rest of the camera view left clear */
+.xr-overlay[data-layout='landscape'] .xr-overlay-foot {
+  align-self: flex-end;
+  width: min(340px, 45%);
+  margin: 0 12px 12px 0;
+  padding: 12px 16px;
+  border-radius: 16px;
 }
