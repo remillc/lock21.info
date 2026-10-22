@@ -4,10 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- Augmented reality on Android: the AR button opens a panel with Google's `<model-viewer>` (loaded only on that tap,
-  about 290 KB), whose button starts WebXR in Chrome (Scene Viewer otherwise). Scene Viewer alone no longer opened on
-  a Pixel 10 Pro, for any model or page, while `<model-viewer>`'s demo did. AR statuses are logged (`ar-status`); the
-  `/modele` frame allows WebXR (`xr-spatial-tracking`).
+- Augmented reality on Android: AR inside Chrome (WebXR, `viewer/src/android-ar.js`, the viewer's three.js). One tap
+  opens the camera, the model loads meanwhile, a ring follows the floor or a table and a tap places the lock; a
+  « Taille » slider goes from 1:100 (on a table) to 1:1 (real size). Scene Viewer, which no longer opened on a Pixel
+  10 Pro for any model or page, stays the fallback where Chrome has no WebXR AR. AR steps are logged (`ar-status`);
+  the `/modele` frame allows WebXR (`xr-spatial-tracking`).
 - 3D viewer: the green removal no longer leaves a blue-cyan tint (green capped at the blue turned water-green pixels
   cyan): the cyan left over is removed too, with its own slider « Retrait du cyan » (`?cyan=0..2`, default 1.5: a
   warm grey).

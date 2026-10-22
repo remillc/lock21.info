@@ -12,6 +12,7 @@ import { TilesRenderer } from '3d-tiles-renderer'
 import { savedSettings, settingsSchema } from './config-panel.js'
 import './loading.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
+import { startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
 
 // Every query parameter is read once here, then changed live by the settings panel (config-panel.js): no setting
@@ -65,24 +66,47 @@ if (arLink.relList?.supports?.('ar')) {
   arLink.href = `${AR_URL}/${arName}.usdz`
   arLink.hidden = false
 } else if (/Android/i.test(navigator.userAgent)) {
+  // Scene Viewer: the link as Google's <model-viewer> builds it (scene-viewer/1.2, occlusion off, ARCore). The
+  // button's link until WebXR is known to work, and the fallback if the WebXR session can't open
+  const page = embedded ? window.top : window
+  const sceneParams = new URLSearchParams({ mode: 'ar_preferred', disable_occlusion: 'true', title: 'Écluse 21' })
+  if (arFull) sceneParams.set('resizable', 'false')
+  const sceneViewer = `intent://arvr.google.com/scene-viewer/1.2?${sceneParams}&file=${encodeURIComponent(`${AR_URL}/${arName}.glb`)}` +
+    '#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;' +
+    `S.browser_fallback_url=${encodeURIComponent(page.location.href.split('#')[0])};end;`
   arLink.removeAttribute('rel')
-  arLink.href = '#'
+  arLink.href = sceneViewer
+  arLink.target = '_top'
   arLink.hidden = false
+  // WebXR in Chrome (android-ar.js): one tap opens the camera, the 1:100 model loads meanwhile; its size slider goes
+  // up to 1:1 (?ar=full starts there)
+  let webxr = false
+  webxrArSupported().then((supported) => {
+    webxr = supported
+    arLink.dataset.mode = supported ? 'webxr' : 'sceneviewer'
+  })
   arLink.addEventListener('click', (event) => {
+    if (!webxr) return
     event.preventDefault()
-    import('./android-ar.js').then(({ openAndroidAr }) =>
-      openAndroidAr({
-        src: `${AR_URL}/${arName}.glb`,
-        title: arFull ? 'Écluse 21 · taille réelle' : 'Écluse 21 · 1:100',
-        fixed: arFull,
-        log,
-      }),
-    )
+    startWebXrAr({
+      src: `${AR_URL}/lock-21-ar.glb`,
+      title: 'Écluse 21',
+      scale: arFull ? 100 : 1,
+      log,
+      onStart: () => renderer.setAnimationLoop(null),
+      onEnd: () => {
+        needsRender = true
+        renderer.setAnimationLoop(renderLoop)
+      },
+      onFail: () => {
+        page.location.href = sceneViewer
+      },
+    })
   })
 }
 // Analytics: the page that embeds the viewer counts the AR launches (src/components/Analytics.astro, after consent)
 arLink.addEventListener('click', () => {
-  log('ar', { size: arFull ? 'full' : 'table', kind: arLink.relList?.supports?.('ar') ? 'quicklook' : 'android-panel' })
+  log('ar', { size: arFull ? 'full' : 'table', kind: arLink.relList?.supports?.('ar') ? 'quicklook' : arLink.dataset.mode })
   if (window.self !== window.top) window.parent.postMessage({ type: 'lock21:ar', size: arFull ? 'full' : 'table' }, location.origin)
 })
 
@@ -692,7 +716,8 @@ function tileFacts() {
 }
 setEndFacts(tileFacts)
 
-renderer.setAnimationLoop(() => {
+// Paused while AR runs (android-ar.js has its own renderer)
+function renderLoop() {
   updateStats()
   // update() returns true while the camera moves (including the damping glide after a gesture)
   if (controls.update()) needsRender = true
@@ -704,6 +729,7 @@ renderer.setAnimationLoop(() => {
   tilesets.forEach((tiles) => tiles.update())
   if (ao.on && composer) composer.render()
   else renderer.render(scene, camera)
-})
+}
+renderer.setAnimationLoop(renderLoop)
 
 loadModel().catch(showError)

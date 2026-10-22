@@ -21,7 +21,7 @@ visionneuse.
 | Appareil | Visionneuse | Fichier |
 | --- | --- | --- |
 | iPhone, iPad (Safari) | **AR Quick Look** (Apple) | USDZ |
-| Android | **`<model-viewer>`** (Google): un panneau s'ouvre avec le modèle en 3D; son bouton lance la RA dans Chrome (WebXR), ou Scene Viewer à défaut | GLB |
+| Android | **WebXR dans Chrome** (code du visualiseur, `viewer/src/android-ar.js`): un toucher ouvre la caméra; Scene Viewer (Google) si Chrome n'a pas la RA WebXR | GLB (1:100) |
 
 Le visiteur lance la RA de deux façons:
 
@@ -107,11 +107,13 @@ avant l'essai.
 ## Problèmes connus
 
 - **Rien ne s'ouvre, la page glisse et revient** (Android, avant le 2026-10-22): Scene Viewer s'ouvrait et se
-  refermait aussitôt sur un Pixel 10 Pro, pour tout modèle (même ceux de Google) et depuis toute page, alors que la
-  démo de `<model-viewer>` s'ouvrait (en WebXR). Le bouton RA ouvre donc maintenant un panneau `<model-viewer>`
-  (`viewer/src/android-ar.js`), chargé seulement à ce moment; deux touchers sont nécessaires (ouvrir le panneau, puis
-  « Placer l'écluse autour de moi »), Chrome ne laissant lancer la RA que juste après un toucher, et le modèle (26 Mo)
-  prenant plus de temps à charger. Les étapes sont notées dans le journal du visualiseur (`ar-status`).
+  refermait aussitôt sur un Pixel 10 Pro, pour tout modèle (même ceux de Google) et depuis toute page. Le bouton RA
+  ouvre donc maintenant la RA dans Chrome même (WebXR, `viewer/src/android-ar.js`): un seul toucher ouvre la caméra,
+  le modèle au 1:100 se charge pendant ce temps (progression affichée), un anneau suit le sol ou une table, et un
+  toucher sur l'écran y pose l'écluse (un autre la déplace). Un curseur « Taille » va de 1:100 (sur une table) à 1:1
+  (taille réelle); `?ar=full` ouvre à 1:1. `<model-viewer>` (essayé) demandait deux touchers: il télécharge tout le
+  modèle (26 Mo) avant de demander la session, et Chrome ne la permet que juste après un toucher. Scene Viewer reste
+  le recours là où Chrome n'a pas la RA WebXR. Étapes notées dans le journal du visualiseur (`ar-status`).
 - **« Impossible de charger l'objet »** (Android): le fichier n'est pas en ligne à l'adresse attendue, ou Scene Viewer
   ne peut pas l'atteindre (réseau local).
 - **La taille réelle n'est pas à la taille réelle:** Scene Viewer réduit un modèle trop grand pour l'écran s'il est
