@@ -110,7 +110,7 @@ avant l'essai.
   refermait aussitôt sur un Pixel 10 Pro, pour tout modèle (même ceux de Google) et depuis toute page. Le bouton RA
   ouvre donc maintenant la RA dans Chrome même (WebXR, `viewer/src/android-ar.js`): un seul toucher ouvre la caméra,
   le modèle au 1:100 se charge pendant ce temps (progression affichée), un anneau suit le sol ou une table, et un
-  toucher sur l'écran y pose l'écluse (un autre la déplace). Un curseur « Taille » va de 1:100 (sur une table) à 1:1
+  toucher sur l'écran y pose l'écluse (un autre la déplace), le fond du canal (60 pi) sur la surface. Elle est agrandie à partir de ce point, sans bouger; à 1:1 les murs montent à environ 35 pi. Un curseur « Taille » va de 1:100 (sur une table) à 1:1
   (taille réelle); `?ar=full` ouvre à 1:1. `<model-viewer>` (essayé) demandait deux touchers: il télécharge tout le
   modèle (26 Mo) avant de demander la session, et Chrome ne la permet que juste après un toucher. Scene Viewer reste
   le recours là où Chrome n'a pas la RA WebXR. Étapes notées dans le journal du visualiseur (`ar-status`).

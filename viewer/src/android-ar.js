@@ -145,10 +145,10 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
         child.material = new THREE.MeshBasicMaterial({ map: old.map ?? null, color: old.map ? 0xffffff : old.color, side: THREE.DoubleSide })
         old.dispose()
       })
-      // Its footprint centred on the placing point, its lowest point on the surface
-      const box = new THREE.Box3().setFromObject(model)
-      const centre = box.getCenter(new THREE.Vector3())
-      model.position.set(-centre.x, -box.min.y, -centre.z)
+      // Placed and scaled from its own origin: the site's reference point (make_model.py's site anchor, in the lock)
+      // on the canal floor (z 0, 60 ft deep). The canal floor stays on the real surface at every size, and the lock
+      // grows from that point without moving; at 1:1 the walls rise about 35 ft, the pits go about 5 ft below the
+      // surface. (Its bounding box, used before, put the deepest pit on the surface and lifted the floor with the size.)
       const holder = new THREE.Group()
       holder.add(model)
       holder.visible = false
