@@ -5,7 +5,7 @@ description: What this site is and what it is for. The field notebook of an unde
 
 Lock 21 has been underwater since 1958. It is at Dickinson Landing, one of the Lost Villages of the St. Lawrence,
 flooded when the Seaway opened. Its walls lie 40 feet (12.2 m) below the surface and its floor at 60 feet (18.3 m). I
-am surveying it with photogrammetry, zone by zone, dive after dive, to build a complete 3D model.
+set out to digitize the whole structure in 3D, zone by zone, dive after dive, with photogrammetry.
 
 This site is the field notebook of that survey: what I did, how I did it, and what came out of it.
 

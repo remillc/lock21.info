@@ -5,7 +5,8 @@ description: Ce qu'est ce site et à quoi il sert. Le carnet de terrain d'un rel
 
 L'écluse 21 est sous l'eau depuis 1958. Elle est à Dickinson Landing, un des villages engloutis du Saint-Laurent, noyée
 par l'ouverture de la Voie maritime. Ses murs sont à 40 pieds (12,2 m) sous la surface et son plancher à 60 pieds
-(18,3 m). Je la relève en photogrammétrie, zone par zone, plongée après plongée, pour en faire un modèle 3D complet.
+(18,3 m). J'ai eu le projet de numériser toute la structure en 3D, zone par zone, plongée après plongée, par
+photogrammétrie.
 
 Ce site est le carnet de terrain de ce relevé: ce que j'ai fait, comment je l'ai fait, et ce que ça donne.
 
