@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Pointer cursor on every action widget, on the site and in the 3D viewer (a global rule without specificity in
+  `custom.scss` and `viewer/src/style.css`; `not-allowed` when disabled).
 - Android AR: the AR model downloads in the background once the 3D view has finished loading (about 30 MB,
   kept in memory), so a tap on AR only waits for its preparation.
 - AR models: their origin is a point on the lock chamber floor (`make_model.py --origin`, 4 m west of the
