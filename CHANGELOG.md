@@ -5,8 +5,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - 3D viewer: new defaults, tint neutralisation 0.2 (was 0.3), green removal 0.8 (was 1) and the sky as background
-  (`?sky=0` for the plain backdrop); the tiles' source is no longer in the settings panel (`?tiles=` still works in a
-  link, for local tests).
+  (`?sky=0` for the plain backdrop); the tiles' source and the relief are no longer in the settings panel (`?tiles=` and
+  `?relief=` still work in a link, for tests; values saved earlier for them are ignored).
 
 ## 0.7.0 - 2026-10-22
 

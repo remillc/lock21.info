@@ -18,9 +18,11 @@ import { N8AOPass } from 'n8ao'
 // reloads the page. `live` holds one handler per parameter. The address keeps only the camera (?cam=, see viewUrl):
 // the other parameters still work in a link (tests), and are removed from the address once read.
 const params = new URLSearchParams(location.search)
-// Settings saved by the browser (config-panel.js) where the link doesn't set them. The tiles' source is no longer a
-// setting (only ?tiles= in a link, for local tests): a source saved earlier is ignored
-for (const [key, value] of savedSettings()) if (!params.has(key) && key !== 'tiles') params.set(key, value)
+// Settings saved by the browser (config-panel.js) where the link doesn't set them. Only the panel's current settings:
+// one saved earlier and since taken out of the panel (the tiles' source, the relief) would apply with no control to
+// change it back; those work only in a link (?tiles=, ?relief=, for tests)
+const panelKeys = new Set(settingsSchema({ mobile: false }).flatMap((section) => section.items).map((item) => item.key))
+for (const [key, value] of savedSettings()) if (!params.has(key) && panelKeys.has(key)) params.set(key, value)
 const live = {}
 history.replaceState(null, '', location.pathname + (params.has('cam') ? `?cam=${params.get('cam')}` : ''))
 
