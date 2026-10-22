@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Home page: « Dernière zone » is the zone added last, not the zone republished last (a retouched zone took its
+  place); the manifest now records each zone's first publication (`added`, `update_manifest.py`).
 - Tested on an iPhone (2026-10-22, iOS 18.7, Safari, Apple GPU, textures up to 16,384 px), through the telemetry: the
   3D model loads in the `/modele` page in about 14 s (2 s on a second visit), no error, no lost WebGL context.
 - 3D viewer settings: the colour settings (« Neutralisation de la teinte », « Retrait du vert », « Retrait du cyan »)
