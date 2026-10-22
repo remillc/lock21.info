@@ -44,7 +44,7 @@
   --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
 
   // Fonts (self-hosted, @fontsource)
-  --lk-font-text: 'Archivo', system-ui, sans-serif;
+  --lk-font-text: 'Archivo', 'Archivo Fallback', system-ui, sans-serif;
   --lk-font-data: 'JetBrains Mono', ui-monospace, monospace;
 
   // Starlight, dark

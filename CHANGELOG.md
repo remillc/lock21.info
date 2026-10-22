@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Speed (PageSpeed, mobile): Google Analytics loads on the first interaction or 4 s after the page; the fonts at the
+  top of the pages are preloaded; a fallback font with Archivo's proportions (Arial, adjusted) removes the home
+  panel's layout shift.
 - 3D viewer telemetry, for every visit: device, load time, errors, WebGL context lost, a visit that never closed
   (Safari's reload on low memory), AR launches. Sent to `/api/log` (the Worker), kept in Cloudflare's Workers Logs;
   a random session code at the bottom of the settings panel finds one visit. Described on the privacy page.
