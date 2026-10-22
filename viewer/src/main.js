@@ -208,10 +208,11 @@ const look = {
   light: (params.get('light') || '330,48').split(',').map(Number),
   // The sun's shadows (?shadows=0|1; default on computers, off on phones: one more render of the scene per frame)
   shadows: params.has('shadows') ? params.get('shadows') !== '0' : !mobile,
-  // Tone mapping of the lit display (?tone=agx|aces|neutral|none, default AgX: natural highlights and shadows) and
-  // its exposure (?exposure=, default 1.4: AgX darkens the mid-tones). The unlit display (?hdri=0) keeps none: the textures as they are
-  tone: ['aces', 'neutral', 'none'].includes(params.get('tone')) ? params.get('tone') : 'agx',
-  exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.4,
+  // Tone mapping of the lit display (?tone=agx|aces|neutral|none) and its exposure (?exposure=). Default Khronos
+  // neutral at 1: it keeps the textures' hues and saturation (measured on zone 3 against the unlit textures: same
+  // brightness and saturation); AgX greyed the colours (saturation halved, even at exposure 1.4). The unlit display (?hdri=0) keeps none: the textures as they are
+  tone: ['agx', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'neutral',
+  exposure: params.has('exposure') ? Number(params.get('exposure')) : 1,
   wet: wetness(params.has('wet') ? params.get('wet') : 0.15),
 }
 function wetness(v) {
@@ -460,7 +461,7 @@ live.sky = (v) => { look.skyBackground = v === '1'; updateEnvironment() }
 live.relief = (v) => { look.relief = v; rebuildMaterials() }
 live.sunIntensity = (v) => { look.sunIntensity = Number(v); updateLights() }
 live.shadows = (v) => { look.shadows = v === '1'; updateLights() }
-live.tone = (v) => { look.tone = TONES[v] !== undefined ? v : 'agx'; updateTone() }
+live.tone = (v) => { look.tone = TONES[v] !== undefined ? v : 'neutral'; updateTone() }
 live.exposure = (v) => { look.exposure = Number(v); updateTone() }
 live.wet = (v) => { look.wet = wetness(v); rebuildMaterials(); updateEnvironment() }
 live.light = (v) => { look.light = v.split(',').map(Number); updateLights() }

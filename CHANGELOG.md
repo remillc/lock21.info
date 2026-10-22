@@ -4,8 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- 3D viewer: the sun casts shadows (« Ombres du soleil », on by default on computers), tone mapping AgX with an
-  « Exposition » slider (default 1.4), the method under Avancé (AgX, ACES, Khronos neutral, none).
+- 3D viewer settings: the colour settings (« Neutralisation de la teinte », « Retrait du vert », « Retrait du cyan »)
+  are removed from the panel; their defaults stay (0.2, 0.8, 1.5), and a link can still set them.
+- 3D viewer: the sun casts shadows (« Ombres du soleil », on by default on computers), tone mapping Khronos neutral
+  (keeps the textures' hues and saturation; AgX greyed them) with an « Exposition » slider (default 1), the method
+  under Avancé (Khronos neutral, AgX, ACES, none).
 - 3D viewer lighting: the sky and the sun together, each with its slider (« Force du ciel », « Force du soleil »,
   plus the sun's direction), realistic defaults (sun 1, sky 0.35, sun in the south-west at 48°); the sky turns with the sun so that
   the sky photo's own sun stands where ours is (one sun, shadows and glints from the same side); the former sun test
