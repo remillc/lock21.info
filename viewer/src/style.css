@@ -2,8 +2,8 @@ html,
 body {
   margin: 0;
   height: 100%;
-  background: #0b1c26;
-  color: #d7e3ea;
+  background: #12140e;
+  color: #e3e6d8;
   font-family: system-ui, sans-serif;
   overflow: hidden;
 }
@@ -33,8 +33,8 @@ l21-loading {
   gap: 10px;
   padding: 14px 20px 16px;
   border-radius: 12px;
-  background: rgb(4 20 24 / 85%);
-  color: #d7e3ea;
+  background: rgb(18 20 14 / 85%);
+  color: #e3e6d8;
   box-shadow: 0 4px 16px rgb(0 0 0 / 30%);
 }
 
@@ -44,7 +44,7 @@ l21-loading[hidden] {
 
 .loading-percent {
   margin-left: 0.5em;
-  color: #9bb8c6;
+  color: #a3a893;
 }
 
 .loading-bar {
@@ -52,13 +52,13 @@ l21-loading[hidden] {
   height: 4px;
   border-radius: 2px;
   overflow: hidden;
-  background: rgb(60 194 188 / 25%);
+  background: rgb(184 201 122 / 25%);
 }
 
 .loading-fill {
   height: 100%;
   border-radius: 2px;
-  background: #3cc2bc;
+  background: #b8c97a;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 200ms linear;
@@ -119,7 +119,7 @@ l21-loading.error .loading-bar {
   left: max(12px, env(safe-area-inset-left));
   padding: 6px 10px;
   border-radius: 6px;
-  background: rgb(4 20 24 / 70%);
+  background: rgb(18 20 14 / 70%);
   color: inherit;
   font-size: 0.85rem;
   text-decoration: none;
@@ -141,13 +141,13 @@ l21-loading.error .loading-bar {
   height: 44px;
   border: 0;
   border-radius: 12px;
-  background: rgb(4 20 24 / 70%);
-  color: #d7e3ea;
+  background: rgb(18 20 14 / 70%);
+  color: #e3e6d8;
   cursor: pointer;
 }
 
 .fullscreen:hover {
-  background: rgb(4 20 24 / 90%);
+  background: rgb(18 20 14 / 90%);
 }
 
 /* Augmented reality (main.js): left of the full-screen button, same look */
@@ -161,11 +161,11 @@ l21-loading.error .loading-bar {
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: rgb(4 20 24 / 70%);
+  background: rgb(18 20 14 / 70%);
 }
 
 .ar-button:hover {
-  background: rgb(4 20 24 / 90%);
+  background: rgb(18 20 14 / 90%);
 }
 
 .ar-button[hidden] {
@@ -179,8 +179,8 @@ l21-loading.error .loading-bar {
   margin: 0;
   padding: 6px 8px;
   border-radius: 6px;
-  background: rgb(4 20 24 / 75%);
-  color: #d7e3ea;
+  background: rgb(18 20 14 / 75%);
+  color: #e3e6d8;
   font-size: 11px;
   pointer-events: none;
 }
@@ -202,14 +202,14 @@ l21-loading.error .loading-bar {
   height: 44px;
   border: 0;
   border-radius: 12px;
-  background: rgb(4 20 24 / 70%);
-  color: #d7e3ea;
+  background: rgb(18 20 14 / 70%);
+  color: #e3e6d8;
   cursor: pointer;
 }
 
 .settings-button:hover,
 .settings-button[aria-expanded="true"] {
-  background: rgb(4 20 24 / 90%);
+  background: rgb(18 20 14 / 90%);
 }
 
 l21-settings-panel {
@@ -222,8 +222,8 @@ l21-settings-panel {
   overflow-y: auto;
   padding: 0 16px 16px;
   border-radius: 16px;
-  background: rgb(6 18 26 / 92%);
-  color: #d7e3ea;
+  background: rgb(27 30 21 / 92%);
+  color: #e3e6d8;
   font-size: 14px;
   box-shadow: 0 8px 24px rgb(0 0 0 / 40%);
 }
@@ -239,7 +239,7 @@ l21-settings-panel[hidden] {
   justify-content: space-between;
   align-items: center;
   padding: 10px 0 6px;
-  background: rgb(6 18 26 / 96%);
+  background: rgb(27 30 21 / 96%);
 }
 
 .settings-head h2 {
@@ -261,7 +261,7 @@ l21-settings-panel[hidden] {
 .settings-section {
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 1px solid #1d3e4f;
+  border-top: 1px solid #2a2f22;
 }
 
 .settings-section h3,
@@ -271,7 +271,7 @@ l21-settings-panel[hidden] {
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #3cc2bc;
+  color: #b8c97a;
 }
 
 .settings-section summary {
@@ -299,7 +299,7 @@ l21-settings-panel[hidden] {
 }
 
 .settings-row output {
-  color: #9bb8c6;
+  color: #a3a893;
   font-variant-numeric: tabular-nums;
 }
 
@@ -308,29 +308,29 @@ l21-settings-panel[hidden] {
 .settings-row input[type="url"] {
   flex: 1 1 100%;
   min-height: 32px;
-  accent-color: #3cc2bc;
+  accent-color: #b8c97a;
 }
 
 .settings-row select,
 .settings-row input[type="url"] {
   padding: 4px 8px;
-  border: 1px solid #2a4a5a;
+  border: 1px solid #3c4232;
   border-radius: 8px;
-  background: #0b1c26;
+  background: #12140e;
   color: inherit;
 }
 
 .settings-toggle input {
   width: 18px;
   height: 18px;
-  accent-color: #3cc2bc;
+  accent-color: #b8c97a;
 }
 
 .settings-hint {
   flex: 1 1 100%;
   margin: 0;
   font-size: 12px;
-  color: #9bb8c6;
+  color: #a3a893;
 }
 
 .settings-actions {
@@ -344,9 +344,9 @@ l21-settings-panel[hidden] {
   flex: 1 1 auto;
   min-height: 40px;
   padding: 0 12px;
-  border: 1px solid #2a4a5a;
+  border: 1px solid #3c4232;
   border-radius: 10px;
-  background: #102a38;
+  background: #1f231a;
   color: inherit;
   cursor: pointer;
 }

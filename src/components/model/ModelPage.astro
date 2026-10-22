@@ -100,7 +100,7 @@ const zones = await zonesOnline()
 const viewer = `${site.viewer}/viewer`
 // QR codes of this page's public address, one per augmented reality size (?ar=full: real size, read by the viewer);
 // SVG, dark on white so they scan in both themes
-const qrOptions = { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#0e2430', light: '#ffffff' } } as const
+const qrOptions = { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#22251b', light: '#ffffff' } } as const
 const page = new URL(pagePath, Astro.site).href
 // utm_*: each code is a Google Analytics campaign (Acquisition reports), read before the page cleans its address
 const campaign = (name: string) => `utm_source=qr&utm_medium=qr&utm_campaign=${name}`
@@ -269,7 +269,7 @@ const updated = zones.updated
     border: 2px solid var(--md-sys-color-outline);
     border-radius: var(--md-sys-shape-extra-large);
     overflow: hidden;
-    background: #0b1c26;
+    background: var(--lk-panel);
   }
   iframe {
     display: block;
@@ -378,7 +378,7 @@ const updated = zones.updated
   .downloads li {
     margin: 0 0 0.75rem;
   }
-  /* MD3 filled button with a leading icon, in the signal colour (tertiary, as the "Modèle 3D" pill): orange with navy
+  /* MD3 filled button with a leading icon, in the signal colour (tertiary, as the "Modèle 3D" pill): orange with dark olive
      text, readable in both themes (an orange outline on the light background would be too pale for text); 48 px
      touch target, label-large */
   .download {

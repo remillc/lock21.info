@@ -1,8 +1,10 @@
 # System design
 
 The lock21.info design, decided with Christian on 2026-10-19: **the "E2 · Sonar" look on the Material Design 3
-system**. Mockups (private canvas): <https://claude.ai/artifact/LERqkcuQMq5wptfoz8uSFE> (E2 on the fourth row; E3, the
-full MD3 look, was set aside). Technical rules (Astro, Starlight, SCSS, components) are in `GUIDELINES.md`.
+system**, in the **Moss** colours since 2026-10-22 (olive bars and greyish off-white or olive-black pages, in place of
+E2's navy; mockups: <https://claude.ai/artifact/QtZB3MVjoJWntaQqS2AghZ>, row D). First mockups (private canvas):
+<https://claude.ai/artifact/LERqkcuQMq5wptfoz8uSFE> (E2 on the fourth row; E3, the full MD3 look, was set aside).
+Technical rules (Astro, Starlight, SCSS, components) are in `GUIDELINES.md`.
 
 ## Audiences
 
@@ -16,7 +18,7 @@ The content stays a first-person field notebook.
 
 ## Look (E2)
 
-- **Underwater instrument**: the page reads like a dive computer and a survey log. Dark navy bars (header, footer),
+- **Underwater instrument**: the page reads like a dive computer and a survey log. Dark olive bars (header, footer),
   monospace data, a **depth gauge** (0 to 55 ft) down the left side of the content, an **instrument panel** with the key
   numbers (bottom depth, dives, time underwater, zones online, latest zone).
 - **Strong outlines**: 2 px outlines on cards, frames and tables; rounded corners throughout.
@@ -36,18 +38,18 @@ Starlight's (`--sl-color-…`) in `src/styles/`.
 
 | Role | Light | Dark | Used for |
 | --- | --- | --- | --- |
-| `primary` / `on-primary` | `#0e2430` / `#f4f8f8` | `#e6eff2` / `#0b1c26` | main buttons |
-| `secondary` / `on-secondary` | `#0b6e77` / `#ffffff` | `#3cc2bc` / `#0b1c26` | links, labels, depth gauge, card numbers, timeline |
-| `tertiary` / `on-tertiary` | `#f28c28` / `#0e2430` | `#f28c28` / `#0b1c26` | signal: 3D model button, bottom depth |
+| `primary` / `on-primary` | `#2e3322` / `#f4f4ee` | `#ebede3` / `#12140e` | main buttons |
+| `secondary` / `on-secondary` | `#5b6b1f` / `#ffffff` | `#b8c97a` / `#12140e` | links, labels, depth gauge, card numbers, timeline |
+| `tertiary` / `on-tertiary` | `#f28c28` / `#22251b` | `#f28c28` / `#12140e` | signal: 3D model button, bottom depth |
 | `tertiary` text on light | `#b4530c` | (same as tertiary) | orange text on the pale background (contrast) |
-| `surface` / `on-surface` | `#f4f8f8` / `#0e2430` | `#0b1c26` / `#e6eff2` | page |
-| `on-surface-variant` | `#3c5562` | `#b7cdd7` | secondary text |
-| `surface-container-lowest` | `#ffffff` | `#06121a` | cards (light); bars, panel (dark) |
-| `surface-container` | `#e3ecee` | `#102a38` | chips (light); cards, timeline items (dark) |
-| `outline` | `#0e2430` | `#2a4a5a` | 2 px outlines |
-| `outline-variant` | `#d5e0e3` | `#1d3e4f` | dividers, table rows |
-| `inverse-surface` / `inverse-on-surface` | `#0e2430` / `#f4f8f8` | — | header, footer, instrument panel (light) |
-| muted on inverse | `#9bb8c6` | `#9bb8c6` | labels in bars and panel |
+| `surface` / `on-surface` | `#f4f4ee` / `#22251b` | `#12140e` / `#ebede3` | page |
+| `on-surface-variant` | `#4f5444` | `#c9cdbb` | secondary text |
+| `surface-container-lowest` | `#ffffff` | `#0d0f0a` | cards (light) |
+| `surface-container` | `#e7e8dc` | `#1f231a` | chips (light); cards, timeline items (dark) |
+| `outline` | `#2e3322` | `#3c4232` | 2 px outlines |
+| `outline-variant` | `#e1e2d6` | `#2a2f22` | dividers, table rows |
+| bars and panel (`--lk-bar`, `--lk-panel`) | `#2e3322` | `#1b1e15` | header, footer, instrument panel: dark olive in both themes (MD3 inverse surface in light) |
+| text / muted / links on bars | `#f2f3ea` / `#b6bca3` / `#c5d48a` | `#f2f3ea` / `#a3a893` / `#b8c97a` | text, labels and links in bars and panel |
 
 Contrast: WCAG AA (4.5:1 for text) in both themes; checked again when the tokens are applied.
 
@@ -99,7 +101,7 @@ Tabular figures in tables and data.
 
 ## Components
 
-- **Header**: navy bar, `LOCK/21`, place line, navigation (Site, Méthode, Histoire, Journal), "Modèle 3D" pill.
+- **Header**: dark olive bar, `LOCK/21`, place line, navigation (Site, Méthode, Histoire, Journal), "Modèle 3D" pill.
 - **Depth gauge**: left column of the home page, 0 / 15 / 30 / 45 / 55 ft, the last in the signal colour; hidden on
   phones. On interior pages it runs along the navigation column's left edge, marks in proportion to depth, on screens
   wide enough for its labels.
@@ -108,7 +110,7 @@ Tabular figures in tables and data.
 - **Render frame**: a render of the model, 28 px corners, label chip with zone and numbers.
 - **Entry cards** ("Par où commencer"): number 01 to 03, title, one line, path `/plongeurs →`.
 - **Journal excerpts**: timeline with outlined items (number, date, zone, duration chip, note), link to all dives, total.
-- **Footer**: previous / next page, then the navy bar: `ÉCLUSE/21 · carnet de terrain`, `© 2024–<year> Christian
+- **Footer**: previous / next page, then the dark olive bar: `ÉCLUSE/21 · carnet de terrain`, `© 2024–<year> Christian
   Rémillard · Licence CC BY 4.0` (link to the licence). At the bottom of the window on short pages (flex columns in
   `custom.scss`), right after the content on long ones. The Baets drawings are credited in their figure captions.
 - Existing pages (docs) keep Starlight's layout, restyled with these tokens.
@@ -127,8 +129,8 @@ clichés, decoration that competes with the 3D viewer on a phone.
 - **Name**: **Écluse 21** in French (the site's language), **Lock 21** in English. The wordmark in the mockups,
   `LOCK/21`, becomes `ÉCLUSE/21`.
 - **Logo**: **S4 · "21 en écho"** (chosen 2026-10-19 on the design canvas): the 21 in JetBrains Mono ExtraBold on a
-  rounded navy square (14/64 corners), with two teal echoes below it (30 % and 60 %) and the orange point top right,
-  like a sonar reading. Files: `src/assets/logo.svg` (light), `src/assets/logo-dark.svg` (dark: deeper navy, outline),
+  rounded dark olive square (14/64 corners), with two moss echoes below it (30 % and 60 %) and the orange point top right,
+  like a sonar reading. Files: `src/assets/logo.svg` (light), `src/assets/logo-dark.svg` (dark: deeper olive, outline),
   `public/favicon.svg` (tab icon: one echo, larger figures for 16 px). The figures are outlines, so no font is needed;
   the generator is described in `src/assets/README.md`.
 - **Coordinates in the header**: Lock 21 is at **44°59.809′ N, 74°53.997′ W** (degrees and decimal minutes;

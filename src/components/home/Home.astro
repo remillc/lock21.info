@@ -286,7 +286,7 @@ const entries = (
     border-radius: var(--md-sys-shape-extra-large);
     border: 2px solid var(--lk-panel-outline);
     background: var(--lk-panel);
-    color: #e6eff2;
+    color: var(--lk-bar-text);
     font-family: var(--lk-font-data);
   }
   .panel-head {
@@ -299,7 +299,7 @@ const entries = (
   .label {
     font-size: 0.75rem;
     letter-spacing: 0.03em;
-    color: #9bb8c6;
+    color: var(--lk-bar-muted);
   }
   .status {
     display: flex;
@@ -310,7 +310,7 @@ const entries = (
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #3cc2bc;
+    background: var(--lk-bar-link);
   }
   .wide {
     grid-column: 1 / -1;
@@ -332,7 +332,7 @@ const entries = (
   }
   .of {
     font-size: 1rem;
-    color: #9bb8c6;
+    color: var(--lk-bar-muted);
   }
 
   /* Render of the model */
@@ -343,7 +343,7 @@ const entries = (
     border: 2px solid var(--md-sys-color-outline);
     border-radius: var(--md-sys-shape-extra-large);
     overflow: hidden;
-    background: #0b1c26;
+    background: var(--lk-panel);
   }
   .render img {
     display: block;
@@ -357,8 +357,8 @@ const entries = (
     left: 0.875rem;
     padding: 0.375rem 0.75rem;
     border-radius: var(--md-sys-shape-full);
-    background: #0e2430;
-    color: #f4f8f8;
+    background: var(--lk-bar);
+    color: var(--lk-bar-text);
     font-family: var(--lk-font-data);
     font-size: 0.75rem;
   }

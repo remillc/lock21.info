@@ -12,7 +12,7 @@ h1#_top {
   font-variant-numeric: tabular-nums;
 }
 
-// --- Header bar and footer bar: navy in both themes (MD3 inverse surface in light). Starlight's components in them
+// --- Header bar and footer bar: dark olive in both themes (MD3 inverse surface in light). Starlight's components in them
 // (search, theme and language selects) read the grey scale, so it is redefined inside the bars.
 
 header.header {
@@ -28,15 +28,15 @@ header.header .social-icons::after {
 header.header,
 .site-footer {
   --sl-color-white: var(--lk-bar-text);
-  --sl-color-gray-1: #d6e4e8;
-  --sl-color-gray-2: #c8d9df;
+  --sl-color-gray-1: #e3e6d8;
+  --sl-color-gray-2: #c9cdbb;
   --sl-color-gray-3: var(--lk-bar-muted);
-  --sl-color-gray-4: #6b8794;
-  --sl-color-gray-5: #2a4a5a;
-  --sl-color-gray-6: #102a38;
-  --sl-color-black: #06121a;
+  --sl-color-gray-4: #7d846b;
+  --sl-color-gray-5: #3c4232;
+  --sl-color-gray-6: #262a1e;
+  --sl-color-black: #12140e;
   --sl-color-text: var(--lk-bar-text);
-  --sl-color-text-accent: #3cc2bc;
+  --sl-color-text-accent: var(--lk-bar-link);
   // The selects' dropdown lists
   --sl-color-bg-nav: var(--lk-bar);
 }
@@ -48,7 +48,7 @@ header.header,
   text-underline-offset: 0.2em;
 }
 
-// --- Tables: 2 px outline, rounded, navy header row
+// --- Tables: 2 px outline, rounded, dark olive header row
 
 .sl-markdown-content table {
   display: block;
@@ -79,7 +79,7 @@ header.header,
     border-bottom: 1px solid var(--md-sys-color-outline-variant);
   }
 
-  // Tables written without a header row (only empty cells) don't show an empty navy band
+  // Tables written without a header row (only empty cells) don't show an empty dark band
   thead:not(:has(th:not(:empty))) {
     display: none;
   }
@@ -171,7 +171,7 @@ dialog.image-zoom {
 
   // The three columns centred in the viewport: the same margin on both sides once the screen is wider than
   // navigation + content + "Sur cette page". Starlight pins the navigation to the left edge; it moves by that margin,
-  // and so do the content (via --sl-content-inline-start) and the header's contents. The navy bar stays full width.
+  // and so do the content (via --sl-content-inline-start) and the header's contents. The bar stays full width.
   // On the left, the header's contents start further out, above the depth gauge's labels (Sidebar.astro), so the logo
   // lines up with the gauge.
   :root[data-has-sidebar][data-has-toc] {
@@ -202,7 +202,7 @@ dialog.image-zoom {
   }
 }
 
-// Footer at the bottom of the window on short pages (Footer.astro: previous / next and the navy bar, pushed down by
+// Footer at the bottom of the window on short pages (Footer.astro: previous / next and the dark bar, pushed down by
 // margin-top: auto); right after the content on long pages, as before. Starlight's .page fills the window's height:
 // that height is passed down to the last content panel through flex columns.
 .main-frame {

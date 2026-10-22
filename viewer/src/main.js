@@ -96,8 +96,9 @@ renderer.setSize(container.clientWidth, container.clientHeight)
 container.appendChild(renderer.domElement)
 
 const scene = new THREE.Scene()
-const navy = new THREE.Color(0x0b1c26)
-scene.background = navy
+// Plain background when the sky is off: the site's darkest surface (Moss palette, src/styles/tokens.scss)
+const backdrop = new THREE.Color(0x12140e)
+scene.background = backdrop
 const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.05, 2000)
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
@@ -325,7 +326,7 @@ function updateEnvironment() {
     scene.environment = look.sky ? skyEnvironment : null
     scene.environmentIntensity = look.skyIntensity
   }
-  scene.background = look.skyBackground && skyTexture ? skyTexture : navy
+  scene.background = look.skyBackground && skyTexture ? skyTexture : backdrop
   requestRender()
 }
 updateEnvironment()
