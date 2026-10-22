@@ -194,9 +194,14 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
   // The model, downloaded while the camera is already on
   let model = null
   say('Chargement du modèle…')
+  // Timing (telemetry, and shown a moment): the download, then the preparation (parsing, decoding the textures)
+  const started = performance.now()
+  let downloaded = 0
+  let bytes = 0
   new GLTFLoader().load(
     src,
     (gltf) => {
+      const ready = performance.now()
       model = gltf.scene
       model.traverse((child) => {
         if (!child.isMesh) return
@@ -214,11 +219,26 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
       holder.scale.setScalar(scale)
       scene.add(holder)
       model = holder
-      say('Pointez le téléphone vers le sol ou une table, puis touchez l’écran pour placer l’écluse.')
-      log('ar-status', { status: 'model-loaded' })
+      const prepared = performance.now()
+      const downloadS = ((downloaded || ready) - started) / 1000
+      const prepareS = (prepared - (downloaded || ready)) / 1000
+      const connection = navigator.connection
+      log('ar-status', {
+        status: 'model-loaded', mb: Math.round(bytes / 1e5) / 10, downloadS: Math.round(downloadS * 10) / 10,
+        prepareS: Math.round(prepareS * 10) / 10, net: connection?.effectiveType ?? null, downlinkMbps: connection?.downlink ?? null,
+      })
+      say(`Modèle chargé: téléchargement ${downloadS.toFixed(1)} s, préparation ${prepareS.toFixed(1)} s.`)
+      setTimeout(() => {
+        if (!placed) say('Pointez le téléphone vers le sol ou une table, puis touchez l’écran pour placer l’écluse.')
+      }, 4000)
     },
     (event) => {
-      if (event.total) say(`Chargement du modèle… ${Math.round((event.loaded / event.total) * 100)} %`)
+      bytes = event.loaded
+      if (event.total && event.loaded >= event.total && !downloaded) downloaded = performance.now()
+      const mb = (event.loaded / 1e6).toFixed(1)
+      say(event.total
+        ? `Chargement du modèle… ${Math.round((event.loaded / event.total) * 100)} % (${mb} Mo)`
+        : `Chargement du modèle… ${mb} Mo`)
     },
     (error) => {
       say('Le modèle n’a pas pu être chargé.')
