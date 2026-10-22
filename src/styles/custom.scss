@@ -12,6 +12,31 @@ h1#_top {
   font-variant-numeric: tabular-nums;
 }
 
+// --- Fallback font: Arial sized and spaced like Archivo, used until Archivo arrives, so that the swap moves nothing
+// (the home page's panel used to jump down on phones: PageSpeed's layout shift). Measured on the home page's text with
+// fontTools: Archivo 400 is 98.5 % of Arial's width, Archivo 800 103.9 % of Arial Bold's; Archivo's ascent 0.878 em,
+// descent 0.210 em, no line gap. Liberation Sans (Linux) has Arial's metrics; Roboto (Android) is close.
+
+@font-face {
+  font-family: 'Archivo Fallback';
+  font-weight: 100 600;
+  src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('Roboto');
+  size-adjust: 98.5%;
+  ascent-override: 89.1%;
+  descent-override: 21.3%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Archivo Fallback';
+  font-weight: 700 900;
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('Roboto Bold');
+  size-adjust: 103.9%;
+  ascent-override: 84.5%;
+  descent-override: 20.2%;
+  line-gap-override: 0%;
+}
+
 // --- Header bar and footer bar: dark olive in both themes (MD3 inverse surface in light). Starlight's components in them
 // (search, theme and language selects) read the grey scale, so it is redefined inside the bars.
 

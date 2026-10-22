@@ -4,6 +4,9 @@
 // - Refusing (Québec's Loi 25: Google Analytics uses cookies): the privacy page's button (<l21-analytics-optout>,
 //   AnalyticsOptOut.astro) keeps the choice in localStorage ('l21-consent': denied, or granted to accept again).
 //   Nothing is loaded for a visitor who refused, including those who refused in the former banner.
+// - Loaded late on purpose: Google's script weighs 180 KB and its long tasks slowed the page (PageSpeed). It comes on
+//   the first interaction (tap, key, scroll) or 4 s after the page has loaded, whichever is first; the page view is
+//   sent then, with the arrival address.
 // - Page views: sent by hand, on the first load and after each client-side navigation (astro:page-load); automatic
 //   ones would also count every ?cam= update of the /modele/ page as a page.
 // - The arrival address is kept before /modele/ cleans its own (l21-model-frame keeps only ?cam=), so that the QR
@@ -72,13 +75,31 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
     w.gtag('event', 'page_view', { page_location: location, page_title: document.title })
   }
 
+  // load(), on the first interaction or 4 s after the page's load event
+  function loadSoon() {
+    const events = ['pointerdown', 'keydown', 'scroll', 'touchstart']
+    const options = { capture: true, passive: true }
+    let timer = 0
+    const start = () => {
+      events.forEach((name) => window.removeEventListener(name, start, options))
+      clearTimeout(timer)
+      load()
+    }
+    events.forEach((name) => window.addEventListener(name, start, options))
+    const arm = () => {
+      timer = window.setTimeout(start, 4000)
+    }
+    if (document.readyState === 'complete') arm()
+    else window.addEventListener('load', arm, { once: true })
+  }
+
   function track(name: string, params: Record<string, string>) {
     if (loaded && w.gtag) w.gtag('event', name, params)
   }
 
   if (id && !w.lock21Analytics) {
     w.lock21Analytics = true
-    if (choice() !== 'denied') load()
+    if (choice() !== 'denied') loadSoon()
     // Measurement refused or accepted again from the privacy page
     document.addEventListener('l21-consent', (event) => {
       const granted = (event as CustomEvent<string>).detail === 'granted'
