@@ -216,9 +216,9 @@ const look = {
   tone: ['agx', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'neutral',
   exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.2,
   wet: wetness(params.has('wet') ? params.get('wet') : 0.1),
-  // Saturation of the lit surfaces (?saturation=0..2, 1 = the textures' own; default 0.9: lit by the sun, the colours
-  // looked a little too saturated)
-  saturation: saturationOf(params.has('saturation') ? params.get('saturation') : 0.9),
+  // Saturation of the lit surfaces (?saturation=0..2, 1 = the textures' own; default 0.8: lit by the sun, the colours
+  // looked too saturated)
+  saturation: saturationOf(params.has('saturation') ? params.get('saturation') : 0.8),
 }
 function saturationOf(v) {
   return Math.min(Math.max(Number(v) || 0, 0), 2)
