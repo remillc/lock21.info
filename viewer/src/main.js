@@ -217,9 +217,13 @@ const look = {
   exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.2,
   wet: wetness(params.has('wet') ? params.get('wet') : 0.1),
   // Saturation of the lit surfaces (?saturation=0..2, 1 = the textures' own; default 0.9: lit by the sun, the colours
-  // looked a little too saturated). Link only, not in the panel
-  saturation: params.has('saturation') ? Math.min(Math.max(Number(params.get('saturation')) || 0, 0), 2) : 0.9,
+  // looked a little too saturated)
+  saturation: saturationOf(params.has('saturation') ? params.get('saturation') : 0.9),
 }
+function saturationOf(v) {
+  return Math.min(Math.max(Number(v) || 0, 0), 2)
+}
+
 function wetness(v) {
   return Math.min(Math.max(Number(v) || 0, 0), 1)
 }
@@ -472,6 +476,7 @@ live.sunIntensity = (v) => { look.sunIntensity = Number(v); updateLights() }
 live.shadows = (v) => { look.shadows = v === '1'; updateLights() }
 live.tone = (v) => { look.tone = TONES[v] !== undefined ? v : 'neutral'; updateTone() }
 live.exposure = (v) => { look.exposure = Number(v); updateTone() }
+live.saturation = (v) => { look.saturation = saturationOf(v); rebuildMaterials() }
 live.wet = (v) => { look.wet = wetness(v); rebuildMaterials(); updateEnvironment() }
 live.light = (v) => { look.light = v.split(',').map(Number); updateLights() }
 
