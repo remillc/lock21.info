@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: new start view (`START_VIEW`), close to the lock floor, chosen by Christian on 2026-10-22.
 - The site's last TypeScript (`src/lib/*.ts`, `src/data/site.ts`, `src/content.config.ts`, types in `.astro` files)
   converted to plain JavaScript, types kept as JSDoc annotations: no TypeScript in the project.
 - Home page: « Dernière zone » is the zone added last, not the zone republished last (a retouched zone took its

@@ -157,7 +157,7 @@ startTelemetry({ renderer, mobile, embedded })
 // The view a visit starts from without ?cam= (same form: x,y,z of the camera, then of the point it looks at; scene
 // metres, y up), chosen by Christian on 2026-10-22. To change it, place the camera where wanted and copy the numbers
 // from the address bar (?cam=).
-const START_VIEW = [27.26, 23.52, 3.86, -33.96, -0.95, -34.6]
+const START_VIEW = [-25.07, 2.07, -17.17, -31.54, -0.78, -22.53]
 
 const scene = new THREE.Scene()
 // Plain background when the sky is off: the site's darkest surface (Moss palette, src/styles/tokens.scss)
