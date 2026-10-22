@@ -4,8 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- AR models: their origin is the Empty `ar-origin` placed in the `.blend` on the visible floor (`make_model.py
-  --origin`), so the floor no longer rises when the lock is enlarged in AR.
+- AR models: their origin is a point on the lock chamber floor (`make_model.py --origin`, 4 m west of the
+  `ar-origin` Empty, at the floor's height, 0.84 m above the reference level), so the floor no longer rises when the
+  lock is enlarged in AR. Zone 3's texture is baked anew onto the simplified mesh with an xatlas UV layout
+  (`make_model.py --rebake`, `xatlas_uv.py`): simplified 1:20, its texture was scrambled. During AR the 3D view
+  releases its tiles (the AR image froze at times).
 - `npm run downloads:upload` compares each file with R2's MD5 (ETag), not only its size: a rebuilt file of the same
   size is sent. The viewer asks for the AR files with a version (`AR_VERSION`), so a rebuild shows at once.
 - 3D viewer buttons (settings, augmented reality, full screen) and the AR close button: MD3 filled tonal icon

@@ -90,7 +90,8 @@ viennent de leurs maillages préparés (`O:\publishing\prepared\<zone>\`, les m�
 (adresse de la liste et des parties, R2 par défaut), `--view`, `--lat`, `--lon`, `-H/--heading`.
 
 **Installation, une fois:** `python -m venv tools\google-earth\.venv`, puis
-`tools\google-earth\.venv\Scripts\python -m pip install pycollada==0.9.2 numpy`. Blender 5 n'exporte plus le COLLADA
+`tools\google-earth\.venv\Scripts\python -m pip install pycollada==0.9.2 numpy xatlas==0.0.10` (xatlas: les nouvelles
+coordonnées de texture de `make_model.py --rebake`, voir `xatlas_uv.py`). Blender 5 n'exporte plus le COLLADA
 (format des modèles dans un KMZ): `make_kmz.py` l'écrit avec pycollada à partir de l'OBJ (un matériau et une texture
 par zone et par pièce du contexte).
 

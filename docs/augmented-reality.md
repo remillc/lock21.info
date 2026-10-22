@@ -54,20 +54,23 @@ les modèles RA sont faits à partir des mêmes zones préparées, et des rempli
 
 ```powershell
 # Sur une table: 1:100
-& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*" --origin=-16.100,11.063,-0.008
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*" --origin=-20.100,11.063,0.842 --rebake zone-3
 
 # Taille réelle: 1:1
-& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar-full -t 400000 -s 2048 -x 1 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*" --origin=-16.100,11.063,-0.008
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar-full -t 400000 -s 2048 -x 1 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*" --origin=-20.100,11.063,0.842 --rebake zone-3
 ```
 
 Les options: `-t` le nombre de triangles (400 000), `-s` la taille des textures (2048 px), `-x` l'échelle, `--usdz`
 pour le fichier d'Apple, `--context` le contexte, `--context-objects "filler*"` pour n'en garder que les remplissages.
 Sans `--context`, le modèle ne contient que les zones. `--origin`: le point du fichier `.blend` qui devient l'origine du modèle,
-celui que la RA pose sous l'anneau et à partir duquel elle agrandit l'écluse: l'Empty **`ar-origin`** (collection
-`terrain`; seuls les maillages en sont publiés), placé par Christian sur le fond visible, au bord est des zones 3 et 4
-(x −16,100, y 11,063, z −0,008). S'il est déplacé, relire sa position (Blender, panneau Objet) et refaire les deux
-modèles. Sans `--origin`, l'origine est le point de référence du site à z 0, où le fond visible est jusqu'à 0,4 m plus
-haut: agrandi en RA, le fond semblait monter.
+celui que la RA pose sous l'anneau et à partir duquel elle agrandit l'écluse: un point sur le plancher du sas, à 4 m à l'ouest de l'Empty
+**`ar-origin`** que Christian a posé au bord est des zones 3 et 4 (x −16,100, y 11,063, z −0,008): x −20,100, y 11,063, à
+la hauteur du plancher mesurée là, **z 0,842** (le plancher est à 0,8 à 1 m au-dessus du niveau de référence z 0; posé à
+z 0, l'origine faisait monter le plancher avec la taille: 1 m à 1:1). Sans `--origin`, l'origine est le point de
+référence du site à z 0. `--rebake zone-3`: la texture de la zone 3 est cuite à nouveau sur le modèle simplifié, avec
+de nouvelles coordonnées de texture (xatlas, `tools/google-earth/xatlas_uv.py`): simplifiée au 1/20, sa texture
+découpée en milliers de morceaux était brouillée. Les coordonnées sont gardées dans `O:	empr-uv` (xatlas prend
+environ 8 minutes; le modèle taille réelle les reprend).
 
 Puis copier les quatre fichiers dans `O:\publishing\downloads\online\ar\` et les mettre en ligne:
 

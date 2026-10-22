@@ -19,11 +19,15 @@ Usage:
     blender -b --factory-startup --python make_model.py -- -o O:\\publishing\\downloads\\google-earth\\t400k -t 400000 -s 2048 --context O:\\temp\\google-earth\\context\\context.glb
 """
 import fnmatch
+import hashlib
 import json
 import os
+import subprocess
 import sys
 
+import bmesh
 import bpy
+import numpy as np
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "publish-model"))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -48,6 +52,10 @@ p.add_argument("--prepared-root", default=r"O:\publishing\prepared", help="prepa
 p.add_argument("-q", "--quality", type=int, default=88, help="JPEG quality (default 88)")
 p.add_argument("-x", "--scale", type=float, default=1.0, help="model scale (default 1; 0.01 = 1:100, for augmented reality on a table)")
 p.add_argument("--usdz", action="store_true", help="also write <name>.usdz (AR Quick Look on iPhone and iPad)")
+p.add_argument("-R", "--rebake", nargs="*", default=[], metavar="ZONE",
+               help="zones (zone-3...) whose texture is baked anew onto the simplified mesh, with a new UV layout: a "
+               "photogrammetry texture cut into many small charts is scrambled by a strong simplification (zone 3 in "
+               "the AR model, 1:20). Cycles on the GPU, from the full-detail zone")
 p.add_argument("-O", "--origin", help="x,y,z of the Blender point that becomes the model's origin (default: the site anchor "
                "at z 0). For the AR models: the Empty \"ar-origin\" of lock-21-publishing.blend, placed by Christian on the "
                "visible floor, the point placed under the ring and the one the lock grows from")
@@ -118,6 +126,94 @@ def decimate(ob, target):
     return before, len(ob.data.polygons)
 
 
+def gpu_cycles():
+    """Cycles on the graphics card (OptiX, else CUDA), one sample: a colour bake needs no more"""
+    scene = bpy.context.scene
+    scene.render.engine = 'CYCLES'
+    prefs = bpy.context.preferences.addons["cycles"].preferences
+    for kind in ("OPTIX", "CUDA"):
+        try:
+            prefs.compute_device_type = kind
+            prefs.get_devices()
+            if any(dev.type == kind for dev in prefs.devices):
+                break
+        except TypeError:
+            continue
+    for dev in prefs.devices:
+        dev.use = dev.type != 'CPU'
+    scene.cycles.device = 'GPU'
+    scene.cycles.samples = 1
+    return prefs.compute_device_type
+
+
+XATLAS_PYTHON = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".venv", "Scripts", "python.exe")
+UV_CACHE = "O:/temp/ar-uv"
+
+
+def new_uv_layout(ob, slug, size):
+    """One UV layout for the whole simplified zone, by xatlas (xatlas_uv.py, in this folder's .venv): about 80 % of the
+    image used, against 40 % and one piece per triangle with Blender's Smart UV Project. xatlas takes minutes: the
+    layout is kept in O:\\temp\\ar-uv, under the mesh's hash, and reused by the next build of the same geometry (the
+    table and real-size AR models)."""
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    bmesh.ops.triangulate(bm, faces=bm.faces[:])
+    bm.to_mesh(ob.data)
+    bm.free()
+    me = ob.data
+    v = np.empty(len(me.vertices) * 3, np.float32)
+    me.vertices.foreach_get("co", v)
+    f = np.empty(len(me.polygons) * 3, np.uint32)
+    me.polygons.foreach_get("vertices", f)
+    key = hashlib.sha1(v.tobytes() + f.tobytes() + str(size).encode()).hexdigest()[:16]
+    os.makedirs(UV_CACHE, exist_ok=True)
+    out = os.path.join(UV_CACHE, f"{slug}-{key}.npz")
+    if os.path.exists(out):
+        log(f"{slug}: UV layout from the cache ({out})")
+    else:
+        mesh = os.path.join(UV_CACHE, f"{slug}-{key}-mesh.npz")
+        np.savez(mesh, v=v.reshape(-1, 3), f=f.reshape(-1, 3))
+        run = subprocess.run([XATLAS_PYTHON, os.path.join(os.path.dirname(os.path.abspath(__file__)), "xatlas_uv.py"),
+                              mesh, out, "-s", str(size)], capture_output=True, text=True)
+        os.remove(mesh)
+        if run.returncode:
+            raise RuntimeError(f"xatlas_uv.py failed: {run.stderr[-2000:]}")
+        log(run.stdout.strip().replace("[xatlas]", f"{slug}: xatlas"))
+    uv = np.load(out)["uv"]
+    while me.uv_layers:
+        me.uv_layers.remove(me.uv_layers[0])
+    me.uv_layers.new(name="UVMap").data.foreach_set("uv", uv.ravel())
+
+
+def rebake(z):
+    """New texture for a simplified zone (--rebake): a new UV layout (new_uv_layout, xatlas) and its colour baked from
+    the full-detail zone (Cycles, diffuse colour only, rays from a cage 15 cm out, at most 50 cm: the simplified
+    surface strays that far from the full-detail one in places). The bake's margin fills the gutters between the
+    pieces with their colour (no black lines). Replaces the zone's texture and removes the full-detail copy."""
+    low, high, slug = z["ob"], z["high"], z["slug"]
+    size = zone_sizes.get(slug, a.size)
+    new_uv_layout(low, slug, size)
+    bpy.ops.object.select_all(action='DESELECT')
+    low.select_set(True)
+    bpy.context.view_layer.objects.active = low
+    image = bpy.data.images.new(f"{slug}-baked", size, size)
+    low.data.materials.clear()
+    low.data.materials.append(plain_material(slug, image=image))
+    nodes = low.data.materials[0].node_tree.nodes
+    nodes.active = next(n for n in nodes if n.type == 'TEX_IMAGE')
+    high.data.materials.clear()
+    high.data.materials.append(plain_material(f"{slug}-source", image=z["source"]))
+    device = gpu_cycles()
+    high.select_set(True)
+    bpy.context.view_layer.objects.active = low
+    bpy.ops.object.bake(type='DIFFUSE', pass_filter={'COLOR'}, use_selected_to_active=True, cage_extrusion=0.15,
+                        max_ray_distance=0.5, margin=4)
+    z["texture"] = save_texture(image, slug)
+    bpy.data.objects.remove(high)
+    bpy.data.images.remove(z["source"])
+    log(f"{slug}: texture baked anew, {size} px, xatlas UV layout ({device})")
+
+
 bpy.ops.wm.read_factory_settings(use_empty=True)
 
 # Zones of the local manifest, with their surface area
@@ -163,6 +259,13 @@ for z in zones:
     ob.name = slug
     ob.data.transform(ob.matrix_world)
     ob.matrix_world.identity()
+    if slug in a.rebake:
+        # The full-detail zone and its full-size texture, the source of the bake (rebake), removed after it
+        z["high"] = ob.copy()
+        z["high"].data = ob.data.copy()
+        z["high"].name = f"{slug}-high"
+        bpy.context.scene.collection.objects.link(z["high"])
+        z["source"] = bpy.data.images.load(os.path.join(z["prox"], f"{slug}.jpg"), check_existing=False)
     z["target"] = int(zone_budget * z["area"] / total_area)
     z["before"], z["after"] = decimate(ob, z["target"])
     texture = z["texture"] = save_texture(bpy.data.images.load(os.path.join(z["prox"], f"{slug}.jpg")), slug)
@@ -179,6 +282,9 @@ if stuck and free_total:
     log(f"above their share (UV seams): {', '.join(z['slug'] for z in stuck)}, {excess:,} triangles taken from the others")
     for z in free:
         z["after"] = decimate(z["ob"], int(z["after"] * max(0.05, 1 - excess / free_total)))[1]
+for z in zones:
+    if "high" in z:
+        rebake(z)
 for z in zones:
     parts.append(dict(part=z["slug"], area_m2=z["area"], triangles_before=z["before"], triangles=z["after"],
                       texture_px=z["texture"].size[0]))
