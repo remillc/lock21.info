@@ -7,7 +7,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - AR models: their origin is a point on the lock chamber floor (`make_model.py --origin`, 4 m west of the
   `ar-origin` Empty, at the floor's height, 0.84 m above the reference level), so the floor no longer rises when the
   lock is enlarged in AR. Zone 3's texture is baked anew onto the simplified mesh with an xatlas UV layout
-  (`make_model.py --rebake`, `xatlas_uv.py`): simplified 1:20, its texture was scrambled. During AR the 3D view
+  (`make_model.py --rebake`, `xatlas_uv.py`): simplified 1:20, its texture was scrambled. Baked in two passes (faces
+  flipped for the second), so faces turned inwards no longer stay black. During AR the 3D view
   releases its tiles (the AR image froze at times).
 - `npm run downloads:upload` compares each file with R2's MD5 (ETag), not only its size: a rebuilt file of the same
   size is sent. The viewer asks for the AR files with a version (`AR_VERSION`), so a rebuild shows at once.

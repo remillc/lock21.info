@@ -189,29 +189,64 @@ def rebake(z):
     """New texture for a simplified zone (--rebake): a new UV layout (new_uv_layout, xatlas) and its colour baked from
     the full-detail zone (Cycles, diffuse colour only, rays from a cage 15 cm out, at most 50 cm: the simplified
     surface strays that far from the full-detail one in places). The bake's margin fills the gutters between the
-    pieces with their colour (no black lines). Replaces the zone's texture and removes the full-detail copy."""
+    pieces with their colour (no black lines). Two passes: faces of the simplified mesh turned inwards cast their rays
+    the wrong way and stayed black (zone 3's walls); the second pass bakes with the faces flipped, and fills what the
+    first one missed (the images start transparent: a missed pixel stays so). What both miss takes the zone's average
+    colour. Replaces the zone's texture and removes the full-detail copy."""
     low, high, slug = z["ob"], z["high"], z["slug"]
     size = zone_sizes.get(slug, a.size)
     new_uv_layout(low, slug, size)
-    bpy.ops.object.select_all(action='DESELECT')
-    low.select_set(True)
-    bpy.context.view_layer.objects.active = low
-    image = bpy.data.images.new(f"{slug}-baked", size, size)
-    low.data.materials.clear()
-    low.data.materials.append(plain_material(slug, image=image))
-    nodes = low.data.materials[0].node_tree.nodes
-    nodes.active = next(n for n in nodes if n.type == 'TEX_IMAGE')
     high.data.materials.clear()
     high.data.materials.append(plain_material(f"{slug}-source", image=z["source"]))
     device = gpu_cycles()
-    high.select_set(True)
-    bpy.context.view_layer.objects.active = low
-    bpy.ops.object.bake(type='DIFFUSE', pass_filter={'COLOR'}, use_selected_to_active=True, cage_extrusion=0.15,
-                        max_ray_distance=0.5, margin=4)
+    low.data.materials.clear()
+
+    def bake_pass(name):
+        image = bpy.data.images.new(name, size, size, alpha=True)
+        image.generated_color = (0, 0, 0, 0)
+        low.data.materials.clear()
+        low.data.materials.append(plain_material(name, image=image))
+        nodes = low.data.materials[0].node_tree.nodes
+        nodes.active = next(n for n in nodes if n.type == 'TEX_IMAGE')
+        bpy.ops.object.select_all(action='DESELECT')
+        high.select_set(True)
+        low.select_set(True)
+        bpy.context.view_layer.objects.active = low
+        bpy.ops.object.bake(type='DIFFUSE', pass_filter={'COLOR'}, use_selected_to_active=True, cage_extrusion=0.15,
+                            max_ray_distance=0.5, margin=4)
+        pixels = np.empty(size * size * 4, np.float32)
+        image.pixels.foreach_get(pixels)
+        return image, pixels.reshape(-1, 4)
+
+    def flip():
+        bm = bmesh.new()
+        bm.from_mesh(low.data)
+        bmesh.ops.reverse_faces(bm, faces=bm.faces[:])
+        bm.to_mesh(low.data)
+        bm.free()
+
+    image, first = bake_pass(f"{slug}-baked")
+    flip()
+    second_image, second = bake_pass(f"{slug}-baked-flipped")
+    flip()
+    missed = first[:, 3] < 0.5
+    from_second = missed & (second[:, 3] >= 0.5)
+    first[from_second] = second[from_second]
+    still = first[:, 3] < 0.5
+    if (~still).any():
+        first[still, :3] = first[~still, :3].mean(0)
+    first[:, 3] = 1.0
+    image.pixels.foreach_set(first.ravel())
+    image.update()
+    bpy.data.images.remove(second_image)
+    low.data.materials.clear()
+    low.data.materials.append(plain_material(slug, image=image))
     z["texture"] = save_texture(image, slug)
     bpy.data.objects.remove(high)
     bpy.data.images.remove(z["source"])
-    log(f"{slug}: texture baked anew, {size} px, xatlas UV layout ({device})")
+    log(f"{slug}: texture baked anew, {size} px, xatlas UV layout ({device}); flipped faces filled "
+        f"{from_second.mean() * 100:.1f} % of the image; average colour on {still.mean() * 100:.1f} % (mostly the space between the "
+        "pieces, used by no face)")
 
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
