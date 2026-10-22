@@ -130,46 +130,79 @@ l21-loading.error .loading-bar {
   display: none;
 }
 
-.fullscreen {
+/* MD3 icon buttons (docs/system-design.md, Buttons): filled tonal, 40 dp container in a 48 dp touch target (8 dp apart),
+   Material Symbols icons at 24 dp, state layers (hover 8 %, focus and pressed 10 %), focus ring. Over the 3D view the
+   container is the Moss palette's tonal colour, slightly see-through */
+.icon-button {
   position: fixed;
-  right: max(12px, env(safe-area-inset-right));
-  bottom: max(12px, env(safe-area-inset-bottom));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
   border: 0;
-  border-radius: 12px;
-  background: rgb(18 20 14 / 70%);
+  border-radius: 999px;
+  background: rgb(60 66 50 / 92%);
   color: #e3e6d8;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
-
-.fullscreen:hover {
-  background: rgb(18 20 14 / 90%);
-}
-
-/* Augmented reality (main.js): left of the full-screen button, same look */
-.ar-button {
-  position: fixed;
-  right: calc(max(12px, env(safe-area-inset-right)) + 52px);
-  bottom: max(12px, env(safe-area-inset-bottom));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: rgb(18 20 14 / 70%);
-}
-
-.ar-button:hover {
-  background: rgb(18 20 14 / 90%);
-}
-
-.ar-button[hidden] {
+.icon-button[hidden] {
   display: none;
+}
+/* 48 dp touch target */
+.icon-button::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+}
+/* State layer */
+.icon-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 200ms;
+}
+.icon-button:hover::after {
+  opacity: 0.08;
+}
+.icon-button:focus-visible::after,
+.icon-button:active::after {
+  opacity: 0.1;
+}
+.icon-button:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: 2px;
+}
+.icon-button img,
+.icon-button svg {
+  display: block;
+}
+/* Selected (toggle): the settings button while its panel is open */
+.icon-button[aria-expanded='true'] {
+  background: #b8c97a;
+  color: #12140e;
+}
+
+/* Positions: 16 dp from the edges (the touch target 12), 8 dp between the touch targets */
+.fullscreen {
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+}
+.fullscreen .icon-exit,
+.fullscreen[data-full='true'] .icon-enter {
+  display: none;
+}
+.fullscreen[data-full='true'] .icon-exit {
+  display: block;
+}
+/* Augmented reality (main.js): left of the full-screen button */
+.ar-button {
+  right: calc(max(16px, env(safe-area-inset-right)) + 56px);
+  bottom: max(16px, env(safe-area-inset-bottom));
 }
 
 .stats {
@@ -192,24 +225,8 @@ l21-loading.error .loading-bar {
 
 /* Settings (config-panel.js): ⚙ button top right, <l21-settings-panel> over the model */
 .settings-button {
-  position: fixed;
-  top: max(12px, env(safe-area-inset-top));
-  right: max(12px, env(safe-area-inset-right));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border: 0;
-  border-radius: 12px;
-  background: rgb(18 20 14 / 70%);
-  color: #e3e6d8;
-  cursor: pointer;
-}
-
-.settings-button:hover,
-.settings-button[aria-expanded="true"] {
-  background: rgb(18 20 14 / 90%);
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
 }
 
 l21-settings-panel {
@@ -459,10 +476,45 @@ l21-settings-panel[hidden] {
   gap: 12px;
   font-size: 14px;
 }
-.xr-overlay-scale input {
+/* The size slider (android-ar.js, createSlider), MD3-like: 4 dp track, active part and 20 dp thumb in the signal
+   colour, 48 dp of touch height; --value (0..1) set by the code */
+.xr-slider {
   flex: 1;
-  min-height: 44px;
-  accent-color: #f28c28;
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  touch-action: none;
+  cursor: pointer;
+}
+.xr-slider:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+.xr-slider-track {
+  position: relative;
+  flex: 1;
+  height: 4px;
+  margin: 0 10px;
+  border-radius: 2px;
+  background: rgb(242 243 234 / 35%);
+}
+.xr-slider-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--value, 0) * 100%);
+  border-radius: inherit;
+  background: #f28c28;
+}
+.xr-slider-thumb {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--value, 0) * 100%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #f28c28;
+  transform: translate(-50%, -50%);
 }
 .xr-overlay-scale output {
   min-width: 3.5em;

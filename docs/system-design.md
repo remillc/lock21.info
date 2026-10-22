@@ -1,4 +1,7 @@
-# System design
+---
+title: System design
+description: The design of lock21.info, the E2 Sonar look in the Moss colours on the Material Design 3 system - colours, type, shapes, spacing, buttons, components.
+---
 
 The lock21.info design, decided with Christian on 2026-10-19: **the "E2 · Sonar" look on the Material Design 3
 system**, in the **Moss** colours since 2026-10-22 (olive bars and greyish off-white or olive-black pages, in place of
@@ -85,6 +88,11 @@ Tabular figures in tables and data.
 
 - 4 px grid (8, 12, 16, 24, 32, 48, 64).
 - Touch targets at least 48 px (links in the header, buttons, cards).
+- **Buttons are always MD3-compliant** (Christian, 2026-10-22), on the site and in the 3D viewer alike: an MD3 button
+  type (filled, filled tonal, outlined, text, or icon button), its sizes (an icon button: 40 dp container in a 48 dp
+  touch target; a button: 40 dp high, full corners), **Material Symbols** icons at 24 dp (never a text character
+  such as "×" for an icon), the state layers and focus ring below, and a selected state for toggles. Over the 3D
+  view: filled tonal icon buttons (`viewer/src/style.css`, `.icon-button`).
 - MD3 state layers on interactive elements: hover 8 %, focus 10 %, pressed 10 % of the content colour; visible focus
   ring (`secondary`).
 - Little motion; everything respects `prefers-reduced-motion` (no animation then: the change is instant).

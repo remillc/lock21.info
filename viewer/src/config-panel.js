@@ -113,7 +113,7 @@ class SettingsPanel extends HTMLElement {
   }
 
   // Rows with dependsOn: shown only while their toggle is on. Revealed and hidden with the MD3 enter / exit motion
-  // (SYSTEM-DESIGN.md, Motion); instantly when the panel is drawn or when the system asks for reduced motion.
+  // (docs/system-design.md, Motion); instantly when the panel is drawn or when the system asks for reduced motion.
   // A row may depend on a setting no longer in the panel (the relief: ?relief=sun in a link only): then only the
   // link's value counts
   showDependents(animate = true) {

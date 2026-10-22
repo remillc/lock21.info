@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer buttons (settings, augmented reality, full screen) and the AR close button: MD3 filled tonal icon
+  buttons (40 dp in a 48 dp touch target, Material Symbols icons, state layers, focus ring). AR size slider drawn by
+  the page (follows the finger in AR, in any orientation); touches on the AR controls no longer move the model.
+- `SYSTEM-DESIGN.md` moved to `docs/system-design.md`, with a rule: buttons are always MD3-compliant.
 - Augmented reality on Android: AR inside Chrome (WebXR, `viewer/src/android-ar.js`, the viewer's three.js). One tap
   opens the camera, the model loads meanwhile, a ring follows the floor or a table and a tap places the lock, its canal floor
   on the surface; a « Taille » slider goes from 1:100 (on a table) to 1:1 (real size, walls about 35 ft high), the lock

@@ -62,26 +62,80 @@ function createOverlay(title, scale) {
       </div>
       <div class="xr-overlay-foot">
         <p class="xr-overlay-status" role="status">Ouverture de la caméra…</p>
-        <label class="xr-overlay-scale">
+        <div class="xr-overlay-scale">
           <span>Taille</span>
-          <input type="range" min="0" max="1" step="0.01" aria-label="Taille de l’écluse, de 1:100 (sur une table) à 1:1 (taille réelle)" />
+          <div class="xr-slider" role="slider" tabindex="0" aria-label="Taille de l’écluse, de 1:100 (sur une table) à 1:1 (taille réelle)" aria-valuemin="0" aria-valuemax="100">
+            <div class="xr-slider-track"><div class="xr-slider-fill"></div><div class="xr-slider-thumb"></div></div>
+          </div>
           <output></output>
-        </label>
+        </div>
       </div>
     </div>`
   root.dataset.turn = '0'
   root.dataset.layout = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait'
   root.querySelector('.xr-overlay-title').textContent = title
-  const slider = root.querySelector('input')
-  const shown = root.querySelector('output')
-  slider.value = String(toValue(scale))
-  shown.textContent = ratio(scale)
-  // Touches on the buttons and the slider don't place the model (no WebXR "select" for them)
+
+  // Touches on the controls don't place the model: no WebXR "select" for them, and, as Chrome may still send one, the
+  // "select" handler ignores taps while a finger is on the controls and for half a second after (busy)
+  let pressed = 0
+  let busyUntil = 0
+  const busy = () => pressed > 0 || performance.now() < busyUntil
   for (const control of root.querySelectorAll('.xr-overlay-head, .xr-overlay-foot')) {
     control.addEventListener('beforexrselect', (event) => event.preventDefault())
+    control.addEventListener('pointerdown', () => { pressed++ }, true)
   }
+  const release = () => {
+    pressed = Math.max(0, pressed - 1)
+    busyUntil = performance.now() + 500
+  }
+  root.addEventListener('pointerup', release, true)
+  root.addEventListener('pointercancel', release, true)
+
+  const slider = createSlider(root, toValue(scale))
   document.body.append(root)
-  return { root, status: root.querySelector('.xr-overlay-status'), close: root.querySelector('.xr-overlay-close'), slider, shown }
+  return { root, status: root.querySelector('.xr-overlay-status'), close: root.querySelector('.xr-overlay-close'), slider, busy }
+}
+
+// The size slider, drawn by the page: a native range input lost the drag in AR (Chrome hands the touch to the AR
+// session too) and when turned a quarter turn. It captures the finger and reads its position along its own direction,
+// whatever the turn of the controls (root.dataset.turn); arrows, Home and End work from a keyboard.
+function createSlider(root, value) {
+  const element = root.querySelector('.xr-slider')
+  const track = root.querySelector('.xr-slider-track')
+  const shown = root.querySelector('.xr-overlay-scale output')
+  const listeners = []
+  const set = (next, notify = true) => {
+    value = Math.min(1, Math.max(0, next))
+    track.style.setProperty('--value', String(value))
+    const scale = toScale(value)
+    shown.textContent = ratio(scale)
+    element.setAttribute('aria-valuenow', String(Math.round(value * 100)))
+    element.setAttribute('aria-valuetext', ratio(scale))
+    if (notify) for (const listener of listeners) listener(scale)
+  }
+  const fromPointer = (event) => {
+    const box = track.getBoundingClientRect()
+    const turn = Number(root.dataset.turn)
+    if (turn === 90) return (event.clientY - box.top) / box.height
+    if (turn === -90) return (box.bottom - event.clientY) / box.height
+    return (event.clientX - box.left) / box.width
+  }
+  element.addEventListener('pointerdown', (event) => {
+    event.preventDefault()
+    element.setPointerCapture(event.pointerId)
+    set(fromPointer(event))
+  })
+  element.addEventListener('pointermove', (event) => {
+    if (element.hasPointerCapture(event.pointerId)) set(fromPointer(event))
+  })
+  element.addEventListener('keydown', (event) => {
+    const step = { ArrowRight: 0.02, ArrowUp: 0.02, ArrowLeft: -0.02, ArrowDown: -0.02, Home: -1, End: 1 }[event.key]
+    if (step === undefined) return
+    event.preventDefault()
+    set(value + step)
+  })
+  set(value, false)
+  return { onInput: (listener) => listeners.push(listener) }
 }
 
 async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
@@ -173,17 +227,16 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
   )
 
   // The size slider: 1:100 (on a table) to 1:1 (real size), applied live; the last size is logged when AR ends
-  overlay.slider.addEventListener('input', () => {
-    scale = toScale(Number(overlay.slider.value))
-    overlay.shown.textContent = ratio(scale)
+  overlay.slider.onInput((next) => {
+    scale = next
     model?.scale.setScalar(scale)
   })
   session.addEventListener('end', () => log('ar-status', { status: 'last-size', ratio: ratio(scale) }))
 
-  // A tap on the screen places the model on the ring, turned to face the phone
+  // A tap on the screen places the model on the ring, turned to face the phone (not a touch on the controls)
   let placed = false
   session.addEventListener('select', () => {
-    if (!model || !reticle.visible) return
+    if (!model || !reticle.visible || overlay.busy()) return
     const position = new THREE.Vector3().setFromMatrixPosition(reticle.matrix)
     model.position.copy(position)
     const eye = new THREE.Vector3().setFromMatrixPosition(renderer.xr.getCamera().matrixWorld)

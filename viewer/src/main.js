@@ -45,6 +45,7 @@ if (document.fullscreenEnabled) {
   })
   document.addEventListener('fullscreenchange', () => {
     fullscreenButton.setAttribute('aria-label', document.fullscreenElement ? 'Quitter le plein écran' : 'Plein écran')
+    fullscreenButton.dataset.full = String(Boolean(document.fullscreenElement))
   })
 }
 
