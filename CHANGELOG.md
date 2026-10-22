@@ -6,6 +6,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 - New colours, « Moss » (olive), in place of the navy: bars, pages, links, logo, favicon, the zone diagram and the 3D
   viewer's buttons and plain background (`src/styles/tokens.scss`, SYSTEM-DESIGN.md).
+- 3D viewer: a visit without `?cam=` starts from a chosen view (`START_VIEW` in `viewer/src/main.js`) instead of a
+  view computed from the model's bounds.
 - Header: on wide screens the logo starts further left, above the depth gauge's labels.
 - Theme and language selects moved to the footer bar, out of the header and the mobile menu.
 - What the site is for: an « À propos » / « About » page (`/about`, first in the navigation) and a short block on
