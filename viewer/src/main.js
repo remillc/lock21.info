@@ -95,6 +95,11 @@ renderer.setPixelRatio(profile.pixelRatio)
 renderer.setSize(container.clientWidth, container.clientHeight)
 container.appendChild(renderer.domElement)
 
+// The view a visit starts from without ?cam= (same form: x,y,z of the camera, then of the point it looks at; scene
+// metres, y up), chosen by Christian on 2026-10-22. To change it, place the camera where wanted and copy the numbers
+// from the address bar (?cam=).
+const START_VIEW = [27.26, 23.52, 3.86, -33.96, -0.95, -34.6]
+
 const scene = new THREE.Scene()
 const navy = new THREE.Color(0x0b1c26)
 scene.background = navy
@@ -491,30 +496,20 @@ async function loadModel() {
     })
   }
 
-  // Frame the camera on all tilesets once every root is loaded (first load only: a new source keeps the view)
-  const bounds = new THREE.Box3()
+  // Place the camera once every root is loaded (first load only: a new source keeps the view)
   let pending = tilesets.length
   tilesets.forEach((tiles) => {
     tiles.addEventListener('load-root-tileset', () => {
-      const sphere = new THREE.Sphere()
-      tiles.getBoundingSphere(sphere)
-      world.updateMatrixWorld(true)
-      sphere.applyMatrix4(world.matrixWorld)
-      bounds.union(sphere.getBoundingBox(new THREE.Box3()))
       if (--pending > 0) return
       rootsLoaded = true
       if (framed) return
       framed = true
-      const all = bounds.getBoundingSphere(new THREE.Sphere())
-      // ?cam=x,y,z,tx,ty,tz: camera position and target (scene metres, y up), for identical or shared views
-      const cam = (params.get('cam') || '').split(',').map(Number)
-      if (cam.length === 6 && cam.every(Number.isFinite)) {
-        camera.position.set(cam[0], cam[1], cam[2])
-        controls.target.set(cam[3], cam[4], cam[5])
-      } else {
-        controls.target.copy(all.center)
-        camera.position.copy(all.center).add(new THREE.Vector3(1, 0.6, 1).normalize().multiplyScalar(all.radius * 1.8))
-      }
+      // ?cam=x,y,z,tx,ty,tz: camera position and target (scene metres, y up), for identical or shared views; without
+      // it, the chosen start view (START_VIEW)
+      let cam = (params.get('cam') || '').split(',').map(Number)
+      if (!(cam.length === 6 && cam.every(Number.isFinite))) cam = START_VIEW
+      camera.position.set(cam[0], cam[1], cam[2])
+      controls.target.set(cam[3], cam[4], cam[5])
       controls.update()
     })
   })
