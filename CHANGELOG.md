@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: the sun casts shadows (« Ombres du soleil », on by default on computers), tone mapping AgX with an
+  « Exposition » slider (default 1.4), the method under Avancé (AgX, ACES, Khronos neutral, none).
 - 3D viewer lighting: the sky and the sun together, each with its slider (« Force du ciel », « Force du soleil »,
   plus the sun's direction), realistic defaults (sun 1, sky 0.35, sun in the south-west at 50°); the former sun test
   (`?relief=sun`, `?shade=`) is removed.

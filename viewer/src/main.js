@@ -205,6 +205,12 @@ const look = {
   // elevation, in degrees
   relief: ['0', 'debug'].includes(params.get('relief')) ? params.get('relief') : '1',
   light: (params.get('light') || '330,50').split(',').map(Number),
+  // The sun's shadows (?shadows=0|1; default on computers, off on phones: one more render of the scene per frame)
+  shadows: params.has('shadows') ? params.get('shadows') !== '0' : !mobile,
+  // Tone mapping of the lit display (?tone=agx|aces|neutral|none, default AgX: natural highlights and shadows) and
+  // its exposure (?exposure=, default 1.4: AgX darkens the mid-tones). The unlit display (?hdri=0) keeps none: the textures as they are
+  tone: ['aces', 'neutral', 'none'].includes(params.get('tone')) ? params.get('tone') : 'agx',
+  exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.4,
   wet: wetness(params.has('wet') ? params.get('wet') : 0.15),
 }
 function wetness(v) {
@@ -223,6 +229,9 @@ function initSurface(mesh, zoneId) {
     old.normalMap.colorSpace = THREE.NoColorSpace
   }
   mesh.userData.surface = { map: old.map, normalMap: old.normalMap, color: old.color.clone(), zoneId }
+  // Every surface casts and receives the sun's shadows (when they are on: updateLights)
+  mesh.castShadow = true
+  mesh.receiveShadow = true
   mesh.material = surfaceMaterial(mesh)
   old.dispose()
 }
@@ -368,16 +377,52 @@ function litMaterial(surface, mesh, normalMap, sky) {
 }
 
 // The sun: a directional light added to the sky's light (lit materials only). Lambert lighting divides by pi: at
-// intensity pi x sunIntensity, a surface facing the sun at sunIntensity 1 shows its texture's own brightness
+// intensity pi x sunIntensity, a surface facing the sun at sunIntensity 1 shows its texture's own brightness.
+// Its shadows: one 4096 px shadow map over the whole site (about 4 cm per texel over the context's 180 m), soft
+// edges (PCF); the walls, stairs and piers shade what lies behind them. The shadow box follows the context's extent
+// once it is loaded (fitShadows), and the sun's direction.
+renderer.shadowMap.enabled = true
+renderer.shadowMap.type = THREE.PCFSoftShadowMap
 const sun = new THREE.DirectionalLight(0xffffff)
-scene.add(sun)
+sun.shadow.mapSize.set(4096, 4096)
+sun.shadow.bias = -0.0002
+sun.shadow.normalBias = 0.04
+scene.add(sun, sun.target)
+const shadowArea = new THREE.Sphere(new THREE.Vector3(), 120)
+function fitShadows() {
+  const box = new THREE.Box3()
+  for (const model of contextModels) box.expandByObject(model)
+  if (!box.isEmpty()) box.getBoundingSphere(shadowArea)
+  updateLights()
+}
 function updateLights() {
   const [azimuth, elevation] = look.light.map(THREE.MathUtils.degToRad)
-  sun.position.set(Math.cos(elevation) * Math.sin(azimuth), Math.sin(elevation), Math.cos(elevation) * Math.cos(azimuth))
+  const direction = new THREE.Vector3(Math.cos(elevation) * Math.sin(azimuth), Math.sin(elevation), Math.cos(elevation) * Math.cos(azimuth))
+  const r = shadowArea.radius
+  sun.target.position.copy(shadowArea.center)
+  sun.position.copy(shadowArea.center).addScaledVector(direction, r * 2)
+  Object.assign(sun.shadow.camera, { left: -r, right: r, top: r, bottom: -r, near: r * 0.5, far: r * 3.5 })
+  sun.shadow.camera.updateProjectionMatrix()
   sun.intensity = Math.PI * look.sunIntensity
   sun.visible = look.sky && look.sunIntensity > 0
+  sun.castShadow = sun.visible && look.shadows
   requestRender()
 }
+// Tone mapping and exposure (look.tone, look.exposure): only for the lit display; changing the method recompiles the
+// materials
+const TONES = { agx: THREE.AgXToneMapping, aces: THREE.ACESFilmicToneMapping, neutral: THREE.NeutralToneMapping, none: THREE.NoToneMapping }
+function updateTone() {
+  const mapping = look.sky ? TONES[look.tone] : THREE.NoToneMapping
+  if (renderer.toneMapping !== mapping) {
+    renderer.toneMapping = mapping
+    scene.traverse((child) => {
+      if (child.isMesh) child.material.needsUpdate = true
+    })
+  }
+  renderer.toneMappingExposure = look.exposure
+  requestRender()
+}
+updateTone()
 updateLights()
 
 // What the lit materials reflect, and the background: the sky (loaded even when its lighting is off at start; the
@@ -400,11 +445,14 @@ new HDRLoader().load(`${import.meta.env.BASE_URL}hdri/sky.hdr`, (texture) => {
   updateEnvironment()
 })
 
-live.hdri = (v) => { look.sky = v === '1'; rebuildMaterials(); updateLights(); updateEnvironment() }
+live.hdri = (v) => { look.sky = v === '1'; rebuildMaterials(); updateLights(); updateTone(); updateEnvironment() }
 live.hdriIntensity = (v) => { look.skyIntensity = Number(v); updateEnvironment() }
 live.sky = (v) => { look.skyBackground = v === '1'; updateEnvironment() }
 live.relief = (v) => { look.relief = v; rebuildMaterials() }
 live.sunIntensity = (v) => { look.sunIntensity = Number(v); updateLights() }
+live.shadows = (v) => { look.shadows = v === '1'; updateLights() }
+live.tone = (v) => { look.tone = TONES[v] !== undefined ? v : 'agx'; updateTone() }
+live.exposure = (v) => { look.exposure = Number(v); updateTone() }
 live.wet = (v) => { look.wet = wetness(v); rebuildMaterials(); updateEnvironment() }
 live.light = (v) => { look.light = v.split(',').map(Number); updateLights() }
 
@@ -550,6 +598,7 @@ async function loadModel() {
       })
       scene.add(model)
       contextModels.push(model)
+      fitShadows()
       requestRender()
     })
   }
