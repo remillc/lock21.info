@@ -41,15 +41,16 @@ export function settingsSchema({ mobile }) {
       items: [
         { key: 'hdri', label: 'Éclairage par le ciel', type: 'toggle', def: '1' },
         { key: 'hdriIntensity', label: 'Force du ciel', type: 'range', min: 0, max: 3, step: 0.05, def: '1' },
-        { key: 'sky', label: 'Ciel en arrière-plan', type: 'toggle', def: '0' },
+        { key: 'sky', label: 'Ciel en arrière-plan', type: 'toggle', def: '1' },
         { key: 'wet', label: 'Aspect mouillé', hint: 'zones seulement: reflets du ciel, couleurs plus saturées', type: 'range', min: 0, max: 1, step: 0.05, def: '0.15', dependsOn: 'hdri' },
       ],
     },
     {
       title: 'Couleurs',
       items: [
-        { key: 'neutral', label: 'Neutralisation de la teinte', hint: "0 = teinte jaune-vert de l'eau gardée, 1 = gris neutre", type: 'range', min: 0, max: 1, step: 0.05, def: '0.3' },
-        { key: 'despill', label: 'Retrait du vert', hint: 'retire le vert dominant pixel par pixel (algues, reflets)', type: 'range', min: 0, max: 1, step: 0.05, def: '1' },
+        { key: 'neutral', label: 'Neutralisation de la teinte', hint: "0 = teinte jaune-vert de l'eau gardée, 1 = gris neutre", type: 'range', min: 0, max: 1, step: 0.05, def: '0.2' },
+        { key: 'despill', label: 'Retrait du vert', hint: 'retire le vert dominant pixel par pixel (algues, reflets)', type: 'range', min: 0, max: 1, step: 0.05, def: '0.8' },
+        { key: 'cyan', label: 'Retrait du cyan', hint: 'retire le cyan laissé par le retrait du vert (0 = aucun, 1 = jusqu’au gris, 2 = au-delà)', type: 'range', min: 0, max: 2, step: 0.1, def: '1.5' },
       ],
     },
     {
@@ -67,8 +68,6 @@ export function settingsSchema({ mobile }) {
         { key: 'profile', label: 'Profil', type: 'select', def: '', options: [['', 'automatique'], ['desktop', 'ordinateur'], ['mobile', 'téléphone']] },
         { key: 'stats', label: 'Statistiques (mémoire, tuiles)', type: 'toggle', def: '0' },
         { key: 'aoDebug', label: 'Occlusion seule', type: 'toggle', def: '0', dependsOn: 'ao' },
-        { key: 'tiles', label: 'Source des tuiles', hint: 'adresse, ex. http://localhost:8081', type: 'text', def: '' },
-        { key: 'relief', label: 'Relief (normal maps des zones)', type: 'select', def: '1', options: [['1', 'oui'], ['0', 'non'], ['sun', 'soleil (essai)'], ['debug', 'normal map']] },
         { key: 'light', label: 'Soleil (azimut, hauteur)', type: 'angles', def: '135,45', ranges: [[0, 360, 5], [0, 90, 5]], unit: '°', dependsOn: ['relief', 'sun'] },
         { key: 'shade', label: 'Part de lumière directe', type: 'range', min: 0, max: 1, step: 0.05, def: '0.6', dependsOn: ['relief', 'sun'] },
       ],
@@ -114,13 +113,15 @@ class SettingsPanel extends HTMLElement {
   }
 
   // Rows with dependsOn: shown only while their toggle is on. Revealed and hidden with the MD3 enter / exit motion
-  // (SYSTEM-DESIGN.md, Motion); instantly when the panel is drawn or when the system asks for reduced motion
+  // (SYSTEM-DESIGN.md, Motion); instantly when the panel is drawn or when the system asks for reduced motion.
+  // A row may depend on a setting no longer in the panel (the relief: ?relief=sun in a link only): then only the
+  // link's value counts
   showDependents(animate = true) {
     const still = !animate || window.matchMedia('(prefers-reduced-motion: reduce)').matches
     for (const item of this.schema.flatMap((section) => section.items)) {
       if (!item.dependsOn) continue
       const [key, value] = Array.isArray(item.dependsOn) ? item.dependsOn : [item.dependsOn, '1']
-      const on = (this.params.get(key) ?? this.item(key).def) === value
+      const on = (this.params.get(key) ?? this.item(key)?.def) === value
       const row = this.querySelector(`[data-key="${item.key}"]`)
       if (row.dataset.shown === String(on)) continue
       row.dataset.shown = String(on)

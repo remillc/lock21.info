@@ -18,8 +18,11 @@ import { N8AOPass } from 'n8ao'
 // reloads the page. `live` holds one handler per parameter. The address keeps only the camera (?cam=, see viewUrl):
 // the other parameters still work in a link (tests), and are removed from the address once read.
 const params = new URLSearchParams(location.search)
-// Settings saved by the browser (config-panel.js) where the link doesn't set them
-for (const [key, value] of savedSettings()) if (!params.has(key)) params.set(key, value)
+// Settings saved by the browser (config-panel.js) where the link doesn't set them. Only the panel's current settings:
+// one saved earlier and since taken out of the panel (the tiles' source, the relief) would apply with no control to
+// change it back; those work only in a link (?tiles=, ?relief=, for tests)
+const panelKeys = new Set(settingsSchema({ mobile: false }).flatMap((section) => section.items).map((item) => item.key))
+for (const [key, value] of savedSettings()) if (!params.has(key) && panelKeys.has(key)) params.set(key, value)
 const live = {}
 history.replaceState(null, '', location.pathname + (params.has('cam') ? `?cam=${params.get('cam')}` : ''))
 
@@ -137,9 +140,10 @@ const look = {
   // Sky lighting (default; ?hdri=0 = the unlit display used before), see skyMaterial
   sky: params.get('hdri') !== '0',
   skyIntensity: params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : 1,
-  skyBackground: params.get('sky') === '1',
+  // The sky as background: on by default (?sky=0: the plain backdrop)
+  skyBackground: (params.get('sky') ?? '1') === '1',
   // Colour balance between zones (?neutral=0..1), see colorBalance
-  neutral: params.has('neutral') ? Number(params.get('neutral')) : 0.3,
+  neutral: params.has('neutral') ? Number(params.get('neutral')) : 0.2,
   // Relief from the zones' normal maps (?relief=1 default, 0 = without), the sun test (?relief=sun, with
   // ?light=azimuth,elevation and ?shade=0..1) or the normal map shown as the colour (?relief=debug); wet look (?wet=0..1)
   relief: ['0', 'sun', 'debug'].includes(params.get('relief')) ? params.get('relief') : '1',
@@ -204,19 +208,28 @@ function unlitMaterial(surface) {
 
 // Green removal ("spill suppression", as for green screens): each pixel's green is capped at the larger of its
 // red and blue. Brown, beige and grey pixels (red >= green) are untouched; only pixels where green dominates
-// (algae, the water's cast in patches) turn olive or grey-brown. A per-zone colour gain cannot do that: it
-// shifts the whole zone, and the green patches stay green. ?despill=0..1 sets the strength (default 1).
-// Always in the zones' shaders (a uniform: 0 changes nothing), so the strength changes live.
-const despill = { value: params.has('despill') ? Number(params.get('despill')) : 1 }
+// (algae, the water's cast in patches) turn olive or grey-brown. Underwater, blue is often above red: the capped
+// green then equals the blue and the pixel turns cyan (0.30, 0.50, 0.40 -> 0.30, 0.40, 0.40). The cyan left over
+// (the part of green AND blue above red) is removed from both, times ?cyan=0..2 (default 1.5): at 1 such a pixel
+// turns grey (0.30, 0.30, 0.30), at 1.5 a warm grey (0.30, 0.25, 0.25), at 0 it stays cyan; olive and brown pixels
+// (red >= blue) are untouched, a truly blue pixel keeps its blue. A per-zone colour gain cannot do that: it
+// shifts the whole zone, and the green patches stay green. ?despill=0..1 sets the strength (default 0.8).
+// Always in the zones' shaders (uniforms: 0 changes nothing), so both change live.
+const despill = { value: params.has('despill') ? Number(params.get('despill')) : 0.8 }
+const cyanCut = { value: params.has('cyan') ? Number(params.get('cyan')) : 1.5 }
 live.despill = (v) => { despill.value = Number(v); requestRender() }
+live.cyan = (v) => { cyanCut.value = Number(v); requestRender() }
 function addDespill(shader) {
   shader.uniforms.despill = despill
+  shader.uniforms.cyanCut = cyanCut
   shader.fragmentShader = shader.fragmentShader
-    .replace('void main() {', 'uniform float despill;\nvoid main() {')
+    .replace('void main() {', 'uniform float despill;\nuniform float cyanCut;\nvoid main() {')
     .replace(
       '#include <map_fragment>',
       '#include <map_fragment>\n' +
-        'diffuseColor.g = mix(diffuseColor.g, min(diffuseColor.g, max(diffuseColor.r, diffuseColor.b)), despill);',
+        'float despillG = min(diffuseColor.g, max(diffuseColor.r, diffuseColor.b));\n' +
+        'float despillCyan = min(cyanCut * max(min(despillG, diffuseColor.b) - diffuseColor.r, 0.0), min(despillG, diffuseColor.b));\n' +
+        'diffuseColor.rgb = mix(diffuseColor.rgb, vec3(diffuseColor.r, despillG - despillCyan, diffuseColor.b - despillCyan), despill);',
     )
 }
 
@@ -359,7 +372,7 @@ live.shade = (v) => { look.shade = Number(v); updateLights() }
 // Colour balance between zones. The water tints each zone differently (yellow-green, more or less dark,
 // depending on the dive). manifest.json gives each zone's average texture colour in linear light
 // (tools/publish-model/texture_stats.mjs); every zone is brought to the same target colour: the average of the
-// zones, from which ?neutral= (0 to 1, default 0.3) of the common tint is removed. Fully neutral looks grey or
+// zones, from which ?neutral= (0 to 1, default 0.2) of the common tint is removed. Fully neutral looks grey or
 // pink: the mussels and the sediment really are brown-green.
 let zoneEntries = []
 let gains = new Map()
