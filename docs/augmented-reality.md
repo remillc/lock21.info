@@ -109,8 +109,10 @@ avant l'essai.
 - **Rien ne s'ouvre, la page glisse et revient** (Android): Chrome n'a pas pu ouvrir Scene Viewer et est revenu à
   l'adresse de secours (la page marquée `#ar-failed`). Le journal du visualiseur le note (message `ar-failed`, après
   `ar`). C'est arrivé le 2026-10-22 sur un Pixel 10 Pro quand le lien visait l'application Google
-  (`com.google.android.googlequicksearchbox`); il vise depuis `com.google.ar.core`, comme le `<model-viewer>` de
-  Google. Vérifier que « Services Google Play pour la RA » est installé et à jour.
+  (`com.google.android.googlequicksearchbox`) au format `scene-viewer/1.0`: Scene Viewer s'ouvrait et se refermait
+  aussitôt, même avec le modèle d'exemple de Google, alors que la démo de `<model-viewer>` s'ouvrait. Le lien est
+  depuis construit exactement comme celui de `<model-viewer>`: `scene-viewer/1.2`, `disable_occlusion=true`, le
+  fichier en dernier, `com.google.ar.core`.
 - **« Impossible de charger l'objet »** (Android): le fichier n'est pas en ligne à l'adresse attendue, ou Scene Viewer
   ne peut pas l'atteindre (réseau local).
 - **La taille réelle n'est pas à la taille réelle:** Scene Viewer réduit un modèle trop grand pour l'écran s'il est

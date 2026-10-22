@@ -71,15 +71,19 @@ if (arLink.relList?.supports?.('ar')) {
   arLink.target = '_top'
   // resizable=false for the real size: otherwise Scene Viewer shrinks a model too big for the view (179 x 143 m with the
   // terrain) to fit it, and the "real size" isn't.
-  // package=com.google.ar.core (Google Play Services for AR, as Google's <model-viewer> does): the Google app
-  // (com.google.android.googlequicksearchbox) no longer opened it on a Pixel 10 Pro (2026-10-22: Chrome went to the
-  // fallback address, the page slid and came back). The fallback is the top page (the /modele page when embedded)
-  // marked #ar-failed: back there, the failure is logged (telemetry) and the mark removed.
+  // The link is built exactly as Google's <model-viewer> builds it (its openSceneViewer): Scene Viewer 1.2,
+  // disable_occlusion=true, the file last, package com.google.ar.core (Google Play Services for AR). On a Pixel 10 Pro
+  // (2026-10-22) the former link (1.0, occlusion on, through the Google app or ARCore) opened Scene Viewer, which
+  // closed at once, even for Google's own sample model, while <model-viewer>'s demo opened. The fallback is the top
+  // page (the /modele page when embedded) marked #ar-failed: back there, the failure is logged (telemetry) and the
+  // mark removed.
   const page = embedded ? window.top : window
   const fallback = `${page.location.href.split('#')[0]}#ar-failed`
-  arLink.href = `intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glb)}&mode=ar_preferred&resizable=${!arFull}` +
-    `&title=${encodeURIComponent(title)}#Intent;scheme=https;package=com.google.ar.core;` +
-    `action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(fallback)};end;`
+  const sceneParams = new URLSearchParams({ mode: 'ar_preferred', disable_occlusion: 'true', title })
+  if (arFull) sceneParams.set('resizable', 'false')
+  arLink.href = `intent://arvr.google.com/scene-viewer/1.2?${sceneParams}&file=${encodeURIComponent(glb)}` +
+    '#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;' +
+    `S.browser_fallback_url=${encodeURIComponent(fallback)};end;`
   arLink.hidden = false
   const failed = () => {
     if (page.location.hash !== '#ar-failed') return
