@@ -210,21 +210,25 @@ function unlitMaterial(surface) {
 // red and blue. Brown, beige and grey pixels (red >= green) are untouched; only pixels where green dominates
 // (algae, the water's cast in patches) turn olive or grey-brown. Underwater, blue is often above red: the capped
 // green then equals the blue and the pixel turns cyan (0.30, 0.50, 0.40 -> 0.30, 0.40, 0.40). The cyan left over
-// (the part of green AND blue above red) is removed from both, so such a pixel turns grey (0.30, 0.30, 0.30); olive
-// and brown pixels (red >= blue) are untouched, a truly blue pixel keeps its blue. A per-zone colour gain cannot do that: it
+// (the part of green AND blue above red) is removed from both, times ?cyan=0..2 (default 1.5): at 1 such a pixel
+// turns grey (0.30, 0.30, 0.30), at 1.5 a warm grey (0.30, 0.25, 0.25), at 0 it stays cyan; olive and brown pixels
+// (red >= blue) are untouched, a truly blue pixel keeps its blue. A per-zone colour gain cannot do that: it
 // shifts the whole zone, and the green patches stay green. ?despill=0..1 sets the strength (default 0.8).
-// Always in the zones' shaders (a uniform: 0 changes nothing), so the strength changes live.
+// Always in the zones' shaders (uniforms: 0 changes nothing), so both change live.
 const despill = { value: params.has('despill') ? Number(params.get('despill')) : 0.8 }
+const cyanCut = { value: params.has('cyan') ? Number(params.get('cyan')) : 1.5 }
 live.despill = (v) => { despill.value = Number(v); requestRender() }
+live.cyan = (v) => { cyanCut.value = Number(v); requestRender() }
 function addDespill(shader) {
   shader.uniforms.despill = despill
+  shader.uniforms.cyanCut = cyanCut
   shader.fragmentShader = shader.fragmentShader
-    .replace('void main() {', 'uniform float despill;\nvoid main() {')
+    .replace('void main() {', 'uniform float despill;\nuniform float cyanCut;\nvoid main() {')
     .replace(
       '#include <map_fragment>',
       '#include <map_fragment>\n' +
         'float despillG = min(diffuseColor.g, max(diffuseColor.r, diffuseColor.b));\n' +
-        'float despillCyan = max(min(despillG, diffuseColor.b) - diffuseColor.r, 0.0);\n' +
+        'float despillCyan = min(cyanCut * max(min(despillG, diffuseColor.b) - diffuseColor.r, 0.0), min(despillG, diffuseColor.b));\n' +
         'diffuseColor.rgb = mix(diffuseColor.rgb, vec3(diffuseColor.r, despillG - despillCyan, diffuseColor.b - despillCyan), despill);',
     )
 }

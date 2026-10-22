@@ -50,6 +50,7 @@ export function settingsSchema({ mobile }) {
       items: [
         { key: 'neutral', label: 'Neutralisation de la teinte', hint: "0 = teinte jaune-vert de l'eau gardée, 1 = gris neutre", type: 'range', min: 0, max: 1, step: 0.05, def: '0.2' },
         { key: 'despill', label: 'Retrait du vert', hint: 'retire le vert dominant pixel par pixel (algues, reflets)', type: 'range', min: 0, max: 1, step: 0.05, def: '0.8' },
+        { key: 'cyan', label: 'Retrait du cyan', hint: 'retire le cyan laissé par le retrait du vert (0 = aucun, 1 = jusqu’au gris, 2 = au-delà)', type: 'range', min: 0, max: 2, step: 0.1, def: '1.5' },
       ],
     },
     {
