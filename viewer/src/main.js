@@ -192,7 +192,8 @@ const look = {
   // Lighting (default; ?hdri=0 = the unlit display used before): the sky (diffuse, ?hdriIntensity=) and the sun
   // (direct, ?sunIntensity=, from ?light=azimuth,elevation), each with its slider. Realistic defaults, as on a clear
   // day (direct sun about 75-85 % of the light, the sky the rest): sun 1 (a surface facing it shows its texture's own
-  // brightness), sky 0.35; the sun in the south-west, 50 degrees up (early afternoon at Dickinson Landing)
+  // brightness), sky 0.35; the sun in the south-west, 48 degrees up (early afternoon at Dickinson Landing; 48 is the
+  // sky photo's own sun, see HDRI_SUN)
   sky: params.get('hdri') !== '0',
   skyIntensity: params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : 0.35,
   sunIntensity: params.has('sunIntensity') ? Number(params.get('sunIntensity')) : 1,
@@ -204,7 +205,7 @@ const look = {
   // (?relief=debug); wet look (?wet=0..1). The sun's direction: azimuth (0 = from the south, 90 = from the east),
   // elevation, in degrees
   relief: ['0', 'debug'].includes(params.get('relief')) ? params.get('relief') : '1',
-  light: (params.get('light') || '330,50').split(',').map(Number),
+  light: (params.get('light') || '330,48').split(',').map(Number),
   // The sun's shadows (?shadows=0|1; default on computers, off on phones: one more render of the scene per frame)
   shadows: params.has('shadows') ? params.get('shadows') !== '0' : !mobile,
   // Tone mapping of the lit display (?tone=agx|aces|neutral|none, default AgX: natural highlights and shadows) and
@@ -395,7 +396,15 @@ function fitShadows() {
   if (!box.isEmpty()) box.getBoundingSphere(shadowArea)
   updateLights()
 }
+// The sky photo has its own sun (53 % of its light, within 5 degrees of it), at azimuth 55.7 and elevation 48 in its
+// unrotated frame (measured on public/hdri/sky.hdr: its brightest pixel, x 609 y 119 of 1024 x 512, through
+// three.js's equirectangular mapping). The sky is turned about the vertical so that its sun stands at our sun's
+// azimuth: one sun, the shadows and the sky's light and glints from the same side. Its elevation stays 48.
+const HDRI_SUN = { azimuth: 55.7, elevation: 48 }
 function updateLights() {
+  const turn = THREE.MathUtils.degToRad(look.light[0] - HDRI_SUN.azimuth)
+  scene.environmentRotation.set(0, turn, 0)
+  scene.backgroundRotation.set(0, turn, 0)
   const [azimuth, elevation] = look.light.map(THREE.MathUtils.degToRad)
   const direction = new THREE.Vector3(Math.cos(elevation) * Math.sin(azimuth), Math.sin(elevation), Math.cos(elevation) * Math.cos(azimuth))
   const r = shadowArea.radius
