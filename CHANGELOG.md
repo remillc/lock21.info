@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Augmented reality on Android: the button opens Scene Viewer through Google Play Services for AR
+  (`com.google.ar.core`, as `<model-viewer>`); through the Google app it no longer opened on a Pixel 10 Pro (the page
+  slid and came back). A failed launch is now logged (`ar-failed`).
 - 3D viewer: the green removal no longer leaves a blue-cyan tint (green capped at the blue turned water-green pixels
   cyan): the cyan left over is removed too, with its own slider « Retrait du cyan » (`?cyan=0..2`, default 1.5: a
   warm grey).
