@@ -48,12 +48,16 @@ p.add_argument("--prepared-root", default=r"O:\publishing\prepared", help="prepa
 p.add_argument("-q", "--quality", type=int, default=88, help="JPEG quality (default 88)")
 p.add_argument("-x", "--scale", type=float, default=1.0, help="model scale (default 1; 0.01 = 1:100, for augmented reality on a table)")
 p.add_argument("--usdz", action="store_true", help="also write <name>.usdz (AR Quick Look on iPhone and iPad)")
+p.add_argument("-O", "--origin", help="x,y,z of the Blender point that becomes the model's origin (default: the site anchor "
+               "at z 0). For the AR models: the Empty \"ar-origin\" of lock-21-publishing.blend, placed by Christian on the "
+               "visible floor, the point placed under the ring and the one the lock grows from")
 # Site anchor: the point of the Blender frame pinned to the lock's coordinates in Google Earth. It is the horizontal
 # centre of all the zones as of 2026-10-19 (zones 1, 2, 3, 4, 7, 8, 10, 11, 12, 13: x -64.34..6.24, y 2.68..40.72),
 # frozen so that zones added later keep their place instead of shifting the whole lock. z unchanged (z = 0 is the
 # lock's reference level).
 SITE_ANCHOR = (-29.05, 21.70)
 a = p.parse_args(script_args())
+ORIGIN = tuple(float(v) for v in a.origin.split(",")) if a.origin else (*SITE_ANCHOR, 0.0)
 os.makedirs(a.out, exist_ok=True)
 
 
@@ -197,13 +201,13 @@ for ob in context_obs:
     parts.append(dict(part=f"context: {ob.name}", triangles_before=before, triangles=after))
     log(f"context {ob.name}: {before:,} -> {after:,} triangles")
 
-# Site anchor at the origin, then the scale (--scale)
+# The origin (site anchor at z 0, or --origin), then the scale (--scale)
 for ob in bpy.data.objects:
     if ob.type == 'MESH':
         for v in ob.data.vertices:
-            v.co.x = (v.co.x - SITE_ANCHOR[0]) * a.scale
-            v.co.y = (v.co.y - SITE_ANCHOR[1]) * a.scale
-            v.co.z *= a.scale
+            v.co.x = (v.co.x - ORIGIN[0]) * a.scale
+            v.co.y = (v.co.y - ORIGIN[1]) * a.scale
+            v.co.z = (v.co.z - ORIGIN[2]) * a.scale
         # Copyright on every object: exported as USD properties (userProperties:lock21:...) in the USDZ
         ob["lock21:copyright"] = copyright_line()
         ob["lock21:source"] = "https://lock21.info/modele"
@@ -229,6 +233,6 @@ bpy.ops.wm.obj_export(filepath=obj, export_selected_objects=True, forward_axis='
                       export_uv=True, export_materials=True, path_mode='STRIP', export_triangulated_mesh=True)
 
 info = dict(triangles=sum(p["triangles"] for p in parts), budget=a.triangles, texture_px=a.size,
-            site_anchor=SITE_ANCHOR, glb_mb=round(os.path.getsize(glb) / 1e6, 1), parts=parts)
+            site_anchor=SITE_ANCHOR, origin=ORIGIN, glb_mb=round(os.path.getsize(glb) / 1e6, 1), parts=parts)
 json.dump(info, open(os.path.join(a.out, f"{a.name}.json"), "w", encoding="utf-8"), indent=2)
 log(f"{info['triangles']:,} triangles, GLB {info['glb_mb']} MB -> {a.out}")
