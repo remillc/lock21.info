@@ -179,6 +179,17 @@ avec Wrangler (réglages dans `wrangler.jsonc`, en-têtes de cache dans `public/
 (page d'accueil du compte, **Account ID**). Rien à faire sur un nouvel ordinateur: ces valeurs ne sont pas dans
 `.env.local`. Pour essayer en local: `npm run build`, puis `npx wrangler dev` (le site tel que Cloudflare le sert).
 
+**Journal du visualiseur.** Le visualiseur 3D envoie un court journal de chaque visite (appareil, temps de chargement,
+erreurs, fin de visite anormale, réalité augmentée) à `/api/log`, que le script `worker/index.js` écrit dans les
+**Workers Logs** de Cloudflare (gardés quelques jours). Pour le lire:
+
+- en direct, pendant un essai: `npx wrangler tail lock21-info` (tout), ou `--search K7Q2` pour une seule visite: le
+  code de la visite est en bas des réglages ⚙ du visualiseur;
+- après coup: tableau de bord Cloudflare › **Workers & Pages** › `lock21-info` › **Logs** (recherche par champ: `t`
+  pour le type de message, `s` pour le code de visite).
+
+`wrangler tail` demande d'être connecté à Cloudflare une première fois (`npx wrangler login`).
+
 ## 8. Vérifier que tout fonctionne
 
 ```powershell

@@ -33,6 +33,21 @@ de l'accepter à nouveau.
 Le visualiseur 3D garde vos réglages (éclairage, couleurs, etc.), et le site votre refus de la mesure s'il y a lieu,
 dans le stockage local de votre navigateur. Ces informations ne quittent pas votre appareil et ne sont pas des témoins.
 
+## Journal technique du visualiseur 3D
+
+Le visualiseur 3D envoie au site un court journal technique de chaque visite, pour trouver et corriger ce qui ne
+fonctionne pas sur certains appareils (par exemple un iPhone qui manque de mémoire). Il contient:
+
+- l'appareil tel que le navigateur le décrit: navigateur et système, taille de l'écran, carte graphique, mémoire;
+- le temps de chargement du modèle, la mémoire utilisée, la durée de la visite;
+- les erreurs rencontrées, et l'usage du bouton de réalité augmentée;
+- le pays, déduit par l'hébergeur.
+
+Il ne contient ni votre nom, ni votre adresse IP, ni témoin. Chaque visite reçoit un code au hasard (affiché en bas des
+réglages ⚙ du visualiseur), qui ne permet pas de vous reconnaître d'une visite à l'autre. Pour repérer une visite qui
+s'est mal terminée, le visualiseur garde ce code dans le stockage de l'onglet le temps de la visite. Le journal est
+conservé quelques jours chez Cloudflare, puis effacé. Il ne sert à rien d'autre.
+
 ## Hébergement
 
 Le site, le modèle 3D et les téléchargements sont hébergés par Cloudflare. Comme tout serveur web, il

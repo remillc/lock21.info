@@ -332,6 +332,11 @@ l21-settings-panel[hidden] {
   font-size: 12px;
   color: #a3a893;
 }
+/* Telemetry session code (telemetry.js): read out by a tester to find their visit in the logs */
+.settings-session {
+  margin-top: 12px;
+  font-family: ui-monospace, monospace;
+}
 
 .settings-actions {
   display: flex;

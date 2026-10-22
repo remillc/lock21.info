@@ -33,6 +33,21 @@ you accept it again.
 The 3D viewer keeps your settings (lighting, colours, etc.), and the site keeps your opt-out if you made one,
 in your browser's local storage. This information doesn't leave your device and isn't a cookie.
 
+## 3D viewer technical log
+
+The 3D viewer sends the site a short technical log of each visit, to find and fix what doesn't work on some devices
+(for example an iPhone running out of memory). It contains:
+
+- the device as the browser describes it: browser and system, screen size, graphics card, memory;
+- the model's loading time, the memory used, the length of the visit;
+- the errors encountered, and the use of the augmented reality button;
+- the country, inferred by the host.
+
+It holds neither your name, nor your IP address, nor a cookie. Each visit gets a random code (shown at the bottom of
+the viewer's ⚙ settings), which can't recognise you from one visit to the next. To spot a visit that ended badly, the
+viewer keeps that code in the tab's storage for the length of the visit. The log is kept a few days at Cloudflare,
+then deleted. It is used for nothing else.
+
 ## Hosting
 
 The site, the 3D model and the downloads are hosted by Cloudflare. Like any web server, it
