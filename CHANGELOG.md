@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Terrain (`lock-21-publishing.blend`, not online yet): the north bank east of zone 7 starts under its stairs and has a
+  straight foot (y 26.5 in the height field), crest unchanged; around the zones the ground meets each zone's edge
+  height, so the floor beside the lock chamber (zones 2 to 4) is level with theirs (it stood 0.3 to 0.5 m higher).
 - 3D viewer: new defaults, tint neutralisation 0.2 (was 0.3), green removal 0.8 (was 1) and the sky as background
   (`?sky=0` for the plain backdrop); the tiles' source and the relief are no longer in the settings panel (`?tiles=` and
   `?relief=` still work in a link, for tests; values saved earlier for them are ignored).
