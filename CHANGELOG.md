@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+## 0.7.0 - 2026-10-22
+
 - Speed (PageSpeed, mobile): Google Analytics loads on the first interaction or 4 s after the page; the fonts at the
   top of the pages are preloaded; a fallback font with Archivo's proportions (Arial, adjusted) removes the home
   panel's layout shift.
@@ -23,8 +25,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   address (`<branch>-lock21-info.lock21.workers.dev`). `public/CNAME` and the `gh-pages` branch are gone.
   Built files with hashed names (`/_astro/`, the viewer's assets) are cached for a year (`public/_headers`).
 - Page addresses without a final slash (`/modele`, `/collecte/materiel-utilise`, the viewer at `/modele/viewer`): a
-  page is a resource, not a folder. The two home pages are collections and keep it: `/` and `/en/`. The old addresses with a slash redirect to the new ones. Links, canonical
-  addresses, the sitemap and search results follow.
+  page is a resource, not a folder. The two home pages are collections and keep it: `/` and `/en/`. The old addresses
+  with a slash redirect to the new ones. Links, canonical addresses, the sitemap and search results follow.
+- Wide screens: the "Modèle 3D" button no longer shows at the top of the navigation column (it is in the header).
 - Home page render: no more light patch at the bottom right (slanted sunlight slipped past the surface's edge into
   the water volume).
 
