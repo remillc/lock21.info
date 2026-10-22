@@ -41,7 +41,7 @@ export function settingsSchema({ mobile }) {
       items: [
         { key: 'hdri', label: 'Éclairage par le ciel', type: 'toggle', def: '1' },
         { key: 'hdriIntensity', label: 'Force du ciel', type: 'range', min: 0, max: 3, step: 0.05, def: '1' },
-        { key: 'sky', label: 'Ciel en arrière-plan', type: 'toggle', def: '0' },
+        { key: 'sky', label: 'Ciel en arrière-plan', type: 'toggle', def: '1' },
         { key: 'wet', label: 'Aspect mouillé', hint: 'zones seulement: reflets du ciel, couleurs plus saturées', type: 'range', min: 0, max: 1, step: 0.05, def: '0.15', dependsOn: 'hdri' },
       ],
     },

@@ -138,7 +138,8 @@ const look = {
   // Sky lighting (default; ?hdri=0 = the unlit display used before), see skyMaterial
   sky: params.get('hdri') !== '0',
   skyIntensity: params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : 1,
-  skyBackground: params.get('sky') === '1',
+  // The sky as background: on by default (?sky=0: the plain backdrop)
+  skyBackground: (params.get('sky') ?? '1') === '1',
   // Colour balance between zones (?neutral=0..1), see colorBalance
   neutral: params.has('neutral') ? Number(params.get('neutral')) : 0.2,
   // Relief from the zones' normal maps (?relief=1 default, 0 = without), the sun test (?relief=sun, with
