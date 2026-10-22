@@ -15,6 +15,7 @@ const en = lang === 'en'
 const zones = await zonesOnline()
 const excerpts = latestWithNotes(3, lang)
 const journal = localPath('/collecte/journal-des-plongees', lang)
+const about = localPath('/about', lang)
 const viewer = localPath(site.viewer, lang)
 // The render's point of view in the viewer (?cam=x,y,z,tx,ty,tz: metres, y up; Blender's x, z, -y): zone 12 from the
 // west, 10 ft above the floor, as in the image
@@ -37,6 +38,10 @@ const t = en
       online: 'ZONES ONLINE',
       latest: 'LATEST',
       alt: 'Render of the 3D model of zone 12 seen from the west, sunlight rays falling through the water: masonry pier, spillway sluice gates and walkway, covered in zebra mussels',
+      aboutTitle: 'What this site is for',
+      about:
+        "Lock 21 has been underwater since 1958, at Dickinson Landing, one of the Lost Villages of the St. Lawrence. I set out to digitize the whole structure in 3D, zone by zone, with photogrammetry. This site is the field notebook: it shows the lock to people who don't dive, helps divers plan their dives, and documents the method so others can do it elsewhere.",
+      aboutMore: 'About the project →',
       start: 'Where to start',
       startSub: 'Three ways in, depending on what brings you here.',
       excerptsTitle: 'From the dive log',
@@ -58,6 +63,10 @@ const t = en
       online: 'ZONES EN LIGNE',
       latest: 'DERNIÈRE',
       alt: "Rendu du modèle 3D de la zone 12 vu de l'ouest, des rayons de soleil traversant l'eau: pilier de maçonnerie, vannes du déversoir et passerelle, couverts de moules zébrées",
+      aboutTitle: 'À quoi sert ce site',
+      about:
+        "L'écluse 21 est sous l'eau depuis 1958, à Dickinson Landing, un des villages engloutis du Saint-Laurent. J'ai eu le projet de numériser toute la structure en 3D, zone par zone, par photogrammétrie. Ce site en est le carnet de terrain: il montre l'écluse à ceux qui ne plongent pas, aide les plongeurs à préparer leur plongée et documente la méthode pour que d'autres la refassent ailleurs.",
+      aboutMore: 'À propos du projet →',
       start: 'Par où commencer',
       startSub: "Trois portes d'entrée, selon ce qui vous amène.",
       excerptsTitle: 'Extraits du journal',
@@ -122,6 +131,12 @@ const entries = (
       <Image src={render} alt={t.alt} widths={[640, 960, 1280]} sizes="(min-width: 75rem) 1100px, 100vw" />
       <span class="chip">ZONE 12 · 13 M FACES · TEX 12 464 PX</span>
     </a>
+
+    <section class="block">
+      <h2>{t.aboutTitle}</h2>
+      <p class="about">{t.about}</p>
+      <a class="more" href={about} data-astro-prefetch="viewport">{t.aboutMore}</a>
+    </section>
 
     <section class="block">
       <h2>{t.start}</h2>
@@ -362,6 +377,12 @@ const entries = (
   .sub {
     margin: 0.25rem 0 1.25rem;
     color: var(--md-sys-color-on-surface-variant);
+  }
+  .about {
+    max-width: 48rem;
+    margin: 0.75rem 0 0.75rem;
+    font-size: 1.125rem;
+    line-height: 1.6;
   }
 
   .cards {
