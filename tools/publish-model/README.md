@@ -2,7 +2,7 @@
 
 Chaîne de traitement qui transforme les modèles photogrammétriques de chaque zone en **tuiles 3D** (OGC 3D Tiles 1.1) affichées par le visualiseur du site, [lock21.info/modele](https://lock21.info/modele) (projet `viewer/`).
 
-> **État:** 11 zones en ligne (1, 2, 3, 4, 7, 8, 10, 11, 12, 13, 18) et le contexte (terrain, remplissages). Relief (carte des normales) et aspect mouillé: en ligne pour toutes les zones (2026-10-21). Atténuation des lampes: en essai sur la zone 12. Ce document décrit ce qui existe et le restera à mesure que la chaîne évolue.
+> **État:** 12 zones en ligne (1, 2, 3, 4, 7, 8, 10, 11, 12, 13, 16, 18; la 16 depuis le 2026-10-22) et le contexte (terrain, remplissages). Relief (carte des normales) et aspect mouillé: en ligne pour toutes les zones (2026-10-21). Atténuation des lampes: en essai sur la zone 12. Ce document décrit ce qui existe et le restera à mesure que la chaîne évolue.
 
 ## Principes
 

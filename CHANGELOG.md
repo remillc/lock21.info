@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Zone 16 online (a spillway gate door on the floor south of the chamber, 69 tiles, 17 MB with its relief); zone 4
+  republished (its cutting changed), with the context.
 - Context: the walls' vertical faces were black in the viewer. Their UV map (the plan projected from above) gave them no
   room in the baked texture; `export_context.py` now bakes such objects into their own unwrapped UV map, colour only
   (the viewer lights them).
