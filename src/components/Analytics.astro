@@ -1,6 +1,6 @@
 ---
 // Google Analytics 4, for every visit, with its cookies (no consent banner since 2026-10-21, at Christian's request).
-// Included in every page's <head> by Head.astro. Without an ID (src/data/site.ts, analytics.ga4) nothing is loaded.
+// Included in every page's <head> by Head.astro. Without an ID (src/data/site.js, analytics.ga4) nothing is loaded.
 // - Refusing (Québec's Loi 25: Google Analytics uses cookies): the privacy page's button (<l21-analytics-optout>,
 //   AnalyticsOptOut.astro) keeps the choice in localStorage ('l21-consent': denied, or granted to accept again).
 //   Nothing is loaded for a visitor who refused, including those who refused in the former banner.
@@ -29,13 +29,16 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
 }
 
 <script>
-  const id = document.querySelector<HTMLMetaElement>('meta[name="lock21-ga4"]')?.content
+  const id = /** @type {HTMLMetaElement | null} */ (document.querySelector('meta[name="lock21-ga4"]'))?.content
   const KEY = 'l21-consent'
 
-  type Gtag = (...args: unknown[]) => void
-  const w = window as unknown as { dataLayer: unknown[]; gtag?: Gtag; lock21Landing?: string; lock21Analytics?: boolean }
+  /** @typedef {(...args: unknown[]) => void} Gtag */
+  const w = /** @type {{ dataLayer: unknown[], gtag?: Gtag, lock21Landing?: string, lock21Analytics?: boolean }} */ (
+    /** @type {unknown} */ (window)
+  )
 
-  function choice(): string | null {
+  /** @returns {string | null} */
+  function choice() {
     try {
       return localStorage.getItem(KEY)
     } catch {
@@ -93,7 +96,11 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
     else window.addEventListener('load', arm, { once: true })
   }
 
-  function track(name: string, params: Record<string, string>) {
+  /**
+   * @param {string} name
+   * @param {Record<string, string>} params
+   */
+  function track(name, params) {
     if (loaded && w.gtag) w.gtag('event', name, params)
   }
 
@@ -102,7 +109,7 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
     if (choice() !== 'denied') loadSoon()
     // Measurement refused or accepted again from the privacy page
     document.addEventListener('l21-consent', (event) => {
-      const granted = (event as CustomEvent<string>).detail === 'granted'
+      const granted = /** @type {CustomEvent<string>} */ (event).detail === 'granted'
       if (granted) load()
       else if (loaded && w.gtag) w.gtag('consent', 'update', { analytics_storage: 'denied' })
     })
@@ -113,7 +120,9 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
     })
     // Downloads
     document.addEventListener('click', (event) => {
-      const link = (event.target as Element | null)?.closest?.<HTMLAnchorElement>('a[data-track-download]')
+      const link = /** @type {HTMLAnchorElement | null | undefined} */ (
+        /** @type {Element | null} */ (event.target)?.closest?.('a[data-track-download]')
+      )
       if (!link) return
       const url = new URL(link.href, location.href)
       const file = url.pathname.split('/').pop() ?? ''

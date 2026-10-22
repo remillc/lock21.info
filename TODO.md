@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#46**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#49**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -10,7 +10,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 ### Viewer
 
 - [ ] #1 If phones struggle: lower the texture resolution of the coarse levels
-- [ ] #2 Test on an iPhone (Safari memory limit; Wi-Fi with `?tiles=http://<PC IP>:8081`, or Safari Web Inspector from a Mac)
 - [ ] #3 Choose default ambient occlusion settings (radius, intensity) after viewing close up
 - [ ] #4 Initial camera and navigation (what the visitor sees first)
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
@@ -35,7 +34,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 ### Documentation
 
 - [ ] #17 Add a workflow page to the site (`6. publication.md`) once the pipeline is stable
-- [ ] #18 Rename the "zone N" Blender materials (`Material_0.00x`, `Empty.00x`) consistently
 
 ### Relief, wet look and lamp bands (relief and wet look on every zone since 2026-10-19)
 
@@ -68,6 +66,14 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #39 Design: applied (tokens, fonts, header and footer bars, home page, logo, tables); to do: a history page for the "L'histoire" entry (it points to the zone map for now), the 3D viewer in the same
   palette and fonts, check contrast (WCAG AA) in both themes
 - [ ] #31 Underwater look for the viewer: set aside on branch `feature/underwater-look`
+- [ ] #46 « Ambiance sous-marine » option for the 3D model, in the viewer's settings (on/off): the lock as seen
+  underwater (water colour and haze with distance, softer light from above); start from #31's branch
+  - « Visibilité » slider over the four seasons, each with its visibility: winter 100' (30 m), spring 10' (3 m),
+    summer 20' (6 m), autumn 30' (9 m)
+- [ ] #47 Idea: a walk mode in the viewer (first-person, eye height above the floor, walking through the lock instead of
+  orbiting around it)
+- [ ] #48 Idea: a guided tour in the viewer (a sequence of views with a short text each). Stops noted so far:
+  - zone 16, the spillway gate door on the floor: `?cam=-18.54,1.28,8.53,-17.08,-0.65,10.34`
 
 ## Other
 

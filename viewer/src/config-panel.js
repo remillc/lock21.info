@@ -39,18 +39,15 @@ export function settingsSchema({ mobile }) {
     {
       title: 'Éclairage',
       items: [
-        { key: 'hdri', label: 'Éclairage par le ciel', type: 'toggle', def: '1' },
-        { key: 'hdriIntensity', label: 'Force du ciel', type: 'range', min: 0, max: 3, step: 0.05, def: '1' },
+        { key: 'hdri', label: 'Éclairage (ciel et soleil)', hint: 'éteint: les textures telles quelles', type: 'toggle', def: '1' },
+        { key: 'hdriIntensity', label: 'Force du ciel', hint: 'lumière diffuse, de partout', type: 'range', min: 0, max: 2, step: 0.05, def: '0.35', dependsOn: 'hdri' },
+        { key: 'sunIntensity', label: 'Force du soleil', hint: 'lumière directe, qui fait ressortir le relief', type: 'range', min: 0, max: 3, step: 0.05, def: '1', dependsOn: 'hdri' },
+        { key: 'light', label: 'Soleil (azimut, hauteur)', hint: 'azimut 0 = du sud, 90 = de l’est', type: 'angles', def: '110,65', ranges: [[0, 360, 5], [0, 90, 5]], unit: '°', dependsOn: 'hdri' },
+        { key: 'shadows', label: 'Ombres du soleil', type: 'toggle', def: mobile ? '0' : '1', dependsOn: 'hdri' },
+        { key: 'exposure', label: 'Exposition', type: 'range', min: 0.25, max: 3, step: 0.05, def: '1.2', dependsOn: 'hdri' },
+        { key: 'saturation', label: 'Saturation', hint: '1 = celle des textures, 0 = gris', type: 'range', min: 0, max: 2, step: 0.05, def: '0.8', dependsOn: 'hdri' },
         { key: 'sky', label: 'Ciel en arrière-plan', type: 'toggle', def: '1' },
-        { key: 'wet', label: 'Aspect mouillé', hint: 'zones seulement: reflets du ciel, couleurs plus saturées', type: 'range', min: 0, max: 1, step: 0.05, def: '0.15', dependsOn: 'hdri' },
-      ],
-    },
-    {
-      title: 'Couleurs',
-      items: [
-        { key: 'neutral', label: 'Neutralisation de la teinte', hint: "0 = teinte jaune-vert de l'eau gardée, 1 = gris neutre", type: 'range', min: 0, max: 1, step: 0.05, def: '0.2' },
-        { key: 'despill', label: 'Retrait du vert', hint: 'retire le vert dominant pixel par pixel (algues, reflets)', type: 'range', min: 0, max: 1, step: 0.05, def: '0.8' },
-        { key: 'cyan', label: 'Retrait du cyan', hint: 'retire le cyan laissé par le retrait du vert (0 = aucun, 1 = jusqu’au gris, 2 = au-delà)', type: 'range', min: 0, max: 2, step: 0.1, def: '1.5' },
+        { key: 'wet', label: 'Aspect mouillé', hint: 'zones seulement: reflets du ciel, couleurs plus saturées', type: 'range', min: 0, max: 1, step: 0.05, def: '0.1', dependsOn: 'hdri' },
       ],
     },
     {
@@ -68,8 +65,7 @@ export function settingsSchema({ mobile }) {
         { key: 'profile', label: 'Profil', type: 'select', def: '', options: [['', 'automatique'], ['desktop', 'ordinateur'], ['mobile', 'téléphone']] },
         { key: 'stats', label: 'Statistiques (mémoire, tuiles)', type: 'toggle', def: '0' },
         { key: 'aoDebug', label: 'Occlusion seule', type: 'toggle', def: '0', dependsOn: 'ao' },
-        { key: 'light', label: 'Soleil (azimut, hauteur)', type: 'angles', def: '135,45', ranges: [[0, 360, 5], [0, 90, 5]], unit: '°', dependsOn: ['relief', 'sun'] },
-        { key: 'shade', label: 'Part de lumière directe', type: 'range', min: 0, max: 1, step: 0.05, def: '0.6', dependsOn: ['relief', 'sun'] },
+        { key: 'tone', label: 'Rendu des tons', type: 'select', def: 'neutral', options: [['neutral', 'Khronos neutre'], ['agx', 'AgX'], ['aces', 'ACES'], ['none', 'aucun']], dependsOn: 'hdri' },
       ],
     },
   ]

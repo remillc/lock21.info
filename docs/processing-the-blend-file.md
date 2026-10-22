@@ -168,9 +168,11 @@ tools\google-earth\.venv\Scripts\python.exe tools\google-earth\make_kmz.py -d O:
 
 ```powershell
 Remove-Item -Recurse -Force O:\publishing\downloads\google-earth\ar -ErrorAction SilentlyContinue
-& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*"
-& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar-full -t 400000 -s 2048 -x 1 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*"
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*" --origin=-20.100,11.063,0.842 --rebake zone-3
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar-full -t 400000 -s 2048 -x 1 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*" --origin=-20.100,11.063,0.842 --rebake zone-3
 ```
+
+`--origin` place l'origine des modèles sur le plancher du sas, `--rebake zone-3` recuit la texture de la zone 3 (guide **Réalité augmentée**). Ensuite, changer `AR_VERSION` dans `viewer/src/main.js` (par exemple la date): sans cela, les téléphones gardent l'ancien modèle en cache.
 
 **5. Rassembler ce qui part en ligne** dans `O:\publishing\downloads\online\`:
 

@@ -4,6 +4,10 @@
 - Matériaux procéduraux (rampes de couleur, bruit, relief Bump: le terrain): si l'objet a une propriété
   `baked_texture` (image cuite dans Blender par bake_context_in_blender.py), elle est utilisée; sinon le rendu
   Cycles sous l'éclairage de la scène est cuit ici, dans une texture par objet (glTF ne transporte pas ces nœuds).
+  Si la carte UV de l'objet laisse des faces sans surface (murs: le plan projeté de dessus, faces verticales réduites
+  à des lignes), la cuisson se fait dans une nouvelle carte UV dépliée (Smart UV Project), la seule exportée; le
+  matériau lit toujours ses images par la carte d'origine. Sans cela, ces faces sortaient noires. Ces objets sont cuits
+  en couleur seule (le visualiseur les éclaire): sous les lumières de la scène, leurs faces verticales étaient sombres.
 - Autres matériaux: la première image est branchée directement sur la couleur; sans image, la couleur de base.
 - Images réduites à --max-texture px de côté (multiple de 4).
 - Coordonnées du monde de la scène (mètres), glTF Y vers le haut: même repère que les tuiles.
@@ -15,9 +19,11 @@ Usage:
     blender -b <fichier.blend> --factory-startup --python export_context.py -- <dossier de sortie> [-t 4096] [-s 4096]
 """
 import json
+import math
 import os
 import sys
 
+import bmesh
 import bpy
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -44,6 +50,40 @@ bake_size = a.bake_size
 
 def procedural(material):
     return material and material.node_tree and any(n.type not in SIMPLE_NODES for n in material.node_tree.nodes)
+
+
+def flat_uv_share(ob):
+    """Part de la surface de l'objet dont les faces n'ont pas de surface dans sa carte UV de rendu."""
+    layer = next((u for u in ob.data.uv_layers if u.active_render), None)
+    if layer is None:
+        return 1.0
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    uv = bm.loops.layers.uv[layer.name]
+    total = flat = 0.0
+    for f in bm.faces:
+        area = f.calc_area()
+        pts = [l[uv].uv for l in f.loops]
+        uv_area = abs(sum(pts[i].x * pts[i - 1].y - pts[i - 1].x * pts[i].y for i in range(len(pts)))) / 2
+        total += area
+        if uv_area < 1e-9:
+            flat += area
+    bm.free()
+    return flat / total if total else 0.0
+
+
+def bake_uv(ob):
+    """Nouvelle carte UV dépliée, active pour la cuisson; la carte de rendu (lue par le matériau) ne change pas."""
+    me = ob.data
+    layer = me.uv_layers.new(name="context-bake")
+    me.uv_layers.active = layer
+    bpy.context.view_layer.objects.active = ob
+    for o in bpy.context.view_layer.objects:
+        o.select_set(o is ob)
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.uv.smart_project(angle_limit=math.radians(66), island_margin=0.003)
+    bpy.ops.object.mode_set(mode='OBJECT')
 
 
 def setup_cycles_gpu(scene, samples):
@@ -73,7 +113,14 @@ for ob in objects:
 to_bake = [o for o in objects if o.name not in baked and any(procedural(sl.material) for sl in o.material_slots)]
 if to_bake:
     setup_cycles_gpu(bpy.context.scene, 128)
+own_uv = set()  # objets cuits dans leur propre carte UV (bake_uv): seule carte exportée
 for ob in to_bake:
+    share = flat_uv_share(ob)
+    if share > 0.01:
+        bake_uv(ob)
+        own_uv.add(ob.name)
+        print(f"[context] {ob.name}: {share * 100:.0f} % de la surface sans place dans la carte UV, cuit dans une carte "
+              "dépliée", flush=True)
     image = bpy.data.images.new(f"context-bake-{ob.name}", bake_size, bake_size)
     for slot in ob.material_slots:
         if slot.material is None:
@@ -90,8 +137,11 @@ for ob in to_bake:
         # zones) projettent leurs ombres dans la texture
         o.hide_render = not (o is ob or o.type == 'LIGHT')
     bpy.context.view_layer.objects.active = ob
-    # Couleur + éclairage direct et indirect: le relief (Bump) n'est visible que sous la lumière
-    bpy.ops.object.bake(type='DIFFUSE', pass_filter={'COLOR', 'DIRECT', 'INDIRECT'}, margin=16)
+    # Couleur + éclairage direct et indirect: le relief (Bump) n'est visible que sous la lumière. Sauf pour les objets
+    # cuits dans leur propre carte UV (murs): la couleur seule, le visualiseur les éclaire (soleil et ciel); sous les
+    # lumières de la scène, venues d'en haut, leurs faces verticales sortaient presque noires
+    passes = {'COLOR'} if ob.name in own_uv else {'COLOR', 'DIRECT', 'INDIRECT'}
+    bpy.ops.object.bake(type='DIFFUSE', pass_filter=passes, margin=16)
     baked[ob.name] = image
     print(f"[context] cuit: {ob.name} ({bake_size}x{bake_size})", flush=True)
 
@@ -99,6 +149,10 @@ for ob in to_bake:
 clean = {}
 for ob in objects:
     if ob.name in baked:
+        if ob.name in own_uv:
+            for layer in [u for u in ob.data.uv_layers if u.name != "context-bake"]:
+                ob.data.uv_layers.remove(layer)
+            ob.data.uv_layers["context-bake"].active_render = True
         mat = bpy.data.materials.new(f"context-{ob.name}")
         mat.use_nodes = True
         tex = mat.node_tree.nodes.new("ShaderNodeTexImage")

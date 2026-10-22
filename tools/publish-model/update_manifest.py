@@ -6,6 +6,8 @@ Usage:
 `tileset`: tuiles 3D (tileset.json); `model`: modèle .glb non tuilé (contexte: fillers, terrain).
 `--color R G B`: couleur moyenne de la texture en lumière linéaire (texture_stats.mjs), d'où le visualiseur tire
 l'équilibre des couleurs de la zone. Sans --color, la couleur déjà inscrite pour cet id est conservée.
+`added`: date de la première mise en ligne de l'id (inscrite à sa première inscription, gardée ensuite); la page
+d'accueil en tire la dernière zone ajoutée. Les zones publiées avant 2026-10-22 n'en ont pas: plus anciennes.
 """
 import json
 import os
@@ -28,13 +30,16 @@ path = os.path.join(root, "manifest.json")
 manifest = json.load(open(path, encoding="utf-8")) if os.path.exists(path) else {"version": 1, "tilesets": []}
 old = next((t for t in manifest.get(key, []) if t["id"] == tileset_id), {})
 entries = [t for t in manifest.get(key, []) if t["id"] != tileset_id]
-entry = {"id": tileset_id, "url": url}
+now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+entry = {"id": tileset_id, "url": url, "added": old.get("added") or (now if not old else None)}
+if not entry["added"]:
+    del entry["added"]
 color = a.color or old.get("color")
 if color:
     entry["color"] = [round(c, 5) for c in color]
 entries.append(entry)
 manifest[key] = sorted(entries, key=lambda t: t["id"])
-manifest["updated"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+manifest["updated"] = now
 with open(path, "w", encoding="utf-8") as f:
     json.dump(manifest, f, ensure_ascii=False, indent=2)
 print(f"manifeste: {tileset_id} -> {url}")

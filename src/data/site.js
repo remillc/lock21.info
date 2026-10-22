@@ -1,5 +1,5 @@
 // Facts about the site used across the pages (docs/system-design.md). Values that change with the work (dives, zones online)
-// are computed at build time instead: see src/lib/diveLog.ts and src/lib/manifest.ts.
+// are computed at build time instead: see src/lib/diveLog.js and src/lib/manifest.js.
 export const site = {
   bottomDepthFt: 60, // canal floor: 60 ft (SOS Ottawa, 1989: lock floor and base of the approach cribs; docs/sos-ottawa-files.md)
   bottomDepthM: 18.3,
@@ -24,7 +24,7 @@ export const site = {
     kmz: '/downloads/lock-21.kmz',
     kmzTriangles: '600 000',
     glb: 'https://tiles.lock21.info/downloads/lock-21.glb',
-    glbSize: '114 Mo',
+    glbSize: '122 Mo',
     glbTriangles: '2 millions',
   },
 }

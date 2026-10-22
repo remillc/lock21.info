@@ -2,8 +2,29 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
-## Unreleased
+## 0.8.0 - 2026-10-22
 
+- Zone 16 online (a spillway gate door on the floor south of the chamber, 69 tiles, 17 MB with its relief); zone 4
+  republished (its cutting changed), with the context.
+- Context: the walls' vertical faces were black in the viewer. Their UV map (the plan projected from above) gave them no
+  room in the baked texture; `export_context.py` now bakes such objects into their own unwrapped UV map, colour only
+  (the viewer lights them).
+- 3D viewer: new start view (`START_VIEW`), close to the lock floor, chosen by Christian on 2026-10-22.
+- The site's last TypeScript (`src/lib/*.ts`, `src/data/site.ts`, `src/content.config.ts`, types in `.astro` files)
+  converted to plain JavaScript, types kept as JSDoc annotations: no TypeScript in the project.
+- Home page: « Dernière zone » is the zone added last, not the zone republished last (a retouched zone took its
+  place); the manifest now records each zone's first publication (`added`, `update_manifest.py`).
+- Tested on an iPhone (2026-10-22, iOS 18.7, Safari, Apple GPU, textures up to 16,384 px), through the telemetry: the
+  3D model loads in the `/modele` page in about 14 s (2 s on a second visit), no error, no lost WebGL context.
+- 3D viewer settings: the colour settings (« Neutralisation de la teinte », « Retrait du vert », « Retrait du cyan »)
+  are removed from the panel; their defaults stay (0.2, 0.8, 1.5), and a link can still set them.
+- 3D viewer: the sun casts shadows (« Ombres du soleil », on by default on computers), tone mapping Khronos neutral
+  (keeps the textures' hues and saturation; AgX greyed them) with an « Exposition » slider (default 1.2; wet look lowered to 0.1), the method
+  under Avancé (Khronos neutral, AgX, ACES, none).
+- 3D viewer lighting: the sky and the sun together, each with its slider (« Force du ciel », « Force du soleil »,
+  plus the sun's direction), realistic defaults (sun 1, sky 0.35, sun from the east-south-east at 65°, « Saturation » slider at 0.8); the sky turns with the sun so that
+  the sky photo's own sun stands where ours is (one sun, shadows and glints from the same side); the former sun test
+  (`?relief=sun`, `?shade=`) is removed.
 - Pointer cursor on every action widget, on the site and in the 3D viewer (a global rule without specificity in
   `custom.scss` and `viewer/src/style.css`; `not-allowed` when disabled).
 - Android AR: the AR model downloads in the background once the 3D view has finished loading (about 30 MB,
