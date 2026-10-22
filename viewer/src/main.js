@@ -192,8 +192,9 @@ const look = {
   // Lighting (default; ?hdri=0 = the unlit display used before): the sky (diffuse, ?hdriIntensity=) and the sun
   // (direct, ?sunIntensity=, from ?light=azimuth,elevation), each with its slider. Realistic defaults, as on a clear
   // day (direct sun about 75-85 % of the light, the sky the rest): sun 1 (a surface facing it shows its texture's own
-  // brightness), sky 0.35; the sun in the south-west, 48 degrees up (early afternoon at Dickinson Landing; 48 is the
-  // sky photo's own sun, see HDRI_SUN)
+  // brightness), sky 0.35; the sun from the east-south-east, 65 degrees up (late morning in summer at Dickinson
+  // Landing; Christian's choice, 2026-10-22). The sky photo's own sun stays 48 degrees up (HDRI_SUN): only its
+  // azimuth follows ours
   sky: params.get('hdri') !== '0',
   skyIntensity: params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : 0.35,
   sunIntensity: params.has('sunIntensity') ? Number(params.get('sunIntensity')) : 1,
@@ -205,7 +206,7 @@ const look = {
   // (?relief=debug); wet look (?wet=0..1). The sun's direction: azimuth (0 = from the south, 90 = from the east),
   // elevation, in degrees
   relief: ['0', 'debug'].includes(params.get('relief')) ? params.get('relief') : '1',
-  light: (params.get('light') || '330,48').split(',').map(Number),
+  light: (params.get('light') || '110,65').split(',').map(Number),
   // The sun's shadows (?shadows=0|1; default on computers, off on phones: one more render of the scene per frame)
   shadows: params.has('shadows') ? params.get('shadows') !== '0' : !mobile,
   // Tone mapping of the lit display (?tone=agx|aces|neutral|none) and its exposure (?exposure=). Default Khronos
@@ -215,6 +216,9 @@ const look = {
   tone: ['agx', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'neutral',
   exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.2,
   wet: wetness(params.has('wet') ? params.get('wet') : 0.1),
+  // Saturation of the lit surfaces (?saturation=0..2, 1 = the textures' own; default 0.9: lit by the sun, the colours
+  // looked a little too saturated). Link only, not in the panel
+  saturation: params.has('saturation') ? Math.min(Math.max(Number(params.get('saturation')) || 0, 0), 2) : 0.9,
 }
 function wetness(v) {
   return Math.min(Math.max(Number(v) || 0, 0), 1)
@@ -344,6 +348,10 @@ function litMaterial(surface, mesh, normalMap, sky) {
       : new THREE.MeshLambertMaterial(options)
   material.onBeforeCompile = (shader) => {
     if (surface.zoneId) addDespill(shader)
+    if (look.saturation !== 1) {
+      shader.fragmentShader = shader.fragmentShader.replace('#include <color_fragment>', `#include <color_fragment>
+        diffuseColor.rgb = mix(vec3(dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722))), diffuseColor.rgb, ${look.saturation.toFixed(3)});`)
+    }
     if (wet > 0) {
       shader.fragmentShader = shader.fragmentShader
         // Wet colours: darker and more saturated
@@ -375,7 +383,7 @@ function litMaterial(surface, mesh, normalMap, sky) {
   }
   // The patches depend on these values (the wetness is written into the shader): one compiled program per
   // combination (three.js would otherwise reuse the first one, its cache key being the function's source)
-  material.customProgramCacheKey = () => `lit-${sky}-${Boolean(normalMap)}-${Boolean(surface.zoneId)}-${wet.toFixed(3)}`
+  material.customProgramCacheKey = () => `lit-${sky}-${Boolean(normalMap)}-${Boolean(surface.zoneId)}-${wet.toFixed(3)}-${look.saturation.toFixed(3)}`
   return material
 }
 

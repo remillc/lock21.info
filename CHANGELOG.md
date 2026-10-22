@@ -10,7 +10,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   (keeps the textures' hues and saturation; AgX greyed them) with an « Exposition » slider (default 1.2; wet look lowered to 0.1), the method
   under Avancé (Khronos neutral, AgX, ACES, none).
 - 3D viewer lighting: the sky and the sun together, each with its slider (« Force du ciel », « Force du soleil »,
-  plus the sun's direction), realistic defaults (sun 1, sky 0.35, sun in the south-west at 48°); the sky turns with the sun so that
+  plus the sun's direction), realistic defaults (sun 1, sky 0.35, sun from the east-south-east at 65°, saturation 0.9); the sky turns with the sun so that
   the sky photo's own sun stands where ours is (one sun, shadows and glints from the same side); the former sun test
   (`?relief=sun`, `?shade=`) is removed.
 - Pointer cursor on every action widget, on the site and in the 3D viewer (a global rule without specificity in
