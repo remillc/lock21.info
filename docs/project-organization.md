@@ -61,7 +61,7 @@ même version. Ne pas changer de branche pendant qu'un outil lit le `.blend`, ni
 | Service | Rôle | Adresse |
 | --- | --- | --- |
 | **GitHub** | le code (dépôt `remillc/lock21.info`) et la publication (action **Deploy**, qui envoie le site à Cloudflare) | <https://github.com/remillc/lock21.info> |
-| **Cloudflare** | l'hébergement du site (Worker `lock21-info`, fichiers statiques, domaine `lock21.info`), le nom de domaine `lock21.info`, l'adresse `info@lock21.info` (Email Routing: renvoyée vers la boîte Gmail de Christian), et le stockage R2 (bucket `lock21-tiles`): tuiles, téléchargements, réalité augmentée | <https://lock21.info/>, <https://tiles.lock21.info/> |
+| **Cloudflare** | l'hébergement du site (Worker `lock21-info`, fichiers statiques, domaine `lock21.info`) et le journal du visualiseur 3D (Workers Logs), le nom de domaine `lock21.info`, l'adresse `info@lock21.info` (Email Routing: renvoyée vers la boîte Gmail de Christian), et le stockage R2 (bucket `lock21-tiles`): tuiles, téléchargements, réalité augmentée | <https://lock21.info/>, <https://tiles.lock21.info/> |
 | **Google Analytics** | la mesure d'audience, avec témoins; les visiteurs peuvent la refuser sur la page Confidentialité (propriété `G-796S6VL5P8`) | <https://analytics.google.com/> |
 
 Les identifiants du stockage R2 sont dans `.env.local`, à la racine du projet, hors de Git (guide **Installation**,

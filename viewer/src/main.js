@@ -11,6 +11,7 @@ import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js'
 import { TilesRenderer } from '3d-tiles-renderer'
 import { savedSettings, settingsSchema } from './config-panel.js'
 import './loading.js'
+import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
 import { N8AOPass } from 'n8ao'
 
 // Every query parameter is read once here, then changed live by the settings panel (config-panel.js): no setting
@@ -74,6 +75,7 @@ if (arLink.relList?.supports?.('ar')) {
 }
 // Analytics: the page that embeds the viewer counts the AR launches (src/components/Analytics.astro, after consent)
 arLink.addEventListener('click', () => {
+  log('ar', { size: arFull ? 'full' : 'table', kind: arLink.relList?.supports?.('ar') ? 'quicklook' : 'sceneviewer' })
   if (window.self !== window.top) window.parent.postMessage({ type: 'lock21:ar', size: arFull ? 'full' : 'table' }, location.origin)
 })
 
@@ -94,6 +96,8 @@ const renderer = new THREE.WebGLRenderer({ antialias: true })
 renderer.setPixelRatio(profile.pixelRatio)
 renderer.setSize(container.clientWidth, container.clientHeight)
 container.appendChild(renderer.domElement)
+// Telemetry for every visit (telemetry.js): device, errors, load time, end of the visit
+startTelemetry({ renderer, mobile, embedded })
 
 // The view a visit starts from without ?cam= (same form: x,y,z of the camera, then of the point it looks at; scene
 // metres, y up), chosen by Christian on 2026-10-22. To change it, place the camera where wanted and copy the numbers
@@ -465,6 +469,7 @@ async function loadModel() {
     tiles.setCamera(camera)
     tiles.setResolutionFromRenderer(camera, renderer)
 
+    tiles.addEventListener('load-error', ({ error, url }) => log('tile-error', { zone: entry.id, url: String(url ?? '').slice(-200), ...errorText(error) }))
     tiles.addEventListener('load-model', ({ scene: model }) => {
       model.traverse((child) => {
         if (child.isMesh) initSurface(child, entry.id)
@@ -536,6 +541,7 @@ function unloadModel() {
 }
 
 function showError(error) {
+  log('load-failed', errorText(error))
   status.showError(error.message)
   console.error(error)
 }
@@ -621,6 +627,7 @@ settings.configure({
   values: params,
   live,
   button: document.querySelector('.settings-button'),
+  session,
 })
 document.body.append(settings)
 
@@ -639,9 +646,34 @@ function updateLoading() {
   // once nothing has been pending for 800 ms in a row
   if (!rootsLoaded || pending > 0) idleSince = 0
   else if (!idleSince) idleSince = performance.now()
-  else if (performance.now() - idleSince > 800) status.done()
+  else if (performance.now() - idleSince > 800) {
+    status.done()
+    // Telemetry: the first full load of the visit (time since the page started, tiles, memory)
+    if (!loadLogged) {
+      loadLogged = true
+      log('loaded', tileFacts())
+    }
+  }
+  const cache = tilesets[0]?.lruCache
+  if (!cacheFullLogged && cache?.isFull()) {
+    cacheFullLogged = true
+    log('cache-full', tileFacts())
+  }
 }
 let idleSince = 0
+let loadLogged = false
+let cacheFullLogged = false
+// Tiles loaded and memory used, all zones together (telemetry)
+function tileFacts() {
+  const cache = tilesets[0]?.lruCache
+  return {
+    tiles: tilesets.reduce((n, t) => n + t.stats.loaded, 0),
+    cacheMB: Math.round((cache?.cachedBytes || 0) / 1e6),
+    maxMB: Math.round(profile.maxBytes / 1e6),
+    zones: tilesets.length,
+  }
+}
+setEndFacts(tileFacts)
 
 renderer.setAnimationLoop(() => {
   updateStats()

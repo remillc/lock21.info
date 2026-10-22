@@ -77,8 +77,10 @@ export function settingsSchema({ mobile }) {
 }
 
 class SettingsPanel extends HTMLElement {
-  configure({ schema, values, live, button }) {
+  configure({ schema, values, live, button, session }) {
     this.schema = schema
+    // Telemetry session code (telemetry.js), shown at the bottom so that a tester can read it out
+    this.session = session
     // Current values (URLSearchParams); a setting at its default is absent
     this.params = new URLSearchParams(values)
     this.live = live
@@ -174,6 +176,12 @@ class SettingsPanel extends HTMLElement {
     })
     actions.append(reset)
     this.append(actions)
+    if (this.session) {
+      const code = document.createElement('p')
+      code.className = 'settings-hint settings-session'
+      code.textContent = `Session ${this.session}`
+      this.append(code)
+    }
     this.showDependents(false)
   }
 }

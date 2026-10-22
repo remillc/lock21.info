@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer telemetry, for every visit: device, load time, errors, WebGL context lost, a visit that never closed
+  (Safari's reload on low memory), AR launches. Sent to `/api/log` (the Worker), kept in Cloudflare's Workers Logs;
+  a random session code at the bottom of the settings panel finds one visit. Described on the privacy page.
 - New colours, « Moss » (olive), in place of the navy: bars, pages, links, logo, favicon, the zone diagram and the 3D
   viewer's buttons and plain background (`src/styles/tokens.scss`, SYSTEM-DESIGN.md).
 - 3D viewer: a visit without `?cam=` starts from a chosen view (`START_VIEW` in `viewer/src/main.js`) instead of a
