@@ -1,4 +1,4 @@
-// Design tokens (SYSTEM-DESIGN.md): the Moss palette (2026-10-22, in place of E2's navy) organised as Material Design 3
+// Design tokens (docs/system-design.md): the Moss palette (2026-10-22, in place of E2's navy) organised as Material Design 3
 // roles, then mapped onto the custom properties Starlight reads. Dark is Starlight's default theme (:root); light is :root[data-theme='light'].
 
 :root {
@@ -35,7 +35,7 @@
   --md-sys-shape-extra-large: 28px;
   --md-sys-shape-full: 999px;
 
-  // MD3 motion (material-web md.sys.motion; SYSTEM-DESIGN.md, Motion)
+  // MD3 motion (material-web md.sys.motion; docs/system-design.md, Motion)
   --md-sys-motion-duration-short4: 200ms;
   --md-sys-motion-duration-medium4: 400ms;
   --md-sys-motion-duration-long1: 450ms;

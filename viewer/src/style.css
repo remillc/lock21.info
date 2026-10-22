@@ -8,6 +8,20 @@ body {
   overflow: hidden;
 }
 
+/* Pointer cursor on every action widget (docs/system-design.md, Spacing and interaction): links, buttons, selects,
+   toggles, sliders, and the elements given an action role; not-allowed when disabled. In :where(), so without
+   specificity: a widget that sets its own cursor (text fields, image zoom) keeps it */
+:where(a[href], button, select, summary, label[for], label:has(input[type='checkbox'], input[type='radio']),
+  input[type='checkbox'], input[type='radio'], input[type='range'], input[type='button'], input[type='submit'],
+  input[type='reset'], input[type='color'], input[type='file'], [role='button'], [role='slider'], [role='tab'],
+  [role='switch'], [role='menuitem'], [role='option'], [role='checkbox'], [role='radio']) {
+  cursor: pointer;
+}
+:where(button, select, input, [role='button'], [role='slider'], [role='tab'], [role='switch']):is(:disabled, [aria-disabled='true']) {
+  cursor: not-allowed;
+}
+
+
 #viewer {
   position: fixed;
   inset: 0;
@@ -130,46 +144,79 @@ l21-loading.error .loading-bar {
   display: none;
 }
 
-.fullscreen {
+/* MD3 icon buttons (docs/system-design.md, Buttons): filled tonal, 40 dp container in a 48 dp touch target (8 dp apart),
+   Material Symbols icons at 24 dp, state layers (hover 8 %, focus and pressed 10 %), focus ring. Over the 3D view the
+   container is the Moss palette's tonal colour, slightly see-through */
+.icon-button {
   position: fixed;
-  right: max(12px, env(safe-area-inset-right));
-  bottom: max(12px, env(safe-area-inset-bottom));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
   border: 0;
-  border-radius: 12px;
-  background: rgb(18 20 14 / 70%);
+  border-radius: 999px;
+  background: rgb(60 66 50 / 92%);
   color: #e3e6d8;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
-
-.fullscreen:hover {
-  background: rgb(18 20 14 / 90%);
-}
-
-/* Augmented reality (main.js): left of the full-screen button, same look */
-.ar-button {
-  position: fixed;
-  right: calc(max(12px, env(safe-area-inset-right)) + 52px);
-  bottom: max(12px, env(safe-area-inset-bottom));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: rgb(18 20 14 / 70%);
-}
-
-.ar-button:hover {
-  background: rgb(18 20 14 / 90%);
-}
-
-.ar-button[hidden] {
+.icon-button[hidden] {
   display: none;
+}
+/* 48 dp touch target */
+.icon-button::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+}
+/* State layer */
+.icon-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 200ms;
+}
+.icon-button:hover::after {
+  opacity: 0.08;
+}
+.icon-button:focus-visible::after,
+.icon-button:active::after {
+  opacity: 0.1;
+}
+.icon-button:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: 2px;
+}
+.icon-button img,
+.icon-button svg {
+  display: block;
+}
+/* Selected (toggle): the settings button while its panel is open */
+.icon-button[aria-expanded='true'] {
+  background: #b8c97a;
+  color: #12140e;
+}
+
+/* Positions: 16 dp from the edges (the touch target 12), 8 dp between the touch targets */
+.fullscreen {
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+}
+.fullscreen .icon-exit,
+.fullscreen[data-full='true'] .icon-enter {
+  display: none;
+}
+.fullscreen[data-full='true'] .icon-exit {
+  display: block;
+}
+/* Augmented reality (main.js): left of the full-screen button */
+.ar-button {
+  right: calc(max(16px, env(safe-area-inset-right)) + 56px);
+  bottom: max(16px, env(safe-area-inset-bottom));
 }
 
 .stats {
@@ -192,24 +239,8 @@ l21-loading.error .loading-bar {
 
 /* Settings (config-panel.js): ⚙ button top right, <l21-settings-panel> over the model */
 .settings-button {
-  position: fixed;
-  top: max(12px, env(safe-area-inset-top));
-  right: max(12px, env(safe-area-inset-right));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border: 0;
-  border-radius: 12px;
-  background: rgb(18 20 14 / 70%);
-  color: #e3e6d8;
-  cursor: pointer;
-}
-
-.settings-button:hover,
-.settings-button[aria-expanded="true"] {
-  background: rgb(18 20 14 / 90%);
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
 }
 
 l21-settings-panel {
@@ -354,4 +385,171 @@ l21-settings-panel[hidden] {
   background: #1f231a;
   color: inherit;
   cursor: pointer;
+}
+
+/* Augmented reality on Android (android-ar.js, WebXR): the AR canvas, and the overlay Chrome shows over the camera
+   (title and close button at the top; status and size slider at the bottom), in the viewer's colours */
+.xr-canvas {
+  position: fixed;
+  inset: 0;
+}
+.xr-overlay {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  color: #f2f3ea;
+  font-family: system-ui, sans-serif;
+}
+/* The controls' frame: the screen, or a quarter turn of it when the phone is held sideways (android-ar.js,
+   trackTurn: Chrome keeps the screen's orientation during AR) */
+.xr-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transform: translate(-50%, -50%);
+  transition: transform 200ms ease;
+}
+.xr-overlay[data-turn='90'] .xr-frame,
+.xr-overlay[data-turn='-90'] .xr-frame {
+  width: 100vh;
+  height: 100vw;
+}
+.xr-overlay[data-turn='90'] .xr-frame {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.xr-overlay[data-turn='-90'] .xr-frame {
+  transform: translate(-50%, -50%) rotate(-90deg);
+}
+.xr-overlay-head,
+.xr-overlay-foot {
+  pointer-events: auto;
+  background: rgb(18 20 14 / 72%);
+}
+.xr-overlay-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 8px 8px 16px;
+}
+.xr-overlay-title {
+  font-weight: 700;
+}
+/* MD3 filled tonal icon button: 40 dp container in a 48 dp touch target, Material Symbols "close" (24 dp), state layer
+   on press, focus ring */
+.xr-overlay-close {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #3c4232;
+  color: #f2f3ea;
+  cursor: pointer;
+}
+.xr-overlay-close::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+}
+.xr-overlay-close::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 200ms;
+}
+.xr-overlay-close:active::after {
+  opacity: 0.1;
+}
+.xr-overlay-close:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: 2px;
+}
+.xr-overlay-foot {
+  padding: 12px 16px calc(16px + env(safe-area-inset-bottom));
+}
+.xr-overlay-status {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+.xr-overlay-scale {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+/* The size slider (android-ar.js, createSlider), MD3-like: 4 dp track, active part and 20 dp thumb in the signal
+   colour, 48 dp of touch height; --value (0..1) set by the code */
+.xr-slider {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  touch-action: none;
+  cursor: pointer;
+}
+.xr-slider:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+.xr-slider-track {
+  position: relative;
+  flex: 1;
+  height: 4px;
+  margin: 0 10px;
+  border-radius: 2px;
+  background: rgb(242 243 234 / 35%);
+}
+.xr-slider-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--value, 0) * 100%);
+  border-radius: inherit;
+  background: #f28c28;
+}
+.xr-slider-thumb {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--value, 0) * 100%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #f28c28;
+  transform: translate(-50%, -50%);
+}
+.xr-overlay-scale output {
+  min-width: 3.5em;
+  text-align: right;
+  font-family: ui-monospace, monospace;
+}
+/* Side insets (notch, rounded corners) in both orientations */
+.xr-overlay-head {
+  padding-left: calc(16px + env(safe-area-inset-left));
+  padding-right: calc(8px + env(safe-area-inset-right));
+}
+.xr-overlay-foot {
+  padding-left: calc(16px + env(safe-area-inset-left));
+  padding-right: calc(16px + env(safe-area-inset-right));
+}
+/* Landscape (phone held sideways, or a landscape screen): the status and the slider in a compact card at the bottom
+   right (within the thumb's reach), the rest of the camera view left clear */
+.xr-overlay[data-layout='landscape'] .xr-overlay-foot {
+  align-self: flex-end;
+  width: min(340px, 45%);
+  margin: 0 12px 12px 0;
+  padding: 12px 16px;
+  border-radius: 16px;
 }

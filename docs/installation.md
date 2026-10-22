@@ -96,7 +96,7 @@ Pour Google Earth seulement, un petit environnement Python à part, avec deux bi
 
 ```powershell
 python -m venv tools\google-earth\.venv
-tools\google-earth\.venv\Scripts\python -m pip install pycollada==0.9.2 numpy
+tools\google-earth\.venv\Scripts\python -m pip install pycollada==0.9.2 numpy xatlas==0.0.10
 ```
 
 Ces dossiers (`node_modules`, `.venv`) ne vont jamais dans Git.

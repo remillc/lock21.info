@@ -32,7 +32,7 @@ Le détail des étapes: le guide **Traiter le fichier .blend**.
 | `modeles\` | Les fichiers Blender, stockés avec Git LFS: `lock-21-publishing.blend` (le fichier de travail de la publication) et `lock-21-mockup.blend` (la maquette) |
 | `docs\` | Les guides pour les personnes: celui-ci, **Installation**, **Traiter le fichier .blend**, **Réalité augmentée**, **Documents de SOS Ottawa** (`sos-ottawa-files.md`, résumé des documents numérisés de `docs\sos-files\`) |
 | `AGENTS.md` | Les consignes pour les assistants d'IA (Claude) qui travaillent dans le projet |
-| `GUIDELINES.md`, `SYSTEM-DESIGN.md` | Les règles du code du site, et le design (couleurs, typographie, mouvement) |
+| `GUIDELINES.md`, `docs/system-design.md` | Les règles du code du site, et le design (couleurs, typographie, mouvement) |
 | `TODO.md` | Ce qui reste à faire, numéroté |
 | `CHANGELOG.md` | Ce qui a changé, version par version |
 

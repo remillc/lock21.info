@@ -1,4 +1,4 @@
-// Global styles on top of Starlight (SYSTEM-DESIGN.md, GUIDELINES.md). Colours, fonts and radii come from tokens.scss.
+// Global styles on top of Starlight (docs/system-design.md, GUIDELINES.md). Colours, fonts and radii come from tokens.scss.
 
 // --- Type: Archivo for text and titles (800 for headings), JetBrains Mono for data
 
@@ -35,6 +35,19 @@ h1#_top {
   ascent-override: 84.5%;
   descent-override: 20.2%;
   line-gap-override: 0%;
+}
+
+// Pointer cursor on every action widget (docs/system-design.md, Spacing and interaction): links, buttons, selects,
+// toggles, sliders, and the elements given an action role; not-allowed when disabled. In :where(), so without
+// specificity: a widget that sets its own cursor (text fields, image zoom) keeps it
+:where(a[href], button, select, summary, label[for], label:has(input[type='checkbox'], input[type='radio']),
+  input[type='checkbox'], input[type='radio'], input[type='range'], input[type='button'], input[type='submit'],
+  input[type='reset'], input[type='color'], input[type='file'], [role='button'], [role='slider'], [role='tab'],
+  [role='switch'], [role='menuitem'], [role='option'], [role='checkbox'], [role='radio']) {
+  cursor: pointer;
+}
+:where(button, select, input, [role='button'], [role='slider'], [role='tab'], [role='switch']):is(:disabled, [aria-disabled='true']) {
+  cursor: not-allowed;
 }
 
 // --- Header bar and footer bar: dark olive in both themes (MD3 inverse surface in light). Starlight's components in them

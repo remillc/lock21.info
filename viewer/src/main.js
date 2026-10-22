@@ -12,6 +12,7 @@ import { TilesRenderer } from '3d-tiles-renderer'
 import { savedSettings, settingsSchema } from './config-panel.js'
 import './loading.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
+import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
 
 // Every query parameter is read once here, then changed live by the settings panel (config-panel.js): no setting
@@ -44,41 +45,93 @@ if (document.fullscreenEnabled) {
   })
   document.addEventListener('fullscreenchange', () => {
     fullscreenButton.setAttribute('aria-label', document.fullscreenElement ? 'Quitter le plein écran' : 'Plein écran')
+    fullscreenButton.dataset.full = String(Boolean(document.fullscreenElement))
   })
 }
 
-// Augmented reality: the whole lock on a table, at 1:100 (70 cm), from the viewer's button. No library: each phone's
-// own AR viewer, with the same model (tools/google-earth/make_model.py -x 0.01, on R2 under downloads/ar/):
+// Augmented reality: the whole lock on a table, at 1:100 (70 cm), from the viewer's button, with the same model
+// (tools/google-earth/make_model.py -x 0.01, on R2 under downloads/ar/):
 // - iPhone and iPad: AR Quick Look opens a USDZ from a link with rel="ar" (Safari only);
-// - Android: Scene Viewer (Google), through an intent link with the GLB; without ARCore it shows the model in 3D.
-// The button stays hidden elsewhere (computers, other browsers). Opened at the top of the page, out of the /modele/
-// iframe. To check on a real phone: AR can't be tested on a computer.
-// The AR files are always the online ones, in development too: Scene Viewer doesn't load a model from the local network
-// (tested on a Pixel, 2026-10-21: the phone never asked for the file)
+// - Android: a panel with Google's <model-viewer> (android-ar.js, loaded on the tap), whose button starts WebXR in
+//   Chrome, Scene Viewer otherwise. A direct Scene Viewer link no longer opened on a Pixel 10 Pro (2026-10-22).
+// The button stays hidden elsewhere (computers, other browsers). To check on a real phone: AR can't be tested on a
+// computer. The AR files are always the online ones, in development too: Scene Viewer doesn't load a model from the
+// local network (tested on a Pixel, 2026-10-21: the phone never asked for the file)
 const AR_URL = import.meta.env.VITE_AR_URL || 'https://tiles.lock21.info/downloads/ar'
+// Version of the AR files, in their address: the server and the phones keep them an hour, so a rebuild (same names)
+// would otherwise show up late. Change it after each upload of rebuilt AR files (docs/augmented-reality.md)
+const AR_VERSION = '2026-10-22-zone3-two-pass'
 // ?ar=full: the lock at its real size (70 m) instead of on a table (the /modele/ page's "Taille réelle" QR code and link)
 const arFull = params.get('ar') === 'full'
 const arName = arFull ? 'lock-21-ar-full' : 'lock-21-ar'
 const arLink = document.querySelector('.ar-button')
+// Run once the 3D view has finished its first load (updateLoading): the AR model's background download waits for it
+const afterFirstLoad = []
 if (arFull) arLink.title = 'Voir en réalité augmentée (taille réelle)'
 if (arLink.relList?.supports?.('ar')) {
-  arLink.href = `${AR_URL}/${arName}.usdz`
+  arLink.href = `${AR_URL}/${arName}.usdz?v=${AR_VERSION}`
   arLink.hidden = false
 } else if (/Android/i.test(navigator.userAgent)) {
-  const glb = `${AR_URL}/${arName}.glb`
-  const title = arFull ? 'Écluse 21 · taille réelle' : 'Écluse 21 · 1:100'
+  // Scene Viewer: the link as Google's <model-viewer> builds it (scene-viewer/1.2, occlusion off, ARCore). The
+  // button's link until WebXR is known to work, and the fallback if the WebXR session can't open
+  const page = embedded ? window.top : window
+  const sceneParams = new URLSearchParams({ mode: 'ar_preferred', disable_occlusion: 'true', title: 'Écluse 21' })
+  if (arFull) sceneParams.set('resizable', 'false')
+  const sceneViewer = `intent://arvr.google.com/scene-viewer/1.2?${sceneParams}&file=${encodeURIComponent(`${AR_URL}/${arName}.glb?v=${AR_VERSION}`)}` +
+    '#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;' +
+    `S.browser_fallback_url=${encodeURIComponent(page.location.href.split('#')[0])};end;`
   arLink.removeAttribute('rel')
+  arLink.href = sceneViewer
   arLink.target = '_top'
-  // resizable=false for the real size: otherwise Scene Viewer shrinks a model too big for the view (179 x 143 m with the
-  // terrain) to fit it, and the "real size" isn't
-  arLink.href = `intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glb)}&mode=ar_preferred&resizable=${!arFull}` +
-    `&title=${encodeURIComponent(title)}#Intent;scheme=https;package=com.google.android.googlequicksearchbox;` +
-    `action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(location.href)};end;`
   arLink.hidden = false
+  // WebXR in Chrome (android-ar.js): one tap opens the camera, the 1:100 model loads meanwhile; its size slider goes
+  // up to 1:1 (?ar=full starts there)
+  let webxr = false
+  const arSrc = `${AR_URL}/lock-21-ar.glb?v=${AR_VERSION}`
+  // With WebXR, the AR model downloads in the background once the 3D view has finished loading (about 30 MB, kept in
+  // memory by android-ar.js): a tap on AR then only waits for its preparation
+  let viewLoaded = false
+  const preloadWhenReady = () => {
+    if (webxr && viewLoaded) preloadArModel(arSrc)
+  }
+  afterFirstLoad.push(() => {
+    viewLoaded = true
+    preloadWhenReady()
+  })
+  webxrArSupported().then((supported) => {
+    webxr = supported
+    arLink.dataset.mode = supported ? 'webxr' : 'sceneviewer'
+    preloadWhenReady()
+  })
+  arLink.addEventListener('click', (event) => {
+    if (!webxr) return
+    event.preventDefault()
+    startWebXrAr({
+      src: arSrc,
+      title: 'Écluse 21',
+      scale: arFull ? 100 : 1,
+      log,
+      // During AR the 3D view stops and gives back its tiles (up to 450 MB on a phone): with the AR model on top, the
+      // graphics memory ran short and the AR image froze at times. They load again, camera kept, when AR ends
+      onStart: () => {
+        renderer.setAnimationLoop(null)
+        unloadModel()
+        renderer.renderLists.dispose()
+      },
+      onEnd: () => {
+        loadModel().catch(showError)
+        needsRender = true
+        renderer.setAnimationLoop(renderLoop)
+      },
+      onFail: () => {
+        page.location.href = sceneViewer
+      },
+    })
+  })
 }
 // Analytics: the page that embeds the viewer counts the AR launches (src/components/Analytics.astro, after consent)
 arLink.addEventListener('click', () => {
-  log('ar', { size: arFull ? 'full' : 'table', kind: arLink.relList?.supports?.('ar') ? 'quicklook' : 'sceneviewer' })
+  log('ar', { size: arFull ? 'full' : 'table', kind: arLink.relList?.supports?.('ar') ? 'quicklook' : arLink.dataset.mode })
   if (window.self !== window.top) window.parent.postMessage({ type: 'lock21:ar', size: arFull ? 'full' : 'table' }, location.origin)
 })
 
@@ -665,6 +718,7 @@ function updateLoading() {
     if (!loadLogged) {
       loadLogged = true
       log('loaded', tileFacts())
+      for (const run of afterFirstLoad.splice(0)) run()
     }
   }
   const cache = tilesets[0]?.lruCache
@@ -688,7 +742,8 @@ function tileFacts() {
 }
 setEndFacts(tileFacts)
 
-renderer.setAnimationLoop(() => {
+// Paused while AR runs (android-ar.js has its own renderer)
+function renderLoop() {
   updateStats()
   // update() returns true while the camera moves (including the damping glide after a gesture)
   if (controls.update()) needsRender = true
@@ -700,6 +755,7 @@ renderer.setAnimationLoop(() => {
   tilesets.forEach((tiles) => tiles.update())
   if (ao.on && composer) composer.render()
   else renderer.render(scene, camera)
-})
+}
+renderer.setAnimationLoop(renderLoop)
 
 loadModel().catch(showError)

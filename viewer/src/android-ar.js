@@ -1,0 +1,353 @@
+// Augmented reality on Android, in Chrome (WebXR), with the viewer's own three.js: one tap on the AR button opens the
+// camera at once (Chrome allows an AR session only right after a tap), the AR model downloads meanwhile (progress in
+// an overlay), a ring follows the floor or a table (hit test), and a tap on the screen places the lock there (another
+// tap moves it). The "×" button or the phone's back button ends it.
+// Why not Scene Viewer, as before: on a Pixel 10 Pro (2026-10-22) it closed at once for every model, Google's samples
+// included and from any page. Why not Google's <model-viewer>: it downloads the whole model (26 MB) before asking for
+// the session, so the tap has expired and a second tap is needed. Scene Viewer stays the fallback where Chrome has no
+// WebXR AR (main.js).
+// The model is shown unlit (MeshBasicMaterial), as in the viewer: the photogrammetry textures already hold the light.
+// Telemetry: 'ar-status' messages (session-started, model-loaded, placed, ended, failed).
+import * as THREE from 'three'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+
+/** Whether Chrome can open a WebXR AR session here (checked once, before any tap) */
+export async function webxrArSupported() {
+  try {
+    return Boolean(await navigator.xr?.isSessionSupported('immersive-ar'))
+  } catch {
+    return false
+  }
+}
+
+// The AR model, downloaded once and kept in memory (an ArrayBuffer, about 30 MB): main.js starts it in the background
+// once the 3D view has finished loading, so that AR doesn't wait for it; AR starts it itself if it hasn't begun. The
+// download in progress is shared: { promise, loaded, total, done, listeners }. A failed download is forgotten, so the
+// next tap tries again.
+let preload = null
+export function preloadArModel(src) {
+  if (preload) return preload
+  const state = { loaded: 0, total: 0, done: false, listeners: new Set() }
+  state.promise = (async () => {
+    const response = await fetch(src)
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
+    state.total = Number(response.headers.get('content-length')) || 0
+    const reader = response.body.getReader()
+    const chunks = []
+    for (;;) {
+      const { done, value } = await reader.read()
+      if (done) break
+      chunks.push(value)
+      state.loaded += value.length
+      for (const listener of state.listeners) listener()
+    }
+    const buffer = new Uint8Array(state.loaded)
+    let offset = 0
+    for (const chunk of chunks) {
+      buffer.set(chunk, offset)
+      offset += chunk.length
+    }
+    state.done = true
+    return buffer.buffer
+  })()
+  state.promise.catch(() => {
+    if (preload === state) preload = null
+  })
+  preload = state
+  return state
+}
+
+/**
+ * Starts AR. Must be called straight from the tap's handler: the session is requested before anything else.
+ * src: the 1:100 model; scale: its starting enlargement (1 = 1:100 on a table, 100 = real size), changed live by the
+ * overlay's slider. onStart / onEnd pause and resume the 3D viewer; onFail(error) runs if the session can't open
+ * (Scene Viewer then).
+ */
+export function startWebXrAr({ src, title, scale = 1, log, onStart, onEnd, onFail }) {
+  const overlay = createOverlay(title, scale)
+  const sessionRequest = navigator.xr.requestSession('immersive-ar', {
+    requiredFeatures: ['hit-test'],
+    optionalFeatures: ['dom-overlay', 'local-floor'],
+    domOverlay: { root: overlay.root },
+  })
+  sessionRequest.then(
+    (session) => run({ session, overlay, src, scale, log, onStart, onEnd }),
+    (error) => {
+      overlay.root.remove()
+      log('ar-status', { status: 'failed', step: 'session', msg: String(error?.message ?? error).slice(0, 300) })
+      onFail(error)
+    },
+  )
+}
+
+// The slider runs from 1:100 to 1:1 on a log scale (value 0..1 -> enlargement 100^value), so that 1:50, 1:10 and 1:2
+// are as easy to reach as the ends
+const MAX_SCALE = 100
+const toScale = (value) => MAX_SCALE ** value
+const toValue = (scale) => Math.log(scale) / Math.log(MAX_SCALE)
+const ratio = (scale) => `1:${Math.max(1, Math.round(MAX_SCALE / scale))}`
+
+function createOverlay(title, scale) {
+  const root = document.createElement('div')
+  root.className = 'xr-overlay'
+  // .xr-frame holds the controls; it turns a quarter turn with the phone (see trackTurn)
+  root.innerHTML = `
+    <div class="xr-frame">
+      <div class="xr-overlay-head">
+        <span class="xr-overlay-title"></span>
+        <button type="button" class="xr-overlay-close" aria-label="Quitter la réalité augmentée"><svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></button>
+      </div>
+      <div class="xr-overlay-foot">
+        <p class="xr-overlay-status" role="status">Ouverture de la caméra…</p>
+        <div class="xr-overlay-scale">
+          <span>Taille</span>
+          <div class="xr-slider" role="slider" tabindex="0" aria-label="Taille de l’écluse, de 1:100 (sur une table) à 1:1 (taille réelle)" aria-valuemin="0" aria-valuemax="100">
+            <div class="xr-slider-track"><div class="xr-slider-fill"></div><div class="xr-slider-thumb"></div></div>
+          </div>
+          <output></output>
+        </div>
+      </div>
+    </div>`
+  root.dataset.turn = '0'
+  root.dataset.layout = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait'
+  root.querySelector('.xr-overlay-title').textContent = title
+
+  // Touches on the controls don't place the model: no WebXR "select" for them, and, as Chrome may still send one, the
+  // "select" handler ignores taps while a finger is on the controls and for half a second after (busy)
+  let pressed = 0
+  let busyUntil = 0
+  const busy = () => pressed > 0 || performance.now() < busyUntil
+  for (const control of root.querySelectorAll('.xr-overlay-head, .xr-overlay-foot')) {
+    control.addEventListener('beforexrselect', (event) => event.preventDefault())
+    control.addEventListener('pointerdown', () => { pressed++ }, true)
+  }
+  const release = () => {
+    pressed = Math.max(0, pressed - 1)
+    busyUntil = performance.now() + 500
+  }
+  root.addEventListener('pointerup', release, true)
+  root.addEventListener('pointercancel', release, true)
+
+  const slider = createSlider(root, toValue(scale))
+  document.body.append(root)
+  return { root, status: root.querySelector('.xr-overlay-status'), close: root.querySelector('.xr-overlay-close'), slider, busy }
+}
+
+// The size slider, drawn by the page: a native range input lost the drag in AR (Chrome hands the touch to the AR
+// session too) and when turned a quarter turn. It captures the finger and reads its position along its own direction,
+// whatever the turn of the controls (root.dataset.turn); arrows, Home and End work from a keyboard.
+function createSlider(root, value) {
+  const element = root.querySelector('.xr-slider')
+  const track = root.querySelector('.xr-slider-track')
+  const shown = root.querySelector('.xr-overlay-scale output')
+  const listeners = []
+  const set = (next, notify = true) => {
+    value = Math.min(1, Math.max(0, next))
+    track.style.setProperty('--value', String(value))
+    const scale = toScale(value)
+    shown.textContent = ratio(scale)
+    element.setAttribute('aria-valuenow', String(Math.round(value * 100)))
+    element.setAttribute('aria-valuetext', ratio(scale))
+    if (notify) for (const listener of listeners) listener(scale)
+  }
+  const fromPointer = (event) => {
+    const box = track.getBoundingClientRect()
+    const turn = Number(root.dataset.turn)
+    if (turn === 90) return (event.clientY - box.top) / box.height
+    if (turn === -90) return (box.bottom - event.clientY) / box.height
+    return (event.clientX - box.left) / box.width
+  }
+  element.addEventListener('pointerdown', (event) => {
+    event.preventDefault()
+    element.setPointerCapture(event.pointerId)
+    set(fromPointer(event))
+  })
+  element.addEventListener('pointermove', (event) => {
+    if (element.hasPointerCapture(event.pointerId)) set(fromPointer(event))
+  })
+  element.addEventListener('keydown', (event) => {
+    const step = { ArrowRight: 0.02, ArrowUp: 0.02, ArrowLeft: -0.02, ArrowDown: -0.02, Home: -1, End: 1 }[event.key]
+    if (step === undefined) return
+    event.preventDefault()
+    set(value + step)
+  })
+  set(value, false)
+  return { onInput: (listener) => listeners.push(listener) }
+}
+
+async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
+  log('ar-status', { status: 'session-started', overlay: Boolean(session.domOverlayState), scale })
+  onStart()
+  const say = (text) => {
+    overlay.status.textContent = text
+  }
+
+  // A renderer of its own, on a transparent canvas: the camera image shows behind
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+  renderer.setPixelRatio(window.devicePixelRatio)
+  renderer.setSize(window.innerWidth, window.innerHeight)
+  renderer.xr.enabled = true
+  renderer.domElement.className = 'xr-canvas'
+  document.body.append(renderer.domElement)
+  const scene = new THREE.Scene()
+  const camera = new THREE.PerspectiveCamera()
+
+  // The ring that follows the surfaces found by the hit test
+  const reticle = new THREE.Mesh(
+    new THREE.RingGeometry(0.06, 0.08, 40).rotateX(-Math.PI / 2),
+    new THREE.MeshBasicMaterial({ color: 0xf28c28 }),
+  )
+  reticle.matrixAutoUpdate = false
+  reticle.visible = false
+  scene.add(reticle)
+
+  let ended = false
+  const end = () => {
+    if (ended) return
+    ended = true
+    renderer.setAnimationLoop(null)
+    renderer.dispose()
+    renderer.domElement.remove()
+    overlay.root.remove()
+    onEnd()
+  }
+  session.addEventListener('end', () => {
+    log('ar-status', { status: 'ended' })
+    end()
+  })
+  overlay.close.addEventListener('click', () => session.end())
+
+  try {
+    renderer.xr.setReferenceSpaceType(session.enabledFeatures?.includes('local-floor') ? 'local-floor' : 'local')
+    await renderer.xr.setSession(session)
+  } catch (error) {
+    log('ar-status', { status: 'failed', step: 'renderer', msg: String(error?.message ?? error).slice(0, 300) })
+    session.end()
+    return
+  }
+  const viewerSpace = await session.requestReferenceSpace('viewer')
+  const hitSource = await session.requestHitTestSource({ space: viewerSpace })
+
+  // The model, downloaded while the camera is already on
+  let model = null
+  say('Chargement du modèle…')
+  // The model: downloaded in the background since the 3D view finished loading (preloadArModel, main.js), or now if
+  // not yet; the download in progress is shown, then the preparation (parsing, decoding the textures). Timing logged.
+  const started = performance.now()
+  const download = preloadArModel(src)
+  const wasReady = download.done
+  const progress = () => {
+    const mb = (download.loaded / 1e6).toFixed(1)
+    say(download.total
+      ? `Chargement du modèle… ${Math.round((download.loaded / download.total) * 100)} % (${mb} Mo)`
+      : `Chargement du modèle… ${mb} Mo`)
+  }
+  if (!wasReady) {
+    progress()
+    download.listeners.add(progress)
+  }
+  download.promise.then(
+    (buffer) => {
+      download.listeners.delete(progress)
+      const downloaded = performance.now()
+      say('Préparation du modèle…')
+      new GLTFLoader().parse(buffer, '', (gltf) => {
+        model = gltf.scene
+        model.traverse((child) => {
+          if (!child.isMesh) return
+          const old = child.material
+          child.material = new THREE.MeshBasicMaterial({ map: old.map ?? null, color: old.map ? 0xffffff : old.color, side: THREE.DoubleSide })
+          old.dispose()
+        })
+        // Placed and scaled from its own origin: a point on the lock chamber's floor (make_model.py --origin, see
+        // docs/augmented-reality.md). The floor stays on the real surface at every size, and the lock grows from that
+        // point without moving; at 1:1 the walls rise about 35 ft.
+        const holder = new THREE.Group()
+        holder.add(model)
+        holder.visible = false
+        holder.scale.setScalar(scale)
+        scene.add(holder)
+        model = holder
+        const prepared = performance.now()
+        const downloadS = (downloaded - started) / 1000
+        const prepareS = (prepared - downloaded) / 1000
+        const connection = navigator.connection
+        log('ar-status', {
+          status: 'model-loaded', preloaded: wasReady, mb: Math.round(download.loaded / 1e5) / 10,
+          waitS: Math.round(downloadS * 10) / 10, prepareS: Math.round(prepareS * 10) / 10,
+          net: connection?.effectiveType ?? null, downlinkMbps: connection?.downlink ?? null,
+        })
+        say(wasReady
+          ? `Modèle prêt (préparation ${prepareS.toFixed(1)} s).`
+          : `Modèle chargé: attente ${downloadS.toFixed(1)} s, préparation ${prepareS.toFixed(1)} s.`)
+        setTimeout(() => {
+          if (!placed) say('Pointez le téléphone vers le sol ou une table, puis touchez l’écran pour placer l’écluse.')
+        }, 3000)
+      }, (error) => {
+        say('Le modèle n’a pas pu être préparé.')
+        log('ar-status', { status: 'failed', step: 'parse', msg: String(error?.message ?? error).slice(0, 300) })
+      })
+    },
+    (error) => {
+      download.listeners.delete(progress)
+      say('Le modèle n’a pas pu être chargé.')
+      log('ar-status', { status: 'failed', step: 'model', msg: String(error?.message ?? error).slice(0, 300) })
+    },
+  )
+
+  // The size slider: 1:100 (on a table) to 1:1 (real size), applied live; the last size is logged when AR ends
+  overlay.slider.onInput((next) => {
+    scale = next
+    model?.scale.setScalar(scale)
+  })
+  session.addEventListener('end', () => log('ar-status', { status: 'last-size', ratio: ratio(scale) }))
+
+  // A tap on the screen places the model on the ring, turned to face the phone (not a touch on the controls)
+  let placed = false
+  session.addEventListener('select', () => {
+    if (!model || !reticle.visible || overlay.busy()) return
+    const position = new THREE.Vector3().setFromMatrixPosition(reticle.matrix)
+    model.position.copy(position)
+    const eye = new THREE.Vector3().setFromMatrixPosition(renderer.xr.getCamera().matrixWorld)
+    model.rotation.y = Math.atan2(eye.x - position.x, eye.z - position.z)
+    model.visible = true
+    if (!placed) {
+      placed = true
+      say('Touchez l’écran pour déplacer l’écluse.')
+      log('ar-status', { status: 'placed' })
+    }
+  })
+
+  renderer.setAnimationLoop((_time, frame) => {
+    if (!frame) return
+    const space = renderer.xr.getReferenceSpace()
+    const pose = frame.getHitTestResults(hitSource)[0]?.getPose(space)
+    reticle.visible = Boolean(pose)
+    if (pose) reticle.matrix.fromArray(pose.transform.matrix)
+    trackTurn(overlay.root, frame.getViewerPose(space))
+    renderer.render(scene, camera)
+  })
+}
+
+// Chrome keeps the screen in its starting orientation during an AR session: turning the phone doesn't rotate the
+// page. As camera apps do, the controls turn themselves: the world's up direction, seen from the phone (its viewer
+// pose), gives how the phone is held; held sideways (more than 60 degrees from the current position, so that it
+// doesn't flicker), the controls frame turns a quarter turn the other way and takes the landscape layout. Ignored while
+// the phone points almost straight down or up (the roll is then meaningless). Where the screen does rotate, the pose
+// follows the screen, and the controls stay as they are.
+const worldUp = new THREE.Vector3()
+const viewerTurn = new THREE.Quaternion()
+function trackTurn(root, viewerPose) {
+  if (!viewerPose) return
+  const o = viewerPose.transform.orientation
+  viewerTurn.set(o.x, o.y, o.z, o.w).invert()
+  worldUp.set(0, 1, 0).applyQuaternion(viewerTurn)
+  if (Math.hypot(worldUp.x, worldUp.y) < 0.5) return
+  const roll = THREE.MathUtils.radToDeg(Math.atan2(worldUp.x, worldUp.y))
+  const turn = Number(root.dataset.turn)
+  if (Math.abs(roll - turn) < 60) return
+  const next = Math.abs(roll) < 45 ? 0 : roll <= -45 && roll > -135 ? -90 : roll >= 45 && roll < 135 ? 90 : turn
+  if (next === turn) return
+  root.dataset.turn = String(next)
+  root.dataset.layout = next !== 0 || window.innerWidth > window.innerHeight ? 'landscape' : 'portrait'
+}

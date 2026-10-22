@@ -4,6 +4,28 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Pointer cursor on every action widget, on the site and in the 3D viewer (a global rule without specificity in
+  `custom.scss` and `viewer/src/style.css`; `not-allowed` when disabled).
+- Android AR: the AR model downloads in the background once the 3D view has finished loading (about 30 MB,
+  kept in memory), so a tap on AR only waits for its preparation.
+- AR models: their origin is a point on the lock chamber floor (`make_model.py --origin`, 4 m west of the
+  `ar-origin` Empty, at the floor's height, 0.84 m above the reference level), so the floor no longer rises when the
+  lock is enlarged in AR. Zone 3's texture is baked anew onto the simplified mesh with an xatlas UV layout
+  (`make_model.py --rebake`, `xatlas_uv.py`): simplified 1:20, its texture was scrambled. Baked in two passes (faces
+  flipped for the second), so faces turned inwards no longer stay black. During AR the 3D view
+  releases its tiles (the AR image froze at times).
+- `npm run downloads:upload` compares each file with R2's MD5 (ETag), not only its size: a rebuilt file of the same
+  size is sent. The viewer asks for the AR files with a version (`AR_VERSION`), so a rebuild shows at once.
+- 3D viewer buttons (settings, augmented reality, full screen) and the AR close button: MD3 filled tonal icon
+  buttons (40 dp in a 48 dp touch target, Material Symbols icons, state layers, focus ring). AR size slider drawn by
+  the page (follows the finger in AR, in any orientation); touches on the AR controls no longer move the model.
+- `SYSTEM-DESIGN.md` moved to `docs/system-design.md`, with a rule: buttons are always MD3-compliant.
+- Augmented reality on Android: AR inside Chrome (WebXR, `viewer/src/android-ar.js`, the viewer's three.js). One tap
+  opens the camera, the model loads meanwhile, a ring follows the floor or a table and a tap places the lock, its canal floor
+  on the surface; a « Taille » slider goes from 1:100 (on a table) to 1:1 (real size, walls about 35 ft high), the lock
+  growing from that point without moving. Scene Viewer, which no longer opened on a Pixel
+  10 Pro for any model or page, stays the fallback where Chrome has no WebXR AR. AR steps are logged (`ar-status`);
+  the `/modele` frame allows WebXR (`xr-spatial-tracking`).
 - 3D viewer: the green removal no longer leaves a blue-cyan tint (green capped at the blue turned water-green pixels
   cyan): the cyan left over is removed too, with its own slider « Retrait du cyan » (`?cyan=0..2`, default 1.5: a
   warm grey).
