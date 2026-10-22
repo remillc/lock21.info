@@ -58,13 +58,16 @@ if (document.fullscreenEnabled) {
 // computer. The AR files are always the online ones, in development too: Scene Viewer doesn't load a model from the
 // local network (tested on a Pixel, 2026-10-21: the phone never asked for the file)
 const AR_URL = import.meta.env.VITE_AR_URL || 'https://tiles.lock21.info/downloads/ar'
+// Version of the AR files, in their address: the server and the phones keep them an hour, so a rebuild (same names)
+// would otherwise show up late. Change it after each upload of rebuilt AR files (docs/augmented-reality.md)
+const AR_VERSION = '2026-10-22-ar-origin'
 // ?ar=full: the lock at its real size (70 m) instead of on a table (the /modele/ page's "Taille réelle" QR code and link)
 const arFull = params.get('ar') === 'full'
 const arName = arFull ? 'lock-21-ar-full' : 'lock-21-ar'
 const arLink = document.querySelector('.ar-button')
 if (arFull) arLink.title = 'Voir en réalité augmentée (taille réelle)'
 if (arLink.relList?.supports?.('ar')) {
-  arLink.href = `${AR_URL}/${arName}.usdz`
+  arLink.href = `${AR_URL}/${arName}.usdz?v=${AR_VERSION}`
   arLink.hidden = false
 } else if (/Android/i.test(navigator.userAgent)) {
   // Scene Viewer: the link as Google's <model-viewer> builds it (scene-viewer/1.2, occlusion off, ARCore). The
@@ -72,7 +75,7 @@ if (arLink.relList?.supports?.('ar')) {
   const page = embedded ? window.top : window
   const sceneParams = new URLSearchParams({ mode: 'ar_preferred', disable_occlusion: 'true', title: 'Écluse 21' })
   if (arFull) sceneParams.set('resizable', 'false')
-  const sceneViewer = `intent://arvr.google.com/scene-viewer/1.2?${sceneParams}&file=${encodeURIComponent(`${AR_URL}/${arName}.glb`)}` +
+  const sceneViewer = `intent://arvr.google.com/scene-viewer/1.2?${sceneParams}&file=${encodeURIComponent(`${AR_URL}/${arName}.glb?v=${AR_VERSION}`)}` +
     '#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;' +
     `S.browser_fallback_url=${encodeURIComponent(page.location.href.split('#')[0])};end;`
   arLink.removeAttribute('rel')
@@ -90,7 +93,7 @@ if (arLink.relList?.supports?.('ar')) {
     if (!webxr) return
     event.preventDefault()
     startWebXrAr({
-      src: `${AR_URL}/lock-21-ar.glb`,
+      src: `${AR_URL}/lock-21-ar.glb?v=${AR_VERSION}`,
       title: 'Écluse 21',
       scale: arFull ? 100 : 1,
       log,

@@ -1,8 +1,10 @@
 // Synchronises the downloads (O:\publishing\downloads\online) with downloads/ in the Cloudflare R2 bucket, served at
 // https://tiles.lock21.info/downloads/ and linked from the /modele/ page.
 //
-// - Every local file is uploaded, except unchanged ones (same size) and parts already online (their name carries a
-//   hash of the content: same name, same part).
+// - Every local file is uploaded, except unchanged ones and parts already online (their name carries a hash of the
+//   content: same name, same part). Unchanged: same size and same MD5 as R2's ETag (files sent in one piece, as this
+//   script sends them); a file of the same size but different content is sent (2026-10-22: the AR model rebuilt with
+//   another origin kept its exact size and was skipped when only sizes were compared).
 // - google-earth/parts/*.kmz (one per zone and piece of context, the name carries a hash of the content, see
 //   tools/google-earth/make_kmz.py --network): one-year cache. google-earth/lock-21.kml, the list of parts read by
 //   the downloaded KMZ: 5-minute cache, so an added zone shows up quickly. Other files: one-hour cache.
@@ -11,6 +13,7 @@
 //
 // Usage: node upload_downloads.mjs [-n|--dry-run] [--no-prune] [-r|--root O:\publishing\downloads\online]
 //        node upload_downloads.mjs -h | --help
+import { createHash } from 'node:crypto'
 import { readdir, readFile, stat } from 'node:fs/promises'
 import { dirname, join, relative, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -60,12 +63,16 @@ async function* files(dir) {
   }
 }
 
-// What is online now (key -> size)
+// What is online now (key -> size and ETag)
 const remote = new Map()
+const etags = new Map()
 let token
 do {
   const page = await s3.send(new ListObjectsV2Command({ Bucket: bucket, Prefix: PREFIX, ContinuationToken: token }))
-  for (const object of page.Contents || []) remote.set(object.Key, object.Size)
+  for (const object of page.Contents || []) {
+    remote.set(object.Key, object.Size)
+    etags.set(object.Key, (object.ETag || '').replaceAll('"', ''))
+  }
   token = page.IsTruncated ? page.NextContinuationToken : undefined
 } while (token)
 
@@ -77,7 +84,13 @@ let sent = 0
 let bytes = 0
 for (const { path, key } of local) {
   const size = (await stat(path)).size
-  if ((remote.get(key) === size && !key.endsWith('.kml')) || (key.includes('/parts/') && remote.has(key))) continue
+  if (key.includes('/parts/') && remote.has(key)) continue
+  if (remote.get(key) === size && !key.endsWith('.kml')) {
+    // Same size: unchanged if R2's ETag is the file's MD5 (an ETag with "-" comes from a multipart upload: size only)
+    const etag = etags.get(key)
+    if (!etag || etag.includes('-')) continue
+    if (createHash('md5').update(await readFile(path)).digest('hex') === etag) continue
+  }
   if (!dryRun) {
     await s3.send(new PutObjectCommand({
       Bucket: bucket, Key: key, Body: await readFile(path), ContentType: typeOf(key), CacheControl: cacheOf(key),

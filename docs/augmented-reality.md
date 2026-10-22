@@ -78,6 +78,11 @@ npm run downloads:upload
 
 Le USDZ part avec le type `model/vnd.usdz+zip`: sans lui, Quick Look refuse de l'ouvrir.
 
+Ensuite, changer `AR_VERSION` dans `viewer/src/main.js` (par exemple la date) et publier le site: le serveur et les
+téléphones gardent les fichiers RA une heure, et l'adresse versionnée (`?v=…`) leur fait prendre les nouveaux tout de
+suite. Le script d'envoi compare les fichiers à leur empreinte en ligne (MD5): un modèle refait de même taille part
+quand même.
+
 ## Essayer sur un téléphone
 
 La RA ne s'essaie pas sur un ordinateur. Deux façons:

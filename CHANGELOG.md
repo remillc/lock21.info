@@ -6,6 +6,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 - AR models: their origin is the Empty `ar-origin` placed in the `.blend` on the visible floor (`make_model.py
   --origin`), so the floor no longer rises when the lock is enlarged in AR.
+- `npm run downloads:upload` compares each file with R2's MD5 (ETag), not only its size: a rebuilt file of the same
+  size is sent. The viewer asks for the AR files with a version (`AR_VERSION`), so a rebuild shows at once.
 - 3D viewer buttons (settings, augmented reality, full screen) and the AR close button: MD3 filled tonal icon
   buttons (40 dp in a 48 dp touch target, Material Symbols icons, state layers, focus ring). AR size slider drawn by
   the page (follows the finger in AR, in any orientation); touches on the AR controls no longer move the model.
