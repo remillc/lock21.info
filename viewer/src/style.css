@@ -409,14 +409,42 @@ l21-settings-panel[hidden] {
 .xr-overlay-title {
   font-weight: 700;
 }
+/* MD3 filled tonal icon button: 40 dp container in a 48 dp touch target, Material Symbols "close" (24 dp), state layer
+   on press, focus ring */
 .xr-overlay-close {
-  width: 44px;
-  height: 44px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: 4px;
+  padding: 0;
   border: 0;
-  border-radius: 50%;
-  background: rgb(27 30 21 / 90%);
+  border-radius: 999px;
+  background: #3c4232;
   color: #f2f3ea;
-  font-size: 24px;
+  cursor: pointer;
+}
+.xr-overlay-close::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+}
+.xr-overlay-close::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 200ms;
+}
+.xr-overlay-close:active::after {
+  opacity: 0.1;
+}
+.xr-overlay-close:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: 2px;
 }
 .xr-overlay-foot {
   padding: 12px 16px calc(16px + env(safe-area-inset-bottom));

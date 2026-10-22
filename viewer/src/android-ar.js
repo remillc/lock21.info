@@ -58,7 +58,7 @@ function createOverlay(title, scale) {
     <div class="xr-frame">
       <div class="xr-overlay-head">
         <span class="xr-overlay-title"></span>
-        <button type="button" class="xr-overlay-close" aria-label="Quitter la réalité augmentée">×</button>
+        <button type="button" class="xr-overlay-close" aria-label="Quitter la réalité augmentée"><svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></button>
       </div>
       <div class="xr-overlay-foot">
         <p class="xr-overlay-status" role="status">Ouverture de la caméra…</p>
