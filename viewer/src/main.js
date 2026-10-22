@@ -208,7 +208,10 @@ function unlitMaterial(surface) {
 
 // Green removal ("spill suppression", as for green screens): each pixel's green is capped at the larger of its
 // red and blue. Brown, beige and grey pixels (red >= green) are untouched; only pixels where green dominates
-// (algae, the water's cast in patches) turn olive or grey-brown. A per-zone colour gain cannot do that: it
+// (algae, the water's cast in patches) turn olive or grey-brown. Underwater, blue is often above red: the capped
+// green then equals the blue and the pixel turns cyan (0.30, 0.50, 0.40 -> 0.30, 0.40, 0.40). The cyan left over
+// (the part of green AND blue above red) is removed from both, so such a pixel turns grey (0.30, 0.30, 0.30); olive
+// and brown pixels (red >= blue) are untouched, a truly blue pixel keeps its blue. A per-zone colour gain cannot do that: it
 // shifts the whole zone, and the green patches stay green. ?despill=0..1 sets the strength (default 0.8).
 // Always in the zones' shaders (a uniform: 0 changes nothing), so the strength changes live.
 const despill = { value: params.has('despill') ? Number(params.get('despill')) : 0.8 }
@@ -220,7 +223,9 @@ function addDespill(shader) {
     .replace(
       '#include <map_fragment>',
       '#include <map_fragment>\n' +
-        'diffuseColor.g = mix(diffuseColor.g, min(diffuseColor.g, max(diffuseColor.r, diffuseColor.b)), despill);',
+        'float despillG = min(diffuseColor.g, max(diffuseColor.r, diffuseColor.b));\n' +
+        'float despillCyan = max(min(despillG, diffuseColor.b) - diffuseColor.r, 0.0);\n' +
+        'diffuseColor.rgb = mix(diffuseColor.rgb, vec3(diffuseColor.r, despillG - despillCyan, diffuseColor.b - despillCyan), despill);',
     )
 }
 

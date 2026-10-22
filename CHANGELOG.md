@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: the green removal no longer leaves a blue-cyan tint (green capped at the blue turned water-green pixels
+  cyan; the cyan left over is now removed too, they turn grey).
 - Terrain (`lock-21-publishing.blend`, not online yet): the north bank east of zone 7 starts under its stairs and has a
   straight foot (y 26.5 in the height field), crest unchanged; around the zones the ground meets each zone's edge
   height, so the floor beside the lock chamber (zones 2 to 4) is level with theirs (it stood 0.3 to 0.5 m higher).
