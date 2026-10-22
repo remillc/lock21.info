@@ -8,7 +8,7 @@ téléchargements de `/modele` et pour Google Earth (TODO #13). Deux télécharg
 | `lock-21.kmz` (311 octets) | sur le site: `https://lock21.info/downloads/lock-21.kmz` (`public/downloads/`) | **Google Earth Pro** (ordinateur): double-clic. Un lien vers les parties du modèle sur R2: les zones ajoutées apparaissent à la prochaine ouverture, sans nouveau téléchargement |
 | `lock-21.glb` (114 Mo) | sur R2: `https://tiles.lock21.info/downloads/lock-21.glb` | **Google Earth Web** (importer, puis placer à la main), Blender, visionneuse 3D de Windows, Sketchfab… |
 
-Liés depuis la page `/modele` (`src/data/site.ts`, `downloads`). Le modèle est posé **au sol** (profondeur 0): Google
+Liés depuis la page `/modele` (`src/data/site.js`, `downloads`). Le modèle est posé **au sol** (profondeur 0): Google
 Earth n'a pas de profondeur négative, l'écluse y est montrée au niveau du sol plutôt qu'à 55 pi (16,8 m) sous l'eau.
 
 ## Réalité augmentée

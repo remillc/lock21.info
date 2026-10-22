@@ -36,9 +36,12 @@ const splash = !hasSidebar && entry.data.template === 'splash'
               // Update the menu state when the sidebar popover is toggled.
               this.addEventListener('toggle', ({ newState }) => this.trapFocus(newState === 'open'))
             }
-            /** Trap keyboard focus inside the header and menu when the menu is expanded. */
-            trapFocus(shouldTrap: boolean) {
-              document.querySelectorAll<HTMLElement>('.main-frame, .sl-skip-link').forEach((el) => {
+            /**
+             * Trap keyboard focus inside the header and menu when the menu is expanded.
+             * @param {boolean} shouldTrap
+             */
+            trapFocus(shouldTrap) {
+              /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.main-frame, .sl-skip-link')).forEach((el) => {
                 el.toggleAttribute('inert', shouldTrap)
               })
             }

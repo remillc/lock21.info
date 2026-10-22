@@ -23,7 +23,7 @@ Le détail des étapes: le guide **Traiter le fichier .blend**.
 
 | Dossier ou fichier | Contenu |
 | --- | --- |
-| `src\` | **Le site** (Astro + Starlight). `src\content\docs\`: les pages, en Markdown; `src\components\`: les éléments de page (en-tête, pied de page, page du modèle, accueil); `src\data\site.ts`: les réglages du site (coordonnées, adresses des téléchargements, identifiant Google Analytics); `src\styles\`: les couleurs et la mise en page |
+| `src\` | **Le site** (Astro + Starlight). `src\content\docs\`: les pages, en Markdown; `src\components\`: les éléments de page (en-tête, pied de page, page du modèle, accueil); `src\data\site.js`: les réglages du site (coordonnées, adresses des téléchargements, identifiant Google Analytics); `src\styles\`: les couleurs et la mise en page |
 | `public\` | Copié tel quel sur le site: `robots.txt`, l'icône, le KMZ de Google Earth (`downloads\lock-21.kmz`), et le visualiseur construit (`modele\viewer\`, refait à chaque publication, hors de Git) |
 | `viewer\` | **Le visualiseur 3D**, une application à part (three.js), intégrée à la page `/modele` |
 | `tools\publish-model\` | **Les outils de publication**: préparer les zones, cuire le relief, tuiler, envoyer sur le serveur. Leur `README.md` explique chaque étape et les leçons apprises |

@@ -49,7 +49,7 @@ particuliers: ne pas les publier. Les deux photos couleur img393 et img394 ne mo
 | Base des caissons d'approche | 60 pi | img401 |
 | Plancher de bois du sas | 60 pi (18,3 m) | guide n° 2 (img380, img383) |
 
-Le modèle met maintenant le fond du canal à **60 pi** (`src\data\site.ts`, avant: 55 pi), comme le sas et le pied
+Le modèle met maintenant le fond du canal à **60 pi** (`src\data\site.js`, avant: 55 pi), comme le sas et le pied
 des caissons selon SOS. La rivière, au sud de la digue, descend plus bas: le terrain y va jusqu'à 70 pi.
 
 ### Avant l'ennoiement

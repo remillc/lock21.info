@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- The site's last TypeScript (`src/lib/*.ts`, `src/data/site.ts`, `src/content.config.ts`, types in `.astro` files)
+  converted to plain JavaScript, types kept as JSDoc annotations: no TypeScript in the project.
 - Home page: « Dernière zone » is the zone added last, not the zone republished last (a retouched zone took its
   place); the manifest now records each zone's first publication (`added`, `update_manifest.py`).
 - Tested on an iPhone (2026-10-22, iOS 18.7, Safari, Apple GPU, textures up to 16,384 px), through the telemetry: the
@@ -84,7 +86,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   shafts), and its link opens the viewer at the same point of view (`/modele/?cam=…`).
 - **English version of the site** (`/en/`): every page translated (docs, tests, privacy), the home page, the model
   page, the header, footer, depth gauges (ft), the opt-out button and the sidebar labels in English; the home page's
-  dive log excerpts from the English log (`src/lib/i18n.ts`, `src/lib/diveLog.ts`).
+  dive log excerpts from the English log (`src/lib/i18n.js`, `src/lib/diveLog.js`).
 - Home page: a new render of zone 12, seen from the west (the sluice gates side) at 10 ft above the floor, warmer
   colours, in the frame's proportions (it showed the back of the zone).
 - Home page: the depth gauge as high as the window below the bar (marks spread from the surface to the bottom), and
@@ -128,7 +130,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   (`<l21-consent>`, refusing as easy as accepting, "Témoins" in the footer to change one's mind, cookies deleted on
   withdrawal), page views on client-side navigations, `file_download` (KMZ, GLB), `ar_launch` (table / real size), and
   the QR codes as campaigns (`utm_campaign=ra-table`, `ra-taille-reelle`). Off until the measurement ID is set in
-  `src/data/site.ts`. New page `/confidentialite/`: what is measured and why, 14-month retention, contact info@lock21.info.
+  `src/data/site.js`. New page `/confidentialite/`: what is measured and why, 14-month retention, contact info@lock21.info.
 - Augmented reality: a button in the 3D viewer, on phones and tablets only, puts the surveyed zones (without the
   mockup terrain) on a table at 1:100 (about 70 cm), or at real size with `?ar=full`: AR Quick Look on iPhone and iPad
   (USDZ), Scene Viewer on Android (GLB). No library. Models built by `make_model.py -x 0.01 --usdz` and `-x 1`

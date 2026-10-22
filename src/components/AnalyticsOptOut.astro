@@ -2,7 +2,7 @@
 // <l21-analytics-optout>, on the privacy page: Google Analytics measures every visit (no banner), and this button lets a
 // visitor refuse, or accept again. The choice is kept in localStorage ('l21-consent': denied, or granted) and announced
 // with a document event 'l21-consent' (Analytics.astro stops or starts measuring). Refusing also deletes Google
-// Analytics' cookies. Shown only when analytics are on (production build, an ID in src/data/site.ts).
+// Analytics' cookies. Shown only when analytics are on (production build, an ID in src/data/site.js).
 import { site } from '../data/site'
 ---
 
@@ -22,7 +22,8 @@ import { site } from '../data/site'
 <script>
   const KEY = 'l21-consent'
 
-  function stored(): string | null {
+  /** @returns {string | null} */
+  function stored() {
     try {
       return localStorage.getItem(KEY)
     } catch {

@@ -2,7 +2,7 @@
 // The /modele page, in the spirit of a Sketchfab page: the 3D viewer embedded in a large frame (its own button
 // goes full screen), then the model's information, how to navigate, the licence and the downloads. The viewer is a
 // separate app (viewer/), published at /modele/viewer; the page doesn't link to that address, visitors only see /modele.
-// French at /modele, English at /en/modele (src/lib/i18n.ts): the text below in both languages. The viewer itself
+// French at /modele, English at /en/modele (src/lib/i18n.js): the text below in both languages. The viewer itself
 // (/modele/viewer) is the same for both.
 import QRCode from 'qrcode'
 import { site } from '../../data/site'
@@ -42,10 +42,12 @@ const t = en
         ['Share a view', "copy the page's address: it keeps the camera position"],
       ],
       downloads: 'Downloads',
-      kmzText: (n: string) =>
+      /** @param {string} n */
+      kmzText: (n) =>
         `Opens the lock in its place on the map (${n} triangles). The file only holds a link: the zones load from the site, and the ones added later show up the next time it is opened.`,
       glbName: 'Full model',
-      glbText: (n: string) => `Zones and the site's model, ${n} triangles: for Blender, Sketchfab, Windows' 3D Viewer or Google Earth Web's import.`,
+      /** @param {string} n */
+      glbText: (n) => `Zones and the site's model, ${n} triangles: for Blender, Sketchfab, Windows' 3D Viewer or Google Earth Web's import.`,
       arTitle: 'Augmented reality',
       arText: 'Place the lock in front of you with a phone or a tablet: on a table, at 1:100 (70 cm), or at its real size (70 m), in a large open space.',
       table: 'On a table',
@@ -83,10 +85,12 @@ const t = en
         ['Partager une vue', "copier l'adresse de la page: elle garde la position de la caméra"],
       ],
       downloads: 'Téléchargements',
-      kmzText: (n: string) =>
+      /** @param {string} n */
+      kmzText: (n) =>
         `Ouvre l'écluse à sa place sur la carte (${n} triangles). Le fichier ne contient qu'un lien: les zones sont chargées depuis le site, et celles qui s'ajoutent apparaissent à la prochaine ouverture.`,
       glbName: 'Modèle complet',
-      glbText: (n: string) => `Zones et maquette du site, ${n} de triangles: pour Blender, Sketchfab, la visionneuse 3D de Windows ou l'import de Google Earth Web.`,
+      /** @param {string} n */
+      glbText: (n) => `Zones et maquette du site, ${n} de triangles: pour Blender, Sketchfab, la visionneuse 3D de Windows ou l'import de Google Earth Web.`,
       arTitle: 'Réalité augmentée',
       arText: "Posez l'écluse devant vous avec un téléphone ou une tablette: sur une table, au 1:100 (70 cm), ou à sa taille réelle (70 m), dans un grand espace dégagé.",
       table: 'Sur une table',
@@ -100,10 +104,11 @@ const zones = await zonesOnline()
 const viewer = `${site.viewer}/viewer`
 // QR codes of this page's public address, one per augmented reality size (?ar=full: real size, read by the viewer);
 // SVG, dark on white so they scan in both themes
-const qrOptions = { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#22251b', light: '#ffffff' } } as const
+const qrOptions = /** @type {const} */ ({ type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#22251b', light: '#ffffff' } })
 const page = new URL(pagePath, Astro.site).href
 // utm_*: each code is a Google Analytics campaign (Acquisition reports), read before the page cleans its address
-const campaign = (name: string) => `utm_source=qr&utm_medium=qr&utm_campaign=${name}`
+/** @param {string} name */
+const campaign = (name) => `utm_source=qr&utm_medium=qr&utm_campaign=${name}`
 const qrTable = await QRCode.toString(`${page}?${campaign('ra-table')}`, qrOptions)
 const qrFull = await QRCode.toString(`${page}?ar=full&${campaign('ra-taille-reelle')}`, qrOptions)
 const updated = zones.updated
@@ -227,7 +232,8 @@ const updated = zones.updated
   // load as after a client-side navigation (ClientRouter, Head.astro), where a plain page script would run only once.
   // replaceState keeps history.state: the router stores its own entry there (back and forward buttons).
   class ModelFrame extends HTMLElement {
-    onMessage = (event: MessageEvent) => {
+    /** @param {MessageEvent} event */
+    onMessage = (event) => {
       const frame = this.querySelector('iframe')
       if (event.origin !== location.origin || event.source !== frame?.contentWindow) return
       if (event.data?.type === 'lock21:cam' && typeof event.data.search === 'string') {
@@ -236,7 +242,7 @@ const updated = zones.updated
     }
 
     connectedCallback() {
-      const frame = this.querySelector('iframe') as HTMLIFrameElement
+      const frame = /** @type {HTMLIFrameElement} */ (this.querySelector('iframe'))
       frame.src = (frame.dataset.src ?? '') + location.search
       const cam = new URLSearchParams(location.search).get('cam')
       history.replaceState(history.state, '', location.pathname + (cam ? `?cam=${cam}` : ''))
