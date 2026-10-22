@@ -5,7 +5,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - 3D viewer: new defaults, tint neutralisation 0.2 (was 0.3), green removal 0.8 (was 1) and the sky as background
-  (`?sky=0` for the plain backdrop); the tiles' source is no longer in the settings panel (`?tiles=` still works in a link, for local tests).
+  (`?sky=0` for the plain backdrop); the tiles' source is no longer in the settings panel (`?tiles=` still works in a
+  link, for local tests).
+
 ## 0.7.0 - 2026-10-22
 
 - Speed (PageSpeed, mobile): Google Analytics loads on the first interaction or 4 s after the page; the fonts at the
