@@ -355,3 +355,67 @@ l21-settings-panel[hidden] {
   color: inherit;
   cursor: pointer;
 }
+
+/* Augmented reality on Android (android-ar.js): a full-screen panel with <model-viewer>, whose button starts AR */
+.ar-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  background: #12140e;
+  color: #e3e6d8;
+  font-family: system-ui, sans-serif;
+}
+.ar-panel[hidden] {
+  display: none;
+}
+.ar-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 8px 8px 16px;
+}
+.ar-panel-title {
+  font-weight: 700;
+}
+.ar-panel-close {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(27 30 21 / 90%);
+  color: #e3e6d8;
+  font-size: 24px;
+  cursor: pointer;
+}
+.ar-panel model-viewer {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  background: #1b1e15;
+  --poster-color: transparent;
+}
+.ar-panel-status {
+  margin: 0;
+  padding: 12px 16px 16px;
+  font-size: 14px;
+  color: #a3a893;
+}
+/* <model-viewer>'s AR button (slot "ar-button"): the signal colour, as the site's "Modèle 3D" button */
+.ar-panel-start {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  min-height: 48px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: #f28c28;
+  color: #12140e;
+  font: 700 15px system-ui, sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+}

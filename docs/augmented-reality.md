@@ -21,7 +21,7 @@ visionneuse.
 | Appareil | Visionneuse | Fichier |
 | --- | --- | --- |
 | iPhone, iPad (Safari) | **AR Quick Look** (Apple) | USDZ |
-| Android | **Scene Viewer** (Google, par « Services Google Play pour la RA », `com.google.ar.core`; sans ARCore, le modèle s'affiche en 3D) | GLB |
+| Android | **`<model-viewer>`** (Google): un panneau s'ouvre avec le modèle en 3D; son bouton lance la RA dans Chrome (WebXR), ou Scene Viewer à défaut | GLB |
 
 Le visiteur lance la RA de deux façons:
 
@@ -106,13 +106,12 @@ avant l'essai.
 
 ## Problèmes connus
 
-- **Rien ne s'ouvre, la page glisse et revient** (Android): Chrome n'a pas pu ouvrir Scene Viewer et est revenu à
-  l'adresse de secours (la page marquée `#ar-failed`). Le journal du visualiseur le note (message `ar-failed`, après
-  `ar`). C'est arrivé le 2026-10-22 sur un Pixel 10 Pro quand le lien visait l'application Google
-  (`com.google.android.googlequicksearchbox`) au format `scene-viewer/1.0`: Scene Viewer s'ouvrait et se refermait
-  aussitôt, même avec le modèle d'exemple de Google, alors que la démo de `<model-viewer>` s'ouvrait. Le lien est
-  depuis construit exactement comme celui de `<model-viewer>`: `scene-viewer/1.2`, `disable_occlusion=true`, le
-  fichier en dernier, `com.google.ar.core`.
+- **Rien ne s'ouvre, la page glisse et revient** (Android, avant le 2026-10-22): Scene Viewer s'ouvrait et se
+  refermait aussitôt sur un Pixel 10 Pro, pour tout modèle (même ceux de Google) et depuis toute page, alors que la
+  démo de `<model-viewer>` s'ouvrait (en WebXR). Le bouton RA ouvre donc maintenant un panneau `<model-viewer>`
+  (`viewer/src/android-ar.js`), chargé seulement à ce moment; deux touchers sont nécessaires (ouvrir le panneau, puis
+  « Placer l'écluse autour de moi »), Chrome ne laissant lancer la RA que juste après un toucher, et le modèle (26 Mo)
+  prenant plus de temps à charger. Les étapes sont notées dans le journal du visualiseur (`ar-status`).
 - **« Impossible de charger l'objet »** (Android): le fichier n'est pas en ligne à l'adresse attendue, ou Scene Viewer
   ne peut pas l'atteindre (réseau local).
 - **La taille réelle n'est pas à la taille réelle:** Scene Viewer réduit un modèle trop grand pour l'écran s'il est

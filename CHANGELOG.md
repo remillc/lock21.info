@@ -4,9 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- Augmented reality on Android: the Scene Viewer link is built exactly as Google's `<model-viewer>` builds it
-  (`scene-viewer/1.2`, `disable_occlusion=true`, Google Play Services for AR); the former one (`1.0`, occlusion on)
-  made Scene Viewer close at once on a Pixel 10 Pro. A failed launch is now logged (`ar-failed`).
+- Augmented reality on Android: the AR button opens a panel with Google's `<model-viewer>` (loaded only on that tap,
+  about 290 KB), whose button starts WebXR in Chrome (Scene Viewer otherwise). Scene Viewer alone no longer opened on
+  a Pixel 10 Pro, for any model or page, while `<model-viewer>`'s demo did. AR statuses are logged (`ar-status`); the
+  `/modele` frame allows WebXR (`xr-spatial-tracking`).
 - 3D viewer: the green removal no longer leaves a blue-cyan tint (green capped at the blue turned water-green pixels
   cyan): the cyan left over is removed too, with its own slider « Retrait du cyan » (`?cyan=0..2`, default 1.5: a
   warm grey).

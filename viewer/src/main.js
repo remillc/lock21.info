@@ -47,14 +47,14 @@ if (document.fullscreenEnabled) {
   })
 }
 
-// Augmented reality: the whole lock on a table, at 1:100 (70 cm), from the viewer's button. No library: each phone's
-// own AR viewer, with the same model (tools/google-earth/make_model.py -x 0.01, on R2 under downloads/ar/):
+// Augmented reality: the whole lock on a table, at 1:100 (70 cm), from the viewer's button, with the same model
+// (tools/google-earth/make_model.py -x 0.01, on R2 under downloads/ar/):
 // - iPhone and iPad: AR Quick Look opens a USDZ from a link with rel="ar" (Safari only);
-// - Android: Scene Viewer (Google), through an intent link with the GLB; without ARCore it shows the model in 3D.
-// The button stays hidden elsewhere (computers, other browsers). Opened at the top of the page, out of the /modele/
-// iframe. To check on a real phone: AR can't be tested on a computer.
-// The AR files are always the online ones, in development too: Scene Viewer doesn't load a model from the local network
-// (tested on a Pixel, 2026-10-21: the phone never asked for the file)
+// - Android: a panel with Google's <model-viewer> (android-ar.js, loaded on the tap), whose button starts WebXR in
+//   Chrome, Scene Viewer otherwise. A direct Scene Viewer link no longer opened on a Pixel 10 Pro (2026-10-22).
+// The button stays hidden elsewhere (computers, other browsers). To check on a real phone: AR can't be tested on a
+// computer. The AR files are always the online ones, in development too: Scene Viewer doesn't load a model from the
+// local network (tested on a Pixel, 2026-10-21: the phone never asked for the file)
 const AR_URL = import.meta.env.VITE_AR_URL || 'https://tiles.lock21.info/downloads/ar'
 // ?ar=full: the lock at its real size (70 m) instead of on a table (the /modele/ page's "Taille réelle" QR code and link)
 const arFull = params.get('ar') === 'full'
@@ -65,37 +65,24 @@ if (arLink.relList?.supports?.('ar')) {
   arLink.href = `${AR_URL}/${arName}.usdz`
   arLink.hidden = false
 } else if (/Android/i.test(navigator.userAgent)) {
-  const glb = `${AR_URL}/${arName}.glb`
-  const title = arFull ? 'Écluse 21 · taille réelle' : 'Écluse 21 · 1:100'
   arLink.removeAttribute('rel')
-  arLink.target = '_top'
-  // resizable=false for the real size: otherwise Scene Viewer shrinks a model too big for the view (179 x 143 m with the
-  // terrain) to fit it, and the "real size" isn't.
-  // The link is built exactly as Google's <model-viewer> builds it (its openSceneViewer): Scene Viewer 1.2,
-  // disable_occlusion=true, the file last, package com.google.ar.core (Google Play Services for AR). On a Pixel 10 Pro
-  // (2026-10-22) the former link (1.0, occlusion on, through the Google app or ARCore) opened Scene Viewer, which
-  // closed at once, even for Google's own sample model, while <model-viewer>'s demo opened. The fallback is the top
-  // page (the /modele page when embedded) marked #ar-failed: back there, the failure is logged (telemetry) and the
-  // mark removed.
-  const page = embedded ? window.top : window
-  const fallback = `${page.location.href.split('#')[0]}#ar-failed`
-  const sceneParams = new URLSearchParams({ mode: 'ar_preferred', disable_occlusion: 'true', title })
-  if (arFull) sceneParams.set('resizable', 'false')
-  arLink.href = `intent://arvr.google.com/scene-viewer/1.2?${sceneParams}&file=${encodeURIComponent(glb)}` +
-    '#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;' +
-    `S.browser_fallback_url=${encodeURIComponent(fallback)};end;`
+  arLink.href = '#'
   arLink.hidden = false
-  const failed = () => {
-    if (page.location.hash !== '#ar-failed') return
-    log('ar-failed', { size: arFull ? 'full' : 'table' })
-    page.history.replaceState(page.history.state, '', page.location.href.split('#')[0])
-  }
-  page.addEventListener('hashchange', failed)
-  failed()
+  arLink.addEventListener('click', (event) => {
+    event.preventDefault()
+    import('./android-ar.js').then(({ openAndroidAr }) =>
+      openAndroidAr({
+        src: `${AR_URL}/${arName}.glb`,
+        title: arFull ? 'Écluse 21 · taille réelle' : 'Écluse 21 · 1:100',
+        fixed: arFull,
+        log,
+      }),
+    )
+  })
 }
 // Analytics: the page that embeds the viewer counts the AR launches (src/components/Analytics.astro, after consent)
 arLink.addEventListener('click', () => {
-  log('ar', { size: arFull ? 'full' : 'table', kind: arLink.relList?.supports?.('ar') ? 'quicklook' : 'sceneviewer' })
+  log('ar', { size: arFull ? 'full' : 'table', kind: arLink.relList?.supports?.('ar') ? 'quicklook' : 'android-panel' })
   if (window.self !== window.top) window.parent.postMessage({ type: 'lock21:ar', size: arFull ? 'full' : 'table' }, location.origin)
 })
 
