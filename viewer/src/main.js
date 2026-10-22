@@ -6,7 +6,6 @@ import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.j
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js'
 import { TilesRenderer } from '3d-tiles-renderer'
 import { savedSettings, settingsSchema } from './config-panel.js'
@@ -190,18 +189,22 @@ function smoothFiltering(texture) {
 
 // How the surfaces look. Each setting below rebuilds or updates the materials in place.
 const look = {
-  // Sky lighting (default; ?hdri=0 = the unlit display used before), see skyMaterial
+  // Lighting (default; ?hdri=0 = the unlit display used before): the sky (diffuse, ?hdriIntensity=) and the sun
+  // (direct, ?sunIntensity=, from ?light=azimuth,elevation), each with its slider. Realistic defaults, as on a clear
+  // day (direct sun about 75-85 % of the light, the sky the rest): sun 1 (a surface facing it shows its texture's own
+  // brightness), sky 0.35; the sun in the south-west, 50 degrees up (early afternoon at Dickinson Landing)
   sky: params.get('hdri') !== '0',
-  skyIntensity: params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : 1,
+  skyIntensity: params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : 0.35,
+  sunIntensity: params.has('sunIntensity') ? Number(params.get('sunIntensity')) : 1,
   // The sky as background: on by default (?sky=0: the plain backdrop)
   skyBackground: (params.get('sky') ?? '1') === '1',
   // Colour balance between zones (?neutral=0..1), see colorBalance
   neutral: params.has('neutral') ? Number(params.get('neutral')) : 0.2,
-  // Relief from the zones' normal maps (?relief=1 default, 0 = without), the sun test (?relief=sun, with
-  // ?light=azimuth,elevation and ?shade=0..1) or the normal map shown as the colour (?relief=debug); wet look (?wet=0..1)
-  relief: ['0', 'sun', 'debug'].includes(params.get('relief')) ? params.get('relief') : '1',
-  light: (params.get('light') || '135,45').split(',').map(Number),
-  shade: params.has('shade') ? Number(params.get('shade')) : 0.6,
+  // Relief from the zones' normal maps (?relief=1 default, 0 = without) or the normal map shown as the colour
+  // (?relief=debug); wet look (?wet=0..1). The sun's direction: azimuth (0 = from the south, 90 = from the east),
+  // elevation, in degrees
+  relief: ['0', 'debug'].includes(params.get('relief')) ? params.get('relief') : '1',
+  light: (params.get('light') || '330,50').split(',').map(Number),
   wet: wetness(params.has('wet') ? params.get('wet') : 0.15),
 }
 function wetness(v) {
@@ -228,7 +231,6 @@ function surfaceMaterial(mesh) {
   const surface = mesh.userData.surface
   const normalMap = look.relief !== '0' ? surface.normalMap : null
   if (normalMap && look.relief === 'debug') return new THREE.MeshBasicMaterial({ map: normalMap, side: THREE.DoubleSide })
-  if (look.relief === 'sun') return normalMap ? litMaterial(surface, mesh, normalMap, false) : unlitMaterial(surface)
   if (look.sky) return litMaterial(surface, mesh, normalMap, true)
   return unlitMaterial(surface)
 }
@@ -290,15 +292,14 @@ function addDespill(shader) {
 // public/hdri/sky.hdr) lights the zones and the context through lit materials: each surface gets the sky's light
 // by its orientation (tops brighter than sides). The tiles carry no normals: they are computed on demand
 // (double-sided rendering turns them outward even where the photogrammetry winding is inconsistent).
-// ?hdriIntensity= sets the strength (default 1), ?sky=1 shows the sky as the background.
+// ?hdriIntensity= sets its strength (default 0.35, the sun bringing the rest: updateLights), ?sky=0 hides it as the
+// background.
 //
 // Relief: zones whose tiles carry a normal map (tools/publish-model/bake_relief.py: object-space normals of the
 // high-res export, zebra mussels included) are lit through it instead of their computed normals. Object space: no
-// vertex normals or tangents needed. ?relief=0 compares without it. ?relief=sun: the earlier test, lit by an
-// ambient + one directional light instead of the sky (zones without a normal map stay unlit): ?light=azimuth,elevation
-// (degrees, default 135,45) orients it, ?shade=0..1 (default 0.6) is the directional share; Lambert lighting divides
-// by pi, hence the factors in updateLights. ?relief=debug shows the normal map itself as the colour (checks that it
-// lines up with the photo texture).
+// vertex normals or tangents needed. ?relief=0 compares without it. ?relief=debug shows the normal map itself as the
+// colour (checks that it lines up with the photo texture). The sun (updateLights) lights them too, through the same
+// normals: the relief shows from its direction.
 //
 // Wet look (?wet=0..1, default 0.15, chosen on zone 12; 0 turns it off), zones only: glossy surface with a clear-coat
 // film (sharp highlights that slide over the relief when the camera moves) reflecting the sky, colours slightly
@@ -366,41 +367,26 @@ function litMaterial(surface, mesh, normalMap, sky) {
   return material
 }
 
-// The relief's lights: on average a lit surface faces the light at ~45 degrees, so the directional part is
-// scaled to keep the overall brightness close to the unlit display
-const reliefLights = new THREE.Group()
-const ambient = new THREE.AmbientLight(0xffffff)
+// The sun: a directional light added to the sky's light (lit materials only). Lambert lighting divides by pi: at
+// intensity pi x sunIntensity, a surface facing the sun at sunIntensity 1 shows its texture's own brightness
 const sun = new THREE.DirectionalLight(0xffffff)
-reliefLights.add(ambient, sun)
-scene.add(reliefLights)
+scene.add(sun)
 function updateLights() {
   const [azimuth, elevation] = look.light.map(THREE.MathUtils.degToRad)
   sun.position.set(Math.cos(elevation) * Math.sin(azimuth), Math.sin(elevation), Math.cos(elevation) * Math.cos(azimuth))
-  ambient.intensity = Math.PI * (1 - look.shade)
-  sun.intensity = Math.PI * look.shade * 1.4
-  reliefLights.visible = look.relief === 'sun'
+  sun.intensity = Math.PI * look.sunIntensity
+  sun.visible = look.sky && look.sunIntensity > 0
   requestRender()
 }
 updateLights()
 
-// What the lit materials reflect, and the background: the sky (loaded even when its lighting is off at start), or
-// for the wet look under the sun test a neutral studio-like environment (the unlit surfaces ignore both)
+// What the lit materials reflect, and the background: the sky (loaded even when its lighting is off at start; the
+// unlit surfaces ignore it)
 let skyTexture = null
 let skyEnvironment = null
-let roomEnvironment = null
 function updateEnvironment() {
-  if (look.relief === 'sun') {
-    if (look.wet > 0 && !roomEnvironment) {
-      const pmrem = new THREE.PMREMGenerator(renderer)
-      roomEnvironment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
-      pmrem.dispose()
-    }
-    scene.environment = look.wet > 0 ? roomEnvironment : null
-    scene.environmentIntensity = 1
-  } else {
-    scene.environment = look.sky ? skyEnvironment : null
-    scene.environmentIntensity = look.skyIntensity
-  }
+  scene.environment = look.sky ? skyEnvironment : null
+  scene.environmentIntensity = look.skyIntensity
   scene.background = look.skyBackground && skyTexture ? skyTexture : backdrop
   requestRender()
 }
@@ -414,13 +400,13 @@ new HDRLoader().load(`${import.meta.env.BASE_URL}hdri/sky.hdr`, (texture) => {
   updateEnvironment()
 })
 
-live.hdri = (v) => { look.sky = v === '1'; rebuildMaterials(); updateEnvironment() }
+live.hdri = (v) => { look.sky = v === '1'; rebuildMaterials(); updateLights(); updateEnvironment() }
 live.hdriIntensity = (v) => { look.skyIntensity = Number(v); updateEnvironment() }
 live.sky = (v) => { look.skyBackground = v === '1'; updateEnvironment() }
-live.relief = (v) => { look.relief = v; rebuildMaterials(); updateLights(); updateEnvironment() }
+live.relief = (v) => { look.relief = v; rebuildMaterials() }
+live.sunIntensity = (v) => { look.sunIntensity = Number(v); updateLights() }
 live.wet = (v) => { look.wet = wetness(v); rebuildMaterials(); updateEnvironment() }
 live.light = (v) => { look.light = v.split(',').map(Number); updateLights() }
-live.shade = (v) => { look.shade = Number(v); updateLights() }
 
 // Colour balance between zones. The water tints each zone differently (yellow-green, more or less dark,
 // depending on the dive). manifest.json gives each zone's average texture colour in linear light

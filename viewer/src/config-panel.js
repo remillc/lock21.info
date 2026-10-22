@@ -39,8 +39,10 @@ export function settingsSchema({ mobile }) {
     {
       title: 'Éclairage',
       items: [
-        { key: 'hdri', label: 'Éclairage par le ciel', type: 'toggle', def: '1' },
-        { key: 'hdriIntensity', label: 'Force du ciel', type: 'range', min: 0, max: 3, step: 0.05, def: '1' },
+        { key: 'hdri', label: 'Éclairage (ciel et soleil)', hint: 'éteint: les textures telles quelles', type: 'toggle', def: '1' },
+        { key: 'hdriIntensity', label: 'Force du ciel', hint: 'lumière diffuse, de partout', type: 'range', min: 0, max: 2, step: 0.05, def: '0.35', dependsOn: 'hdri' },
+        { key: 'sunIntensity', label: 'Force du soleil', hint: 'lumière directe, qui fait ressortir le relief', type: 'range', min: 0, max: 3, step: 0.05, def: '1', dependsOn: 'hdri' },
+        { key: 'light', label: 'Soleil (azimut, hauteur)', hint: 'azimut 0 = du sud, 90 = de l’est', type: 'angles', def: '330,50', ranges: [[0, 360, 5], [0, 90, 5]], unit: '°', dependsOn: 'hdri' },
         { key: 'sky', label: 'Ciel en arrière-plan', type: 'toggle', def: '1' },
         { key: 'wet', label: 'Aspect mouillé', hint: 'zones seulement: reflets du ciel, couleurs plus saturées', type: 'range', min: 0, max: 1, step: 0.05, def: '0.15', dependsOn: 'hdri' },
       ],
@@ -68,8 +70,6 @@ export function settingsSchema({ mobile }) {
         { key: 'profile', label: 'Profil', type: 'select', def: '', options: [['', 'automatique'], ['desktop', 'ordinateur'], ['mobile', 'téléphone']] },
         { key: 'stats', label: 'Statistiques (mémoire, tuiles)', type: 'toggle', def: '0' },
         { key: 'aoDebug', label: 'Occlusion seule', type: 'toggle', def: '0', dependsOn: 'ao' },
-        { key: 'light', label: 'Soleil (azimut, hauteur)', type: 'angles', def: '135,45', ranges: [[0, 360, 5], [0, 90, 5]], unit: '°', dependsOn: ['relief', 'sun'] },
-        { key: 'shade', label: 'Part de lumière directe', type: 'range', min: 0, max: 1, step: 0.05, def: '0.6', dependsOn: ['relief', 'sun'] },
       ],
     },
   ]

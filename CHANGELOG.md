@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer lighting: the sky and the sun together, each with its slider (« Force du ciel », « Force du soleil »,
+  plus the sun's direction), realistic defaults (sun 1, sky 0.35, sun in the south-west at 50°); the former sun test
+  (`?relief=sun`, `?shade=`) is removed.
 - Pointer cursor on every action widget, on the site and in the 3D viewer (a global rule without specificity in
   `custom.scss` and `viewer/src/style.css`; `not-allowed` when disabled).
 - Android AR: the AR model downloads in the background once the 3D view has finished loading (about 30 MB,
