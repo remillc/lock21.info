@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Context: the walls' vertical faces were black in the viewer. Their UV map (the plan projected from above) gave them no
+  room in the baked texture; `export_context.py` now bakes such objects into their own unwrapped UV map, colour only
+  (the viewer lights them).
 - 3D viewer: new start view (`START_VIEW`), close to the lock floor, chosen by Christian on 2026-10-22.
 - The site's last TypeScript (`src/lib/*.ts`, `src/data/site.ts`, `src/content.config.ts`, types in `.astro` files)
   converted to plain JavaScript, types kept as JSDoc annotations: no TypeScript in the project.
