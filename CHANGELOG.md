@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Header: on wide screens the logo starts further left, above the depth gauge's labels.
 - Theme and language selects moved to the footer bar, out of the header and the mobile menu.
 - What the site is for: an « À propos » / « About » page (`/about`, first in the navigation) and a short block on
   the home page (show the lock to non-divers, help divers plan their dives, document the method).
