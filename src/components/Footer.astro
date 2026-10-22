@@ -1,8 +1,11 @@
 ---
-// Footer: Starlight's (previous/next page links), then the navy bar of the design with the site's name, the copyright and
-// the licence (CC BY 4.0, as for the 3D model: /modele/).
+// Footer: Starlight's (previous/next page links), then the navy bar of the design with the site's name, the theme and
+// language selects (Starlight's, moved here from the header: astro.config.mjs), the copyright and the licence
+// (CC BY 4.0, as for the 3D model: /modele).
 // Both stay together at the bottom of the window on short pages (margin-top: auto; the flex columns in custom.scss).
 import Default from '@astrojs/starlight/components/Footer.astro'
+import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro'
+import ThemeSelect from '@astrojs/starlight/components/ThemeSelect.astro'
 
 const english = Astro.locals.starlightRoute.lang?.startsWith('en')
 const privacy = english ? '/en/confidentialite' : '/confidentialite'
@@ -21,6 +24,10 @@ const licence = `https://creativecommons.org/licenses/by/4.0/deed.${english ? 'e
 </script>
 <div class="site-footer">
   <span translate="no">{english ? 'LOCK/21' : 'ÉCLUSE/21'} · {english ? 'field notebook' : 'carnet de terrain'}</span>
+  <div class="preferences print:hidden">
+    <ThemeSelect />
+    <LanguageSelect />
+  </div>
   <span>© {years} Christian Rémillard · {english ? 'License' : 'Licence'} <a href={licence} rel="license">CC BY 4.0</a>
     · <a href={privacy}>{english ? 'Privacy' : 'Confidentialité'}</a></span>
 </div>
@@ -35,6 +42,7 @@ const licence = `https://creativecommons.org/licenses/by/4.0/deed.${english ? 'e
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    align-items: center;
     gap: 0.75rem 1.5rem;
     margin-top: 2rem;
     padding: 1.25rem 1.5rem;
@@ -47,5 +55,10 @@ const licence = `https://creativecommons.org/licenses/by/4.0/deed.${english ? 'e
   }
   .site-footer a {
     color: #3cc2bc;
+  }
+  .preferences {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
   }
 </style>

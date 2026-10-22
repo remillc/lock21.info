@@ -61,6 +61,9 @@ export default defineConfig({
         Sidebar: './src/components/Sidebar.astro',
         MobileMenuFooter: './src/components/MobileMenuFooter.astro',
         PageFrame: './src/components/PageFrame.astro',
+        // Theme and language selects: in the footer (Footer.astro), not in the header nor the mobile menu
+        ThemeSelect: './src/components/Omitted.astro',
+        LanguageSelect: './src/components/Omitted.astro',
       },
       sidebar: [
         { label: 'À propos', translations: { en: 'About' }, link: '/about' },

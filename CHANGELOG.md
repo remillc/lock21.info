@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Theme and language selects moved to the footer bar, out of the header and the mobile menu.
 - What the site is for: an « À propos » / « About » page (`/about`, first in the navigation) and a short block on
   the home page (show the lock to non-divers, help divers plan their dives, document the method).
 - Hosting moved from GitHub Pages to Cloudflare (Workers static assets, `wrangler.jsonc`, custom domain `lock21.info`):
