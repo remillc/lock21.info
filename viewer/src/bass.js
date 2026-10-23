@@ -41,8 +41,8 @@ const WAVE_LAG = 0.9
 // per bone (rad per rad/s of turning, head to tail: the body lags behind the head); its glide while turning (m per rad)
 const TURN_EASE = 3
 const TURN_GAIN = 2.5
-// (twice as supple as the first try: Christian, 2026-10-23)
-const CURVE = [0, 0.25, 0.32, 0.32, 0.25]
+// (four times as supple as the first try: Christian, 2026-10-23)
+const CURVE = [0, 0.5, 0.64, 0.64, 0.5]
 const GLIDE = 0.05
 
 /**
