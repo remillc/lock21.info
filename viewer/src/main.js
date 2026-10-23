@@ -15,6 +15,7 @@ import { errorText, log, session, setEndFacts, startTelemetry } from './telemetr
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
 import { createPhotoRender } from './photo-render.js'
+import { homePath, t } from './i18n.js'
 
 // Every query parameter is read once here, then changed live by the settings panel (config-panel.js): no setting
 // reloads the page. `live` holds one handler per parameter. The address keeps only the camera (?cam=, see viewUrl):
@@ -36,6 +37,23 @@ let tilesUrl = params.get('tiles') || DEFAULT_TILES_URL
 const embedded = window.self !== window.top
 document.documentElement.classList.toggle('embedded', embedded)
 
+// index.html's texts are in French (its fallback): set in the viewer's language (i18n.js, French or English)
+document.title = t('pageTitle')
+document.querySelector('meta[name="description"]')?.setAttribute('content', t('pageDescription'))
+const homeLink = document.querySelector('.home')
+homeLink.textContent = t('home')
+homeLink.href = homePath
+for (const [selector, label, title] of [
+  ['.settings-button', 'settings', 'settings'],
+  ['.ar-button', 'ar', 'ar'],
+  ['.photo-button', 'photo', 'photoTitle'],
+  ['.fullscreen', 'fullscreen', 'fullscreenTitle'],
+]) {
+  const element = document.querySelector(selector)
+  element.setAttribute('aria-label', t(label))
+  element.title = t(title)
+}
+
 // Full screen: works standalone and embedded (the iframe allows it)
 const fullscreenButton = document.querySelector('.fullscreen')
 if (document.fullscreenEnabled) {
@@ -45,7 +63,7 @@ if (document.fullscreenEnabled) {
     else document.documentElement.requestFullscreen()
   })
   document.addEventListener('fullscreenchange', () => {
-    fullscreenButton.setAttribute('aria-label', document.fullscreenElement ? 'Quitter le plein écran' : 'Plein écran')
+    fullscreenButton.setAttribute('aria-label', t(document.fullscreenElement ? 'fullscreenExit' : 'fullscreen'))
     fullscreenButton.dataset.full = String(Boolean(document.fullscreenElement))
   })
 }
@@ -68,7 +86,7 @@ const arName = arFull ? 'lock-21-ar-full' : 'lock-21-ar'
 const arLink = document.querySelector('.ar-button')
 // Run once the 3D view has finished its first load (updateLoading): the AR model's background download waits for it
 const afterFirstLoad = []
-if (arFull) arLink.title = 'Voir en réalité augmentée (taille réelle)'
+if (arFull) arLink.title = t('arFull')
 if (arLink.relList?.supports?.('ar')) {
   arLink.href = `${AR_URL}/${arName}.usdz?v=${AR_VERSION}`
   arLink.hidden = false
@@ -76,7 +94,7 @@ if (arLink.relList?.supports?.('ar')) {
   // Scene Viewer: the link as Google's <model-viewer> builds it (scene-viewer/1.2, occlusion off, ARCore). The
   // button's link until WebXR is known to work, and the fallback if the WebXR session can't open
   const page = embedded ? window.top : window
-  const sceneParams = new URLSearchParams({ mode: 'ar_preferred', disable_occlusion: 'true', title: 'Écluse 21' })
+  const sceneParams = new URLSearchParams({ mode: 'ar_preferred', disable_occlusion: 'true', title: t('name') })
   if (arFull) sceneParams.set('resizable', 'false')
   const sceneViewer = `intent://arvr.google.com/scene-viewer/1.2?${sceneParams}&file=${encodeURIComponent(`${AR_URL}/${arName}.glb?v=${AR_VERSION}`)}` +
     '#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;' +
@@ -109,7 +127,7 @@ if (arLink.relList?.supports?.('ar')) {
     event.preventDefault()
     startWebXrAr({
       src: arSrc,
-      title: 'Écluse 21',
+      title: t('name'),
       scale: arFull ? 100 : 1,
       log,
       // During AR the 3D view stops and gives back its tiles (up to 450 MB on a phone): with the AR model on top, the
@@ -780,11 +798,11 @@ window.addEventListener('keydown', (e) => {
 // « Après » the ?compare= root; the tiles reload in place, the camera doesn't move. Link only, never shown otherwise.
 const compareUrl = params.get('compare')
 if (compareUrl) {
-  const sources = [['Avant', tilesUrl], ['Après', compareUrl]]
+  const sources = [[t('before'), tilesUrl], [t('after'), compareUrl]]
   const group = document.body.appendChild(document.createElement('div'))
   group.className = 'compare'
   group.setAttribute('role', 'group')
-  group.setAttribute('aria-label', 'Comparer deux versions des tuiles (touche B)')
+  group.setAttribute('aria-label', t('compare'))
   const check = '<svg aria-hidden="true" width="18" height="18" viewBox="0 -960 960 960" fill="currentColor"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>'
   const buttons = sources.map(([label, url]) => {
     const button = group.appendChild(document.createElement('button'))
@@ -823,8 +841,8 @@ function updateStats() {
   lastStats = performance.now()
   const cache = tilesets[0]?.lruCache
   const lines = [
-    `${mobile ? 'téléphone' : 'ordinateur'} · mémoire ${((cache?.cachedBytes || 0) / 1e6).toFixed(0)} / ${(profile.maxBytes / 1e6).toFixed(0)} Mo${cache?.isFull() ? ' (PLEINE)' : ''}`,
-    ...tilesets.map((t) => `${t.zoneId.padEnd(8)} visibles ${String(t.visibleTiles.size).padStart(3)} · en cours ${t.stats.downloading + t.stats.parsing}`),
+    t('statsMemory', { phone: mobile, used: ((cache?.cachedBytes || 0) / 1e6).toFixed(0), max: (profile.maxBytes / 1e6).toFixed(0), full: cache?.isFull() }),
+    ...tilesets.map((tiles) => t('statsZone', { zone: tiles.zoneId.padEnd(8), visible: String(tiles.visibleTiles.size).padStart(3), loading: tiles.stats.downloading + tiles.stats.parsing })),
   ]
   statsBox.textContent = lines.join('\n')
 }
@@ -941,7 +959,7 @@ async function setPhoto(on) {
     return
   }
   photoStatus.hidden = false
-  photoStatus.textContent = 'Préparation…'
+  photoStatus.textContent = t('photoPreparing')
   try {
     const built = await photo.start({
       scene,
@@ -952,7 +970,7 @@ async function setPhoto(on) {
       sunIntensity: csm.lights[0].visible ? look.sunIntensity : 0,
       surfaceGrade: photoGrade,
       onProgress: (fraction) => {
-        if (run === photoRun) photoStatus.textContent = `Préparation… ${Math.round(fraction * 100)} %`
+        if (run === photoRun) photoStatus.textContent = t('photoPreparingPercent', { n: Math.round(fraction * 100) })
       },
     })
     if (!built || run !== photoRun) return
@@ -982,7 +1000,7 @@ function photoLoop() {
     return true
   }
   photo.render()
-  photoStatus.textContent = `Rendu photo · ${Math.floor(photo.samples)} échantillon${photo.samples >= 2 ? 's' : ''}`
+  photoStatus.textContent = t('photoSamples', { n: Math.floor(photo.samples) })
   return true
 }
 

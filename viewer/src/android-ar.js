@@ -10,6 +10,7 @@
 // Telemetry: 'ar-status' messages (session-started, model-loaded, placed, ended, failed).
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { t } from './i18n.js'
 
 /** Whether Chrome can open a WebXR AR session here (checked once, before any tap) */
 export async function webxrArSupported() {
@@ -95,13 +96,13 @@ function createOverlay(title, scale) {
     <div class="xr-frame">
       <div class="xr-overlay-head">
         <span class="xr-overlay-title"></span>
-        <button type="button" class="xr-overlay-close" aria-label="Quitter la réalité augmentée"><svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></button>
+        <button type="button" class="xr-overlay-close" aria-label="${t('arClose')}"><svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></button>
       </div>
       <div class="xr-overlay-foot">
-        <p class="xr-overlay-status" role="status">Ouverture de la caméra…</p>
+        <p class="xr-overlay-status" role="status">${t('arOpening')}</p>
         <div class="xr-overlay-scale">
-          <span>Taille</span>
-          <div class="xr-slider" role="slider" tabindex="0" aria-label="Taille de l’écluse, de 1:100 (sur une table) à 1:1 (taille réelle)" aria-valuemin="0" aria-valuemax="100">
+          <span>${t('arSize')}</span>
+          <div class="xr-slider" role="slider" tabindex="0" aria-label="${t('arSizeLabel')}" aria-valuemin="0" aria-valuemax="100">
             <div class="xr-slider-track"><div class="xr-slider-fill"></div><div class="xr-slider-thumb"></div></div>
           </div>
           <output></output>
@@ -230,7 +231,7 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
 
   // The model, downloaded while the camera is already on
   let model = null
-  say('Chargement du modèle…')
+  say(t('arLoading'))
   // The model: downloaded in the background since the 3D view finished loading (preloadArModel, main.js), or now if
   // not yet; the download in progress is shown, then the preparation (parsing, decoding the textures). Timing logged.
   const started = performance.now()
@@ -239,8 +240,8 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
   const progress = () => {
     const mb = (download.loaded / 1e6).toFixed(1)
     say(download.total
-      ? `Chargement du modèle… ${Math.round((download.loaded / download.total) * 100)} % (${mb} Mo)`
-      : `Chargement du modèle… ${mb} Mo`)
+      ? t('arLoadingPercent', { n: Math.round((download.loaded / download.total) * 100), mb })
+      : t('arLoadingMb', { mb }))
   }
   if (!wasReady) {
     progress()
@@ -250,7 +251,7 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
     (buffer) => {
       download.listeners.delete(progress)
       const downloaded = performance.now()
-      say('Préparation du modèle…')
+      say(t('arPreparing'))
       new GLTFLoader().parse(buffer, '', (gltf) => {
         model = gltf.scene
         model.traverse((child) => {
@@ -278,19 +279,19 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
           net: connection?.effectiveType ?? null, downlinkMbps: connection?.downlink ?? null,
         })
         say(wasReady
-          ? `Modèle prêt (préparation ${prepareS.toFixed(1)} s).`
-          : `Modèle chargé: attente ${downloadS.toFixed(1)} s, préparation ${prepareS.toFixed(1)} s.`)
+          ? t('arReady', { prepare: prepareS.toFixed(1) })
+          : t('arLoaded', { wait: downloadS.toFixed(1), prepare: prepareS.toFixed(1) }))
         setTimeout(() => {
-          if (!placed) say('Pointez le téléphone vers le sol ou une table, puis touchez l’écran pour placer l’écluse.')
+          if (!placed) say(t('arPoint'))
         }, 3000)
       }, (error) => {
-        say('Le modèle n’a pas pu être préparé.')
+        say(t('arPrepareFailed'))
         log('ar-status', { status: 'failed', step: 'parse', msg: String(error?.message ?? error).slice(0, 300) })
       })
     },
     (error) => {
       download.listeners.delete(progress)
-      say('Le modèle n’a pas pu être chargé.')
+      say(t('arLoadFailed'))
       log('ar-status', { status: 'failed', step: 'model', msg: String(error?.message ?? error).slice(0, 300) })
     },
   )
@@ -313,7 +314,7 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
     model.visible = true
     if (!placed) {
       placed = true
-      say('Touchez l’écran pour déplacer l’écluse.')
+      say(t('arMove'))
       log('ar-status', { status: 'placed' })
     }
   })

@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: its interface follows the page's language (French or English): loading, buttons, settings, photo
+  render and augmented reality texts (`viewer/src/i18n.js`).
 - 3D viewer: « Rendu photo » (path tracing, computers only): the 📷 button left of full screen, or the toggle at the
   top of the settings; the image refines while the camera stays still (bounced light, soft shadows, per-pixel relief).
 - 3D viewer settings: « Éclairage (ciel et soleil) » is out of the panel, the lighting is always on (a link can

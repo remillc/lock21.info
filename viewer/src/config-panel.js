@@ -2,7 +2,7 @@
 // by the ⚙ button. Every setting applies at once through its "live" handler (main.js), sliders while they move: the
 // page never reloads. The settings are not written into the address (it keeps only the camera): the browser keeps
 // them between visits (localStorage, see savedSettings), and a link's query parameters override them at load.
-// Labels in French, like the rest of the viewer.
+// Labels in the viewer's language (i18n.js).
 //
 // Usage: const panel = document.createElement('l21-settings-panel')
 //        panel.configure({ schema, values, live, button }); document.body.append(panel)
@@ -15,6 +15,8 @@
 // Settings kept by the browser between page loads (localStorage of this origin: lock21.info, where the /modele/ page
 // embeds the viewer). Saved at every change, cleared by "Réinitialiser"; unavailable storage (private browsing,
 // blocked site data) only means nothing is kept.
+import { t } from './i18n.js'
+
 const STORAGE_KEY = 'l21-viewer-settings'
 
 export function savedSettings() {
@@ -39,26 +41,26 @@ function saveSettings(params, schema) {
 export function settingsSchema({ mobile }) {
   return [
     {
-      title: 'Éclairage',
+      title: t('lighting'),
       items: [
         // Computers only (the path tracer is too heavy for a phone); the 📷 button does the same
-        ...(mobile ? [] : [{ key: 'photo', label: 'Rendu photo', hint: 'lancer de rayons: image affinée tant que la caméra ne bouge pas (aussi le bouton 📷)', type: 'toggle', def: '0', keep: false }]),
-        { key: 'hdriIntensity', label: 'Force du ciel', hint: 'lumière diffuse, de partout', type: 'range', min: 0, max: 2, step: 0.05, def: '0.35' },
-        { key: 'sunIntensity', label: 'Force du soleil', hint: 'lumière directe, qui fait ressortir le relief', type: 'range', min: 0, max: 3, step: 0.05, def: '1' },
-        { key: 'light', label: 'Soleil (azimut, hauteur)', hint: 'azimut 0 = du sud, 90 = de l’est', type: 'angles', def: '320,65', ranges: [[0, 360, 1], [0, 90, 1]], unit: '°' },
-        { key: 'exposure', label: 'Exposition', type: 'range', min: 0.25, max: 3, step: 0.05, def: '1.2' },
-        { key: 'contrast', label: 'Contraste', hint: '1 = celui des textures; plus haut: sombres plus sombres, clairs plus clairs', type: 'range', min: 0.5, max: 2, step: 0.05, def: '1' },
-        { key: 'saturation', label: 'Saturation', hint: '1 = celle des textures, 0 = gris', type: 'range', min: 0, max: 2, step: 0.05, def: '1.2' },
-        { key: 'wet', label: 'Aspect mouillé', hint: 'zones seulement: reflets du ciel, couleurs plus saturées', type: 'range', min: 0, max: 1, step: 0.05, def: '0.15' },
+        ...(mobile ? [] : [{ key: 'photo', label: t('photo'), hint: t('photoHint'), type: 'toggle', def: '0', keep: false }]),
+        { key: 'hdriIntensity', label: t('skyStrength'), hint: t('skyStrengthHint'), type: 'range', min: 0, max: 2, step: 0.05, def: '0.35' },
+        { key: 'sunIntensity', label: t('sunStrength'), hint: t('sunStrengthHint'), type: 'range', min: 0, max: 3, step: 0.05, def: '1' },
+        { key: 'light', label: t('sun'), hint: t('sunHint'), type: 'angles', def: '320,65', ranges: [[0, 360, 1], [0, 90, 1]], unit: '°' },
+        { key: 'exposure', label: t('exposure'), type: 'range', min: 0.25, max: 3, step: 0.05, def: '1.2' },
+        { key: 'contrast', label: t('contrast'), hint: t('contrastHint'), type: 'range', min: 0.5, max: 2, step: 0.05, def: '1' },
+        { key: 'saturation', label: t('saturation'), hint: t('saturationHint'), type: 'range', min: 0, max: 2, step: 0.05, def: '1.2' },
+        { key: 'wet', label: t('wet'), hint: t('wetHint'), type: 'range', min: 0, max: 1, step: 0.05, def: '0.15' },
       ],
     },
     {
-      title: 'Avancé',
+      title: t('advanced'),
       advanced: true,
       items: [
-        { key: 'profile', label: 'Profil', type: 'select', def: '', options: [['', 'automatique'], ['desktop', 'ordinateur'], ['mobile', 'téléphone']] },
-        { key: 'stats', label: 'Statistiques (mémoire, tuiles)', type: 'toggle', def: '0' },
-        { key: 'tone', label: 'Rendu des tons', type: 'select', def: 'agx', options: [['agx', 'AgX'], ['neutral', 'Khronos neutre'], ['aces', 'ACES'], ['none', 'aucun']] },
+        { key: 'profile', label: t('profile'), type: 'select', def: '', options: [['', t('profileAuto')], ['desktop', t('profileDesktop')], ['mobile', t('profileMobile')]] },
+        { key: 'stats', label: t('stats'), type: 'toggle', def: '0' },
+        { key: 'tone', label: t('tone'), type: 'select', def: 'agx', options: [['agx', 'AgX'], ['neutral', t('toneNeutral')], ['aces', 'ACES'], ['none', t('toneNone')]] },
       ],
     },
   ]
@@ -78,7 +80,7 @@ class SettingsPanel extends HTMLElement {
   connectedCallback() {
     this.hidden = true
     this.setAttribute('role', 'dialog')
-    this.setAttribute('aria-label', 'Réglages du visualiseur')
+    this.setAttribute('aria-label', t('settingsDialog'))
     this.render()
     this.button.hidden = false
     this.button.addEventListener('click', () => this.toggle(this.hidden))
@@ -147,11 +149,11 @@ class SettingsPanel extends HTMLElement {
     const head = document.createElement('div')
     head.className = 'settings-head'
     const title = document.createElement('h2')
-    title.textContent = 'Réglages'
+    title.textContent = t('settings')
     const close = document.createElement('button')
     close.type = 'button'
     close.className = 'settings-close'
-    close.setAttribute('aria-label', 'Fermer les réglages')
+    close.setAttribute('aria-label', t('settingsClose'))
     close.textContent = '×'
     close.addEventListener('click', () => this.toggle(false))
     head.append(title, close)
@@ -173,7 +175,7 @@ class SettingsPanel extends HTMLElement {
 
     const actions = document.createElement('div')
     actions.className = 'settings-actions'
-    const reset = button('Réinitialiser', () => {
+    const reset = button(t('reset'), () => {
       // Back to the defaults, keeping the view; the controls are drawn again with their default values
       for (const item of this.schema.flatMap((section) => section.items)) {
         if (!this.params.has(item.key)) continue
@@ -189,7 +191,7 @@ class SettingsPanel extends HTMLElement {
     if (this.session) {
       const code = document.createElement('p')
       code.className = 'settings-hint settings-session'
-      code.textContent = `Session ${this.session}`
+      code.textContent = t('session', { code: this.session })
       this.append(code)
     }
     this.showDependents(false)

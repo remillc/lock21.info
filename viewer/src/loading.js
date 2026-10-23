@@ -1,10 +1,12 @@
 // <l21-loading>: the viewer's loading indicator (native Custom Element, GUIDELINES.md), centred over the model.
-// "Chargement" with three dots that appear one after the other, then go and start again; under it, an MD3 linear
+// "Chargement" ("Loading") with three dots that appear one after the other, then go and start again; under it, an MD3 linear
 // progress indicator (determinate) with the percentage of tiles loaded. The value never goes back (new tiles join the
 // queue as the camera settles). When the first view is complete, it leaves with the MD3 exit motion (fade,
 // emphasized-accelerate, 200 ms); instantly, and with still dots, when the system asks for reduced motion.
 //
 // Usage: status.start(), status.progress = 0..1, status.done(), status.showError(message)
+import { t } from './i18n.js'
+
 const EXIT = { duration: 200, easing: 'cubic-bezier(0.3, 0, 0.8, 0.15)' } // md.sys.motion: short4, emphasized-accelerate
 
 class Loading extends HTMLElement {
@@ -13,9 +15,9 @@ class Loading extends HTMLElement {
     // On a card of its own: readable over the dark background as over the light terrain that loads behind it
     this.innerHTML = `
       <div class="loading-card">
-      <div class="loading-label">Chargement<span class="loading-dots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span>
+      <div class="loading-label">${t('loading')}<span class="loading-dots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span>
         <span class="loading-percent"></span></div>
-      <div class="loading-bar" role="progressbar" aria-label="Chargement du modèle" aria-valuemin="0" aria-valuemax="100">
+      <div class="loading-bar" role="progressbar" aria-label="${t('loadingBar')}" aria-valuemin="0" aria-valuemax="100">
         <div class="loading-fill"></div>
       </div>
       </div>`
@@ -35,7 +37,7 @@ class Loading extends HTMLElement {
     this.leaving = false
     this.hidden = false
     this.classList.remove('error')
-    this.label.firstChild.textContent = 'Chargement'
+    this.label.firstChild.textContent = t('loading')
     this.value = 0
     this.render()
   }
@@ -50,7 +52,7 @@ class Loading extends HTMLElement {
 
   render() {
     const pct = Math.round(this.value * 100)
-    this.percent.textContent = `${pct} %`
+    this.percent.textContent = t('percent', { n: pct })
     this.fill.style.transform = `scaleX(${this.value})`
     this.bar.setAttribute('aria-valuenow', String(pct))
   }
@@ -73,7 +75,7 @@ class Loading extends HTMLElement {
     this.leaving = false
     this.hidden = false
     this.classList.add('error')
-    this.label.firstChild.textContent = `Erreur: ${message}`
+    this.label.firstChild.textContent = t('error', { message })
   }
 }
 customElements.define('l21-loading', Loading)
