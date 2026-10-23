@@ -2,6 +2,15 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased
+
+- 3D viewer on phones (TODO #54, `viewer/src/touch-nav.js`): in the /modele page's frame one finger scrolls the page
+  and two fingers turn the model and pinch to zoom (a one-finger drag says so); in full screen one finger turns, two
+  pan and zoom. Pinching zooms toward the fingers, and within a metre of the orbit's centre the centre moves ahead,
+  so zooming in never stalls (the wheel too). A double-tap (a double-click) flies to that point. The gestures' card
+  shows at the first touch, and a « ? » button shows it again. Where a frame can't go full screen (iPhone), the
+  full-screen button opens the viewer on its own page. The /modele page's « Naviguer » list follows.
+
 ## 0.9.1 - 2026-10-23
 
 - 3D viewer: the desktop memory budget for tiles back to 1.2 GB: at 2 GB (0.9.0) the browser ran out of memory

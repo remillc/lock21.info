@@ -345,6 +345,48 @@ l21-loading.error .loading-bar {
   top: max(16px, env(safe-area-inset-top));
   right: max(16px, env(safe-area-inset-right));
 }
+/* Touch screens (touch-nav.js): the gestures' card again, left of the settings */
+.touch-help-button {
+  top: max(16px, env(safe-area-inset-top));
+  right: calc(max(16px, env(safe-area-inset-right)) + 56px);
+}
+/* The gestures' card or the frame's one line (touch-nav.js): over the view, top centre, below the buttons; never in
+   the way of a touch */
+.touch-hint {
+  position: fixed;
+  top: calc(max(16px, env(safe-area-inset-top)) + 56px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: min(360px, calc(100% - 32px));
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: rgb(30 33 25 / 92%);
+  color: #e3e6d8;
+  font: 400 13px/18px system-ui, sans-serif;
+  letter-spacing: 0.25px;
+  pointer-events: none;
+}
+/* A small frame (the /modele page on a phone): just below the top edge, the buttons beside it */
+@media (max-height: 400px) {
+  .touch-hint {
+    top: max(8px, env(safe-area-inset-top));
+    max-width: calc(100% - 136px);
+  }
+}
+.touch-hint[hidden] {
+  display: none;
+}
+.touch-hint strong {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.touch-hint ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #c6c9bb;
+}
 
 l21-settings-panel {
   position: fixed;
