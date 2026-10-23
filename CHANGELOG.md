@@ -8,7 +8,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   neoprene sleeve and glove (the hand a little closed), a dive computer on the wrist, and the light strapped on the back
   of the hand, modelled after a Light & Motion Sola 1200 (fluted head, knurled blue bezel, LEDs in their cups behind
   glass, slide switch, strap and buckle). The beam starts at the drawn light. Drawn over the view (never into a wall),
-  it lags a little behind the camera's turns and sways gently (`viewer/src/diver-arm.js`; built by
+  it lags a little behind the camera's turns and sways gently from the shoulder, the beam following the light's aim
+  (`viewer/src/diver-arm.js`; built by
   `tools/diver/make_dive_light.py` and `make_diver_arm.py` into `viewer/public/diver/`). The arm's shape: « First
   Person hands rigged » by DavidFischer (Sketchfab, CC BY 4.0, credited on the /modele page).
 - 3D viewer: the crayfish's claws keep the model's own colours (the blue tint removed; orange pincer tips kept), and

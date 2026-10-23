@@ -13,8 +13,11 @@ const URL = `${import.meta.env.BASE_URL}diver/diver-arm.glb`
 // How fast the arm catches up with the camera's turns (1/s), and how far it may lag (rad)
 const FOLLOW = 9
 const MAX_LAG = 0.12
-// The sway: amplitudes (m, rad) and periods (s)
-const SWAY = { lift: 0.004, side: 0.003, roll: 0.012, periods: [4.3, 6.1, 5.2] }
+// The sway (Christian, 2026-10-23: the beam follows the arm): the arm turns a little about the shoulder (camera's
+// frame, m), up and down, side to side and about itself (rad), each at its own period (s): the light's aim wanders
+// with it, so does the beam (a spot 6 m away wanders about 15 cm each way)
+const SHOULDER = new THREE.Vector3(0.2, -0.3, 0.1)
+const SWAY = { pitch: 0.022, yaw: 0.028, roll: 0.015, periods: [4.3, 6.1, 5.2] }
 
 /**
  * @param {object} options
@@ -39,6 +42,10 @@ export function createDiverArm({ onLampPose = () => {} } = {}) {
   const lag = new THREE.Quaternion()
   const sway = new THREE.Euler()
   const swayTurn = new THREE.Quaternion()
+  const pose = new THREE.Matrix4()
+  const turn = new THREE.Matrix4()
+  const toShoulder = new THREE.Matrix4().makeTranslation(SHOULDER.x, SHOULDER.y, SHOULDER.z)
+  const fromShoulder = new THREE.Matrix4().makeTranslation(-SHOULDER.x, -SHOULDER.y, -SHOULDER.z)
   // The light's front and axis in the model, and as the arm holds them now
   const frontLocal = new THREE.Vector3()
   const axisLocal = new THREE.Vector3(0, 0, -1)
@@ -79,9 +86,11 @@ export function createDiverArm({ onLampPose = () => {} } = {}) {
       if (held.angleTo(view.quaternion) > MAX_LAG) held.rotateTowards(view.quaternion, held.angleTo(view.quaternion) - MAX_LAG)
       lag.copy(view.quaternion).invert().multiply(held)
       const [a, b, c] = SWAY.periods.map((period) => Math.sin((2 * Math.PI * time) / period))
-      sway.set(0, 0, SWAY.roll * c)
-      arm.quaternion.copy(lag).multiply(swayTurn.setFromEuler(sway))
-      arm.position.set(SWAY.side * b, SWAY.lift * a, 0)
+      // The lag about the eye, the sway about the shoulder
+      sway.set(SWAY.pitch * a, SWAY.yaw * b, SWAY.roll * c)
+      turn.makeRotationFromQuaternion(swayTurn.setFromEuler(sway))
+      pose.makeRotationFromQuaternion(lag).multiply(toShoulder).multiply(turn).multiply(fromShoulder)
+      pose.decompose(arm.position, arm.quaternion, arm.scale)
       arm.updateMatrix()
       onLampPose(front.copy(frontLocal).applyMatrix4(arm.matrix), axis.copy(axisLocal).applyQuaternion(arm.quaternion))
     },

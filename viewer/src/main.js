@@ -998,6 +998,7 @@ let mockupModels = []
 let crawfishes = []
 // The diver's arm and its light, while underwater with the light on: the beam starts at the drawn light
 const diverArm = createDiverArm({ onLampPose: (front, axis) => underwater.setLampPose(front, axis) })
+if (import.meta.env.DEV) window.l21.diverArm = diverArm
 // The river's current (m/s, world): west to east, 35 ft/min (measured 2024-06-08)
 const RIVER_CURRENT = new THREE.Vector3((35 * 0.3048) / 60, 0, 0)
 /** @param {THREE.Material} material */
