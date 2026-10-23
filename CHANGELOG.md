@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the mockups of the zones not yet online are opaque (the water hides them with the distance,
+  like the zones); in the air they stay translucent ghosts.
 - 3D viewer, underwater: looking up, the sun's disc and glare only as far as its light gets through the water above
   (in murky water a few visibilities down, none: a dim, diffuse glow); the particles drift 15 % slower.
 - 3D viewer, underwater: the dive light's beam 32° across in all (was 48°), its hotspot unchanged (16°).

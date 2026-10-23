@@ -1377,6 +1377,14 @@ function renderLoop() {
   drawScene()
 }
 function drawScene() {
+  // The mockups: translucent ghosts in the air, opaque underwater (the water hides them with the distance, like the
+  // zones: Christian, 2026-10-23); kept in step here, the material being made after the underwater switch
+  if (mockupMaterial.transparent === underwater.on) {
+    mockupMaterial.transparent = !underwater.on
+    mockupMaterial.opacity = underwater.on ? 1 : MOCKUP_OPACITY
+    mockupMaterial.depthWrite = underwater.on
+    mockupMaterial.needsUpdate = true
+  }
   // The shadow cascades follow the camera
   csm.update()
   // No ambient occlusion underwater: it darkened the creases of surfaces the water had erased, which redrew the lock
