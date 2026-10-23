@@ -38,8 +38,12 @@ const STEP = [0.05, 0.15]
 // diver, every SHUFFLE_WAIT s (at random in between)
 const SHUFFLE = 0.08
 const SHUFFLE_WAIT = [2, 5]
-// The claws' blue (multiplied with the texture's brightness)
-const CLAW_BLUE = new THREE.Color(0.35, 0.6, 1.25)
+// The claws' colours, after a blue land crayfish (Christian's reference photo, 2026-10-23): a saturated cobalt blue
+// keeping the texture's light and shade, orange at the fingers' tips (within TIP m of the fingers' end once scaled).
+// Linear colours
+const CLAW_BLUE = new THREE.Color(0.04, 0.17, 0.72)
+const CLAW_TIP = new THREE.Color(0.85, 0.3, 0.04)
+const TIP = 0.012
 
 const X = new THREE.Vector3(1, 0, 0)
 const Y = new THREE.Vector3(0, 1, 0)
@@ -112,14 +116,39 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
       for (let k = 0; k < 4; k++) if (clawJoints.has(skinIndex.getComponent(i, k))) clawness[i] += skinWeight.getComponent(i, k)
     }
     mesh.geometry.setAttribute('clawness', new THREE.BufferAttribute(clawness, 1))
+    // The fingers' tips: near the end of each claw's last bone (its moving finger; the fixed one closes against it),
+    // in the mesh's bind space (from the bones' inverse bind matrices)
+    const position = mesh.geometry.attributes.position
+    const ends = mesh.skeleton.bones
+      .map((bone, i) => (/^claw_[LR]_003$/.test(bone.name) ? i : -1))
+      .filter((i) => i >= 0)
+      .map((i) => {
+        const bind = mesh.skeleton.boneInverses[i].clone().invert()
+        const child = mesh.skeleton.bones[i].children.find((c) => c.isBone)
+        return child ? child.position.clone().applyMatrix4(bind) : new THREE.Vector3().setFromMatrixPosition(bind)
+      })
+    const size = new THREE.Box3().setFromBufferAttribute(position).getSize(new THREE.Vector3())
+    const radius = (TIP / LENGTH) * Math.max(size.x, size.y, size.z)
+    const tipness = new Float32Array(position.count)
+    const point = new THREE.Vector3()
+    for (let i = 0; i < position.count; i++) {
+      point.fromBufferAttribute(position, i)
+      const nearest = Math.min(...ends.map((end) => end.distanceTo(point)))
+      tipness[i] = 1 - THREE.MathUtils.smoothstep(nearest, radius * 0.4, radius)
+    }
+    mesh.geometry.setAttribute('tipness', new THREE.BufferAttribute(tipness, 1))
     material.onBeforeCompile = (shader) => {
       shader.uniforms.clawBlue = { value: CLAW_BLUE }
-      shader.vertexShader = 'attribute float clawness;\nvarying float vClawness;\n' +
-        shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nvClawness = clawness;')
-      shader.fragmentShader = 'uniform vec3 clawBlue;\nvarying float vClawness;\n' +
+      shader.uniforms.clawTip = { value: CLAW_TIP }
+      shader.vertexShader = 'attribute float clawness;\nattribute float tipness;\nvarying float vClawness;\nvarying float vTipness;\n' +
+        shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nvClawness = clawness;\nvTipness = tipness;')
+      shader.fragmentShader = 'uniform vec3 clawBlue;\nuniform vec3 clawTip;\nvarying float vClawness;\nvarying float vTipness;\n' +
         shader.fragmentShader.replace('#include <map_fragment>', `#include <map_fragment>
-          float clawLuma = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-          diffuseColor.rgb = mix(diffuseColor.rgb, clawLuma * clawBlue, smoothstep(0.3, 0.9, vClawness));`)
+          // The texture's light and shade, on the claws' own colours
+          float clawShade = 0.45 + 1.6 * dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+          float onClaw = smoothstep(0.3, 0.9, vClawness);
+          diffuseColor.rgb = mix(diffuseColor.rgb, clawBlue * clawShade, onClaw);
+          diffuseColor.rgb = mix(diffuseColor.rgb, clawTip * clawShade, vTipness * onClaw);`)
     }
     material.customProgramCacheKey = () => 'crayfish-claws'
     return material
