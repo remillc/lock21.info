@@ -79,6 +79,13 @@ class SettingsPanel extends HTMLElement {
     this.render()
     this.button.hidden = false
     this.button.addEventListener('click', () => this.toggle(this.hidden))
+    // The wheel stays in the panel: at the end of its list (or when it has nothing to scroll), the page around the
+    // viewer (the /modele page) would scroll instead. style.css: overscroll-behavior does the same for touch
+    this.addEventListener('wheel', (e) => {
+      const atTop = this.scrollTop <= 0 && e.deltaY < 0
+      const atBottom = this.scrollTop + this.clientHeight >= this.scrollHeight - 1 && e.deltaY > 0
+      if (atTop || atBottom) e.preventDefault()
+    }, { passive: false })
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && !this.hidden) this.toggle(false)
     })
