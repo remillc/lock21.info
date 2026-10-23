@@ -79,8 +79,8 @@ if (document.fullscreenEnabled) {
     fullscreenButton.dataset.full = String(Boolean(document.fullscreenElement))
   })
 } else if (embedded && window.matchMedia('(pointer: coarse)').matches) {
-  // No full screen for a frame (iPhone): the button opens the viewer on its own page, at the same view, where one
-  // finger turns the model (touch-nav.js)
+  // No full screen for a frame (iPhone): the button opens the viewer on its own page, at the same view, the whole
+  // screen for the model
   fullscreenButton.hidden = false
   fullscreenButton.addEventListener('click', () => {
     window.top.location.href = viewUrl()
@@ -233,7 +233,6 @@ const touchNav = createTouchNav({
   controls,
   camera,
   surface: renderer.domElement,
-  embedded,
   t,
   requestRender: () => requestRender(),
   pick: (x, y) => {

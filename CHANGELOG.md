@@ -4,12 +4,12 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- 3D viewer on phones (TODO #54, `viewer/src/touch-nav.js`): in the /modele page's frame one finger scrolls the page
-  and two fingers turn the model and pinch to zoom (a one-finger drag says so); in full screen one finger turns, two
-  pan and zoom. Pinching zooms toward the fingers, and within a metre of the orbit's centre the centre moves ahead,
-  so zooming in never stalls (the wheel too). A double-tap (a double-click) flies to that point. The gestures' card
-  shows at the first touch, and a « ? » button shows it again. Where a frame can't go full screen (iPhone), the
-  full-screen button opens the viewer on its own page. The /modele page's « Naviguer » list follows.
+- 3D viewer on phones (TODO #54, `viewer/src/touch-nav.js`): over the viewer, one finger pans the model and two fingers
+  turn it and pinch to zoom, toward the fingers; the page scrolls from outside the viewer. Within a metre of the orbit's
+  centre the centre moves ahead, so zooming in never stalls (the wheel too). A double-tap (a double-click) flies to
+  that point. The gestures' card shows at the first touch, and a « ? » button shows it again. Where a frame can't go
+  full screen (iPhone), the full-screen button opens the viewer on its own page. The /modele page's « Naviguer » list
+  follows.
 
 ## 0.9.1 - 2026-10-23
 
