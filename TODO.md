@@ -66,8 +66,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   phone, navigation and search, on both languages
 - [ ] #39 Design: applied (tokens, fonts, header and footer bars, home page, logo, tables); to do: a history page for the "L'histoire" entry (it points to the zone map for now), the 3D viewer in the same
   palette and fonts, check contrast (WCAG AA) in both themes
-- [ ] #53 Thank the people who helped: those mentioned in the pages (dive buddies, Save Ontario Shipwrecks, Nick
-  Baets' drawings…) and Sylvain Marcotte, who designed the rig; probably on the About page (French and English)
 - [ ] #48 Idea: a guided tour in the viewer (a sequence of views with a short text each). Stops noted so far:
   - zone 16, the spillway gate door on the floor: `?cam=-18.54,1.28,8.53,-17.08,-0.65,10.34`
 

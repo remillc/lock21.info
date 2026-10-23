@@ -39,3 +39,14 @@ Le relevé avance une zone à la fois: la [page du modèle 3D](/modele) dit comb
 Ce relevé est un projet personnel de Christian Rémillard, plongeur. Le modèle 3D est sous licence
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.fr): vous pouvez le réutiliser en citant la source. Pour
 une question, une correction ou une photo d'archive de l'écluse: [info@lock21.info](mailto:info@lock21.info).
+
+## Remerciements
+
+Ce relevé, je ne l'ai pas fait seul. Merci:
+
+- à mes compagnons de plongée, pour les plongées dans le courant, la sécurité et la patience pendant que je filmais
+  chaque moule zébrée: Jean-Sébastien Fournier, Josianne Demers, Nicolas Pinsonneault, Julie Cardinal, Thierry Amar,
+  Véronique Lisi, Michel Giroux et Dan Foster;
+- à Sylvain Marcotte, qui a conçu le [rig](/questions/dimensions-rig) qui porte les caméras;
+- à Nick Baets et à [Save Ontario Shipwrecks](https://saveontarioshipwrecks.ca/chapter-ottawa/) (section d'Ottawa),
+  pour les dessins de l'écluse de 1988 qui ont servi au [découpage du site](/decoupage-du-site).
