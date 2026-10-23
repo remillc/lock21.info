@@ -2,16 +2,21 @@
 // Page frame: Starlight's (0.42), plus the mobile menu on splash pages (the home page, /modele/). Those pages have no
 // navigation column, so Starlight draws neither the menu button (☰) nor the menu, and on small screens the bar looked
 // different from the rest of the site, without access to the navigation or the "Modèle 3D" button. Here, on splash
-// pages, the button and the same menu (Sidebar.astro) are drawn on small screens only; wide screens are unchanged.
+// pages, the button and the same menu (Sidebar.astro) are drawn on small screens only; wide screens are unchanged,
+// except /modele: there the button and the menu are on wide screens too, the menu a panel over the page's left side
+// (a popover at every width: a click outside or Esc closes it), so the viewer keeps its full width (Christian,
+// 2026-10-23).
 // When updating Starlight, compare with node_modules/@astrojs/starlight/dist/components/PageFrame.astro.
 import MobileMenuToggle from 'virtual:starlight/components/MobileMenuToggle'
 import Sidebar from 'virtual:starlight/components/Sidebar'
 
 const { hasSidebar, entry } = Astro.locals.starlightRoute
 const splash = !hasSidebar && entry.data.template === 'splash'
+// The 3D model's page: its menu at every width (see above)
+const drawer = splash && /^(en\/)?modele$/.test(entry.id)
 ---
 
-<div class:list={['page sl-flex', { 'splash-menu': splash }]}>
+<div class:list={['page sl-flex', { 'splash-menu': splash, 'drawer-menu': drawer }]}>
   <header class="header"><slot name="header" /></header>
   {
     (hasSidebar || splash) && (
@@ -26,9 +31,11 @@ const splash = !hasSidebar && entry.data.template === 'splash'
 
               const desktopMediaQuery = matchMedia('(min-width: 50em)')
 
-              // Remove the popover attribute on desktop viewports. It's only needed for the mobile menu.
+              // Remove the popover attribute on desktop viewports. It's only needed for the mobile menu; on /modele the
+              // menu stays a popover at every width (a panel over the page)
+              const drawer = Boolean(this.closest('.drawer-menu'))
               const resetPopoverAttribute = () => {
-                this.popover = desktopMediaQuery.matches ? null : 'auto'
+                this.popover = desktopMediaQuery.matches && !drawer ? null : 'auto'
               }
               resetPopoverAttribute()
               desktopMediaQuery.addEventListener('change', () => resetPopoverAttribute())
@@ -135,6 +142,28 @@ const splash = !hasSidebar && entry.data.template === 'splash'
       .splash-menu .sidebar {
         display: none;
       }
+      /* /modele: the menu on wide screens too, a panel over the page's left side while open; room for its button */
+      .drawer-menu .sidebar {
+        display: block;
+      }
+      .drawer-menu .sidebar-pane:not(:popover-open) {
+        display: none;
+      }
+      .drawer-menu .sidebar-pane {
+        box-shadow: var(--sl-shadow-lg);
+      }
+      .drawer-menu .header {
+        padding-inline-end: calc(var(--sl-nav-gap) + var(--sl-nav-pad-x) + var(--sl-menu-button-size));
+      }
+    }
+  }
+</style>
+
+<style is:global>
+  /* /modele: Starlight's menu button (md:sl-hidden) shown on wide screens too; outside the layers, to win */
+  @media (min-width: 50rem) {
+    .drawer-menu .sl-menu-button {
+      display: flex;
     }
   }
 </style>
