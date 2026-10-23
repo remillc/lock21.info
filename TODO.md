@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#49**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#50**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -70,6 +70,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
     summer 20' (6 m), autumn 30' (9 m)
 - [ ] #47 Idea: a walk mode in the viewer (first-person, eye height above the floor, walking through the lock instead of
   orbiting around it)
+- [ ] #49 The /modele page's 3D default view on phones is not good (the start view, `START_VIEW` in
+  `viewer/src/main.js`, was chosen on a computer screen; a phone's narrow frame needs its own)
 - [ ] #48 Idea: a guided tour in the viewer (a sequence of views with a short text each). Stops noted so far:
   - zone 16, the spillway gate door on the floor: `?cam=-18.54,1.28,8.53,-17.08,-0.65,10.34`
 
