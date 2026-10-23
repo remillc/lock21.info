@@ -12,6 +12,7 @@ import { TilesRenderer } from '3d-tiles-renderer'
 import { savedSettings, settingsSchema } from './config-panel.js'
 import './loading.js'
 import './tooltip.js'
+import { createUnderwater, refractedSun, SURFACE_Y } from './underwater.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
@@ -47,6 +48,7 @@ homeLink.href = homePath
 for (const [selector, label, tooltip] of [
   ['.settings-button', 'settings', 'settings'],
   ['.ar-button', 'ar', 'ar'],
+  ['.underwater-button', 'underwater', 'underwater'],
   ['.fullscreen', 'fullscreen', 'fullscreenTitle'],
 ]) {
   const element = document.querySelector(selector)
@@ -184,6 +186,9 @@ const scene = new THREE.Scene()
 // Plain background when the sky is off: the site's darkest surface (Moss palette, src/styles/tokens.scss)
 const backdrop = new THREE.Color(0x12140e)
 scene.background = backdrop
+// « Ambiance sous-marine » (underwater.js): its water column, surface and particles, and the absorption every lit
+// material carries (litMaterial); off until the 🤿 button or the setting turns it on (setUnderwater)
+const underwater = createUnderwater(scene, renderer)
 const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.05, 2000)
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
@@ -238,6 +243,12 @@ const look = {
   tone: ['neutral', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'agx',
   exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.2,
   wet: wetness(params.has('wet') ? params.get('wet') : 0.15),
+  // « Ambiance sous-marine » (?underwater=1) and its season (?season=0..3: winter, spring, summer, autumn; default
+  // summer, the diving season), see underwater.js
+  underwater: params.get('underwater') === '1',
+  season: params.has('season') ? Number(params.get('season')) : 2,
+  // The dive light while underwater (?lamp=0 turns it off)
+  lamp: params.get('lamp') !== '0',
   // Saturation of the lit surfaces (?saturation=0..2, 1 = the textures' own; default 1.2, Christian's choice: AgX greys the
   // colours, 1.5 matched the unlit textures' saturation on zone 3, see tone)
   saturation: saturationOf(params.has('saturation') ? params.get('saturation') : 1.2),
@@ -415,6 +426,7 @@ function litMaterial(surface, mesh, normalMap, sky) {
           '\nif (dot(normal, nonPerturbedNormal) < 0.0) normal = -normal;',
       )
     }
+    underwater.patchShader(shader)
   }
   // The patches depend on these values (the wetness is written into the shader): one compiled program per
   // combination (three.js would otherwise reuse the first one, its cache key being the function's source)
@@ -485,11 +497,15 @@ function updateLights() {
   const skyTurn = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), turn)
   scene.environmentRotation.setFromQuaternion(skyTilt.multiply(skyTurn))
   const direction = sunDirection(...look.light)
+  // Underwater: the sun bent toward the vertical by the surface, and dimmer (absorbed on its way down); the lighting
+  // environment is the water column, not turned with the sky photo
+  underwater.setSun(direction)
+  if (underwater.on) scene.environmentRotation.set(0, 0, 0)
   // CSM's light direction points from the sun to the scene
-  csm.lightDirection.copy(direction).negate()
+  csm.lightDirection.copy(underwater.on ? refractedSun(direction) : direction).negate()
   const on = look.sky && look.sunIntensity > 0
   csm.lights.forEach((light, i) => {
-    light.intensity = Math.PI * look.sunIntensity
+    light.intensity = Math.PI * look.sunIntensity * (underwater.on ? UNDERWATER_SUN : 1)
     light.visible = on && (look.shadows || i === 0)
     light.castShadow = on && look.shadows
   })
@@ -517,12 +533,59 @@ updateLights()
 let skyTexture = null
 let skyEnvironment = null
 function updateEnvironment() {
-  scene.environment = look.sky ? skyEnvironment : null
-  scene.environmentIntensity = look.skyIntensity
-  scene.background = look.skyBackground && skyTexture ? skyTexture : backdrop
+  scene.environment = underwater.on ? underwater.environment : look.sky ? skyEnvironment : null
+  scene.environmentIntensity = underwater.on ? UNDERWATER_WATER_LIGHT : look.skyIntensity
+  // Underwater, the water column (a sphere around the camera) is the background
+  scene.background = underwater.on ? null : look.skyBackground && skyTexture ? skyTexture : backdrop
   requestRender()
 }
 updateEnvironment()
+
+// « Ambiance sous-marine »: the sun's strength once at the floor (absorbed by 17 m of water; the eye adapts, so not
+// the true fraction), and the strength of the water column's light (the lighting environment)
+const UNDERWATER_SUN = 0.45
+const UNDERWATER_WATER_LIGHT = 1.2
+const underwaterButton = document.querySelector('.underwater-button')
+underwaterButton.hidden = false
+underwaterButton.addEventListener('click', () => setUnderwater(!underwater.on))
+/** @param {boolean} on */
+function setUnderwater(on) {
+  look.underwater = on
+  underwater.setOn(on)
+  underwaterButton.setAttribute('aria-pressed', String(on))
+  seasonControl.hidden = !on
+  settings.reflect('underwater', on ? '1' : '0')
+  updateLights()
+  updateEnvironment()
+}
+live.underwater = (v) => setUnderwater(v === '1')
+live.season = (v) => {
+  look.season = Number(v)
+  underwater.setSeason(look.season)
+  showSeason()
+  updateEnvironment()
+}
+// The season slider beside the 🤿 button (while underwater), kept in step with the settings' « Saison »
+const seasonControl = document.querySelector('.season-control')
+const seasonRange = seasonControl.querySelector('.season-range')
+const seasonValue = seasonControl.querySelector('.season-value')
+seasonRange.setAttribute('aria-label', t('season'))
+function showSeason() {
+  seasonRange.value = String(look.season)
+  seasonValue.textContent = t('seasonValue', { index: look.season })
+}
+seasonRange.addEventListener('input', () => {
+  live.season(seasonRange.value)
+  settings.reflect('season', seasonRange.value)
+})
+showSeason()
+live.lamp = (v) => {
+  look.lamp = v === '1'
+  underwater.setLamp(look.lamp)
+  requestRender()
+}
+underwater.setSeason(look.season)
+underwater.setLamp(look.lamp)
 new HDRLoader().load(`${import.meta.env.BASE_URL}hdri/sky.hdr`, (texture) => {
   texture.mapping = THREE.EquirectangularReflectionMapping
   const pmrem = new THREE.PMREMGenerator(renderer)
@@ -850,6 +913,7 @@ settings.configure({
   session,
 })
 document.body.append(settings)
+if (look.underwater) setUnderwater(true)
 
 // Loading indicator: share of the tiles loaded among those the first view asks for, all zones together; done once every
 // root is in and nothing has been pending for a moment
@@ -901,6 +965,12 @@ function renderLoop() {
   updateStats()
   // update() returns true while the camera moves (including the damping glide after a gesture)
   if (controls.update()) needsRender = true
+  // Underwater: the camera stays below the surface, and the caustics and particles move (a frame every time)
+  if (underwater.on) {
+    if (camera.position.y > SURFACE_Y - 0.5) camera.position.y = SURFACE_Y - 0.5
+    underwater.update(camera)
+    needsRender = true
+  }
   const loading = tilesets.some((t) => t.stats.queued + t.stats.downloading + t.stats.parsing > 0)
   updateLoading()
   if (!needsRender && !loading) return

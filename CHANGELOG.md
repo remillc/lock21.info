@@ -4,6 +4,12 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: « Ambiance sous-marine » (TODO #46, from the first attempt #31): the 🤿 button beside full screen, or the
+  settings' « Sous l'eau » section. Light absorbed along the line of sight (red first) toward the water's colour, the
+  water column as background and lighting, the sun refracted at the surface, caustics, the surface seen from below,
+  particles drifting with the current, a dive light held near the camera (« Lampe de plongée »). A « Saison » slider,
+  beside the button and in the settings: visibility and water colour, winter 100 ft, spring 10, summer 20 (default),
+  autumn 30 (`viewer/src/underwater.js`).
 - 3D viewer: MD3 tooltips on its buttons (`<l21-tooltip>`, `viewer/src/tooltip.js`) instead of the browser's own,
   in the page's language; also shown on keyboard focus.
 - 3D viewer: gloss by surface (roughness from the relief map: smooth planks glossier, mussels matte) tried and set

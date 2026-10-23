@@ -8,6 +8,7 @@
 //        panel.configure({ schema, values, live, button }); document.body.append(panel)
 
 // type: toggle | range | select | text | angles (two ranges stored as "a,b")
+// format: (value) => text shown for a range's value instead of the number (« Saison »)
 // dependsOn: key of a toggle (the row is shown only while it is on), or [key, value] (shown only while that setting
 // has that value)
 // Settings kept by the browser between page loads (localStorage of this origin: lock21.info, where the /modele/ page
@@ -38,6 +39,14 @@ function saveSettings(params, schema) {
 
 export function settingsSchema({ mobile }) {
   return [
+    {
+      title: t('underwaterSection'),
+      items: [
+        { key: 'underwater', label: t('underwater'), hint: t('underwaterHint'), type: 'toggle', def: '0' },
+        { key: 'season', label: t('season'), hint: t('seasonHint'), type: 'range', min: 0, max: 3, step: 1, def: '2', format: (v) => t('seasonValue', { index: Number(v) }), dependsOn: 'underwater' },
+        { key: 'lamp', label: t('lamp'), hint: t('lampHint'), type: 'toggle', def: '1', dependsOn: 'underwater' },
+      ],
+    },
     {
       title: t('lighting'),
       items: [
@@ -122,6 +131,24 @@ class SettingsPanel extends HTMLElement {
       if (still) row.hidden = !on
       else reveal(row, on)
     }
+  }
+
+  // A value changed elsewhere (the 🤿 button for « Ambiance sous-marine »): kept, saved and shown, without applying
+  // it again
+  reflect(key, value) {
+    const item = this.item(key)
+    if (!item) return
+    if (value === item.def) this.params.delete(key)
+    else this.params.set(key, value)
+    saveSettings(this.params, this.schema)
+    const row = this.querySelector(`[data-key="${key}"]`)
+    if (row) {
+      const fresh = control(item, value, (v) => this.set(item, v))
+      fresh.dataset.key = key
+      fresh.dataset.shown = row.dataset.shown ?? ''
+      row.replaceWith(fresh)
+    }
+    this.showDependents()
   }
 
   item(key) {
@@ -233,7 +260,7 @@ function control(item, value, onChange) {
     const ranges = item.type === 'angles' ? item.ranges : [[item.min, item.max, item.step]]
     const output = document.createElement('output')
     const inputs = ranges.map(([min, max, step], i) => rangeInput(i ? `${id}-${i + 1}` : id, min, max, step, values[i] ?? String(min)))
-    const show = () => (output.textContent = inputs.map((r) => `${r.value}${item.unit ?? ''}`).join(', '))
+    const show = () => (output.textContent = inputs.map((r) => (item.format ? item.format(r.value) : `${r.value}${item.unit ?? ''}`)).join(', '))
     show()
     const current = () => inputs.map((r) => r.value).join(',')
     // Applied while the slider moves, not only when it is released

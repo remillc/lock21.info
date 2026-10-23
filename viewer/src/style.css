@@ -213,9 +213,54 @@ l21-loading.error .loading-bar {
 .fullscreen[data-full='true'] .icon-exit {
   display: block;
 }
-/* Augmented reality (main.js): left of the full-screen button */
-.ar-button {
+/* « Ambiance sous-marine » (main.js): left of the full-screen button; filled while on (selected) */
+.underwater-button {
   right: calc(max(16px, env(safe-area-inset-right)) + 56px);
+  bottom: max(16px, env(safe-area-inset-bottom));
+}
+.icon-button[aria-pressed='true'] {
+  background: #b8c97a;
+  color: #12140e;
+}
+/* The season slider (main.js), left of the underwater button while it is on: a pill like the other controls over
+   the 3D view, an MD3 discrete slider (four stops) and its value. Narrow screens: above the buttons' row */
+.season-control {
+  position: fixed;
+  right: calc(max(16px, env(safe-area-inset-right)) + 112px);
+  bottom: max(16px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: rgb(30 33 25 / 88%);
+  color: #e3e6d8;
+  font: 500 12px/16px system-ui, sans-serif;
+  letter-spacing: 0.5px;
+}
+.season-control[hidden] {
+  display: none;
+}
+.season-range {
+  width: 112px;
+  margin: 0;
+  accent-color: #b8c97a;
+  cursor: pointer;
+}
+.season-value {
+  min-width: 120px;
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .season-control {
+    right: max(16px, env(safe-area-inset-right));
+    bottom: calc(max(16px, env(safe-area-inset-bottom)) + 56px);
+  }
+}
+/* Augmented reality (main.js, phones): left of the underwater button */
+.ar-button {
+  right: calc(max(16px, env(safe-area-inset-right)) + 112px);
   bottom: max(16px, env(safe-area-inset-bottom));
 }
 
