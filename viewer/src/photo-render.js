@@ -6,14 +6,18 @@
 // (the tiles' level of detail is frozen meanwhile, main.js):
 // - the same geometry, as plain float copies (the tiles store positions as 16-bit integers, normalized and
 //   interleaved, rescaled by each tile's matrix; the path tracer reads raw floats, which gave garbage triangles and a
-//   black image), one vertex per triangle corner with flat normals (averaged normals went dark wherever neighbouring
-//   triangles of the photogrammetry mesh face opposite ways); placed with each mesh's world matrix;
+//   black image); placed with each mesh's world matrix. Normals: on the zones, each vertex takes the normal of the
+//   zone's relief map at its texture coordinates (smooth, and the right way out), and a triangle whose winding
+//   disagrees with its vertices' normals is turned over. Averaged normals went dark wherever neighbouring triangles of
+//   the photogrammetry mesh face opposite ways, flat normals showed every facet. Elsewhere (the context, Blender-made
+//   and consistent), averaged normals;
 // - plain physical materials: the path tracer ignores our shader patches (green and cyan removal, zone colour balance,
 //   saturation), so each photo texture gets a corrected copy, made on the GPU with the same formulas, at the size of
 //   the path tracer's texture array: every texture of the scene sits in one array, at one size, chosen from a memory
 //   budget (TEXTURE_BUDGET) between 512 and 2048 px. A tile's texture is an atlas of many small pieces: at 512 px
 //   each piece was a smear of a few pixels;
-// - no relief maps: ours are in object space, which the path tracer doesn't read; the geometry's own normals instead;
+// - no relief maps as such: ours are in object space, which the path tracer doesn't read (they give the vertices'
+//   normals instead, see above);
 // - the same sky (environment and background, rotations and strengths) and one sun (the shadow cascades are three
 //   lights in the normal display).
 // The image goes to the screen through the path tracer's own pass, with the renderer's tone mapping and exposure, as
@@ -63,27 +67,66 @@ const gradeMaterial = new THREE.ShaderMaterial({
 })
 const gradeQuad = new FullScreenQuad(gradeMaterial)
 
+// A raw copy of a texture (the relief maps: data, no colour conversion), to read it back on the CPU
+const copyMaterial = new THREE.ShaderMaterial({
+  uniforms: { map: { value: null } },
+  vertexShader: gradeMaterial.vertexShader,
+  fragmentShader: /* glsl */ `
+    uniform sampler2D map;
+    varying vec2 vUv;
+    void main() {
+      gl_FragColor = texture2D(map, vUv);
+    }`,
+})
+const copyQuad = new FullScreenQuad(copyMaterial)
+const RELIEF_READ_SIZE = 1024
+
 /**
- * A copy of the geometry the path tracer can read: plain floats, one vertex per triangle corner (position, uv) and
- * flat normals
+ * A copy of the geometry the path tracer can read: plain floats (position, uv, normal), same triangles
  * @param {THREE.BufferGeometry} geometry
+ * @param {((u: number, v: number, out: THREE.Vector3) => void) | null} reliefNormal - the relief map's normal at a
+ *   texture coordinate (object space); null: averaged normals
  */
-function floatGeometry(geometry) {
+function floatGeometry(geometry, reliefNormal) {
   const copy = new THREE.BufferGeometry()
-  const index = geometry.index
-  const count = index ? index.count : geometry.attributes.position.count
   for (const name of ['position', 'uv']) {
     const attribute = geometry.attributes[name]
     if (!attribute) continue
     const size = attribute.itemSize
-    const values = new Float32Array(count * size)
-    for (let i = 0; i < count; i++) {
-      const vertex = index ? index.getX(i) : i
-      for (let k = 0; k < size; k++) values[i * size + k] = attribute.getComponent(vertex, k)
+    const values = new Float32Array(attribute.count * size)
+    for (let i = 0; i < attribute.count; i++) {
+      for (let k = 0; k < size; k++) values[i * size + k] = attribute.getComponent(i, k)
     }
     copy.setAttribute(name, new THREE.BufferAttribute(values, size))
   }
-  copy.computeVertexNormals()
+  const count = geometry.attributes.position.count
+  const index = geometry.index ? Uint32Array.from(geometry.index.array) : Uint32Array.from({ length: count }, (_, i) => i)
+  const uv = copy.attributes.uv
+  if (!reliefNormal || !uv) {
+    copy.setIndex(new THREE.BufferAttribute(index, 1))
+    copy.computeVertexNormals()
+    return copy
+  }
+  const normals = new Float32Array(count * 3)
+  const n = new THREE.Vector3()
+  for (let i = 0; i < count; i++) {
+    reliefNormal(uv.getX(i), uv.getY(i), n)
+    normals.set([n.x, n.y, n.z], i * 3)
+  }
+  copy.setAttribute('normal', new THREE.BufferAttribute(normals, 3))
+  // Triangles turned over where their winding disagrees with their vertices' normals
+  const position = copy.attributes.position
+  const [a, b, c, ab, ac, face, sum] = Array.from({ length: 7 }, () => new THREE.Vector3())
+  for (let t = 0; t < index.length; t += 3) {
+    a.fromBufferAttribute(position, index[t])
+    b.fromBufferAttribute(position, index[t + 1])
+    c.fromBufferAttribute(position, index[t + 2])
+    face.crossVectors(ab.subVectors(b, a), ac.subVectors(c, a))
+    sum.set(0, 0, 0)
+    for (let k = 0; k < 3; k++) sum.x += normals[index[t + k] * 3], sum.y += normals[index[t + k] * 3 + 1], sum.z += normals[index[t + k] * 3 + 2]
+    if (face.dot(sum) < 0) [index[t + 1], index[t + 2]] = [index[t + 2], index[t + 1]]
+  }
+  copy.setIndex(new THREE.BufferAttribute(index, 1))
   return copy
 }
 
@@ -98,6 +141,41 @@ export function createPhotoRender(renderer, rasterize) {
   let graded = []
   let building = null
   let textureSize = 0
+  /** @type {Map<THREE.Texture, (u: number, v: number, out: THREE.Vector3) => void>} */
+  let reliefReaders = new Map()
+
+  /**
+   * Reads a relief map (object-space normals) back from the GPU: a function giving its normal at a texture
+   * coordinate, through the map's texture transform
+   * @param {THREE.Texture} normalMap
+   */
+  function reliefReader(normalMap) {
+    if (reliefReaders.has(normalMap)) return reliefReaders.get(normalMap)
+    const size = RELIEF_READ_SIZE
+    const target = new THREE.WebGLRenderTarget(size, size)
+    copyMaterial.uniforms.map.value = normalMap
+    const previous = renderer.getRenderTarget()
+    renderer.setRenderTarget(target)
+    copyQuad.render(renderer)
+    renderer.setRenderTarget(previous)
+    const pixels = new Uint8Array(size * size * 4)
+    renderer.readRenderTargetPixels(target, 0, 0, size, size, pixels)
+    target.dispose()
+    normalMap.updateMatrix()
+    const matrix = normalMap.matrix.clone()
+    const p = new THREE.Vector3()
+    const read = (u, v, out) => {
+      p.set(u, v, 1).applyMatrix3(matrix)
+      const x = Math.min(size - 1, Math.max(0, Math.floor((p.x - Math.floor(p.x)) * size)))
+      const y = Math.min(size - 1, Math.max(0, Math.floor((p.y - Math.floor(p.y)) * size)))
+      const o = (y * size + x) * 4
+      out.set(pixels[o] / 127.5 - 1, pixels[o + 1] / 127.5 - 1, pixels[o + 2] / 127.5 - 1)
+      if (out.lengthSq() < 1e-6) out.set(0, 0, 1)
+      out.normalize()
+    }
+    reliefReaders.set(normalMap, read)
+    return read
+  }
 
   /**
    * A corrected copy of a surface texture (see gradeMaterial)
@@ -181,12 +259,14 @@ export function createPhotoRender(renderer, rasterize) {
         else material.color.copy(grade.color)
         materials.set(key, material)
       }
-      const copy = new THREE.Mesh(floatGeometry(object.geometry), material)
+      const normalMap = surface.zoneId ? surface.normalMap : null
+      const copy = new THREE.Mesh(floatGeometry(object.geometry, normalMap ? reliefReader(normalMap) : null), material)
       copy.matrixAutoUpdate = false
       copy.matrix.copy(object.matrixWorld)
       photoScene.add(copy)
     }
     textureSize = size
+    reliefReaders = new Map()
     photoScene.updateMatrixWorld(true)
 
     pathTracer = new WebGLPathTracer(renderer)
