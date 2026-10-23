@@ -1124,6 +1124,10 @@ const bass = createBass({
   prepare: prepareCreatureMaterial,
   clearance: (point) => collider.distanceTo(point, collider.surfacesNear(point, 0.6), 0.6),
   visibility: () => underwater.visibility,
+  // Its pace by the season's water temperature: winter, spring, summer, autumn (SEASONS' order)
+  pace: () => [0.4, 0.7, 1, 0.8][Math.round(look.season)] ?? 1,
+  // Debug: ?bass=1 shows it at once and all the time
+  always: params.get('bass') === '1',
 })
 scene.add(bass.object)
 if (import.meta.env.DEV) window.l21.bass = bass

@@ -1,11 +1,13 @@
 // A curious smallmouth bass in the underwater view (TODO #56, Christian, 2026-10-23): when the camera has been still for
 // IDLE s, it comes slowly from one side of the view, swims about a sixth of the view's width, stops, and turns toward
-// the diver, its two big eyes on them; it stays, hovering. When the camera moves again, it turns away and swims off
-// the way it came. At most once every COOLDOWN s, and only where its whole path stays CLEARANCE m from the surfaces.
+// the diver, its two big eyes on them; it stays, hovering. When the camera moves again, it turns away and dashes off the
+// way it came; or it gets bored after a while (STAY, at random) and swims off calmly. At most once every COOLDOWN s, and
+// only where its whole path stays CLEARANCE m from the surfaces.
 //
 // The model: « Smallmouth bass » by faerbogdan99 (Sketchfab, CC BY 4.0, credited on the /modele page), packed into
-// public/creatures/bass.glb (textures 1024 px WebP; original in O:\modeles\creatures\bass\). Not rigged: it swims by
-// swaying its whole body.
+// public/creatures/bass.glb (rigged by tools/creatures/rig_bass.py: a spine of five bones, head to tail; textures
+// 1024 px WebP; original in O:\modeles\creatures\bass\). It swims by a wave travelling down its spine, wider toward the
+// tail.
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
@@ -23,23 +25,39 @@ const SWIM = 0.16
 const FLEE = 2.2
 const TURN = 1.4
 const FLEE_TURN = 7
-// How long it stays facing the diver at most (s), and its gentle hover (m, rad)
-const STAY = 40
+// How long it watches the diver before it gets bored (s, at random in between: Christian, 2026-10-23), its calm
+// departure's speed (m/s), and its gentle hover (m)
+const STAY = [8, 25]
+const WANDER_OFF = 0.35
 const BOB = 0.02
+// The swimming wave down the spine: each bone's bend (rad, head to tail), its beats per second and its size, hovering,
+// swimming or fleeing, and the lag between bones (rad)
+const WAVE = [0.02, 0.05, 0.09, 0.14, 0.22]
+// (half the first try's pace: Christian, 2026-10-23, it waved far too fast; then times the season's pace)
+const BEAT = { hover: 0.35, swim: 0.9, flee: 2.2 }
+const WAVE_SIZE = { hover: 0.25, swim: 1, flee: 1.3 }
+const WAVE_LAG = 0.9
 
 /**
  * @param {object} options
  * @param {(material: THREE.Material) => THREE.Material} [options.prepare] - the viewer's material set-up (underwater)
  * @param {(point: THREE.Vector3) => number} [options.clearance] - distance to the nearest surface (m, capped)
  * @param {() => number} [options.visibility] - the water's visibility (m)
+ * @param {() => number} [options.pace] - its pace in this season's water (1 in summer; in winter's cold water it
+ *   saves its energy: slower waves, turns and swimming, a shorter dash)
+ * @param {boolean} [options.always] - debug (?bass=1): shown at once and all the time, its place kept in front of the
+ *   camera (re-placed when the camera moves), facing the diver; no wait, pause or wall check
  */
-export function createBass({ prepare = (m) => m, clearance = () => Infinity, visibility = () => 6 } = {}) {
+export function createBass({ prepare = (m) => m, clearance = () => Infinity, visibility = () => 6, pace = () => 1, always = false } = {}) {
   const root = new THREE.Group()
   root.name = 'bass'
   root.visible = false
   const body = new THREE.Group()
   root.add(body)
   let ready = false
+  /** @type {{ bone: THREE.Bone, rest: THREE.Quaternion, axis: THREE.Vector3 }[]} */
+  const spine = []
+  const bend = new THREE.Quaternion()
 
   new GLTFLoader().load(URL, (gltf) => {
     const model = gltf.scene
@@ -55,6 +73,15 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
     model.position.sub(centre)
     body.scale.setScalar(LENGTH / size.z)
     body.add(model)
+    body.updateMatrixWorld(true)
+    // The spine, head first: each bone bends about the body's up axis, expressed in its parent's frame
+    const bodyTurn = body.getWorldQuaternion(new THREE.Quaternion())
+    for (let i = 0; ; i++) {
+      const bone = model.getObjectByName(`spine_${i}`)
+      if (!bone) break
+      const toLocal = bone.parent.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(bodyTurn)
+      spine.push({ bone, rest: bone.quaternion.clone(), axis: new THREE.Vector3(0, 1, 0).applyQuaternion(toLocal).normalize() })
+    }
     ready = true
   })
 
@@ -75,6 +102,9 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   let heading = 0
   let lastPlan = null
   let leftAt = 0
+  let calm = false
+  let stayFor = STAY[1]
+  let phase = 0
 
   /** Its path for this view: from just outside one side to a sixth of the view's width inside, or null */
   function plan(camera) {
@@ -90,11 +120,13 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
     exit.copy(from).addScaledVector(right, side * 3)
     const mid = from.clone().lerp(to, 0.5)
     lastPlan = [from, mid, to, exit].map((p) => Math.round(clearance(p) * 100) / 100)
-    return lastPlan.every((c) => c >= CLEARANCE)
+    return always || lastPlan.every((c) => c >= CLEARANCE)
   }
 
-  function leave() {
+  /** @param {boolean} [bored] - a calm departure (bored), not a flight */
+  function leave(bored = false) {
     state = 'leaving'
+    calm = bored
     leftAt = since
   }
 
@@ -132,8 +164,10 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         root.visible = false
         return false
       }
+      // Debug: whenever the camera moves, it starts over from its new place (no flight)
+      if (always && moved && state !== 'away') state = 'away'
       if (state === 'away') {
-        if (idle < IDLE || cooldown > 0) return false
+        if (!always && (idle < IDLE || cooldown > 0)) return false
         if (!plan(camera)) {
           cooldown = 5
           return false
@@ -145,8 +179,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         root.visible = true
       }
       since += dt
-      const swimming = state === 'arriving' || state === 'leaving'
-      const fleeing = state === 'leaving'
+      const slow = pace()
       if (state === 'arriving') {
         const step = to.clone().sub(root.position)
         const left = step.length()
@@ -154,17 +187,19 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         else if (left < 0.02) state = 'turning'
         else {
           face(step, dt)
-          root.position.addScaledVector(step.normalize(), Math.min(left, SWIM * dt))
+          root.position.addScaledVector(step.normalize(), Math.min(left, SWIM * slow * dt))
         }
       } else if (state === 'turning' || state === 'staying') {
-        // Facing the diver, its eyes on them; a move of the camera sends it away
+        // Facing the diver, its eyes on them; a move of the camera sends it away, and it gets bored after a while
         toCamera.copy(camera.position).sub(root.position).setY(0)
-        const faced = face(toCamera, dt)
+        const faced = face(toCamera, dt, TURN * slow)
         if (state === 'turning' && faced) {
           state = 'staying'
           since = 0
+          stayFor = STAY[0] + Math.random() * (STAY[1] - STAY[0])
         }
-        if (moved || (state === 'staying' && since > STAY)) leave()
+        if (moved) leave()
+        else if (state === 'staying' && since > stayFor) leave(true)
       } else if (state === 'leaving') {
         const step = exit.clone().sub(root.position)
         const left = step.length()
@@ -174,14 +209,21 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
           cooldown = COOLDOWN
           return true
         }
-        // Turned away first, then the dash, speeding up (an easing on its first second)
-        const turned = face(step, dt, FLEE_TURN)
-        const speed = FLEE * Math.min(1, (since - leftAt) / 1) ** 2
-        if (turned || since - leftAt > 0.3) root.position.addScaledVector(step.normalize(), Math.min(left, Math.max(speed, 0.3) * dt))
+        // Turned away first, then the dash, speeding up (an easing on its first second); bored, a slow turn and an easy
+        // swim. In cold water, everything slower (pace)
+        const turned = face(step, dt, calm ? TURN * slow : FLEE_TURN)
+        const speed = calm ? WANDER_OFF * slow : FLEE * Math.sqrt(slow) * Math.min(1, (since - leftAt) / 1) ** 2
+        if (turned || since - leftAt > (calm ? 1.5 : 0.3)) root.position.addScaledVector(step.normalize(), Math.min(left, Math.max(speed, 0.3) * dt))
       }
-      // The body sways as it swims (faster and wider while swimming), and hovers up and down
-      const sway = fleeing ? 0.22 * Math.sin(time * 22) : swimming ? 0.14 * Math.sin(time * 9) : 0.03 * Math.sin(time * 2.2)
-      root.rotation.set(0, heading + sway, 0)
+      const fleeing = state === 'leaving' && !calm
+      const swimming = state === 'arriving' || state === 'leaving'
+      // The wave down the spine: its pace and size by what it does, slower in cold water
+      const mode = fleeing ? 'flee' : swimming ? 'swim' : 'hover'
+      phase += dt * BEAT[mode] * slow * Math.PI * 2
+      spine.forEach(({ bone, rest, axis }, k) => {
+        bone.quaternion.copy(rest).premultiply(bend.setFromAxisAngle(axis, WAVE[k] * WAVE_SIZE[mode] * Math.sin(phase - k * WAVE_LAG)))
+      })
+      root.rotation.set(0, heading, 0)
       body.position.y = BOB * Math.sin(time * 1.3)
       return true
     },
