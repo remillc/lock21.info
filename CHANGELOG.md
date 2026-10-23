@@ -5,7 +5,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - 3D viewer, the bass: its swimming wave's pace and size follow how fast it actually goes (its turns included): slow
-  and small hovering, quicker and wider swimming, fastest in its dash; its body much more supple in turns.
+  and small hovering, quicker and wider swimming, fastest in its dash, twice as wide as the first try; its body much more supple in turns.
 - 3D viewer, the bass: it turns as a fish does, its turn easing in and out, its body curving into a supple C (the body
   lagging behind the head) and gliding forward a little, instead of pivoting evenly; it comes closer (1 m, was 1.4).
 - 3D viewer, underwater, the bass: its path must be seen from the camera (a spot far from every surface could be inside

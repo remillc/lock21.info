@@ -33,7 +33,8 @@ const BOB = 0.02
 // The swimming wave down the spine: each bone's bend (rad, head to tail) and the lag between bones (rad). Its pace and
 // size follow how fast it actually goes (Christian, 2026-10-23), turning included: beats per second at rest plus per
 // m/s (at most BEAT_MAX), size at rest up to 1 at SIZE_SPEED m/s and WAVE_MAX at full dash
-const WAVE = [0.02, 0.05, 0.09, 0.14, 0.22]
+// (twice the first try's: Christian, 2026-10-23)
+const WAVE = [0.04, 0.1, 0.18, 0.28, 0.44]
 const WAVE_LAG = 0.9
 const BEAT_REST = 0.3
 const BEAT_PER_SPEED = 4
