@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer on the /modele page: its settings are kept when the page reloads, and forgotten when a visitor arrives from
+  another page (a link, the address bar, back and forward): the viewer then starts from its defaults (`?reset=1`).
 - 3D viewer: the relief's normal maps only on the finest level of the tiles, dropped from the coarser levels as they
   load (TODO #55): at the start view they held about 550 MB of the 1.2 GB budget, which kept the finest level from
   loading and left light flakes on the floor.

@@ -9,7 +9,7 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js'
 import { CSM } from 'three/examples/jsm/csm/CSM.js'
 import { TilesRenderer } from '3d-tiles-renderer'
-import { rememberedKeys, savedSettings, settingsSchema } from './config-panel.js'
+import { forgetSettings, rememberedKeys, savedSettings, settingsSchema } from './config-panel.js'
 import './loading.js'
 import './tooltip.js'
 import { createUnderwater, FIELD_CELLS, FIELD_RANGE, FIELD_SIZE, SURFACE_Y } from './underwater.js'
@@ -31,6 +31,12 @@ const params = new URLSearchParams(location.search)
 // change it back; those work only in a link (?tiles=, ?relief=, for tests). Nor those not remembered (underwater: a
 // value saved before is ignored)
 const panelKeys = rememberedKeys(settingsSchema({ mobile: false }))
+// Arriving on the /modele page from another page (?reset=1, ModelPage.astro): the saved settings are forgotten, the
+// viewer starts from its defaults; a reload of the page keeps them
+if (params.get('reset') === '1') {
+  forgetSettings()
+  params.delete('reset')
+}
 for (const [key, value] of savedSettings()) if (!params.has(key) && panelKeys.has(key)) params.set(key, value)
 const live = {}
 // The address keeps only what makes the view shareable (viewUrl): the camera, and underwater with its season and lamp

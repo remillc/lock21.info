@@ -13,8 +13,9 @@
 // has that value)
 // remember: false: not kept between visits (underwater: each visit starts in the air, Christian 2026-10-23; a link's
 // ?underwater=1 still applies)
-// Settings kept by the browser between page loads (localStorage of this origin: lock21.info, where the /modele/ page
-// embeds the viewer). Saved at every change, cleared by "Réinitialiser"; unavailable storage (private browsing,
+// Settings kept by the browser (localStorage of this origin: lock21.info, where the /modele page embeds the viewer):
+// through reloads of the /modele page; forgotten when a visitor arrives there from another page (?reset=1,
+// forgetSettings). Saved at every change, cleared by "Réinitialiser"; unavailable storage (private browsing,
 // blocked site data) only means nothing is kept.
 import { t } from './i18n.js'
 
@@ -31,6 +32,15 @@ export function savedSettings() {
 /** The settings kept between visits: the panel's, except those marked remember: false */
 export function rememberedKeys(schema) {
   return new Set(schema.flatMap((section) => section.items).filter((item) => item.remember !== false).map((item) => item.key))
+}
+
+/** Forgets the saved settings (the /modele page asks for it when a visitor arrives from another page: ?reset=1) */
+export function forgetSettings() {
+  try {
+    localStorage.removeItem(STORAGE_KEY)
+  } catch {
+    // Storage unavailable: nothing was kept
+  }
 }
 
 function saveSettings(params, schema) {
