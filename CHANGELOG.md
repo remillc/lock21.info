@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Header, every page on wide screens: the search as a 24 px magnifier at the bar's right, before « Modèle 3D » (as on
+  /modele), instead of the box in the middle; Ctrl+K still opens it. Phones unchanged.
 - Navigation: the current page always shown (its group unfolded, the others closed at page load, the list scrolled
   to it when out of view, also when the menu opens on phones and on /modele); MD3 hover state layer on the items and
   the groups' titles (150 ms).

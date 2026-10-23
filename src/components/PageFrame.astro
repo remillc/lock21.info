@@ -243,30 +243,6 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
       inset-inline-end: auto;
     }
   }
-  /* /modele: the search as an icon at the bar's right, before « Modèle 3D » (Christian, 2026-10-23): Starlight's
-     narrow-screen look on wide screens too (no box, label or shortcut shown; Ctrl+K still opens it) */
-  @media (min-width: 50rem) {
-    .drawer-menu .header > :nth-child(2) {
-      justify-content: flex-end;
-    }
-    .drawer-menu site-search button[data-open-modal] {
-      width: auto;
-      max-width: none;
-      padding: 0.5rem;
-      border: 0;
-      background-color: transparent;
-    }
-    /* The magnifier at 24 px, as the MD3 icons (it was the text's size, 14 px) */
-    .drawer-menu site-search button[data-open-modal] > svg {
-      width: 1.5rem;
-      height: 1.5rem;
-    }
-    .drawer-menu site-search button[data-open-modal] > span,
-    .drawer-menu site-search button[data-open-modal] > kbd {
-      display: none;
-    }
-  }
-
   /* /modele: the menu button's three bars turn into an X and back (Christian, 2026-10-23): the outer bars rotate, the
      middle one shrinks away; Starlight's two icons hidden */
   .drawer-menu nav .sl-menu-button svg {

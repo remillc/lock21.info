@@ -379,3 +379,29 @@ main > .content-panel:last-child > .sl-container {
     box-shadow: inset 0 0 0 100px color-mix(in srgb, currentColor 8%, transparent);
   }
 }
+
+// The search, on every page, wide screens: Starlight's one search component as a 24 px magnifier at the bar's right,
+// before « Modèle 3D », as first done on /modele (Christian, 2026-10-23): no box, label or shortcut shown (Ctrl+K
+// still opens it). Phones keep Starlight's magnifier
+@media (min-width: 50rem) {
+  header.header .header > :nth-child(2) {
+    justify-content: flex-end;
+  }
+  site-search button[data-open-modal] {
+    width: auto;
+    max-width: none;
+    padding: 0.5rem;
+    border: 0;
+    background-color: transparent;
+
+    > svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+
+    > span,
+    > kbd {
+      display: none;
+    }
+  }
+}
