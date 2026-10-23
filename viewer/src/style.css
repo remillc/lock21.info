@@ -553,3 +553,64 @@ l21-settings-panel[hidden] {
   padding: 12px 16px;
   border-radius: 16px;
 }
+
+/* ?compare= (test tool): MD3 segmented button « Avant | Après », top centre. 40 dp high, outlined, the selected
+   segment filled (secondary container) with a check mark */
+.compare {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  border: 1px solid #8f9482;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgb(30 33 25 / 88%);
+}
+.compare button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border: 0;
+  background: transparent;
+  color: #e3e6d8;
+  font: 500 14px/20px system-ui, sans-serif;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+}
+.compare button + button {
+  border-left: 1px solid #8f9482;
+}
+.compare button svg {
+  display: none;
+}
+.compare button[aria-pressed='true'] {
+  background: #b8c97a;
+  color: #12140e;
+}
+.compare button[aria-pressed='true'] svg {
+  display: block;
+}
+/* State layer */
+.compare button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 200ms;
+}
+.compare button:hover::after {
+  opacity: 0.08;
+}
+.compare button:focus-visible::after,
+.compare button:active::after {
+  opacity: 0.1;
+}
+.compare button:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: -2px;
+}

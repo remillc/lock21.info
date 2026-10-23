@@ -719,6 +719,34 @@ window.addEventListener('keydown', (e) => {
   navigator.clipboard?.writeText(viewUrl()).catch(() => {})
 })
 
+// ?compare=<tiles url>: a test tool (TODO #24, de-lighting) to compare two versions of the tiles from the same view.
+// An MD3 segmented button « Avant | Après » at the top (key B flips): « Avant » is the usual tiles (or ?tiles=),
+// « Après » the ?compare= root; the tiles reload in place, the camera doesn't move. Link only, never shown otherwise.
+const compareUrl = params.get('compare')
+if (compareUrl) {
+  const sources = [['Avant', tilesUrl], ['Après', compareUrl]]
+  const group = document.body.appendChild(document.createElement('div'))
+  group.className = 'compare'
+  group.setAttribute('role', 'group')
+  group.setAttribute('aria-label', 'Comparer deux versions des tuiles (touche B)')
+  const check = '<svg aria-hidden="true" width="18" height="18" viewBox="0 -960 960 960" fill="currentColor"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>'
+  const buttons = sources.map(([label, url]) => {
+    const button = group.appendChild(document.createElement('button'))
+    button.type = 'button'
+    button.innerHTML = `${check}<span>${label}</span>`
+    button.addEventListener('click', () => select(url))
+    return button
+  })
+  const select = (url) => {
+    if (url !== tilesUrl) live.tiles(url)
+    buttons.forEach((button, i) => button.setAttribute('aria-pressed', String(sources[i][1] === url)))
+  }
+  select(tilesUrl)
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'b' || e.key === 'B') select(tilesUrl === compareUrl ? sources[0][1] : compareUrl)
+  })
+}
+
 // ?stats=1: memory used and tiles loaded per zone, on screen (readable on a phone)
 let statsBox = null
 let lastStats = 0

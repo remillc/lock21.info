@@ -2,6 +2,11 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased
+
+- 3D viewer: `?compare=<tiles url>` (tests): an « Avant | Après » segmented button (key B) swaps the tiles between
+  the usual ones and those of that address, from the same view; for judging the de-lighting (TODO #24).
+
 ## 0.8.0 - 2026-10-22
 
 - Zone 16 online (a spillway gate door on the floor south of the chamber, 69 tiles, 17 MB with its relief); zone 4
