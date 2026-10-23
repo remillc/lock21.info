@@ -1,4 +1,4 @@
-// Site lock21.info: Astro + Starlight (see GUIDELINES.md). French is the root locale; the structure is ready for
+// Site lock21.info: Astro + Starlight (see docs/guidelines.md). French is the root locale; the structure is ready for
 // English (/en/), which ships when pages are translated. The 3D viewer is a separate app (viewer/), built into
 // public/modele/viewer/ and served as is at /modele/viewer (in development, forwarded to the viewer's dev server).
 import { defineConfig } from 'astro/config'

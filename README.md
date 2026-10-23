@@ -14,4 +14,4 @@ npm run build:viewer   # viewer into public/modele
 npm run build          # site into dist/
 ```
 
-Agents and contributors: read `AGENTS.md` and `GUIDELINES.md` first.
+Agents and contributors: read `AGENTS.md` and `docs/guidelines.md` first.

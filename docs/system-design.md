@@ -7,7 +7,7 @@ The lock21.info design, decided with Christian on 2026-10-19: **the "E2 · Sonar
 system**, in the **Moss** colours since 2026-10-22 (olive bars and greyish off-white or olive-black pages, in place of
 E2's navy; mockups: <https://claude.ai/artifact/QtZB3MVjoJWntaQqS2AghZ>, row D). First mockups (private canvas):
 <https://claude.ai/artifact/LERqkcuQMq5wptfoz8uSFE> (E2 on the fourth row; E3, the full MD3 look, was set aside).
-Technical rules (Astro, Starlight, SCSS, components) are in `GUIDELINES.md`.
+Technical rules (Astro, Starlight, SCSS, components) are in `docs/guidelines.md`.
 
 ## Audiences
 
@@ -129,7 +129,7 @@ Tabular figures in tables and data.
   Rémillard · Licence CC BY 4.0` (link to the licence). At the bottom of the window on short pages (flex columns in
   `custom.scss`), right after the content on long ones. The Baets drawings are credited in their figure captions.
 - Existing pages (docs) keep Starlight's layout, restyled with these tokens.
-- **Custom Elements** are named with the `l21-` prefix (rule in `GUIDELINES.md`): `<l21-image-zoom>` (figures, full
+- **Custom Elements** are named with the `l21-` prefix (rule in `docs/guidelines.md`): `<l21-image-zoom>` (figures, full
   size on click), `<l21-dev-breakpoints>` (dev server only), `<l21-settings-panel>` (the 3D viewer's settings, ⚙),
   `<l21-model-frame>` (the viewer's frame on `/modele`), `<l21-viewer-warmup>` (prefetches the viewer's files when a
   `/modele` link is hovered).

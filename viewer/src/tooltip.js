@@ -1,4 +1,4 @@
-// <l21-tooltip>: native Custom Element (GUIDELINES.md), the MD3 plain tooltip of the viewer's buttons
+// <l21-tooltip>: native Custom Element (docs/guidelines.md), the MD3 plain tooltip of the viewer's buttons
 // (docs/system-design.md). One element for the page; any element with data-tooltip gets it: shown after a short hover
 // delay (HOVER_DELAY), at once on keyboard focus; hidden when the pointer leaves, on blur, on a click and on Escape.
 // The text is read at that moment (data-tooltip), so it follows the language and the button's state (full screen).

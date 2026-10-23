@@ -1,4 +1,4 @@
-// <l21-loading>: the viewer's loading indicator (native Custom Element, GUIDELINES.md), centred over the model.
+// <l21-loading>: the viewer's loading indicator (native Custom Element, docs/guidelines.md), centred over the model.
 // "Chargement" ("Loading") with three dots that appear one after the other, then go and start again; under it, an MD3 linear
 // progress indicator (determinate) with the percentage of tiles loaded. The value never goes back (new tiles join the
 // queue as the camera settles). When the first view is complete, it leaves with the MD3 exit motion (fade,

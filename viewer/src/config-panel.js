@@ -1,4 +1,4 @@
-// <l21-settings-panel>: native Custom Element (GUIDELINES.md) with one control per query parameter of the viewer, opened
+// <l21-settings-panel>: native Custom Element (docs/guidelines.md) with one control per query parameter of the viewer, opened
 // by the ⚙ button. Every setting applies at once through its "live" handler (main.js), sliders while they move: the
 // page never reloads. The settings are not written into the address (it keeps only the camera): the browser keeps
 // them between visits (localStorage, see savedSettings), and a link's query parameters override them at load.

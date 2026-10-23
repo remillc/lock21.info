@@ -1,5 +1,5 @@
 // Image zoom: a click on a figure image of the notebook opens it full size in a <dialog>; a click or Escape
-// closes it. Native Custom Element (see GUIDELINES.md), added once to the page.
+// closes it. Native Custom Element (see docs/guidelines.md), added once to the page.
 class ImageZoom extends HTMLElement {
   connectedCallback() {
     // Moved into the new <body> after a client-side navigation: already set up

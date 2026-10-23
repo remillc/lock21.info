@@ -1,4 +1,7 @@
-# Front-end guidelines
+---
+title: Front-end guidelines
+description: The technical rules of the lock21.info site and the 3D viewer's interface - Astro, Starlight, SCSS, Custom Elements, scripts under client-side routing, prefetch.
+---
 
 Rules for the lock21.info site after its switch from Docusaurus to Astro (TODO #29, #30). They apply to the site and
 to any UI added to the 3D viewer. Decided with Christian on 2026-10-19.

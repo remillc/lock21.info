@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Docs: the front-end guidelines moved from `GUIDELINES.md` to `docs/guidelines.md`, beside the design brief.
 - 3D viewer: the crayfish's threat posture: its tail held up in an arc of a circle; both arms together, drifting slowly
   and, now and then, a gesture (random length and size): they open out and rise, the pincers opening wide a moment
   later, on a timing of their own, apart from the crayfish's shuffles and turns; gestures snap out with a slight overshoot, hold and ease back, and the posture eases in and out
