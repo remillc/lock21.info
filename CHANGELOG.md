@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: gloss by surface (roughness from the relief map: smooth planks glossier, mussels matte) tried and set
+  aside: stone, wood and silt reflect about 4 % of light at a direct view, so even a mirror finish hardly showed; the
+  wet look's clear coat already gives the sheen.
 - 3D viewer: its interface follows the page's language (French or English): loading, buttons, settings and
   augmented reality texts (`viewer/src/i18n.js`).
 - 3D viewer: « Rendu photo » (path tracing with three-gpu-pathtracer, computers only) tried and set aside: bounced
