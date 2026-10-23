@@ -14,7 +14,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #55 Floor flakes in the default view (light shards: coarse levels left over the detail): with the relief's normal
   maps, the view needs more than the desktop tiles budget (1.2 GB); at 2 GB the browser ran out of memory (« Array
   buffer allocation failed », 0.9.0). Make the tiles lighter (smaller normal maps, or none on coarse levels) or load
-  what is in view first (the cache's unload priority). Measured 2026-10-23: the budget is full right after the start
+  what is in view first (the cache's unload priority). Done 2026-10-23: no normal maps on the coarser levels, phones
+  without relief and with a 300 MB budget (CHANGELOG); still to try if needed: smaller coarse textures
+  (`--lod-texture-scale` below 0.5, a full re-tiling). Measured 2026-10-23 before that: the budget is full right after the start
   view (phone 462 of 450 MB with 15 tiles, desktop 1201 of 1200 MB), so turning or moving loads no new detail, during
   a gesture or after it
 - [ ] #56 Underwater, when the camera stays still for a while: a bass comes slowly from one side, swims about a sixth of
@@ -44,7 +46,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 - [ ] #21 Relief: fold the relief steps (`relief_zones.ps1`) into `publish_zones.ps1`, so that one command republishes a
   zone with its relief
-- [ ] #22 Relief on phones: memory, heat, smoothness; probably off by default there
 - [ ] #25 Optional: read each zone's Blender shader settings (wetness, roughness) and pass them through the manifest
 - [ ] #26 Move the viewer's shader patches to three-custom-shader-material (CSM) if the relief is kept
 

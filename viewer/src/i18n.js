@@ -2,7 +2,7 @@
 // The language: embedded in a page of the site (/modele or /en/modele, same origin), that page's <html lang>; otherwise
 // ?lang=fr|en in the address (read before main.js tidies the address); otherwise the browser's language.
 //
-// Usage: t('reset'), t('percent', { n: 42 }). A text is a string, or a function of the params (plurals, numbers).
+// Usage: t('reset'), t('error', { message }). A text is a string, or a function of the params (plurals, numbers).
 
 /** @typedef {'fr' | 'en'} Lang */
 
@@ -50,7 +50,7 @@ const TEXTS = {
     // Loading indicator (loading.js)
     loading: 'Chargement',
     loadingBar: 'Chargement du modèle',
-    percent: ({ n }) => `${n} %`,
+    refining: 'Affinage des détails',
     error: ({ message }) => `Erreur: ${message}`,
 
 
@@ -143,7 +143,7 @@ const TEXTS = {
     // Loading indicator (loading.js)
     loading: 'Loading',
     loadingBar: 'Loading the model',
-    percent: ({ n }) => `${n}%`,
+    refining: 'Refining the details',
     error: ({ message }) => `Error: ${message}`,
 
 

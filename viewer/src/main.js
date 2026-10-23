@@ -185,7 +185,9 @@ const status = document.getElementById('status')
 // Phones: coarser detail and a smaller memory budget (Safari iOS reloads the page beyond ~1-1.5 GB).
 // ?profile=mobile|desktop forces a profile (tests on the PC).
 const PROFILES = {
-  mobile: { errorTarget: 12, maxBytes: 450e6, pixelRatio: Math.min(window.devicePixelRatio, 1.5) },
+  // Phones (Christian, 2026-10-23: old iPhones struggled): 300 MB (was 450: old iPhones ran out of memory before the
+  // model was complete) and less fine detail (errorTarget 16, was 12)
+  mobile: { errorTarget: 16, maxBytes: 300e6, pixelRatio: Math.min(window.devicePixelRatio, 1.5) },
   desktop: { errorTarget: 6, maxBytes: 1200e6, pixelRatio: Math.min(window.devicePixelRatio, 2) },
 }
 const isMobile = (forced) => (forced ? forced === 'mobile' : window.matchMedia('(pointer: coarse)').matches)
@@ -974,7 +976,8 @@ let tilesets = []
 const coarseWithoutRelief = () => ({
   name: 'CoarseWithoutRelief',
   processTileModel(scene, tile) {
-    if (!tile.children?.length) return
+    // Phones: no relief at all (TODO #22): at the finest level the normal maps weigh as much as the photo
+    if (!mobile && !tile.children?.length) return
     scene.traverse((object) => {
       if (!object.isMesh || !object.material.normalMap) return
       object.material.normalMap.dispose()
@@ -1297,15 +1300,30 @@ if (look.underwater) setUnderwater(true)
 
 // Loading indicator: share of the tiles loaded among those the first view asks for, all zones together; done once every
 // root is in and nothing has been pending for a moment
+/** The first view drawn: something is shown, and no tile of the first level with content (the coarsest, drawn first)
+ *  is still loading in any zone; the finer levels then refine it */
+function firstViewDrawn() {
+  let visible = 0
+  for (const tiles of tilesets) {
+    visible += tiles.visibleTiles.size
+    for (const tile of tiles.loadingTiles) if (tile.internal.depthFromRenderedParent <= 1) return false
+  }
+  return visible > 0
+}
 function updateLoading() {
-  if (!status.active) return
+  if (!status.busy) return
   let loaded = 0
   let pending = 0
   for (const t of tilesets) {
     loaded += t.stats.loaded
     pending += t.stats.queued + t.stats.downloading + t.stats.parsing
   }
-  if (loaded + pending > 0) status.progress = loaded / (loaded + pending)
+  // The first view drawn (firstViewDrawn): the card gives way to the thin « Affinage des
+  // détails » bar (loading.js), which stays while the finer detail keeps arriving
+  if (status.active && rootsLoaded && firstViewDrawn()) {
+    status.refine()
+    log('first-view', tileFacts())
+  }
   // Right after the roots, nothing is queued for a moment (the next tiles are only asked on the next update): done
   // once nothing has been pending for 800 ms in a row
   if (!rootsLoaded || pending > 0) idleSince = 0

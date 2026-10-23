@@ -7,6 +7,18 @@
     <meta name="robots" content="noindex, nofollow" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Écluse 21 en 3D</title>
+    <!-- In the /modele page's frame: known before the page is drawn, so the « ← Écluse 21 » link never shows there
+         (main.js sets the same class, once its module has loaded) -->
+    <script>
+      if (window.self !== window.top) document.documentElement.classList.add('embedded')
+    </script>
+    <!-- Its rule here too: the stylesheet arrives with the script (in development, before the styles, the link showed
+         as plain text) -->
+    <style>
+      .embedded .home {
+        display: none;
+      }
+    </style>
     <meta name="description" content="Modèle 3D photogrammétrique de l'écluse 21 submergée." />
     <!-- Tab icon of the site (public/favicon.svg, served at the root) -->
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

@@ -4,6 +4,14 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, loading (TODO #55): the tiles' coarser levels without normal maps (relief only at the finest level;
+  `merge_normal_maps.mjs`, and `strip_coarse_normals.mjs` for the published versions): their download 337 -> 157 MB.
+  Phones: no relief at all (TODO #22), a 300 MB budget (was 450) and less fine detail (errorTarget 16, was 12), for old
+  iPhones that ran out of memory. Measured on an emulated phone at 9 Mb/s: the first image in 46 s (39 MB), all
+  loaded in 66 s (64 MB), against 130 to 150 s (100 to 119 MB) before.
+- 3D viewer, loading indicator in two phases: the « Chargement » card (indeterminate bar, no percentage) until the
+  first view is drawn, then a thin bar along the top edge with « Affinage des détails » while the detail arrives;
+  telemetry: a `first-view` event. The « ← Écluse 21 » link no longer flashes in the /modele frame while it loads.
 - 3D viewer, underwater: the dive light dimmer again, twice by 20 % (surfaces and its glow in the water).
 - Header, every page: the menu button (☰) drawn in bold 3 px bars that turn into an X and back (MD3 motion, as on
   /modele before); in the light theme, no disc or shadow, the icon in the bar's text colour as the magnifier; the

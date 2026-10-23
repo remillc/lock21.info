@@ -28,7 +28,8 @@ body {
   touch-action: none;
 }
 
-/* Loading indicator (loading.js): centred over the model, label then an MD3 linear progress indicator */
+/* Loading indicator (loading.js): first a card centred over the model (label, MD3 linear progress indicator,
+   indeterminate), then a thin bar along the top edge while the detail is refined */
 l21-loading {
   position: fixed;
   inset: 0;
@@ -56,11 +57,6 @@ l21-loading[hidden] {
   display: none;
 }
 
-.loading-percent {
-  margin-left: 0.5em;
-  color: #a3a893;
-}
-
 .loading-bar {
   width: min(240px, 60vw);
   height: 4px;
@@ -69,13 +65,62 @@ l21-loading[hidden] {
   background: rgb(184 201 122 / 25%);
 }
 
+.loading-bar,
+.refining-bar {
+  position: relative;
+}
+
+/* Indeterminate (MD3): a segment running across the track, again and again */
 .loading-fill {
-  height: 100%;
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
   border-radius: 2px;
   background: #b8c97a;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 200ms linear;
+  animation: loading-run 1.6s cubic-bezier(0.2, 0, 0, 1) infinite;
+}
+
+@keyframes loading-run {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+
+/* The second phase: the card gone, a thin bar along the viewer's top edge and its small label under it, centred
+   (clear of the buttons in the corners) */
+.refining {
+  display: none;
+}
+
+l21-loading.refine {
+  align-items: flex-start;
+  justify-content: stretch;
+}
+
+l21-loading.refine .loading-card {
+  display: none;
+}
+
+l21-loading.refine .refining {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.refining-bar {
+  height: 3px;
+  overflow: hidden;
+  background: rgb(184 201 122 / 20%);
+}
+
+.refining-label {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgb(18 20 14 / 70%);
+  color: #c6c9bb;
+  font: 500 11px/16px system-ui, sans-serif;
+  letter-spacing: 0.5px;
 }
 
 /* The dots: the first appears, then the second, then the third, then all go, and again */
@@ -112,7 +157,6 @@ l21-loading[hidden] {
 }
 
 l21-loading.error .loading-dots,
-l21-loading.error .loading-percent,
 l21-loading.error .loading-bar {
   display: none;
 }
@@ -123,7 +167,9 @@ l21-loading.error .loading-bar {
   }
 
   .loading-fill {
-    transition: none;
+    animation: none;
+    width: 100%;
+    opacity: 0.6;
   }
 }
 
