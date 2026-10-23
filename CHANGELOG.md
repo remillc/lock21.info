@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: the crayfish's threat posture: its tail held up in an arc of a circle; each arm on its own, with its own
+  slow drift and its own gestures now and then (random length and size), opening out and rising, its pincer opening
+  wide a moment later; gestures snap out with a slight overshoot, hold and ease back, and the posture eases in and out
+  (a damped spring). The viewer's timers use `THREE.Timer` (`THREE.Clock` is deprecated).
 - 3D viewer: underwater with the dive light on, the diver's arm holds it at the bottom right of the view: a black
   neoprene sleeve and glove (the hand a little closed), a dive computer on the wrist, and the light strapped on the back
   of the hand, modelled after a Light & Motion Sola 1200 (fluted head, knurled blue bezel, LEDs in their cups behind

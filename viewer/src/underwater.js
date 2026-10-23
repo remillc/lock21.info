@@ -167,7 +167,8 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
   }
   let on = false
   let season = SEASONS[2]
-  const clock = new THREE.Clock(false)
+  // The animation's time, running only while underwater (THREE.Clock is deprecated)
+  const timer = new THREE.Timer()
 
   // Water column: a sphere around the camera, lighter toward the surface, with the refracted sun
   const columnMaterial = new THREE.ShaderMaterial({
@@ -519,8 +520,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
       lamp.visible = on && lampWanted
       uniforms.uUwLampStrength.value = lamp.visible ? BEAM_STRENGTH : 0
       uniforms.uUwLampPower.value = lamp.visible ? LAMP_INTENSITY : 0
-      if (on) clock.start()
-      else clock.stop()
+      if (on) timer.reset()
     },
     /** @param {boolean} wanted - the dive light (while underwater) */
     setLamp(wanted) {
@@ -552,7 +552,8 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
     },
     /** Each frame while on: the animation, the column and the particles follow the camera */
     update(camera) {
-      uniforms.uUwTime.value = clock.getElapsedTime()
+      timer.update()
+      uniforms.uUwTime.value = timer.getElapsed()
       column.position.copy(camera.position)
       surface.position.x = camera.position.x
       surface.position.z = camera.position.z
