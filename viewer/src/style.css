@@ -222,12 +222,22 @@ l21-loading.error .loading-bar {
   background: #b8c97a;
   color: #12140e;
 }
-/* The season slider (main.js), left of the underwater button while it is on: a pill like the other controls over
-   the 3D view, an MD3 discrete slider (four stops) and its value. Narrow screens: above the buttons' row */
-.season-control {
+/* While underwater (main.js), left of the underwater button: one strip with the season slider (a pill like the
+   other controls over the 3D view, an MD3 discrete slider with four stops, and its value) and the dive light's icon
+   button (selected while on, its icon lit or crossed out). It unrolls out of the button: its width revealed from
+   the right (showSeasonControl). Narrow screens: above the buttons' row */
+.underwater-tools {
   position: fixed;
   right: calc(max(16px, env(safe-area-inset-right)) + 112px);
   bottom: max(16px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.underwater-tools[hidden] {
+  display: none;
+}
+.season-control {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -239,9 +249,6 @@ l21-loading.error .loading-bar {
   font: 500 12px/16px system-ui, sans-serif;
   letter-spacing: 0.5px;
 }
-.season-control[hidden] {
-  display: none;
-}
 .season-range {
   width: 112px;
   margin: 0;
@@ -252,12 +259,24 @@ l21-loading.error .loading-bar {
   min-width: 120px;
   white-space: nowrap;
 }
+.underwater-tools .lamp-button {
+  position: relative;
+  flex: none;
+}
+.lamp-button .icon-on,
+.lamp-button[aria-pressed='true'] .icon-off {
+  display: none;
+}
+.lamp-button[aria-pressed='true'] .icon-on {
+  display: block;
+}
 @media (max-width: 600px) {
-  .season-control {
+  .underwater-tools {
     right: max(16px, env(safe-area-inset-right));
     bottom: calc(max(16px, env(safe-area-inset-bottom)) + 56px);
   }
 }
+
 /* Augmented reality (main.js, phones): left of the underwater button */
 .ar-button {
   right: calc(max(16px, env(safe-area-inset-right)) + 112px);

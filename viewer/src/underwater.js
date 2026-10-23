@@ -7,8 +7,11 @@
 //  - the sun bent toward the vertical by the surface (Snell), from the « Soleil » setting; caustics (the moving light
 //    network of the waves) on surfaces facing it, fading with depth;
 //  - the water surface seen from below; suspended particles carried west to east by the current;
-//  - a dive light held near the camera, pointing where it looks (« Lampe de plongée » setting): warm white, a 30°
-//    beam with soft edges, fading with distance, out of reach beyond about 1.5 times the visibility;
+//  - a dive light at the camera, pointing where it looks (« Lampe de plongée » setting): warm white, a 15°
+//    beam with soft edges, fading with distance, out of reach beyond about 1.5 times the visibility; its beam seen in
+//    the water (the light the water scatters toward the eye), computed in each pixel's shading (uwBeam): samples along
+//    the line of sight, lit where they fall in the lamp's cone. It only adds light (a cone drawn as a mesh veiled the
+//    model when seen along its axis);
 //  - the season (« Saison » setting): the visibility (winter 100 ft, spring 10, summer 20, autumn 30, Christian's
 //    observations) and the water's colour (spring's runoff murkier and browner).
 // Distances in metres, y up; the lock floor near y = 0.
@@ -26,21 +29,27 @@ const PARTICLE_COUNT = 40000
 const PARTICLE_BOX = 14
 // The scattered light's strength against the lit surfaces (brighter washed every surface to the water's colour)
 const WATER_BRIGHTNESS = 0.6
-// The dive light: held 30 cm below and 25 cm right of the eye, pointing ahead; candela (about 5 times the sun at the
-// floor 2 m away: at 12 the beam vanished in the haze), beam half-angle and soft edge, reach in visibilities
-const LAMP_OFFSET = [0.25, -0.3, 0]
-const LAMP_INTENSITY = 60
-const LAMP_ANGLE = 30
+// The dive light: on the camera's axis (its spot in the middle of the view, Christian 2026-10-23), pointing ahead; candela (about 10 times the sun at the
+// floor 2 m away: at 12 the light vanished in the haze), beam half-angle and soft edge, reach in visibilities
+const LAMP_OFFSET = [0, 0, 0]
+const LAMP_INTENSITY = 120
+const LAMP_ANGLE = 15
 const LAMP_PENUMBRA = 0.6
 const LAMP_REACH = 1.5
+// The beam's brightness in the water (in-scattered light, added along the line of sight)
+const BEAM_STRENGTH = 0.04
+const BEAM_SAMPLES = 12
 
-// Per season: visibility (ft), relative absorption per channel (red, green, blue), the colour of the light the water
-// scatters toward the eye (linear), and the water column's colours above and below (linear)
+// Per season: visibility (ft); the water's own absorption per metre and per channel (red, green, blue: red first; in
+// spring's runoff, blue too); the colour of the light the water scatters toward the eye (linear), and the water
+// column's colours above and below (linear). The visibility is mostly scattering by particles, which keeps the
+// colours (haze toward the water's colour); only the absorption takes them away. Treating all the haze as absorption
+// left no colour a metre away, even in the dive light's beam
 export const SEASONS = [
-  { key: 'winter', visibilityFt: 100, absorb: [1.7, 1.0, 1.15], water: [0.05, 0.16, 0.17], surface: [0.35, 0.6, 0.62], deep: [0.01, 0.04, 0.05] },
-  { key: 'spring', visibilityFt: 10, absorb: [1.35, 1.0, 1.6], water: [0.12, 0.13, 0.07], surface: [0.42, 0.45, 0.3], deep: [0.03, 0.03, 0.015] },
-  { key: 'summer', visibilityFt: 20, absorb: [1.7, 1.0, 1.3], water: [0.07, 0.17, 0.12], surface: [0.4, 0.62, 0.5], deep: [0.015, 0.05, 0.035] },
-  { key: 'autumn', visibilityFt: 30, absorb: [1.7, 1.0, 1.25], water: [0.06, 0.16, 0.14], surface: [0.36, 0.58, 0.52], deep: [0.012, 0.045, 0.04] },
+  { key: 'winter', visibilityFt: 100, absorb: [0.3, 0.05, 0.06], water: [0.05, 0.16, 0.17], surface: [0.35, 0.6, 0.62], deep: [0.01, 0.04, 0.05] },
+  { key: 'spring', visibilityFt: 10, absorb: [0.35, 0.12, 0.3], water: [0.12, 0.13, 0.07], surface: [0.42, 0.45, 0.3], deep: [0.03, 0.03, 0.015] },
+  { key: 'summer', visibilityFt: 20, absorb: [0.35, 0.07, 0.15], water: [0.07, 0.17, 0.12], surface: [0.4, 0.62, 0.5], deep: [0.015, 0.05, 0.035] },
+  { key: 'autumn', visibilityFt: 30, absorb: [0.33, 0.06, 0.12], water: [0.06, 0.16, 0.14], surface: [0.36, 0.58, 0.52], deep: [0.012, 0.045, 0.04] },
 ]
 
 // Caustic network: thin bright lines where interfering wave fronts focus the sunlight
@@ -50,6 +59,32 @@ const CAUSTIC_GLSL = /* glsl */ `
     float a = sin(q.x * 2.1 + t) + sin(q.y * 1.7 - t * 0.8) + sin((q.x + q.y) * 1.3 + t * 0.5);
     float b = sin(q.x * 3.3 - t * 1.1) * sin(q.y * 2.9 + t * 0.9);
     return pow(max(0.0, 1.0 - abs(a) * 0.55), 5.0) + 0.35 * pow(max(0.0, 1.0 - abs(b) * 1.4), 4.0);
+  }`
+
+// The dive light's beam in the water: the light scattered toward the eye along the line of sight from a to b
+// (world), sampled BEAM_SAMPLES times within the lamp's reach; lit where a sample falls in the lamp's cone (soft
+// edge), dimmed by distance from the lamp and by the water on both legs (lamp to sample, sample to eye)
+const BEAM_GLSL = /* glsl */ `
+  uniform vec3 uUwLampPos;
+  uniform vec3 uUwLampDir;
+  uniform float uUwLampCos;
+  uniform float uUwLampStrength;
+  uniform float uUwLampReach;
+  float uwBeam(vec3 a, vec3 b, float absorb) {
+    if (uUwLampStrength <= 0.0) return 0.0;
+    vec3 ray = b - a;
+    float span = min(length(ray), uUwLampReach);
+    vec3 dir = normalize(ray);
+    float sum = 0.0;
+    for (int i = 0; i < ${BEAM_SAMPLES}; i++) {
+      float t = (float(i) + 0.5) / ${BEAM_SAMPLES}.0 * span;
+      vec3 toSample = a + dir * t - uUwLampPos;
+      float d = max(length(toSample), 0.05);
+      float cone = smoothstep(uUwLampCos, mix(uUwLampCos, 1.0, 0.4), dot(toSample / d, uUwLampDir));
+      // Not closer than 1 m: with the lamp at the eye, the water right in front of it glared over the whole view
+      sum += cone * exp(-absorb * (d + t)) / max(d * d, 1.0);
+    }
+    return sum * span / ${BEAM_SAMPLES}.0 * uUwLampStrength;
   }`
 
 /**
@@ -76,18 +111,30 @@ export function createUnderwater(scene, renderer) {
     uUwTime: { value: 0 },
     uUwSun: { value: new THREE.Vector3(0, 1, 0) },
     uUwSurface: { value: SURFACE_Y },
+    uUwLampPos: { value: new THREE.Vector3() },
+    uUwLampDir: { value: new THREE.Vector3(0, 0, -1) },
+    uUwLampCos: { value: Math.cos(THREE.MathUtils.degToRad(LAMP_ANGLE)) },
+    uUwLampStrength: { value: 0 },
+    uUwLampReach: { value: 10 },
   }
   let on = false
   let season = SEASONS[2]
   /** @type {THREE.Texture | null} */
   let environment = null
   const clock = new THREE.Clock(false)
+  const sunColor = new THREE.Color(1, 1, 1)
 
   // Water column: a sphere around the camera, lighter toward the surface, with the refracted sun
   const columnMaterial = new THREE.ShaderMaterial({
     side: THREE.BackSide,
     depthWrite: false,
     uniforms: {
+      uUwLampPos: uniforms.uUwLampPos,
+      uUwLampDir: uniforms.uUwLampDir,
+      uUwLampCos: uniforms.uUwLampCos,
+      uUwLampStrength: uniforms.uUwLampStrength,
+      uUwLampReach: uniforms.uUwLampReach,
+      uAbsorb: uniforms.uUwAbsorb,
       uSurface: { value: new THREE.Vector3() },
       uWater: uniforms.uUwWater,
       uDeep: { value: new THREE.Vector3() },
@@ -106,12 +153,16 @@ export function createUnderwater(scene, renderer) {
       uniform vec3 uDeep;
       uniform vec3 uSun;
       uniform float uGlare;
+      uniform vec3 uAbsorb;
       varying vec3 vDir;
+      ${BEAM_GLSL}
       void main() {
         float y = vDir.y;
         vec3 c = y > 0.0 ? mix(uWater, uSurface, pow(y, 0.8)) : mix(uWater, uDeep, pow(-y, 0.6));
         float s = max(dot(vDir, uSun), 0.0);
         c += vec3(1.0, 0.97, 0.85) * (2.5 * pow(s, 400.0) + 0.45 * pow(s, 12.0)) * uGlare;
+        // The beam over open water (not in the lighting environment: uGlare 0 there)
+        c += vec3(1.0, 0.94, 0.87) * uwBeam(cameraPosition, cameraPosition + vDir * uUwLampReach, uAbsorb.g) * uGlare;
         gl_FragColor = vec4(c, 1.0);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
@@ -219,8 +270,8 @@ export function createUnderwater(scene, renderer) {
           vec4 mv = viewMatrix * vec4(p, 1.0);
           vDistance = -mv.z;
           vSeed = seed.w;
-          // Half the first size (Christian, 2026-10-23: smaller)
-          gl_PointSize = (0.006 + 0.01 * seed.w) * 900.0 * uPixelRatio / max(vDistance, 0.1);
+          // A quarter of the first size (Christian, 2026-10-23: smaller, twice)
+          gl_PointSize = (0.003 + 0.005 * seed.w) * 900.0 * uPixelRatio / max(vDistance, 0.1);
           gl_Position = projectionMatrix * mv;
         }`,
       fragmentShader: /* glsl */ `
@@ -254,7 +305,7 @@ export function createUnderwater(scene, renderer) {
     )
     shader.fragmentShader =
       'uniform float uUwOn;\nuniform vec3 uUwAbsorb;\nuniform vec3 uUwWater;\nuniform float uUwTime;\nuniform vec3 uUwSun;\n' +
-      'uniform float uUwSurface;\nvarying vec3 vUwWorld;\nvarying float vUwDepth;\n' + CAUSTIC_GLSL + '\n' +
+      'uniform float uUwSurface;\nvarying vec3 vUwWorld;\nvarying float vUwDepth;\n' + CAUSTIC_GLSL + BEAM_GLSL + '\n' +
       shader.fragmentShader.replace('#include <tonemapping_fragment>', /* glsl */ `
         if (uUwOn > 0.5) {
           // Face orientation from screen-space derivatives; double-sided
@@ -266,6 +317,7 @@ export function createUnderwater(scene, renderer) {
           float uwCaustic = uwCaustic(uwCaustUv, uUwTime * 0.8) * smoothstep(0.2, 0.9, uwFacing) * exp(-0.07 * uwDepth);
           vec3 uwTransmit = exp(-uUwAbsorb * vUwDepth);
           gl_FragColor.rgb = gl_FragColor.rgb * (1.0 + 1.5 * uwCaustic) * uwTransmit + uUwWater * (1.0 - uwTransmit);
+          gl_FragColor.rgb += vec3(1.0, 0.94, 0.87) * uwBeam(cameraPosition, vUwWorld, uUwAbsorb.g);
         }
         #include <tonemapping_fragment>`)
   }
@@ -278,14 +330,21 @@ export function createUnderwater(scene, renderer) {
   const lampAhead = new THREE.Vector3()
 
   function applySeason() {
-    // Contrast at the visibility distance about 8 % for the least absorbed channel (k = 2.5 / V): softer than the
-    // textbook 2 % (k = 3.9 / V), which hid what a diver sees clearly a metre away (the eye adapts)
-    const k = 2.5 / (season.visibilityFt * 0.3048)
-    uniforms.uUwAbsorb.value.set(...season.absorb.map((r) => r * k))
+    // Attenuation along the line of sight, per channel: scattering (the same for all colours) plus absorption.
+    // Contrast at the visibility distance about 8 % for green (total 2.5 / V): softer than the textbook 2 % (3.9 / V),
+    // which hid what a diver sees clearly a metre away (the eye adapts)
+    const total = 2.5 / (season.visibilityFt * 0.3048)
+    const scatter = Math.max(total - season.absorb[1], 0)
+    uniforms.uUwAbsorb.value.set(...season.absorb.map((a) => scatter + a))
+    // The sunlight at the floor has crossed the whole water column: its colour after absorption (the brightest
+    // channel at 1; UNDERWATER_SUN in main.js sets the strength, the eye adapts)
+    const down = season.absorb.map((a) => Math.exp(-a * SURFACE_Y))
+    sunColor.setRGB(...down.map((c) => c / Math.max(...down)))
     uniforms.uUwWater.value.set(...season.water.map((c) => c * WATER_BRIGHTNESS))
     columnMaterial.uniforms.uSurface.value.set(...season.surface)
     columnMaterial.uniforms.uDeep.value.set(...season.deep)
     lamp.distance = LAMP_REACH * season.visibilityFt * 0.3048
+    uniforms.uUwLampReach.value = lamp.distance
     makeEnvironment()
   }
 
@@ -293,6 +352,10 @@ export function createUnderwater(scene, renderer) {
     patchShader,
     get on() {
       return on
+    },
+    /** The sunlight's colour at the floor (after the water column's absorption) */
+    get sunColor() {
+      return sunColor
     },
     /** The lighting environment while on (the water column) */
     get environment() {
@@ -304,6 +367,7 @@ export function createUnderwater(scene, renderer) {
       uniforms.uUwOn.value = on ? 1 : 0
       column.visible = surface.visible = particles.visible = on
       lamp.visible = on && lampWanted
+      uniforms.uUwLampStrength.value = lamp.visible ? BEAM_STRENGTH : 0
       if (on && !environment) applySeason()
       if (on) clock.start()
       else clock.stop()
@@ -312,6 +376,7 @@ export function createUnderwater(scene, renderer) {
     setLamp(wanted) {
       lampWanted = wanted
       lamp.visible = on && lampWanted
+      uniforms.uUwLampStrength.value = lamp.visible ? BEAM_STRENGTH : 0
     },
     /** @param {number} index - in SEASONS */
     setSeason(index) {
@@ -333,6 +398,8 @@ export function createUnderwater(scene, renderer) {
       // The dive light follows the camera: its offset in the camera's frame, aimed 10 m ahead
       lamp.position.copy(camera.position).add(lampOffset.set(...LAMP_OFFSET).applyQuaternion(camera.quaternion))
       lamp.target.position.copy(camera.position).add(lampAhead.set(0, 0, -10).applyQuaternion(camera.quaternion))
+      uniforms.uUwLampPos.value.copy(lamp.position)
+      uniforms.uUwLampDir.value.subVectors(lamp.target.position, lamp.position).normalize()
     },
   }
 }

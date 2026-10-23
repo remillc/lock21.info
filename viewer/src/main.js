@@ -506,6 +506,7 @@ function updateLights() {
   const on = look.sky && look.sunIntensity > 0
   csm.lights.forEach((light, i) => {
     light.intensity = Math.PI * look.sunIntensity * (underwater.on ? UNDERWATER_SUN : 1)
+    light.color.set(underwater.on ? underwater.sunColor : 0xffffff)
     light.visible = on && (look.shadows || i === 0)
     light.castShadow = on && look.shadows
   })
@@ -553,7 +554,7 @@ function setUnderwater(on) {
   look.underwater = on
   underwater.setOn(on)
   underwaterButton.setAttribute('aria-pressed', String(on))
-  seasonControl.hidden = !on
+  showSeasonControl(on)
   settings.reflect('underwater', on ? '1' : '0')
   updateLights()
   updateEnvironment()
@@ -563,10 +564,46 @@ live.season = (v) => {
   look.season = Number(v)
   underwater.setSeason(look.season)
   showSeason()
+  updateLights()
   updateEnvironment()
 }
 // The season slider beside the 🤿 button (while underwater), kept in step with the settings' « Saison »
 const seasonControl = document.querySelector('.season-control')
+// Shown and hidden with the MD3 motion (docs/system-design.md, Motion): it slides out from the button and fades in
+// over 400 ms (emphasized decelerate), back over 200 ms (emphasized accelerate); at once on start-up or when the
+// system asks for reduced motion
+const SEASON_MOTION = {
+  enter: { duration: 400, easing: 'cubic-bezier(0.05, 0.7, 0.1, 1)' },
+  exit: { duration: 200, easing: 'cubic-bezier(0.3, 0, 0.8, 0.15)' },
+}
+// The strip with the season slider and the dive light's button: its whole width unrolls out of the 🤿 button
+// (revealed from the right) and rolls back into it
+const underwaterTools = document.querySelector('.underwater-tools')
+/** @param {boolean} on */
+function showSeasonControl(on) {
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const away = { clipPath: 'inset(-8px -8px -8px 100%)', opacity: 0.4 }
+  const here = { clipPath: 'inset(-8px -8px -8px 0%)', opacity: 1 }
+  for (const element of [underwaterTools]) {
+    if (on === !element.hidden && !element.dataset.leaving) continue
+    element.getAnimations().forEach((a) => a.cancel())
+    delete element.dataset.leaving
+    if (on) {
+      element.hidden = false
+      if (!still) element.animate([away, here], SEASON_MOTION.enter)
+    } else if (still) {
+      element.hidden = true
+    } else {
+      element.dataset.leaving = 'true'
+      element.animate([here, away], { ...SEASON_MOTION.exit, fill: 'forwards' }).finished.then(() => {
+        if (!element.dataset.leaving) return
+        delete element.dataset.leaving
+        element.hidden = true
+        element.getAnimations().forEach((a) => a.cancel())
+      }, () => {})
+    }
+  }
+}
 const seasonRange = seasonControl.querySelector('.season-range')
 const seasonValue = seasonControl.querySelector('.season-value')
 seasonRange.setAttribute('aria-label', t('season'))
@@ -582,8 +619,21 @@ showSeason()
 live.lamp = (v) => {
   look.lamp = v === '1'
   underwater.setLamp(look.lamp)
+  showLamp()
   requestRender()
 }
+// The dive light's button, between the season slider and the 🤿 button, kept in step with the settings' « Lampe de plongée »
+const lampButton = document.querySelector('.lamp-button')
+function showLamp() {
+  lampButton.setAttribute('aria-pressed', String(look.lamp))
+  lampButton.setAttribute('aria-label', t('lamp'))
+  lampButton.dataset.tooltip = t(look.lamp ? 'lampOff' : 'lampOn')
+}
+lampButton.addEventListener('click', () => {
+  live.lamp(look.lamp ? '0' : '1')
+  settings.reflect('lamp', look.lamp ? '1' : '0')
+})
+showLamp()
 underwater.setSeason(look.season)
 underwater.setLamp(look.lamp)
 new HDRLoader().load(`${import.meta.env.BASE_URL}hdri/sky.hdr`, (texture) => {

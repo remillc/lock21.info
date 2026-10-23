@@ -35,10 +35,20 @@
     <button class="underwater-button icon-button" type="button" aria-label="Ambiance sous-marine" data-tooltip="Ambiance sous-marine" aria-pressed="false" hidden>
       <svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M160-40 96-88l114-152 31-178q3-24 19-42.5t41-24.5l379-115 80-160 120-120 40 40-100 116-60 184-200 140-234 74-46 126L160-40Zm-40-320q-33 0-56.5-23.5T40-440q0-33 23.5-56.5T120-520q33 0 56.5 23.5T200-440q0 33-23.5 56.5T120-360Zm236-196q-24 7-45.5-5.5T282-598q-7-24 5.5-46t36.5-28l182-48 31 116-181 48Z"/></svg>
     </button>
-    <!-- The season (visibility) while underwater, beside its button (main.js); also in the settings -->
-    <div class="season-control" hidden>
-      <input class="season-range" type="range" min="0" max="3" step="1" />
-      <output class="season-value"></output>
+    <!-- While underwater, left of its button: the season slider and the dive light, one strip that unrolls out of the
+         button (main.js, showSeasonControl) -->
+    <div class="underwater-tools" hidden>
+      <!-- The season (visibility) while underwater, beside its button (main.js); also in the settings -->
+      <div class="season-control">
+        <input class="season-range" type="range" min="0" max="3" step="1" />
+        <output class="season-value"></output>
+      </div>
+      <!-- The dive light on and off, between the season slider and the underwater button while underwater (Material
+           Symbols « flashlight_on » / « flashlight_off »); also in the settings -->
+      <button class="lamp-button icon-button" type="button" aria-pressed="true">
+        <svg class="icon-on" aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M320-80v-440l-80-120v-240h480v240l-80 120v440H320Zm117.5-277.5Q420-375 420-400t17.5-42.5Q455-460 480-460t42.5 17.5Q540-425 540-400t-17.5 42.5Q505-340 480-340t-42.5-17.5ZM320-760h320v-40H320v40Zm320 80H320v16l80 120v384h160v-384l80-120v-16ZM480-480Z"/></svg>
+        <svg class="icon-off" aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M792-56 640-208v128H320v-448L56-792l56-56 736 736-56 56ZM400-160h160v-128L400-448v288Zm240-274-80-80v-30l80-120v-16H394l-80-80h326v-40H274l-34-34v-46h480v240l-80 120v86Zm-160 66Zm17-209Z"/></svg>
+      </button>
     </div>
     <button class="fullscreen icon-button" type="button" aria-label="Plein écran" data-tooltip="Plein écran (Échap pour sortir)" hidden>
       <svg class="icon-enter" aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z"/></svg>
