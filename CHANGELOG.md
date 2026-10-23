@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: the library's « tiles versions at 1.1 or higher have limited support » warning (12 per visit) silenced;
+  our tiles use none of the features it lacks.
 - 3D viewer, underwater: the dive light dimmer, twice by 25 % (surfaces and its glow in the water).
 - 3D viewer, swim mode: the diver stops 60 cm from any surface, the floor included (was 40 cm).
 - 3D viewer, underwater: the dive light reaches the creatures (crayfish, bass) in a wider cone than the surfaces (up to

@@ -24,6 +24,14 @@ import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
 import { homePath, t } from './i18n.js'
 
+// 3d-tiles-renderer warns, for each tileset, that version 1.1 has limited support: our tiles declare 1.1 (needed for
+// their .glb content) and use none of the features it lacks. That one message only is silenced (12 lines a visit)
+const consoleWarn = console.warn
+console.warn = (...args) => {
+  if (typeof args[0] === 'string' && args[0].includes('tiles versions at 1.1 or higher have limited support')) return
+  consoleWarn(...args)
+}
+
 // Every query parameter is read once here, then changed live by the settings panel (config-panel.js): no setting
 // reloads the page. `live` holds one handler per parameter. The address keeps only the camera (?cam=, see viewUrl):
 // the other parameters still work in a link (tests), and are removed from the address once read.
