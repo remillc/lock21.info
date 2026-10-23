@@ -11,7 +11,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 - [ ] #1 If phones struggle: lower the texture resolution of the coarse levels
 - [ ] #3 Choose default ambient occlusion settings (radius, intensity) after viewing close up
-- [ ] #4 Initial camera and navigation (what the visitor sees first)
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
 
 ### Zones
