@@ -37,7 +37,3 @@ The survey moves forward one zone at a time: the [3D model page](/en/modele) sho
 This survey is a personal project by Christian Rémillard, diver. The 3D model is licensed under
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): you may reuse it with credit. For a question, a correction
 or an archive photo of the lock: [info@lock21.info](mailto:info@lock21.info).
-
-## Thanks
-
-I didn't do this survey alone: see the [thanks](/en/remerciements).
