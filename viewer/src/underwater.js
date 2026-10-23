@@ -25,6 +25,8 @@ const WATER_INDEX = 1.333
 // River current, west to east: 35 ft/min, measured by drifting in the canal (2024-06-08), in m/s; the particles drift
 // SEASONS[].current times faster (Christian, 2026-10-23: the murkier the water, the faster: spring's runoff)
 const CURRENT = (35 * 0.3048) / 60
+// The particles' drift against that: 15 % slower (Christian, 2026-10-23)
+const DRIFT_SHARE = 0.85
 // Suspended particles, only where they can be seen: in a box ahead of the camera (it covers the view's cone), as deep
 // as the visibility (PARTICLE_REACH m at most, PARTICLE_MIN at least); SEASONS[].density particles per m³ (the
 // murkier, dramatically more; doubled 2026-10-23), so the drawn count follows the box (at most PARTICLE_COUNT; MOBILE_SHARE of them on a
@@ -188,6 +190,9 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
       uDeep: uniforms.uUwDeep,
       uSun: uniforms.uUwSun,
       uGlare: { value: 1 },
+      // The direct sunlight left after the water above the camera (1 clear to 0 murky): the sun's disc; what the water
+      // scattered comes as a broad glow from above instead
+      uSunThrough: { value: 1 },
     },
     vertexShader: /* glsl */ `
       varying vec3 vDir;
@@ -201,6 +206,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
       uniform vec3 uDeep;
       uniform vec3 uSun;
       uniform float uGlare;
+      uniform float uSunThrough;
       uniform vec3 uAbsorb;
       varying vec3 vDir;
       ${BEAM_GLSL}
@@ -210,7 +216,9 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
         // well down: a gradient right from the horizon made a light band over everything above eye level
         vec3 c = y > 0.0 ? mix(uWater, uSurface, smoothstep(0.35, 1.0, y)) : mix(uWater, uDeep, smoothstep(0.35, 1.0, -y));
         float s = max(dot(vDir, uSun), 0.0);
-        c += vec3(1.0, 0.97, 0.85) * (2.5 * pow(s, 400.0) + 0.45 * pow(s, 12.0)) * uGlare;
+        // The sun: its disc and glare as far as its light comes through the water above (in murky water, a few
+        // visibilities down, none: Christian, 2026-10-23, « c'est la pénombre »); the rest as a broad, dim glow
+        c += vec3(1.0, 0.97, 0.85) * ((2.5 * pow(s, 400.0) + 0.45 * pow(s, 12.0)) * uSunThrough + 0.12 * pow(s, 3.0) * (1.0 - uSunThrough)) * uGlare;
         // The beam over open water
         c += vec3(1.0, 0.94, 0.87) * uwBeam(cameraPosition, cameraPosition + vDir * uUwLampReach, uAbsorb) * uGlare;
         gl_FragColor = vec4(c, 1.0);
@@ -482,7 +490,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
     particles.material.uniforms.uBox.value = box
     const count = Math.min(PARTICLE_COUNT, season.density * box ** 3) * (mobile ? MOBILE_SHARE : 1)
     particleGeometry.setDrawRange(0, Math.round(count))
-    particles.material.uniforms.uCurrent.value.set(CURRENT * season.current, 0, 0)
+    particles.material.uniforms.uCurrent.value.set(CURRENT * season.current * DRIFT_SHARE, 0, 0)
     // The surfaces: clear up to CLEAR_SHARE of the visibility, gone at the visibility; the water's absorption
     uniforms.uUwGone.value = season.visibilityFt * 0.3048
     uniforms.uUwClear.value = CLEAR_SHARE * uniforms.uUwGone.value
@@ -553,6 +561,11 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
     },
     /** Each frame while on: the animation, the column and the particles follow the camera */
     update(camera) {
+      // The direct sunlight through the water above: its path from the surface down to the camera (slanted as the
+      // refracted sun), dimmed as the line of sight is (2.5 per visibility, applySeason)
+      const depth = Math.max(SURFACE_Y - camera.position.y, 0)
+      const slant = Math.max(uniforms.uUwSun.value.y, 0.2)
+      columnMaterial.uniforms.uSunThrough.value = Math.exp((-2.5 * depth) / (season.visibilityFt * 0.3048) / slant)
       timer.update()
       uniforms.uUwTime.value = timer.getElapsed()
       column.position.copy(camera.position)

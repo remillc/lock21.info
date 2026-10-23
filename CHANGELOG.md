@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: looking up, the sun's disc and glare only as far as its light gets through the water above
+  (in murky water a few visibilities down, none: a dim, diffuse glow); the particles drift 15 % slower.
 - 3D viewer, underwater: the dive light's beam 32° across in all (was 48°), its hotspot unchanged (16°).
 - 3D viewer, underwater: the dive light 15 % dimmer, on the surfaces and its beam in the water.
 - 3D viewer, underwater: until a season is chosen, the season is today's (December to February winter, March to May
