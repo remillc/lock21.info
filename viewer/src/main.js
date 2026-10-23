@@ -16,6 +16,7 @@ import { createUnderwater, FIELD_CELLS, FIELD_RANGE, FIELD_SIZE, SURFACE_Y } fro
 import { createSwim } from './swim.js'
 import { createCollider } from './collide.js'
 import { createCrawfish } from './crawfish.js'
+import { createDiverArm } from './diver-arm.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
@@ -995,6 +996,8 @@ function unloadModel() {
 let mockupModels = []
 // The crayfish (crawfish.js): lit like the surfaces, with the sun's shadows and the underwater look
 let crawfishes = []
+// The diver's arm and its light, while underwater with the light on: the beam starts at the drawn light
+const diverArm = createDiverArm({ onLampPose: (front, axis) => underwater.setLampPose(front, axis) })
 // The river's current (m/s, world): west to east, 35 ft/min (measured 2024-06-08)
 const RIVER_CURRENT = new THREE.Vector3((35 * 0.3048) / 60, 0, 0)
 /** @param {THREE.Material} material */
@@ -1234,6 +1237,9 @@ function renderLoop() {
   // Underwater: the camera stays below the surface, and the caustics and particles move (a frame every time)
   if (underwater.on) {
     if (camera.position.y > SURFACE_Y - 0.5) camera.position.y = SURFACE_Y - 0.5
+    // The diver's arm first: the beam follows the light it holds
+    diverArm.setVisible(underwater.lampVisible)
+    diverArm.update(camera)
     underwater.update(camera)
     buildParticleField()
     needsRender = true
@@ -1258,6 +1264,9 @@ function drawScene() {
   // far beyond the visibility
   if (ao.on && composer && !underwater.on) composer.render()
   else renderer.render(scene, camera)
+  // The diver's arm holding the light, over the view (diver-arm.js)
+  if (underwater.on) diverArm.render(renderer, camera)
+  else diverArm.setVisible(false)
 }
 renderer.setAnimationLoop(renderLoop)
 

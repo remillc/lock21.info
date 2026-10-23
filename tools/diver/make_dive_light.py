@@ -1,8 +1,13 @@
 """Models the diver's hand light for the 3D viewer's underwater view, after a Light & Motion Sola 1200 (Christian's
-reference, 2026-10-23): a compact black cylindrical head, rounded at the back, its front a black face with a ring of six
-flood LEDs and three spot LEDs at the centre behind a blue anodized bezel, a slide switch on top, and a wide hand strap
-below (it rides on the back of the hand). Written as a .glb (metres, glTF Y up, facing +Z) for the viewer
+reference, 2026-10-23): a compact turned head, black anodized, fluted for the grip and rounded at the back (a battery
+indicator there), its front recessed behind clear glass: a polished reflector with six flood LEDs and three spot LEDs
+in their cups, framed by a knurled blue anodized bezel; a slide switch in its track on top, and a wide rubber hand
+strap with a buckle below (the light rides on the back of the hand). Written as a .glb (metres) for the viewer
 (viewer/public/diver/dive-light.glb), and a preview render.
+
+Built in Blender's frame: forward +Y (the front face at y = 0), up +Z; the strap's loop centred at (0, -0.035, -0.062),
+the saddle's underside at z = -0.0425 (make_diver_arm.py sets it on the back of the hand and swaps the loop, the buckle
+and the keeper for a strap fitted to the hand).
 
 Run in Blender, headless:
     blender -b --factory-startup --python tools/diver/make_dive_light.py -- -o viewer/public/diver/dive-light.glb [-p preview.png]
@@ -12,6 +17,7 @@ import math
 import os
 import sys
 
+import bmesh
 import bpy
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
@@ -24,7 +30,7 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 scene = bpy.context.scene
 
 
-def material(name, color, roughness=0.5, metallic=0.0, emission=None, strength=0.0, alpha=1.0, transmission=0.0):
+def material(name, color, roughness=0.5, metallic=0.0, emission=None, strength=0.0, alpha=1.0):
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     bsdf = m.node_tree.nodes["Principled BSDF"]
@@ -34,112 +40,162 @@ def material(name, color, roughness=0.5, metallic=0.0, emission=None, strength=0
     if emission:
         bsdf.inputs["Emission Color"].default_value = (*emission, 1)
         bsdf.inputs["Emission Strength"].default_value = strength
-    if transmission:
-        bsdf.inputs["Transmission Weight"].default_value = transmission
     if alpha < 1:
         bsdf.inputs["Alpha"].default_value = alpha
-        m.blend_method = 'BLEND' if hasattr(m, "blend_method") else None
+        if hasattr(m, "surface_render_method"):
+            m.surface_render_method = 'BLENDED'
     return m
 
 
-black = material("light-body", (0.012, 0.012, 0.013), roughness=0.38)
-face = material("light-face", (0.006, 0.006, 0.007), roughness=0.55)
-blue = material("light-bezel", (0.02, 0.16, 0.75), roughness=0.3, metallic=0.85)
-led = material("light-led", (1, 1, 1), roughness=0.1, emission=(1.0, 0.97, 0.9), strength=6.0)
-lens = material("light-lens", (0.85, 0.88, 0.9), roughness=0.05, metallic=0.2)
-strap = material("light-strap", (0.02, 0.02, 0.02), roughness=0.85)
-clip = material("light-clip", (0.03, 0.03, 0.035), roughness=0.5)
-switch = material("light-switch", (0.55, 0.56, 0.57), roughness=0.35, metallic=0.6)
+body_mat = material("light-body", (0.016, 0.016, 0.018), roughness=0.32, metallic=0.75)
+groove_mat = material("light-face", (0.005, 0.005, 0.006), roughness=0.6)
+blue = material("light-bezel", (0.02, 0.15, 0.7), roughness=0.28, metallic=0.9)
+reflector = material("light-reflector", (0.85, 0.86, 0.88), roughness=0.08, metallic=1.0)
+led = material("light-led", (1.0, 0.86, 0.45), roughness=0.3, emission=(1.0, 0.95, 0.82), strength=8.0)
+glass = material("light-lens", (0.9, 0.95, 1.0), roughness=0.02, alpha=0.12)
+switch_mat = material("light-switch", (0.5, 0.51, 0.53), roughness=0.3, metallic=0.85)
+rubber = material("light-strap", (0.018, 0.018, 0.019), roughness=0.88)
+# The loop round the hand and its keeper: a material of their own, so make_diver_arm.py can swap them for a strap fitted
+# to the hand
+loop_mat = material("light-strap-loop", (0.018, 0.018, 0.019), roughness=0.88)
+clip = material("light-clip", (0.03, 0.03, 0.033), roughness=0.45, metallic=0.3)
+buckle_mat = material("light-buckle", (0.6, 0.6, 0.62), roughness=0.25, metallic=1.0)
+indicator = material("light-indicator", (0.1, 0.8, 0.3), roughness=0.2, emission=(0.2, 1.0, 0.4), strength=3.0)
+
+parts = []
 
 
-def finish(obj, mat, bevel=0.0, subdivide=0, smooth=True):
+def add(obj, mat, smooth=True, sharp=40, bevel=0.0):
+    """Material, smooth shading with sharp edges past `sharp` degrees, an optional bevel; kept for the join"""
     obj.data.materials.append(mat)
     if bevel:
         mod = obj.modifiers.new("bevel", 'BEVEL')
-        mod.width = bevel
-        mod.segments = 3
-        mod.limit_method = 'ANGLE'
-    if subdivide:
-        mod = obj.modifiers.new("subsurf", 'SUBSURF')
-        mod.levels = mod.render_levels = subdivide
+        mod.width, mod.segments, mod.limit_method = bevel, 3, 'ANGLE'
     if smooth:
-        bpy.ops.object.select_all(action='DESELECT')
-        obj.select_set(True)
-        bpy.context.view_layer.objects.active = obj
-        bpy.ops.object.shade_smooth()
+        bm = bmesh.new()
+        bm.from_mesh(obj.data)
+        for f in bm.faces:
+            f.smooth = True
+        for e in bm.edges:
+            if len(e.link_faces) == 2 and e.calc_face_angle(0) > math.radians(sharp):
+                e.smooth = False
+        bm.to_mesh(obj.data)
+        bm.free()
+    parts.append(obj)
     return obj
 
 
-parts = []
-# The light points along +Y in Blender (forward), Z up; exported with Y up, it faces +Z in three.js... see the export
-R = 0.031          # head radius
-L = 0.085          # head length (front face at y = 0)
+def lathe(name, profile, segments=128, centre=(0.0, 0.0), radius=None):
+    """A solid turned around the Y axis (through `centre`, x and z) from a profile of (r, y) points; `radius(r, y,
+    angle)` can reshape it (flutes, knurling)"""
+    bm = bmesh.new()
+    rings = []
+    for i in range(segments):
+        angle = 2 * math.pi * i / segments
+        ring = []
+        for r, y in profile:
+            rr = radius(r, y, angle) if radius else r
+            ring.append(bm.verts.new((centre[0] + rr * math.cos(angle), y, centre[1] + rr * math.sin(angle))))
+        rings.append(ring)
+    for i in range(segments):
+        a_, b_ = rings[i], rings[(i + 1) % segments]
+        for j in range(len(profile) - 1):
+            bm.faces.new((a_[j], a_[j + 1], b_[j + 1], b_[j]))
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-6)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    mesh = bpy.data.meshes.new(name)
+    bm.to_mesh(mesh)
+    bm.free()
+    obj = bpy.data.objects.new(name, mesh)
+    scene.collection.objects.link(obj)
+    return obj
 
-# Head: a cylinder from y = -L to 0, its back rounded by a sphere
-bpy.ops.mesh.primitive_cylinder_add(vertices=64, radius=R, depth=L - R * 0.5, location=(0, -(L - R * 0.5) / 2, 0), rotation=(math.pi / 2, 0, 0))
-parts.append(finish(bpy.context.object, black, bevel=0.002))
-bpy.ops.mesh.primitive_uv_sphere_add(segments=64, ring_count=32, radius=R, location=(0, -(L - R * 0.5), 0))
-back = bpy.context.object
-back.scale = (1, 0.75, 1)
-parts.append(finish(back, black))
-# A slight waist (grip groove) near the back
-bpy.ops.mesh.primitive_torus_add(major_radius=R, minor_radius=0.0018, location=(0, -0.05, 0), rotation=(math.pi / 2, 0, 0), major_segments=64, minor_segments=12)
-parts.append(finish(bpy.context.object, face))
 
-# Front: the blue bezel (a ring), the black face, the LEDs
-bpy.ops.mesh.primitive_torus_add(major_radius=R - 0.0025, minor_radius=0.0032, location=(0, 0.001, 0), rotation=(math.pi / 2, 0, 0), major_segments=64, minor_segments=16)
-parts.append(finish(bpy.context.object, blue))
-bpy.ops.mesh.primitive_cylinder_add(vertices=64, radius=R - 0.004, depth=0.002, location=(0, 0.0005, 0), rotation=(math.pi / 2, 0, 0))
-parts.append(finish(bpy.context.object, face))
-for i in range(6):
-    angle = math.radians(90 + i * 60)
-    x, z = math.cos(angle) * 0.017, math.sin(angle) * 0.017
-    bpy.ops.mesh.primitive_uv_sphere_add(segments=24, ring_count=12, radius=0.0042, location=(x, 0.0015, z))
-    dome = bpy.context.object
-    dome.scale = (1, 0.45, 1)
-    parts.append(finish(dome, led))
-for i in range(3):
-    angle = math.radians(-90 + i * 120)
-    x, z = math.cos(angle) * 0.0055, math.sin(angle) * 0.0055
-    bpy.ops.mesh.primitive_cylinder_add(vertices=24, radius=0.0042, depth=0.003, location=(x, 0.002, z), rotation=(math.pi / 2, 0, 0))
-    parts.append(finish(bpy.context.object, lens, bevel=0.0008))
-    bpy.ops.mesh.primitive_uv_sphere_add(segments=16, ring_count=8, radius=0.0018, location=(x, 0.003, z))
-    parts.append(finish(bpy.context.object, led))
+def box(name, size, location):
+    bpy.ops.mesh.primitive_cube_add(size=1, location=location)
+    obj = bpy.context.object
+    obj.name = name
+    obj.data.transform(__import__("mathutils").Matrix.Diagonal((*size, 1)))
+    return obj
 
-# The slide switch on top, near the back
-bpy.ops.mesh.primitive_cube_add(size=1, location=(0, -0.055, R + 0.004))
-sw = bpy.context.object
-sw.scale = (0.016, 0.02, 0.007)
-parts.append(finish(sw, switch, bevel=0.002, smooth=False))
-bpy.ops.mesh.primitive_cube_add(size=1, location=(0, -0.055, R + 0.0005))
-base = bpy.context.object
-base.scale = (0.02, 0.028, 0.004)
-parts.append(finish(base, black, bevel=0.0015, smooth=False))
 
-# The mount under the head, and the wide hand strap: a loop around the back of the hand (its palm side below)
-bpy.ops.mesh.primitive_cube_add(size=1, location=(0, -0.035, -R - 0.004))
-mount = bpy.context.object
-mount.scale = (0.03, 0.05, 0.012)
-parts.append(finish(mount, clip, bevel=0.003, smooth=False))
+L = 0.092           # head length, back to front
+RB = 0.0285         # body radius
+RF = 0.031          # front collar radius
+FACE = -0.008       # the reflector's plane, behind the glass
+
+# 1. The head: a rounded back (its quarter ellipse), the fluted body with a grip groove, the wider front collar
+profile = [(0.0, -L)]
+for k in range(1, 11):
+    t = math.radians(9 * k)
+    profile.append((RB * math.sin(t), -L + 0.017 * (1 - math.cos(t))))
+profile += [(RB, -0.06), (RB, -0.052), (RB - 0.002, -0.0505), (RB - 0.002, -0.0495), (RB, -0.048), (RB, -0.021),
+            (RF, -0.017), (RF, -0.004), (0.0245, -0.004), (0.0245, FACE), (0.0, FACE)]
+
+
+def flutes(r, y, angle):
+    # 16 shallow flats along the body, between the back's curve and the collar (not across the groove)
+    if -0.07 < y < -0.022 and r >= RB - 1e-4:
+        return r * (1 - 0.045 * max(0.0, math.cos(16 * angle)) ** 8)
+    return r
+
+
+add(lathe("head", profile, radius=flutes), body_mat, sharp=35)
+# The groove's floor in black (an inset ring over it)
+add(lathe("groove", [(RB - 0.0019, -0.0506), (RB - 0.0019, -0.0494)]), groove_mat)
+
+# 2. The front: the knurled blue bezel, the reflector with its LED cups, the glass
+def knurl(r, y, angle):
+    return r * (1 - 0.02 * (0.5 + 0.5 * math.cos(72 * angle))) if r > 0.031 else r
+
+
+bezel = [(0.0245, -0.0042), (0.0315, -0.0042), (0.0322, -0.003), (0.0322, 0.0012), (0.031, 0.0024), (0.0262, 0.0024),
+         (0.0252, 0.0012), (0.0252, -0.0042)]
+add(lathe("bezel", bezel, segments=288, radius=knurl), blue, sharp=30)
+add(lathe("reflector", [(0.0, FACE + 0.0002), (0.0245, FACE + 0.0002)]), reflector)
+cups = [(0.0165, math.radians(90 + i * 60), 0.0058) for i in range(6)] + \
+       [(0.0062, math.radians(-90 + i * 120), 0.0044) for i in range(3)]
+for ring, angle, size in cups:
+    cx, cz = ring * math.cos(angle), ring * math.sin(angle)
+    # A polished cup opening forward (a curved cone), the LED's die at its bottom
+    cup = [(0.0014, FACE + 0.0004)] + [(0.0014 + (size - 0.0014) * (k / 6) ** 0.7, FACE + 0.0004 + 0.0055 * (k / 6) ** 1.6)
+                                       for k in range(1, 7)]
+    add(lathe("cup", cup, segments=32, centre=(cx, cz)), reflector, sharp=60)
+    add(box("die", (0.0022, 0.0006, 0.0022), (cx, FACE + 0.0007, cz)), led, smooth=False)
+add(lathe("glass", [(0.0, -0.0022), (0.0252, -0.0022), (0.0252, -0.0010), (0.0, -0.0010)], segments=96), glass)
+
+# 3. The slide switch on top, in its track, its slider ridged; the battery indicator at the back
+add(box("track", (0.013, 0.034, 0.003), (0, -0.05, RB + 0.0005)), groove_mat, smooth=False, bevel=0.001)
+slider = add(box("slider", (0.012, 0.013, 0.0055), (0, -0.058, RB + 0.003)), switch_mat, smooth=False, bevel=0.0012)
+for k in (-1, 0, 1):
+    add(box("ridge", (0.012, 0.0012, 0.001), (0, -0.058 + k * 0.0035, RB + 0.006)), switch_mat, smooth=False)
+bpy.ops.mesh.primitive_uv_sphere_add(segments=24, ring_count=12, radius=0.0022, location=(0, -L + 0.0004, 0.008))
+dot = bpy.context.object
+dot.scale = (1, 0.5, 1)
+add(dot, indicator)
+
+# 4. The mount under the head, and the wide rubber strap round the hand (palm side below), its buckle on the outside
 HAND_W, HAND_T = 0.09, 0.03          # the hand's width and thickness the strap goes round
-bpy.ops.mesh.primitive_cylinder_add(vertices=48, radius=1, depth=0.045, location=(0, -0.035, -R - 0.012 - HAND_T / 2 - 0.004), rotation=(math.pi / 2, 0, 0))
+add(box("mount", (0.026, 0.05, 0.012), (0, -0.035, -RB - 0.005)), clip, smooth=False, bevel=0.003)
+add(box("saddle", (0.034, 0.042, 0.004), (0, -0.035, -RB - 0.012)), rubber, smooth=False, bevel=0.0015)
+loop_z = -RB - 0.012 - HAND_T / 2 - 0.0055
+bpy.ops.mesh.primitive_cylinder_add(vertices=64, radius=1, depth=0.04, location=(0, -0.035, loop_z), rotation=(math.pi / 2, 0, 0))
 loop = bpy.context.object
 loop.scale = (HAND_W / 2 + 0.006, HAND_T / 2 + 0.006, 1)
 bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+bm = bmesh.new()
+bm.from_mesh(loop.data)
+bmesh.ops.delete(bm, geom=[f for f in bm.faces if len(f.verts) > 4], context='FACES')          # an open tube
+bm.to_mesh(loop.data)
+bm.free()
 solid = loop.modifiers.new("strap", 'SOLIDIFY')
-solid.thickness = 0.004
-# An open tube: no caps
-bpy.ops.object.mode_set(mode='EDIT')
-bpy.ops.mesh.select_all(action='DESELECT')
-bpy.ops.object.mode_set(mode='OBJECT')
-for poly in loop.data.polygons:
-    poly.select = len(poly.vertices) > 4
-bpy.ops.object.mode_set(mode='EDIT')
-bpy.ops.mesh.delete(type='FACE')
-bpy.ops.object.mode_set(mode='OBJECT')
-parts.append(finish(loop, strap))
+solid.thickness = 0.0035
+add(loop, loop_mat, sharp=80)
+add(box("buckle", (0.004, 0.03, 0.016), (HAND_W / 2 + 0.0095, -0.035, loop_z)), buckle_mat, smooth=False, bevel=0.001)
+add(box("keeper", (0.005, 0.034, 0.004), (HAND_W / 2 + 0.0095, -0.035, loop_z + 0.004)), loop_mat, smooth=False, bevel=0.001)
 
 # One object, its origin at the front centre of the light
+bpy.ops.object.select_all(action='DESELECT')
 for o in parts:
     o.select_set(True)
 bpy.context.view_layer.objects.active = parts[0]
@@ -163,17 +219,19 @@ if a.preview:
     key.data.energy = 60
     key.data.size = 0.3
     key.rotation_euler = (math.radians(-45), math.radians(35), math.radians(140))
-    bpy.ops.object.camera_add(location=(0.17, 0.2, 0.09))
-    cam = bpy.context.object
     target = bpy.data.objects.new("target", None)
-    target.location = (0, -0.03, -0.01)
+    target.location = (0, -0.035, -0.015)
     scene.collection.objects.link(target)
-    track = cam.constraints.new('TRACK_TO')
-    track.target = target
-    cam.data.lens = 60
-    scene.camera = cam
     scene.render.engine = 'BLENDER_EEVEE_NEXT' if 'BLENDER_EEVEE_NEXT' in bpy.types.RenderSettings.bl_rna.properties['engine'].enum_items.keys() else 'BLENDER_EEVEE'
     scene.render.resolution_x, scene.render.resolution_y = 900, 600
-    scene.render.filepath = a.preview
-    bpy.ops.render.render(write_still=True)
+    # Three-quarter view from the front, and the back from above
+    for suffix, location in (("", (0.17, 0.2, 0.09)), ("-back", (-0.12, -0.25, 0.14))):
+        bpy.ops.object.camera_add(location=location)
+        cam = bpy.context.object
+        track = cam.constraints.new('TRACK_TO')
+        track.target = target
+        cam.data.lens = 60
+        scene.camera = cam
+        scene.render.filepath = a.preview.replace(".png", f"{suffix}.png")
+        bpy.ops.render.render(write_still=True)
     print(f"[light] preview {a.preview}", flush=True)

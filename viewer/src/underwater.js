@@ -44,8 +44,8 @@ const WATER_BRIGHTNESS = 0.6
 // The surfaces are seen as they are up to this share of the visibility (Christian, 2026-10-23: textures seen up close,
 // nothing far away); the usual lighting (sky and sun) stays, the water only hides the distance
 const CLEAR_SHARE = 0.15
-// The dive light: held at the bottom right of the view (35 cm right of and 30 cm below the eye), aimed at the point
-// LAMP_AIM ahead in the middle of the view, so its ray crosses the view toward the centre (Christian, 2026-10-23);
+// The dive light: held at the bottom right of the view (35 cm right of and 30 cm below the eye, until the diver's arm
+// gives the drawn light's front and axis, which follow its sway: setLampPose, diver-arm.js), aimed at the point LAMP_AIM ahead in the middle of the view, so its ray crosses the view toward the centre (Christian, 2026-10-23);
 // candela (as a three.js spot light: about 7 times the sun at the floor 3 m away), beam half-angle, reach in
 // visibilities
 const LAMP_OFFSET = [0.35, -0.3, 0]
@@ -453,6 +453,9 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
   // red with the distance it travels, which a light's single colour can't do. Here only its place and aim
   const lamp = { position: new THREE.Vector3(), target: new THREE.Vector3(), visible: false, distance: 10 }
   let lampWanted = true
+  const lampAt = new THREE.Vector3(...LAMP_OFFSET)
+  // Where it points in the camera's frame, once the diver's arm holds it (else at the point LAMP_AIM ahead)
+  let lampAxis = null
   const lampOffset = new THREE.Vector3()
   const ahead = new THREE.Vector3()
   let particleReach = PARTICLE_MIN
@@ -526,6 +529,18 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
       uniforms.uUwLampStrength.value = lamp.visible ? BEAM_STRENGTH : 0
       uniforms.uUwLampPower.value = lamp.visible ? LAMP_INTENSITY : 0
     },
+    /**
+     * Where the light is and where it points, in the camera's frame: as the diver's arm holds it (diver-arm.js)
+     * @param {THREE.Vector3} offset - m
+     * @param {THREE.Vector3} axis - a unit vector
+     */
+    setLampPose(offset, axis) {
+      lampAt.copy(offset)
+      lampAxis = (lampAxis ?? new THREE.Vector3()).copy(axis)
+    },
+    get lampVisible() {
+      return lamp.visible
+    },
     /** @param {number} index - in SEASONS */
     setSeason(index) {
       season = SEASONS[Math.min(Math.max(Math.round(index), 0), SEASONS.length - 1)]
@@ -543,10 +558,13 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
       surface.position.z = camera.position.z
       particles.material.uniforms.uCentre.value.copy(camera.getWorldDirection(ahead)).multiplyScalar(0.6 * particleReach).add(camera.position)
       // The dive light follows the camera: its offset in the camera's frame, aimed 10 m ahead
-      lamp.position.copy(camera.position).add(lampOffset.set(...LAMP_OFFSET).applyQuaternion(camera.quaternion))
+      lamp.position.copy(camera.position).add(lampOffset.copy(lampAt).applyQuaternion(camera.quaternion))
       lamp.target.copy(camera.position).add(lampAhead.set(0, 0, -LAMP_AIM).applyQuaternion(camera.quaternion))
       uniforms.uUwLampPos.value.copy(lamp.position)
-      uniforms.uUwLampDir.value.subVectors(lamp.target, lamp.position).normalize()
+      if (lampAxis) {
+        uniforms.uUwLampDir.value.copy(lampAxis).applyQuaternion(camera.quaternion)
+        lamp.target.copy(lamp.position).addScaledVector(uniforms.uUwLampDir.value, LAMP_AIM)
+      } else uniforms.uUwLampDir.value.subVectors(lamp.target, lamp.position).normalize()
     },
   }
 }
