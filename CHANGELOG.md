@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Claude Code added to the software used (gear page, French and English; pipeline README).
 - 3D viewer: wet look back to 0.15 by default.
 - 3D viewer settings: « Ombres du soleil » is out of the panel; the default stays (on computers, off on phones),
   and a link can still set it (`?shadows=`).
