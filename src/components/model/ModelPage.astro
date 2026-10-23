@@ -228,7 +228,8 @@ const updated = zones.updated
 <script>
   // <l21-model-frame>: the viewer's iframe. The page's own query string (?cam=…, plus test settings) goes to the
   // viewer, and the viewer's camera comes back into the page's address, so that the page URL always shares the current
-  // view. The address keeps only ?cam=. A Custom Element (GUIDELINES.md): set up each time it is inserted, on a full
+  // view. The address keeps only the view's shareable part: ?cam=, and while underwater &underwater=1&season= (&lamp=0).
+  // A Custom Element (GUIDELINES.md): set up each time it is inserted, on a full
   // load as after a client-side navigation (ClientRouter, Head.astro), where a plain page script would run only once.
   // replaceState keeps history.state: the router stores its own entry there (back and forward buttons).
   class ModelFrame extends HTMLElement {
@@ -244,8 +245,11 @@ const updated = zones.updated
     connectedCallback() {
       const frame = /** @type {HTMLIFrameElement} */ (this.querySelector('iframe'))
       frame.src = (frame.dataset.src ?? '') + location.search
-      const cam = new URLSearchParams(location.search).get('cam')
-      history.replaceState(history.state, '', location.pathname + (cam ? `?cam=${cam}` : ''))
+      const query = new URLSearchParams(location.search)
+      const underwater = query.get('underwater') === '1'
+      const shared = [...query].filter(([key]) => key === 'cam' || (underwater && ['underwater', 'season', 'lamp'].includes(key)))
+      const search = shared.map(([key, value]) => `${key}=${value}`).join('&')
+      history.replaceState(history.state, '', location.pathname + (search ? `?${search}` : ''))
       window.addEventListener('message', this.onMessage)
     }
 

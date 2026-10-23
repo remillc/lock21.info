@@ -28,7 +28,10 @@ const params = new URLSearchParams(location.search)
 const panelKeys = new Set(settingsSchema({ mobile: false }).flatMap((section) => section.items).map((item) => item.key))
 for (const [key, value] of savedSettings()) if (!params.has(key) && panelKeys.has(key)) params.set(key, value)
 const live = {}
-history.replaceState(null, '', location.pathname + (params.has('cam') ? `?cam=${params.get('cam')}` : ''))
+// The address keeps only what makes the view shareable (viewUrl): the camera, and underwater with its season and lamp
+const SHARED_KEYS = ['cam', 'underwater', 'season', 'lamp']
+const shared = new URLSearchParams([...params].filter(([key]) => SHARED_KEYS.includes(key) && (key === 'cam' || params.get('underwater') === '1')))
+history.replaceState(null, '', location.pathname + (shared.size ? `?${shared}` : '').replaceAll('%2C', ','))
 
 // Root of the published tiles (manifest.json + tilesets). Override with ?tiles=<url> (e.g. phone tests on the LAN)
 const DEFAULT_TILES_URL = import.meta.env.VITE_TILES_URL || 'http://localhost:8081'
@@ -553,6 +556,7 @@ function setUnderwater(on) {
   underwater.setOn(on)
   underwaterButton.setAttribute('aria-pressed', String(on))
   showSeasonControl(on)
+  updateAddress()
   settings.reflect('underwater', on ? '1' : '0')
   updateLights()
   updateEnvironment()
@@ -564,6 +568,7 @@ live.season = (v) => {
   showSeason()
   updateLights()
   updateEnvironment()
+  if (look.underwater) updateAddress()
 }
 // The season slider beside the 🤿 button (while underwater), kept in step with the settings' « Saison »
 const seasonControl = document.querySelector('.season-control')
@@ -619,6 +624,7 @@ live.lamp = (v) => {
   underwater.setLamp(look.lamp)
   showLamp()
   requestRender()
+  if (look.underwater) updateAddress()
 }
 // The dive light's button, between the season slider and the 🤿 button, kept in step with the settings' « Lampe de plongée »
 const lampButton = document.querySelector('.lamp-button')
@@ -875,21 +881,23 @@ function resize() {
 }
 window.addEventListener('resize', resize)
 
-// The address bar follows the camera: ?cam=x,y,z,tx,ty,tz (its only parameter) is updated when a gesture ends,
-// so the URL can be copied at any time to share or reproduce the view. replaceState: no history entry per move.
-// Key C copies that URL.
+// The address bar follows the view: ?cam=x,y,z,tx,ty,tz, updated when a gesture ends, and while underwater
+// &underwater=1&season=0..3 (&lamp=0 with the dive light off), updated when they change: the URL can be copied at any
+// time to share or reproduce the view. replaceState: no history entry per move. Key C copies that URL.
 const viewUrl = () => {
   const v = [...camera.position.toArray(), ...controls.target.toArray()].map((n) => n.toFixed(2)).join(',')
-  return `${location.origin}${location.pathname}?cam=${v}`
+  const water = look.underwater ? `&underwater=1&season=${look.season}${look.lamp ? '' : '&lamp=0'}` : ''
+  return `${location.origin}${location.pathname}?cam=${v}${water}`
+}
+function updateAddress() {
+  history.replaceState(null, '', viewUrl())
+  // The /modele page shows the same query string in its own address, so that copying it shares this view
+  if (embedded) window.parent.postMessage({ type: 'lock21:cam', search: location.search }, location.origin)
 }
 let urlTimer = 0
 controls.addEventListener('change', () => {
   clearTimeout(urlTimer)
-  urlTimer = setTimeout(() => {
-    history.replaceState(null, '', viewUrl())
-    // The /modele/ page shows the same ?cam= in its own address, so that copying it shares this view
-    if (embedded) window.parent.postMessage({ type: 'lock21:cam', search: location.search }, location.origin)
-  }, 300)
+  urlTimer = setTimeout(updateAddress, 300)
 })
 window.addEventListener('keydown', (e) => {
   if (e.key !== 'c' && e.key !== 'C') return

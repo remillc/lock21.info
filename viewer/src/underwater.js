@@ -36,17 +36,17 @@ const WATER_BRIGHTNESS = 0.6
 const CLEAR_SHARE = 0.15
 // The dive light: held at the bottom right of the view (35 cm right of and 30 cm below the eye), aimed at the point
 // LAMP_AIM ahead in the middle of the view, so its ray crosses the view toward the centre (Christian, 2026-10-23);
-// candela (as a three.js spot light: about 4 times the sun at the floor 3 m away), beam half-angle, reach in
+// candela (as a three.js spot light: about 7 times the sun at the floor 3 m away), beam half-angle, reach in
 // visibilities
 const LAMP_OFFSET = [0.35, -0.3, 0]
 const LAMP_AIM = 6
-const LAMP_INTENSITY = 120
+const LAMP_INTENSITY = 200
 // The share of the daylight's colour shift at depth that is shown (the rest: the eye's adaptation)
 const DAYLIGHT_SHIFT = 0.5
 const LAMP_ANGLE = 15
 const LAMP_REACH = 1.5
 // The beam's brightness in the water (in-scattered light, added along the line of sight)
-const BEAM_STRENGTH = 0.04
+const BEAM_STRENGTH = 0.25
 const BEAM_SAMPLES = 12
 
 // Per season: visibility (ft); the water's own absorption per metre and per channel (red, green, blue: red first; in
@@ -248,6 +248,10 @@ export function createUnderwater(scene, renderer) {
         uPixelRatio: { value: renderer.getPixelRatio() },
         uAbsorb: uniforms.uUwAbsorb,
         uCurrent: { value: new THREE.Vector3(...CURRENT) },
+        uUwLampPos: uniforms.uUwLampPos,
+        uUwLampDir: uniforms.uUwLampDir,
+        uUwLampCos: uniforms.uUwLampCos,
+        uUwLampStrength: uniforms.uUwLampStrength,
       },
       vertexShader: /* glsl */ `
         attribute vec4 seed;
@@ -256,8 +260,13 @@ export function createUnderwater(scene, renderer) {
         uniform float uBox;
         uniform float uPixelRatio;
         uniform vec3 uCurrent;
+        uniform vec3 uUwLampPos;
+        uniform vec3 uUwLampDir;
+        uniform float uUwLampCos;
+        uniform float uUwLampStrength;
         varying float vDistance;
         varying float vSeed;
+        varying float vLit;
         void main() {
           // Carried by the current (speed varies a little per particle), with a slight turbulent sway
           vec3 sway = vec3(sin(uTime * 0.3 + seed.w * 6.28), sin(uTime * 0.21 + seed.z * 6.28) - 0.03 * uTime, cos(uTime * 0.25 + seed.w * 3.14)) * 0.25;
@@ -266,6 +275,11 @@ export function createUnderwater(scene, renderer) {
           vec4 mv = viewMatrix * vec4(p, 1.0);
           vDistance = length(mv.xyz);
           vSeed = seed.w;
+          // In the dive light's cone: lit, fading with the distance from the lamp (the beam shows through them)
+          vec3 toParticle = p - uUwLampPos;
+          float d = max(length(toParticle), 0.3);
+          float cone = smoothstep(uUwLampCos, mix(uUwLampCos, 1.0, 0.4), dot(toParticle / d, uUwLampDir));
+          vLit = uUwLampStrength > 0.0 ? cone * 2.0 / (d * d) : 0.0;
           // A quarter of the first size (Christian, 2026-10-23: smaller, twice)
           gl_PointSize = (0.003 + 0.005 * seed.w) * 900.0 * uPixelRatio / max(vDistance, 0.1);
           gl_Position = projectionMatrix * mv;
@@ -275,12 +289,14 @@ export function createUnderwater(scene, renderer) {
         uniform float uTime;
         varying float vDistance;
         varying float vSeed;
+        varying float vLit;
         void main() {
           float r = length(gl_PointCoord - 0.5);
           if (r > 0.5) discard;
           float sparkle = 0.75 + 0.25 * sin(uTime * 3.0 + vSeed * 40.0);
-          float alpha = smoothstep(0.5, 0.0, r) * (0.3 + 0.4 * vSeed) * sparkle * exp(-uAbsorb.g * vDistance);
-          gl_FragColor = vec4(vec3(0.85, 0.95, 0.9), alpha);
+          float lit = min(vLit, 3.0);
+          float alpha = smoothstep(0.5, 0.0, r) * (0.3 + 0.4 * vSeed) * sparkle * exp(-uAbsorb.g * vDistance) * (1.0 + lit);
+          gl_FragColor = vec4(mix(vec3(0.85, 0.95, 0.9), vec3(1.0, 0.94, 0.85), min(lit, 1.0)) * (1.0 + 0.5 * lit), min(alpha, 1.0));
         }`,
     }),
   )

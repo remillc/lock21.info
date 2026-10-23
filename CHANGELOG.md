@@ -4,6 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the view's address (and the /modele page's) carries `&underwater=1&season=` (`&lamp=0`), so
+  a copied link reopens the same view. Colours absorbed by distance, red first: daylight from the surface down (half
+  the shift shown, the eye adapts), the dive light only from the lamp, so it brings red back up close; the lamp at the
+  bottom right of the view, aimed at its middle, its beam visible in the water and in the particles it lights. The
+  camera stays above the height of the point it turns around (never under the floor).
 - 3D viewer: « Ambiance sous-marine » (TODO #46, from the first attempt #31): the 🤿 button beside full screen, or the
   settings' « Sous l'eau » section. The water column as background, the sun refracted at the surface, caustics, the
   surface seen from below, many small particles drifting with the current (shown 3 times faster than measured). The
