@@ -593,8 +593,8 @@ function updateLights() {
   const skyTurn = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), turn)
   scene.environmentRotation.setFromQuaternion(skyTilt.multiply(skyTurn))
   const direction = sunDirection(...look.light)
-  // Underwater the lighting stays as above water (the textures seen as they are up close, underwater.js); the sun's
-  // direction is only used for the caustics and its glare in the water
+  // Underwater the sun's direction also sets the caustics and its glare in the water; its strength on the surfaces
+  // follows the water above (renderLoop, underwater.sunThrough)
   underwater.setSun(direction)
   // CSM's light direction points from the sun to the scene
   csm.lightDirection.copy(direction).negate()
@@ -1342,6 +1342,8 @@ setEndFacts(tileFacts)
 
 // Paused while AR runs (android-ar.js has its own renderer)
 let lastFrame = performance.now()
+// Underwater, the share of the sun's lost direct light given back as the sky's diffuse light
+const SUN_TO_SKY = 0.5
 function renderLoop() {
   updateStats()
   // update() returns true while the camera moves (including the damping glide after a gesture); swimming: the keys
@@ -1360,6 +1362,11 @@ function renderLoop() {
     diverArm.setVisible(underwater.lampVisible)
     diverArm.update(camera)
     underwater.update(camera)
+    // The sun on the surfaces: only as much as gets through the water above; what it lost comes as diffuse light
+    // from the sky above (no sun patches in murky water: Christian, 2026-10-23). Back to updateLights in the air
+    const through = underwater.sunThrough
+    csm.lights.forEach((light) => { light.intensity = Math.PI * look.sunIntensity * through })
+    scene.environmentIntensity = look.skyIntensity + SUN_TO_SKY * look.sunIntensity * (1 - through)
     buildParticleField()
     needsRender = true
   }

@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the sun on the surfaces only as far as it gets through the water above, the rest as diffuse
+  light from the sky (no sun patches or caustics in murky water); looking up, the haze closes in (down to 40 % of the
+  visibility straight up), so the banks' walls fade into the light from above; spring's visibility 14 ft (was 12).
 - 3D viewer, underwater: the mockups of the zones not yet online are opaque (the water hides them with the distance,
   like the zones); in the air they stay translucent ghosts.
 - 3D viewer, underwater: looking up, the sun's disc and glare only as far as its light gets through the water above

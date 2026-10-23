@@ -73,6 +73,8 @@ const LAMP_REACH = 1.5
 // The beam's brightness in the water (in-scattered light, added along the line of sight)
 const BEAM_STRENGTH = 0.2125
 const BEAM_SAMPLES = 12
+// Looking straight up, the visibility's share left (the water toward the light from above hides what stands there)
+const UP_HAZE = 0.4
 
 // Per season: visibility (ft); the water's own absorption per metre and per channel (red, green, blue: red first; in
 // spring's runoff, blue too); the colour of the light the water scatters toward the eye (linear), and the water
@@ -81,7 +83,7 @@ const BEAM_SAMPLES = 12
 // left no colour a metre away, even in the dive light's beam
 export const SEASONS = [
   { key: 'winter', density: 6, current: 2, visibilityFt: 100, absorb: [0.3, 0.05, 0.06], water: [0.05, 0.16, 0.17], surface: [0.35, 0.6, 0.62], deep: [0.01, 0.04, 0.05] },
-  { key: 'spring', density: 300, current: 8, visibilityFt: 12, absorb: [0.35, 0.12, 0.3], water: [0.12, 0.13, 0.07], surface: [0.42, 0.45, 0.3], deep: [0.03, 0.03, 0.015] },
+  { key: 'spring', density: 300, current: 8, visibilityFt: 14, absorb: [0.35, 0.12, 0.3], water: [0.12, 0.13, 0.07], surface: [0.42, 0.45, 0.3], deep: [0.03, 0.03, 0.015] },
   { key: 'summer', density: 60, current: 6, visibilityFt: 20, absorb: [0.35, 0.07, 0.15], water: [0.07, 0.17, 0.12], surface: [0.4, 0.62, 0.5], deep: [0.015, 0.05, 0.035] },
   { key: 'autumn', density: 30, current: 4, visibilityFt: 30, absorb: [0.33, 0.06, 0.12], water: [0.06, 0.16, 0.14], surface: [0.36, 0.58, 0.52], deep: [0.012, 0.045, 0.04] },
 ]
@@ -425,7 +427,10 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
           float uwDepth = max(0.0, uUwSurface - vUwWorld.y);
           // Projected along the sun's ray to the surface: the pattern belongs to the waves above
           vec2 uwCaustUv = (vUwWorld.xz + uwDepth * uUwSun.xz / max(uUwSun.y, 0.2)) * 0.8;
-          float uwCaustic = uwCaustic(uwCaustUv, uUwTime * 0.8) * smoothstep(0.2, 0.9, uwFacing) * exp(-0.07 * uwDepth);
+          // As much as the direct sunlight reaches this depth (2.5 per visibility along the sun's slanted path): none a few
+          // visibilities down in murky water, no sun patterns there (Christian, 2026-10-23)
+          float uwSunHere = exp(-2.5 * uwDepth / uUwGone / max(uUwSun.y, 0.2));
+          float uwCaustic = uwCaustic(uwCaustUv, uUwTime * 0.8) * smoothstep(0.2, 0.9, uwFacing) * uwSunHere;
           // Daylight (sun and sky) has crossed the water from the surface down to here: red absorbed first. Relative
           // to green (the eye adapts to the overall level), and half the shift (it partly adapts to the colour too:
           // the full shift left the floor neon green)
@@ -450,8 +455,12 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
           // Then the haze (the same for all colours): clear up close, gone at the visibility distance (a smooth step: an
           // exponential dimmed even the nearby surfaces), into the water column's own colour in that direction (as the
           // background; one flat colour left a silhouette)
-          float uwTransmit = 1.0 - smoothstep(uUwClear, uUwGone, vUwDepth);
+          // Looking up, through the water toward the light from above, it closes in sooner: down to UP_HAZE of the
+          // visibility straight up, so what stands above (the banks' walls) fades into the glow rather than showing as
+          // a silhouette (Christian, 2026-10-23)
           vec3 uwDir = normalize(vUwWorld - cameraPosition);
+          float uwUp = mix(1.0, ${UP_HAZE.toFixed(2)}, smoothstep(0.0, 0.8, uwDir.y));
+          float uwTransmit = 1.0 - smoothstep(uUwClear * uwUp, uUwGone * uwUp, vUwDepth);
           vec3 uwBack = uwDir.y > 0.0 ? mix(uUwWater, uUwTop, smoothstep(0.35, 1.0, uwDir.y)) : mix(uUwWater, uUwDeep, smoothstep(0.35, 1.0, -uwDir.y));
           gl_FragColor.rgb = uwColor * uwTransmit + uwBack * (1.0 - uwTransmit);
           gl_FragColor.rgb += vec3(1.0, 0.94, 0.87) * uwBeam(cameraPosition, vUwWorld, uUwAbsorb);
@@ -469,6 +478,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
   const lampOffset = new THREE.Vector3()
   const ahead = new THREE.Vector3()
   let particleReach = PARTICLE_MIN
+  let sunThrough = 1
   const lampAhead = new THREE.Vector3()
 
   function applySeason() {
@@ -515,6 +525,10 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
     /** For tests (main.js exposes it in development builds) */
     uniforms,
     /** The river's current as the particles drift in it (m/s, world): faster in murky seasons */
+    /** The direct sunlight left at the camera's depth (1 to 0): main.js lights the surfaces with it */
+    get sunThrough() {
+      return sunThrough
+    },
     get current() {
       return particles.material.uniforms.uCurrent.value
     },
@@ -566,6 +580,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
       const depth = Math.max(SURFACE_Y - camera.position.y, 0)
       const slant = Math.max(uniforms.uUwSun.value.y, 0.2)
       columnMaterial.uniforms.uSunThrough.value = Math.exp((-2.5 * depth) / (season.visibilityFt * 0.3048) / slant)
+      sunThrough = columnMaterial.uniforms.uSunThrough.value
       timer.update()
       uniforms.uUwTime.value = timer.getElapsed()
       column.position.copy(camera.position)
