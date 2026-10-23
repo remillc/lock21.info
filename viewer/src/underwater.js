@@ -64,7 +64,7 @@ const LAMP_SPILL = 1 / 3
 // The share of the water's scattering that dims the lamp's beam (forward scattering keeps the rest in it), and the
 // saturation of the colours it lights
 const LAMP_SCATTER = 0.33
-const LAMP_SATURATION = 1.3
+const LAMP_SATURATION = 1.5
 const LAMP_REACH = 1.5
 // The beam's brightness in the water (in-scattered light, added along the line of sight)
 const BEAM_STRENGTH = 0.25
@@ -148,7 +148,8 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
     uUwClear: { value: 1 },
     uUwSpectral: { value: new THREE.Vector3() },
     uUwLampPower: { value: 0 },
-    uUwLampColor: { value: new THREE.Color(0xffe2c4) },
+    // Warm, like a halogen dive light: more red to bring back (Christian, 2026-10-23)
+    uUwLampColor: { value: new THREE.Color(0xffcc9c) },
     uUwTop: { value: new THREE.Vector3() },
     uUwDeep: { value: new THREE.Vector3() },
     uUwGone: { value: 6 },
