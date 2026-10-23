@@ -409,16 +409,14 @@ const updated = zones.updated
     list-style: none;
   }
   .downloads li {
-    margin: 0;
-  }
-  /* Each download (its button and its text) apart from the next (Christian, 2026-10-23) */
-  .downloads li + li {
-    margin-top: 4rem;
+    margin: 0 0 0.75rem;
   }
   /* MD3 filled button with a leading icon, in the signal colour (tertiary, as the "Modèle 3D" pill): orange with dark olive
      text, readable in both themes (an orange outline on the light background would be too pale for text); 48 px
      touch target, label-large */
+  /* Space above and below each button (Christian, 2026-10-23) */
   .download {
+    margin: 1rem 0;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -445,7 +443,7 @@ const updated = zones.updated
     opacity: 0.75;
   }
   .downloads p {
-    margin: 1rem 0 0;
+    margin: 0.5rem 0 0;
     font-size: 0.9375rem;
   }
   /* Secondary credit: body-medium (14 / 20) */
