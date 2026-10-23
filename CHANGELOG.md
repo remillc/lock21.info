@@ -4,8 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- 3D viewer, the bass: it turns as a fish does, its turn easing in and out, its body curving into a C (the body lagging
-  behind the head) and gliding forward a little, instead of pivoting evenly; it comes closer (1 m, was 1.4).
+- 3D viewer, the bass: it turns as a fish does, its turn easing in and out, its body curving into a supple C (the body
+  lagging behind the head) and gliding forward a little, instead of pivoting evenly; it comes closer (1 m, was 1.4).
 - 3D viewer, underwater, the bass: its path must be seen from the camera (a spot far from every surface could be inside
   the masonry: it came, but hidden), and it tries both sides, closer distances (1, 0.7, 0.5 m) and higher paths (from
   just below eye level to 45 cm above: a camera near the floor) before giving up.
