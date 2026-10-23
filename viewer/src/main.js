@@ -11,6 +11,7 @@ import { CSM } from 'three/examples/jsm/csm/CSM.js'
 import { TilesRenderer } from '3d-tiles-renderer'
 import { savedSettings, settingsSchema } from './config-panel.js'
 import './loading.js'
+import './tooltip.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
@@ -42,14 +43,15 @@ document.querySelector('meta[name="description"]')?.setAttribute('content', t('p
 const homeLink = document.querySelector('.home')
 homeLink.textContent = t('home')
 homeLink.href = homePath
-for (const [selector, label, title] of [
+// Accessible name, and the tooltip's text (tooltip.js: the MD3 tooltip replaces the browser's title tooltip)
+for (const [selector, label, tooltip] of [
   ['.settings-button', 'settings', 'settings'],
   ['.ar-button', 'ar', 'ar'],
   ['.fullscreen', 'fullscreen', 'fullscreenTitle'],
 ]) {
   const element = document.querySelector(selector)
   element.setAttribute('aria-label', t(label))
-  element.title = t(title)
+  element.dataset.tooltip = t(tooltip)
 }
 
 // Full screen: works standalone and embedded (the iframe allows it)
@@ -62,6 +64,7 @@ if (document.fullscreenEnabled) {
   })
   document.addEventListener('fullscreenchange', () => {
     fullscreenButton.setAttribute('aria-label', t(document.fullscreenElement ? 'fullscreenExit' : 'fullscreen'))
+    fullscreenButton.dataset.tooltip = t(document.fullscreenElement ? 'fullscreenExit' : 'fullscreenTitle')
     fullscreenButton.dataset.full = String(Boolean(document.fullscreenElement))
   })
 }
@@ -84,7 +87,7 @@ const arName = arFull ? 'lock-21-ar-full' : 'lock-21-ar'
 const arLink = document.querySelector('.ar-button')
 // Run once the 3D view has finished its first load (updateLoading): the AR model's background download waits for it
 const afterFirstLoad = []
-if (arFull) arLink.title = t('arFull')
+if (arFull) arLink.dataset.tooltip = t('arFull')
 if (arLink.relList?.supports?.('ar')) {
   arLink.href = `${AR_URL}/${arName}.usdz?v=${AR_VERSION}`
   arLink.hidden = false

@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: MD3 tooltips on its buttons (`<l21-tooltip>`, `viewer/src/tooltip.js`) instead of the browser's own,
+  in the page's language; also shown on keyboard focus.
 - 3D viewer: gloss by surface (roughness from the relief map: smooth planks glossier, mussels matte) tried and set
   aside: stone, wood and silt reflect about 4 % of light at a direct view, so even a mirror finish hardly showed; the
   wet look's clear coat already gives the sheen.

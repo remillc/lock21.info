@@ -616,3 +616,36 @@ l21-settings-panel[hidden] {
   outline: 2px solid #b8c97a;
   outline-offset: -2px;
 }
+
+/* <l21-tooltip> (tooltip.js): MD3 plain tooltip. Inverse surface, body-small, 24 dp high, 4 dp corners; fades in
+   over 150 ms (decelerate), out over 75 ms (accelerate). Placed by tooltip.js (transform), never catches the pointer */
+l21-tooltip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  display: block;
+  box-sizing: border-box;
+  max-width: 240px;
+  min-height: 24px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #e3e6d8;
+  color: #2f3227;
+  font: 400 12px/16px system-ui, sans-serif;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 75ms cubic-bezier(0.3, 0, 1, 1);
+}
+l21-tooltip[data-shown='true'] {
+  opacity: 1;
+  transition: opacity 150ms cubic-bezier(0, 0, 0, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  l21-tooltip,
+  l21-tooltip[data-shown='true'] {
+    transition: none;
+  }
+}

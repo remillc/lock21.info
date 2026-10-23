@@ -96,6 +96,10 @@ Tabular figures in tables and data.
   touch target; a button: 40 dp high, full corners), **Material Symbols** icons at 24 dp (never a text character
   such as "×" for an icon), the state layers and focus ring below, and a selected state for toggles. Over the 3D
   view: filled tonal icon buttons (`viewer/src/style.css`, `.icon-button`).
+- **Icon buttons get an MD3 plain tooltip** (Christian, 2026-10-23), not the browser's `title` tooltip: its text in
+  `data-tooltip`, shown by one `<l21-tooltip>` element (`viewer/src/tooltip.js`) after a 500 ms hover or at once on
+  keyboard focus; inverse surface, body-small, 24 dp high, 4 dp corners, above the button or below when there is no
+  room; fades in over 150 ms and out over 75 ms.
 - MD3 state layers on interactive elements: hover 8 %, focus 10 %, pressed 10 % of the content colour; visible focus
   ring (`secondary`).
 - Little motion; everything respects `prefers-reduced-motion` (no animation then: the change is instant).
