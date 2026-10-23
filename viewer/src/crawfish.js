@@ -11,6 +11,9 @@ const THREAT = 0.8
 // Turning speed toward the diver (rad/s) and how fast the posture follows (1/s)
 const TURN_SPEED = 2.2
 const POSTURE_SPEED = 3
+// It turns to face the diver again once they are more than REFACE (rad, about 20°) off its heading, after REACTION s
+const REFACE = 0.35
+const REACTION = 2
 // Wandering: how far from its place (m), its walking speed (m/s), the wait between walks (s, at random in between)
 const WANDER = 0.6
 const WALK_SPEED = 0.05
@@ -143,6 +146,9 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
 
   let posture = 0
   let time = 0
+  // The heading it holds toward the diver, and how long the diver has been off it
+  let facing = null
+  let noticed = 0
   const toCamera = new THREE.Vector3()
   // Wandering: its place and floor (set on the first update), the spot it walks to, the rest before the next walk
   let home = null
@@ -231,12 +237,24 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
       })
       const wanted = THREE.MathUtils.smoothstep(REACT - distance, 0, REACT - THREAT)
       posture += (wanted - posture) * Math.min(1, POSTURE_SPEED * dt)
-      // Turn toward the diver (about the vertical) once it has noticed them
+      // Faces the diver once it has noticed them, then holds that heading: when the diver has moved round it by more
+      // than REFACE, it waits REACTION s, then turns to face them again
       if (distance < REACT + 0.5) {
-        const target = Math.atan2(toCamera.x, toCamera.z)
-        let delta = target - root.rotation.y
-        delta = Math.atan2(Math.sin(delta), Math.cos(delta))
-        root.rotation.y += Math.sign(delta) * Math.min(Math.abs(delta), TURN_SPEED * dt * (0.3 + posture))
+        const bearing = Math.atan2(toCamera.x, toCamera.z)
+        const off = (a, b) => Math.atan2(Math.sin(a - b), Math.cos(a - b))
+        if (facing === null) facing = bearing
+        else if (Math.abs(off(bearing, facing)) > REFACE) {
+          noticed += dt
+          if (noticed > REACTION) {
+            facing = bearing
+            noticed = 0
+          }
+        } else noticed = 0
+        const delta = off(facing, root.rotation.y)
+        root.rotation.y += Math.sign(delta) * Math.min(Math.abs(delta), TURN_SPEED * dt)
+      } else {
+        facing = null
+        noticed = 0
       }
       const p = posture
       front.rotation.x = -0.55 * p

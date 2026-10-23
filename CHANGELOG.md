@@ -5,7 +5,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - 3D viewer: a crayfish (rusty crayfish, about 15 cm, built from simple shapes: `viewer/src/crawfish.js`) at the
-  `.blend`'s « crawfish » empty, exported with the mockups. It turns toward a diver closer than 1.8 m and takes its
+  `.blend`'s « crawfish » empty, exported with the mockups. It faces a diver closer than 1.8 m (and turns again, after a moment, once they have moved round it) and takes its
   threat posture by 0.8 m (front raised, claws raised, spread and open, snapping); left alone, it now and then walks a
   few centimetres within 60 cm of its place, only on its zone's floor (a ray down: same zone, flat).
 - 3D viewer: the mockups of the zones not yet digitised as translucent ghosts (TODO #6): exported from the `.blend`'s
