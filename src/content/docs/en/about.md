@@ -37,3 +37,14 @@ The survey moves forward one zone at a time: the [3D model page](/en/modele) sho
 This survey is a personal project by Christian Rémillard, diver. The 3D model is licensed under
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): you may reuse it with credit. For a question, a correction
 or an archive photo of the lock: [info@lock21.info](mailto:info@lock21.info).
+
+## Thanks
+
+I didn't do this survey alone. Thank you:
+
+- to my dive buddies, for the dives in the current, the safety, and the patience while I filmed every zebra mussel:
+  Jean-Sébastien Fournier, Josianne Demers, Nicolas Pinsonneault, Julie Cardinal, Thierry Amar, Véronique Lisi,
+  Michel Giroux and Dan Foster;
+- to Sylvain Marcotte, who designed the [rig](/en/questions/dimensions-rig) that carries the cameras;
+- to Nick Baets and [Save Ontario Shipwrecks](https://saveontarioshipwrecks.ca/chapter-ottawa/) (Ottawa chapter), for
+  the 1988 drawings of the lock that the [site's zones](/en/decoupage-du-site) are based on.
