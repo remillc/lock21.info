@@ -73,6 +73,8 @@ const LAMP_REACH = 1.5
 // The beam's brightness in the water (in-scattered light, added along the line of sight)
 const BEAM_STRENGTH = 0.2125
 const BEAM_SAMPLES = 12
+// The beam's glow in the water starts this far from the lamp (m): none at the first, full at the second
+const BEAM_NEAR = [0.5, 2.5]
 // Looking straight up, the visibility's share left (the water toward the light from above hides what stands there)
 const UP_HAZE = 0.4
 
@@ -124,8 +126,10 @@ const BEAM_GLSL = /* glsl */ `
       vec3 toSample = a + dir * t - uUwLampPos;
       float d = max(length(toSample), 0.05);
       float cone = uwLampCone(dot(toSample / d, uUwLampDir));
-      // Not closer than 1 m: with the lamp at the eye, the water right in front of it glared over the whole view
-      sum += cone * exp(-absorb * (d + t)) / max(d * d, 1.0);
+      // Not closer than 1 m: with the lamp at the eye, the water right in front of it glared over the whole view; and
+      // faded in over the first metres from the lamp (BEAM_NEAR): seen almost along the beam, that water drew a bright
+      // disc around the lamp's head (Christian, 2026-10-23)
+      sum += cone * exp(-absorb * (d + t)) / max(d * d, 1.0) * smoothstep(${BEAM_NEAR[0].toFixed(2)}, ${BEAM_NEAR[1].toFixed(2)}, d);
     }
     return sum * span / ${BEAM_SAMPLES}.0 * uUwLampStrength;
   }`

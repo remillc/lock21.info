@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the dive light's glow in the water fades in over the first metres from the lamp (0.5 to 2.5 m):
+  no bright disc around the lamp's head any more.
 - 3D viewer, underwater: the sun on the surfaces only as far as it gets through the water above, the rest as diffuse
   light from the sky (no sun patches or caustics in murky water); looking up, the haze closes in (down to 40 % of the
   visibility straight up), so the banks' walls fade into the light from above; spring's visibility 14 ft (was 12).
