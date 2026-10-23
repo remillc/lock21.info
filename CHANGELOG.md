@@ -4,7 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- 3D viewer, underwater: the particles drift 8 times the river's current in spring (was 10).
+- 3D viewer, underwater, spring: the particles drift 8 times the river's current (was 10), and the visibility is 12 ft
+  (3.7 m, was 10 ft).
 
 ## 0.9.0 - 2026-10-23
 
