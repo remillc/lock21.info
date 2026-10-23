@@ -1073,6 +1073,14 @@ async function loadModel() {
       }
       model.traverse((child) => {
         if (child.isMesh) initSurface(child, null)
+        // The south wall's texture, for the mockups (repeated)
+        if (child.isMesh && child.name === 'mur_sud' && child.userData.surface.map) {
+          const map = child.userData.surface.map
+          map.wrapS = map.wrapT = THREE.RepeatWrapping
+          map.needsUpdate = true
+          mockupTexture.value = map
+          requestRender()
+        }
       })
       scene.add(model)
       contextModels.push(model)
@@ -1137,6 +1145,16 @@ const bass = createBass({
   prepare: prepareCreatureMaterial,
   clearance: (point) => collider.distanceTo(point, collider.surfacesNear(point, 0.6), 0.6),
   visibility: () => underwater.visibility,
+  // Seen from the camera: nothing of the model in between (pickRay, touch navigation's raycaster)
+  inSight: (from, to) => {
+    const direction = to.clone().sub(from)
+    const distance = direction.length()
+    pickRay.set(from, direction.normalize())
+    pickRay.far = distance
+    const hit = pickRay.intersectObjects([...tilesets.map((tiles) => tiles.group), ...contextModels], true)[0]
+    pickRay.far = Infinity
+    return !hit
+  },
   // Its pace by the season's water temperature: winter, spring, summer, autumn (SEASONS' order)
   pace: () => [0.4, 0.7, 1, 0.8][Math.round(look.season)] ?? 1,
   // Debug: ?bass=1 shows it at once and all the time
@@ -1161,17 +1179,42 @@ function prepareCreatureMaterial(material) {
   material.customProgramCacheKey = () => `creature-${key}-${material.color.getHexString()}`
   return withShadowCascades(material)
 }
-const MOCKUP_OPACITY = 0.22
-const mockupMaterial = new THREE.MeshStandardMaterial({
-  color: 0xd2dccb,
-  roughness: 1,
-  transparent: true,
-  opacity: MOCKUP_OPACITY,
-  depthWrite: false,
-  side: THREE.DoubleSide,
-})
-mockupMaterial.onBeforeCompile = (shader) => underwater.patchShader(shader)
-mockupMaterial.customProgramCacheKey = () => 'mockup'
+// The mockups of the zones not yet online: opaque, with the south wall's texture (mur_sud of the context) tinted purple
+// (Christian, 2026-10-23; they were translucent ghosts). They have no texture coordinates: the texture is projected in
+// world space from the three axes, blended by the surface's orientation (MOCKUP_TEXTURE_SIZE m per repeat)
+const MOCKUP_TINT = 0xb7a3d6
+const MOCKUP_TEXTURE_SIZE = 4
+// White until the context's south wall has loaded
+const mockupTexture = { value: new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1) }
+mockupTexture.value.needsUpdate = true
+const mockupMaterial = new THREE.MeshStandardMaterial({ color: MOCKUP_TINT, roughness: 1, side: THREE.DoubleSide })
+mockupMaterial.onBeforeCompile = (shader) => {
+  shader.uniforms.mockupMap = mockupTexture
+  shader.vertexShader = `varying vec3 vMockupWorld;
+varying vec3 vMockupNormal;
+${shader.vertexShader.replace(
+    '#include <project_vertex>',
+    `#include <project_vertex>
+vMockupWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;
+vMockupNormal = normalize(mat3(modelMatrix) * objectNormal);`,
+  )}`
+  shader.fragmentShader = `uniform sampler2D mockupMap;
+varying vec3 vMockupWorld;
+varying vec3 vMockupNormal;
+` + shader.fragmentShader.replace(
+    '#include <map_fragment>',
+    `#include <map_fragment>
+    {
+      vec3 w = pow(abs(normalize(vMockupNormal)), vec3(4.0));
+      w /= w.x + w.y + w.z;
+      vec3 p = vMockupWorld / ${MOCKUP_TEXTURE_SIZE.toFixed(1)};
+      vec4 t = texture2D(mockupMap, p.zy) * w.x + texture2D(mockupMap, p.xz) * w.y + texture2D(mockupMap, p.xy) * w.z;
+      diffuseColor.rgb *= t.rgb;
+    }`,
+  )
+  underwater.patchShader(shader)
+}
+mockupMaterial.customProgramCacheKey = () => 'mockup-textured'
 withShadowCascades(mockupMaterial)
 /**
  * @param {THREE.Object3D} model - the mockups' GLB
@@ -1446,14 +1489,6 @@ function renderLoop() {
   drawScene()
 }
 function drawScene() {
-  // The mockups: translucent ghosts in the air, opaque underwater (the water hides them with the distance, like the
-  // zones: Christian, 2026-10-23); kept in step here, the material being made after the underwater switch
-  if (mockupMaterial.transparent === underwater.on) {
-    mockupMaterial.transparent = !underwater.on
-    mockupMaterial.opacity = underwater.on ? 1 : MOCKUP_OPACITY
-    mockupMaterial.depthWrite = underwater.on
-    mockupMaterial.needsUpdate = true
-  }
   // The shadow cascades follow the camera
   csm.update()
   // No ambient occlusion underwater: it darkened the creases of surfaces the water had erased, which redrew the lock

@@ -43,12 +43,14 @@ const WAVE_LAG = 0.9
  * @param {(material: THREE.Material) => THREE.Material} [options.prepare] - the viewer's material set-up (underwater)
  * @param {(point: THREE.Vector3) => number} [options.clearance] - distance to the nearest surface (m, capped)
  * @param {() => number} [options.visibility] - the water's visibility (m)
+ * @param {(from: THREE.Vector3, to: THREE.Vector3) => boolean} [options.inSight] - nothing of the model between two
+ *   points (its path must be seen from the camera: a spot far from every surface can be inside the masonry)
  * @param {() => number} [options.pace] - its pace in this season's water (1 in summer; in winter's cold water it
  *   saves its energy: slower waves, turns and swimming, a shorter dash)
  * @param {boolean} [options.always] - debug (?bass=1): shown at once and all the time, its place kept in front of the
  *   camera (re-placed when the camera moves), facing the diver; no wait, pause or wall check
  */
-export function createBass({ prepare = (m) => m, clearance = () => Infinity, visibility = () => 6, pace = () => 1, always = false } = {}) {
+export function createBass({ prepare = (m) => m, clearance = () => Infinity, visibility = () => 6, inSight = () => true, pace = () => 1, always = false } = {}) {
   const root = new THREE.Group()
   root.name = 'bass'
   root.visible = false
@@ -107,12 +109,20 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   let phase = 0
 
   /** Its path for this view: from just outside one side to a sixth of the view's width inside, or null */
+  /** Its path for this view: from just outside one side to a sixth of the view's width inside, at the first distance
+   *  (DISTANCE, then closer) and side that work; false when none does */
   function plan(camera) {
-    const distance = Math.min(DISTANCE, visibility() * VISIBILITY_SHARE)
+    const first = Math.random() < 0.5 ? -1 : 1
+    for (const share of [1, 0.7, 0.5]) {
+      for (const side of [first, -first]) if (tryPath(camera, Math.min(DISTANCE, visibility() * VISIBILITY_SHARE) * share, side)) return true
+    }
+    return false
+  }
+
+  function tryPath(camera, distance, side) {
     camera.getWorldDirection(ahead).setY(0).normalize()
     right.set(-ahead.z, 0, ahead.x)
     const half = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * distance * camera.aspect
-    const side = Math.random() < 0.5 ? -1 : 1
     const centre = camera.position.clone().addScaledVector(ahead, distance)
     centre.y -= 0.15
     from.copy(centre).addScaledVector(right, side * (half + LENGTH))
@@ -120,7 +130,8 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
     exit.copy(from).addScaledVector(right, side * 3)
     const mid = from.clone().lerp(to, 0.5)
     lastPlan = [from, mid, to, exit].map((p) => Math.round(clearance(p) * 100) / 100)
-    return always || lastPlan.every((c) => c >= CLEARANCE)
+    // Clear of the walls, and seen from the camera (a spot far from every surface can be inside the masonry)
+    return always || (lastPlan.every((c) => c >= CLEARANCE) && [from, mid, to].every((p) => inSight(camera.position, p)))
   }
 
   /** @param {boolean} [bored] - a calm departure (bored), not a flight */

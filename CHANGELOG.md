@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater, the bass: its path must be seen from the camera (a spot far from every surface could be inside
+  the masonry: it came, but hidden), and it tries both sides and closer distances (1.4, 1, 0.7 m) before giving up.
+- 3D viewer: the mockups of the zones not yet online opaque, with the south wall's texture (projected in world space)
+  tinted purple.
 - 3D viewer: a reload keeps the camera where it was, even right after a move (kept in the tab's session storage at
   every move; the address follows only 300 ms later); arriving from another page still starts from the link's view.
 - 3D publishing: `lock-21-publishing.blend` cleaned up (unused data purged), 2.79 -> 1.14 GB, under Git LFS's 2 GB
