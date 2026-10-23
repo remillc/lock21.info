@@ -32,6 +32,9 @@ const t = en
       licenceText: 'The model is licensed under',
       licenceRest: 'free to reuse, adapt and share it, commercially too, as long as you credit the source:',
       credit: 'Lock 21, 3D model by Christian Rémillard (lock21.info), CC BY 4.0',
+      crayfish: 'The crayfish in the underwater view is based on',
+      crayfishBy: 'by',
+      arm: 'The diver’s arm is based on',
       drawings: 'Original drawings of the site: Nick Baets (1988), via',
       navigate: 'Navigating',
       controls: [
@@ -75,6 +78,9 @@ const t = en
       licenceText: 'Le modèle est sous licence',
       licenceRest: "libre de le réutiliser, de l'adapter et de le partager, y compris commercialement, en citant la source:",
       credit: 'Écluse 21, modèle 3D par Christian Rémillard (lock21.info), CC BY 4.0',
+      crayfish: 'L’écrevisse de la vue sous-marine est tirée de',
+      crayfishBy: 'par',
+      arm: 'Le bras du plongeur est tiré de',
       drawings: "Dessins d'origine du site: Nick Baets (1988), via",
       navigate: 'Naviguer',
       controls: [
@@ -157,6 +163,18 @@ const updated = zones.updated
           {t.licenceRest}
         </p>
         <p class="credit">{t.credit}</p>
+        <!-- The crayfish model (viewer/src/crawfish.js): CC BY 4.0, its author credited -->
+        <p class="note">
+          {t.crayfish} « <a href="https://sketchfab.com/3d-models/crayfish-cdc4cfc6203443a490f6b5103e7eac18">Crayfish</a> »
+          {t.crayfishBy} <a href="https://sketchfab.com/ucdavisterc">ucdavisterc</a>,
+          <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
+        </p>
+        <!-- The diver's arm (viewer/src/diver-arm.js): its shape from a CC BY 4.0 model, its author credited -->
+        <p class="note">
+          {t.arm} « <a href="https://sketchfab.com/3d-models/first-person-hands-rigged-547a45535f0c4fe787948f7a7a6a88db">First Person hands rigged</a> »
+          {t.crayfishBy} <a href="https://sketchfab.com/davidfischer">DavidFischer</a>,
+          <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
+        </p>
         <p class="note">
           {t.drawings}{' '}
           <a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks</a>.
@@ -228,7 +246,8 @@ const updated = zones.updated
 <script>
   // <l21-model-frame>: the viewer's iframe. The page's own query string (?cam=…, plus test settings) goes to the
   // viewer, and the viewer's camera comes back into the page's address, so that the page URL always shares the current
-  // view. The address keeps only ?cam=. A Custom Element (GUIDELINES.md): set up each time it is inserted, on a full
+  // view. The address keeps only the view's shareable part: ?cam=, and while underwater &underwater=1&season= (&lamp=0).
+  // A Custom Element (GUIDELINES.md): set up each time it is inserted, on a full
   // load as after a client-side navigation (ClientRouter, Head.astro), where a plain page script would run only once.
   // replaceState keeps history.state: the router stores its own entry there (back and forward buttons).
   class ModelFrame extends HTMLElement {
@@ -244,8 +263,11 @@ const updated = zones.updated
     connectedCallback() {
       const frame = /** @type {HTMLIFrameElement} */ (this.querySelector('iframe'))
       frame.src = (frame.dataset.src ?? '') + location.search
-      const cam = new URLSearchParams(location.search).get('cam')
-      history.replaceState(history.state, '', location.pathname + (cam ? `?cam=${cam}` : ''))
+      const query = new URLSearchParams(location.search)
+      const underwater = query.get('underwater') === '1'
+      const shared = [...query].filter(([key]) => key === 'cam' || (underwater && ['underwater', 'season', 'lamp'].includes(key)))
+      const search = shared.map(([key, value]) => `${key}=${value}`).join('&')
+      history.replaceState(history.state, '', location.pathname + (search ? `?${search}` : ''))
       window.addEventListener('message', this.onMessage)
     }
 

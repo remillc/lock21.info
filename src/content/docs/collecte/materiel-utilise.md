@@ -43,5 +43,8 @@ Mode de capture: **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution a
 
 Scripts PowerShell
 
+[Claude Code](https://claude.com/claude-code) (Anthropic, modèle Claude Opus): assistant de programmation, pour le site, le
+visualiseur 3D et la chaîne de publication du modèle
+
 [^1]: Disponible lorsque le paramètre Protune est activé
 [^2]: Choisi en fonction de la température de couleur des lampes,

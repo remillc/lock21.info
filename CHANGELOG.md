@@ -2,6 +2,106 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased
+
+- 3D viewer: underwater with the dive light on, the diver's arm holds it at the bottom right of the view: a black
+  neoprene sleeve and glove (the hand a little closed), a dive computer on the wrist, and the light strapped on the back
+  of the hand, modelled after a Light & Motion Sola 1200 (fluted head, knurled blue bezel, LEDs in their cups behind
+  glass, slide switch, strap and buckle). The beam starts at the drawn light. Drawn over the view (never into a wall),
+  it lags a little behind the camera's turns and sways gently from the shoulder, the beam following the light's aim
+  (`viewer/src/diver-arm.js`; built by
+  `tools/diver/make_dive_light.py` and `make_diver_arm.py` into `viewer/public/diver/`). The arm's shape: « First
+  Person hands rigged » by DavidFischer (Sketchfab, CC BY 4.0, credited on the /modele page).
+- 3D viewer: the crayfish's claws keep the model's own colours (the blue tint removed; orange pincer tips kept), and
+  its antennae bend downstream with the river's current (hardly fluttering), more in a stronger current (underwater: the season's drift).
+- 3D viewer: a crayfish at the `.blend`'s « crawfish » empty (exported with the mockups): « Crayfish » by ucdavisterc
+  (Sketchfab, CC BY 4.0, credited on the /modele page), rigged, packed in `viewer/public/creatures/crayfish.glb`, its
+  pincer tips orange, after a blue land crayfish (`viewer/src/crawfish.js`). It faces a diver closer than 1.8 m (and turns again 2 s after they
+  have moved round it) and takes its threat posture by 0.8 m: front raised, claws raised, spread and open; now and then
+  both arms open out wider together, and it shuffles a few centimetres, still facing the diver. Left alone, it often
+  walks a few centimetres (5 to 15), within 60 cm of its place, only on its zone's floor (a ray down: same zone, flat).
+- 3D viewer: the mockups of the zones not yet digitised as translucent ghosts (TODO #6): exported from the `.blend`'s
+  `mockups` collection (`tools/publish-model/export_mockups.py`, `mockups` in the manifest); a zone's ghost disappears
+  once the zone is online. Today zones 5, 6, 9, 14, 15, 19 and 20.
+- 3D viewer, underwater: the daylight more absorbed at depth (35 % of its strength above water, was half).
+- 3D viewer, underwater: the dive light brings back more reds (a warmer light, its colours more saturated).
+- 3D viewer, underwater: the keys pad bottom left continues the season strip's sweep out of the 🤿 button (MD3 motion).
+- 3D viewer, underwater: particles only where they can be seen: a box ahead of the camera, as deep as the visibility
+  (3 to 10 m), with a density per m³ by season; drawn counts winter 25,000, spring 35,000, summer 56,000, autumn
+  94,000 instead of up to 200,000 in a cube around the camera.
+- 3D viewer, underwater: dramatically more particles, and faster, the murkier the water: they drift 2 times the
+  measured current in winter, 4 in autumn, 6 in summer, 10 in spring.
+- 3D viewer, underwater: the particles flow around the model instead of through it (a distance field around the
+  camera, 32³ cells, built a few milliseconds per frame; on the GPU a particle in a surface's skin is pushed out along
+  it). Swim mode: a help dialog (MD3) the first time, then from a « ? » in the keys bottom left.
+- 3D viewer, swim mode: the diver can't go through the model (a 40 cm body; each move stops short of the surfaces
+  and slides along them; rays on bounding volume hierarchies, three-mesh-bvh, `viewer/src/collide.js`).
+- 3D viewer, underwater on a computer: swim mode instead of orbiting (`viewer/src/swim.js`). W, A, S, D (or the
+  arrows) move where you look, Shift faster; dragging turns the head. Keys by position (Z, Q, S, D on AZERTY), drawn
+  bottom left with the keyboard's own letters, lit while held. Leaving the underwater view brings the orbit back,
+  around a point ahead of the diver.
+- 3D viewer, underwater: no light band over everything above eye level: the water keeps one colour around the
+  horizon and brightens only when looking well up (in the background and in the haze).
+- 3D viewer, underwater: the dive light reveals more colour (its beam keeps the forward-scattered light: only a third
+  of the scattering dims it; the colours it lights a little more saturated).
+- 3D viewer, underwater: the water surface overhead fades out beyond the visibility like the model (from the floor
+  in murky water its ripples showed as light bands).
+- 3D viewer, underwater: the dive light fades with its distance from the lamp (the water's whole attenuation per
+  colour, scattering included): on surfaces, in its glow in the water and on the particles it lights.
+- 3D viewer, underwater: no more noise toward the water surface (its ripples and caustics fade out where finer than
+  a pixel) and no banding in the water's gradients (dithered).
+- 3D viewer, underwater: the dive light has a hotspot (8°) and a spill 3 times wider and weaker; it brings the reds
+  back (its light absorbed only from the lamp, the daylight dimmed to half at depth); more particles the murkier the
+  season (winter 10,000, autumn 25,000, summer 35,000, spring 60,000).
+- 3D viewer, underwater: the view's address (and the /modele page's) carries `&underwater=1&season=` (`&lamp=0`), so
+  a copied link reopens the same view. Colours absorbed by distance, red first: daylight from the surface down (half
+  the shift shown, the eye adapts), the dive light only from the lamp, so it brings red back up close; the lamp at the
+  bottom right of the view, aimed at its middle, its beam visible in the water and in the particles it lights. The
+  camera stays above the height of the point it turns around (never under the floor).
+- 3D viewer: « Ambiance sous-marine » (TODO #46, from the first attempt #31): the 🤿 button beside full screen, or the
+  settings' « Sous l'eau » section. The water column as background, the sun refracted at the surface, caustics, the
+  surface seen from below, many small particles drifting with the current (shown 3 times faster than measured). The
+  usual lighting stays: the surfaces are seen as they are up close, then fade into the water column's own colour and
+  are gone at the season's visibility (no ambient occlusion meanwhile: it redrew the erased lock). A dive light at the
+  camera, a 15° beam centred in the view, its glow in the water computed along the line of sight (it only adds light).
+  Beside the 🤿 button, a strip that unrolls out of it (MD3 motion): the « Saison » slider (winter 100 ft, spring 10,
+  summer 20 by default, autumn 30; visibility and water colour) and the dive light's button; both also in the settings
+  (`viewer/src/underwater.js`).
+- 3D viewer: MD3 tooltips on its buttons (`<l21-tooltip>`, `viewer/src/tooltip.js`) instead of the browser's own,
+  in the page's language; also shown on keyboard focus.
+- 3D viewer: gloss by surface (roughness from the relief map: smooth planks glossier, mussels matte) tried and set
+  aside: stone, wood and silt reflect about 4 % of light at a direct view, so even a mirror finish hardly showed; the
+  wet look's clear coat already gives the sheen.
+- 3D viewer: its interface follows the page's language (French or English): loading, buttons, settings and
+  augmented reality texts (`viewer/src/i18n.js`).
+- 3D viewer: « Rendu photo » (path tracing with three-gpu-pathtracer, computers only) tried and set aside: bounced
+  light and soft shadows, but no visible gain in realism, which the source data limits (lighting already in the
+  photos, mesh noise). Kept on the branch `feature/photo-render`, not merged.
+- 3D viewer settings: « Éclairage (ciel et soleil) » is out of the panel, the lighting is always on (a link can
+  still show the raw textures with `?hdri=0`, for tests); the lighting settings are always shown.
+- 3D viewer settings: scrolling in the panel no longer scrolls the page around the viewer once the list ends.
+- 3D viewer: « Contraste » slider in the settings (0.5 to 2, default 1): the lit surfaces' colours stretched around a
+  mid-grey, hue kept.
+- Claude Code added to the software used (gear page, French and English; pipeline README).
+- 3D viewer: wet look back to 0.15 by default.
+- 3D viewer settings: « Ombres du soleil » is out of the panel; the default stays (on computers, off on phones),
+  and a link can still set it (`?shadows=`).
+- 3D viewer: AgX tone mapping by default again (exposure 1.2), with saturation 1.2 to make up for its greying (1.5
+  matched the unlit textures' saturation on zone 3); Khronos neutral stays under Avancé.
+- 3D viewer settings: « Occlusion ambiante » (and « Occlusion seule ») and « Ciel en arrière-plan » are out of the
+  panel; their defaults stay (occlusion on computers, sky background on), and a link can still set them.
+- 3D viewer: the sky that lights the scene also tilts so that its photo's sun (48° up) stands exactly at our sun's
+  height, not only its azimuth (tilt up to 25°); the background sky only turns about the vertical.
+- 3D viewer: the sun by default from the southwest (320), 65° up; the sun
+  direction sliders move by 1°.
+- 3D viewer: cascaded sun shadows (three.js CSM, three 2048 px maps following the camera, up to 300 m): sharp up
+  close instead of one 4096 px map over the whole site (about 4 cm per texel).
+- De-lighting of the lamp bands (TODO #24, `delight_texture.py`): tried on zones 3 and 10 with stronger settings and
+  set aside; almost no visible difference, Metashape's blending of many photos already evens out the lamps' large-scale
+  light.
+- 3D viewer: `?compare=<tiles url>` (tests): an « Avant | Après » segmented button (key B) swaps the tiles between
+  the usual ones and those of that address, from the same view; for judging the de-lighting (TODO #24).
+
 ## 0.8.0 - 2026-10-22
 
 - Zone 16 online (a spillway gate door on the floor south of the chamber, 69 tiles, 17 MB with its relief); zone 4

@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="fr">
   <head>
+    <!-- The texts below are the French fallback: main.js sets them in the viewer's language (src/i18n.js) -->
     <meta charset="utf-8" />
     <!-- Not indexed by search engines for now (same rule as the site) -->
     <meta name="robots" content="noindex, nofollow" />
@@ -18,18 +19,55 @@
     <!-- The viewer's buttons are MD3 icon buttons (filled tonal, style.css .icon-button): 40 dp in a 48 dp touch target,
          Material Symbols icons (24 dp), state layers, focus ring (docs/system-design.md, Buttons) -->
     <!-- Settings (config-panel.js, <l21-settings-panel>): one control per query parameter -->
-    <button class="settings-button icon-button" type="button" aria-label="Réglages" title="Réglages" aria-expanded="false" hidden>
+    <button class="settings-button icon-button" type="button" aria-label="Réglages" data-tooltip="Réglages" aria-expanded="false" hidden>
       <svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"/></svg>
     </button>
     <!-- Augmented reality (main.js): the lock on a table at 1:100. Shown only where a phone can display it: iPhone and
          iPad (AR Quick Look, rel="ar", which requires an image as the link's first child: hence an <img>) and Android
          (WebXR in Chrome, android-ar.js; Scene Viewer otherwise) -->
-    <a class="ar-button icon-button" rel="ar" aria-label="Voir en réalité augmentée" title="Voir en réalité augmentée" hidden>
+    <a class="ar-button icon-button" rel="ar" aria-label="Voir en réalité augmentée" data-tooltip="Voir en réalité augmentée" hidden>
       <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 -960 960 960' fill='%23e3e6d8'%3E%3Cpath d='M440-181 240-296q-19-11-29.5-29T200-365v-230q0-22 10.5-40t29.5-29l200-115q19-11 40-11t40 11l200 115q19 11 29.5 29t10.5 40v230q0 22-10.5 40T720-296L520-181q-19 11-40 11t-40-11Zm0-92v-184l-160-93v185l160 92Zm80 0 160-92v-185l-160 93v184ZM80-680v-120q0-33 23.5-56.5T160-880h120v80H160v120H80ZM280-80H160q-33 0-56.5-23.5T80-160v-120h80v120h120v80Zm400 0v-80h120v-120h80v120q0 33-23.5 56.5T800-80H680Zm120-600v-120H680v-80h120q33 0 56.5 23.5T880-800v120h-80ZM480-526l158-93-158-91-158 91 158 93Zm0 45Zm0-45Zm40 69Zm-80 0Z'/%3E%3C/svg%3E" width="24" height="24" alt="" />
     </a>
     <!-- Full screen (the site's /modele/ page embeds the viewer in an iframe with allow="fullscreen"); main.js sets
          data-full while full screen, which shows the exit icon -->
-    <button class="fullscreen icon-button" type="button" aria-label="Plein écran" title="Plein écran (Échap pour sortir)" hidden>
+    <!-- « Ambiance sous-marine » (main.js, underwater.js): left of the full-screen button; selected (aria-pressed) while
+         on. Material Symbols « scuba_diving » -->
+    <button class="underwater-button icon-button" type="button" aria-label="Ambiance sous-marine" data-tooltip="Ambiance sous-marine" aria-pressed="false" hidden>
+      <svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M160-40 96-88l114-152 31-178q3-24 19-42.5t41-24.5l379-115 80-160 120-120 40 40-100 116-60 184-200 140-234 74-46 126L160-40Zm-40-320q-33 0-56.5-23.5T40-440q0-33 23.5-56.5T120-520q33 0 56.5 23.5T200-440q0 33-23.5 56.5T120-360Zm236-196q-24 7-45.5-5.5T282-598q-7-24 5.5-46t36.5-28l182-48 31 116-181 48Z"/></svg>
+    </button>
+    <!-- While underwater, left of its button: the season slider and the dive light, one strip that unrolls out of the
+         button (main.js, showSeasonControl) -->
+    <div class="underwater-tools" hidden>
+      <!-- The season (visibility) while underwater, beside its button (main.js); also in the settings -->
+      <div class="season-control">
+        <input class="season-range" type="range" min="0" max="3" step="1" />
+        <output class="season-value"></output>
+      </div>
+      <!-- The dive light on and off, between the season slider and the underwater button while underwater (Material
+           Symbols « flashlight_on » / « flashlight_off »); also in the settings -->
+      <button class="lamp-button icon-button" type="button" aria-pressed="true">
+        <svg class="icon-on" aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M320-80v-440l-80-120v-240h480v240l-80 120v440H320Zm117.5-277.5Q420-375 420-400t17.5-42.5Q455-460 480-460t42.5 17.5Q540-425 540-400t-17.5 42.5Q505-340 480-340t-42.5-17.5ZM320-760h320v-40H320v40Zm320 80H320v16l80 120v384h160v-384l80-120v-16ZM480-480Z"/></svg>
+        <svg class="icon-off" aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M792-56 640-208v128H320v-448L56-792l56-56 736 736-56 56ZM400-160h160v-128L400-448v288Zm240-274-80-80v-30l80-120v-16H394l-80-80h326v-40H274l-34-34v-46h480v240l-80 120v86Zm-160 66Zm17-209Z"/></svg>
+      </button>
+    </div>
+    <!-- Swimming (main.js, swim.js): the movement keys, bottom left, while underwater on a computer; a key lights up
+         while held. Letters set from the keyboard's layout where the browser tells it -->
+    <div class="swim-keys" hidden>
+      <div class="swim-row"><kbd data-code="KeyW">W</kbd></div>
+      <div class="swim-row"><kbd data-code="KeyA">A</kbd><kbd data-code="KeyS">S</kbd><kbd data-code="KeyD">D</kbd></div>
+      <p class="swim-hint"></p>
+      <!-- Opens the swim mode's help again (Material Symbols « help ») -->
+      <button class="swim-help-button" type="button">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 -960 960 960" fill="currentColor"><path d="M513.5-254.5Q528-269 528-290t-14.5-35.5Q499-340 478-340t-35.5 14.5Q428-311 428-290t14.5 35.5Q457-240 478-240t35.5-14.5ZM442-394h74q0-33 7.5-52t42.5-52q26-26 41-49.5t15-56.5q0-56-41-86t-97-30q-57 0-92.5 30T342-618l66 26q5-18 22.5-39t53.5-21q32 0 48 17.5t16 38.5q0 20-12 37.5T506-526q-44 39-54 59t-10 73Zm38 314q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
+      </button>
+    </div>
+    <!-- The swim mode's help (main.js, showSwimHelp): an MD3 basic dialog; texts set by main.js -->
+    <dialog class="swim-help">
+      <h2></h2>
+      <div class="swim-help-text"></div>
+      <div class="swim-help-actions"><button class="swim-help-ok" type="button"></button></div>
+    </dialog>
+    <button class="fullscreen icon-button" type="button" aria-label="Plein écran" data-tooltip="Plein écran (Échap pour sortir)" hidden>
       <svg class="icon-enter" aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z"/></svg>
       <svg class="icon-exit" aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z"/></svg>
     </button>

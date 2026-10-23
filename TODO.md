@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#49**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#53**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -13,11 +13,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #3 Choose default ambient occlusion settings (radius, intensity) after viewing close up
 - [ ] #4 Initial camera and navigation (what the visitor sees first)
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
-- [ ] #6 Show the mockups for the zones not yet digitised (hidden once a zone is scanned)
 
 ### Zones
 
-- [ ] #8 Zone 16: digitised (7 M faces) but not in the `.blend` yet
 - [ ] #9 Textures: the analysis targets 1.3 mm per texel; current exports are 2 to 5 times coarser. Decide the viewing
   distance, then retexture in Metashape where needed
 
@@ -40,10 +38,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #21 Relief: fold the relief steps (`relief_zones.ps1`) into `publish_zones.ps1`, so that one command republishes a
   zone with its relief
 - [ ] #22 Relief on phones: memory, heat, smoothness; probably off by default there
-- [ ] #23 Default light direction and strength (`?light=`, `?shade=`), after viewing from several angles; the photos
-  already contain the lamps' light, so some directions may look odd
-- [ ] #24 De-lighting of the lamp bands (`delight_texture.py`): run it on zone 10 (strongest bands), then decide whether
-  it goes into the pipeline for every zone
 - [ ] #25 Optional: read each zone's Blender shader settings (wetness, roughness) and pass them through the manifest
 - [ ] #26 Move the viewer's shader patches to three-custom-shader-material (CSM) if the relief is kept
 
@@ -65,13 +59,11 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   phone, navigation and search, on both languages
 - [ ] #39 Design: applied (tokens, fonts, header and footer bars, home page, logo, tables); to do: a history page for the "L'histoire" entry (it points to the zone map for now), the 3D viewer in the same
   palette and fonts, check contrast (WCAG AA) in both themes
-- [ ] #31 Underwater look for the viewer: set aside on branch `feature/underwater-look`
-- [ ] #46 « Ambiance sous-marine » option for the 3D model, in the viewer's settings (on/off): the lock as seen
-  underwater (water colour and haze with distance, softer light from above); start from #31's branch
-  - « Visibilité » slider over the four seasons, each with its visibility: winter 100' (30 m), spring 10' (3 m),
-    summer 20' (6 m), autumn 30' (9 m)
-- [ ] #47 Idea: a walk mode in the viewer (first-person, eye height above the floor, walking through the lock instead of
-  orbiting around it)
+- [ ] #49 The /modele page's 3D default view on phones is not good (the start view, `START_VIEW` in
+  `viewer/src/main.js`, was chosen on a computer screen; a phone's narrow frame needs its own)
+- [ ] #50 The crayfish in attack mode raises its tail (`viewer/src/crawfish.js`)
+- [ ] #51 The crayfish in attack mode: when it opens its arms, it opens its claws too
+- [ ] #52 The crayfish's arm movements: more natural easing (ease in and out, slight overshoot and settle, no linear moves)
 - [ ] #48 Idea: a guided tour in the viewer (a sequence of views with a short text each). Stops noted so far:
   - zone 16, the spillway gate door on the floor: `?cam=-18.54,1.28,8.53,-17.08,-0.65,10.34`
 

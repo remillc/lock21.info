@@ -213,9 +213,73 @@ l21-loading.error .loading-bar {
 .fullscreen[data-full='true'] .icon-exit {
   display: block;
 }
-/* Augmented reality (main.js): left of the full-screen button */
-.ar-button {
+/* « Ambiance sous-marine » (main.js): left of the full-screen button; filled while on (selected) */
+.underwater-button {
   right: calc(max(16px, env(safe-area-inset-right)) + 56px);
+  bottom: max(16px, env(safe-area-inset-bottom));
+}
+.icon-button[aria-pressed='true'] {
+  background: #b8c97a;
+  color: #12140e;
+}
+/* While underwater (main.js), left of the underwater button: one strip with the season slider (a pill like the
+   other controls over the 3D view, an MD3 discrete slider with four stops, and its value) and the dive light's icon
+   button (selected while on, its icon lit or crossed out). It unrolls out of the button: its width revealed from
+   the right (showSeasonControl). Narrow screens: above the buttons' row */
+.underwater-tools {
+  position: fixed;
+  right: calc(max(16px, env(safe-area-inset-right)) + 112px);
+  bottom: max(16px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.underwater-tools[hidden] {
+  display: none;
+}
+.season-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: rgb(30 33 25 / 88%);
+  color: #e3e6d8;
+  font: 500 12px/16px system-ui, sans-serif;
+  letter-spacing: 0.5px;
+}
+.season-range {
+  width: 112px;
+  margin: 0;
+  accent-color: #b8c97a;
+  cursor: pointer;
+}
+.season-value {
+  min-width: 120px;
+  white-space: nowrap;
+}
+.underwater-tools .lamp-button {
+  position: relative;
+  flex: none;
+}
+.lamp-button .icon-on,
+.lamp-button[aria-pressed='true'] .icon-off {
+  display: none;
+}
+.lamp-button[aria-pressed='true'] .icon-on {
+  display: block;
+}
+@media (max-width: 600px) {
+  .underwater-tools {
+    right: max(16px, env(safe-area-inset-right));
+    bottom: calc(max(16px, env(safe-area-inset-bottom)) + 56px);
+  }
+}
+
+/* Augmented reality (main.js, phones): left of the underwater button */
+.ar-button {
+  right: calc(max(16px, env(safe-area-inset-right)) + 112px);
   bottom: max(16px, env(safe-area-inset-bottom));
 }
 
@@ -251,6 +315,8 @@ l21-settings-panel {
   display: block;
   width: min(320px, calc(100vw - 24px));
   overflow-y: auto;
+  /* Scrolling stays in the panel (also config-panel.js, for the wheel) */
+  overscroll-behavior: contain;
   padding: 0 16px 16px;
   border-radius: 16px;
   background: rgb(27 30 21 / 92%);
@@ -552,4 +618,253 @@ l21-settings-panel[hidden] {
   margin: 0 12px 12px 0;
   padding: 12px 16px;
   border-radius: 16px;
+}
+
+/* ?compare= (test tool): MD3 segmented button « Avant | Après », top centre. 40 dp high, outlined, the selected
+   segment filled (secondary container) with a check mark */
+.compare {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  border: 1px solid #8f9482;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgb(30 33 25 / 88%);
+}
+.compare button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border: 0;
+  background: transparent;
+  color: #e3e6d8;
+  font: 500 14px/20px system-ui, sans-serif;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+}
+.compare button + button {
+  border-left: 1px solid #8f9482;
+}
+.compare button svg {
+  display: none;
+}
+.compare button[aria-pressed='true'] {
+  background: #b8c97a;
+  color: #12140e;
+}
+.compare button[aria-pressed='true'] svg {
+  display: block;
+}
+/* State layer */
+.compare button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 200ms;
+}
+.compare button:hover::after {
+  opacity: 0.08;
+}
+.compare button:focus-visible::after,
+.compare button:active::after {
+  opacity: 0.1;
+}
+.compare button:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: -2px;
+}
+
+/* <l21-tooltip> (tooltip.js): MD3 plain tooltip. Inverse surface, body-small, 24 dp high, 4 dp corners; fades in
+   over 150 ms (decelerate), out over 75 ms (accelerate). Placed by tooltip.js (transform), never catches the pointer */
+l21-tooltip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  display: block;
+  box-sizing: border-box;
+  max-width: 240px;
+  min-height: 24px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #e3e6d8;
+  color: #2f3227;
+  font: 400 12px/16px system-ui, sans-serif;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 75ms cubic-bezier(0.3, 0, 1, 1);
+}
+l21-tooltip[data-shown='true'] {
+  opacity: 1;
+  transition: opacity 150ms cubic-bezier(0, 0, 0, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  l21-tooltip,
+  l21-tooltip[data-shown='true'] {
+    transition: none;
+  }
+}
+
+/* Swimming (main.js, swim.js): the movement keys, bottom left, while underwater on a computer. Keycaps in the style of
+   the other controls over the 3D view; a held key lights up (the accent colour) */
+.swim-keys {
+  position: fixed;
+  left: max(16px, env(safe-area-inset-left));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px 8px;
+  border-radius: 16px;
+  background: rgb(30 33 25 / 88%);
+  color: #e3e6d8;
+  font: 500 12px/16px system-ui, sans-serif;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+}
+/* The « ? » (MD3 standard icon button, 32 dp here): opens the help; the only part of the keys that takes clicks */
+.swim-help-button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #c6c9bb;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.swim-help-button:hover {
+  background: rgb(227 230 216 / 8%);
+}
+.swim-help-button:focus-visible,
+.swim-help-button:active {
+  background: rgb(227 230 216 / 10%);
+}
+.swim-help-button:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: 2px;
+}
+.swim-keys[hidden] {
+  display: none;
+}
+.swim-row {
+  display: flex;
+  gap: 6px;
+}
+.swim-keys kbd {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #8f9482;
+  border-bottom-width: 3px;
+  border-radius: 6px;
+  font: 600 13px/1 system-ui, sans-serif;
+  transition: background 100ms, color 100ms;
+}
+.swim-keys kbd[data-down] {
+  background: #b8c97a;
+  color: #12140e;
+  border-color: #b8c97a;
+}
+.swim-hint {
+  margin: 2px 0 0;
+  color: #c6c9bb;
+  white-space: nowrap;
+}
+
+/* The swim mode's help (main.js): MD3 basic dialog. Surface container high, 28 dp corners, 24 dp padding,
+   headline-small title, body-medium text, a text button bottom right; a scrim behind it */
+.swim-help {
+  max-width: min(400px, calc(100vw - 48px));
+  padding: 24px;
+  border: 0;
+  border-radius: 28px;
+  background: #23261d;
+  color: #e3e6d8;
+  font: 400 14px/20px system-ui, sans-serif;
+  letter-spacing: 0.25px;
+}
+.swim-help::backdrop {
+  background: rgb(0 0 0 / 32%);
+}
+.swim-help h2 {
+  margin: 0 0 16px;
+  font: 400 24px/32px system-ui, sans-serif;
+}
+.swim-help p,
+.swim-help ul {
+  margin: 0 0 12px;
+  color: #c6c9bb;
+}
+.swim-help ul {
+  padding-left: 20px;
+}
+.swim-help li {
+  margin-bottom: 4px;
+}
+.swim-help kbd {
+  display: inline-block;
+  min-width: 22px;
+  padding: 0 6px;
+  border: 1px solid #8f9482;
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  font: 600 12px/18px system-ui, sans-serif;
+  text-align: center;
+  color: #e3e6d8;
+}
+.swim-help-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+.swim-help-ok {
+  height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #b8c97a;
+  font: 500 14px/20px system-ui, sans-serif;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+}
+.swim-help-ok:hover {
+  background: rgb(184 201 122 / 8%);
+}
+.swim-help-ok:focus-visible,
+.swim-help-ok:active {
+  background: rgb(184 201 122 / 10%);
+}
+/* The underwater button's icon in the help's text: a small filled round, as the button while on */
+.swim-help-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #b8c97a;
+  color: #12140e;
+  vertical-align: middle;
+}
+.swim-help-icon svg {
+  width: 16px;
+  height: 16px;
 }
