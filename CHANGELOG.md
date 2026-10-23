@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- De-lighting of the lamp bands (TODO #24, `delight_texture.py`): tried on zones 3 and 10 with stronger settings and
+  set aside; almost no visible difference, Metashape's blending of many photos already evens out the lamps' large-scale
+  light.
 - 3D viewer: `?compare=<tiles url>` (tests): an « Avant | Après » segmented button (key B) swaps the tiles between
   the usual ones and those of that address, from the same view; for judging the de-lighting (TODO #24).
 

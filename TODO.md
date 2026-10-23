@@ -42,8 +42,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #22 Relief on phones: memory, heat, smoothness; probably off by default there
 - [ ] #23 Default light direction and strength (`?light=`, `?shade=`), after viewing from several angles; the photos
   already contain the lamps' light, so some directions may look odd
-- [ ] #24 De-lighting of the lamp bands (`delight_texture.py`): run it on zone 10 (strongest bands), then decide whether
-  it goes into the pipeline for every zone
 - [ ] #25 Optional: read each zone's Blender shader settings (wetness, roughness) and pass them through the manifest
 - [ ] #26 Move the viewer's shader patches to three-custom-shader-material (CSM) if the relief is kept
 
