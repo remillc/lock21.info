@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D publishing: `lock-21-publishing.blend` cleaned up (unused data purged), 2.79 -> 1.14 GB, under Git LFS's 2 GB
+  limit (TODO #38); boolean.023 enlarged: zone 2's sliver in front of zone 3's pillar gone (republished).
 - 3D viewer, underwater: the haze that closes in when looking up only in murky water (full at 14 ft of visibility,
   none from 30 ft): in autumn and winter the tops of the walls show again.
 - 3D viewer, underwater, winter: the particles drift 1.5 times the river's current (was 2).
