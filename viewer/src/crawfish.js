@@ -32,6 +32,8 @@ const WANDER = 0.6
 const WALK_SPEED = 0.05
 // (more often: Christian, 2026-10-23; was 4 to 10 s)
 const REST = [1.5, 4]
+// Each walk's length (m, at random in between: short, Christian 2026-10-23)
+const STEP = [0.05, 0.15]
 // In attack mode, a shuffle now and then: a few cm (SHUFFLE, m, at most) sideways, forward or back, still facing the
 // diver, every SHUFFLE_WAIT s (at random in between)
 const SHUFFLE = 0.08
@@ -156,10 +158,12 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
   /** A spot to walk to, on the same floor, or null */
   function pickSpot() {
     for (let i = 0; i < 8; i++) {
+      // A short walk from where it stands (STEP), still within WANDER of its place
       const angle = Math.random() * Math.PI * 2
-      const reach = Math.sqrt(Math.random()) * WANDER
-      const x = home.x + Math.cos(angle) * reach
-      const z = home.z + Math.sin(angle) * reach
+      const reach = STEP[0] + Math.random() * (STEP[1] - STEP[0])
+      const x = root.position.x + Math.cos(angle) * reach
+      const z = root.position.z + Math.sin(angle) * reach
+      if (Math.hypot(x - home.x, z - home.z) > WANDER) continue
       const below = ground(x, root.position.y, z)
       if (below && below.floor === floor && Math.abs(below.y - home.y) < 0.12) return new THREE.Vector3(x, below.y, z)
     }
