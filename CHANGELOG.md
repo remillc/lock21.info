@@ -6,7 +6,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 - 3D viewer: a crayfish at the `.blend`'s « crawfish » empty (exported with the mockups): « Crayfish » by ucdavisterc
   (Sketchfab, CC BY 4.0, credited on the /modele page), rigged, packed in `viewer/public/creatures/crayfish.glb`, its
-  claws cobalt blue with orange tips, after a blue land crayfish (`viewer/src/crawfish.js`). It faces a diver closer than 1.8 m (and turns again 2 s after they
+  pincer tips orange, after a blue land crayfish (`viewer/src/crawfish.js`). It faces a diver closer than 1.8 m (and turns again 2 s after they
   have moved round it) and takes its threat posture by 0.8 m: front raised, claws raised, spread and open; now and then
   both arms open out wider together, and it shuffles a few centimetres, still facing the diver. Left alone, it often
   walks a few centimetres (5 to 15), within 60 cm of its place, only on its zone's floor (a ray down: same zone, flat).

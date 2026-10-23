@@ -1,7 +1,7 @@
 // A crayfish (« crawfish » empty of the .blend, exported with the mockups: export_mockups.py) that defends itself as
 // the diver comes close. The model: « Crayfish » by ucdavisterc (Sketchfab, CC BY 4.0), rigged, packed into
-// public/creatures/crayfish.glb (textures 1024 px WebP); its claws tinted blue (Christian, 2026-10-23), by their bones'
-// weights.
+// public/creatures/crayfish.glb (textures 1024 px WebP); its pincers' tips orange, found from the claw bones' weights
+// and the fingers' end bones.
 //
 // Behaviour: it faces a diver closer than REACT m (and turns again, REACTION s after they have moved round it by more
 // than REFACE); its threat posture eases in from REACT and is full at THREAT m: front raised (the tail and legs stay
@@ -38,10 +38,8 @@ const STEP = [0.05, 0.15]
 // diver, every SHUFFLE_WAIT s (at random in between)
 const SHUFFLE = 0.08
 const SHUFFLE_WAIT = [2, 5]
-// The claws' colours, after a blue land crayfish (Christian's reference photo, 2026-10-23): a saturated cobalt blue
-// keeping the texture's light and shade, orange at the fingers' tips (within TIP m of the fingers' end once scaled).
-// Linear colours
-const CLAW_BLUE = new THREE.Color(0.04, 0.17, 0.72)
+// The claws keep the texture's colours (a blue tint was tried and removed, 2026-10-23); orange at the fingers' tips
+// (within TIP m of the fingers' end once scaled), as on Christian's reference photo of a blue land crayfish. Linear
 const CLAW_TIP = new THREE.Color(0.85, 0.3, 0.04)
 const TIP = 0.012
 
@@ -104,7 +102,7 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
     ready = true
   })
 
-  /** The claws' blue: a copy of the material that tints what the claw bones carry */
+  /** The pincers' orange tips: a copy of the material that tints them (the claw bones' weights, near the fingers' end) */
   function tintClaws(mesh) {
     const material = mesh.material.clone()
     if (!mesh.isSkinnedMesh) return material
@@ -138,16 +136,14 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
     }
     mesh.geometry.setAttribute('tipness', new THREE.BufferAttribute(tipness, 1))
     material.onBeforeCompile = (shader) => {
-      shader.uniforms.clawBlue = { value: CLAW_BLUE }
       shader.uniforms.clawTip = { value: CLAW_TIP }
       shader.vertexShader = 'attribute float clawness;\nattribute float tipness;\nvarying float vClawness;\nvarying float vTipness;\n' +
         shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nvClawness = clawness;\nvTipness = tipness;')
-      shader.fragmentShader = 'uniform vec3 clawBlue;\nuniform vec3 clawTip;\nvarying float vClawness;\nvarying float vTipness;\n' +
+      shader.fragmentShader = 'uniform vec3 clawTip;\nvarying float vClawness;\nvarying float vTipness;\n' +
         shader.fragmentShader.replace('#include <map_fragment>', `#include <map_fragment>
-          // The texture's light and shade, on the claws' own colours
+          // The tips' orange, with the texture's light and shade (the claws otherwise keep the texture's colours)
           float clawShade = 0.45 + 1.6 * dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
           float onClaw = smoothstep(0.3, 0.9, vClawness);
-          diffuseColor.rgb = mix(diffuseColor.rgb, clawBlue * clawShade, onClaw);
           diffuseColor.rgb = mix(diffuseColor.rgb, clawTip * clawShade, vTipness * onClaw);`)
     }
     material.customProgramCacheKey = () => 'crayfish-claws'
