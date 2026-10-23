@@ -44,7 +44,7 @@ export function settingsSchema({ mobile }) {
         { key: 'sunIntensity', label: 'Force du soleil', hint: 'lumière directe, qui fait ressortir le relief', type: 'range', min: 0, max: 3, step: 0.05, def: '1', dependsOn: 'hdri' },
         { key: 'light', label: 'Soleil (azimut, hauteur)', hint: 'azimut 0 = du sud, 90 = de l’est', type: 'angles', def: '320,65', ranges: [[0, 360, 1], [0, 90, 1]], unit: '°', dependsOn: 'hdri' },
         { key: 'exposure', label: 'Exposition', type: 'range', min: 0.25, max: 3, step: 0.05, def: '1.2', dependsOn: 'hdri' },
-        { key: 'saturation', label: 'Saturation', hint: '1 = celle des textures, 0 = gris', type: 'range', min: 0, max: 2, step: 0.05, def: '1.5', dependsOn: 'hdri' },
+        { key: 'saturation', label: 'Saturation', hint: '1 = celle des textures, 0 = gris', type: 'range', min: 0, max: 2, step: 0.05, def: '1.3', dependsOn: 'hdri' },
         { key: 'wet', label: 'Aspect mouillé', hint: 'zones seulement: reflets du ciel, couleurs plus saturées', type: 'range', min: 0, max: 1, step: 0.05, def: '0.1', dependsOn: 'hdri' },
       ],
     },

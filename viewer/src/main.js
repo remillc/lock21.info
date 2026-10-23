@@ -218,9 +218,9 @@ const look = {
   tone: ['neutral', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'agx',
   exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.2,
   wet: wetness(params.has('wet') ? params.get('wet') : 0.1),
-  // Saturation of the lit surfaces (?saturation=0..2, 1 = the textures' own; default 1.5, to make up for AgX's greying:
-  // see tone)
-  saturation: saturationOf(params.has('saturation') ? params.get('saturation') : 1.5),
+  // Saturation of the lit surfaces (?saturation=0..2, 1 = the textures' own; default 1.3, Christian's choice: AgX greys the
+  // colours, 1.5 matched the unlit textures' saturation on zone 3, see tone)
+  saturation: saturationOf(params.has('saturation') ? params.get('saturation') : 1.3),
 }
 function saturationOf(v) {
   return Math.min(Math.max(Number(v) || 0, 0), 2)
