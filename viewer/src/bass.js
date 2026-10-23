@@ -18,7 +18,7 @@ const IDLE = 6
 const COOLDOWN = 30
 const CLEARANCE = 0.15
 // Its distance ahead of the camera (m, at most a share of the visibility), its speeds (m/s), its turn (rad/s)
-const DISTANCE = 1.4
+const DISTANCE = 1
 const VISIBILITY_SHARE = 0.5
 // Fleeing (Christian, 2026-10-23: it rushes out): a quick turn away and a dash, speeding up over its first second
 const SWIM = 0.16
@@ -37,6 +37,12 @@ const WAVE = [0.02, 0.05, 0.09, 0.14, 0.22]
 const BEAT = { hover: 0.35, swim: 0.9, flee: 2.2 }
 const WAVE_SIZE = { hover: 0.25, swim: 1, flee: 1.3 }
 const WAVE_LAG = 0.9
+// Turning: how fast its turning rate follows (1/s) and how it scales with what is left to turn; the C-curve of its body
+// per bone (rad per rad/s of turning, head to tail: the body lags behind the head); its glide while turning (m per rad)
+const TURN_EASE = 3
+const TURN_GAIN = 2.5
+const CURVE = [0, 0.12, 0.16, 0.16, 0.12]
+const GLIDE = 0.05
 
 /**
  * @param {object} options
@@ -99,6 +105,8 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   const lastPosition = new THREE.Vector3()
   const lastQuaternion = new THREE.Quaternion()
   const right = new THREE.Vector3()
+  const forward = new THREE.Vector3()
+  let turnRate = 0
   const ahead = new THREE.Vector3()
   const toCamera = new THREE.Vector3()
   let heading = 0
@@ -144,11 +152,17 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
     leftAt = since
   }
 
+  /** Turns toward a direction as a fish does (Christian, 2026-10-23: the even pivot was not natural): its turning rate
+   *  eases in and out (toward TURN_GAIN times what is left, at most `turn`), and while it turns its body curves into a C
+   *  (the spine below) and it glides forward a little; true once it faces that way and has stopped turning */
   function face(direction, dt, turn = TURN) {
     const target = Math.atan2(direction.x, direction.z)
     const delta = Math.atan2(Math.sin(target - heading), Math.cos(target - heading))
-    heading += Math.sign(delta) * Math.min(Math.abs(delta), turn * dt)
-    return Math.abs(delta) < 0.05
+    const wanted = THREE.MathUtils.clamp(delta * TURN_GAIN, -turn, turn)
+    turnRate += (wanted - turnRate) * Math.min(1, TURN_EASE * dt)
+    heading += turnRate * dt
+    root.position.addScaledVector(forward.set(Math.sin(heading), 0, Math.cos(heading)), Math.abs(turnRate) * GLIDE * dt)
+    return Math.abs(delta) < 0.05 && Math.abs(turnRate) < 0.1
   }
 
   return {
@@ -190,6 +204,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         since = 0
         root.position.copy(from)
         heading = Math.atan2(to.x - from.x, to.z - from.z)
+        turnRate = 0
         root.visible = true
       }
       since += dt
@@ -235,7 +250,8 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
       const mode = fleeing ? 'flee' : swimming ? 'swim' : 'hover'
       phase += dt * BEAT[mode] * slow * Math.PI * 2
       spine.forEach(({ bone, rest, axis }, k) => {
-        bone.quaternion.copy(rest).premultiply(bend.setFromAxisAngle(axis, WAVE[k] * WAVE_SIZE[mode] * Math.sin(phase - k * WAVE_LAG)))
+        const wave = WAVE[k] * WAVE_SIZE[mode] * Math.sin(phase - k * WAVE_LAG)
+        bone.quaternion.copy(rest).premultiply(bend.setFromAxisAngle(axis, wave - turnRate * CURVE[k]))
       })
       root.rotation.set(0, heading, 0)
       body.position.y = BOB * Math.sin(time * 1.3)
