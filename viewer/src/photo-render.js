@@ -32,7 +32,7 @@ const TEXTURE_BUDGET = 512 * 2 ** 20
 const TEXTURE_SIZES = [512, 2048]
 
 // The corrections of main.js's surface materials, applied to a copy of the texture: colour balance (color), green
-// and cyan removal (addDespill), saturation
+// and cyan removal (addDespill), saturation, contrast
 const gradeMaterial = new THREE.ShaderMaterial({
   uniforms: {
     map: { value: null },
@@ -40,6 +40,7 @@ const gradeMaterial = new THREE.ShaderMaterial({
     despill: { value: 0 },
     cyanCut: { value: 0 },
     saturation: { value: 1 },
+    contrast: { value: 1 },
   },
   vertexShader: /* glsl */ `
     varying vec2 vUv;
@@ -53,6 +54,7 @@ const gradeMaterial = new THREE.ShaderMaterial({
     uniform float despill;
     uniform float cyanCut;
     uniform float saturation;
+    uniform float contrast;
     varying vec2 vUv;
     void main() {
       vec4 diffuseColor = texture2D(map, vUv);
@@ -61,6 +63,8 @@ const gradeMaterial = new THREE.ShaderMaterial({
       float despillCyan = min(cyanCut * max(min(despillG, diffuseColor.b) - diffuseColor.r, 0.0), min(despillG, diffuseColor.b));
       diffuseColor.rgb = mix(diffuseColor.rgb, vec3(diffuseColor.r, despillG - despillCyan, diffuseColor.b - despillCyan), despill);
       diffuseColor.rgb = mix(vec3(dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722))), diffuseColor.rgb, saturation);
+      float contrastLuma = max(dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722)), 1e-4);
+      diffuseColor.rgb *= 0.18 * pow(contrastLuma / 0.18, contrast) / contrastLuma; diffuseColor.rgb = min(diffuseColor.rgb, vec3(1.0));
       gl_FragColor = vec4(diffuseColor.rgb, 1.0);
       #include <colorspace_fragment>
     }`,
@@ -180,7 +184,7 @@ export function createPhotoRender(renderer, rasterize) {
   /**
    * A corrected copy of a surface texture (see gradeMaterial)
    * @param {THREE.Texture} map
-   * @param {{ color: THREE.Color, despill: number, cyanCut: number, saturation: number }} grade
+   * @param {{ color: THREE.Color, despill: number, cyanCut: number, saturation: number, contrast: number }} grade
    * @param {number} size - px
    */
   function gradedTexture(map, grade, size) {
@@ -190,6 +194,7 @@ export function createPhotoRender(renderer, rasterize) {
     gradeMaterial.uniforms.despill.value = grade.despill
     gradeMaterial.uniforms.cyanCut.value = grade.cyanCut
     gradeMaterial.uniforms.saturation.value = grade.saturation
+    gradeMaterial.uniforms.contrast.value = grade.contrast
     const previous = renderer.getRenderTarget()
     renderer.setRenderTarget(target)
     gradeQuad.render(renderer)
@@ -219,7 +224,7 @@ export function createPhotoRender(renderer, rasterize) {
    * @param {THREE.Camera} source.camera
    * @param {THREE.Vector3} source.sunDirection - from the scene toward the sun
    * @param {number} source.sunIntensity
-   * @param {(mesh: THREE.Mesh) => { color: THREE.Color, despill: number, cyanCut: number, saturation: number, roughness: number }} source.surfaceGrade
+   * @param {(mesh: THREE.Mesh) => { color: THREE.Color, despill: number, cyanCut: number, saturation: number, contrast: number, roughness: number }} source.surfaceGrade
    * @param {(fraction: number) => void} [source.onProgress]
    */
   async function start({ scene, environment, roots, camera, sunDirection, sunIntensity, surfaceGrade, onProgress }) {

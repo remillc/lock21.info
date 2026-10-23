@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: « Contraste » slider in the settings (0.5 to 2, default 1): the lit surfaces' colours stretched around a
+  mid-grey, hue kept; also in « Rendu photo ».
 - Claude Code added to the software used (gear page, French and English; pipeline README).
 - 3D viewer: wet look back to 0.15 by default.
 - 3D viewer settings: « Ombres du soleil » is out of the panel; the default stays (on computers, off on phones),

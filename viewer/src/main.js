@@ -225,7 +225,14 @@ const look = {
   // Saturation of the lit surfaces (?saturation=0..2, 1 = the textures' own; default 1.2, Christian's choice: AgX greys the
   // colours, 1.5 matched the unlit textures' saturation on zone 3, see tone)
   saturation: saturationOf(params.has('saturation') ? params.get('saturation') : 1.2),
+  // Contrast of the lit surfaces' colours (?contrast=0.5..2, 1 = the textures' own): their brightness stretched around a
+  // mid-grey (0.18 in linear light), the hue kept; above 1, darks darker and lights lighter
+  contrast: contrastOf(params.has('contrast') ? params.get('contrast') : 1),
 }
+function contrastOf(v) {
+  return Math.min(Math.max(Number(v) || 1, 0.5), 2)
+}
+
 function saturationOf(v) {
   return Math.min(Math.max(Number(v) || 0, 0), 2)
 }
@@ -359,9 +366,11 @@ function litMaterial(surface, mesh, normalMap, sky) {
       : new THREE.MeshLambertMaterial(options)
   material.onBeforeCompile = (shader) => {
     if (surface.zoneId) addDespill(shader)
-    if (look.saturation !== 1) {
+    if (look.saturation !== 1 || look.contrast !== 1) {
       shader.fragmentShader = shader.fragmentShader.replace('#include <color_fragment>', `#include <color_fragment>
-        diffuseColor.rgb = mix(vec3(dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722))), diffuseColor.rgb, ${look.saturation.toFixed(3)});`)
+        diffuseColor.rgb = mix(vec3(dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722))), diffuseColor.rgb, ${look.saturation.toFixed(3)});
+        float contrastLuma = max(dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722)), 1e-4);
+        diffuseColor.rgb *= 0.18 * pow(contrastLuma / 0.18, ${look.contrast.toFixed(3)}) / contrastLuma; diffuseColor.rgb = min(diffuseColor.rgb, vec3(1.0));`)
     }
     if (wet > 0) {
       shader.fragmentShader = shader.fragmentShader
@@ -394,7 +403,7 @@ function litMaterial(surface, mesh, normalMap, sky) {
   }
   // The patches depend on these values (the wetness is written into the shader): one compiled program per
   // combination (three.js would otherwise reuse the first one, its cache key being the function's source)
-  material.customProgramCacheKey = () => `lit-${sky}-${Boolean(normalMap)}-${Boolean(surface.zoneId)}-${wet.toFixed(3)}-${look.saturation.toFixed(3)}`
+  material.customProgramCacheKey = () => `lit-${sky}-${Boolean(normalMap)}-${Boolean(surface.zoneId)}-${wet.toFixed(3)}-${look.saturation.toFixed(3)}-${look.contrast.toFixed(3)}`
   return withShadowCascades(material)
 }
 
@@ -524,6 +533,7 @@ live.shadows = (v) => { look.shadows = v === '1'; updateLights() }
 live.tone = (v) => { look.tone = TONES[v] !== undefined ? v : 'agx'; updateTone() }
 live.exposure = (v) => { look.exposure = Number(v); updateTone() }
 live.saturation = (v) => { look.saturation = saturationOf(v); rebuildMaterials() }
+live.contrast = (v) => { look.contrast = contrastOf(v); rebuildMaterials() }
 live.wet = (v) => { look.wet = wetness(v); rebuildMaterials(); updateEnvironment() }
 live.light = (v) => { look.light = v.split(',').map(Number); updateLights() }
 
@@ -915,6 +925,7 @@ function photoGrade(mesh) {
     despill: zone ? despill.value : 0,
     cyanCut: zone ? cyanCut.value : 0,
     saturation: look.saturation,
+    contrast: look.contrast,
     roughness: zone && look.wet > 0 ? 0.9 - 0.5 * look.wet : 1,
   }
 }
