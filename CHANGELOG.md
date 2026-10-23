@@ -2,7 +2,7 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
-## Unreleased
+## 0.9.1 - 2026-10-23
 
 - 3D viewer: the desktop memory budget for tiles back to 1.2 GB: at 2 GB (0.9.0) the browser ran out of memory
   ("Array buffer allocation failed"), and tiles and textures failed to load.
