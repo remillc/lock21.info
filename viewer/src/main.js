@@ -210,16 +210,17 @@ const look = {
   light: (params.get('light') || '320,65').split(',').map(Number),
   // The sun's shadows (?shadows=0|1; default on computers, off on phones: one more render of the scene per frame)
   shadows: params.has('shadows') ? params.get('shadows') !== '0' : !mobile,
-  // Tone mapping of the lit display (?tone=agx|aces|neutral|none) and its exposure (?exposure=). Default Khronos
-  // neutral at 1.2: it keeps the textures' hues and saturation (on zone 3, with the wet look at 0.1: brightness 0.55
-  // and saturation 0.33, unlit textures 0.51 and 0.32; at exposure 1 it looked dark and too saturated); AgX greyed
-  // the colours (saturation halved, even at exposure 1.4). The unlit display (?hdri=0) keeps none: the textures as they are
-  tone: ['agx', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'neutral',
+  // Tone mapping of the lit display (?tone=agx|aces|neutral|none) and its exposure (?exposure=). Default AgX at 1.2,
+  // Christian's choice (2026-10-23): soft highlights that never clip to flat white. AgX greys the colours, so the
+  // saturation below makes up for it (1.5: on zone 3, brightness 0.61 and saturation 0.32, the unlit textures 0.53
+  // and 0.31). Khronos neutral was the default for a day (it keeps the hues, but harder highlights). The unlit display
+  // (?hdri=0) keeps none: the textures as they are
+  tone: ['neutral', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'agx',
   exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.2,
   wet: wetness(params.has('wet') ? params.get('wet') : 0.1),
-  // Saturation of the lit surfaces (?saturation=0..2, 1 = the textures' own; default 0.8: lit by the sun, the colours
-  // looked too saturated)
-  saturation: saturationOf(params.has('saturation') ? params.get('saturation') : 0.8),
+  // Saturation of the lit surfaces (?saturation=0..2, 1 = the textures' own; default 1.5, to make up for AgX's greying:
+  // see tone)
+  saturation: saturationOf(params.has('saturation') ? params.get('saturation') : 1.5),
 }
 function saturationOf(v) {
   return Math.min(Math.max(Number(v) || 0, 0), 2)
@@ -508,7 +509,7 @@ live.sky = (v) => { look.skyBackground = v === '1'; updateEnvironment() }
 live.relief = (v) => { look.relief = v; rebuildMaterials() }
 live.sunIntensity = (v) => { look.sunIntensity = Number(v); updateLights() }
 live.shadows = (v) => { look.shadows = v === '1'; updateLights() }
-live.tone = (v) => { look.tone = TONES[v] !== undefined ? v : 'neutral'; updateTone() }
+live.tone = (v) => { look.tone = TONES[v] !== undefined ? v : 'agx'; updateTone() }
 live.exposure = (v) => { look.exposure = Number(v); updateTone() }
 live.saturation = (v) => { look.saturation = saturationOf(v); rebuildMaterials() }
 live.wet = (v) => { look.wet = wetness(v); rebuildMaterials(); updateEnvironment() }

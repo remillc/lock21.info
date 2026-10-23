@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: AgX tone mapping by default again (exposure 1.2), with saturation 1.5 to make up for its greying (on
+  zone 3, the same saturation as the unlit textures); Khronos neutral stays under Avancé.
 - 3D viewer settings: « Occlusion ambiante » (and « Occlusion seule ») and « Ciel en arrière-plan » are out of the
   panel; their defaults stay (occlusion on computers, sky background on), and a link can still set them.
 - 3D viewer: the sky that lights the scene also tilts so that its photo's sun (48° up) stands exactly at our sun's

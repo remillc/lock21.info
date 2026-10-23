@@ -45,7 +45,7 @@ export function settingsSchema({ mobile }) {
         { key: 'light', label: 'Soleil (azimut, hauteur)', hint: 'azimut 0 = du sud, 90 = de l’est', type: 'angles', def: '320,65', ranges: [[0, 360, 1], [0, 90, 1]], unit: '°', dependsOn: 'hdri' },
         { key: 'shadows', label: 'Ombres du soleil', type: 'toggle', def: mobile ? '0' : '1', dependsOn: 'hdri' },
         { key: 'exposure', label: 'Exposition', type: 'range', min: 0.25, max: 3, step: 0.05, def: '1.2', dependsOn: 'hdri' },
-        { key: 'saturation', label: 'Saturation', hint: '1 = celle des textures, 0 = gris', type: 'range', min: 0, max: 2, step: 0.05, def: '0.8', dependsOn: 'hdri' },
+        { key: 'saturation', label: 'Saturation', hint: '1 = celle des textures, 0 = gris', type: 'range', min: 0, max: 2, step: 0.05, def: '1.5', dependsOn: 'hdri' },
         { key: 'wet', label: 'Aspect mouillé', hint: 'zones seulement: reflets du ciel, couleurs plus saturées', type: 'range', min: 0, max: 1, step: 0.05, def: '0.1', dependsOn: 'hdri' },
       ],
     },
@@ -55,7 +55,7 @@ export function settingsSchema({ mobile }) {
       items: [
         { key: 'profile', label: 'Profil', type: 'select', def: '', options: [['', 'automatique'], ['desktop', 'ordinateur'], ['mobile', 'téléphone']] },
         { key: 'stats', label: 'Statistiques (mémoire, tuiles)', type: 'toggle', def: '0' },
-        { key: 'tone', label: 'Rendu des tons', type: 'select', def: 'neutral', options: [['neutral', 'Khronos neutre'], ['agx', 'AgX'], ['aces', 'ACES'], ['none', 'aucun']], dependsOn: 'hdri' },
+        { key: 'tone', label: 'Rendu des tons', type: 'select', def: 'agx', options: [['agx', 'AgX'], ['neutral', 'Khronos neutre'], ['aces', 'ACES'], ['none', 'aucun']], dependsOn: 'hdri' },
       ],
     },
   ]
