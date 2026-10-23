@@ -256,6 +256,8 @@ const look = {
   // (?relief=debug); wet look (?wet=0..1). The sun's direction: azimuth (0 = from the south, 90 = from the east),
   // elevation, in degrees
   relief: ['0', 'debug'].includes(params.get('relief')) ? params.get('relief') : '1',
+  // Mesh view (?mesh=1, settings « Maillage »): the zones and the context as their triangles
+  mesh: params.get('mesh') === '1',
   light: (params.get('light') || '320,65').split(',').map(Number),
   // The sun's shadows (?shadows=0|1; default on computers, off on phones: one more render of the scene per frame)
   shadows: params.has('shadows') ? params.get('shadows') !== '0' : !mobile,
@@ -295,6 +297,8 @@ function wetness(v) {
 // Every mesh keeps in userData.surface what its material is built from: the original textures (the tiles'
 // material is replaced, so they would be lost otherwise), its colour, and its zone (null for the context).
 function initSurface(mesh, zoneId) {
+  // The mesh view's edges (meshEdges) are added as the tile's meshes are visited: not a surface
+  if (mesh.userData.isEdges) return
   const old = mesh.material
   smoothFiltering(old.map)
   if (old.normalMap) {
@@ -308,24 +312,54 @@ function initSurface(mesh, zoneId) {
   mesh.castShadow = true
   mesh.receiveShadow = true
   mesh.material = surfaceMaterial(mesh)
+  meshEdges(mesh)
   old.dispose()
 }
 
 function surfaceMaterial(mesh) {
   const surface = mesh.userData.surface
+  if (look.mesh) return meshMaterial(surface)
   const normalMap = look.relief !== '0' ? surface.normalMap : null
   if (normalMap && look.relief === 'debug') return new THREE.MeshBasicMaterial({ map: normalMap, side: THREE.DoubleSide })
   if (look.sky) return litMaterial(surface, mesh, normalMap, true)
   return unlitMaterial(surface)
 }
 
-// Rebuilds every material after a change of display mode (sky, relief, wet)
+// The mesh view: a solid, flat-shaded surface (each triangle a facet, light olive for the zones, grey for the
+// context; pushed back a little in depth) with its edges drawn over it (meshEdges)
+function meshMaterial(surface) {
+  return new THREE.MeshLambertMaterial({
+    color: surface.zoneId ? 0xc9d3a8 : 0x9a9e8f,
+    flatShading: true,
+    side: THREE.DoubleSide,
+    polygonOffset: true,
+    polygonOffsetFactor: 1,
+    polygonOffsetUnits: 1,
+  })
+}
+const edgeMaterial = new THREE.MeshBasicMaterial({ color: 0x2b2f24, wireframe: true, transparent: true, opacity: 0.6 })
+/** The mesh view's edges: a child sharing the surface's geometry, drawn as lines; removed when the view is off */
+function meshEdges(mesh) {
+  const edges = mesh.userData.edges
+  if (look.mesh && !edges) {
+    mesh.userData.edges = new THREE.Mesh(mesh.geometry, edgeMaterial)
+    mesh.userData.edges.userData.isEdges = true
+    mesh.userData.edges.raycast = () => {}
+    mesh.add(mesh.userData.edges)
+  } else if (!look.mesh && edges) {
+    mesh.remove(edges)
+    delete mesh.userData.edges
+  }
+}
+
+// Rebuilds every material after a change of display mode (sky, relief, wet, mesh)
 function rebuildMaterials() {
   scene.traverse((child) => {
     if (!child.isMesh || !child.userData.surface) return
     const old = child.material
     child.material = surfaceMaterial(child)
     old.dispose()
+    meshEdges(child)
   })
   requestRender()
 }
@@ -1195,6 +1229,10 @@ live.stats = (v) => {
   }
 }
 live.stats(params.get('stats') ?? '0')
+live.mesh = (v) => {
+  look.mesh = v === '1'
+  rebuildMaterials()
+}
 // Refreshed even when nothing is redrawn (render on demand), otherwise the overlay shows stale numbers
 function updateStats() {
   if (!statsBox || performance.now() - lastStats < 500) return
