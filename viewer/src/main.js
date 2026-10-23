@@ -251,6 +251,10 @@ const requestRender = () => { needsRender = true }
 controls.addEventListener('change', requestRender)
 
 const ktx2Loader = new KTX2Loader().setTranscoderPath(`${import.meta.env.BASE_URL}vendor/basis/`).detectSupport(renderer)
+// The tiles' textures are ETC1S (Obj2Tiles): on a computer the loader would transcode them to BC7 (1 byte per pixel),
+// which holds no more than ETC1S does; BC1 (DXT1, half a byte per pixel) shows the same and halves the textures'
+// memory (TODO #55). Phones transcode ETC1S to ETC1/ETC2 already
+if (ktx2Loader.workerConfig.dxtSupported) ktx2Loader.workerConfig.bptcSupported = false
 
 // Sharper textures on surfaces seen at a grazing angle (floors, walls along the line of sight)
 const maxAnisotropy = renderer.capabilities.getMaxAnisotropy()
