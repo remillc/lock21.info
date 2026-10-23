@@ -7,6 +7,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js'
+import { CSM } from 'three/examples/jsm/csm/CSM.js'
 import { TilesRenderer } from '3d-tiles-renderer'
 import { savedSettings, settingsSchema } from './config-panel.js'
 import './loading.js'
@@ -388,27 +389,49 @@ function litMaterial(surface, mesh, normalMap, sky) {
   // The patches depend on these values (the wetness is written into the shader): one compiled program per
   // combination (three.js would otherwise reuse the first one, its cache key being the function's source)
   material.customProgramCacheKey = () => `lit-${sky}-${Boolean(normalMap)}-${Boolean(surface.zoneId)}-${wet.toFixed(3)}-${look.saturation.toFixed(3)}`
-  return material
+  return withShadowCascades(material)
 }
 
 // The sun: a directional light added to the sky's light (lit materials only). Lambert lighting divides by pi: at
 // intensity pi x sunIntensity, a surface facing the sun at sunIntensity 1 shows its texture's own brightness.
-// Its shadows: one 4096 px shadow map over the whole site (about 4 cm per texel over the context's 180 m), soft
-// edges (PCF); the walls, stairs and piers shade what lies behind them. The shadow box follows the context's extent
-// once it is loaded (fitShadows), and the sun's direction.
+// Its shadows: cascaded shadow maps (three.js CSM): three 2048 px maps that follow the camera, the first over the
+// nearest metres, the last up to SHADOW_FAR; sharp close up (a few mm per texel at a metre or two) and still over
+// the whole site from afar. One shadow map over the whole site gave about 4 cm per texel: blurred, blocky edges up
+// close. Soft edges (PCF), wider in texels on the near maps: about the sun's own penumbra (0.5 degree: 1 cm per metre
+// between the object and its shadow). Each cascade is a light of its own, used only in its distance range; without
+// shadows (phones, ?shadows=0), only the first one stays on, as a plain sun (the others would add their light).
 renderer.shadowMap.enabled = true
-renderer.shadowMap.type = THREE.PCFSoftShadowMap
-const sun = new THREE.DirectionalLight(0xffffff)
-sun.shadow.mapSize.set(4096, 4096)
-sun.shadow.bias = -0.0002
-sun.shadow.normalBias = 0.04
-scene.add(sun, sun.target)
-const shadowArea = new THREE.Sphere(new THREE.Vector3(), 120)
-function fitShadows() {
-  const box = new THREE.Box3()
-  for (const model of contextModels) box.expandByObject(model)
-  if (!box.isEmpty()) box.getBoundingSphere(shadowArea)
-  updateLights()
+renderer.shadowMap.type = THREE.PCFShadowMap
+const SHADOW_FAR = 300
+const SHADOW_RADII = [3, 2, 1]
+const csm = new CSM({
+  camera,
+  parent: scene,
+  cascades: SHADOW_RADII.length,
+  maxFar: SHADOW_FAR,
+  mode: 'practical',
+  shadowMapSize: 2048,
+  lightMargin: 100,
+  lightIntensity: Math.PI,
+  shadowBias: -0.0002,
+})
+csm.fade = true
+csm.lights.forEach((light, i) => {
+  light.shadow.normalBias = 0.01
+  light.shadow.radius = SHADOW_RADII[i]
+})
+// Lit materials take the cascades (CSM.setupMaterial) on top of their own shader patches: both hooks run. CSM keeps a
+// list of its materials; a disposed one leaves it.
+function withShadowCascades(material) {
+  const own = material.onBeforeCompile
+  csm.setupMaterial(material)
+  const cascades = material.onBeforeCompile
+  material.onBeforeCompile = (shader, renderer) => {
+    cascades(shader, renderer)
+    own.call(material, shader, renderer)
+  }
+  material.addEventListener('dispose', () => csm.shaders.delete(material))
+  return material
 }
 // The sky photo has its own sun (53 % of its light, within 5 degrees of it), at azimuth 55.7 and elevation 48 in its
 // unrotated frame (measured on public/hdri/sky.hdr: its brightest pixel, x 609 y 119 of 1024 x 512, through
@@ -421,14 +444,14 @@ function updateLights() {
   scene.backgroundRotation.set(0, turn, 0)
   const [azimuth, elevation] = look.light.map(THREE.MathUtils.degToRad)
   const direction = new THREE.Vector3(Math.cos(elevation) * Math.sin(azimuth), Math.sin(elevation), Math.cos(elevation) * Math.cos(azimuth))
-  const r = shadowArea.radius
-  sun.target.position.copy(shadowArea.center)
-  sun.position.copy(shadowArea.center).addScaledVector(direction, r * 2)
-  Object.assign(sun.shadow.camera, { left: -r, right: r, top: r, bottom: -r, near: r * 0.5, far: r * 3.5 })
-  sun.shadow.camera.updateProjectionMatrix()
-  sun.intensity = Math.PI * look.sunIntensity
-  sun.visible = look.sky && look.sunIntensity > 0
-  sun.castShadow = sun.visible && look.shadows
+  // CSM's light direction points from the sun to the scene
+  csm.lightDirection.copy(direction).negate()
+  const on = look.sky && look.sunIntensity > 0
+  csm.lights.forEach((light, i) => {
+    light.intensity = Math.PI * look.sunIntensity
+    light.visible = on && (look.shadows || i === 0)
+    light.castShadow = on && look.shadows
+  })
   requestRender()
 }
 // Tone mapping and exposure (look.tone, look.exposure): only for the lit display; changing the method recompiles the
@@ -622,7 +645,6 @@ async function loadModel() {
       })
       scene.add(model)
       contextModels.push(model)
-      fitShadows()
       requestRender()
     })
   }
@@ -840,6 +862,8 @@ function renderLoop() {
   needsRender = false
   camera.updateMatrixWorld()
   tilesets.forEach((tiles) => tiles.update())
+  // The shadow cascades follow the camera
+  csm.update()
   if (ao.on && composer) composer.render()
   else renderer.render(scene, camera)
 }
