@@ -4,8 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- 3D viewer, underwater: the keys pad bottom left continues the season strip's sweep out of the 🤿 button (MD3 motion);
-  the particles are soft, blurred specks (a wide Gaussian, at least 6 px, never opaque; the lamp brightens them).
+- 3D viewer, underwater: the keys pad bottom left continues the season strip's sweep out of the 🤿 button (MD3 motion).
 - 3D viewer, underwater: particles only where they can be seen: a box ahead of the camera, as deep as the visibility
   (3 to 10 m), with a density per m³ by season; drawn counts winter 25,000, spring 35,000, summer 56,000, autumn
   94,000 instead of up to 200,000 in a cube around the camera.
