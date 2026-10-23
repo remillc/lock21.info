@@ -194,6 +194,8 @@ export function createUnderwater(scene, renderer) {
         gl_FragColor = vec4(c, 1.0);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
+        // Dithered by a fraction of a colour step: the smooth gradients showed bands (8 bits a channel)
+        gl_FragColor.rgb += (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) / 255.0;
       }`,
   })
   const column = new THREE.Mesh(new THREE.SphereGeometry(1000, 48, 24), columnMaterial)
@@ -233,10 +235,17 @@ export function createUnderwater(scene, renderer) {
           float w = sin(p.x * 1.7 + uTime * 0.6) * sin(p.y * 1.3 - uTime * 0.45) + 0.5 * sin((p.x + p.y) * 2.9 + uTime * 0.9);
           vec3 view = normalize(vWorld - cameraPosition);
           float glare = pow(max(dot(view, uSun), 0.0), 30.0);
-          vec3 c = uColor * (1.35 + 0.25 * w + 0.6 * uwCaustic(vWorld.xz * 0.8, uTime * 0.8)) + vec3(1.0, 0.97, 0.88) * 2.0 * glare;
+          // The ripples and caustics fade out where they get finer than a pixel (far away, at a grazing angle): there
+          // they only made noise. The caustic at 0.25 is its average brightness
+          float detail = 1.0 - smoothstep(0.15, 0.6, length(fwidth(vWorld.xz * 0.8)));
+          float ripple = mix(0.0, 0.25 * w, detail);
+          float caustic = mix(0.25, uwCaustic(vWorld.xz * 0.8, uTime * 0.8), detail);
+          vec3 c = uColor * (1.35 + ripple + 0.6 * caustic) + vec3(1.0, 0.97, 0.88) * 2.0 * glare;
           gl_FragColor = vec4(c, exp(-0.6 * uAbsorb.g * vDistance));
           #include <tonemapping_fragment>
           #include <colorspace_fragment>
+          // Dithered by a fraction of a colour step: the smooth gradients showed bands (8 bits a channel)
+          gl_FragColor.rgb += (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) / 255.0;
         }`,
     }),
   )

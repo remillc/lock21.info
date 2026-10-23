@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: no more noise toward the water surface (its ripples and caustics fade out where finer than
+  a pixel) and no banding in the water's gradients (dithered).
 - 3D viewer, underwater: the dive light has a hotspot (8°) and a spill 3 times wider and weaker; it brings the reds
   back (its light absorbed only from the lamp, the daylight dimmed to half at depth); more particles the murkier the
   season (winter 10,000, autumn 25,000, summer 35,000, spring 60,000).
