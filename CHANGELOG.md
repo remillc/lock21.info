@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: dramatically more particles, and faster, the murkier the water: winter 8,000 at the
+  measured current, autumn 40,000 at 2 times, summer 80,000 at 3 times, spring 200,000 at 5 times (40 % on a phone).
 - 3D viewer, underwater: the particles flow around the model instead of through it (a distance field around the
   camera, 32³ cells, built a few milliseconds per frame; on the GPU a particle in a surface's skin is pushed out along
   it). Swim mode: a help dialog (MD3) the first time, then from a « ? » in the keys bottom left.

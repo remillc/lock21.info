@@ -193,7 +193,7 @@ const backdrop = new THREE.Color(0x12140e)
 scene.background = backdrop
 // « Ambiance sous-marine » (underwater.js): its water column, surface and particles, and the absorption every lit
 // material carries (litMaterial); off until the 🤿 button or the setting turns it on (setUnderwater)
-const underwater = createUnderwater(scene, renderer)
+const underwater = createUnderwater(scene, renderer, { mobile })
 const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.05, 2000)
 const controls = new OrbitControls(camera, renderer.domElement)
 // Development builds only: the viewer's parts for tests in the browser console (window.l21)
