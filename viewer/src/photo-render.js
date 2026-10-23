@@ -4,10 +4,15 @@
 //
 // The path tracer gets its own scene, built once when the mode starts, from the surfaces on screen at that moment
 // (the tiles' level of detail is frozen meanwhile, main.js):
-// - the same geometry (no copy), placed with each mesh's world matrix;
+// - the same geometry, as plain float copies (the tiles store positions as 16-bit integers, normalized and
+//   interleaved, rescaled by each tile's matrix; the path tracer reads raw floats, which gave garbage triangles and a
+//   black image), one vertex per triangle corner with flat normals (averaged normals went dark wherever neighbouring
+//   triangles of the photogrammetry mesh face opposite ways); placed with each mesh's world matrix;
 // - plain physical materials: the path tracer ignores our shader patches (green and cyan removal, zone colour balance,
 //   saturation), so each photo texture gets a corrected copy, made on the GPU with the same formulas, at the size of
-//   the path tracer's texture array (TEXTURE_SIZE: every texture of the scene sits in one array, at one size);
+//   the path tracer's texture array: every texture of the scene sits in one array, at one size, chosen from a memory
+//   budget (TEXTURE_BUDGET) between 512 and 2048 px. A tile's texture is an atlas of many small pieces: at 512 px
+//   each piece was a smear of a few pixels;
 // - no relief maps: ours are in object space, which the path tracer doesn't read; the geometry's own normals instead;
 // - the same sky (environment and background, rotations and strengths) and one sun (the shadow cascades are three
 //   lights in the normal display).
@@ -18,7 +23,9 @@ import { WebGLPathTracer } from 'three-gpu-pathtracer'
 import { ParallelMeshBVHWorker } from 'three-mesh-bvh/worker'
 import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js'
 
-const TEXTURE_SIZE = 512
+// GPU memory for the path tracer's texture array (RGBA, 4 bytes a pixel), and the size range of its textures
+const TEXTURE_BUDGET = 512 * 2 ** 20
+const TEXTURE_SIZES = [512, 2048]
 
 // The corrections of main.js's surface materials, applied to a copy of the texture: colour balance (color), green
 // and cyan removal (addDespill), saturation
@@ -57,6 +64,30 @@ const gradeMaterial = new THREE.ShaderMaterial({
 const gradeQuad = new FullScreenQuad(gradeMaterial)
 
 /**
+ * A copy of the geometry the path tracer can read: plain floats, one vertex per triangle corner (position, uv) and
+ * flat normals
+ * @param {THREE.BufferGeometry} geometry
+ */
+function floatGeometry(geometry) {
+  const copy = new THREE.BufferGeometry()
+  const index = geometry.index
+  const count = index ? index.count : geometry.attributes.position.count
+  for (const name of ['position', 'uv']) {
+    const attribute = geometry.attributes[name]
+    if (!attribute) continue
+    const size = attribute.itemSize
+    const values = new Float32Array(count * size)
+    for (let i = 0; i < count; i++) {
+      const vertex = index ? index.getX(i) : i
+      for (let k = 0; k < size; k++) values[i * size + k] = attribute.getComponent(vertex, k)
+    }
+    copy.setAttribute(name, new THREE.BufferAttribute(values, size))
+  }
+  copy.computeVertexNormals()
+  return copy
+}
+
+/**
  * @param {THREE.WebGLRenderer} renderer
  * @param {() => void} rasterize - draws the normal display (shown until the first samples come)
  */
@@ -66,14 +97,16 @@ export function createPhotoRender(renderer, rasterize) {
   /** @type {THREE.WebGLRenderTarget[]} */
   let graded = []
   let building = null
+  let textureSize = 0
 
   /**
    * A corrected copy of a surface texture (see gradeMaterial)
    * @param {THREE.Texture} map
    * @param {{ color: THREE.Color, despill: number, cyanCut: number, saturation: number }} grade
+   * @param {number} size - px
    */
-  function gradedTexture(map, grade) {
-    const target = new THREE.WebGLRenderTarget(TEXTURE_SIZE, TEXTURE_SIZE, { colorSpace: THREE.SRGBColorSpace })
+  function gradedTexture(map, grade, size) {
+    const target = new THREE.WebGLRenderTarget(size, size, { colorSpace: THREE.SRGBColorSpace })
     Object.assign(gradeMaterial.uniforms.map, { value: map })
     gradeMaterial.uniforms.color.value.copy(grade.color)
     gradeMaterial.uniforms.despill.value = grade.despill
@@ -83,9 +116,17 @@ export function createPhotoRender(renderer, rasterize) {
     renderer.setRenderTarget(target)
     gradeQuad.render(renderer)
     renderer.setRenderTarget(previous)
-    target.texture.flipY = map.flipY
-    target.texture.wrapS = map.wrapS
-    target.texture.wrapT = map.wrapT
+    // Same placement as the original: flip, wrap, and its texture transform (the tiles' texture coordinates are
+    // 16-bit integers; the scale and offset that turn them back into the texture's range are on the texture)
+    const texture = target.texture
+    texture.flipY = map.flipY
+    texture.wrapS = map.wrapS
+    texture.wrapT = map.wrapT
+    texture.offset.copy(map.offset)
+    texture.repeat.copy(map.repeat)
+    texture.center.copy(map.center)
+    texture.rotation = map.rotation
+    texture.updateMatrix()
     graded.push(target)
     return target.texture
   }
@@ -116,33 +157,41 @@ export function createPhotoRender(renderer, rasterize) {
     sun.position.copy(sunDirection).multiplyScalar(100)
     photoScene.add(sun, sun.target)
 
-    const materials = new Map()
+    // The surfaces on screen, then one material per texture and correction
+    const surfaces = []
     for (const root of roots) {
       root.updateMatrixWorld(true)
       root.traverseVisible((object) => {
         if (!object.isMesh || !object.userData.surface) return
-        const surface = object.userData.surface
         const grade = surfaceGrade(object)
-        const key = `${surface.map?.uuid ?? 'none'}-${grade.color.getHexString()}-${grade.roughness}`
-        let material = materials.get(key)
-        if (!material) {
-          material = new THREE.MeshStandardMaterial({ side: THREE.DoubleSide, metalness: 0, roughness: grade.roughness })
-          if (surface.map) material.map = gradedTexture(surface.map, grade)
-          else material.color.copy(grade.color)
-          materials.set(key, material)
-        }
-        if (!object.geometry.attributes.normal) object.geometry.computeVertexNormals()
-        const copy = new THREE.Mesh(object.geometry, material)
-        copy.matrixAutoUpdate = false
-        copy.matrix.copy(object.matrixWorld)
-        photoScene.add(copy)
+        const key = `${object.userData.surface.map?.uuid ?? 'none'}-${grade.color.getHexString()}-${grade.roughness}`
+        surfaces.push({ object, grade, key })
       })
     }
+    const textured = new Set(surfaces.filter((s) => s.object.userData.surface.map).map((s) => s.key)).size
+    const largest = Math.sqrt(TEXTURE_BUDGET / 4 / Math.max(textured, 1))
+    const size = THREE.MathUtils.clamp(2 ** Math.floor(Math.log2(largest)), TEXTURE_SIZES[0], Math.min(TEXTURE_SIZES[1], renderer.capabilities.maxTextureSize))
+    const materials = new Map()
+    for (const { object, grade, key } of surfaces) {
+      const surface = object.userData.surface
+      let material = materials.get(key)
+      if (!material) {
+        material = new THREE.MeshStandardMaterial({ side: THREE.DoubleSide, metalness: 0, roughness: grade.roughness })
+        if (surface.map) material.map = gradedTexture(surface.map, grade, size)
+        else material.color.copy(grade.color)
+        materials.set(key, material)
+      }
+      const copy = new THREE.Mesh(floatGeometry(object.geometry), material)
+      copy.matrixAutoUpdate = false
+      copy.matrix.copy(object.matrixWorld)
+      photoScene.add(copy)
+    }
+    textureSize = size
     photoScene.updateMatrixWorld(true)
 
     pathTracer = new WebGLPathTracer(renderer)
     pathTracer.setBVHWorker(new ParallelMeshBVHWorker())
-    pathTracer.textureSize.set(TEXTURE_SIZE, TEXTURE_SIZE)
+    pathTracer.textureSize.set(size, size)
     pathTracer.bounces = 5
     pathTracer.filterGlossyFactor = 0.5
     pathTracer.minSamples = 1
@@ -163,7 +212,10 @@ export function createPhotoRender(renderer, rasterize) {
     pathTracer = null
     graded.forEach((target) => target.dispose())
     graded = []
-    photoScene?.traverse((object) => object.material?.dispose())
+    photoScene?.traverse((object) => {
+      object.geometry?.dispose()
+      object.material?.dispose()
+    })
     photoScene = null
   }
 
@@ -179,7 +231,7 @@ export function createPhotoRender(renderer, rasterize) {
     },
     /** For tests (main.js exposes it in development builds): the path tracer and its scene */
     get debug() {
-      return { pathTracer, photoScene, graded }
+      return { pathTracer, photoScene, graded, textureSize }
     },
     /** The camera moved: start over */
     cameraMoved() {
