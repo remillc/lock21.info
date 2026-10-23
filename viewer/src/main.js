@@ -14,7 +14,6 @@ import './loading.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
-import { createPhotoRender } from './photo-render.js'
 import { homePath, t } from './i18n.js'
 
 // Every query parameter is read once here, then changed live by the settings panel (config-panel.js): no setting
@@ -46,7 +45,6 @@ homeLink.href = homePath
 for (const [selector, label, title] of [
   ['.settings-button', 'settings', 'settings'],
   ['.ar-button', 'ar', 'ar'],
-  ['.photo-button', 'photo', 'photoTitle'],
   ['.fullscreen', 'fullscreen', 'fullscreenTitle'],
 ]) {
   const element = document.querySelector(selector)
@@ -190,9 +188,6 @@ controls.enableDamping = true
 // Draw only when something changed (camera, tiles, size): a scene redrawn 60 times per second for nothing
 // kept the phone's GPU at 100 % and made it very hot.
 let needsRender = true
-// « Rendu photo » state (see setPhoto): declared early, the settings' handlers read it during start-up
-let photoOn = false
-let photoRefresh = 0
 const requestRender = () => { needsRender = true }
 controls.addEventListener('change', requestRender)
 
@@ -295,7 +290,6 @@ function rebuildMaterials() {
     old.dispose()
   })
   requestRender()
-  refreshPhoto()
 }
 
 // The surface's colour: white times the zone's colour balance for a texture, the material's own colour otherwise
@@ -497,7 +491,6 @@ function updateLights() {
     light.castShadow = on && look.shadows
   })
   requestRender()
-  refreshPhoto()
 }
 // Tone mapping and exposure (look.tone, look.exposure): only for the lit display; changing the method recompiles the
 // materials
@@ -525,7 +518,6 @@ function updateEnvironment() {
   scene.environmentIntensity = look.skyIntensity
   scene.background = look.skyBackground && skyTexture ? skyTexture : backdrop
   requestRender()
-  refreshPhoto()
 }
 updateEnvironment()
 new HDRLoader().load(`${import.meta.env.BASE_URL}hdri/sky.hdr`, (texture) => {
@@ -539,8 +531,6 @@ new HDRLoader().load(`${import.meta.env.BASE_URL}hdri/sky.hdr`, (texture) => {
 
 live.hdri = (v) => {
   look.sky = v === '1'
-  if (!mobile) photoButton.hidden = !look.sky
-  if (!look.sky && photoOn) setPhoto(false)
   rebuildMaterials(); updateLights(); updateTone(); updateEnvironment()
 }
 live.hdriIntensity = (v) => { look.skyIntensity = Number(v); updateEnvironment() }
@@ -905,7 +895,6 @@ setEndFacts(tileFacts)
 
 // Paused while AR runs (android-ar.js has its own renderer)
 function renderLoop() {
-  if (photoLoop()) return
   updateStats()
   // update() returns true while the camera moves (including the damping glide after a gesture)
   if (controls.update()) needsRender = true
@@ -924,84 +913,5 @@ function drawScene() {
   else renderer.render(scene, camera)
 }
 renderer.setAnimationLoop(renderLoop)
-
-// « Rendu photo » (photo-render.js): a path-traced image of the view, refined while the camera stays still.
-// Computers only, under the sky lighting. Meanwhile the tiles' level of detail is frozen (the path tracer's scene is
-// built from the surfaces on screen when the mode starts) and a move starts the image over; a change of settings
-// rebuilds the scene. The button turns it on and off; the label under it counts the samples.
-const photoButton = document.querySelector('.photo-button')
-const photoStatus = document.querySelector('.photo-status')
-const photo = createPhotoRender(renderer, drawScene)
-// Development builds only: the viewer's parts for tests in the browser console (window.l21)
-if (import.meta.env.DEV) window.l21 = { THREE, renderer, scene, camera, photo }
-let photoRun = 0
-function photoGrade(mesh) {
-  const surface = mesh.userData.surface
-  const zone = Boolean(surface.zoneId)
-  return {
-    color: surfaceColor(surface),
-    despill: zone ? despill.value : 0,
-    cyanCut: zone ? cyanCut.value : 0,
-    saturation: look.saturation,
-    contrast: look.contrast,
-    roughness: zone && look.wet > 0 ? 0.9 - 0.5 * look.wet : 1,
-  }
-}
-async function setPhoto(on) {
-  photoOn = on && look.sky
-  photoButton.setAttribute('aria-pressed', String(photoOn))
-  settings.reflect('photo', photoOn ? '1' : '0')
-  const run = ++photoRun
-  photo.stop()
-  if (!photoOn) {
-    photoStatus.hidden = true
-    requestRender()
-    return
-  }
-  photoStatus.hidden = false
-  photoStatus.textContent = t('photoPreparing')
-  try {
-    const built = await photo.start({
-      scene,
-      environment: skyTexture,
-      roots: [...tilesets.map((tiles) => tiles.group), ...contextModels],
-      camera,
-      sunDirection: csm.lightDirection.clone().negate(),
-      sunIntensity: csm.lights[0].visible ? look.sunIntensity : 0,
-      surfaceGrade: photoGrade,
-      onProgress: (fraction) => {
-        if (run === photoRun) photoStatus.textContent = t('photoPreparingPercent', { n: Math.round(fraction * 100) })
-      },
-    })
-    if (!built || run !== photoRun) return
-    log('photo', { zones: tilesets.length })
-  } catch (error) {
-    showError(error)
-    setPhoto(false)
-  }
-}
-// A change of settings while the mode is on: the scene is rebuilt (after the last change of a slider's drag)
-function refreshPhoto() {
-  if (!photoOn) return
-  clearTimeout(photoRefresh)
-  photoRefresh = setTimeout(() => setPhoto(true), 400)
-}
-if (!mobile) {
-  photoButton.hidden = !look.sky
-  photoButton.addEventListener('click', () => setPhoto(!photoOn))
-}
-live.photo = (v) => setPhoto(v === '1')
-function photoLoop() {
-  if (!photoOn) return false
-  updateStats()
-  if (controls.update()) photo.cameraMoved()
-  if (!photo.ready) {
-    drawScene()
-    return true
-  }
-  photo.render()
-  photoStatus.textContent = t('photoSamples', { n: Math.floor(photo.samples) })
-  return true
-}
 
 loadModel().catch(showError)

@@ -2,7 +2,7 @@
 // The language: embedded in a page of the site (/modele or /en/modele, same origin), that page's <html lang>; otherwise
 // ?lang=fr|en in the address (read before main.js tidies the address); otherwise the browser's language.
 //
-// Usage: t('reset'), t('photoSamples', { n: 3 }). A text is a string, or a function of the params (plurals, numbers).
+// Usage: t('reset'), t('percent', { n: 42 }). A text is a string, or a function of the params (plurals, numbers).
 
 /** @typedef {'fr' | 'en'} Lang */
 
@@ -43,8 +43,6 @@ const TEXTS = {
     settings: 'Réglages',
     ar: 'Voir en réalité augmentée',
     arFull: 'Voir en réalité augmentée (taille réelle)',
-    photo: 'Rendu photo',
-    photoTitle: 'Rendu photo: image calculée par lancer de rayons, affinée tant que la caméra ne bouge pas',
     fullscreen: 'Plein écran',
     fullscreenTitle: 'Plein écran (Échap pour sortir)',
     fullscreenExit: 'Quitter le plein écran',
@@ -55,10 +53,6 @@ const TEXTS = {
     percent: ({ n }) => `${n} %`,
     error: ({ message }) => `Erreur: ${message}`,
 
-    // « Rendu photo » status line (main.js)
-    photoPreparing: 'Préparation…',
-    photoPreparingPercent: ({ n }) => `Préparation… ${n} %`,
-    photoSamples: ({ n }) => `Rendu photo · ${n} échantillon${n >= 2 ? 's' : ''}`,
 
     // ?compare= segmented button (main.js)
     compare: 'Comparer deux versions des tuiles (touche B)',
@@ -76,7 +70,6 @@ const TEXTS = {
     session: ({ code }) => `Session ${code}`,
     lighting: 'Éclairage',
     advanced: 'Avancé',
-    photoHint: 'lancer de rayons: image affinée tant que la caméra ne bouge pas (aussi le bouton 📷)',
     skyStrength: 'Force du ciel',
     skyStrengthHint: 'lumière diffuse, de partout',
     sunStrength: 'Force du soleil',
@@ -124,8 +117,6 @@ const TEXTS = {
     settings: 'Settings',
     ar: 'View in augmented reality',
     arFull: 'View in augmented reality (real size)',
-    photo: 'Photo render',
-    photoTitle: 'Photo render: a ray-traced image, refined while the camera stays still',
     fullscreen: 'Full screen',
     fullscreenTitle: 'Full screen (Esc to exit)',
     fullscreenExit: 'Exit full screen',
@@ -136,10 +127,6 @@ const TEXTS = {
     percent: ({ n }) => `${n}%`,
     error: ({ message }) => `Error: ${message}`,
 
-    // « Rendu photo » status line (main.js)
-    photoPreparing: 'Preparing…',
-    photoPreparingPercent: ({ n }) => `Preparing… ${n}%`,
-    photoSamples: ({ n }) => `Photo render · ${n} sample${n === 1 ? '' : 's'}`,
 
     // ?compare= segmented button (main.js)
     compare: 'Compare two versions of the tiles (B key)',
@@ -157,7 +144,6 @@ const TEXTS = {
     session: ({ code }) => `Session ${code}`,
     lighting: 'Lighting',
     advanced: 'Advanced',
-    photoHint: 'ray tracing: the image refines while the camera stays still (also the 📷 button)',
     skyStrength: 'Sky strength',
     skyStrengthHint: 'diffuse light, from all around',
     sunStrength: 'Sun strength',

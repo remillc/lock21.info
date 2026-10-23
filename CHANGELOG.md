@@ -4,15 +4,16 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- 3D viewer: its interface follows the page's language (French or English): loading, buttons, settings, photo
-  render and augmented reality texts (`viewer/src/i18n.js`).
-- 3D viewer: « Rendu photo » (path tracing, computers only): the 📷 button left of full screen, or the toggle at the
-  top of the settings; the image refines while the camera stays still (bounced light, soft shadows, per-pixel relief).
+- 3D viewer: its interface follows the page's language (French or English): loading, buttons, settings and
+  augmented reality texts (`viewer/src/i18n.js`).
+- 3D viewer: « Rendu photo » (path tracing with three-gpu-pathtracer, computers only) tried and set aside: bounced
+  light and soft shadows, but no visible gain in realism, which the source data limits (lighting already in the
+  photos, mesh noise). Kept on the branch `feature/photo-render`, not merged.
 - 3D viewer settings: « Éclairage (ciel et soleil) » is out of the panel, the lighting is always on (a link can
   still show the raw textures with `?hdri=0`, for tests); the lighting settings are always shown.
 - 3D viewer settings: scrolling in the panel no longer scrolls the page around the viewer once the list ends.
 - 3D viewer: « Contraste » slider in the settings (0.5 to 2, default 1): the lit surfaces' colours stretched around a
-  mid-grey, hue kept; also in « Rendu photo ».
+  mid-grey, hue kept.
 - Claude Code added to the software used (gear page, French and English; pipeline README).
 - 3D viewer: wet look back to 0.15 by default.
 - 3D viewer settings: « Ombres du soleil » is out of the panel; the default stays (on computers, off on phones),
