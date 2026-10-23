@@ -37,7 +37,9 @@ export function createDiverArm({ onLampPose = () => {} } = {}) {
 
   let visible = false
   let ready = false
-  const clock = new THREE.Clock(false)
+  const timer = new THREE.Timer()
+  // Just shown: the arm starts where the camera looks, no lag carried over
+  let fresh = true
   const held = new THREE.Quaternion()
   const lag = new THREE.Quaternion()
   const sway = new THREE.Euler()
@@ -69,7 +71,10 @@ export function createDiverArm({ onLampPose = () => {} } = {}) {
   return {
     /** @param {boolean} value - underwater with the light on */
     setVisible(value) {
-      if (value && !visible) clock.start()
+      if (value && !visible) {
+        timer.reset()
+        fresh = true
+      }
       visible = value
     },
     /**
@@ -78,10 +83,14 @@ export function createDiverArm({ onLampPose = () => {} } = {}) {
      */
     update(view) {
       if (!visible || !ready) return
-      const dt = Math.min(clock.getDelta(), 0.1)
-      const time = clock.elapsedTime
+      timer.update()
+      const dt = Math.min(timer.getDelta(), 0.1)
+      const time = timer.getElapsed()
       // Lag: the arm's held orientation follows the camera's, a step behind; drawn as the difference
-      if (held.angleTo(view.quaternion) > MAX_LAG || dt === 0) held.copy(view.quaternion)
+      if (fresh) {
+        held.copy(view.quaternion)
+        fresh = false
+      }
       held.slerp(view.quaternion, 1 - Math.exp(-FOLLOW * dt))
       if (held.angleTo(view.quaternion) > MAX_LAG) held.rotateTowards(view.quaternion, held.angleTo(view.quaternion) - MAX_LAG)
       lag.copy(view.quaternion).invert().multiply(held)

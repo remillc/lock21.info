@@ -199,7 +199,7 @@ const underwater = createUnderwater(scene, renderer, { mobile })
 const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.05, 2000)
 const controls = new OrbitControls(camera, renderer.domElement)
 // Development builds only: the viewer's parts for tests in the browser console (window.l21)
-if (import.meta.env.DEV) window.l21 = { THREE, renderer, scene, camera, underwater }
+if (import.meta.env.DEV) window.l21 = { THREE, renderer, scene, camera, controls, underwater }
 controls.enableDamping = true
 // The camera never goes below the height of the point it turns around: it can't look from under the floor
 controls.maxPolarAngle = Math.PI / 2 - 0.02
