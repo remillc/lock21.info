@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the dive light reveals more colour (its beam keeps the forward-scattered light: only a third
+  of the scattering dims it; the colours it lights a little more saturated).
 - 3D viewer, underwater: the water surface overhead fades out beyond the visibility like the model (from the floor
   in murky water its ripples showed as light bands).
 - 3D viewer, underwater: the dive light fades with its distance from the lamp (the water's whole attenuation per

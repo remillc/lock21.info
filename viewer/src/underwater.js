@@ -52,6 +52,10 @@ const DAYLIGHT_LEVEL = 0.5
 const LAMP_HOT_ANGLE = 8
 const LAMP_WIDE_ANGLE = 3 * LAMP_HOT_ANGLE
 const LAMP_SPILL = 1 / 3
+// The share of the water's scattering that dims the lamp's beam (forward scattering keeps the rest in it), and the
+// saturation of the colours it lights
+const LAMP_SCATTER = 0.33
+const LAMP_SATURATION = 1.3
 const LAMP_REACH = 1.5
 // The beam's brightness in the water (in-scattered light, added along the line of sight)
 const BEAM_STRENGTH = 0.25
@@ -375,8 +379,14 @@ export function createUnderwater(scene, renderer) {
           float uwLampDist = max(length(uwToLamp), 0.05);
           vec3 uwLampDir = normalize((viewMatrix * vec4(uwToLamp, 0.0)).xyz);
           float uwCone = uwLampCone(dot(-uwToLamp / uwLampDist, uUwLampDir));
-          uwColor += diffuseColor.rgb * uUwLampColor * uUwLampPower * uwCone * max(dot(normal, uwLampDir), 0.0)
-            / (3.14159 * max(uwLampDist * uwLampDist, 0.2)) * exp(-uUwAbsorb * uwLampDist);
+          // Water scatters mostly forward: along a beam most of the scattered light stays in it, so only a third of the
+          // scattering counts on the lamp's path (all of the absorption, red first). Its colours a little more
+          // saturated: under white light the eye reads colour better than under the green daylight
+          vec3 uwLampAtten = uUwSpectral + ${LAMP_SCATTER.toFixed(2)} * (uUwAbsorb - uUwSpectral);
+          vec3 uwLit = diffuseColor.rgb;
+          uwLit = max(mix(vec3(dot(uwLit, vec3(0.2126, 0.7152, 0.0722))), uwLit, ${LAMP_SATURATION.toFixed(2)}), 0.0);
+          uwColor += uwLit * uUwLampColor * uUwLampPower * uwCone * max(dot(normal, uwLampDir), 0.0)
+            / (3.14159 * max(uwLampDist * uwLampDist, 0.2)) * exp(-uwLampAtten * uwLampDist);
           // Then the haze (the same for all colours): clear up close, gone at the visibility distance (a smooth step: an
           // exponential dimmed even the nearby surfaces), into the water column's own colour in that direction (as the
           // background; one flat colour left a silhouette)
