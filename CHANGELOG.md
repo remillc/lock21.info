@@ -5,8 +5,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - 3D viewer, underwater: particles only where they can be seen: a box ahead of the camera, as deep as the visibility
-  (3 to 10 m), with a density per m³ by season; drawn counts winter 12,000, spring 17,000, summer 28,000, autumn
-  47,000 instead of up to 200,000 in a cube around the camera.
+  (3 to 10 m), with a density per m³ by season; drawn counts winter 25,000, spring 35,000, summer 56,000, autumn
+  94,000 instead of up to 200,000 in a cube around the camera.
 - 3D viewer, underwater: dramatically more particles, and faster, the murkier the water: winter 8,000 at the
   measured current, autumn 40,000 at 2 times, summer 80,000 at 3 times, spring 200,000 at 5 times (40 % on a phone).
 - 3D viewer, underwater: the particles flow around the model instead of through it (a distance field around the
