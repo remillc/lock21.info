@@ -16,8 +16,11 @@
 //   the path tracer's texture array: every texture of the scene sits in one array, at one size, chosen from a memory
 //   budget (TEXTURE_BUDGET) between 512 and 2048 px. A tile's texture is an atlas of many small pieces: at 512 px
 //   each piece was a smear of a few pixels;
-// - no relief maps as such: ours are in object space, which the path tracer doesn't read (they give the vertices'
-//   normals instead, see above);
+// - the relief maps, converted: ours are in object space, which the path tracer doesn't read; it reads tangent-space
+//   maps, turned at each point through the frame of the interpolated vertex normal and tangent. Each mesh is drawn
+//   flattened into its texture layout, and each pixel gets the relief normal expressed in that same frame
+//   (tangentMaterial): the path tracer turns it back into the relief normal, pixel by pixel, as the normal display.
+//   Without it, only the vertices had the relief: faceted, patchy stone;
 // - the same sky (environment and background, rotations and strengths) and one sun (the shadow cascades are three
 //   lights in the normal display).
 // The image goes to the screen through the path tracer's own pass, with the renderer's tone mapping and exposure, as
@@ -27,8 +30,9 @@ import { WebGLPathTracer } from 'three-gpu-pathtracer'
 import { ParallelMeshBVHWorker } from 'three-mesh-bvh/worker'
 import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js'
 
-// GPU memory for the path tracer's texture array (RGBA, 4 bytes a pixel), and the size range of its textures
-const TEXTURE_BUDGET = 512 * 2 ** 20
+// GPU memory for the path tracer's texture array (RGBA, 4 bytes a pixel; photo textures and relief maps), and the
+// size range of its textures
+const TEXTURE_BUDGET = 1024 * 2 ** 20
 const TEXTURE_SIZES = [512, 2048]
 
 // The corrections of main.js's surface materials, applied to a copy of the texture: colour balance (color), green
@@ -83,6 +87,42 @@ const copyMaterial = new THREE.ShaderMaterial({
     }`,
 })
 const copyQuad = new FullScreenQuad(copyMaterial)
+
+// A relief map in the path tracer's form: the mesh drawn in its texture layout (uv as the position); each pixel gets
+// the relief normal (object space, through the map's texture transform) in the frame the path tracer builds there:
+// interpolated normal N, tangent T, bitangent normalize(cross(N, T) * w), as in its get_surface_record_function
+const tangentMaterial = new THREE.ShaderMaterial({
+  uniforms: { reliefMap: { value: null }, reliefTransform: { value: new THREE.Matrix3() } },
+  vertexShader: /* glsl */ `
+    attribute vec4 tangent;
+    varying vec3 vNormal;
+    varying vec4 vTangent;
+    varying vec2 vUv;
+    void main() {
+      vNormal = normal;
+      vTangent = tangent;
+      vUv = uv;
+      gl_Position = vec4(uv * 2.0 - 1.0, 0.0, 1.0);
+    }`,
+  fragmentShader: /* glsl */ `
+    uniform sampler2D reliefMap;
+    uniform mat3 reliefTransform;
+    varying vec3 vNormal;
+    varying vec4 vTangent;
+    varying vec2 vUv;
+    void main() {
+      vec3 relief = normalize(texture2D(reliefMap, (reliefTransform * vec3(vUv, 1.0)).xy).xyz * 2.0 - 1.0);
+      vec3 n = normalize(vNormal);
+      vec3 t = normalize(vTangent.xyz);
+      vec3 b = normalize(cross(n, t) * vTangent.w);
+      vec3 local = clamp(inverse(mat3(t, b, n)) * relief, -1.0, 1.0);
+      gl_FragColor = vec4(local * 0.5 + 0.5, 1.0);
+    }`,
+  side: THREE.DoubleSide,
+  depthTest: false,
+  depthWrite: false,
+})
+const flatCamera = new THREE.Camera()
 const RELIEF_READ_SIZE = 1024
 
 /**
@@ -215,6 +255,32 @@ export function createPhotoRender(renderer, rasterize) {
   }
 
   /**
+   * The relief map of a mesh in the path tracer's form (see tangentMaterial), at the texture array's size
+   * @param {THREE.BufferGeometry} geometry - the float copy, with its normals and tangents
+   * @param {THREE.Texture} reliefMap - object space
+   * @param {number} size - px
+   */
+  function tangentReliefMap(geometry, reliefMap, size) {
+    const target = new THREE.WebGLRenderTarget(size, size)
+    reliefMap.updateMatrix()
+    tangentMaterial.uniforms.reliefMap.value = reliefMap
+    tangentMaterial.uniforms.reliefTransform.value.copy(reliefMap.matrix)
+    const flat = new THREE.Mesh(geometry, tangentMaterial)
+    flat.frustumCulled = false
+    const previous = renderer.getRenderTarget()
+    const clear = [renderer.getClearColor(new THREE.Color()), renderer.getClearAlpha()]
+    renderer.setRenderTarget(target)
+    // Between the atlas pieces: a flat relief (straight along the normal)
+    renderer.setClearColor(new THREE.Color(0.5, 0.5, 1), 1)
+    renderer.clear()
+    renderer.render(flat, flatCamera)
+    renderer.setRenderTarget(previous)
+    renderer.setClearColor(...clear)
+    graded.push(target)
+    return target.texture
+  }
+
+  /**
    * Builds the path tracer's scene and starts sampling.
    * @param {object} source
    * @param {THREE.Scene} source.scene - the normal scene (sky, rotations, strengths)
@@ -247,25 +313,33 @@ export function createPhotoRender(renderer, rasterize) {
       root.traverseVisible((object) => {
         if (!object.isMesh || !object.userData.surface) return
         const grade = surfaceGrade(object)
-        const key = `${object.userData.surface.map?.uuid ?? 'none'}-${grade.color.getHexString()}-${grade.roughness}`
-        surfaces.push({ object, grade, key })
+        const surface = object.userData.surface
+        const relief = Boolean(surface.zoneId && surface.normalMap && surface.map)
+        // A mesh with relief has its own material (its relief map is drawn from its own geometry)
+        const key = `${surface.map?.uuid ?? 'none'}-${grade.color.getHexString()}-${grade.roughness}${relief ? `-${object.uuid}` : ''}`
+        surfaces.push({ object, grade, key, relief })
       })
     }
-    const textured = new Set(surfaces.filter((s) => s.object.userData.surface.map).map((s) => s.key)).size
-    const largest = Math.sqrt(TEXTURE_BUDGET / 4 / Math.max(textured, 1))
+    const textures = new Set(surfaces.filter((s) => s.object.userData.surface.map).map((s) => s.key)).size +
+      surfaces.filter((s) => s.relief).length
+    const largest = Math.sqrt(TEXTURE_BUDGET / 4 / Math.max(textures, 1))
     const size = THREE.MathUtils.clamp(2 ** Math.floor(Math.log2(largest)), TEXTURE_SIZES[0], Math.min(TEXTURE_SIZES[1], renderer.capabilities.maxTextureSize))
     const materials = new Map()
-    for (const { object, grade, key } of surfaces) {
+    for (const { object, grade, key, relief } of surfaces) {
       const surface = object.userData.surface
+      const geometry = floatGeometry(object.geometry, relief ? reliefReader(surface.normalMap) : null)
       let material = materials.get(key)
       if (!material) {
         material = new THREE.MeshStandardMaterial({ side: THREE.DoubleSide, metalness: 0, roughness: grade.roughness })
         if (surface.map) material.map = gradedTexture(surface.map, grade, size)
         else material.color.copy(grade.color)
+        if (relief) {
+          geometry.computeTangents()
+          material.normalMap = tangentReliefMap(geometry, surface.normalMap, size)
+        }
         materials.set(key, material)
       }
-      const normalMap = surface.zoneId ? surface.normalMap : null
-      const copy = new THREE.Mesh(floatGeometry(object.geometry, normalMap ? reliefReader(normalMap) : null), material)
+      const copy = new THREE.Mesh(geometry, material)
       copy.matrixAutoUpdate = false
       copy.matrix.copy(object.matrixWorld)
       photoScene.add(copy)
@@ -288,6 +362,9 @@ export function createPhotoRender(renderer, rasterize) {
     await build
     if (building !== build) return false
     building = null
+    // The path tracer has its own copies of the textures (its texture array): ours can go
+    graded.forEach((target) => target.dispose())
+    graded = []
     return true
   }
 
