@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the haze that closes in when looking up only in murky water (full at 14 ft of visibility,
+  none from 30 ft): in autumn and winter the tops of the walls show again.
 - 3D viewer, underwater, winter: the particles drift 1.5 times the river's current (was 2).
 - 3D viewer: the library's « tiles versions at 1.1 or higher have limited support » warning (12 per visit) silenced;
   our tiles use none of the features it lacks.

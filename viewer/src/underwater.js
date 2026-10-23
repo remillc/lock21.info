@@ -80,6 +80,9 @@ const CREATURE_FILL = [0.6, 55, 25]
 const BEAM_NEAR = [0.5, 2.5]
 // Looking straight up, the visibility's share left (the water toward the light from above hides what stands there)
 const UP_HAZE = 0.4
+// ... in murky water only: full at and below the first visibility (m, 14 ft), none from the second (30 ft)
+const UP_HAZE_MURKY = 14 * 0.3048
+const UP_HAZE_CLEAR = 30 * 0.3048
 
 // Per season: visibility (ft); the water's own absorption per metre and per channel (red, green, blue: red first; in
 // spring's runoff, blue too); the colour of the light the water scatters toward the eye (linear), and the water
@@ -473,7 +476,10 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
           // visibility straight up, so what stands above (the banks' walls) fades into the glow rather than showing as
           // a silhouette (Christian, 2026-10-23)
           vec3 uwDir = normalize(vUwWorld - cameraPosition);
-          float uwUp = mix(1.0, ${UP_HAZE.toFixed(2)}, smoothstep(0.0, 0.8, uwDir.y));
+          // Only in murky water: full at UP_HAZE_MURKY m of visibility and below, none from UP_HAZE_CLEAR m (the tops of
+          // the walls show in clear water: Christian, 2026-10-23)
+          float uwMurk = 1.0 - smoothstep(${UP_HAZE_MURKY.toFixed(2)}, ${UP_HAZE_CLEAR.toFixed(2)}, uUwGone);
+          float uwUp = mix(1.0, ${UP_HAZE.toFixed(2)}, smoothstep(0.0, 0.8, uwDir.y) * uwMurk);
           float uwTransmit = 1.0 - smoothstep(uUwClear * uwUp, uUwGone * uwUp, vUwDepth);
           vec3 uwBack = uwDir.y > 0.0 ? mix(uUwWater, uUwTop, smoothstep(0.35, 1.0, uwDir.y)) : mix(uUwWater, uUwDeep, smoothstep(0.35, 1.0, -uwDir.y));
           gl_FragColor.rgb = uwColor * uwTransmit + uwBack * (1.0 - uwTransmit);
