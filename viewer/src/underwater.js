@@ -55,8 +55,8 @@ const LAMP_INTENSITY = 200
 const DAYLIGHT_SHIFT = 0.5
 // The daylight's strength underwater, against above water: dimmer at depth, so that the dive light dominates in its
 // spot and brings the reds back (at full strength the green daylight swamped it)
-// 0.25: more absorbed at depth (Christian, 2026-10-23; was 0.5)
-const DAYLIGHT_LEVEL = 0.25
+// 0.35: more absorbed at depth than the first 0.5 (Christian, 2026-10-23; 0.25 was too dark)
+const DAYLIGHT_LEVEL = 0.35
 // The beam's two parts, as a real dive light: a narrow, strong hotspot and a spill around it, 3 times wider and 3 times
 // weaker (Christian, 2026-10-23); half-angles, and the spill's strength against the hotspot's
 const LAMP_HOT_ANGLE = 8
