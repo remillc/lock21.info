@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the dive light fades with its distance from the lamp (the water's whole attenuation per
+  colour, scattering included): on surfaces, in its glow in the water and on the particles it lights.
 - 3D viewer, underwater: no more noise toward the water surface (its ripples and caustics fade out where finer than
   a pixel) and no banding in the water's gradients (dithered).
 - 3D viewer, underwater: the dive light has a hotspot (8°) and a spill 3 times wider and weaker; it brings the reds

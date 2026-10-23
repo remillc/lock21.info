@@ -92,12 +92,14 @@ const BEAM_GLSL = /* glsl */ `
     return smoothstep(uUwLampHot, mix(uUwLampHot, 1.0, 0.5), c) + ${LAMP_SPILL.toFixed(2)} * smoothstep(uUwLampWide, mix(uUwLampWide, 1.0, 0.3), c);
   }
   uniform float uUwLampReach;
-  float uwBeam(vec3 a, vec3 b, float absorb) {
-    if (uUwLampStrength <= 0.0) return 0.0;
+  // absorb: the water's attenuation per metre and per colour (scattering and absorption): the light dims and loses its
+  // red from the lamp to each point of the beam, then from there to the eye
+  vec3 uwBeam(vec3 a, vec3 b, vec3 absorb) {
+    if (uUwLampStrength <= 0.0) return vec3(0.0);
     vec3 ray = b - a;
     float span = min(length(ray), uUwLampReach);
     vec3 dir = normalize(ray);
-    float sum = 0.0;
+    vec3 sum = vec3(0.0);
     for (int i = 0; i < ${BEAM_SAMPLES}; i++) {
       float t = (float(i) + 0.5) / ${BEAM_SAMPLES}.0 * span;
       vec3 toSample = a + dir * t - uUwLampPos;
@@ -190,7 +192,7 @@ export function createUnderwater(scene, renderer) {
         float s = max(dot(vDir, uSun), 0.0);
         c += vec3(1.0, 0.97, 0.85) * (2.5 * pow(s, 400.0) + 0.45 * pow(s, 12.0)) * uGlare;
         // The beam over open water
-        c += vec3(1.0, 0.94, 0.87) * uwBeam(cameraPosition, cameraPosition + vDir * uUwLampReach, uAbsorb.g) * uGlare;
+        c += vec3(1.0, 0.94, 0.87) * uwBeam(cameraPosition, cameraPosition + vDir * uUwLampReach, uAbsorb) * uGlare;
         gl_FragColor = vec4(c, 1.0);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
@@ -285,6 +287,7 @@ export function createUnderwater(scene, renderer) {
         uniform float uBox;
         uniform float uPixelRatio;
         uniform vec3 uCurrent;
+        uniform vec3 uAbsorb;
         uniform vec3 uUwLampPos;
         uniform vec3 uUwLampDir;
         uniform float uUwLampHot;
@@ -308,7 +311,7 @@ export function createUnderwater(scene, renderer) {
           vec3 toParticle = p - uUwLampPos;
           float d = max(length(toParticle), 0.3);
           float cone = uwLampCone(dot(toParticle / d, uUwLampDir));
-          vLit = uUwLampStrength > 0.0 ? cone * 2.0 / (d * d) : 0.0;
+          vLit = uUwLampStrength > 0.0 ? cone * 2.0 / (d * d) * exp(-uAbsorb.g * d) : 0.0;
           // A quarter of the first size (Christian, 2026-10-23: smaller, twice)
           gl_PointSize = (0.003 + 0.005 * seed.w) * 900.0 * uPixelRatio / max(vDistance, 0.1);
           gl_Position = projectionMatrix * mv;
@@ -362,14 +365,15 @@ export function createUnderwater(scene, renderer) {
           vec3 uwDown = exp(-(uUwSpectral - uUwSpectral.g) * uwDepth * ${DAYLIGHT_SHIFT.toFixed(2)});
           // Back to the eye, the daylight's colours absorbed by distance
           vec3 uwColor = gl_FragColor.rgb * uwDown * ${DAYLIGHT_LEVEL.toFixed(2)} * (1.0 + 1.5 * uwCaustic) * exp(-uUwSpectral * vUwDepth);
-          // The dive light: absorbed from the lamp to here only (the lamp is at the eye: the way back is about the same,
-          // counted once), so its reds come back up close (Lambert, warm white)
+          // The dive light: dimmed and its red absorbed from the lamp to here by the whole water attenuation (the lamp
+          // is at the eye: the way back is about the same, counted once), so its reds come back up close and it fades
+          // with distance (Lambert, warm white)
           vec3 uwToLamp = uUwLampPos - vUwWorld;
           float uwLampDist = max(length(uwToLamp), 0.05);
           vec3 uwLampDir = normalize((viewMatrix * vec4(uwToLamp, 0.0)).xyz);
           float uwCone = uwLampCone(dot(-uwToLamp / uwLampDist, uUwLampDir));
           uwColor += diffuseColor.rgb * uUwLampColor * uUwLampPower * uwCone * max(dot(normal, uwLampDir), 0.0)
-            / (3.14159 * max(uwLampDist * uwLampDist, 0.2)) * exp(-uUwSpectral * uwLampDist);
+            / (3.14159 * max(uwLampDist * uwLampDist, 0.2)) * exp(-uUwAbsorb * uwLampDist);
           // Then the haze (the same for all colours): clear up close, gone at the visibility distance (a smooth step: an
           // exponential dimmed even the nearby surfaces), into the water column's own colour in that direction (as the
           // background; one flat colour left a silhouette)
@@ -377,7 +381,7 @@ export function createUnderwater(scene, renderer) {
           vec3 uwDir = normalize(vUwWorld - cameraPosition);
           vec3 uwBack = uwDir.y > 0.0 ? mix(uUwWater, uUwTop, pow(uwDir.y, 0.8)) : mix(uUwWater, uUwDeep, pow(-uwDir.y, 0.6));
           gl_FragColor.rgb = uwColor * uwTransmit + uwBack * (1.0 - uwTransmit);
-          gl_FragColor.rgb += vec3(1.0, 0.94, 0.87) * uwBeam(cameraPosition, vUwWorld, uUwAbsorb.g);
+          gl_FragColor.rgb += vec3(1.0, 0.94, 0.87) * uwBeam(cameraPosition, vUwWorld, uUwAbsorb);
         }
         #include <tonemapping_fragment>`)
   }
