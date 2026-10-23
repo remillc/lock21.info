@@ -658,7 +658,11 @@ function showSwimHelp() {
 function openSwimHelp() {
   const letter = (code) => swimKeys.querySelector(`[data-code="${code}"]`)?.textContent ?? code.slice(3)
   swimHelp.querySelector('h2').textContent = t('swimHelpTitle')
-  swimHelp.querySelector('.swim-help-text').innerHTML = t('swimHelpText', { w: letter('KeyW'), a: letter('KeyA'), s: letter('KeyS'), d: letter('KeyD') })
+  swimHelp.querySelector('.swim-help-text').innerHTML = t('swimHelpText', {
+    w: letter('KeyW'), a: letter('KeyA'), s: letter('KeyS'), d: letter('KeyD'),
+    // The underwater button's own icon, in a small round like the button
+    icon: `<span class="swim-help-icon">${underwaterButton.querySelector('svg').outerHTML}</span>`,
+  })
   swimHelp.querySelector('.swim-help-ok').textContent = t('swimHelpOk')
   swimHelp.showModal()
 }

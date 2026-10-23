@@ -853,3 +853,18 @@ l21-tooltip[data-shown='true'] {
 .swim-help-ok:active {
   background: rgb(184 201 122 / 10%);
 }
+/* The underwater button's icon in the help's text: a small filled round, as the button while on */
+.swim-help-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #b8c97a;
+  color: #12140e;
+  vertical-align: middle;
+}
+.swim-help-icon svg {
+  width: 16px;
+  height: 16px;
+}
