@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the dive light 15 % dimmer, on the surfaces and its beam in the water.
 - 3D viewer, underwater: until a season is chosen, the season is today's (December to February winter, March to May
   spring, June to August summer, September to November autumn); it was summer.
 - 3D viewer: a new start view (`START_VIEW`, chosen by Christian), about a metre from the point it looks at.
