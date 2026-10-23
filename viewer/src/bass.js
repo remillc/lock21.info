@@ -109,22 +109,25 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   let phase = 0
 
   /** Its path for this view: from just outside one side to a sixth of the view's width inside, or null */
-  /** Its path for this view: from just outside one side to a sixth of the view's width inside, at the first distance
-   *  (DISTANCE, then closer) and side that work; false when none does */
+  /** Its path for this view: from just outside one side to a sixth of the view's width inside, at the first height,
+   *  distance (DISTANCE, then closer) and side that work; false when none does */
   function plan(camera) {
     const first = Math.random() < 0.5 ? -1 : 1
-    for (const share of [1, 0.7, 0.5]) {
-      for (const side of [first, -first]) if (tryPath(camera, Math.min(DISTANCE, visibility() * VISIBILITY_SHARE) * share, side)) return true
+    // Heights: a little below the eye, at it, then above (the camera close to the floor: Christian, 2026-10-23)
+    for (const rise of [-0.15, 0, 0.2, 0.45]) {
+      for (const share of [1, 0.7, 0.5]) {
+        for (const side of [first, -first]) if (tryPath(camera, Math.min(DISTANCE, visibility() * VISIBILITY_SHARE) * share, side, rise)) return true
+      }
     }
     return false
   }
 
-  function tryPath(camera, distance, side) {
+  function tryPath(camera, distance, side, rise) {
     camera.getWorldDirection(ahead).setY(0).normalize()
     right.set(-ahead.z, 0, ahead.x)
     const half = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * distance * camera.aspect
     const centre = camera.position.clone().addScaledVector(ahead, distance)
-    centre.y -= 0.15
+    centre.y += rise
     from.copy(centre).addScaledVector(right, side * (half + LENGTH))
     to.copy(centre).addScaledVector(right, side * (half - (2 * half) / 6))
     exit.copy(from).addScaledVector(right, side * 3)

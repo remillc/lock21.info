@@ -5,7 +5,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - 3D viewer, underwater, the bass: its path must be seen from the camera (a spot far from every surface could be inside
-  the masonry: it came, but hidden), and it tries both sides and closer distances (1.4, 1, 0.7 m) before giving up.
+  the masonry: it came, but hidden), and it tries both sides, closer distances (1.4, 1, 0.7 m) and higher paths (from
+  just below eye level to 45 cm above: a camera near the floor) before giving up.
 - 3D viewer: the mockups of the zones not yet online opaque, with the south wall's texture (projected in world space)
   tinted purple.
 - 3D viewer: a reload keeps the camera where it was, even right after a move (kept in the tab's session storage at
