@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#58**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#59**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -69,6 +69,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   palette and fonts, check contrast (WCAG AA) in both themes
 - [ ] #57 Show the site's version (package.json, e.g. 0.10.0) on the About page, perhaps with its date and a link to
   the release notes; Christian finds it a little odd on a field-notes site: maybe discreet, at the bottom
+- [ ] #58 About page: links to Christian's other works, https://lock23.ca, https://thousandislandsshipwrecks.ca and
+  https://opencaves.org (checked 2026-10-23: all answer; www.opencaves.org does not, use the bare domain). And move
+  the page from /about to /a-propos (French slug; English /en/about, its redirects from the old address)
 - [ ] #48 Idea: a guided tour in the viewer (a sequence of views with a short text each). Stops noted so far:
   - zone 16, the spillway gate door on the floor: `?cam=-18.54,1.28,8.53,-17.08,-0.65,10.34`
   - looking down the stone passage through the wall, its pipes on the floor, the opening at the end (Christian's
