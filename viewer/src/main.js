@@ -12,7 +12,7 @@ import { TilesRenderer } from '3d-tiles-renderer'
 import { savedSettings, settingsSchema } from './config-panel.js'
 import './loading.js'
 import './tooltip.js'
-import { createUnderwater, refractedSun, SURFACE_Y } from './underwater.js'
+import { createUnderwater, SURFACE_Y } from './underwater.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
@@ -497,16 +497,14 @@ function updateLights() {
   const skyTurn = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), turn)
   scene.environmentRotation.setFromQuaternion(skyTilt.multiply(skyTurn))
   const direction = sunDirection(...look.light)
-  // Underwater: the sun bent toward the vertical by the surface, and dimmer (absorbed on its way down); the lighting
-  // environment is the water column, not turned with the sky photo
+  // Underwater the lighting stays as above water (the textures seen as they are up close, underwater.js); the sun's
+  // direction is only used for the caustics and its glare in the water
   underwater.setSun(direction)
-  if (underwater.on) scene.environmentRotation.set(0, 0, 0)
   // CSM's light direction points from the sun to the scene
-  csm.lightDirection.copy(underwater.on ? refractedSun(direction) : direction).negate()
+  csm.lightDirection.copy(direction).negate()
   const on = look.sky && look.sunIntensity > 0
   csm.lights.forEach((light, i) => {
-    light.intensity = Math.PI * look.sunIntensity * (underwater.on ? UNDERWATER_SUN : 1)
-    light.color.set(underwater.on ? underwater.sunColor : 0xffffff)
+    light.intensity = Math.PI * look.sunIntensity
     light.visible = on && (look.shadows || i === 0)
     light.castShadow = on && look.shadows
   })
@@ -534,18 +532,14 @@ updateLights()
 let skyTexture = null
 let skyEnvironment = null
 function updateEnvironment() {
-  scene.environment = underwater.on ? underwater.environment : look.sky ? skyEnvironment : null
-  scene.environmentIntensity = underwater.on ? UNDERWATER_WATER_LIGHT : look.skyIntensity
+  scene.environment = look.sky ? skyEnvironment : null
+  scene.environmentIntensity = look.skyIntensity
   // Underwater, the water column (a sphere around the camera) is the background
   scene.background = underwater.on ? null : look.skyBackground && skyTexture ? skyTexture : backdrop
   requestRender()
 }
 updateEnvironment()
 
-// « Ambiance sous-marine »: the sun's strength once at the floor (absorbed by 17 m of water; the eye adapts, so not
-// the true fraction), and the strength of the water column's light (the lighting environment)
-const UNDERWATER_SUN = 0.45
-const UNDERWATER_WATER_LIGHT = 1.2
 const underwaterButton = document.querySelector('.underwater-button')
 underwaterButton.hidden = false
 underwaterButton.addEventListener('click', () => setUnderwater(!underwater.on))
@@ -1032,7 +1026,9 @@ function renderLoop() {
 function drawScene() {
   // The shadow cascades follow the camera
   csm.update()
-  if (ao.on && composer) composer.render()
+  // No ambient occlusion underwater: it darkened the creases of surfaces the water had erased, which redrew the lock
+  // far beyond the visibility
+  if (ao.on && composer && !underwater.on) composer.render()
   else renderer.render(scene, camera)
 }
 renderer.setAnimationLoop(renderLoop)

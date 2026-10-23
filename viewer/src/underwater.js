@@ -1,9 +1,9 @@
 // « Ambiance sous-marine » (TODO #46): the lock as a diver sees it, turned on by the 🤿 button (main.js). Ported from
 // the first attempt on the old viewer (branch feature/underwater-look, 2026-10-18), on top of today's lit materials:
-//  - light absorbed along the line of sight, per channel (Beer-Lambert: red fades first), toward the water's colour;
-//    applied before the tone mapping, so the same with and without the ambient occlusion pass (main.js, patchShader);
-//  - the background: the water column around the camera, lighter toward the surface, with the refracted sun; it also
-//    lights the scene (its own lighting environment, made by PMREM), instead of the sky;
+//  - applied before the tone mapping, so the same with and without the ambient occlusion pass (main.js, patchShader);
+//  - the background: the water column around the camera, lighter toward the surface, with the refracted sun; the
+//    surfaces fade into its colour: seen as they are up close, gone at the season's visibility (the usual sky and sun
+//    lighting stays: the water only hides the distance);
 //  - the sun bent toward the vertical by the surface (Snell), from the « Soleil » setting; caustics (the moving light
 //    network of the waves) on surfaces facing it, fading with depth;
 //  - the water surface seen from below; suspended particles carried west to east by the current;
@@ -29,6 +29,9 @@ const PARTICLE_COUNT = 40000
 const PARTICLE_BOX = 14
 // The scattered light's strength against the lit surfaces (brighter washed every surface to the water's colour)
 const WATER_BRIGHTNESS = 0.6
+// The surfaces are seen as they are up to this share of the visibility (Christian, 2026-10-23: textures seen up close,
+// nothing far away); the usual lighting (sky and sun) stays, the water only hides the distance
+const CLEAR_SHARE = 0.15
 // The dive light: on the camera's axis (its spot in the middle of the view, Christian 2026-10-23), pointing ahead; candela (about 10 times the sun at the
 // floor 2 m away: at 12 the light vanished in the haze), beam half-angle and soft edge, reach in visibilities
 const LAMP_OFFSET = [0, 0, 0]
@@ -107,6 +110,10 @@ export function createUnderwater(scene, renderer) {
   const uniforms = {
     uUwOn: { value: 0 },
     uUwAbsorb: { value: new THREE.Vector3() },
+    uUwClear: { value: 1 },
+    uUwTop: { value: new THREE.Vector3() },
+    uUwDeep: { value: new THREE.Vector3() },
+    uUwGone: { value: 6 },
     uUwWater: { value: new THREE.Vector3() },
     uUwTime: { value: 0 },
     uUwSun: { value: new THREE.Vector3(0, 1, 0) },
@@ -119,10 +126,7 @@ export function createUnderwater(scene, renderer) {
   }
   let on = false
   let season = SEASONS[2]
-  /** @type {THREE.Texture | null} */
-  let environment = null
   const clock = new THREE.Clock(false)
-  const sunColor = new THREE.Color(1, 1, 1)
 
   // Water column: a sphere around the camera, lighter toward the surface, with the refracted sun
   const columnMaterial = new THREE.ShaderMaterial({
@@ -135,9 +139,9 @@ export function createUnderwater(scene, renderer) {
       uUwLampStrength: uniforms.uUwLampStrength,
       uUwLampReach: uniforms.uUwLampReach,
       uAbsorb: uniforms.uUwAbsorb,
-      uSurface: { value: new THREE.Vector3() },
+      uSurface: uniforms.uUwTop,
       uWater: uniforms.uUwWater,
-      uDeep: { value: new THREE.Vector3() },
+      uDeep: uniforms.uUwDeep,
       uSun: uniforms.uUwSun,
       uGlare: { value: 1 },
     },
@@ -161,7 +165,7 @@ export function createUnderwater(scene, renderer) {
         vec3 c = y > 0.0 ? mix(uWater, uSurface, pow(y, 0.8)) : mix(uWater, uDeep, pow(-y, 0.6));
         float s = max(dot(vDir, uSun), 0.0);
         c += vec3(1.0, 0.97, 0.85) * (2.5 * pow(s, 400.0) + 0.45 * pow(s, 12.0)) * uGlare;
-        // The beam over open water (not in the lighting environment: uGlare 0 there)
+        // The beam over open water
         c += vec3(1.0, 0.94, 0.87) * uwBeam(cameraPosition, cameraPosition + vDir * uUwLampReach, uAbsorb.g) * uGlare;
         gl_FragColor = vec4(c, 1.0);
         #include <tonemapping_fragment>
@@ -173,23 +177,6 @@ export function createUnderwater(scene, renderer) {
   column.frustumCulled = false
   column.visible = false
   scene.add(column)
-
-  // The lighting environment: the same column, without the sun's glare (the sun light brings it), through PMREM
-  const pmrem = new THREE.PMREMGenerator(renderer)
-  function makeEnvironment() {
-    environment?.dispose()
-    const columnScene = new THREE.Scene()
-    const copy = new THREE.Mesh(column.geometry, columnMaterial.clone())
-    copy.material.uniforms.uGlare.value = 0
-    copy.material.uniforms.uSurface.value.copy(columnMaterial.uniforms.uSurface.value)
-    copy.material.uniforms.uDeep.value.copy(columnMaterial.uniforms.uDeep.value)
-    copy.material.uniforms.uWater = { value: uniforms.uUwWater.value.clone() }
-    copy.material.uniforms.uSun = { value: uniforms.uUwSun.value.clone() }
-    copy.material.toneMapped = false
-    columnScene.add(copy)
-    environment = pmrem.fromScene(columnScene, 0, 0.1, 2000).texture
-    copy.material.dispose()
-  }
 
   // Water surface seen from below: bright, shimmering, with the sun's glare, fading with distance
   const surface = new THREE.Mesh(
@@ -304,7 +291,7 @@ export function createUnderwater(scene, renderer) {
       '#include <project_vertex>\nvUwWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;\nvUwDepth = -mvPosition.z;',
     )
     shader.fragmentShader =
-      'uniform float uUwOn;\nuniform vec3 uUwAbsorb;\nuniform vec3 uUwWater;\nuniform float uUwTime;\nuniform vec3 uUwSun;\n' +
+      'uniform vec3 uUwTop;\nuniform vec3 uUwDeep;\nuniform float uUwOn;\nuniform float uUwClear;\nuniform float uUwGone;\nuniform vec3 uUwAbsorb;\nuniform vec3 uUwWater;\nuniform float uUwTime;\nuniform vec3 uUwSun;\n' +
       'uniform float uUwSurface;\nvarying vec3 vUwWorld;\nvarying float vUwDepth;\n' + CAUSTIC_GLSL + BEAM_GLSL + '\n' +
       shader.fragmentShader.replace('#include <tonemapping_fragment>', /* glsl */ `
         if (uUwOn > 0.5) {
@@ -315,8 +302,14 @@ export function createUnderwater(scene, renderer) {
           // Projected along the sun's ray to the surface: the pattern belongs to the waves above
           vec2 uwCaustUv = (vUwWorld.xz + uwDepth * uUwSun.xz / max(uUwSun.y, 0.2)) * 0.8;
           float uwCaustic = uwCaustic(uwCaustUv, uUwTime * 0.8) * smoothstep(0.2, 0.9, uwFacing) * exp(-0.07 * uwDepth);
-          vec3 uwTransmit = exp(-uUwAbsorb * vUwDepth);
-          gl_FragColor.rgb = gl_FragColor.rgb * (1.0 + 1.5 * uwCaustic) * uwTransmit + uUwWater * (1.0 - uwTransmit);
+          // Clear up close, gone into the water at the visibility distance (a smooth step, not an exponential: that
+          // dimmed and tinted even the nearby surfaces)
+          float uwTransmit = 1.0 - smoothstep(uUwClear, uUwGone, vUwDepth);
+          // Faded toward the water column's own colour in that direction (as the background): at the visibility the
+          // surface melts into it (one flat water colour left the lock as a silhouette)
+          vec3 uwDir = normalize(vUwWorld - cameraPosition);
+          vec3 uwBack = uwDir.y > 0.0 ? mix(uUwWater, uUwTop, pow(uwDir.y, 0.8)) : mix(uUwWater, uUwDeep, pow(-uwDir.y, 0.6));
+          gl_FragColor.rgb = gl_FragColor.rgb * (1.0 + 1.5 * uwCaustic) * uwTransmit + uwBack * (1.0 - uwTransmit);
           gl_FragColor.rgb += vec3(1.0, 0.94, 0.87) * uwBeam(cameraPosition, vUwWorld, uUwAbsorb.g);
         }
         #include <tonemapping_fragment>`)
@@ -336,30 +329,17 @@ export function createUnderwater(scene, renderer) {
     const total = 2.5 / (season.visibilityFt * 0.3048)
     const scatter = Math.max(total - season.absorb[1], 0)
     uniforms.uUwAbsorb.value.set(...season.absorb.map((a) => scatter + a))
-    // The sunlight at the floor has crossed the whole water column: its colour after absorption (the brightest
-    // channel at 1; UNDERWATER_SUN in main.js sets the strength, the eye adapts)
-    const down = season.absorb.map((a) => Math.exp(-a * SURFACE_Y))
-    sunColor.setRGB(...down.map((c) => c / Math.max(...down)))
     uniforms.uUwWater.value.set(...season.water.map((c) => c * WATER_BRIGHTNESS))
     columnMaterial.uniforms.uSurface.value.set(...season.surface)
     columnMaterial.uniforms.uDeep.value.set(...season.deep)
     lamp.distance = LAMP_REACH * season.visibilityFt * 0.3048
     uniforms.uUwLampReach.value = lamp.distance
-    makeEnvironment()
   }
 
   return {
     patchShader,
     get on() {
       return on
-    },
-    /** The sunlight's colour at the floor (after the water column's absorption) */
-    get sunColor() {
-      return sunColor
-    },
-    /** The lighting environment while on (the water column) */
-    get environment() {
-      return environment
     },
     /** @param {boolean} value */
     setOn(value) {
@@ -368,7 +348,6 @@ export function createUnderwater(scene, renderer) {
       column.visible = surface.visible = particles.visible = on
       lamp.visible = on && lampWanted
       uniforms.uUwLampStrength.value = lamp.visible ? BEAM_STRENGTH : 0
-      if (on && !environment) applySeason()
       if (on) clock.start()
       else clock.stop()
     },
@@ -386,7 +365,6 @@ export function createUnderwater(scene, renderer) {
     /** @param {THREE.Vector3} direction - toward the sun in the air: refracted for the caustics and the glare */
     setSun(direction) {
       uniforms.uUwSun.value.copy(refractedSun(direction))
-      if (environment) makeEnvironment()
     },
     /** Each frame while on: the animation, the column and the particles follow the camera */
     update(camera) {

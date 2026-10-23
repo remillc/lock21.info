@@ -5,12 +5,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - 3D viewer: « Ambiance sous-marine » (TODO #46, from the first attempt #31): the 🤿 button beside full screen, or the
-  settings' « Sous l'eau » section. Light absorbed along the line of sight (red first) toward the water's colour, the
-  water column as background and lighting, the sun refracted at the surface, caustics, the surface seen from below,
-  many small particles drifting with the current (shown 3 times faster than measured). Visibility as scattering (haze
-  toward the water's colour, colours kept) plus a small absorption per colour (red first), so the sunlight reaching
-  the floor is green and a dive light brings the colours back: the lamp at the camera, a 15° beam centred in the view,
-  its glow in the water computed along the line of sight (it only adds light). Beside the 🤿 button, a strip that
+  settings' « Sous l'eau » section. The water column as background, the sun refracted at the surface, caustics, the surface seen from below,
+  many small particles drifting with the current (shown 3 times faster than measured). The usual lighting stays:
+  the surfaces are seen as they are up close, then fade into the water column's own colour and are gone at the
+  season's visibility (no ambient occlusion meanwhile: it redrew the erased lock). A dive light at the camera, a 15°
+  beam centred in the view, its glow in the water computed along the line of sight (it only adds light). Beside the 🤿 button, a strip that
   unrolls out of it (MD3 motion): the « Saison » slider (winter 100 ft, spring 10, summer 20 by default, autumn 30;
   visibility and water colour) and the dive light's button; both also in the settings (`viewer/src/underwater.js`).
 - 3D viewer: MD3 tooltips on its buttons (`<l21-tooltip>`, `viewer/src/tooltip.js`) instead of the browser's own,
