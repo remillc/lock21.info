@@ -14,6 +14,9 @@ const POSTURE_SPEED = 3
 // It turns to face the diver again once they are more than REFACE (rad, about 20°) off its heading, after REACTION s
 const REFACE = 0.35
 const REACTION = 2
+// Claw gestures in attack mode: their length (s), and the wait between two of a claw's gestures (s, at random)
+const GESTURE = 1
+const GESTURE_WAIT = [1.5, 4]
 // Wandering: how far from its place (m), its walking speed (m/s), the wait between walks (s, at random in between)
 const WANDER = 0.6
 const WALK_SPEED = 0.05
@@ -137,7 +140,7 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
     wrist.add(forearm, hand)
     shoulder.add(arm, wrist)
     front.add(shoulder)
-    claws.push({ side, shoulder, wrist, hand, moving })
+    claws.push({ side, shoulder, wrist, hand, moving, gesture: -1, wait: 1 + Math.random() * 2 })
   }
 
   root.traverse((object) => {
@@ -262,12 +265,29 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
         antenna.rotation.y = side * (0.15 * Math.sin(time * 1.3 + phase) + 0.35 * p)
         antenna.rotation.x = -0.1 * Math.sin(time * 0.9 + phase) - 0.3 * p
       }
-      // Snapping now and then when fully threatened
-      const snap = p > 0.85 ? Math.max(0, Math.sin(time * 3.1)) ** 8 : 0
-      for (const { side, shoulder, wrist, hand, moving } of claws) {
-        shoulder.rotation.y = side * (0.25 + 0.55 * p)
-        shoulder.rotation.x = 0.15 - 0.9 * p
-        wrist.rotation.y = -side * (0.6 - 0.2 * p)
+      // In attack mode, each claw now and then (every GESTURE_WAIT s, at random) makes a short gesture: the pincer
+      // snaps open and shut a few times while the arm jabs and sways
+      for (const claw of claws) {
+        const { side, shoulder, wrist, hand, moving } = claw
+        let e = 0
+        let snap = 0
+        if (p > 0.6) {
+          if (claw.gesture >= 0) {
+            claw.gesture += dt
+            if (claw.gesture > GESTURE) {
+              claw.gesture = -1
+              claw.wait = GESTURE_WAIT[0] + Math.random() * (GESTURE_WAIT[1] - GESTURE_WAIT[0])
+            }
+          } else if ((claw.wait -= dt) <= 0) claw.gesture = 0
+          if (claw.gesture >= 0) {
+            const g = claw.gesture
+            e = Math.sin((Math.PI * g) / GESTURE)
+            snap = e * (0.5 + 0.5 * Math.sin(g * 16))
+          }
+        }
+        shoulder.rotation.y = side * (0.25 + 0.55 * p + 0.15 * e * Math.cos(claw.gesture * 6))
+        shoulder.rotation.x = 0.15 - 0.9 * p - 0.25 * e * Math.sin(claw.gesture * 8)
+        wrist.rotation.y = -side * (0.6 - 0.2 * p + 0.2 * e)
         wrist.rotation.x = -0.2 * p
         hand.rotation.z = side * 0.3 * p
         moving.rotation.y = -side * (0.05 + 0.55 * p) * (1 - snap)
