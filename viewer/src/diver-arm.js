@@ -15,9 +15,9 @@ const FOLLOW = 9
 const MAX_LAG = 0.12
 // The sway (Christian, 2026-10-23: the beam follows the arm): the arm turns a little about the shoulder (camera's
 // frame, m), up and down, side to side and about itself (rad), each at its own period (s): the light's aim wanders
-// with it, so does the beam (a spot 6 m away wanders about 15 cm each way)
+// with it, so does the beam (a spot 6 m away wanders about 8 cm each way; halved, Christian 2026-10-23)
 const SHOULDER = new THREE.Vector3(0.2, -0.3, 0.1)
-const SWAY = { pitch: 0.022, yaw: 0.028, roll: 0.015, periods: [4.3, 6.1, 5.2] }
+const SWAY = { pitch: 0.011, yaw: 0.014, roll: 0.008, periods: [4.3, 6.1, 5.2] }
 
 /**
  * @param {object} options
