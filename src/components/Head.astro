@@ -3,7 +3,8 @@
 // Starlight doesn't support the router officially; the gaps are filled here and in Search.astro:
 // - theme: the new document arrives without data-theme (Starlight sets it in a script at full load): copied over
 //   before the swap, so there is no flash;
-// - sidebar: its scroll position is kept (Starlight saves it only when the page unloads);
+// - sidebar: its scroll position is kept (Starlight saves it only when the page unloads), and the current page
+//   shown (its group unfolded, the others closed at page load, scrolled to when out of view);
 // - search: kept across pages (Search.astro); the new page's copy is emptied before the swap, and the dialog is
 //   closed after a navigation from a result.
 // Page transition: docs/system-design.md (Motion), styles in custom.scss.
@@ -41,5 +42,27 @@ const fonts = [archivo400, archivo800, mono700, mono800]
       if (sidebar) sidebar.scrollTop = sidebarScroll
       document.querySelector('site-search dialog[open]')?.close()
     })
+    // The menu shows the current page (Christian, 2026-10-23): its group unfolded (the others closed at page load),
+    // and scrolled to it when it is out
+    // of view (otherwise the kept scroll stays). At every page load, and when the menu (a popover on phones and on
+    // /modele) opens: closed, it has no size to measure
+    // closeOthers (at page load, Christian 2026-10-23): the other groups closed, only the current page's open (after
+    // Starlight's own memory of the open groups)
+    const revealCurrent = (closeOthers = false) => {
+      const pane = document.getElementById('starlight__sidebar')
+      const link = pane?.querySelector('a[aria-current="page"]')
+      if (!pane) return
+      if (closeOthers) pane.querySelectorAll('details').forEach((group) => (group.open = Boolean(link && group.contains(link))))
+      if (!link) return
+      for (let group = link.closest('details'); group; group = group.parentElement?.closest('details')) group.open = true
+      const box = pane.getBoundingClientRect()
+      const item = link.getBoundingClientRect()
+      if (box.height === 0) return
+      if (item.top < box.top || item.bottom > box.bottom) pane.scrollTop += item.top - box.top - (box.height - item.height) / 2
+    }
+    document.addEventListener('astro:page-load', () => requestAnimationFrame(() => revealCurrent(true)))
+    document.addEventListener('toggle', (event) => {
+      if (event.target.id === 'starlight__sidebar' && event.newState === 'open') requestAnimationFrame(() => revealCurrent())
+    }, true)
   }
 </script>

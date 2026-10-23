@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Navigation: the current page always shown (its group unfolded, the others closed at page load, the list scrolled
+  to it when out of view, also when the menu opens on phones and on /modele); MD3 hover state layer on the items and
+  the groups' titles (150 ms).
+- « Modèle 3D » pill: the navigation's 3D cube instead of the ▶.
 - /modele page, wide screens: the header's content 6rem wider than the viewer's frame on each side (not edge to edge),
   the search as a 24 px magnifier at its right, before « Modèle 3D ». The menu opens against the frame, 2rem from it,
   with the depth gauge along its left edge, as on the other pages; without room left of the frame, it opens from the
