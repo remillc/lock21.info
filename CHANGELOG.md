@@ -5,7 +5,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - 3D viewer: the crayfish's claws keep the model's own colours (the blue tint removed; orange pincer tips kept), and
-  its antennae bend downstream with the river's current, more in a stronger current (underwater: the season's drift).
+  its antennae bend downstream with the river's current (hardly fluttering), more in a stronger current (underwater: the season's drift).
 - 3D viewer: a crayfish at the `.blend`'s « crawfish » empty (exported with the mockups): « Crayfish » by ucdavisterc
   (Sketchfab, CC BY 4.0, credited on the /modele page), rigged, packed in `viewer/public/creatures/crayfish.glb`, its
   pincer tips orange, after a blue land crayfish (`viewer/src/crawfish.js`). It faces a diver closer than 1.8 m (and turns again 2 s after they

@@ -44,8 +44,8 @@ const CLAW_TIP = new THREE.Color(0.85, 0.3, 0.04)
 const TIP = 0.012
 
 // The antennae in the current: how far they bend toward its direction (rad, the base and the tip segment) at
-// CURRENT_FULL m/s and above, and their flutter in it
-const ANTENNA_BEND = [0.7, 0.5]
+// CURRENT_FULL m/s and above
+const ANTENNA_BEND = [0.9, 0.7]
 const CURRENT_FULL = 0.5
 // Without a current given: the river's, west to east (35 ft/min, measured 2024-06-08)
 const DEFAULT_CURRENT = new THREE.Vector3((35 * 0.3048) / 60, 0, 0)
@@ -312,13 +312,14 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
       stride = walking ? stride + dt * 9 : stride
       legs.forEach((name, i) => pose(name, [X, -lift], [Y, walking ? 0.25 * Math.sin(stride + i * 1.3) : 0]))
       // The antennae bend toward where the current goes (in its own frame, as it turns), more at the tip and the
-      // stronger the current, fluttering in it; raised a little in the threat posture
+      // stronger the current; raised a little in the threat posture
       const flow = current()
       const speed = Math.hypot(flow.x, flow.z)
       const strength = Math.min(speed / CURRENT_FULL, 1)
       const local = Math.atan2(flow.x, flow.z) - root.rotation.y
       const toward = THREE.MathUtils.clamp(Math.atan2(Math.sin(local), Math.cos(local)), -1.2, 1.2)
-      const flutter = (phase) => (0.04 + 0.1 * strength) * Math.sin(time * (1.3 + 6 * strength) + phase)
+      // A slow, slight sway only: they bend more than they flutter (Christian, 2026-10-23)
+      const flutter = (phase) => 0.03 * Math.sin(time * 0.8 + phase)
       for (const [name, phase] of [['L', 0], ['R', 1.7]]) {
         pose(`antenna_${name}_000`, [Y, toward * ANTENNA_BEND[0] * strength + flutter(phase)], [X, -0.25 * p])
         pose(`antenna_${name}_001`, [Y, toward * ANTENNA_BEND[1] * strength + flutter(phase + 0.8)])
