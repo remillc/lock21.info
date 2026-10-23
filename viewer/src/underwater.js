@@ -59,11 +59,11 @@ const DAYLIGHT_SHIFT = 0.5
 // spot and brings the reds back (at full strength the green daylight swamped it)
 // 0.35: more absorbed at depth than the first 0.5 (Christian, 2026-10-23; 0.25 was too dark)
 const DAYLIGHT_LEVEL = 0.35
-// The beam's two parts, as a real dive light: a narrow, strong hotspot (16° across) and a spill around it, 32° across
-// in all (was 48°) and 3 times weaker (Christian, 2026-10-23); half-angles, and the spill's strength against the
+// The beam's two parts, as a real dive light: a narrow, strong hotspot (16° across) and a spill around it, 40° across
+// in all (was 48°, then 32°) and 3 times weaker (Christian, 2026-10-23); half-angles, and the spill's strength against the
 // hotspot's
 const LAMP_HOT_ANGLE = 8
-const LAMP_WIDE_ANGLE = 16
+const LAMP_WIDE_ANGLE = 20
 const LAMP_SPILL = 1 / 3
 // The share of the water's scattering that dims the lamp's beam (forward scattering keeps the rest in it), and the
 // saturation of the colours it lights
