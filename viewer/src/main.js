@@ -596,8 +596,8 @@ function setSwimming(on) {
   if (on) showSwimHelp()
   controls.enabled = !on
   swim.setActive(on)
-  // The keys unroll from the left edge, as the season strip from the 🤿 button
-  reveal(swimKeys, on, 'inset(-8px 100% -8px -8px)')
+  // The keys pad continues the season strip's sweep, leftward (SWEEP_DELAY)
+  reveal(swimKeys, on, 'inset(-8px -8px -8px 100%)', on ? SWEEP_DELAY : 0)
   if (!on) {
     controls.target.copy(camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(SWIM_TARGET).add(camera.position))
     controls.update()
@@ -699,16 +699,20 @@ const underwaterTools = document.querySelector('.underwater-tools')
 /** @param {boolean} on */
 function showSeasonControl(on) {
   // Unrolls out of the 🤿 button: revealed from its right edge
-  reveal(underwaterTools, on, 'inset(-8px -8px -8px 100%)')
+  reveal(underwaterTools, on, 'inset(-8px -8px -8px 100%)', on ? 0 : SWEEP_DELAY)
 }
+// The season strip and the keys pad unroll as one sweep leftward from the 🤿 button: the pad (setSwimming) follows
+// the strip on the way in, and goes first on the way back
+const SWEEP_DELAY = 180
 /**
  * Shows or hides an element with the MD3 motion (SEASON_MOTION): revealed from one edge (away: its clip-path when
  * hidden), back the same way; at once when the system asks for reduced motion
  * @param {HTMLElement} element
  * @param {boolean} on
  * @param {string} hidden - clip-path while hidden, e.g. inset(-8px -8px -8px 100%) for unrolling from the right
+ * @param {number} [delay] - ms before it starts (hidden meanwhile on the way in)
  */
-function reveal(element, on, hidden) {
+function reveal(element, on, hidden, delay = 0) {
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const away = { clipPath: hidden, opacity: 0.4 }
   const here = { clipPath: 'inset(-8px -8px -8px -8px)', opacity: 1 }
@@ -717,12 +721,12 @@ function reveal(element, on, hidden) {
   delete element.dataset.leaving
   if (on) {
     element.hidden = false
-    if (!still) element.animate([away, here], SEASON_MOTION.enter)
+    if (!still) element.animate([away, here], { ...SEASON_MOTION.enter, delay, fill: 'backwards' })
   } else if (still) {
     element.hidden = true
   } else {
     element.dataset.leaving = 'true'
-    element.animate([here, away], { ...SEASON_MOTION.exit, fill: 'forwards' }).finished.then(() => {
+    element.animate([here, away], { ...SEASON_MOTION.exit, delay, fill: 'forwards' }).finished.then(() => {
       if (!element.dataset.leaving) return
       delete element.dataset.leaving
       element.hidden = true

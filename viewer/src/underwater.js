@@ -367,9 +367,9 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
           float cone = uwLampCone(dot(toParticle / d, uUwLampDir));
           vLit = uUwLampStrength > 0.0 ? cone * 2.0 / (d * d) * exp(-uAbsorb.g * d) : 0.0;
           // A quarter of the first size (Christian, 2026-10-23: smaller, twice)
-          // Drawn 2.5 times their size with a soft falloff (and fainter): small blurred specks, slightly out of focus;
-          // at least 3 px, or the blur has no room to show
-          gl_PointSize = max((0.003 + 0.005 * seed.w) * 900.0 * 2.5 / max(vDistance, 0.1), 3.0) * uPixelRatio;
+          // Drawn 4 times their size with a soft falloff (and faint): blurred specks, out of focus; at least 6 px, or the
+          // blur has no room to show
+          gl_PointSize = max((0.003 + 0.005 * seed.w) * 900.0 * 4.0 / max(vDistance, 0.1), 6.0) * uPixelRatio;
           gl_Position = projectionMatrix * mv;
         }`,
       fragmentShader: /* glsl */ `
@@ -383,8 +383,10 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
           if (r > 0.5) discard;
           float sparkle = 0.75 + 0.25 * sin(uTime * 3.0 + vSeed * 40.0);
           float lit = min(vLit, 3.0);
-          float alpha = exp(-r * r * 18.0) * 0.55 * (0.3 + 0.4 * vSeed) * sparkle * exp(-uAbsorb.g * vDistance) * (1.0 + lit);
-          gl_FragColor = vec4(mix(vec3(0.85, 0.95, 0.9), vec3(1.0, 0.94, 0.85), min(lit, 1.0)) * (1.0 + 0.5 * lit), min(alpha, 1.0));
+          // A wide Gaussian, never opaque (at most 0.5 at its centre): a blurred speck. The lamp brightens it, it doesn't
+          // make it more opaque (that turned the particles in the beam into solid dots)
+          float alpha = exp(-r * r * 10.0) * 0.5 * (0.4 + 0.6 * vSeed) * sparkle * exp(-uAbsorb.g * vDistance);
+          gl_FragColor = vec4(mix(vec3(0.85, 0.95, 0.9), vec3(1.0, 0.94, 0.85), min(lit, 1.0)) * (1.0 + lit), alpha);
         }`,
     }),
   )
