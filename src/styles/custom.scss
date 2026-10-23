@@ -405,3 +405,25 @@ main > .content-panel:last-child > .sl-container {
     }
   }
 }
+
+// The menu button (☰) in the light theme (Christian, 2026-10-23): no disc and no shadow, the icon in the bar's text
+// colour as the magnifier (#c9cdbb: the bar's --sl-color-gray-2 above; the button sits outside header.header), the bar
+// staying dark in both themes; open or closed
+:root[data-theme='light'] .sl-menu-button,
+:root[data-theme='light'] .sl-menu-button:has(~ :popover-open) {
+  background-color: transparent;
+  box-shadow: none;
+  color: #c9cdbb;
+
+  &:hover {
+    background-color: color-mix(in srgb, currentColor 8%, transparent); // MD3 hover state layer
+  }
+}
+
+// The magnifier bolder, as the menu button's bars (Christian, 2026-10-23): Starlight's filled icon outlined in its own
+// colour, every page and screen
+site-search button[data-open-modal] > svg {
+  stroke: currentColor;
+  stroke-width: 1.2px;
+  stroke-linejoin: round;
+}

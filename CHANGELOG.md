@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Header, every page: the menu button (☰) drawn in bold 3 px bars that turn into an X and back (MD3 motion, as on
+  /modele before); in the light theme, no disc or shadow, the icon in the bar's text colour as the magnifier; the
+  magnifier bolder too.
 - Header, every page on wide screens: the search as a 24 px magnifier at the bar's right, before « Modèle 3D » (as on
   /modele), instead of the box in the middle; Ctrl+K still opens it. Phones unchanged.
 - Navigation: the current page always shown (its group unfolded, the others closed at page load, the list scrolled

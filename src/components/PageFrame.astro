@@ -243,57 +243,57 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
       inset-inline-end: auto;
     }
   }
-  /* /modele: the menu button's three bars turn into an X and back (Christian, 2026-10-23): the outer bars rotate, the
-     middle one shrinks away; Starlight's two icons hidden */
-  .drawer-menu nav .sl-menu-button svg {
+  /* Every page: the menu button's three bars turn into an X and back (Christian, 2026-10-23): the outer bars rotate,
+     the middle one shrinks away; bold, 3 px bars 18 px wide; Starlight's two icons hidden */
+  nav .sl-menu-button svg {
     display: none;
   }
-  .drawer-menu nav .sl-menu-button {
+  nav .sl-menu-button {
     background-image: linear-gradient(currentColor, currentColor);
-    background-size: 1rem 2px;
+    background-size: 1.125rem 3px;
     background-position: center;
     background-repeat: no-repeat;
     /* MD3: the X forms in 400 ms (emphasized decelerate), the bars come back in 200 ms (emphasized accelerate) */
     transition: background-size 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
   }
-  .drawer-menu nav .sl-menu-button::before,
-  .drawer-menu nav .sl-menu-button::after {
+  nav .sl-menu-button::before,
+  nav .sl-menu-button::after {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 1rem;
-    height: 2px;
-    margin: -1px 0 0 -0.5rem;
-    border-radius: 1px;
+    width: 1.125rem;
+    height: 3px;
+    margin: -1.5px 0 0 -0.5625rem;
+    border-radius: 1.5px;
     background: currentColor;
     transition: transform 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
   }
-  .drawer-menu nav .sl-menu-button::before {
-    transform: translateY(-5px);
+  nav .sl-menu-button::before {
+    transform: translateY(-6px);
   }
-  .drawer-menu nav .sl-menu-button::after {
-    transform: translateY(5px);
+  nav .sl-menu-button::after {
+    transform: translateY(6px);
   }
-  .drawer-menu nav .sl-menu-button:has(~ :popover-open) {
-    background-size: 0 2px;
+  nav .sl-menu-button:has(~ :popover-open) {
+    background-size: 0 3px;
     transition: background-size 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
   }
-  .drawer-menu nav .sl-menu-button:has(~ :popover-open)::before {
+  nav .sl-menu-button:has(~ :popover-open)::before {
     transform: rotate(45deg);
     transition: transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
   }
-  .drawer-menu nav .sl-menu-button:has(~ :popover-open)::after {
+  nav .sl-menu-button:has(~ :popover-open)::after {
     transform: rotate(-45deg);
     transition: transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
   }
   @media (prefers-reduced-motion: reduce) {
-    .drawer-menu nav .sl-menu-button,
-    .drawer-menu nav .sl-menu-button::before,
-    .drawer-menu nav .sl-menu-button::after,
-    .drawer-menu nav .sl-menu-button:has(~ :popover-open),
-    .drawer-menu nav .sl-menu-button:has(~ :popover-open)::before,
-    .drawer-menu nav .sl-menu-button:has(~ :popover-open)::after {
+    nav .sl-menu-button,
+    nav .sl-menu-button::before,
+    nav .sl-menu-button::after,
+    nav .sl-menu-button:has(~ :popover-open),
+    nav .sl-menu-button:has(~ :popover-open)::before,
+    nav .sl-menu-button:has(~ :popover-open)::after {
       transition: none;
     }
   }
