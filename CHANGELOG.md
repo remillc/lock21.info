@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: the mockups of the zones not yet digitised as translucent ghosts (TODO #6): exported from the `.blend`'s
+  `mockups` collection (`tools/publish-model/export_mockups.py`, `mockups` in the manifest); a zone's ghost disappears
+  once the zone is online. Today zones 5, 6, 9, 14, 15, 19 and 20.
 - 3D viewer, underwater: the daylight more absorbed at depth (35 % of its strength above water, was half).
 - 3D viewer, underwater: the dive light brings back more reds (a warmer light, its colours more saturated).
 - 3D viewer, underwater: the keys pad bottom left continues the season strip's sweep out of the 🤿 button (MD3 motion).

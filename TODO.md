@@ -13,7 +13,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #3 Choose default ambient occlusion settings (radius, intensity) after viewing close up
 - [ ] #4 Initial camera and navigation (what the visitor sees first)
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
-- [ ] #6 Show the mockups for the zones not yet digitised (hidden once a zone is scanned)
 
 ### Zones
 

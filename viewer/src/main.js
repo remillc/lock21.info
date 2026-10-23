@@ -929,6 +929,10 @@ async function loadModel() {
   for (const entry of manifest.models || []) {
     contextLoader.load(`${tilesUrl}/${entry.url}`, ({ scene: model }) => {
       if (load !== loadCount) return
+      if (entry.id === 'mockups') {
+        showMockups(model, manifest)
+        return
+      }
       model.traverse((child) => {
         if (child.isMesh) initSurface(child, null)
       })
@@ -971,8 +975,48 @@ function unloadModel() {
       child.userData.surface?.map?.dispose()
     })
   }
+  for (const model of mockupModels) {
+    scene.remove(model)
+    model.traverse((child) => child.geometry?.dispose())
+  }
   tilesets = []
   contextModels = []
+  mockupModels = []
+  requestRender()
+}
+
+// The mockups of the zones not yet digitised (TODO #6; tools/publish-model/export_mockups.py: « mockup zone N »
+// objects of the .blend): translucent ghosts that complete the lock's shape; a zone's mockup is hidden as soon as the
+// zone is online (in the manifest). No shadows, not solid for the swimmer
+let mockupModels = []
+const MOCKUP_OPACITY = 0.22
+const mockupMaterial = new THREE.MeshStandardMaterial({
+  color: 0xd2dccb,
+  roughness: 1,
+  transparent: true,
+  opacity: MOCKUP_OPACITY,
+  depthWrite: false,
+  side: THREE.DoubleSide,
+})
+mockupMaterial.onBeforeCompile = (shader) => underwater.patchShader(shader)
+mockupMaterial.customProgramCacheKey = () => 'mockup'
+withShadowCascades(mockupMaterial)
+/**
+ * @param {THREE.Object3D} model - the mockups' GLB
+ * @param {{ tilesets: { id: string }[] }} manifest
+ */
+function showMockups(model, manifest) {
+  const online = new Set(manifest.tilesets.map((t) => t.id))
+  model.traverse((child) => {
+    if (!child.isMesh) return
+    // Node names from Blender, spaces turned to underscores by the loader: mockup_zone_9
+    const zone = child.name.match(/(\d+)$/)?.[1]
+    child.visible = Boolean(zone) && !online.has(`zone-${zone}`)
+    child.material = mockupMaterial
+    child.renderOrder = 1
+  })
+  scene.add(model)
+  mockupModels.push(model)
   requestRender()
 }
 
