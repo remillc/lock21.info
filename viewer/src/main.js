@@ -193,7 +193,7 @@ const look = {
   // Lighting (default; ?hdri=0 = the unlit display used before): the sky (diffuse, ?hdriIntensity=) and the sun
   // (direct, ?sunIntensity=, from ?light=azimuth,elevation), each with its slider. Realistic defaults, as on a clear
   // day (direct sun about 75-85 % of the light, the sky the rest): sun 1 (a surface facing it shows its texture's own
-  // brightness), sky 0.35; the sun from the south-southwest (azimuth 345: 15 degrees west of south), 60 degrees up
+  // brightness), sky 0.35; the sun from the southwest (azimuth 320: 40 degrees west of south), 65 degrees up
   // (Christian's choice, 2026-10-23; the .blend's frame is aligned on north). The sky photo's own sun stays 48 degrees up (HDRI_SUN): only
   // its azimuth follows ours
   sky: params.get('hdri') !== '0',
@@ -207,7 +207,7 @@ const look = {
   // (?relief=debug); wet look (?wet=0..1). The sun's direction: azimuth (0 = from the south, 90 = from the east),
   // elevation, in degrees
   relief: ['0', 'debug'].includes(params.get('relief')) ? params.get('relief') : '1',
-  light: (params.get('light') || '345,60').split(',').map(Number),
+  light: (params.get('light') || '320,65').split(',').map(Number),
   // The sun's shadows (?shadows=0|1; default on computers, off on phones: one more render of the scene per frame)
   shadows: params.has('shadows') ? params.get('shadows') !== '0' : !mobile,
   // Tone mapping of the lit display (?tone=agx|aces|neutral|none) and its exposure (?exposure=). Default Khronos

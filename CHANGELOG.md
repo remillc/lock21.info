@@ -6,7 +6,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 - 3D viewer: the sky that lights the scene also tilts so that its photo's sun (48° up) stands exactly at our sun's
   height, not only its azimuth (tilt up to 25°); the background sky only turns about the vertical.
-- 3D viewer: the sun by default from the south-southwest, 60° up; the sun
+- 3D viewer: the sun by default from the southwest (320), 65° up; the sun
   direction sliders move by 1°.
 - 3D viewer: cascaded sun shadows (three.js CSM, three 2048 px maps following the camera, up to 300 m): sharp up
   close instead of one 4096 px map over the whole site (about 4 cm per texel).
