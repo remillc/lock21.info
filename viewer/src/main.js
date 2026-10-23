@@ -435,15 +435,26 @@ function withShadowCascades(material) {
 }
 // The sky photo has its own sun (53 % of its light, within 5 degrees of it), at azimuth 55.7 and elevation 48 in its
 // unrotated frame (measured on public/hdri/sky.hdr: its brightest pixel, x 609 y 119 of 1024 x 512, through
-// three.js's equirectangular mapping). The sky is turned about the vertical so that its sun stands at our sun's
-// azimuth: one sun, the shadows and the sky's light and glints from the same side. Its elevation stays 48.
+// three.js's equirectangular mapping). The sky that lights the scene is turned so that its sun stands exactly where
+// ours is: one sun, the shadows and the sky's light and glints from the same side. First a turn about the vertical for
+// the azimuth, then a tilt about the horizontal axis square to the sun's azimuth for the height, up to SKY_TILT_MAX
+// (beyond it, the photo's horizon would light the scene from too high or too low). The sky shown as the background
+// only turns about the vertical: a tilted horizon would show.
 const HDRI_SUN = { azimuth: 55.7, elevation: 48 }
+const SKY_TILT_MAX = 25
+const sunDirection = (azimuth, elevation) => {
+  const [a, e] = [azimuth, elevation].map(THREE.MathUtils.degToRad)
+  return new THREE.Vector3(Math.cos(e) * Math.sin(a), Math.sin(e), Math.cos(e) * Math.cos(a))
+}
 function updateLights() {
   const turn = THREE.MathUtils.degToRad(look.light[0] - HDRI_SUN.azimuth)
-  scene.environmentRotation.set(0, turn, 0)
   scene.backgroundRotation.set(0, turn, 0)
-  const [azimuth, elevation] = look.light.map(THREE.MathUtils.degToRad)
-  const direction = new THREE.Vector3(Math.cos(elevation) * Math.sin(azimuth), Math.sin(elevation), Math.cos(elevation) * Math.cos(azimuth))
+  const skyElevation = THREE.MathUtils.clamp(look.light[1], HDRI_SUN.elevation - SKY_TILT_MAX, HDRI_SUN.elevation + SKY_TILT_MAX)
+  const skyTilt = new THREE.Quaternion().setFromUnitVectors(
+    sunDirection(look.light[0], HDRI_SUN.elevation), sunDirection(look.light[0], skyElevation))
+  const skyTurn = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), turn)
+  scene.environmentRotation.setFromQuaternion(skyTilt.multiply(skyTurn))
+  const direction = sunDirection(...look.light)
   // CSM's light direction points from the sun to the scene
   csm.lightDirection.copy(direction).negate()
   const on = look.sky && look.sunIntensity > 0
