@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: the sun by default where it stood at Lock 21 on 1968-05-12 at 9:00 (almost due east, 35° up); the sun
+  direction sliders move by 1°.
 - 3D viewer: cascaded sun shadows (three.js CSM, three 2048 px maps following the camera, up to 300 m): sharp up
   close instead of one 4096 px map over the whole site (about 4 cm per texel).
 - De-lighting of the lamp bands (TODO #24, `delight_texture.py`): tried on zones 3 and 10 with stronger settings and

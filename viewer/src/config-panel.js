@@ -42,7 +42,7 @@ export function settingsSchema({ mobile }) {
         { key: 'hdri', label: 'Éclairage (ciel et soleil)', hint: 'éteint: les textures telles quelles', type: 'toggle', def: '1' },
         { key: 'hdriIntensity', label: 'Force du ciel', hint: 'lumière diffuse, de partout', type: 'range', min: 0, max: 2, step: 0.05, def: '0.35', dependsOn: 'hdri' },
         { key: 'sunIntensity', label: 'Force du soleil', hint: 'lumière directe, qui fait ressortir le relief', type: 'range', min: 0, max: 3, step: 0.05, def: '1', dependsOn: 'hdri' },
-        { key: 'light', label: 'Soleil (azimut, hauteur)', hint: 'azimut 0 = du sud, 90 = de l’est', type: 'angles', def: '110,65', ranges: [[0, 360, 5], [0, 90, 5]], unit: '°', dependsOn: 'hdri' },
+        { key: 'light', label: 'Soleil (azimut, hauteur)', hint: 'azimut 0 = du sud, 90 = de l’est', type: 'angles', def: '81,35', ranges: [[0, 360, 1], [0, 90, 1]], unit: '°', dependsOn: 'hdri' },
         { key: 'shadows', label: 'Ombres du soleil', type: 'toggle', def: mobile ? '0' : '1', dependsOn: 'hdri' },
         { key: 'exposure', label: 'Exposition', type: 'range', min: 0.25, max: 3, step: 0.05, def: '1.2', dependsOn: 'hdri' },
         { key: 'saturation', label: 'Saturation', hint: '1 = celle des textures, 0 = gris', type: 'range', min: 0, max: 2, step: 0.05, def: '0.8', dependsOn: 'hdri' },
