@@ -2,7 +2,7 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
-## Unreleased
+## 0.10.0 - 2026-10-23
 
 - 3D viewer, loading (TODO #55): the tiles' coarser levels without normal maps (relief only at the finest level;
   `merge_normal_maps.mjs`, and `strip_coarse_normals.mjs` for the published versions): their download 337 -> 157 MB.
