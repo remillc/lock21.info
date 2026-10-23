@@ -27,8 +27,10 @@ const REST = [4, 10]
 export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
   const shell = prepare(new THREE.MeshStandardMaterial({ color: 0x4a3524, roughness: 0.55 }))
   const rust = prepare(new THREE.MeshStandardMaterial({ color: 0x7a3f22, roughness: 0.5 }))
-  const tip = prepare(new THREE.MeshStandardMaterial({ color: 0xc8662d, roughness: 0.45 }))
   const dark = prepare(new THREE.MeshStandardMaterial({ color: 0x15100c, roughness: 0.3 }))
+  // The claws tinted blue (Christian, 2026-10-23), the tips lighter
+  const claw = prepare(new THREE.MeshStandardMaterial({ color: 0x2f4f78, roughness: 0.45 }))
+  const clawTip = prepare(new THREE.MeshStandardMaterial({ color: 0x5f8fc4, roughness: 0.4 }))
 
   const ellipsoid = (rx, ry, rz, material) => {
     const mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), material)
@@ -115,19 +117,19 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
   for (const side of [-1, 1]) {
     const shoulder = new THREE.Group()
     shoulder.position.set(side * 0.014, 0, 0.045)
-    const arm = rod(0.0035, 0.028, rust)
+    const arm = rod(0.0035, 0.028, claw)
     const wrist = new THREE.Group()
     wrist.position.set(0, 0, 0.028)
-    const forearm = rod(0.0045, 0.022, rust)
+    const forearm = rod(0.0045, 0.022, claw)
     const hand = new THREE.Group()
     hand.position.set(0, 0, 0.022)
-    const palm = ellipsoid(0.0085, 0.0045, 0.016, rust)
+    const palm = ellipsoid(0.0085, 0.0045, 0.016, claw)
     palm.position.set(0, 0, 0.012)
-    const fixed = rod(0.004, 0.026, tip, 0.0008)
+    const fixed = rod(0.004, 0.026, clawTip, 0.0008)
     fixed.position.set(side * 0.003, 0, 0.024)
     const moving = new THREE.Group()
     moving.position.set(-side * 0.003, 0, 0.024)
-    moving.add(rod(0.0035, 0.025, tip, 0.0008))
+    moving.add(rod(0.0035, 0.025, clawTip, 0.0008))
     hand.add(palm, fixed, moving)
     wrist.add(forearm, hand)
     shoulder.add(arm, wrist)
