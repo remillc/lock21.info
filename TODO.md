@@ -64,8 +64,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #39 Design: applied (tokens, fonts, header and footer bars, home page, logo, tables); to do: a history page for the "L'histoire" entry (it points to the zone map for now), the 3D viewer in the same
   palette and fonts, check contrast (WCAG AA) in both themes
 - [ ] #31 Underwater look for the viewer: set aside on branch `feature/underwater-look`
-- [ ] #46 « Ambiance sous-marine » option for the 3D model, in the viewer's settings (on/off): the lock as seen
-  underwater (water colour and haze with distance, softer light from above); start from #31's branch
+- [ ] #46 « Ambiance sous-marine » option for the 3D model: the lock as seen underwater (water colour and haze with
+  distance, softer light from above); start from #31's branch. Turned on and off by a button beside the full-screen
+  button, with a mask-and-snorkel icon (MD3 icon button, Material Symbols, e.g. « scuba_diving »)
   - « Visibilité » slider over the four seasons, each with its visibility: winter 100' (30 m), spring 10' (3 m),
     summer 20' (6 m), autumn 30' (9 m)
 - [ ] #47 Idea: a walk mode in the viewer (first-person, eye height above the floor, walking through the lock instead of
