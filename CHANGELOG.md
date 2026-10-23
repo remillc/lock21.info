@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the dive light has a hotspot (8°) and a spill 3 times wider and weaker; it brings the reds
+  back (its light absorbed only from the lamp, the daylight dimmed to half at depth); more particles the murkier the
+  season (winter 10,000, autumn 25,000, summer 35,000, spring 60,000).
 - 3D viewer, underwater: the view's address (and the /modele page's) carries `&underwater=1&season=` (`&lamp=0`), so
   a copied link reopens the same view. Colours absorbed by distance, red first: daylight from the surface down (half
   the shift shown, the eye adapts), the dive light only from the lamp, so it brings red back up close; the lamp at the
