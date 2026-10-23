@@ -189,6 +189,18 @@ startTelemetry({ renderer, mobile, embedded })
 // metres, y up), chosen by Christian on 2026-10-22. To change it, place the camera where wanted and copy the numbers
 // from the address bar (?cam=).
 const START_VIEW = [-25.07, 2.07, -17.17, -31.54, -0.78, -22.53]
+// It was framed on a computer, about START_ASPECT wide for 1 high. A narrower frame (a phone: the /modele page's frame
+// is nearly square, the full screen tall) sees less of it across (the field of view is vertical): the camera steps
+// back along the same line of sight until it sees as much across, at most START_BACK times as far (farther, walls
+// came between). TODO #49
+const START_ASPECT = 1.6
+const START_BACK = 2.2
+/** The start view for a frame `aspect` wide for 1 high */
+function startView(aspect) {
+  const back = THREE.MathUtils.clamp(START_ASPECT / aspect, 1, START_BACK)
+  const [x, y, z, tx, ty, tz] = START_VIEW
+  return [tx + (x - tx) * back, ty + (y - ty) * back, tz + (z - tz) * back, tx, ty, tz]
+}
 
 const scene = new THREE.Scene()
 // Plain background when the sky is off: the site's darkest surface (Moss palette, src/styles/tokens.scss)
@@ -955,9 +967,9 @@ async function loadModel() {
       if (framed) return
       framed = true
       // ?cam=x,y,z,tx,ty,tz: camera position and target (scene metres, y up), for identical or shared views; without
-      // it, the chosen start view (START_VIEW)
+      // it, the chosen start view (START_VIEW), stepped back on a narrow frame
       let cam = (params.get('cam') || '').split(',').map(Number)
-      if (!(cam.length === 6 && cam.every(Number.isFinite))) cam = START_VIEW
+      if (!(cam.length === 6 && cam.every(Number.isFinite))) cam = startView(container.clientWidth / container.clientHeight)
       camera.position.set(cam[0], cam[1], cam[2])
       controls.target.set(cam[3], cam[4], cam[5])
       controls.update()

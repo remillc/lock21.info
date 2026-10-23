@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: on a narrow frame (phones: the /modele page's square frame, the tall full screen), the start view steps back
+  along its line of sight to show as much across as on a computer (at most 2.2 times as far; TODO #49).
 - 3D viewer: the underwater view is no longer remembered between visits (each visit starts in the air; a link's
   `?underwater=1` still opens it). Its season and lamp are still remembered.
 - 3D viewer, underwater, spring: the particles drift 8 times the river's current (was 10), and the visibility is 12 ft

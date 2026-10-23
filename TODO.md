@@ -60,8 +60,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   palette and fonts, check contrast (WCAG AA) in both themes
 - [ ] #53 Thank the people who helped: those mentioned in the pages (dive buddies, Save Ontario Shipwrecks, Nick
   Baets' drawings…) and Sylvain Marcotte, who designed the rig; probably on the About page (French and English)
-- [ ] #49 The /modele page's 3D default view on phones is not good (the start view, `START_VIEW` in
-  `viewer/src/main.js`, was chosen on a computer screen; a phone's narrow frame needs its own)
 - [ ] #48 Idea: a guided tour in the viewer (a sequence of views with a short text each). Stops noted so far:
   - zone 16, the spillway gate door on the floor: `?cam=-18.54,1.28,8.53,-17.08,-0.65,10.34`
 
