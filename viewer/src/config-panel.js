@@ -10,6 +10,8 @@
 // type: toggle | range | select | text | angles (two ranges stored as "a,b")
 // dependsOn: key of a toggle (the row is shown only while it is on), or [key, value] (shown only while that setting
 // has that value)
+// keep: false: not kept by the browser between page loads (« Rendu photo »: on at load, it would start a heavy render
+// before the tiles have arrived)
 // Settings kept by the browser between page loads (localStorage of this origin: lock21.info, where the /modele/ page
 // embeds the viewer). Saved at every change, cleared by "Réinitialiser"; unavailable storage (private browsing,
 // blocked site data) only means nothing is kept.
@@ -24,7 +26,7 @@ export function savedSettings() {
 }
 
 function saveSettings(params, schema) {
-  const keys = new Set(schema.flatMap((section) => section.items).map((item) => item.key))
+  const keys = new Set(schema.flatMap((section) => section.items).filter((item) => item.keep !== false).map((item) => item.key))
   const kept = new URLSearchParams([...params].filter(([key]) => keys.has(key)))
   try {
     if (kept.size) localStorage.setItem(STORAGE_KEY, kept.toString())
@@ -39,6 +41,8 @@ export function settingsSchema({ mobile }) {
     {
       title: 'Éclairage',
       items: [
+        // Computers only (the path tracer is too heavy for a phone); the 📷 button does the same
+        ...(mobile ? [] : [{ key: 'photo', label: 'Rendu photo', hint: 'lancer de rayons: image affinée tant que la caméra ne bouge pas (aussi le bouton 📷)', type: 'toggle', def: '0', keep: false }]),
         { key: 'hdriIntensity', label: 'Force du ciel', hint: 'lumière diffuse, de partout', type: 'range', min: 0, max: 2, step: 0.05, def: '0.35' },
         { key: 'sunIntensity', label: 'Force du soleil', hint: 'lumière directe, qui fait ressortir le relief', type: 'range', min: 0, max: 3, step: 0.05, def: '1' },
         { key: 'light', label: 'Soleil (azimut, hauteur)', hint: 'azimut 0 = du sud, 90 = de l’est', type: 'angles', def: '320,65', ranges: [[0, 360, 1], [0, 90, 1]], unit: '°' },
@@ -120,6 +124,19 @@ class SettingsPanel extends HTMLElement {
       if (still) row.hidden = !on
       else reveal(row, on)
     }
+  }
+
+  // A value changed elsewhere (the 📷 button for « Rendu photo »): kept and shown, without applying it again
+  reflect(key, value) {
+    const item = this.item(key)
+    if (!item) return
+    if (value === item.def) this.params.delete(key)
+    else this.params.set(key, value)
+    const row = this.querySelector(`[data-key="${key}"]`)
+    if (!row) return
+    const fresh = control(item, value, (v) => this.set(item, v))
+    fresh.dataset.key = key
+    row.replaceWith(fresh)
   }
 
   item(key) {

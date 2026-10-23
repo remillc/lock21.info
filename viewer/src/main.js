@@ -932,6 +932,7 @@ function photoGrade(mesh) {
 async function setPhoto(on) {
   photoOn = on && look.sky
   photoButton.setAttribute('aria-pressed', String(photoOn))
+  settings.reflect('photo', photoOn ? '1' : '0')
   const run = ++photoRun
   photo.stop()
   if (!photoOn) {
@@ -971,6 +972,7 @@ if (!mobile) {
   photoButton.hidden = !look.sky
   photoButton.addEventListener('click', () => setPhoto(!photoOn))
 }
+live.photo = (v) => setPhoto(v === '1')
 function photoLoop() {
   if (!photoOn) return false
   updateStats()
