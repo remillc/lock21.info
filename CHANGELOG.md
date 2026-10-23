@@ -4,6 +4,12 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- /modele page, wide screens: the header's content 6rem wider than the viewer's frame on each side (not edge to edge),
+  the search as a 24 px magnifier at its right, before « Modèle 3D ». The menu opens against the frame, 2rem from it,
+  with the depth gauge along its left edge, as on the other pages; without room left of the frame, it opens from the
+  window's left edge over the frame, with MD3's level 1 elevation. MD3 motion: unrolled in 400 ms (emphasized
+  decelerate), rolled back in 200 ms (emphasized accelerate); the menu button's bars turn into an X and back.
+- Navigation, every page: « Modèle 3D » marked with an orange 3D cube (the signal colour).
 - /modele page: the site's menu on wide screens too, from the ☰ button (left of the logo on wide screens, at the bar's
   right on phones), as a panel over the page's left side (on phones, on the right, over the 3D display) (a click outside or Esc closes it); the viewer keeps its full width.
 - Site: a thanks page (« Remerciements », in the sidebar after « À propos »): the dive buddies, DECOSTOP Outdoor Centre

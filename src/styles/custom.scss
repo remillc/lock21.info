@@ -351,3 +351,19 @@ main > .content-panel:last-child > .sl-container {
   width: 168px;
   height: auto;
 }
+
+// « Modèle 3D » in the navigation (sidebar and mobile menu), on every page: an orange 3D icon before its label (the
+// signal colour, as the header's « Modèle 3D » pill; Christian, 2026-10-23), so it always stands out
+.sidebar-content a[href='/modele']::before,
+.sidebar-content a[href='/en/modele']::before {
+  content: '';
+  display: inline-block;
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-inline-end: 0.5rem;
+  vertical-align: -0.25em;
+  background: var(--md-sys-color-tertiary);
+  // A cube in perspective (not the augmented reality button's cube)
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3 6.6 3.7L12 11.7 5.4 8 12 4.3ZM5 9.7l6 3.4v6.6l-6-3.4V9.7Zm8 10v-6.6l6-3.4v6.6l-6 3.4Z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
