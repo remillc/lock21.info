@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer settings: « Ombres du soleil » is out of the panel; the default stays (on computers, off on phones),
+  and a link can still set it (`?shadows=`).
 - 3D viewer: AgX tone mapping by default again (exposure 1.2), with saturation 1.5 to make up for its greying (on
   zone 3, the same saturation as the unlit textures); Khronos neutral stays under Avancé.
 - 3D viewer settings: « Occlusion ambiante » (and « Occlusion seule ») and « Ciel en arrière-plan » are out of the
