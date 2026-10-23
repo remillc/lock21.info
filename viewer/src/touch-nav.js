@@ -1,7 +1,7 @@
 // Navigation by touch (TODO #54, Christian's choices, 2026-10-23), and a few helpers that serve the mouse too.
 //
-// - On a touch screen, over the viewer (in the /modele page's frame as in full screen): one finger pans the model, two
-//   fingers turn it and pinch to zoom. The page scrolls from outside the viewer.
+// - On a touch screen, over the viewer (in the /modele page's frame as in full screen): one finger turns the model, two
+//   fingers pan it and pinch to zoom. The page scrolls from outside the viewer.
 // - Pinching zooms toward the fingers (OrbitControls' zoomToCursor, its centre moving along); once the camera is within
 //   NEAR m of the orbit's centre, the centre moves ahead with it, so zooming in never stalls (the wheel too).
 // - A double-tap (a double-click with a mouse) on the model flies there: the orbit's centre glides to that point and
@@ -34,8 +34,8 @@ export function createTouchNav({ controls, camera, surface, pick, t, requestRend
   const hint = document.querySelector('.touch-hint')
   const helpButton = document.querySelector('.touch-help-button')
 
-  controls.touches.ONE = TOUCH.PAN
-  controls.touches.TWO = TOUCH.DOLLY_ROTATE
+  controls.touches.ONE = TOUCH.ROTATE
+  controls.touches.TWO = TOUCH.DOLLY_PAN
   if (coarse) controls.zoomToCursor = true
 
   // The gestures' card: at the first touch, and from the « ? » button
