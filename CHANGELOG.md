@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the water surface overhead fades out beyond the visibility like the model (from the floor
+  in murky water its ripples showed as light bands).
 - 3D viewer, underwater: the dive light fades with its distance from the lamp (the water's whole attenuation per
   colour, scattering included): on surfaces, in its glow in the water and on the particles it lights.
 - 3D viewer, underwater: no more noise toward the water surface (its ripples and caustics fade out where finer than

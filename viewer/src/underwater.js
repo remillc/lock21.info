@@ -213,7 +213,7 @@ export function createUnderwater(scene, renderer) {
       side: THREE.DoubleSide,
       transparent: true,
       depthWrite: false,
-      uniforms: { uTime: uniforms.uUwTime, uAbsorb: uniforms.uUwAbsorb, uColor: columnMaterial.uniforms.uSurface, uSun: uniforms.uUwSun },
+      uniforms: { uTime: uniforms.uUwTime, uAbsorb: uniforms.uUwAbsorb, uColor: columnMaterial.uniforms.uSurface, uSun: uniforms.uUwSun, uClear: uniforms.uUwClear, uGone: uniforms.uUwGone },
       vertexShader: /* glsl */ `
         varying vec3 vWorld;
         varying float vDistance;
@@ -229,6 +229,8 @@ export function createUnderwater(scene, renderer) {
         uniform vec3 uAbsorb;
         uniform vec3 uColor;
         uniform vec3 uSun;
+        uniform float uClear;
+        uniform float uGone;
         varying vec3 vWorld;
         varying float vDistance;
         ${CAUSTIC_GLSL}
@@ -243,7 +245,8 @@ export function createUnderwater(scene, renderer) {
           float ripple = mix(0.0, 0.25 * w, detail);
           float caustic = mix(0.25, uwCaustic(vWorld.xz * 0.8, uTime * 0.8), detail);
           vec3 c = uColor * (1.35 + ripple + 0.6 * caustic) + vec3(1.0, 0.97, 0.88) * 2.0 * glare;
-          gl_FragColor = vec4(c, exp(-0.6 * uAbsorb.g * vDistance));
+          // Gone beyond the visibility, like the surfaces (from the floor in murky water, its ripples showed as bands)
+          gl_FragColor = vec4(c, 1.0 - smoothstep(uClear, uGone, vDistance));
           #include <tonemapping_fragment>
           #include <colorspace_fragment>
           // Dithered by a fraction of a colour step: the smooth gradients showed bands (8 bits a channel)
