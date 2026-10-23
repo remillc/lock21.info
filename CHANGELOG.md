@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer settings: « Occlusion ambiante » (and « Occlusion seule ») and « Ciel en arrière-plan » are out of the
+  panel; their defaults stay (occlusion on computers, sky background on), and a link can still set them.
 - 3D viewer: the sky that lights the scene also tilts so that its photo's sun (48° up) stands exactly at our sun's
   height, not only its azimuth (tilt up to 25°); the background sky only turns about the vertical.
 - 3D viewer: the sun by default from the southwest (320), 65° up; the sun

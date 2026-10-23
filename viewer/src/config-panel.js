@@ -46,16 +46,7 @@ export function settingsSchema({ mobile }) {
         { key: 'shadows', label: 'Ombres du soleil', type: 'toggle', def: mobile ? '0' : '1', dependsOn: 'hdri' },
         { key: 'exposure', label: 'Exposition', type: 'range', min: 0.25, max: 3, step: 0.05, def: '1.2', dependsOn: 'hdri' },
         { key: 'saturation', label: 'Saturation', hint: '1 = celle des textures, 0 = gris', type: 'range', min: 0, max: 2, step: 0.05, def: '0.8', dependsOn: 'hdri' },
-        { key: 'sky', label: 'Ciel en arrière-plan', type: 'toggle', def: '1' },
         { key: 'wet', label: 'Aspect mouillé', hint: 'zones seulement: reflets du ciel, couleurs plus saturées', type: 'range', min: 0, max: 1, step: 0.05, def: '0.1', dependsOn: 'hdri' },
-      ],
-    },
-    {
-      title: 'Occlusion ambiante',
-      items: [
-        { key: 'ao', label: 'Occlusion', type: 'toggle', def: mobile ? '0' : '1' },
-        { key: 'aoRadius', label: 'Rayon', type: 'range', min: 0.1, max: 5, step: 0.1, def: '1', unit: ' m', dependsOn: 'ao' },
-        { key: 'aoIntensity', label: 'Force', type: 'range', min: 0, max: 10, step: 0.1, def: '3', dependsOn: 'ao' },
       ],
     },
     {
@@ -64,7 +55,6 @@ export function settingsSchema({ mobile }) {
       items: [
         { key: 'profile', label: 'Profil', type: 'select', def: '', options: [['', 'automatique'], ['desktop', 'ordinateur'], ['mobile', 'téléphone']] },
         { key: 'stats', label: 'Statistiques (mémoire, tuiles)', type: 'toggle', def: '0' },
-        { key: 'aoDebug', label: 'Occlusion seule', type: 'toggle', def: '0', dependsOn: 'ao' },
         { key: 'tone', label: 'Rendu des tons', type: 'select', def: 'neutral', options: [['neutral', 'Khronos neutre'], ['agx', 'AgX'], ['aces', 'ACES'], ['none', 'aucun']], dependsOn: 'hdri' },
       ],
     },
