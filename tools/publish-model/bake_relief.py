@@ -91,7 +91,8 @@ if deform:
     zone_ob = dst.objects[0]
     copied = []
     for m in zone_ob.modifiers:
-        if m.type == 'BOOLEAN' or not m.show_viewport:
+        # Those enabled for render, as prepare_zone.py (blend_state.follow_render_visibility)
+        if m.type == 'BOOLEAN' or not m.show_render:
             continue
         n = high.modifiers.new(m.name, m.type)
         for prop in m.bl_rna.properties:

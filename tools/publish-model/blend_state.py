@@ -1,7 +1,7 @@
 """Empreinte de l'état d'une zone dans le .blend: tout ce qui change le résultat publié.
 
 Couvre: transformation de l'objet, mesh de base, propriété `source` (chemin et date du fichier),
-modificateurs visibles (réglages, et pour les objets qu'ils utilisent, comme les volumes de coupe
+modificateurs activés pour le rendu (réglages, et pour les objets qu'ils utilisent, comme les volumes de coupe
 ou un Lattice: transformation et forme). Deux empreintes égales = même résultat de préparation.
 """
 import hashlib
@@ -54,7 +54,7 @@ def zone_state(ob):
         "source_mtime": os.path.getmtime(source) if source and os.path.exists(source) else None,
         "matrix_world": _matrix(ob.matrix_world),
         "mesh": _mesh_digest(ob),
-        "modifiers": [_modifier_state(m) for m in ob.modifiers if m.show_viewport],
+        "modifiers": [_modifier_state(m) for m in ob.modifiers if m.show_render],
     }
     baked = ob.get("baked_texture")
     if baked:
@@ -62,6 +62,21 @@ def zone_state(ob):
         path = bpy.path.abspath(baked)
         state["baked_texture"] = [baked, os.path.getmtime(path) if os.path.exists(path) else None]
     return state
+
+
+def follow_render_visibility():
+    """Les modificateurs publiés sont ceux activés pour le rendu (l'appareil photo, « Show in Render »), quel que soit
+    l'œil (« Show in Viewport »): un booléen lent, masqué dans la vue pour garder Blender fluide, doit quand même être
+    appliqué (Christian, 2026-10-23, Boolean.024 de la zone 3). Ce fichier n'est jamais sauvegardé par la chaîne: on
+    aligne l'affichage sur le rendu, en mémoire, avant toute évaluation. Retourne les modificateurs changés."""
+    import bpy
+    changed = []
+    for ob in bpy.data.objects:
+        for m in getattr(ob, "modifiers", []):
+            if m.show_viewport != m.show_render:
+                m.show_viewport = m.show_render
+                changed.append(f"{ob.name}/{m.name}")
+    return changed
 
 
 CONTEXT_ID = "context"

@@ -21,10 +21,13 @@ import bpy
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from cli import parser, script_args  # noqa: E402
+from blend_state import follow_render_visibility  # noqa: E402
 
 p = parser("export_mockups.py", __doc__)
 p.add_argument("out_dir", help="dossier de sortie (mockups.glb)")
 a = p.parse_args(script_args())
+# Modificateurs: ceux activés pour le rendu, même masqués dans la vue (blend_state.follow_render_visibility)
+print("[render visibility]", follow_render_visibility(), flush=True)
 os.makedirs(a.out_dir, exist_ok=True)
 
 collection = bpy.data.collections.get("mockups")

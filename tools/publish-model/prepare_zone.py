@@ -34,7 +34,7 @@ from mathutils.bvhtree import BVHTree
 
 sys.path.insert(0, os.path.dirname(__file__))
 from register_zone import transform_for  # noqa: E402
-from blend_state import fingerprint  # noqa: E402
+from blend_state import fingerprint, follow_render_visibility  # noqa: E402
 
 p = argparse.ArgumentParser(prog="prepare_zone.py", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 p.add_argument("-z", "--zone", required=True, help='objet de zone, ex. "zone 12"')
@@ -47,6 +47,8 @@ p.add_argument("--texture-quality", type=int, default=92)
 p.add_argument("--samples", type=int, default=100000)
 p.add_argument("-o", "--out", required=True, help="dossier de sortie (OBJ, texture, rapports)")
 a = p.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [])
+# Modificateurs: ceux activés pour le rendu, même masqués dans la vue (blend_state.follow_render_visibility)
+print("[render visibility]", follow_render_visibility(), flush=True)
 os.makedirs(a.out, exist_ok=True)
 slug = a.zone.replace(" ", "-")
 zone_ob = bpy.data.objects[a.zone]

@@ -16,12 +16,14 @@ import sys
 import bpy
 
 sys.path.insert(0, os.path.dirname(__file__))
-from blend_state import CONTEXT_ID, context_fingerprint, context_objects, fingerprint  # noqa: E402
+from blend_state import CONTEXT_ID, context_fingerprint, context_objects, fingerprint, follow_render_visibility  # noqa: E402
 from cli import parser, script_args  # noqa: E402
 
 p = parser("check_changes.py", __doc__)
 p.add_argument("tiles_root", nargs="?", default=r"O:\publishing\tiles", help="racine des tuiles publiées (défaut O:\\publishing\\tiles)")
 tiles_root = p.parse_args(script_args()).tiles_root
+# Comme la publication: les modificateurs activés pour le rendu (blend_state.follow_render_visibility)
+follow_render_visibility()
 manifest_path = os.path.join(tiles_root, "manifest.json")
 manifest = json.load(open(manifest_path, encoding="utf-8")) if os.path.exists(manifest_path) else {"tilesets": []}
 active = {t["id"]: t["url"] for t in manifest["tilesets"] + manifest.get("models", [])}

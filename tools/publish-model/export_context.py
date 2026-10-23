@@ -27,7 +27,7 @@ import bmesh
 import bpy
 
 sys.path.insert(0, os.path.dirname(__file__))
-from blend_state import context_fingerprint, context_objects  # noqa: E402
+from blend_state import context_fingerprint, context_objects, follow_render_visibility  # noqa: E402
 from cli import parser, script_args  # noqa: E402
 
 p = parser("export_context.py", __doc__)
@@ -35,6 +35,8 @@ p.add_argument("out_dir", help="dossier de sortie (context.glb, fingerprint.json
 p.add_argument("-t", "--max-texture", type=int, default=4096, help="côté maximal des images reprises telles quelles, px")
 p.add_argument("-s", "--bake-size", type=int, default=4096, help="taille des textures cuites, px")
 a = p.parse_args(script_args())
+# Modificateurs: ceux activés pour le rendu, même masqués dans la vue (blend_state.follow_render_visibility)
+print("[render visibility]", follow_render_visibility(), flush=True)
 out_dir, max_texture = a.out_dir, a.max_texture
 os.makedirs(out_dir, exist_ok=True)
 

@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D publishing: the modifiers published are those enabled for render (Show in Render), even when hidden in the
+  viewport (a slow boolean hidden to keep Blender fluid is still applied); the eye decided before, and zone 3's
+  Boolean.024, hidden, had been left out. The change check follows, so zones with such modifiers show as changed.
 - 3D viewer, underwater: the dive light's glow in the water fades in over the first metres from the lamp (0.5 to 2.5 m):
   no bright disc around the lamp's head any more.
 - 3D viewer, underwater: the sun on the surfaces only as far as it gets through the water above, the rest as diffuse
