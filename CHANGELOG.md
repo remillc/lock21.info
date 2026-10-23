@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: on a computer the tiles' textures (ETC1S) go to the graphics card as BC1 instead of BC7, half the memory
+  for the same look (TODO #55): at the start view twice as many tiles of the finest level fit in the budget.
 - 3D viewer: the relief's normal maps only on the finest level of the tiles, dropped from the coarser levels as they
   load (TODO #55): at the start view they held about 550 MB of the 1.2 GB budget, which kept the finest level from
   loading and left light flakes on the floor.
