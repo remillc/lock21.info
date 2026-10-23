@@ -152,18 +152,24 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
       .drawer-menu .sidebar-pane {
         box-shadow: var(--sl-shadow-lg);
       }
+      /* Its button left of the logo (Christian, 2026-10-23): room for it at the bar's start, the usual padding at its
+         end */
       .drawer-menu .header {
-        padding-inline-end: calc(var(--sl-nav-gap) + var(--sl-nav-pad-x) + var(--sl-menu-button-size));
+        padding-inline-start: calc(var(--sl-nav-gap) + var(--sl-nav-pad-x) + var(--sl-menu-button-size));
+        padding-inline-end: var(--sl-nav-pad-x);
       }
     }
   }
 </style>
 
 <style is:global>
-  /* /modele: Starlight's menu button (md:sl-hidden) shown on wide screens too; outside the layers, to win */
+  /* /modele: Starlight's menu button (md:sl-hidden) shown on wide screens too, left of the logo, beside the panel it
+     opens; outside the layers, to win */
   @media (min-width: 50rem) {
     .drawer-menu .sl-menu-button {
       display: flex;
+      inset-inline-start: var(--sl-nav-pad-x);
+      inset-inline-end: auto;
     }
   }
 </style>
