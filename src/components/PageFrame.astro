@@ -114,6 +114,17 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
       gap: 1rem;
     }
 
+    /* /modele on narrow screens: the menu a panel on the right, under its button, over the 3D display (Christian,
+       2026-10-23), not the whole width */
+    @media (max-width: 49.99rem) {
+      .drawer-menu .sidebar-pane {
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+        width: min(var(--sl-sidebar-width), 85vw);
+        box-shadow: var(--sl-shadow-lg);
+      }
+    }
+
     @media (min-width: 50rem) {
       .sidebar-content::after {
         content: '';

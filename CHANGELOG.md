@@ -5,7 +5,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - /modele page: the site's menu on wide screens too, from the ☰ button (left of the logo on wide screens, at the bar's
-  right on phones), as a panel over the page's left side (a click outside or Esc closes it); the viewer keeps its full width.
+  right on phones), as a panel over the page's left side (on phones, on the right, over the 3D display) (a click outside or Esc closes it); the viewer keeps its full width.
 - Site: a thanks page (« Remerciements », in the sidebar after « À propos »): the dive buddies, DECOSTOP Outdoor Centre
   and its owner Dan Foster for the sponsorship (its logo, one per theme), Sylvain Marcotte for the rig, Nick Baets and
   Save Ontario Shipwrecks for the 1988 drawings (TODO #53).
