@@ -2,7 +2,7 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
-## Unreleased
+## 0.11.0 - 2026-10-23
 
 - 3D viewer, the bass: its swimming wave's pace and size follow how fast it actually goes (its turns included): slow
   and small hovering, quicker and wider swimming, fastest in its dash, twice as wide as the first try; its body much more supple in turns.
