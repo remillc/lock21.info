@@ -26,18 +26,19 @@ const POSTURE_SPRING = 4
 // It turns to face the diver again once they are more than REFACE (rad, about 20°) off its heading, after REACTION s
 const REFACE = 0.35
 const REACTION = 2
-// The claws' gestures in attack mode, each arm on its own (Christian, 2026-10-23: the arms' raise and moves
-// independent): a gesture's length (s, at random in between), its size (open out and raise, times the full gesture, at
-// random), and the wait between two (GESTURE_WAIT, s, at random). Its shape (more natural): the arm snaps out a little
-// past its mark and settles (GESTURE_OUT of it), holds, then eases back; its pincer follows a moment later
-// (GESTURE_FOLLOW, s)
+// The claws' gestures in attack mode, both arms together, on a clock of their own: independent of the crayfish's
+// moves (its shuffles and turns; Christian, 2026-10-23). A gesture's length (s, at random in between), its size (open
+// out and raise, times the full gesture, at random), and the wait between two (GESTURE_WAIT, s, at random). Its shape
+// (more natural): the arms snap out a little past their mark and settle (GESTURE_OUT of it), hold, then ease back;
+// the pincers follow a moment later (GESTURE_FOLLOW, s)
 const GESTURE = [1.3, 2.2]
 const GESTURE_SIZE = [0.5, 1.2]
 const GESTURE_WAIT = [1.5, 4]
 const GESTURE_OUT = 0.25
 const GESTURE_HOLD = 0.5
 const GESTURE_FOLLOW = 0.1
-// Between gestures each arm drifts slowly on its own: its raise and spread (rad), at its own pace (rad/s, at random)
+// Between gestures the arms drift slowly, together: their raise and spread (rad), each at its own pace (rad/s, at
+// random)
 const DRIFT = 0.12
 const DRIFT_PACE = [0.5, 1.1]
 // The tail's arc in the threat posture: its joints, and the total bend (rad, about 100°)
@@ -215,19 +216,18 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
   let rest = REST[0]
   let stride = 0
   let shuffleTo = null
-  let shuffleWait = SHUFFLE_WAIT[0]
+  let shuffleWait = SHUFFLE_WAIT[0] + Math.random() * (SHUFFLE_WAIT[1] - SHUFFLE_WAIT[0])
   const between = ([low, high]) => low + Math.random() * (high - low)
-  // Each arm's own gesture and drift
-  const arms = ['L', 'R'].map((name) => ({
-    name,
+  // The arms' gesture and drift (both arms), their timing apart from the shuffles' (random from the start)
+  const arms = {
     t: -1,
-    wait: 1 + Math.random() * 3,
+    wait: between(GESTURE_WAIT),
     length: between(GESTURE),
     open: 1,
     raise: 1,
     pace: [between(DRIFT_PACE), between(DRIFT_PACE)],
     phase: [Math.random() * 6.3, Math.random() * 6.3],
-  }))
+  }
   const legs = ['front', 'mid1', 'mid2', 'rear'].flatMap((leg) => [`leg_${leg}_L_000`, `leg_${leg}_R_000`])
 
   /** A spot to walk to, on the same floor, or null */
@@ -347,20 +347,18 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
       posture = THREE.MathUtils.clamp(posture + postureSpeed * dt, 0, 1)
       const p = posture
 
-      // Each arm's gesture: now and then (GESTURE_WAIT), in attack mode, its own length and size
-      for (const arm of arms) {
-        if (arm.t >= 0) {
-          arm.t += dt
-          if (arm.t > arm.length + GESTURE_FOLLOW) {
-            arm.t = -1
-            arm.wait = between(GESTURE_WAIT)
-          }
-        } else if (p > 0.6 && (arm.wait -= dt) <= 0) {
-          arm.t = 0
-          arm.length = between(GESTURE)
-          arm.open = between(GESTURE_SIZE)
-          arm.raise = between(GESTURE_SIZE)
+      // The arms' gesture: now and then (GESTURE_WAIT), in attack mode, its own length and size
+      if (arms.t >= 0) {
+        arms.t += dt
+        if (arms.t > arms.length + GESTURE_FOLLOW) {
+          arms.t = -1
+          arms.wait = between(GESTURE_WAIT)
         }
+      } else if (p > 0.6 && (arms.wait -= dt) <= 0) {
+        arms.t = 0
+        arms.length = between(GESTURE)
+        arms.open = between(GESTURE_SIZE)
+        arms.raise = between(GESTURE_SIZE)
       }
       // Front raised: the body pitches up (a negative turn about x lifts +z); the legs turn back as much, so they stay
       // down. The tail is held up in an arc of a circle all through the threat posture (Christian, 2026-10-23): the
@@ -384,17 +382,16 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
         pose(`antenna_${name}_000`, [Y, toward * ANTENNA_BEND[0] * strength + flutter(phase)], [X, -0.25 * p])
         pose(`antenna_${name}_001`, [Y, toward * ANTENNA_BEND[1] * strength + flutter(phase + 0.8)])
       }
-      // Claws: raised and spread, open, each arm drifting on its own; in its gesture an arm opens out wider and rises,
-      // and its pincer opens wide a moment later (TODO #51)
-      for (const arm of arms) {
-        const out = arm.name === 'L' ? side : -side
-        const e = arm.t >= 0 ? gestureAt(arm.t, arm.length) : 0
-        const pincer = arm.t >= 0 ? gestureAt(arm.t - GESTURE_FOLLOW, arm.length) : 0
-        const rise = DRIFT * p * Math.sin(time * arm.pace[0] + arm.phase[0])
-        const spread = DRIFT * p * Math.sin(time * arm.pace[1] + arm.phase[1])
-        const name = arm.name
-        pose(`claw_${name}_000`, [X, -0.7 * p - rise - 0.2 * e * arm.raise], [Y, out * (0.45 * p + spread + 0.45 * e * arm.open)])
-        pose(`claw_${name}_001`, [Y, out * 0.25 * e * arm.open])
+      // Claws: raised and spread, open, drifting together; in a gesture both arms open out wider and rise, and their
+      // pincers open wide a moment later (TODO #51)
+      const e = arms.t >= 0 ? gestureAt(arms.t, arms.length) : 0
+      const pincer = arms.t >= 0 ? gestureAt(arms.t - GESTURE_FOLLOW, arms.length) : 0
+      const rise = DRIFT * p * Math.sin(time * arms.pace[0] + arms.phase[0])
+      const spread = DRIFT * p * Math.sin(time * arms.pace[1] + arms.phase[1])
+      for (const name of ['L', 'R']) {
+        const out = name === 'L' ? side : -side
+        pose(`claw_${name}_000`, [X, -0.7 * p - rise - 0.2 * e * arms.raise], [Y, out * (0.45 * p + spread + 0.45 * e * arms.open)])
+        pose(`claw_${name}_001`, [Y, out * 0.25 * e * arms.open])
         pose(`claw_${name}_003`, [Y, -out * (0.35 * p + 0.5 * pincer)])
       }
       return true
