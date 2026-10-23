@@ -172,7 +172,7 @@ const status = document.getElementById('status')
 // ?profile=mobile|desktop forces a profile (tests on the PC).
 const PROFILES = {
   mobile: { errorTarget: 12, maxBytes: 450e6, pixelRatio: Math.min(window.devicePixelRatio, 1.5) },
-  desktop: { errorTarget: 6, maxBytes: 2000e6, pixelRatio: Math.min(window.devicePixelRatio, 2) },
+  desktop: { errorTarget: 6, maxBytes: 1200e6, pixelRatio: Math.min(window.devicePixelRatio, 2) },
 }
 const isMobile = (forced) => (forced ? forced === 'mobile' : window.matchMedia('(pointer: coarse)').matches)
 let mobile = isMobile(params.get('profile'))
@@ -753,9 +753,17 @@ function reveal(element, on, hidden, delay = 0) {
 const seasonRange = seasonControl.querySelector('.season-range')
 const seasonValue = seasonControl.querySelector('.season-value')
 seasonRange.setAttribute('aria-label', t('season'))
+// All four seasons' values in the same place, only the current one shown: the strip keeps the size of the longest
+// while the slider moves (Christian, 2026-10-23)
+const seasonLabels = [0, 1, 2, 3].map((index) => {
+  const label = document.createElement('span')
+  label.textContent = t('seasonValue', { index })
+  return label
+})
+seasonValue.replaceChildren(...seasonLabels)
 function showSeason() {
   seasonRange.value = String(look.season)
-  seasonValue.textContent = t('seasonValue', { index: look.season })
+  seasonLabels.forEach((label, index) => label.classList.toggle('current', index === Number(look.season)))
 }
 seasonRange.addEventListener('input', () => {
   live.season(seasonRange.value)

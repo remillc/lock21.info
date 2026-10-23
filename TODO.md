@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#54**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#55**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -11,6 +11,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 - [ ] #1 If phones struggle: lower the texture resolution of the coarse levels
 - [ ] #3 Choose default ambient occlusion settings (radius, intensity) after viewing close up
+- [ ] #54 How to navigate in the 3D viewer with a phone: what the gestures are (one finger, two fingers, swimming
+  underwater?), and how a visitor learns them (help, hints)
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
 
 ### Zones

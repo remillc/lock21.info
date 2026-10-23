@@ -256,8 +256,16 @@ l21-loading.error .loading-bar {
   cursor: pointer;
 }
 .season-value {
-  min-width: 120px;
+  display: grid;
   white-space: nowrap;
+}
+/* The four values stacked in one cell (main.js): sized by the longest, only the current one visible */
+.season-value > span {
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+.season-value > span.current {
+  visibility: visible;
 }
 .underwater-tools .lamp-button {
   position: relative;
@@ -270,10 +278,41 @@ l21-loading.error .loading-bar {
 .lamp-button[aria-pressed='true'] .icon-on {
   display: block;
 }
+/* Narrow screens (phones, the /modele page's frame): in the bottom-left corner, beside the buttons' row (full screen,
+   underwater, and AR where it is offered), the lamp button above the season pill, the pill on two lines (its value
+   above the slider; the value wraps if it must). Christian, 2026-10-23 */
 @media (max-width: 600px) {
   .underwater-tools {
-    right: max(16px, env(safe-area-inset-right));
-    bottom: calc(max(16px, env(safe-area-inset-bottom)) + 56px);
+    left: max(16px, env(safe-area-inset-left));
+    right: calc(max(16px, env(safe-area-inset-right)) + 168px);
+    bottom: max(16px, env(safe-area-inset-bottom));
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .ar-button[hidden] ~ .underwater-tools {
+    right: calc(max(16px, env(safe-area-inset-right)) + 112px);
+  }
+  .underwater-tools .lamp-button {
+    order: -1;
+  }
+  .season-control {
+    align-self: stretch;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    height: auto;
+    padding: 8px 16px;
+    border-radius: 20px;
+  }
+  .season-value {
+    order: -1;
+    white-space: normal;
+    text-align: center;
+    text-wrap: balance;
+  }
+  .season-range {
+    width: 100%;
   }
 }
 

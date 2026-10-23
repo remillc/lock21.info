@@ -4,6 +4,12 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: the desktop memory budget for tiles back to 1.2 GB: at 2 GB (0.9.0) the browser ran out of memory
+  ("Array buffer allocation failed"), and tiles and textures failed to load.
+- 3D viewer, underwater on narrow screens (phones, the /modele page's frame): the season pill in the bottom-left corner
+  beside the buttons' row, on two lines (its value above the slider), the lamp button above it.
+- 3D viewer: the season strip keeps its size while the slider moves (the four values stacked in one place, the
+  longest sets the size); a value wraps only after the « · ».
 - 3D viewer: on a narrow frame (phones: the /modele page's square frame, the tall full screen), the start view steps back
   along its line of sight to show as much across as on a computer (at most 2.2 times as far; TODO #49).
 - 3D viewer: the underwater view is no longer remembered between visits (each visit starts in the air; a link's
