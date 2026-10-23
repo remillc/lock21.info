@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: until a season is chosen, the season is today's (December to February winter, March to May
+  spring, June to August summer, September to November autumn); it was summer.
 - 3D viewer: a new start view (`START_VIEW`, chosen by Christian), about a metre from the point it looks at.
 - 3D viewer: on a computer the tiles' textures (ETC1S) go to the graphics card as BC1 instead of BC7, half the memory
   for the same look (TODO #55): at the start view twice as many tiles of the finest level fit in the budget.

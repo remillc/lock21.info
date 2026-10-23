@@ -21,6 +21,17 @@ import { t } from './i18n.js'
 
 const STORAGE_KEY = 'l21-viewer-settings'
 
+/**
+ * The underwater season of a date (underwater.js SEASONS: 0 winter, 1 spring, 2 summer, 3 autumn), by meteorological
+ * seasons: December to February, March to May, June to August, September to November. The season shown until one is
+ * chosen (Christian, 2026-10-23)
+ * @param {Date} [date]
+ * @returns {number}
+ */
+export function seasonOfDate(date = new Date()) {
+  return Math.floor(((date.getMonth() + 1) % 12) / 3)
+}
+
 export function savedSettings() {
   try {
     return new URLSearchParams(localStorage.getItem(STORAGE_KEY) ?? '')
@@ -60,7 +71,7 @@ export function settingsSchema({ mobile }) {
       title: t('underwaterSection'),
       items: [
         { key: 'underwater', label: t('underwater'), hint: t('underwaterHint'), type: 'toggle', def: '0', remember: false },
-        { key: 'season', label: t('season'), hint: t('seasonHint'), type: 'range', min: 0, max: 3, step: 1, def: '2', format: (v) => t('seasonValue', { index: Number(v) }), dependsOn: 'underwater' },
+        { key: 'season', label: t('season'), hint: t('seasonHint'), type: 'range', min: 0, max: 3, step: 1, def: String(seasonOfDate()), format: (v) => t('seasonValue', { index: Number(v) }), dependsOn: 'underwater' },
         { key: 'lamp', label: t('lamp'), hint: t('lampHint'), type: 'toggle', def: '1', dependsOn: 'underwater' },
       ],
     },

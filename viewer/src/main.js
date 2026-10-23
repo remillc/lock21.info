@@ -9,7 +9,7 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js'
 import { CSM } from 'three/examples/jsm/csm/CSM.js'
 import { TilesRenderer } from '3d-tiles-renderer'
-import { forgetSettings, rememberedKeys, savedSettings, settingsSchema } from './config-panel.js'
+import { forgetSettings, rememberedKeys, savedSettings, seasonOfDate, settingsSchema } from './config-panel.js'
 import './loading.js'
 import './tooltip.js'
 import { createUnderwater, FIELD_CELLS, FIELD_RANGE, FIELD_SIZE, SURFACE_Y } from './underwater.js'
@@ -309,7 +309,8 @@ const look = {
   // « Ambiance sous-marine » (?underwater=1) and its season (?season=0..3: winter, spring, summer, autumn; default
   // summer, the diving season), see underwater.js
   underwater: params.get('underwater') === '1',
-  season: params.has('season') ? Number(params.get('season')) : 2,
+  // Until a season is chosen (the slider, a link, kept settings): today's (seasonOfDate)
+  season: params.has('season') ? Number(params.get('season')) : seasonOfDate(),
   // The dive light while underwater (?lamp=0 turns it off)
   lamp: params.get('lamp') !== '0',
   // Saturation of the lit surfaces (?saturation=0..2, 1 = the textures' own; default 1.2, Christian's choice: AgX greys the
