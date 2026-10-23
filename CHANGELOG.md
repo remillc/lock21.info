@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the dive light 20 % dimmer again (surfaces and its glow in the water).
 - Header, every page: the menu button (☰) drawn in bold 3 px bars that turn into an X and back (MD3 motion, as on
   /modele before); in the light theme, no disc or shadow, the icon in the bar's text colour as the magnifier; the
   magnifier bolder too.
