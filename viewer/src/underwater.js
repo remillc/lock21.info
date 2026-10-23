@@ -501,6 +501,10 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
     },
     /** For tests (main.js exposes it in development builds) */
     uniforms,
+    /** The river's current as the particles drift in it (m/s, world): faster in murky seasons */
+    get current() {
+      return particles.material.uniforms.uCurrent.value
+    },
     get on() {
       return on
     },

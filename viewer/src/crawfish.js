@@ -43,6 +43,13 @@ const SHUFFLE_WAIT = [2, 5]
 const CLAW_TIP = new THREE.Color(0.85, 0.3, 0.04)
 const TIP = 0.012
 
+// The antennae in the current: how far they bend toward its direction (rad, the base and the tip segment) at
+// CURRENT_FULL m/s and above, and their flutter in it
+const ANTENNA_BEND = [0.7, 0.5]
+const CURRENT_FULL = 0.5
+// Without a current given: the river's, west to east (35 ft/min, measured 2024-06-08)
+const DEFAULT_CURRENT = new THREE.Vector3((35 * 0.3048) / 60, 0, 0)
+
 const X = new THREE.Vector3(1, 0, 0)
 const Y = new THREE.Vector3(0, 1, 0)
 
@@ -52,8 +59,9 @@ const Y = new THREE.Vector3(0, 1, 0)
  *   underwater)
  * @param {(x: number, y: number, z: number) => ({ y: number, floor: string } | null)} [options.ground] - the floor
  *   below a point: its height and which floor it is (a zone), or null; without it, no wandering
+ * @param {() => THREE.Vector3} [options.current] - the river's current (m/s, world): the antennae bend with it
  */
-export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
+export function createCrawfish({ prepare = (m) => m, ground = null, current = () => DEFAULT_CURRENT } = {}) {
   const root = new THREE.Group()
   root.name = 'crawfish'
   // The model, turned and scaled so that it faces +z, its feet at y = 0
@@ -303,8 +311,18 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
       pose('tail_000', [X, -lift])
       stride = walking ? stride + dt * 9 : stride
       legs.forEach((name, i) => pose(name, [X, -lift], [Y, walking ? 0.25 * Math.sin(stride + i * 1.3) : 0]))
-      pose('antenna_L_000', [Y, 0.12 * Math.sin(time * 1.3)], [X, -0.25 * p])
-      pose('antenna_R_000', [Y, -0.12 * Math.sin(time * 1.3 + 1.7)], [X, -0.25 * p])
+      // The antennae bend toward where the current goes (in its own frame, as it turns), more at the tip and the
+      // stronger the current, fluttering in it; raised a little in the threat posture
+      const flow = current()
+      const speed = Math.hypot(flow.x, flow.z)
+      const strength = Math.min(speed / CURRENT_FULL, 1)
+      const local = Math.atan2(flow.x, flow.z) - root.rotation.y
+      const toward = THREE.MathUtils.clamp(Math.atan2(Math.sin(local), Math.cos(local)), -1.2, 1.2)
+      const flutter = (phase) => (0.04 + 0.1 * strength) * Math.sin(time * (1.3 + 6 * strength) + phase)
+      for (const [name, phase] of [['L', 0], ['R', 1.7]]) {
+        pose(`antenna_${name}_000`, [Y, toward * ANTENNA_BEND[0] * strength + flutter(phase)], [X, -0.25 * p])
+        pose(`antenna_${name}_001`, [Y, toward * ANTENNA_BEND[1] * strength + flutter(phase + 0.8)])
+      }
       // Claws: raised and spread, open; now and then (GESTURE_WAIT) both arms open out wider together and come back
       let e = 0
       if (p > 0.6) {

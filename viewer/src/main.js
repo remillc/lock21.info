@@ -995,6 +995,8 @@ function unloadModel() {
 let mockupModels = []
 // The crayfish (crawfish.js): lit like the surfaces, with the sun's shadows and the underwater look
 let crawfishes = []
+// The river's current (m/s, world): west to east, 35 ft/min (measured 2024-06-08)
+const RIVER_CURRENT = new THREE.Vector3((35 * 0.3048) / 60, 0, 0)
 /** @param {THREE.Material} material */
 function prepareCreatureMaterial(material) {
   // After its own patches (the crayfish's blue claws)
@@ -1029,7 +1031,12 @@ function showMockups(model, manifest) {
   // Crayfish at the « crawfish » empties (crawfish.js)
   model.traverse((child) => {
     if (!/^crawfish/i.test(child.name) || child.isMesh) return
-    const crawfish = createCrawfish({ prepare: prepareCreatureMaterial, ground: (x, y, z) => collider.groundAt(x, y, z) })
+    const crawfish = createCrawfish({
+      prepare: prepareCreatureMaterial,
+      ground: (x, y, z) => collider.groundAt(x, y, z),
+      // The river's current as the particles drift in it (underwater.js), or as measured outside the underwater view
+      current: () => (underwater.on ? underwater.current : RIVER_CURRENT),
+    })
     child.getWorldPosition(crawfish.object.position)
     scene.add(crawfish.object)
     crawfishes.push(crawfish)
