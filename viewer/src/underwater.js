@@ -219,7 +219,8 @@ export function createUnderwater(scene, renderer) {
           vec4 mv = viewMatrix * vec4(p, 1.0);
           vDistance = -mv.z;
           vSeed = seed.w;
-          gl_PointSize = (0.012 + 0.02 * seed.w) * 900.0 * uPixelRatio / max(vDistance, 0.1);
+          // Half the first size (Christian, 2026-10-23: smaller)
+          gl_PointSize = (0.006 + 0.01 * seed.w) * 900.0 * uPixelRatio / max(vDistance, 0.1);
           gl_Position = projectionMatrix * mv;
         }`,
       fragmentShader: /* glsl */ `
