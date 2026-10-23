@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the daylight more absorbed at depth (a quarter of its strength above water, was half).
 - 3D viewer, underwater: the dive light brings back more reds (a warmer light, its colours more saturated).
 - 3D viewer, underwater: the keys pad bottom left continues the season strip's sweep out of the 🤿 button (MD3 motion).
 - 3D viewer, underwater: particles only where they can be seen: a box ahead of the camera, as deep as the visibility
