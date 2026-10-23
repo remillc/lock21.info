@@ -39,7 +39,3 @@ Le relevé avance une zone à la fois: la [page du modèle 3D](/modele) dit comb
 Ce relevé est un projet personnel de Christian Rémillard, plongeur. Le modèle 3D est sous licence
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.fr): vous pouvez le réutiliser en citant la source. Pour
 une question, une correction ou une photo d'archive de l'écluse: [info@lock21.info](mailto:info@lock21.info).
-
-## Remerciements
-
-Ce relevé, je ne l'ai pas fait seul: voir les [remerciements](/remerciements).

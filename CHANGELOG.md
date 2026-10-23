@@ -6,7 +6,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 - Site: a thanks page (« Remerciements », in the sidebar after « À propos »): the dive buddies, DECOSTOP Outdoor Centre
   and its owner Dan Foster for the sponsorship (its logo, one per theme), Sylvain Marcotte for the rig, Nick Baets and
-  Save Ontario Shipwrecks for the 1988 drawings (TODO #53); the About page points to it.
+  Save Ontario Shipwrecks for the 1988 drawings (TODO #53).
 - 3D publishing: the modifiers published are those enabled for render (Show in Render), even when hidden in the
   viewport (a slow boolean hidden to keep Blender fluid is still applied); the eye decided before, and zone 3's
   Boolean.024, hidden, had been left out. The change check follows, so zones with such modifiers show as changed.
