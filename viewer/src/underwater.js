@@ -25,11 +25,14 @@ const WATER_INDEX = 1.333
 // River current, west to east: 35 ft/min, measured by drifting in the canal (2024-06-08), in m/s; the particles drift
 // SEASONS[].current times faster (Christian, 2026-10-23: the murkier the water, the faster: spring's runoff)
 const CURRENT = (35 * 0.3048) / 60
-// Suspended particles in a box following the camera: the murkier the season, dramatically more (SEASONS[].particles,
-// at most PARTICLE_COUNT; MOBILE_SHARE of them on a phone)
-const PARTICLE_COUNT = 200000
+// Suspended particles, only where they can be seen: in a box ahead of the camera (it covers the view's cone), as deep
+// as the visibility (PARTICLE_REACH m at most, PARTICLE_MIN at least); SEASONS[].density particles per m³ (the
+// murkier, dramatically more), so the drawn count follows the box (at most PARTICLE_COUNT; MOBILE_SHARE of them on a
+// phone). A cube of 14 m around the camera drew mostly particles behind it, out of the view or beyond the visibility
+const PARTICLE_COUNT = 60000
+const PARTICLE_REACH = 10
+const PARTICLE_MIN = 3
 const MOBILE_SHARE = 0.4
-const PARTICLE_BOX = 14
 // The particles' distance field: its cells per side, its size (m, centred near the camera: a little more than the
 // particles' box), the distances it holds (m) and the skin a particle is kept out of (m)
 export const FIELD_CELLS = 32
@@ -73,10 +76,10 @@ const BEAM_SAMPLES = 12
 // colours (haze toward the water's colour); only the absorption takes them away. Treating all the haze as absorption
 // left no colour a metre away, even in the dive light's beam
 export const SEASONS = [
-  { key: 'winter', particles: 8000, current: 1, visibilityFt: 100, absorb: [0.3, 0.05, 0.06], water: [0.05, 0.16, 0.17], surface: [0.35, 0.6, 0.62], deep: [0.01, 0.04, 0.05] },
-  { key: 'spring', particles: 200000, current: 5, visibilityFt: 10, absorb: [0.35, 0.12, 0.3], water: [0.12, 0.13, 0.07], surface: [0.42, 0.45, 0.3], deep: [0.03, 0.03, 0.015] },
-  { key: 'summer', particles: 80000, current: 3, visibilityFt: 20, absorb: [0.35, 0.07, 0.15], water: [0.07, 0.17, 0.12], surface: [0.4, 0.62, 0.5], deep: [0.015, 0.05, 0.035] },
-  { key: 'autumn', particles: 40000, current: 2, visibilityFt: 30, absorb: [0.33, 0.06, 0.12], water: [0.06, 0.16, 0.14], surface: [0.36, 0.58, 0.52], deep: [0.012, 0.045, 0.04] },
+  { key: 'winter', density: 3, current: 1, visibilityFt: 100, absorb: [0.3, 0.05, 0.06], water: [0.05, 0.16, 0.17], surface: [0.35, 0.6, 0.62], deep: [0.01, 0.04, 0.05] },
+  { key: 'spring', density: 150, current: 5, visibilityFt: 10, absorb: [0.35, 0.12, 0.3], water: [0.12, 0.13, 0.07], surface: [0.42, 0.45, 0.3], deep: [0.03, 0.03, 0.015] },
+  { key: 'summer', density: 30, current: 3, visibilityFt: 20, absorb: [0.35, 0.07, 0.15], water: [0.07, 0.17, 0.12], surface: [0.4, 0.62, 0.5], deep: [0.015, 0.05, 0.035] },
+  { key: 'autumn', density: 15, current: 2, visibilityFt: 30, absorb: [0.33, 0.06, 0.12], water: [0.06, 0.16, 0.14], surface: [0.36, 0.58, 0.52], deep: [0.012, 0.045, 0.04] },
 ]
 
 // Caustic network: thin bright lines where interfering wave fronts focus the sunlight
@@ -295,9 +298,9 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
       transparent: true,
       depthWrite: false,
       uniforms: {
-        uCamera: { value: new THREE.Vector3() },
+        uCentre: { value: new THREE.Vector3() },
         uTime: uniforms.uUwTime,
-        uBox: { value: PARTICLE_BOX },
+        uBox: { value: 10 },
         uPixelRatio: { value: renderer.getPixelRatio() },
         uAbsorb: uniforms.uUwAbsorb,
         uCurrent: { value: new THREE.Vector3(CURRENT, 0, 0) },
@@ -313,7 +316,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
       },
       vertexShader: /* glsl */ `
         attribute vec4 seed;
-        uniform vec3 uCamera;
+        uniform vec3 uCentre;
         uniform float uTime;
         uniform float uBox;
         uniform float uPixelRatio;
@@ -340,7 +343,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
           // Carried by the current (speed varies a little per particle), with a slight turbulent sway
           vec3 sway = vec3(sin(uTime * 0.3 + seed.w * 6.28), sin(uTime * 0.21 + seed.z * 6.28) - 0.03 * uTime, cos(uTime * 0.25 + seed.w * 3.14)) * 0.25;
           vec3 p = seed.xyz * uBox + uCurrent * uTime * (0.8 + 0.4 * seed.w) + sway;
-          p = mod(p - uCamera + uBox * 0.5, uBox) - uBox * 0.5 + uCamera;
+          p = mod(p - uCentre + uBox * 0.5, uBox) - uBox * 0.5 + uCentre;
           // Around the surfaces, not through them: pushed out of the distance field's skin, along its gradient (they
           // flow around the walls and over the floor)
           vec3 uvw = (p - uFieldMin) / uFieldSize;
@@ -448,6 +451,8 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
   const lamp = { position: new THREE.Vector3(), target: new THREE.Vector3(), visible: false, distance: 10 }
   let lampWanted = true
   const lampOffset = new THREE.Vector3()
+  const ahead = new THREE.Vector3()
+  let particleReach = PARTICLE_MIN
   const lampAhead = new THREE.Vector3()
 
   function applySeason() {
@@ -463,7 +468,12 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
     columnMaterial.uniforms.uDeep.value.set(...season.deep.map((c) => c * DAYLIGHT_LEVEL))
     lamp.distance = LAMP_REACH * season.visibilityFt * 0.3048
     uniforms.uUwLampReach.value = lamp.distance
-    particleGeometry.setDrawRange(0, Math.round(season.particles * (mobile ? MOBILE_SHARE : 1)))
+    // The box: 1.6 times the reach wide, centred 0.6 reach ahead (from just behind the camera to 1.4 reach ahead)
+    particleReach = THREE.MathUtils.clamp(season.visibilityFt * 0.3048, PARTICLE_MIN, PARTICLE_REACH)
+    const box = 1.6 * particleReach
+    particles.material.uniforms.uBox.value = box
+    const count = Math.min(PARTICLE_COUNT, season.density * box ** 3) * (mobile ? MOBILE_SHARE : 1)
+    particleGeometry.setDrawRange(0, Math.round(count))
     particles.material.uniforms.uCurrent.value.set(CURRENT * season.current, 0, 0)
     // The surfaces: clear up to CLEAR_SHARE of the visibility, gone at the visibility; the water's absorption
     uniforms.uUwGone.value = season.visibilityFt * 0.3048
@@ -524,7 +534,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
       column.position.copy(camera.position)
       surface.position.x = camera.position.x
       surface.position.z = camera.position.z
-      particles.material.uniforms.uCamera.value.copy(camera.position)
+      particles.material.uniforms.uCentre.value.copy(camera.getWorldDirection(ahead)).multiplyScalar(0.6 * particleReach).add(camera.position)
       // The dive light follows the camera: its offset in the camera's frame, aimed 10 m ahead
       lamp.position.copy(camera.position).add(lampOffset.set(...LAMP_OFFSET).applyQuaternion(camera.quaternion))
       lamp.target.copy(camera.position).add(lampAhead.set(0, 0, -LAMP_AIM).applyQuaternion(camera.quaternion))
