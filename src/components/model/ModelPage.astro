@@ -38,11 +38,14 @@ const t = en
       drawings: 'Original drawings of the site: Nick Baets (1988), via',
       navigate: 'Navigating',
       controls: [
-        ['Rotate', 'drag with the left button · one finger'],
-        ['Pan', 'drag with the right button · two fingers'],
-        ['Zoom', 'wheel · pinch'],
-        ['Full screen', 'button at the bottom right of the model · Esc to exit'],
-        ['Share a view', "copy the page's address: it keeps the camera position"],
+        ['Rotate', 'mouse: drag with the left button · fingers: slide one finger'],
+        ['Pan', 'mouse: drag with the right button · fingers: slide two fingers'],
+        ['Zoom', 'mouse: wheel · fingers: pinch, toward your fingers'],
+        ['Move closer to a point', 'double-click · double-tap'],
+        ['Full screen', 'button at the bottom right of the model · Esc to exit · on an iPhone, the model opens on its own page'],
+        ['Underwater', 'diver button: the season (visibility) and the dive light; on a computer, swim with the movement keys (W A S D, or the arrows) and drag to turn your head'],
+        ['Help', '? button at the top right, on a phone'],
+        ['Augmented reality', 'cube button, on a phone: the lock on a table'],
       ],
       downloads: 'Downloads',
       /** @param {string} n */
@@ -84,11 +87,14 @@ const t = en
       drawings: "Dessins d'origine du site: Nick Baets (1988), via",
       navigate: 'Naviguer',
       controls: [
-        ['Tourner', 'glisser avec le bouton gauche · un doigt'],
-        ['Déplacer', 'glisser avec le bouton droit · deux doigts'],
-        ['Zoomer', 'molette · pincer'],
-        ['Plein écran', 'bouton en bas à droite du modèle · Échap pour sortir'],
-        ['Partager une vue', "copier l'adresse de la page: elle garde la position de la caméra"],
+        ['Tourner', 'souris: glisser avec le bouton gauche · doigts: glisser un doigt'],
+        ['Déplacer', 'souris: glisser avec le bouton droit · doigts: glisser deux doigts'],
+        ['Zoomer', 'souris: molette · doigts: pincer, vers les doigts'],
+        ['S’approcher d’un point', 'double-clic · toucher deux fois'],
+        ['Plein écran', 'bouton en bas à droite du modèle · Échap pour sortir · sur un iPhone, le modèle s’ouvre sur sa propre page'],
+        ['Sous l’eau', 'bouton du plongeur: la saison (visibilité) et la lampe de plongée; à l’ordinateur, nager avec les touches de déplacement (W A S D, ou les flèches) et glisser pour tourner la tête'],
+        ['Aide', 'bouton ? en haut à droite, sur un téléphone'],
+        ['Réalité augmentée', 'bouton du cube, sur un téléphone: l’écluse sur une table'],
       ],
       downloads: 'Téléchargements',
       /** @param {string} n */
@@ -408,7 +414,9 @@ const updated = zones.updated
   /* MD3 filled button with a leading icon, in the signal colour (tertiary, as the "Modèle 3D" pill): orange with dark olive
      text, readable in both themes (an orange outline on the light background would be too pale for text); 48 px
      touch target, label-large */
+  /* Space above and below each button (Christian, 2026-10-23) */
   .download {
+    margin: 1rem 0;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;

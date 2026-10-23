@@ -7,6 +7,15 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - 3D viewer: the relief's normal maps only on the finest level of the tiles, dropped from the coarser levels as they
   load (TODO #55): at the start view they held about 550 MB of the 1.2 GB budget, which kept the finest level from
   loading and left light flakes on the floor.
+- 3D viewer on phones (TODO #54, `viewer/src/touch-nav.js`): over the viewer, one finger turns the model and two fingers
+  pan it and pinch to zoom, toward the fingers; the page scrolls from outside the viewer. Within a metre of the orbit's
+  centre the centre moves ahead, so zooming in never stalls (the wheel too). A double-tap (a double-click) flies to
+  that point. The gestures' card shows at the first touch, and a « ? » button shows it again. Where a frame can't go
+  full screen (iPhone), the full-screen button opens the viewer on its own page. The /modele page's « Naviguer » list
+  follows.
+- /modele page: the « Naviguer » list rewritten, about the 3D model only (sharing a view through the page's address
+  left out), mouse and fingers apart, with full screen on an iPhone, the underwater view, the help button and
+  augmented reality; more space above and below each download button (16 px).
 
 ## 0.9.1 - 2026-10-23
 

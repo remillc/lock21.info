@@ -17,6 +17,7 @@ import { createSwim } from './swim.js'
 import { createCollider } from './collide.js'
 import { createCrawfish } from './crawfish.js'
 import { createDiverArm } from './diver-arm.js'
+import { createTouchNav } from './touch-nav.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
@@ -76,6 +77,13 @@ if (document.fullscreenEnabled) {
     fullscreenButton.setAttribute('aria-label', t(document.fullscreenElement ? 'fullscreenExit' : 'fullscreen'))
     fullscreenButton.dataset.tooltip = t(document.fullscreenElement ? 'fullscreenExit' : 'fullscreenTitle')
     fullscreenButton.dataset.full = String(Boolean(document.fullscreenElement))
+  })
+} else if (embedded && window.matchMedia('(pointer: coarse)').matches) {
+  // No full screen for a frame (iPhone): the button opens the viewer on its own page, at the same view, the whole
+  // screen for the model
+  fullscreenButton.hidden = false
+  fullscreenButton.addEventListener('click', () => {
+    window.top.location.href = viewUrl()
   })
 }
 
@@ -216,6 +224,25 @@ if (import.meta.env.DEV) window.l21 = { THREE, renderer, scene, camera, controls
 controls.enableDamping = true
 // The camera never goes below the height of the point it turns around: it can't look from under the floor
 controls.maxPolarAngle = Math.PI / 2 - 0.02
+// Touch navigation, the double-tap's flight (touch-nav.js): the model's point under the finger (the zones' tiles and
+// the context)
+const pickRay = new THREE.Raycaster()
+pickRay.firstHitOnly = true
+const pickPointer = new THREE.Vector2()
+const touchNav = createTouchNav({
+  controls,
+  camera,
+  surface: renderer.domElement,
+  t,
+  requestRender: () => requestRender(),
+  pick: (x, y) => {
+    const box = renderer.domElement.getBoundingClientRect()
+    pickPointer.set(((x - box.left) / box.width) * 2 - 1, -((y - box.top) / box.height) * 2 + 1)
+    pickRay.setFromCamera(pickPointer, camera)
+    const hit = pickRay.intersectObjects([...tilesets.map((tiles) => tiles.group), ...contextModels], true)[0]
+    return hit ? hit.point.clone() : null
+  },
+})
 
 // Draw only when something changed (camera, tiles, size): a scene redrawn 60 times per second for nothing
 // kept the phone's GPU at 100 % and made it very hot.
@@ -1272,7 +1299,11 @@ function renderLoop() {
   // and the drag move the camera (swim.js), the address follows
   if (swim.active) {
     if (swim.update()) swimMoved()
-  } else if (controls.update()) needsRender = true
+  } else {
+    // Touch and double-tap navigation (touch-nav.js): a flight to a point, the orbit's centre kept ahead
+    if (touchNav.update()) needsRender = true
+    if (controls.update()) needsRender = true
+  }
   // Underwater: the camera stays below the surface, and the caustics and particles move (a frame every time)
   if (underwater.on) {
     if (camera.position.y > SURFACE_Y - 0.5) camera.position.y = SURFACE_Y - 0.5

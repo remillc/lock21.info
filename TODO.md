@@ -11,8 +11,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 - [ ] #1 If phones struggle: lower the texture resolution of the coarse levels
 - [ ] #3 Choose default ambient occlusion settings (radius, intensity) after viewing close up
-- [ ] #54 How to navigate in the 3D viewer with a phone: what the gestures are (one finger, two fingers, swimming
-  underwater?), and how a visitor learns them (help, hints)
 - [ ] #55 Floor flakes in the default view (light shards: coarse levels left over the detail): with the relief's normal
   maps, the view needs more than the desktop tiles budget (1.2 GB); at 2 GB the browser ran out of memory (« Array
   buffer allocation failed », 0.9.0). Make the tiles lighter (smaller normal maps, or none on coarse levels) or load
