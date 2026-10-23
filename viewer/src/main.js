@@ -191,7 +191,11 @@ scene.background = backdrop
 const underwater = createUnderwater(scene, renderer)
 const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.05, 2000)
 const controls = new OrbitControls(camera, renderer.domElement)
+// Development builds only: the viewer's parts for tests in the browser console (window.l21)
+if (import.meta.env.DEV) window.l21 = { THREE, renderer, scene, camera, underwater }
 controls.enableDamping = true
+// The camera never goes below the height of the point it turns around: it can't look from under the floor
+controls.maxPolarAngle = Math.PI / 2 - 0.02
 
 // Draw only when something changed (camera, tiles, size): a scene redrawn 60 times per second for nothing
 // kept the phone's GPU at 100 % and made it very hot.
