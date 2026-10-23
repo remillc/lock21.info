@@ -997,8 +997,14 @@ let mockupModels = []
 let crawfishes = []
 /** @param {THREE.Material} material */
 function prepareCreatureMaterial(material) {
-  material.onBeforeCompile = (shader) => underwater.patchShader(shader)
-  material.customProgramCacheKey = () => `creature-${material.color.getHexString()}`
+  // After its own patches (the crayfish's blue claws)
+  const own = material.onBeforeCompile
+  const key = material.customProgramCacheKey?.() ?? ''
+  material.onBeforeCompile = (shader, renderer) => {
+    own?.call(material, shader, renderer)
+    underwater.patchShader(shader)
+  }
+  material.customProgramCacheKey = () => `creature-${key}-${material.color.getHexString()}`
   return withShadowCascades(material)
 }
 const MOCKUP_OPACITY = 0.22

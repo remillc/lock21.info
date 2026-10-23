@@ -32,6 +32,8 @@ const t = en
       licenceText: 'The model is licensed under',
       licenceRest: 'free to reuse, adapt and share it, commercially too, as long as you credit the source:',
       credit: 'Lock 21, 3D model by Christian Rémillard (lock21.info), CC BY 4.0',
+      crayfish: 'The crayfish in the underwater view is based on',
+      crayfishBy: 'by',
       drawings: 'Original drawings of the site: Nick Baets (1988), via',
       navigate: 'Navigating',
       controls: [
@@ -75,6 +77,8 @@ const t = en
       licenceText: 'Le modèle est sous licence',
       licenceRest: "libre de le réutiliser, de l'adapter et de le partager, y compris commercialement, en citant la source:",
       credit: 'Écluse 21, modèle 3D par Christian Rémillard (lock21.info), CC BY 4.0',
+      crayfish: 'L’écrevisse de la vue sous-marine est tirée de',
+      crayfishBy: 'par',
       drawings: "Dessins d'origine du site: Nick Baets (1988), via",
       navigate: 'Naviguer',
       controls: [
@@ -157,6 +161,12 @@ const updated = zones.updated
           {t.licenceRest}
         </p>
         <p class="credit">{t.credit}</p>
+        <!-- The crayfish model (viewer/src/crawfish.js): CC BY 4.0, its author credited -->
+        <p class="note">
+          {t.crayfish} « <a href="https://sketchfab.com/3d-models/crayfish-cdc4cfc6203443a490f6b5103e7eac18">Crayfish</a> »
+          {t.crayfishBy} <a href="https://sketchfab.com/ucdavisterc">ucdavisterc</a>,
+          <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
+        </p>
         <p class="note">
           {t.drawings}{' '}
           <a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks</a>.

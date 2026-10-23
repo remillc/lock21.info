@@ -1,168 +1,157 @@
 // A crayfish (« crawfish » empty of the .blend, exported with the mockups: export_mockups.py) that defends itself as
-// the diver comes close: it turns toward the camera, raises its front, lifts and spreads its claws and opens them, as
-// rusty crayfish do (Faxonius rusticus, common in the St. Lawrence). Built from simple shapes, about 15 cm long,
-// facing +z; its threat posture eases in from REACT m and is full at THREAT m, and eases back when the diver leaves.
-// Left alone, it wanders: now and then a few steps to a spot within WANDER m of its place, only where the ground
-// below is the same floor (options.ground: the zone it stands in, flat), so it never leaves that zone's floor.
+// the diver comes close. The model: « Crayfish » by ucdavisterc (Sketchfab, CC BY 4.0), rigged, packed into
+// public/creatures/crayfish.glb (textures 1024 px WebP); its claws tinted blue (Christian, 2026-10-23), by their bones'
+// weights.
+//
+// Behaviour: it faces a diver closer than REACT m (and turns again, REACTION s after they have moved round it by more
+// than REFACE); its threat posture eases in from REACT and is full at THREAT m: front raised (the tail and legs stay
+// down), claws raised, spread and open; now and then both arms open out wider together and come back. Left alone, it
+// wanders: a few steps now and then to a spot within WANDER m of its place, only where the ground below is the same
+// floor (options.ground), legs paddling.
+//
+// The rig's bones are turned about axes of the crayfish's own frame (forward +z, up +y), converted once into each
+// bone's parent space from the rest pose: no need to know how each bone's own axes were set in the rig.
 import * as THREE from 'three'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
+const URL = `${import.meta.env.BASE_URL}creatures/crayfish.glb`
+// Its length from claws to tail fan (m): a large rusty crayfish
+const LENGTH = 0.16
 const REACT = 1.8
 const THREAT = 0.8
-// Turning speed toward the diver (rad/s) and how fast the posture follows (1/s)
 const TURN_SPEED = 2.2
 const POSTURE_SPEED = 3
 // It turns to face the diver again once they are more than REFACE (rad, about 20°) off its heading, after REACTION s
 const REFACE = 0.35
 const REACTION = 2
-// Claw gestures in attack mode: their length (s), and the wait between two of a claw's gestures (s, at random)
+// The claws' gesture in attack mode (both together): its length (s), and the wait between two (s, at random)
 const GESTURE = 1.4
 const GESTURE_WAIT = [1.5, 4]
 // Wandering: how far from its place (m), its walking speed (m/s), the wait between walks (s, at random in between)
 const WANDER = 0.6
 const WALK_SPEED = 0.05
-const REST = [4, 10]
+// (more often: Christian, 2026-10-23; was 4 to 10 s)
+const REST = [1.5, 4]
+// In attack mode, a shuffle now and then: a few cm (SHUFFLE, m, at most) sideways, forward or back, still facing the
+// diver, every SHUFFLE_WAIT s (at random in between)
+const SHUFFLE = 0.08
+const SHUFFLE_WAIT = [2, 5]
+// The claws' blue (multiplied with the texture's brightness)
+const CLAW_BLUE = new THREE.Color(0.35, 0.6, 1.25)
+
+const X = new THREE.Vector3(1, 0, 0)
+const Y = new THREE.Vector3(0, 1, 0)
 
 /**
  * @param {object} options
  * @param {(material: THREE.Material) => THREE.Material} [options.prepare] - the viewer's material set-up (shadows,
  *   underwater)
  * @param {(x: number, y: number, z: number) => ({ y: number, floor: string } | null)} [options.ground] - the floor
- *   below a point: its height and which floor it is (a zone), or null (none, a wall, too steep); without it, no
- *   wandering
+ *   below a point: its height and which floor it is (a zone), or null; without it, no wandering
  */
 export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
-  const shell = prepare(new THREE.MeshStandardMaterial({ color: 0x4a3524, roughness: 0.55 }))
-  const rust = prepare(new THREE.MeshStandardMaterial({ color: 0x7a3f22, roughness: 0.5 }))
-  const dark = prepare(new THREE.MeshStandardMaterial({ color: 0x15100c, roughness: 0.3 }))
-  // The claws tinted blue (Christian, 2026-10-23), the tips lighter
-  const claw = prepare(new THREE.MeshStandardMaterial({ color: 0x2f4f78, roughness: 0.45 }))
-  const clawTip = prepare(new THREE.MeshStandardMaterial({ color: 0x5f8fc4, roughness: 0.4 }))
-
-  const ellipsoid = (rx, ry, rz, material) => {
-    const mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), material)
-    mesh.scale.set(rx, ry, rz)
-    return mesh
-  }
-  const rod = (radius, length, material, tipRadius = radius) => {
-    // Along +z from its origin
-    const geometry = new THREE.CylinderGeometry(tipRadius, radius, length, 8).translate(0, length / 2, 0).rotateX(Math.PI / 2)
-    return new THREE.Mesh(geometry, material)
-  }
-
   const root = new THREE.Group()
   root.name = 'crawfish'
+  // The model, turned and scaled so that it faces +z, its feet at y = 0
+  const body = new THREE.Group()
+  root.add(body)
+  /** @type {Record<string, { bone: THREE.Bone, rest: THREE.Quaternion, toLocal: THREE.Quaternion }>} */
+  const bones = {}
+  let ready = false
+  let side = 1
 
-  // The tail (abdomen) stays on the ground: segments shrinking backward, then the fan
-  const tail = new THREE.Group()
-  tail.position.set(0, 0.012, -0.005)
-  root.add(tail)
-  let z = 0
-  for (let i = 0; i < 6; i++) {
-    const r = 0.017 - i * 0.0018
-    const segment = ellipsoid(r * 1.15, r * 0.75, 0.009, i % 2 ? shell : rust)
-    z -= 0.011
-    segment.position.set(0, -i * 0.0012, z)
-    tail.add(segment)
-  }
-  for (let i = -2; i <= 2; i++) {
-    const plate = ellipsoid(0.007, 0.0015, 0.013, shell)
-    plate.position.set(i * 0.0075, -0.007, z - 0.014)
-    plate.rotation.y = i * 0.25
-    tail.add(plate)
+  new GLTFLoader().load(URL, (gltf) => {
+    const model = gltf.scene
+    model.updateMatrixWorld(true)
+    let skinned = null
+    model.traverse((object) => {
+      if (object.isBone) object.name = object.name.replace(/_\d+$/, '')
+      if (!object.isMesh) return
+      object.castShadow = object.receiveShadow = true
+      object.frustumCulled = false
+      if (object.isSkinnedMesh && !skinned) skinned = object
+      object.material = prepare(tintClaws(object))
+    })
+    // Its frame: forward from the tail to the claws, scaled to LENGTH, feet on the ground
+    const at = (name) => model.getObjectByName(name)?.getWorldPosition(new THREE.Vector3())
+    const forward = at('claw_L_003_end').add(at('claw_R_003_end')).multiplyScalar(0.5).sub(at('fin_middle_end')).setY(0)
+    model.rotation.y = -Math.atan2(forward.x, forward.z)
+    model.updateMatrixWorld(true)
+    const box = new THREE.Box3().setFromObject(skinned ?? model)
+    const size = box.getSize(new THREE.Vector3())
+    body.scale.setScalar(LENGTH / Math.max(size.x, size.z))
+    body.add(model)
+    body.updateMatrixWorld(true)
+    const settled = new THREE.Box3().setFromObject(skinned ?? model)
+    model.position.y -= body.worldToLocal(new THREE.Vector3(0, settled.min.y, 0)).y
+    body.updateMatrixWorld(true)
+    // Left is +x or -x in its frame: from the left claw's place
+    const inBody = (name) => body.worldToLocal(model.getObjectByName(name).getWorldPosition(new THREE.Vector3()))
+    side = Math.sign(inBody('claw_L_000').x) || 1
+    // Each bone: its rest rotation, and the turn from the crayfish's frame to its parent's space
+    const bodyWorld = body.getWorldQuaternion(new THREE.Quaternion())
+    model.traverse((object) => {
+      if (!object.isBone) return
+      const toLocal = object.parent.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(bodyWorld)
+      bones[object.name] = { bone: object, rest: object.quaternion.clone(), toLocal }
+    })
+    ready = true
+  })
+
+  /** The claws' blue: a copy of the material that tints what the claw bones carry */
+  function tintClaws(mesh) {
+    const material = mesh.material.clone()
+    if (!mesh.isSkinnedMesh) return material
+    const skinIndex = mesh.geometry.attributes.skinIndex
+    const skinWeight = mesh.geometry.attributes.skinWeight
+    const clawJoints = new Set(mesh.skeleton.bones.map((b, i) => (/^claw_/.test(b.name) ? i : -1)).filter((i) => i >= 0))
+    const clawness = new Float32Array(skinIndex.count)
+    for (let i = 0; i < skinIndex.count; i++) {
+      for (let k = 0; k < 4; k++) if (clawJoints.has(skinIndex.getComponent(i, k))) clawness[i] += skinWeight.getComponent(i, k)
+    }
+    mesh.geometry.setAttribute('clawness', new THREE.BufferAttribute(clawness, 1))
+    material.onBeforeCompile = (shader) => {
+      shader.uniforms.clawBlue = { value: CLAW_BLUE }
+      shader.vertexShader = 'attribute float clawness;\nvarying float vClawness;\n' +
+        shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nvClawness = clawness;')
+      shader.fragmentShader = 'uniform vec3 clawBlue;\nvarying float vClawness;\n' +
+        shader.fragmentShader.replace('#include <map_fragment>', `#include <map_fragment>
+          float clawLuma = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+          diffuseColor.rgb = mix(diffuseColor.rgb, clawLuma * clawBlue, smoothstep(0.3, 0.9, vClawness));`)
+    }
+    material.customProgramCacheKey = () => 'crayfish-claws'
+    return material
   }
 
-  // The walking legs (4 pairs) stay on the ground too
-  for (const side of [-1, 1]) {
-    for (let i = 0; i < 4; i++) {
-      const leg = new THREE.Group()
-      leg.position.set(side * 0.012, 0.012, 0.018 - i * 0.009)
-      leg.rotation.y = side * (Math.PI / 2 + 0.3 - i * 0.2)
-      const upper = rod(0.0014, 0.022, shell)
-      upper.rotation.x = -0.6
-      const lower = rod(0.0011, 0.022, shell, 0.0005)
-      lower.position.set(0, 0.013, 0.018)
-      lower.rotation.x = 0.9
-      leg.add(upper, lower)
-      root.add(leg)
+  const turn = new THREE.Quaternion()
+  const axis = new THREE.Vector3()
+  /** Sets a bone to its rest rotation turned by these (axis in the crayfish's frame, angle) pairs */
+  function pose(name, ...turns) {
+    const entry = bones[name]
+    if (!entry) return
+    entry.bone.quaternion.copy(entry.rest)
+    for (const [frameAxis, angle] of turns) {
+      if (!angle) continue
+      axis.copy(frameAxis).applyQuaternion(entry.toLocal)
+      entry.bone.quaternion.premultiply(turn.setFromAxisAngle(axis, angle))
     }
   }
 
-  // The front (carapace, head, claws) pivots at the tail's joint: it rises in the threat posture
-  const front = new THREE.Group()
-  front.position.set(0, 0.012, 0)
-  root.add(front)
-  const carapace = ellipsoid(0.019, 0.016, 0.034, rust)
-  carapace.position.set(0, 0.004, 0.028)
-  const rostrum = rod(0.005, 0.016, shell, 0.0008)
-  rostrum.position.set(0, 0.006, 0.058)
-  front.add(carapace, rostrum)
-  for (const side of [-1, 1]) {
-    const eye = ellipsoid(0.0032, 0.0032, 0.0032, dark)
-    eye.position.set(side * 0.006, 0.011, 0.061)
-    front.add(eye)
-  }
-
-  // Antennae: long, thin, swaying
-  const antennae = []
-  for (const side of [-1, 1]) {
-    const antenna = new THREE.Group()
-    antenna.position.set(side * 0.005, 0.006, 0.062)
-    const curve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(0, 0, 0),
-      new THREE.Vector3(side * 0.02, 0.012, 0.04),
-      new THREE.Vector3(side * 0.06, 0.018, 0.075),
-      new THREE.Vector3(side * 0.11, 0.01, 0.1),
-    ])
-    antenna.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 24, 0.0006, 5), shell))
-    front.add(antenna)
-    antennae.push({ antenna, side, phase: Math.random() * 6 })
-  }
-
-  // Claws: shoulder → arm → wrist → hand, a fixed finger and a moving one
-  const claws = []
-  for (const side of [-1, 1]) {
-    const shoulder = new THREE.Group()
-    shoulder.position.set(side * 0.014, 0, 0.045)
-    const arm = rod(0.0035, 0.028, claw)
-    const wrist = new THREE.Group()
-    wrist.position.set(0, 0, 0.028)
-    const forearm = rod(0.0045, 0.022, claw)
-    const hand = new THREE.Group()
-    hand.position.set(0, 0, 0.022)
-    const palm = ellipsoid(0.0085, 0.0045, 0.016, claw)
-    palm.position.set(0, 0, 0.012)
-    const fixed = rod(0.004, 0.026, clawTip, 0.0008)
-    fixed.position.set(side * 0.003, 0, 0.024)
-    const moving = new THREE.Group()
-    moving.position.set(-side * 0.003, 0, 0.024)
-    moving.add(rod(0.0035, 0.025, clawTip, 0.0008))
-    hand.add(palm, fixed, moving)
-    wrist.add(forearm, hand)
-    shoulder.add(arm, wrist)
-    front.add(shoulder)
-    claws.push({ side, shoulder, wrist, hand, moving, gesture: -1, wait: 1 + Math.random() * 2 })
-  }
-
-  root.traverse((object) => {
-    if (object.isMesh) object.castShadow = object.receiveShadow = true
-  })
-
   let posture = 0
   let time = 0
-  // The heading it holds toward the diver, and how long the diver has been off it
+  const toCamera = new THREE.Vector3()
   let facing = null
   let noticed = 0
-  const toCamera = new THREE.Vector3()
-  // Wandering: its place and floor (set on the first update), the spot it walks to, the rest before the next walk
   let home = null
   let floor = null
   let walkTo = null
   let rest = REST[0]
   let stride = 0
-  const legs = []
-  root.traverse((object) => {
-    if (object.parent === root && object.isGroup && object !== tail && object !== front) legs.push(object)
-  })
+  let gesture = -1
+  let shuffleTo = null
+  let shuffleWait = SHUFFLE_WAIT[0]
+  let gestureWait = 1 + Math.random() * 2
+  const legs = ['front', 'mid1', 'mid2', 'rear'].flatMap((leg) => [`leg_${leg}_L_000`, `leg_${leg}_R_000`])
 
   /** A spot to walk to, on the same floor, or null */
   function pickSpot() {
@@ -179,24 +168,25 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
 
   return {
     object: root,
-    /** For tests: its wandering state */
+    /** For tests: its state */
     get debug() {
-      return { home: home?.toArray(), floor, walkTo: walkTo?.toArray(), rest }
+      return { ready, home: home?.toArray(), floor, walkTo: walkTo?.toArray(), rest, side }
     },
     /**
-     * Each frame: turns toward the camera and takes its posture
+     * Each frame: wanders, faces the diver, takes its posture
      * @param {THREE.Camera} camera
      * @param {number} dt - seconds since the last frame
      * @returns {boolean} whether it moved (a new frame is needed)
      */
     update(camera, dt) {
+      if (!ready) return false
       toCamera.copy(camera.position).sub(root.position)
       const distance = toCamera.length()
       // Too far to be seen moving: nothing to draw
       if (distance > 12 && posture < 0.001) return false
       time += dt
-      // Its place and floor, once the floor below it has loaded (the tiles arrive after it): set on the floor. A zone's
-      // floor rather than the terrain under it (hit first while the zone's tiles load), unless none comes in 30 s
+      // Its place and floor, once its zone's floor below it has loaded (the terrain under it is hit first while the
+      // zone's tiles load; accepted only if no zone floor comes in 30 s): set on the floor
       if (!home && ground && distance < 12) {
         const below = ground(root.position.x, root.position.y, root.position.z)
         if (below && (below.floor !== 'context' || time > 30)) {
@@ -217,7 +207,7 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
           } else {
             // Faces where it goes, then walks; follows the floor's height
             const heading = Math.atan2(step.x, step.z)
-            let delta = Math.atan2(Math.sin(heading - root.rotation.y), Math.cos(heading - root.rotation.y))
+            const delta = Math.atan2(Math.sin(heading - root.rotation.y), Math.cos(heading - root.rotation.y))
             root.rotation.y += Math.sign(delta) * Math.min(Math.abs(delta), TURN_SPEED * dt)
             if (Math.abs(delta) < 0.4) {
               root.position.addScaledVector(step.divideScalar(left), Math.min(left, WALK_SPEED * dt))
@@ -233,13 +223,27 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
       } else if (walkTo && distance <= REACT) {
         walkTo = null
       }
-      // The legs paddle while walking
-      stride = walking ? stride + dt * 9 : stride
-      legs.forEach((leg, i) => {
-        leg.rotation.x = walking ? 0.25 * Math.sin(stride + i * 1.3) : leg.rotation.x * 0.9
-      })
-      const wanted = THREE.MathUtils.smoothstep(REACT - distance, 0, REACT - THREAT)
-      posture += (wanted - posture) * Math.min(1, POSTURE_SPEED * dt)
+      // In attack mode, a few centimetres now and then, without turning: it keeps facing the diver
+      if (floor && posture > 0.6) {
+        if (shuffleTo) {
+          const step = shuffleTo.clone().sub(root.position).setY(0)
+          const left = step.length()
+          if (left < 0.005) shuffleTo = null
+          else {
+            root.position.addScaledVector(step.divideScalar(left), Math.min(left, WALK_SPEED * dt))
+            walking = true
+          }
+        } else if ((shuffleWait -= dt) <= 0) {
+          shuffleWait = SHUFFLE_WAIT[0] + Math.random() * (SHUFFLE_WAIT[1] - SHUFFLE_WAIT[0])
+          const angle = Math.random() * Math.PI * 2
+          const reach = SHUFFLE * (0.4 + 0.6 * Math.random())
+          const x = root.position.x + Math.cos(angle) * reach
+          const z = root.position.z + Math.sin(angle) * reach
+          const below = ground(x, root.position.y, z)
+          const near = Math.hypot(x - home.x, z - home.z) < WANDER
+          if (below && below.floor === floor && Math.abs(below.y - home.y) < 0.12 && near) shuffleTo = new THREE.Vector3(x, below.y, z)
+        }
+      } else shuffleTo = null
       // Faces the diver once it has noticed them, then holds that heading: when the diver has moved round it by more
       // than REFACE, it waits REACTION s, then turns to face them again
       if (distance < REACT + 0.5) {
@@ -259,35 +263,36 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
         facing = null
         noticed = 0
       }
+      const wanted = THREE.MathUtils.smoothstep(REACT - distance, 0, REACT - THREAT)
+      posture += (wanted - posture) * Math.min(1, POSTURE_SPEED * dt)
       const p = posture
-      front.rotation.x = -0.55 * p
-      for (const { antenna, side, phase } of antennae) {
-        antenna.rotation.y = side * (0.15 * Math.sin(time * 1.3 + phase) + 0.35 * p)
-        antenna.rotation.x = -0.1 * Math.sin(time * 0.9 + phase) - 0.3 * p
-      }
-      // In attack mode, each claw now and then (every GESTURE_WAIT s, at random) makes a short gesture: the arm opens
-      // out wider, its pincer wide open, then comes back to its raised position (Christian, 2026-10-23)
-      for (const claw of claws) {
-        const { side, shoulder, wrist, hand, moving } = claw
-        let e = 0
-        if (p > 0.6) {
-          if (claw.gesture >= 0) {
-            claw.gesture += dt
-            if (claw.gesture > GESTURE) {
-              claw.gesture = -1
-              claw.wait = GESTURE_WAIT[0] + Math.random() * (GESTURE_WAIT[1] - GESTURE_WAIT[0])
-            }
-          } else if ((claw.wait -= dt) <= 0) claw.gesture = 0
-          if (claw.gesture >= 0) {
-            e = Math.sin((Math.PI * claw.gesture) / GESTURE)
+
+      // Front raised: the body pitches up (a negative turn about x lifts +z); the tail and the legs turn back as much,
+      // so they stay down
+      const lift = -0.45 * p
+      pose('body', [X, lift])
+      pose('tail_000', [X, -lift])
+      stride = walking ? stride + dt * 9 : stride
+      legs.forEach((name, i) => pose(name, [X, -lift], [Y, walking ? 0.25 * Math.sin(stride + i * 1.3) : 0]))
+      pose('antenna_L_000', [Y, 0.12 * Math.sin(time * 1.3)], [X, -0.25 * p])
+      pose('antenna_R_000', [Y, -0.12 * Math.sin(time * 1.3 + 1.7)], [X, -0.25 * p])
+      // Claws: raised and spread, open; now and then (GESTURE_WAIT) both arms open out wider together and come back
+      let e = 0
+      if (p > 0.6) {
+        if (gesture >= 0) {
+          gesture += dt
+          if (gesture > GESTURE) {
+            gesture = -1
+            gestureWait = GESTURE_WAIT[0] + Math.random() * (GESTURE_WAIT[1] - GESTURE_WAIT[0])
           }
-        }
-        shoulder.rotation.y = side * (0.25 + 0.55 * p + 0.5 * e)
-        shoulder.rotation.x = 0.15 - 0.9 * p - 0.15 * e
-        wrist.rotation.y = -side * (0.6 - 0.2 * p - 0.3 * e)
-        wrist.rotation.x = -0.2 * p
-        hand.rotation.z = side * 0.3 * p
-        moving.rotation.y = -side * (0.05 + 0.55 * p + 0.25 * e)
+        } else if ((gestureWait -= dt) <= 0) gesture = 0
+        if (gesture >= 0) e = Math.sin((Math.PI * gesture) / GESTURE)
+      }
+      for (const name of ['L', 'R']) {
+        const out = name === 'L' ? side : -side
+        pose(`claw_${name}_000`, [X, -0.7 * p - 0.15 * e], [Y, out * (0.45 * p + 0.45 * e)])
+        pose(`claw_${name}_001`, [Y, out * 0.25 * e])
+        pose(`claw_${name}_003`, [Y, -out * (0.45 * p + 0.2 * e)])
       }
       return true
     },
