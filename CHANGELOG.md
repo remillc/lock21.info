@@ -4,7 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- 3D viewer: the sun by default where it stood at Lock 21 on 1968-05-12 at 9:00 (almost due east, 35° up); the sun
+- 3D viewer: the sun by default where it stood at Lock 21 on 2026-10-23 at 13:00 (just west of south, 33° up); the sun
   direction sliders move by 1°.
 - 3D viewer: cascaded sun shadows (three.js CSM, three 2048 px maps following the camera, up to 300 m): sharp up
   close instead of one 4096 px map over the whole site (about 4 cm per texel).
