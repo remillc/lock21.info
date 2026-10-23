@@ -15,7 +15,7 @@ const POSTURE_SPEED = 3
 const REFACE = 0.35
 const REACTION = 2
 // Claw gestures in attack mode: their length (s), and the wait between two of a claw's gestures (s, at random)
-const GESTURE = 1
+const GESTURE = 1.4
 const GESTURE_WAIT = [1.5, 4]
 // Wandering: how far from its place (m), its walking speed (m/s), the wait between walks (s, at random in between)
 const WANDER = 0.6
@@ -265,12 +265,11 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
         antenna.rotation.y = side * (0.15 * Math.sin(time * 1.3 + phase) + 0.35 * p)
         antenna.rotation.x = -0.1 * Math.sin(time * 0.9 + phase) - 0.3 * p
       }
-      // In attack mode, each claw now and then (every GESTURE_WAIT s, at random) makes a short gesture: the pincer
-      // snaps open and shut a few times while the arm jabs and sways
+      // In attack mode, each claw now and then (every GESTURE_WAIT s, at random) makes a short gesture: the arm opens
+      // out wider, its pincer wide open, then comes back to its raised position (Christian, 2026-10-23)
       for (const claw of claws) {
         const { side, shoulder, wrist, hand, moving } = claw
         let e = 0
-        let snap = 0
         if (p > 0.6) {
           if (claw.gesture >= 0) {
             claw.gesture += dt
@@ -280,17 +279,15 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
             }
           } else if ((claw.wait -= dt) <= 0) claw.gesture = 0
           if (claw.gesture >= 0) {
-            const g = claw.gesture
-            e = Math.sin((Math.PI * g) / GESTURE)
-            snap = e * (0.5 + 0.5 * Math.sin(g * 16))
+            e = Math.sin((Math.PI * claw.gesture) / GESTURE)
           }
         }
-        shoulder.rotation.y = side * (0.25 + 0.55 * p + 0.15 * e * Math.cos(claw.gesture * 6))
-        shoulder.rotation.x = 0.15 - 0.9 * p - 0.25 * e * Math.sin(claw.gesture * 8)
-        wrist.rotation.y = -side * (0.6 - 0.2 * p + 0.2 * e)
+        shoulder.rotation.y = side * (0.25 + 0.55 * p + 0.5 * e)
+        shoulder.rotation.x = 0.15 - 0.9 * p - 0.15 * e
+        wrist.rotation.y = -side * (0.6 - 0.2 * p - 0.3 * e)
         wrist.rotation.x = -0.2 * p
         hand.rotation.z = side * 0.3 * p
-        moving.rotation.y = -side * (0.05 + 0.55 * p) * (1 - snap)
+        moving.rotation.y = -side * (0.05 + 0.55 * p + 0.25 * e)
       }
       return true
     },
