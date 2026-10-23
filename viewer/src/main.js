@@ -89,7 +89,7 @@ if (document.fullscreenEnabled) {
 const AR_URL = import.meta.env.VITE_AR_URL || 'https://tiles.lock21.info/downloads/ar'
 // Version of the AR files, in their address: the server and the phones keep them an hour, so a rebuild (same names)
 // would otherwise show up late. Change it after each upload of rebuilt AR files (docs/augmented-reality.md)
-const AR_VERSION = '2026-10-22-zone16'
+const AR_VERSION = '2026-10-23'
 // ?ar=full: the lock at its real size (70 m) instead of on a table (the /modele/ page's "Taille réelle" QR code and link)
 const arFull = params.get('ar') === 'full'
 const arName = arFull ? 'lock-21-ar-full' : 'lock-21-ar'
@@ -171,7 +171,7 @@ const status = document.getElementById('status')
 // ?profile=mobile|desktop forces a profile (tests on the PC).
 const PROFILES = {
   mobile: { errorTarget: 12, maxBytes: 450e6, pixelRatio: Math.min(window.devicePixelRatio, 1.5) },
-  desktop: { errorTarget: 6, maxBytes: 1200e6, pixelRatio: Math.min(window.devicePixelRatio, 2) },
+  desktop: { errorTarget: 6, maxBytes: 2000e6, pixelRatio: Math.min(window.devicePixelRatio, 2) },
 }
 const isMobile = (forced) => (forced ? forced === 'mobile' : window.matchMedia('(pointer: coarse)').matches)
 let mobile = isMobile(params.get('profile'))
@@ -199,7 +199,7 @@ const underwater = createUnderwater(scene, renderer, { mobile })
 const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.05, 2000)
 const controls = new OrbitControls(camera, renderer.domElement)
 // Development builds only: the viewer's parts for tests in the browser console (window.l21)
-if (import.meta.env.DEV) window.l21 = { THREE, renderer, scene, camera, controls, underwater }
+if (import.meta.env.DEV) window.l21 = { THREE, renderer, scene, camera, controls, underwater, get tilesets() { return tilesets } }
 controls.enableDamping = true
 // The camera never goes below the height of the point it turns around: it can't look from under the floor
 controls.maxPolarAngle = Math.PI / 2 - 0.02

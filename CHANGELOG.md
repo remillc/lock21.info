@@ -2,8 +2,14 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
-## Unreleased
+## 0.9.0 - 2026-10-23
 
+- 3D model: zones 2, 3, 4, 11, 12 and 13 republished after their cuts and, for zones 3, 4, 12 and 13, their placement
+  changed in the `.blend`, with their relief (normal maps) baked again; the context (terrain, walls, fillers)
+  republished too. Downloads rebuilt: Google Earth KMZ, full GLB, and the AR models (`AR_VERSION` 2026-10-23).
+- 3D viewer: the desktop memory budget for tiles raised from 1.2 to 2 GB (phones unchanged, 450 MB): with the relief's
+  normal maps, the default view no longer fitted, and when the tiles came fast from the CDN's cache, its floor stayed on
+  coarse levels (light flakes over the detail).
 - Docs: the front-end guidelines moved from `GUIDELINES.md` to `docs/guidelines.md`, beside the design brief.
 - 3D viewer: the crayfish's threat posture: its tail held up in an arc of a circle; both arms together, drifting slowly
   and, now and then, a gesture (random length and size): they open out and rise, the pincers opening wide a moment
