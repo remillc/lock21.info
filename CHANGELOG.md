@@ -10,6 +10,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   that point. The gestures' card shows at the first touch, and a « ? » button shows it again. Where a frame can't go
   full screen (iPhone), the full-screen button opens the viewer on its own page. The /modele page's « Naviguer » list
   follows.
+- /modele page: the « Naviguer » list rewritten, mouse and fingers apart, with scrolling the page on a phone, full screen
+  on an iPhone, the underwater view, the help button and augmented reality; more space between the two downloads.
 
 ## 0.9.1 - 2026-10-23
 
