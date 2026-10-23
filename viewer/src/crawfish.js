@@ -244,9 +244,9 @@ export function createCrawfish({ prepare = (m) => m, ground = null } = {}) {
           if (below && below.floor === floor && Math.abs(below.y - home.y) < 0.12 && near) shuffleTo = new THREE.Vector3(x, below.y, z)
         }
       } else shuffleTo = null
-      // Faces the diver once it has noticed them, then holds that heading: when the diver has moved round it by more
-      // than REFACE, it waits REACTION s, then turns to face them again
-      if (distance < REACT + 0.5) {
+      // At rest (the diver farther than REACT) it doesn't bother with them. Closer, it faces them, then holds that
+      // heading: when the diver has moved round it by more than REFACE, it waits REACTION s, then turns again
+      if (distance < REACT) {
         const bearing = Math.atan2(toCamera.x, toCamera.z)
         const off = (a, b) => Math.atan2(Math.sin(a - b), Math.cos(a - b))
         if (facing === null) facing = bearing
