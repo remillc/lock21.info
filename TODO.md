@@ -68,6 +68,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   palette and fonts, check contrast (WCAG AA) in both themes
 - [ ] #48 Idea: a guided tour in the viewer (a sequence of views with a short text each). Stops noted so far:
   - zone 16, the spillway gate door on the floor: `?cam=-18.54,1.28,8.53,-17.08,-0.65,10.34`
+  - looking down the stone passage through the wall, its pipes on the floor, the opening at the end (Christian's
+    favourite, 2026-10-23; screenshot `images/views/2026-10-23-view-1.webp`): `?cam=-37.01,2.56,-14.66,-33.02,2.48,-14.40`
 
 ## Other
 
