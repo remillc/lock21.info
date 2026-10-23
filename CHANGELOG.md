@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, swim mode: the diver stops 1 m from any surface, the floor included (was 40 cm).
+- 3D viewer, underwater: the dive light reaches the creatures (crayfish, bass) in a wider cone than the surfaces (up to
+  25° from its axis at 60 % of the hotspot, none past 55°): a crayfish at the diver's feet, below the beam aimed at the
+  view's centre, was a dark silhouette.
 - 3D viewer, underwater (TODO #56): a curious smallmouth bass. When the camera stays still for 6 s, it comes slowly from
   one side of the view, swims about a sixth of its width, stops and turns to look at the diver; a move of the camera
   sends it off at once, a quick turn and a dash, gone in about 2 s (at most once every 30 s, only where its path

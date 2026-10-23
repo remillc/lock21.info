@@ -73,6 +73,9 @@ const LAMP_REACH = 1.5
 // The beam's brightness in the water (in-scattered light, added along the line of sight)
 const BEAM_STRENGTH = 0.136
 const BEAM_SAMPLES = 12
+// The dive light on the creatures (crayfish, bass): at least this share of the hotspot's light within a cone of these
+// half-angles (degrees: none at the first, full at the second)
+const CREATURE_FILL = [0.6, 55, 25]
 // The beam's glow in the water starts this far from the lamp (m): none at the first, full at the second
 const BEAM_NEAR = [0.5, 2.5]
 // Looking straight up, the visibility's share left (the water toward the light from above hides what stands there)
@@ -414,7 +417,11 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
    * water's colour, with the caustics; before the tone mapping. Always compiled in, uUwOn turns it on
    * @param {{ vertexShader: string, fragmentShader: string, uniforms: object }} shader
    */
-  function patchShader(shader) {
+  /**
+   * @param {object} shader - from onBeforeCompile
+   * @param {{ creature?: boolean }} [options] - creature: the dive light reaches it in a wider cone (CREATURE_FILL)
+   */
+  function patchShader(shader, { creature = false } = {}) {
     Object.assign(shader.uniforms, uniforms)
     shader.vertexShader = 'varying vec3 vUwWorld;\nvarying float vUwDepth;\n' + shader.vertexShader.replace(
       '#include <project_vertex>',
@@ -448,6 +455,9 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
           float uwLampDist = max(length(uwToLamp), 0.05);
           vec3 uwLampDir = normalize((viewMatrix * vec4(uwToLamp, 0.0)).xyz);
           float uwCone = uwLampCone(dot(-uwToLamp / uwLampDist, uUwLampDir));
+          ${creature ? `// A creature near the lamp: lit in a wider cone than the surfaces (the eye follows it; the beam, aimed at the
+          // view's centre, passed over a crayfish at the diver's feet, leaving it a dark silhouette: Christian, 2026-10-23)
+          uwCone = max(uwCone, ${CREATURE_FILL[0].toFixed(2)} * smoothstep(${Math.cos((CREATURE_FILL[1] * Math.PI) / 180).toFixed(4)}, ${Math.cos((CREATURE_FILL[2] * Math.PI) / 180).toFixed(4)}, dot(-uwToLamp / uwLampDist, uUwLampDir)));` : ''}
           // Water scatters mostly forward: along a beam most of the scattered light stays in it, so only a third of the
           // scattering counts on the lamp's path (all of the absorption, red first). Its colours a little more
           // saturated: under white light the eye reads colour better than under the green daylight

@@ -9,8 +9,9 @@ import { acceleratedRaycast, computeBoundsTree } from 'three-mesh-bvh'
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree
 THREE.Mesh.prototype.raycast = acceleratedRaycast
 
-// The diver's body (m), and how many times a move slides on (along a wall, then into a corner)
-const RADIUS = 0.4
+// The diver's body (m: 1 m from any surface, the floor included; Christian, 2026-10-23, was 40 cm), and how many times
+// a move slides on (along a wall, then into a corner)
+const RADIUS = 1
 const SLIDES = 3
 
 /**

@@ -1131,7 +1131,7 @@ function prepareCreatureMaterial(material) {
   const key = material.customProgramCacheKey?.() ?? ''
   material.onBeforeCompile = (shader, renderer) => {
     own?.call(material, shader, renderer)
-    underwater.patchShader(shader)
+    underwater.patchShader(shader, { creature: true })
   }
   material.customProgramCacheKey = () => `creature-${key}-${material.color.getHexString()}`
   return withShadowCascades(material)
