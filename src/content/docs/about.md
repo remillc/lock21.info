@@ -42,12 +42,4 @@ une question, une correction ou une photo d'archive de l'écluse: [info@lock21.i
 
 ## Remerciements
 
-Ce relevé, je ne l'ai pas fait seul. Merci:
-
-- à mes compagnons de plongée, pour les plongées dans le courant, la sécurité et la patience pendant que je filmais
-  chaque moule zébrée: Jean-Sébastien Fournier, Josianne Demers, Nicolas Pinsonneault, Julie Cardinal, Thierry Amar,
-  Véronique Lisi, Michel Giroux et Dan Foster;
-- à [DECOSTOP Outdoor Centre](https://www.decostop.ca/) et à son propriétaire, Dan Foster, pour la commandite et le soutien;
-- à Sylvain Marcotte, qui a conçu le [rig](/questions/dimensions-rig) qui porte les caméras;
-- à Nick Baets et à [Save Ontario Shipwrecks](https://saveontarioshipwrecks.ca/chapter-ottawa/) (section d'Ottawa),
-  pour les dessins de l'écluse de 1988 qui ont servi au [découpage du site](/decoupage-du-site).
+Ce relevé, je ne l'ai pas fait seul: voir les [remerciements](/remerciements).

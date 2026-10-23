@@ -26,6 +26,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 | --- | --- |
 | `src/content/docs/` | **The docs** (Starlight content collection), served at the site root. `index.mdx` is the home page (splash). |
 | `  about.md` | What the site is for (also summed up on the home page, `Home.astro`) |
+| `  remerciements.md` | Thanks: dive buddies, the sponsor (DECOSTOP Outdoor Centre, its logo in `public/images/`, one per theme), the rig's designer, the 1988 drawings |
 | `  decoupage-du-site.mdx` | Zone map and description of zones 1–25 |
 | `  collecte/` | Dive log (`journal-des-plongees.mdx`, a large table wrapped in `<DiveLog>`) and gear (`materiel-utilise.md`) |
 | `  workflow/` | Processing steps (`extraction-des-photos.md` … `texture.md`, ordered by `sidebar.order` in their frontmatter) and per-zone progress tracking (`suivi.md`) |

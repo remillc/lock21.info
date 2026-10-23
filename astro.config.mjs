@@ -67,6 +67,7 @@ export default defineConfig({
       },
       sidebar: [
         { label: 'À propos', translations: { en: 'About' }, link: '/about' },
+        { label: 'Remerciements', translations: { en: 'Thanks' }, link: '/remerciements' },
         { label: 'Modèle 3D', translations: { en: '3D model' }, link: '/modele' },
         { label: 'Découpage du site', translations: { en: 'Site zones' }, link: '/decoupage-du-site' },
         { label: 'La collecte des données', translations: { en: 'Data collection' }, items: [{ autogenerate: { directory: 'collecte' } }] },

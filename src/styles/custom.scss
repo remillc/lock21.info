@@ -334,3 +334,20 @@ main > .content-panel:last-child > .sl-container {
     animation: none !important;
   }
 }
+
+/* A logo for each theme (the sponsor's, on the thanks page): its light-background version in the light theme, its
+   dark-background version in the dark theme (dark is the default, :root) */
+.theme-light-only {
+  display: none;
+}
+[data-theme='light'] .theme-light-only {
+  display: inline;
+}
+[data-theme='light'] .theme-dark-only {
+  display: none;
+}
+/* The sponsor's logo: medium size (168 px wide), under the thanks */
+.sponsor-logo img {
+  width: 168px;
+  height: auto;
+}
