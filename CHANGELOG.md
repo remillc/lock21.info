@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater on a computer: swim mode instead of orbiting (`viewer/src/swim.js`). W, A, S, D (or the
+  arrows) move where you look, Shift faster; dragging turns the head. Keys by position (Z, Q, S, D on AZERTY), drawn
+  bottom left with the keyboard's own letters, lit while held. Leaving the underwater view brings the orbit back,
+  around a point ahead of the diver.
 - 3D viewer, underwater: no light band over everything above eye level: the water keeps one colour around the
   horizon and brightens only when looking well up (in the background and in the haze).
 - 3D viewer, underwater: the dive light reveals more colour (its beam keeps the forward-scattered light: only a third

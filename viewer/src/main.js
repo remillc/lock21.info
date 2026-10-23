@@ -13,6 +13,7 @@ import { savedSettings, settingsSchema } from './config-panel.js'
 import './loading.js'
 import './tooltip.js'
 import { createUnderwater, SURFACE_Y } from './underwater.js'
+import { createSwim } from './swim.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
@@ -556,12 +557,54 @@ function setUnderwater(on) {
   underwater.setOn(on)
   underwaterButton.setAttribute('aria-pressed', String(on))
   showSeasonControl(on)
+  setSwimming(on && !mobile)
   updateAddress()
   settings.reflect('underwater', on ? '1' : '0')
   updateLights()
   updateEnvironment()
 }
 live.underwater = (v) => setUnderwater(v === '1')
+
+// Swimming (swim.js): underwater on a computer, first-person navigation replaces the orbit; leaving it, the orbit
+// turns around the point SWIM_TARGET ahead of where the diver looks. The movement keys drawn bottom left
+const SWIM_TARGET = 4
+const swimKeys = document.querySelector('.swim-keys')
+swimKeys.setAttribute('aria-label', t('swimKeys'))
+swimKeys.querySelector('.swim-hint').textContent = t('swimHint')
+const swim = createSwim({
+  camera,
+  element: renderer.domElement,
+  onKey: (code, down) => {
+    const arrow = { ArrowUp: 'KeyW', ArrowDown: 'KeyS', ArrowLeft: 'KeyA', ArrowRight: 'KeyD' }[code] ?? code
+    swimKeys.querySelector(`[data-code="${arrow}"]`)?.toggleAttribute('data-down', down)
+  },
+})
+// The keyboard's own letters for those positions (AZERTY: Z, Q, S, D), where the browser tells them
+navigator.keyboard?.getLayoutMap?.().then((layout) => {
+  for (const key of swimKeys.querySelectorAll('kbd')) {
+    const letter = layout.get(key.dataset.code)
+    if (letter) key.textContent = letter.toUpperCase()
+  }
+}).catch(() => {})
+/** @param {boolean} on */
+function setSwimming(on) {
+  if (on === swim.active) return
+  controls.enabled = !on
+  swim.setActive(on)
+  swimKeys.hidden = !on
+  if (!on) {
+    controls.target.copy(camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(SWIM_TARGET).add(camera.position))
+    controls.update()
+  }
+}
+let swimTimer = 0
+function swimMoved() {
+  // The address (viewUrl) reads the orbit's target: kept ahead of the diver
+  controls.target.copy(camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(SWIM_TARGET).add(camera.position))
+  needsRender = true
+  clearTimeout(swimTimer)
+  swimTimer = setTimeout(updateAddress, 300)
+}
 live.season = (v) => {
   look.season = Number(v)
   underwater.setSeason(look.season)
@@ -1019,8 +1062,11 @@ setEndFacts(tileFacts)
 // Paused while AR runs (android-ar.js has its own renderer)
 function renderLoop() {
   updateStats()
-  // update() returns true while the camera moves (including the damping glide after a gesture)
-  if (controls.update()) needsRender = true
+  // update() returns true while the camera moves (including the damping glide after a gesture); swimming: the keys
+  // and the drag move the camera (swim.js), the address follows
+  if (swim.active) {
+    if (swim.update()) swimMoved()
+  } else if (controls.update()) needsRender = true
   // Underwater: the camera stays below the surface, and the caustics and particles move (a frame every time)
   if (underwater.on) {
     if (camera.position.y > SURFACE_Y - 0.5) camera.position.y = SURFACE_Y - 0.5

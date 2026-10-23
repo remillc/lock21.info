@@ -1,0 +1,121 @@
+// Swim mode (the « Ambiance sous-marine », computers): first-person navigation instead of orbiting. The keys move the
+// diver where they look (W forward, S back, A and D sideways; the arrows too; Shift faster), dragging turns the head
+// (up, down, left, right). Keys by position (event.code): on an AZERTY keyboard they are Z, Q, S, D, and the keycaps
+// drawn at the bottom left (main.js) show the keyboard's own letters where the browser can tell
+// (navigator.keyboard.getLayoutMap).
+import * as THREE from 'three'
+
+// Swimming speed (m/s), and with Shift; head turn per pixel dragged (radians); the head's pitch limit
+const SPEED = 1.2
+const FAST = 3
+const TURN = 0.004
+const PITCH_LIMIT = 1.45
+
+const MOVES = {
+  KeyW: [0, 0, -1],
+  ArrowUp: [0, 0, -1],
+  KeyS: [0, 0, 1],
+  ArrowDown: [0, 0, 1],
+  KeyA: [-1, 0, 0],
+  ArrowLeft: [-1, 0, 0],
+  KeyD: [1, 0, 0],
+  ArrowRight: [1, 0, 0],
+}
+
+/**
+ * @param {object} options
+ * @param {THREE.PerspectiveCamera} options.camera
+ * @param {HTMLElement} options.element - the 3D view (drag to look around)
+ * @param {(code: string, down: boolean) => void} [options.onKey] - a movement key pressed or released (the keycaps)
+ */
+export function createSwim({ camera, element, onKey }) {
+  let active = false
+  const held = new Set()
+  const euler = new THREE.Euler(0, 0, 0, 'YXZ')
+  const move = new THREE.Vector3()
+  let drag = null
+  let last = 0
+  let fast = false
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Shift') fast = true
+  })
+  window.addEventListener('keyup', (event) => {
+    if (event.key === 'Shift') fast = false
+  })
+
+  // Not while typing in the settings (text fields, sliders, selects)
+  const typing = (event) => event.target instanceof HTMLElement && event.target.closest('input, select, textarea')
+  window.addEventListener('keydown', (event) => {
+    if (!active || !(event.code in MOVES) || typing(event) || event.ctrlKey || event.metaKey || event.altKey) return
+    event.preventDefault()
+    if (!held.has(event.code)) onKey?.(event.code, true)
+    held.add(event.code)
+  })
+  window.addEventListener('keyup', (event) => {
+    if (!held.delete(event.code)) return
+    onKey?.(event.code, false)
+  })
+  // Keys released while the window lost the focus: forgotten
+  window.addEventListener('blur', () => {
+    fast = false
+    for (const code of held) onKey?.(code, false)
+    held.clear()
+  })
+
+  element.addEventListener('pointerdown', (event) => {
+    if (!active || event.button !== 0) return
+    drag = { id: event.pointerId, x: event.clientX, y: event.clientY }
+    element.setPointerCapture(event.pointerId)
+  })
+  element.addEventListener('pointermove', (event) => {
+    if (!active || !drag || event.pointerId !== drag.id) return
+    euler.setFromQuaternion(camera.quaternion)
+    euler.y -= (event.clientX - drag.x) * TURN
+    euler.x = THREE.MathUtils.clamp(euler.x - (event.clientY - drag.y) * TURN, -PITCH_LIMIT, PITCH_LIMIT)
+    euler.z = 0
+    camera.quaternion.setFromEuler(euler)
+    drag.x = event.clientX
+    drag.y = event.clientY
+  })
+  const endDrag = (event) => {
+    if (drag && event.pointerId === drag.id) drag = null
+  }
+  element.addEventListener('pointerup', endDrag)
+  element.addEventListener('pointercancel', endDrag)
+
+  return {
+    get active() {
+      return active
+    },
+    /** @param {boolean} on */
+    setActive(on) {
+      active = on
+      drag = null
+      for (const code of held) onKey?.(code, false)
+      held.clear()
+      last = 0
+      if (on) {
+        // Level the head (no roll), keeping where it looks
+        euler.setFromQuaternion(camera.quaternion)
+        euler.z = 0
+        camera.quaternion.setFromEuler(euler)
+      }
+    },
+    /**
+     * Each frame while active: moves the camera by the held keys
+     * @returns {boolean} whether the view changed (moved or turned)
+     */
+    update() {
+      const now = performance.now()
+      const dt = last ? Math.min((now - last) / 1000, 0.1) : 0
+      last = now
+      if (!active || !held.size) return Boolean(drag)
+      move.set(0, 0, 0)
+      for (const code of held) move.add(new THREE.Vector3(...MOVES[code]))
+      if (!move.lengthSq()) return Boolean(drag)
+      move.normalize().multiplyScalar((fast ? SPEED * FAST : SPEED) * dt).applyQuaternion(camera.quaternion)
+      camera.position.add(move)
+      return true
+    },
+  }
+}
