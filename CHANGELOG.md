@@ -12,7 +12,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   follows.
 - /modele page: the « Naviguer » list rewritten, about the 3D model only (sharing a view through the page's address
   left out), mouse and fingers apart, with full screen on an iPhone, the underwater view, the help button and
-  augmented reality; more space between the two downloads (40 px) and under each button (12 px).
+  augmented reality; more space between the two downloads (64 px) and under each button (16 px).
 
 ## 0.9.1 - 2026-10-23
 
