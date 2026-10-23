@@ -192,7 +192,9 @@ export function createUnderwater(scene, renderer) {
       ${BEAM_GLSL}
       void main() {
         float y = vDir.y;
-        vec3 c = y > 0.0 ? mix(uWater, uSurface, pow(y, 0.8)) : mix(uWater, uDeep, pow(-y, 0.6));
+        // One even water colour around the horizon; lighter only when looking well up (more than about 20°), darker
+        // well down: a gradient right from the horizon made a light band over everything above eye level
+        vec3 c = y > 0.0 ? mix(uWater, uSurface, smoothstep(0.35, 1.0, y)) : mix(uWater, uDeep, smoothstep(0.35, 1.0, -y));
         float s = max(dot(vDir, uSun), 0.0);
         c += vec3(1.0, 0.97, 0.85) * (2.5 * pow(s, 400.0) + 0.45 * pow(s, 12.0)) * uGlare;
         // The beam over open water
@@ -392,7 +394,7 @@ export function createUnderwater(scene, renderer) {
           // background; one flat colour left a silhouette)
           float uwTransmit = 1.0 - smoothstep(uUwClear, uUwGone, vUwDepth);
           vec3 uwDir = normalize(vUwWorld - cameraPosition);
-          vec3 uwBack = uwDir.y > 0.0 ? mix(uUwWater, uUwTop, pow(uwDir.y, 0.8)) : mix(uUwWater, uUwDeep, pow(-uwDir.y, 0.6));
+          vec3 uwBack = uwDir.y > 0.0 ? mix(uUwWater, uUwTop, smoothstep(0.35, 1.0, uwDir.y)) : mix(uUwWater, uUwDeep, smoothstep(0.35, 1.0, -uwDir.y));
           gl_FragColor.rgb = uwColor * uwTransmit + uwBack * (1.0 - uwTransmit);
           gl_FragColor.rgb += vec3(1.0, 0.94, 0.87) * uwBeam(cameraPosition, vUwWorld, uUwAbsorb);
         }

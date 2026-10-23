@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: no light band over everything above eye level: the water keeps one colour around the
+  horizon and brightens only when looking well up (in the background and in the haze).
 - 3D viewer, underwater: the dive light reveals more colour (its beam keeps the forward-scattered light: only a third
   of the scattering dims it; the colours it lights a little more saturated).
 - 3D viewer, underwater: the water surface overhead fades out beyond the visibility like the model (from the floor
