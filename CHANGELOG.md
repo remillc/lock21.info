@@ -22,7 +22,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   stays clear of the walls).
   « Smallmouth bass » by faerbogdan99 (Sketchfab, CC BY 4.0, credited on the /modele page); `viewer/src/bass.js`.
 - 3D viewer, the bass: rigged (a spine of five bones, `tools/creatures/rig_bass.py`, packed by
-  `tools/publish-model/pack_creature.mjs`), it swims by a slow wave down its spine; it gets bored after 8 to 25 s and
+  `tools/publish-model/pack_creature.mjs`), it swims by a slow wave down its spine; it gets bored after 8 to 20 s and
   swims off calmly; its pace follows the water's temperature (winter 40 % of summer's: it saves its energy). Debug:
   `?bass=1` shows it at once and all the time.
 

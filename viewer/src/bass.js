@@ -27,7 +27,7 @@ const TURN = 1.4
 const FLEE_TURN = 7
 // How long it watches the diver before it gets bored (s, at random in between: Christian, 2026-10-23), its calm
 // departure's speed (m/s), and its gentle hover (m)
-const STAY = [8, 25]
+const STAY = [8, 20]
 const WANDER_OFF = 0.35
 const BOB = 0.02
 // The swimming wave down the spine: each bone's bend (rad, head to tail), its beats per second and its size, hovering,
