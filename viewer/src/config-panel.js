@@ -11,6 +11,8 @@
 // format: (value) => text shown for a range's value instead of the number (« Saison »)
 // dependsOn: key of a toggle (the row is shown only while it is on), or [key, value] (shown only while that setting
 // has that value)
+// remember: false: not kept between visits (underwater: each visit starts in the air, Christian 2026-10-23; a link's
+// ?underwater=1 still applies)
 // Settings kept by the browser between page loads (localStorage of this origin: lock21.info, where the /modele/ page
 // embeds the viewer). Saved at every change, cleared by "Réinitialiser"; unavailable storage (private browsing,
 // blocked site data) only means nothing is kept.
@@ -26,8 +28,13 @@ export function savedSettings() {
   }
 }
 
+/** The settings kept between visits: the panel's, except those marked remember: false */
+export function rememberedKeys(schema) {
+  return new Set(schema.flatMap((section) => section.items).filter((item) => item.remember !== false).map((item) => item.key))
+}
+
 function saveSettings(params, schema) {
-  const keys = new Set(schema.flatMap((section) => section.items).map((item) => item.key))
+  const keys = rememberedKeys(schema)
   const kept = new URLSearchParams([...params].filter(([key]) => keys.has(key)))
   try {
     if (kept.size) localStorage.setItem(STORAGE_KEY, kept.toString())
@@ -42,7 +49,7 @@ export function settingsSchema({ mobile }) {
     {
       title: t('underwaterSection'),
       items: [
-        { key: 'underwater', label: t('underwater'), hint: t('underwaterHint'), type: 'toggle', def: '0' },
+        { key: 'underwater', label: t('underwater'), hint: t('underwaterHint'), type: 'toggle', def: '0', remember: false },
         { key: 'season', label: t('season'), hint: t('seasonHint'), type: 'range', min: 0, max: 3, step: 1, def: '2', format: (v) => t('seasonValue', { index: Number(v) }), dependsOn: 'underwater' },
         { key: 'lamp', label: t('lamp'), hint: t('lampHint'), type: 'toggle', def: '1', dependsOn: 'underwater' },
       ],

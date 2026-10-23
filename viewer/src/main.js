@@ -9,7 +9,7 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js'
 import { CSM } from 'three/examples/jsm/csm/CSM.js'
 import { TilesRenderer } from '3d-tiles-renderer'
-import { savedSettings, settingsSchema } from './config-panel.js'
+import { rememberedKeys, savedSettings, settingsSchema } from './config-panel.js'
 import './loading.js'
 import './tooltip.js'
 import { createUnderwater, FIELD_CELLS, FIELD_RANGE, FIELD_SIZE, SURFACE_Y } from './underwater.js'
@@ -28,8 +28,9 @@ import { homePath, t } from './i18n.js'
 const params = new URLSearchParams(location.search)
 // Settings saved by the browser (config-panel.js) where the link doesn't set them. Only the panel's current settings:
 // one saved earlier and since taken out of the panel (the tiles' source, the relief) would apply with no control to
-// change it back; those work only in a link (?tiles=, ?relief=, for tests)
-const panelKeys = new Set(settingsSchema({ mobile: false }).flatMap((section) => section.items).map((item) => item.key))
+// change it back; those work only in a link (?tiles=, ?relief=, for tests). Nor those not remembered (underwater: a
+// value saved before is ignored)
+const panelKeys = rememberedKeys(settingsSchema({ mobile: false }))
 for (const [key, value] of savedSettings()) if (!params.has(key) && panelKeys.has(key)) params.set(key, value)
 const live = {}
 // The address keeps only what makes the view shareable (viewUrl): the camera, and underwater with its season and lamp
