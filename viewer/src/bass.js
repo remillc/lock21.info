@@ -30,19 +30,25 @@ const FLEE_TURN = 7
 const STAY = [8, 20]
 const WANDER_OFF = 0.35
 const BOB = 0.02
-// The swimming wave down the spine: each bone's bend (rad, head to tail), its beats per second and its size, hovering,
-// swimming or fleeing, and the lag between bones (rad)
+// The swimming wave down the spine: each bone's bend (rad, head to tail) and the lag between bones (rad). Its pace and
+// size follow how fast it actually goes (Christian, 2026-10-23), turning included: beats per second at rest plus per
+// m/s (at most BEAT_MAX), size at rest up to 1 at SIZE_SPEED m/s and WAVE_MAX at full dash
 const WAVE = [0.02, 0.05, 0.09, 0.14, 0.22]
-// (half the first try's pace: Christian, 2026-10-23, it waved far too fast; then times the season's pace)
-const BEAT = { hover: 0.35, swim: 0.9, flee: 2.2 }
-const WAVE_SIZE = { hover: 0.25, swim: 1, flee: 1.3 }
 const WAVE_LAG = 0.9
+const BEAT_REST = 0.3
+const BEAT_PER_SPEED = 4
+const BEAT_MAX = 4
+const SIZE_REST = 0.25
+const SIZE_SPEED = 0.2
+const WAVE_MAX = 1.3
+// How a turn counts as speed for the tail (m/s per rad/s): the tail beats as it turns
+const TURN_AS_SPEED = 0.12
 // Turning: how fast its turning rate follows (1/s) and how it scales with what is left to turn; the C-curve of its body
 // per bone (rad per rad/s of turning, head to tail: the body lags behind the head); its glide while turning (m per rad)
 const TURN_EASE = 3
 const TURN_GAIN = 2.5
-// (four times as supple as the first try: Christian, 2026-10-23)
-const CURVE = [0, 0.5, 0.64, 0.64, 0.5]
+// (eight times as supple as the first try: Christian, 2026-10-23)
+const CURVE = [0, 1, 1.28, 1.28, 1]
 const GLIDE = 0.05
 
 /**
@@ -108,6 +114,8 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   const right = new THREE.Vector3()
   const forward = new THREE.Vector3()
   let turnRate = 0
+  const lastRoot = new THREE.Vector3()
+  let speedNow = 0
   const ahead = new THREE.Vector3()
   const toCamera = new THREE.Vector3()
   let heading = 0
@@ -206,6 +214,8 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         root.position.copy(from)
         heading = Math.atan2(to.x - from.x, to.z - from.z)
         turnRate = 0
+        lastRoot.copy(from)
+        speedNow = 0
         root.visible = true
       }
       since += dt
@@ -245,13 +255,15 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         const speed = calm ? WANDER_OFF * slow : FLEE * Math.sqrt(slow) * Math.min(1, (since - leftAt) / 1) ** 2
         if (turned || since - leftAt > (calm ? 1.5 : 0.3)) root.position.addScaledVector(step.normalize(), Math.min(left, Math.max(speed, 0.3) * dt))
       }
-      const fleeing = state === 'leaving' && !calm
-      const swimming = state === 'arriving' || state === 'leaving'
-      // The wave down the spine: its pace and size by what it does, slower in cold water
-      const mode = fleeing ? 'flee' : swimming ? 'swim' : 'hover'
-      phase += dt * BEAT[mode] * slow * Math.PI * 2
+      // Its speed this frame (smoothed), its turn counted in: the wave's pace and size follow it (in cold water it goes
+      // slower, so it waves slower too)
+      const travelled = dt > 0 ? root.position.distanceTo(lastRoot) / dt : 0
+      lastRoot.copy(root.position)
+      speedNow += (travelled + Math.abs(turnRate) * TURN_AS_SPEED - speedNow) * Math.min(1, 4 * dt)
+      phase += dt * Math.min(BEAT_MAX, BEAT_REST + BEAT_PER_SPEED * speedNow) * Math.PI * 2
+      const size = speedNow < SIZE_SPEED ? SIZE_REST + (1 - SIZE_REST) * (speedNow / SIZE_SPEED) : Math.min(WAVE_MAX, 1 + (speedNow - SIZE_SPEED) * 0.2)
       spine.forEach(({ bone, rest, axis }, k) => {
-        const wave = WAVE[k] * WAVE_SIZE[mode] * Math.sin(phase - k * WAVE_LAG)
+        const wave = WAVE[k] * size * Math.sin(phase - k * WAVE_LAG)
         bone.quaternion.copy(rest).premultiply(bend.setFromAxisAngle(axis, wave - turnRate * CURVE[k]))
       })
       root.rotation.set(0, heading, 0)
