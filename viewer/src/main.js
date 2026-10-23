@@ -16,6 +16,7 @@ import { createUnderwater, FIELD_CELLS, FIELD_RANGE, FIELD_SIZE, SURFACE_Y } fro
 import { createSwim } from './swim.js'
 import { createCollider } from './collide.js'
 import { createCrawfish } from './crawfish.js'
+import { createBass } from './bass.js'
 import { createDiverArm } from './diver-arm.js'
 import { createTouchNav } from './touch-nav.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
@@ -1109,6 +1110,15 @@ function unloadModel() {
 let mockupModels = []
 // The crayfish (crawfish.js): lit like the surfaces, with the sun's shadows and the underwater look
 let crawfishes = []
+// The curious bass underwater (bass.js, TODO #56): when the camera stays still, it comes to look at the diver; its path
+// clear of the surfaces (collide.js)
+const bass = createBass({
+  prepare: prepareCreatureMaterial,
+  clearance: (point) => collider.distanceTo(point, collider.surfacesNear(point, 0.6), 0.6),
+  visibility: () => underwater.visibility,
+})
+scene.add(bass.object)
+if (import.meta.env.DEV) window.l21.bass = bass
 // The diver's arm and its light, while underwater with the light on: the beam starts at the drawn light
 const diverArm = createDiverArm({ onLampPose: (front, axis) => underwater.setLampPose(front, axis) })
 if (import.meta.env.DEV) window.l21.diverArm = diverArm
@@ -1393,6 +1403,7 @@ function renderLoop() {
   const dt = Math.min((now - lastFrame) / 1000, 0.1)
   lastFrame = now
   for (const crawfish of crawfishes) if (crawfish.update(camera, dt)) needsRender = true
+  if (bass.update(camera, dt, underwater.on)) needsRender = true
   const loading = tilesets.some((t) => t.stats.queued + t.stats.downloading + t.stats.parsing > 0)
   updateLoading()
   if (!needsRender && !loading) return

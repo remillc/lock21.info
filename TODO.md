@@ -19,8 +19,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   (`--lod-texture-scale` below 0.5, a full re-tiling). Measured 2026-10-23 before that: the budget is full right after the start
   view (phone 462 of 450 MB with 15 tiles, desktop 1201 of 1200 MB), so turning or moving loads no new detail, during
   a gesture or after it
-- [ ] #56 Underwater, when the camera stays still for a while: a bass comes slowly from one side, swims about a sixth of
-  the screen's width, stops and turns toward the diver, its two big eyes looking at us
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
 
 ### Zones

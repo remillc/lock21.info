@@ -533,6 +533,10 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
     get sunThrough() {
       return sunThrough
     },
+    /** The season's visibility (m) */
+    get visibility() {
+      return season.visibilityFt * 0.3048
+    },
     get current() {
       return particles.material.uniforms.uCurrent.value
     },

@@ -35,6 +35,7 @@ const t = en
       crayfish: 'The crayfish in the underwater view is based on',
       crayfishBy: 'by',
       arm: 'The diver’s arm is based on',
+      bass: 'The smallmouth bass is based on',
       drawings: 'Original drawings of the site: Nick Baets (1988), via',
       navigate: 'Navigating',
       controls: [
@@ -84,6 +85,7 @@ const t = en
       crayfish: 'L’écrevisse de la vue sous-marine est tirée de',
       crayfishBy: 'par',
       arm: 'Le bras du plongeur est tiré de',
+      bass: 'L’achigan à petite bouche est tiré de',
       drawings: "Dessins d'origine du site: Nick Baets (1988), via",
       navigate: 'Naviguer',
       controls: [
@@ -172,6 +174,12 @@ const updated = zones.updated
         <p class="note">
           {t.crayfish} « <a href="https://sketchfab.com/3d-models/crayfish-cdc4cfc6203443a490f6b5103e7eac18">Crayfish</a> »
           {t.crayfishBy} <a href="https://sketchfab.com/ucdavisterc">ucdavisterc</a>,
+          <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
+        </p>
+        <!-- The bass (viewer/src/bass.js): CC BY 4.0, its author credited -->
+        <p class="note">
+          {t.bass} « <a href="https://sketchfab.com/3d-models/smallmouth-bass-015389aed3414793b3e9e4a0c25169d1">Smallmouth bass</a> »
+          {t.crayfishBy} <a href="https://sketchfab.com/faerbogdan99">faerbogdan99</a>,
           <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
         </p>
         <!-- The diver's arm (viewer/src/diver-arm.js): its shape from a CC BY 4.0 model, its author credited -->

@@ -2,6 +2,14 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased
+
+- 3D viewer, underwater (TODO #56): a curious smallmouth bass. When the camera stays still for 6 s, it comes slowly from
+  one side of the view, swims about a sixth of its width, stops and turns to look at the diver; a move of the camera
+  sends it off at once, a quick turn and a dash, gone in about 2 s (at most once every 30 s, only where its path
+  stays clear of the walls).
+  « Smallmouth bass » by faerbogdan99 (Sketchfab, CC BY 4.0, credited on the /modele page); `viewer/src/bass.js`.
+
 ## 0.10.0 - 2026-10-23
 
 - 3D viewer, loading (TODO #55): the tiles' coarser levels without normal maps (relief only at the finest level;
