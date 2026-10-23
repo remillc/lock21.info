@@ -1,8 +1,8 @@
 {
   "pages": {
     "about.md": {
-      "source": "d0742506eaef7d325297a4d92424a8ce3b27109e",
-      "commit": "b13d0f2",
+      "source": "4f02081916d8888ea4aa39956082031f8bd87d0d",
+      "commit": "a67d7dc",
       "recorded": "2026-10-23"
     },
     "collecte/journal-des-plongees.mdx": {
@@ -69,6 +69,11 @@
       "source": "40590ce0ff6a223844b9b2c3578f7465ced953bc",
       "commit": "5576b4b",
       "recorded": "2026-10-21"
+    },
+    "remerciements.md": {
+      "source": "1968572d424dab2421cce6ff518b9d1445444dc3",
+      "commit": "a67d7dc",
+      "recorded": "2026-10-23"
     },
     "tests/calibration-couleurs.md": {
       "source": "9ee8e4397dab8be204b3f31bf27af84af83645b7",
