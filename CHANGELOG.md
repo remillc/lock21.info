@@ -2,6 +2,10 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased
+
+- 3D viewer, underwater: the particles drift 8 times the river's current in spring (was 10).
+
 ## 0.9.0 - 2026-10-23
 
 - 3D model: zones 2, 3, 4, 11, 12 and 13 republished after their cuts and, for zones 3, 4, 12 and 13, their placement

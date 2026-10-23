@@ -78,7 +78,7 @@ const BEAM_SAMPLES = 12
 // left no colour a metre away, even in the dive light's beam
 export const SEASONS = [
   { key: 'winter', density: 6, current: 2, visibilityFt: 100, absorb: [0.3, 0.05, 0.06], water: [0.05, 0.16, 0.17], surface: [0.35, 0.6, 0.62], deep: [0.01, 0.04, 0.05] },
-  { key: 'spring', density: 300, current: 10, visibilityFt: 10, absorb: [0.35, 0.12, 0.3], water: [0.12, 0.13, 0.07], surface: [0.42, 0.45, 0.3], deep: [0.03, 0.03, 0.015] },
+  { key: 'spring', density: 300, current: 8, visibilityFt: 10, absorb: [0.35, 0.12, 0.3], water: [0.12, 0.13, 0.07], surface: [0.42, 0.45, 0.3], deep: [0.03, 0.03, 0.015] },
   { key: 'summer', density: 60, current: 6, visibilityFt: 20, absorb: [0.35, 0.07, 0.15], water: [0.07, 0.17, 0.12], surface: [0.4, 0.62, 0.5], deep: [0.015, 0.05, 0.035] },
   { key: 'autumn', density: 30, current: 4, visibilityFt: 30, absorb: [0.33, 0.06, 0.12], water: [0.06, 0.16, 0.14], surface: [0.36, 0.58, 0.52], deep: [0.012, 0.045, 0.04] },
 ]
