@@ -48,11 +48,11 @@ const WATER_BRIGHTNESS = 0.6
 const CLEAR_SHARE = 0.15
 // The dive light: held at the bottom right of the view (35 cm right of and 30 cm below the eye, until the diver's arm
 // gives the drawn light's front and axis, which follow its sway: setLampPose, diver-arm.js), aimed at the point LAMP_AIM ahead in the middle of the view, so its ray crosses the view toward the centre (Christian, 2026-10-23);
-// candela (as a three.js spot light: about 3 times the sun at the floor 3 m away; was 200, 15 %, twice 20 % then 25 %
-// less on 2026-10-23), beam half-angle, reach in visibilities
+// candela (as a three.js spot light: about 2 times the sun at the floor 3 m away; was 200, 15 %, twice 20 % then twice
+// 25 % less on 2026-10-23), beam half-angle, reach in visibilities
 const LAMP_OFFSET = [0.35, -0.3, 0]
 const LAMP_AIM = 6
-const LAMP_INTENSITY = 82
+const LAMP_INTENSITY = 61
 // The share of the daylight's colour shift at depth that is shown (the rest: the eye's adaptation)
 const DAYLIGHT_SHIFT = 0.5
 // The daylight's strength underwater, against above water: dimmer at depth, so that the dive light dominates in its
@@ -71,7 +71,7 @@ const LAMP_SCATTER = 0.33
 const LAMP_SATURATION = 1.5
 const LAMP_REACH = 1.5
 // The beam's brightness in the water (in-scattered light, added along the line of sight)
-const BEAM_STRENGTH = 0.102
+const BEAM_STRENGTH = 0.077
 const BEAM_SAMPLES = 12
 // The dive light on the creatures (crayfish, bass): at least this share of the hotspot's light within a cone of these
 // half-angles (degrees: none at the first, full at the second)

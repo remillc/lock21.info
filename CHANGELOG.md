@@ -4,7 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- 3D viewer, underwater: the dive light 25 % dimmer (surfaces and its glow in the water).
+- 3D viewer, underwater: the dive light dimmer, twice by 25 % (surfaces and its glow in the water).
 - 3D viewer, swim mode: the diver stops 60 cm from any surface, the floor included (was 40 cm).
 - 3D viewer, underwater: the dive light reaches the creatures (crayfish, bass) in a wider cone than the surfaces (up to
   25° from its axis at 60 % of the hotspot, none past 55°): a crayfish at the diver's feet, below the beam aimed at the
