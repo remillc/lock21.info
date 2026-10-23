@@ -48,8 +48,8 @@ const TURN_AS_SPEED = 0.12
 // per bone (rad per rad/s of turning, head to tail: the body lags behind the head); its glide while turning (m per rad)
 const TURN_EASE = 3
 const TURN_GAIN = 2.5
-// (eight times as supple as the first try: Christian, 2026-10-23)
-const CURVE = [0, 1, 1.28, 1.28, 1]
+// (four times as supple as the first try: Christian, 2026-10-23; eight was too much)
+const CURVE = [0, 0.5, 0.64, 0.64, 0.5]
 const GLIDE = 0.05
 
 /**
