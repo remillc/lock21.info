@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer settings: « Éclairage (ciel et soleil) » is out of the panel, the lighting is always on (a link can
+  still show the raw textures with `?hdri=0`, for tests); the lighting settings are always shown.
 - 3D viewer settings: scrolling in the panel no longer scrolls the page around the viewer once the list ends.
 - 3D viewer: « Contraste » slider in the settings (0.5 to 2, default 1): the lit surfaces' colours stretched around a
   mid-grey, hue kept; also in « Rendu photo ».
