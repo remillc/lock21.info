@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#56**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#57**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -16,7 +16,11 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #55 Floor flakes in the default view (light shards: coarse levels left over the detail): with the relief's normal
   maps, the view needs more than the desktop tiles budget (1.2 GB); at 2 GB the browser ran out of memory (« Array
   buffer allocation failed », 0.9.0). Make the tiles lighter (smaller normal maps, or none on coarse levels) or load
-  what is in view first (the cache's unload priority)
+  what is in view first (the cache's unload priority). Measured 2026-10-23: the budget is full right after the start
+  view (phone 462 of 450 MB with 15 tiles, desktop 1201 of 1200 MB), so turning or moving loads no new detail, during
+  a gesture or after it
+- [ ] #56 Underwater, when the camera stays still for a while: a bass comes slowly from one side, swims about a sixth of
+  the screen's width, stops and turns toward the diver, its two big eyes looking at us
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
 
 ### Zones
