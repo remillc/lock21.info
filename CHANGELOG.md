@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: wet look back to 0.15 by default.
 - 3D viewer settings: « Ombres du soleil » is out of the panel; the default stays (on computers, off on phones),
   and a link can still set it (`?shadows=`).
 - 3D viewer: AgX tone mapping by default again (exposure 1.2), with saturation 1.3 to make up for its greying (1.5

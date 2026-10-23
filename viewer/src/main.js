@@ -217,7 +217,7 @@ const look = {
   // (?hdri=0) keeps none: the textures as they are
   tone: ['neutral', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'agx',
   exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.2,
-  wet: wetness(params.has('wet') ? params.get('wet') : 0.1),
+  wet: wetness(params.has('wet') ? params.get('wet') : 0.15),
   // Saturation of the lit surfaces (?saturation=0..2, 1 = the textures' own; default 1.3, Christian's choice: AgX greys the
   // colours, 1.5 matched the unlit textures' saturation on zone 3, see tone)
   saturation: saturationOf(params.has('saturation') ? params.get('saturation') : 1.3),
@@ -323,7 +323,7 @@ function addDespill(shader) {
 // colour (checks that it lines up with the photo texture). The sun (updateLights) lights them too, through the same
 // normals: the relief shows from its direction.
 //
-// Wet look (?wet=0..1, default 0.1, first chosen on zone 12 at 0.15, lowered with the neutral tone mapping; 0 turns it off), zones only: glossy surface with a clear-coat
+// Wet look (?wet=0..1, default 0.15, chosen on zone 12; 0.1 for a day with the neutral tone mapping; 0 turns it off), zones only: glossy surface with a clear-coat
 // film (sharp highlights that slide over the relief when the camera moves) reflecting the sky, colours slightly
 // darker and more saturated. The photos already hold the lamps' real reflections: keep it subtle.
 function litMaterial(surface, mesh, normalMap, sky) {
