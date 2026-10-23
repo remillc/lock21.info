@@ -43,6 +43,18 @@ const params = new URLSearchParams(location.search)
 const panelKeys = rememberedKeys(settingsSchema({ mobile: false }))
 // Arriving on the /modele page from another page (?reset=1, ModelPage.astro): the saved settings are forgotten, the
 // viewer starts from its defaults; a reload of the page keeps them
+// A reload keeps the view the camera was at (Christian, 2026-10-23): the address follows the camera only 300 ms after
+// a move, so a reload right after one brought back an older view. The camera is kept in the tab's session storage at
+// every move (CAM_KEY) and taken back on a reload: of the /modele page (no ?reset=1, ModelPage.astro) or of the viewer
+const CAM_KEY = 'l21-viewer-cam'
+const navigation = /** @type {PerformanceNavigationTiming | undefined} */ (performance.getEntriesByType('navigation')[0])
+const reloading = params.get('reset') !== '1' && (window.self !== window.top || navigation?.type === 'reload')
+if (reloading) {
+  try {
+    const kept = sessionStorage.getItem(CAM_KEY)
+    if (kept) params.set('cam', kept)
+  } catch {}
+}
 if (params.get('reset') === '1') {
   forgetSettings()
   params.delete('reset')
@@ -773,6 +785,7 @@ function swimMoved() {
   controls.target.copy(camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(SWIM_TARGET).add(camera.position))
   needsRender = true
   clearTimeout(swimTimer)
+  keepCamera()
   swimTimer = setTimeout(updateAddress, 300)
 }
 live.season = (v) => {
@@ -1234,13 +1247,21 @@ const viewUrl = () => {
   const water = look.underwater ? `&underwater=1&season=${look.season}${look.lamp ? '' : '&lamp=0'}` : ''
   return `${location.origin}${location.pathname}?cam=${v}${water}`
 }
+/** The camera, kept for a reload (CAM_KEY) */
+function keepCamera() {
+  try {
+    sessionStorage.setItem(CAM_KEY, [...camera.position.toArray(), ...controls.target.toArray()].map((n) => n.toFixed(2)).join(','))
+  } catch {}
+}
 function updateAddress() {
+  keepCamera()
   history.replaceState(null, '', viewUrl())
   // The /modele page shows the same query string in its own address, so that copying it shares this view
   if (embedded) window.parent.postMessage({ type: 'lock21:cam', search: location.search }, location.origin)
 }
 let urlTimer = 0
 controls.addEventListener('change', () => {
+  keepCamera()
   clearTimeout(urlTimer)
   urlTimer = setTimeout(updateAddress, 300)
 })

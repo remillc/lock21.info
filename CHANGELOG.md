@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: a reload keeps the camera where it was, even right after a move (kept in the tab's session storage at
+  every move; the address follows only 300 ms later); arriving from another page still starts from the link's view.
 - 3D publishing: `lock-21-publishing.blend` cleaned up (unused data purged), 2.79 -> 1.14 GB, under Git LFS's 2 GB
   limit (TODO #38); boolean.023 enlarged: zone 2's sliver in front of zone 3's pillar gone (republished).
 - 3D viewer, underwater: the haze that closes in when looking up only in murky water (full at 14 ft of visibility,
