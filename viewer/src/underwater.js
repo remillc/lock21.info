@@ -30,6 +30,12 @@ const CURRENT = [((35 * 0.3048) / 60) * CURRENT_SCALE, 0, 0]
 // (SEASONS[].particles, at most PARTICLE_COUNT)
 const PARTICLE_COUNT = 60000
 const PARTICLE_BOX = 14
+// The particles' distance field: its cells per side, its size (m, centred near the camera: a little more than the
+// particles' box), the distances it holds (m) and the skin a particle is kept out of (m)
+export const FIELD_CELLS = 32
+export const FIELD_SIZE = 16
+export const FIELD_RANGE = 2
+const FIELD_PUSH = 0.15
 // The scattered light's strength against the lit surfaces (brighter washed every surface to the water's colour)
 const WATER_BRIGHTNESS = 0.6
 // The surfaces are seen as they are up to this share of the visibility (Christian, 2026-10-23: textures seen up close,
@@ -265,6 +271,17 @@ export function createUnderwater(scene, renderer) {
   surface.visible = false
   scene.add(surface)
 
+  // The particles' distance field (filled by main.js, a little each frame): FIELD_CELLS³ cells over FIELD_SIZE m
+  const field = {
+    data: new Uint8Array(FIELD_CELLS ** 3).fill(255),
+    min: new THREE.Vector3(),
+    texture: null,
+  }
+  field.texture = new THREE.Data3DTexture(field.data, FIELD_CELLS, FIELD_CELLS, FIELD_CELLS)
+  field.texture.format = THREE.RedFormat
+  field.texture.minFilter = field.texture.magFilter = THREE.LinearFilter
+  field.texture.unpackAlignment = 1
+
   // Suspended particles, wrapped in a box that follows the camera; they sparkle a little
   const seeds = new Float32Array(PARTICLE_COUNT * 4)
   for (let i = 0; i < seeds.length; i++) seeds[i] = Math.random()
@@ -283,6 +300,10 @@ export function createUnderwater(scene, renderer) {
         uPixelRatio: { value: renderer.getPixelRatio() },
         uAbsorb: uniforms.uUwAbsorb,
         uCurrent: { value: new THREE.Vector3(...CURRENT) },
+        uField: { value: field.texture },
+        uFieldMin: { value: field.min },
+        uFieldSize: { value: FIELD_SIZE },
+        uFieldOn: { value: 0 },
         uUwLampPos: uniforms.uUwLampPos,
         uUwLampDir: uniforms.uUwLampDir,
         uUwLampHot: uniforms.uUwLampHot,
@@ -297,6 +318,12 @@ export function createUnderwater(scene, renderer) {
         uniform float uPixelRatio;
         uniform vec3 uCurrent;
         uniform vec3 uAbsorb;
+        // The distance field around the camera (main.js, buildParticleField): distance to the nearest surface, 0 to
+        // FIELD_RANGE m in 0..1; a particle closer than FIELD_PUSH is pushed out along its gradient
+        uniform highp sampler3D uField;
+        uniform vec3 uFieldMin;
+        uniform float uFieldSize;
+        uniform float uFieldOn;
         uniform vec3 uUwLampPos;
         uniform vec3 uUwLampDir;
         uniform float uUwLampHot;
@@ -313,6 +340,20 @@ export function createUnderwater(scene, renderer) {
           vec3 sway = vec3(sin(uTime * 0.3 + seed.w * 6.28), sin(uTime * 0.21 + seed.z * 6.28) - 0.03 * uTime, cos(uTime * 0.25 + seed.w * 3.14)) * 0.25;
           vec3 p = seed.xyz * uBox + uCurrent * uTime * (0.8 + 0.4 * seed.w) + sway;
           p = mod(p - uCamera + uBox * 0.5, uBox) - uBox * 0.5 + uCamera;
+          // Around the surfaces, not through them: pushed out of the distance field's skin, along its gradient (they
+          // flow around the walls and over the floor)
+          vec3 uvw = (p - uFieldMin) / uFieldSize;
+          if (uFieldOn > 0.5 && all(greaterThan(uvw, vec3(0.0))) && all(lessThan(uvw, vec3(1.0)))) {
+            float d = texture(uField, uvw).r * ${FIELD_RANGE.toFixed(2)};
+            if (d < ${FIELD_PUSH.toFixed(2)}) {
+              float e = 1.0 / ${FIELD_CELLS}.0;
+              vec3 grad = vec3(
+                texture(uField, uvw + vec3(e, 0.0, 0.0)).r - texture(uField, uvw - vec3(e, 0.0, 0.0)).r,
+                texture(uField, uvw + vec3(0.0, e, 0.0)).r - texture(uField, uvw - vec3(0.0, e, 0.0)).r,
+                texture(uField, uvw + vec3(0.0, 0.0, e)).r - texture(uField, uvw - vec3(0.0, 0.0, e)).r);
+              if (dot(grad, grad) > 1e-8) p += normalize(grad) * (${FIELD_PUSH.toFixed(2)} - d);
+            }
+          }
           vec4 mv = viewMatrix * vec4(p, 1.0);
           vDistance = length(mv.xyz);
           vSeed = seed.w;
@@ -430,6 +471,19 @@ export function createUnderwater(scene, renderer) {
 
   return {
     patchShader,
+    /**
+     * The particles' distance field: main.js fills its cells (distance / FIELD_RANGE, 0..255), then calls ready() with
+     * the field's corner; the particles use it from then on
+     */
+    field: {
+      data: field.data,
+      /** @param {THREE.Vector3} min */
+      ready(min) {
+        field.min.copy(min)
+        field.texture.needsUpdate = true
+        particles.material.uniforms.uFieldOn.value = 1
+      },
+    },
     /** For tests (main.js exposes it in development builds) */
     uniforms,
     get on() {

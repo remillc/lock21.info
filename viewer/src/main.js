@@ -12,7 +12,7 @@ import { TilesRenderer } from '3d-tiles-renderer'
 import { savedSettings, settingsSchema } from './config-panel.js'
 import './loading.js'
 import './tooltip.js'
-import { createUnderwater, SURFACE_Y } from './underwater.js'
+import { createUnderwater, FIELD_CELLS, FIELD_RANGE, FIELD_SIZE, SURFACE_Y } from './underwater.js'
 import { createSwim } from './swim.js'
 import { createCollider } from './collide.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
@@ -593,6 +593,7 @@ navigator.keyboard?.getLayoutMap?.().then((layout) => {
 /** @param {boolean} on */
 function setSwimming(on) {
   if (on === swim.active) return
+  if (on) showSwimHelp()
   controls.enabled = !on
   swim.setActive(on)
   swimKeys.hidden = !on
@@ -601,6 +602,67 @@ function setSwimming(on) {
     controls.update()
   }
 }
+// The particles' distance field (underwater.js): the distance from each of its cells to the nearest surface, built
+// around the camera a few milliseconds per frame (FIELD_BUDGET), again once the camera has moved FIELD_MOVE m
+const FIELD_BUDGET = 4
+const FIELD_MOVE = 2
+let fieldCentre = null
+let fieldJob = null
+function buildParticleField() {
+  if (!fieldJob) {
+    if (fieldCentre && fieldCentre.distanceTo(camera.position) < FIELD_MOVE) return
+    const centre = camera.position.clone()
+    fieldJob = {
+      centre,
+      min: centre.clone().subScalar(FIELD_SIZE / 2),
+      surfaces: collider.surfacesNear(centre, FIELD_SIZE * 0.87 + FIELD_RANGE),
+      data: new Uint8Array(FIELD_CELLS ** 3),
+      index: 0,
+    }
+  }
+  const job = fieldJob
+  const cell = FIELD_SIZE / FIELD_CELLS
+  const point = new THREE.Vector3()
+  const started = performance.now()
+  while (job.index < job.data.length && performance.now() - started < FIELD_BUDGET) {
+    const i = job.index
+    // x fastest, then y, then z (the 3D texture's layout); each value at its cell's centre
+    point.set(i % FIELD_CELLS, Math.floor(i / FIELD_CELLS) % FIELD_CELLS, Math.floor(i / FIELD_CELLS ** 2))
+    point.addScalar(0.5).multiplyScalar(cell).add(job.min)
+    job.data[i] = Math.round((collider.distanceTo(point, job.surfaces, FIELD_RANGE) / FIELD_RANGE) * 255)
+    job.index++
+  }
+  if (job.index < job.data.length) return
+  underwater.field.data.set(job.data)
+  underwater.field.ready(job.min)
+  fieldCentre = job.centre
+  fieldJob = null
+}
+// The swim mode's help: an MD3 basic dialog (native <dialog>), opened by itself the first time the swim mode starts
+// (remembered by the browser), then by the « ? » button of the keys, bottom left
+const SWIM_HELP_KEY = 'l21-swim-help-seen'
+const swimHelp = document.querySelector('.swim-help')
+const swimHelpButton = swimKeys.querySelector('.swim-help-button')
+swimHelpButton.setAttribute('aria-label', t('swimHelpTitle'))
+swimHelpButton.dataset.tooltip = t('swimHelpTitle')
+swimHelpButton.addEventListener('click', () => openSwimHelp())
+function showSwimHelp() {
+  try {
+    if (localStorage.getItem(SWIM_HELP_KEY)) return
+    localStorage.setItem(SWIM_HELP_KEY, '1')
+  } catch {
+    // storage unavailable: shown each time
+  }
+  openSwimHelp()
+}
+function openSwimHelp() {
+  const letter = (code) => swimKeys.querySelector(`[data-code="${code}"]`)?.textContent ?? code.slice(3)
+  swimHelp.querySelector('h2').textContent = t('swimHelpTitle')
+  swimHelp.querySelector('.swim-help-text').innerHTML = t('swimHelpText', { w: letter('KeyW'), a: letter('KeyA'), s: letter('KeyS'), d: letter('KeyD') })
+  swimHelp.querySelector('.swim-help-ok').textContent = t('swimHelpOk')
+  swimHelp.showModal()
+}
+swimHelp.querySelector('.swim-help-ok').addEventListener('click', () => swimHelp.close())
 let swimTimer = 0
 function swimMoved() {
   // The address (viewUrl) reads the orbit's target: kept ahead of the diver
@@ -1075,6 +1137,7 @@ function renderLoop() {
   if (underwater.on) {
     if (camera.position.y > SURFACE_Y - 0.5) camera.position.y = SURFACE_Y - 0.5
     underwater.update(camera)
+    buildParticleField()
     needsRender = true
   }
   const loading = tilesets.some((t) => t.stats.queued + t.stats.downloading + t.stats.parsing > 0)

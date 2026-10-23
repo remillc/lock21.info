@@ -732,6 +732,34 @@ l21-tooltip[data-shown='true'] {
   letter-spacing: 0.5px;
   pointer-events: none;
 }
+/* The « ? » (MD3 standard icon button, 32 dp here): opens the help; the only part of the keys that takes clicks */
+.swim-help-button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #c6c9bb;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.swim-help-button:hover {
+  background: rgb(227 230 216 / 8%);
+}
+.swim-help-button:focus-visible,
+.swim-help-button:active {
+  background: rgb(227 230 216 / 10%);
+}
+.swim-help-button:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: 2px;
+}
 .swim-keys[hidden] {
   display: none;
 }
@@ -759,4 +787,69 @@ l21-tooltip[data-shown='true'] {
   margin: 2px 0 0;
   color: #c6c9bb;
   white-space: nowrap;
+}
+
+/* The swim mode's help (main.js): MD3 basic dialog. Surface container high, 28 dp corners, 24 dp padding,
+   headline-small title, body-medium text, a text button bottom right; a scrim behind it */
+.swim-help {
+  max-width: min(400px, calc(100vw - 48px));
+  padding: 24px;
+  border: 0;
+  border-radius: 28px;
+  background: #23261d;
+  color: #e3e6d8;
+  font: 400 14px/20px system-ui, sans-serif;
+  letter-spacing: 0.25px;
+}
+.swim-help::backdrop {
+  background: rgb(0 0 0 / 32%);
+}
+.swim-help h2 {
+  margin: 0 0 16px;
+  font: 400 24px/32px system-ui, sans-serif;
+}
+.swim-help p,
+.swim-help ul {
+  margin: 0 0 12px;
+  color: #c6c9bb;
+}
+.swim-help ul {
+  padding-left: 20px;
+}
+.swim-help li {
+  margin-bottom: 4px;
+}
+.swim-help kbd {
+  display: inline-block;
+  min-width: 22px;
+  padding: 0 6px;
+  border: 1px solid #8f9482;
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  font: 600 12px/18px system-ui, sans-serif;
+  text-align: center;
+  color: #e3e6d8;
+}
+.swim-help-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+.swim-help-ok {
+  height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #b8c97a;
+  font: 500 14px/20px system-ui, sans-serif;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+}
+.swim-help-ok:hover {
+  background: rgb(184 201 122 / 8%);
+}
+.swim-help-ok:focus-visible,
+.swim-help-ok:active {
+  background: rgb(184 201 122 / 10%);
 }

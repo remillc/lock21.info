@@ -41,7 +41,34 @@ export function createCollider(roots) {
     return meshes
   }
 
+  const local = new THREE.Vector3()
+  const inverse = new THREE.Matrix4()
+  const closest = { point: new THREE.Vector3(), distance: 0 }
+
   return {
+    /**
+     * The surfaces within reach of a point (their bounding volume hierarchies built), for distanceTo
+     * @param {THREE.Vector3} point
+     * @param {number} reach
+     */
+    surfacesNear: near,
+    /**
+     * Distance from a point to the nearest of the given surfaces, up to a limit (the limit when none is closer)
+     * @param {THREE.Vector3} point
+     * @param {THREE.Mesh[]} meshes - from surfacesNear
+     * @param {number} limit
+     */
+    distanceTo(point, meshes, limit) {
+      let best = limit
+      for (const mesh of meshes) {
+        // In the mesh's own frame (the tiles are scaled: uniformly)
+        const scale = mesh.matrixWorld.getMaxScaleOnAxis()
+        local.copy(point).applyMatrix4(inverse.copy(mesh.matrixWorld).invert())
+        const found = mesh.geometry.boundsTree.closestPointToPoint(local, closest, 0, best / scale)
+        if (found) best = Math.min(best, found.distance * scale)
+      }
+      return best
+    },
     /**
      * Moves a position by a step, stopping short of the surfaces and sliding along them
      * @param {THREE.Vector3} position - changed in place

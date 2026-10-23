@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the particles flow around the model instead of through it (a distance field around the
+  camera, 32³ cells, built a few milliseconds per frame; on the GPU a particle in a surface's skin is pushed out along
+  it). Swim mode: a help dialog (MD3) the first time, then from a « ? » in the keys bottom left.
 - 3D viewer, swim mode: the diver can't go through the model (a 40 cm body; each move stops short of the surfaces
   and slides along them; rays on bounding volume hierarchies, three-mesh-bvh, `viewer/src/collide.js`).
 - 3D viewer, underwater on a computer: swim mode instead of orbiting (`viewer/src/swim.js`). W, A, S, D (or the
