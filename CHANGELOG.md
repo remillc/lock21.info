@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the keys pad bottom left is revealed left to right and hidden right to left (MD3 motion);
+  the particles are soft, blurred specks (a Gaussian falloff, at least 3 px).
 - 3D viewer, underwater: particles only where they can be seen: a box ahead of the camera, as deep as the visibility
   (3 to 10 m), with a density per m³ by season; drawn counts winter 25,000, spring 35,000, summer 56,000, autumn
   94,000 instead of up to 200,000 in a cube around the camera.

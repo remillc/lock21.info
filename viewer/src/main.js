@@ -596,7 +596,8 @@ function setSwimming(on) {
   if (on) showSwimHelp()
   controls.enabled = !on
   swim.setActive(on)
-  swimKeys.hidden = !on
+  // The keys unroll from the left edge, as the season strip from the 🤿 button
+  reveal(swimKeys, on, 'inset(-8px 100% -8px -8px)')
   if (!on) {
     controls.target.copy(camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(SWIM_TARGET).add(camera.position))
     controls.update()
@@ -697,27 +698,36 @@ const SEASON_MOTION = {
 const underwaterTools = document.querySelector('.underwater-tools')
 /** @param {boolean} on */
 function showSeasonControl(on) {
+  // Unrolls out of the 🤿 button: revealed from its right edge
+  reveal(underwaterTools, on, 'inset(-8px -8px -8px 100%)')
+}
+/**
+ * Shows or hides an element with the MD3 motion (SEASON_MOTION): revealed from one edge (away: its clip-path when
+ * hidden), back the same way; at once when the system asks for reduced motion
+ * @param {HTMLElement} element
+ * @param {boolean} on
+ * @param {string} hidden - clip-path while hidden, e.g. inset(-8px -8px -8px 100%) for unrolling from the right
+ */
+function reveal(element, on, hidden) {
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const away = { clipPath: 'inset(-8px -8px -8px 100%)', opacity: 0.4 }
-  const here = { clipPath: 'inset(-8px -8px -8px 0%)', opacity: 1 }
-  for (const element of [underwaterTools]) {
-    if (on === !element.hidden && !element.dataset.leaving) continue
-    element.getAnimations().forEach((a) => a.cancel())
-    delete element.dataset.leaving
-    if (on) {
-      element.hidden = false
-      if (!still) element.animate([away, here], SEASON_MOTION.enter)
-    } else if (still) {
+  const away = { clipPath: hidden, opacity: 0.4 }
+  const here = { clipPath: 'inset(-8px -8px -8px -8px)', opacity: 1 }
+  if (on === !element.hidden && !element.dataset.leaving) return
+  element.getAnimations().forEach((a) => a.cancel())
+  delete element.dataset.leaving
+  if (on) {
+    element.hidden = false
+    if (!still) element.animate([away, here], SEASON_MOTION.enter)
+  } else if (still) {
+    element.hidden = true
+  } else {
+    element.dataset.leaving = 'true'
+    element.animate([here, away], { ...SEASON_MOTION.exit, fill: 'forwards' }).finished.then(() => {
+      if (!element.dataset.leaving) return
+      delete element.dataset.leaving
       element.hidden = true
-    } else {
-      element.dataset.leaving = 'true'
-      element.animate([here, away], { ...SEASON_MOTION.exit, fill: 'forwards' }).finished.then(() => {
-        if (!element.dataset.leaving) return
-        delete element.dataset.leaving
-        element.hidden = true
-        element.getAnimations().forEach((a) => a.cancel())
-      }, () => {})
-    }
+      element.getAnimations().forEach((a) => a.cancel())
+    }, () => {})
   }
 }
 const seasonRange = seasonControl.querySelector('.season-range')
