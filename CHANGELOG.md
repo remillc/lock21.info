@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, swim mode: the diver can't go through the model (a 40 cm body; each move stops short of the surfaces
+  and slides along them; rays on bounding volume hierarchies, three-mesh-bvh, `viewer/src/collide.js`).
 - 3D viewer, underwater on a computer: swim mode instead of orbiting (`viewer/src/swim.js`). W, A, S, D (or the
   arrows) move where you look, Shift faster; dragging turns the head. Keys by position (Z, Q, S, D on AZERTY), drawn
   bottom left with the keyboard's own letters, lit while held. Leaving the underwater view brings the orbit back,

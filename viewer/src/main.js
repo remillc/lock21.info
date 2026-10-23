@@ -14,6 +14,7 @@ import './loading.js'
 import './tooltip.js'
 import { createUnderwater, SURFACE_Y } from './underwater.js'
 import { createSwim } from './swim.js'
+import { createCollider } from './collide.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
@@ -571,9 +572,12 @@ const SWIM_TARGET = 4
 const swimKeys = document.querySelector('.swim-keys')
 swimKeys.setAttribute('aria-label', t('swimKeys'))
 swimKeys.querySelector('.swim-hint').textContent = t('swimHint')
+// The diver can't go through the model: each move stops short of the surfaces and slides along them (collide.js)
+const collider = createCollider(() => [...tilesets.map((tiles) => tiles.group), ...contextModels])
 const swim = createSwim({
   camera,
   element: renderer.domElement,
+  move: (position, step) => collider.move(position, step),
   onKey: (code, down) => {
     const arrow = { ArrowUp: 'KeyW', ArrowDown: 'KeyS', ArrowLeft: 'KeyA', ArrowRight: 'KeyD' }[code] ?? code
     swimKeys.querySelector(`[data-code="${arrow}"]`)?.toggleAttribute('data-down', down)

@@ -27,8 +27,10 @@ const MOVES = {
  * @param {THREE.PerspectiveCamera} options.camera
  * @param {HTMLElement} options.element - the 3D view (drag to look around)
  * @param {(code: string, down: boolean) => void} [options.onKey] - a movement key pressed or released (the keycaps)
+ * @param {(position: THREE.Vector3, step: THREE.Vector3) => void} [options.move] - moves the camera by a step (collisions:
+ *   collide.js); by default straight
  */
-export function createSwim({ camera, element, onKey }) {
+export function createSwim({ camera, element, onKey, move: moveBy = (position, step) => position.add(step) }) {
   let active = false
   const held = new Set()
   const euler = new THREE.Euler(0, 0, 0, 'YXZ')
@@ -114,7 +116,7 @@ export function createSwim({ camera, element, onKey }) {
       for (const code of held) move.add(new THREE.Vector3(...MOVES[code]))
       if (!move.lengthSq()) return Boolean(drag)
       move.normalize().multiplyScalar((fast ? SPEED * FAST : SPEED) * dt).applyQuaternion(camera.quaternion)
-      camera.position.add(move)
+      moveBy(camera.position, move)
       return true
     },
   }

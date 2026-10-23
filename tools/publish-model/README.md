@@ -195,6 +195,7 @@ Après une publication locale (`model:post-modified`), lancer `model:upload` pou
 | 3d-tiles-renderer (NASA-AMMOS) | 0.5.3 | `viewer/package.json` | chargement des tuiles dans three.js |
 | N8AO | 2.0.1 | `viewer/package.json` | occlusion ambiante du visualiseur |
 | HDRI « Kloofendal 48d Partly Cloudy (Pure Sky) », 1k | Poly Haven, CC0 | `viewer/public/hdri/sky.hdr` | éclairage du visualiseur par un ciel ensoleillé avec nuages (`?hdri=0` pour l'affichage sans éclairage, `?hdriIntensity=`, `?sky=0` pour un fond uni au lieu du ciel, affiché par défaut) |
+| three-mesh-bvh | 0.9.16 | `viewer/package.json` | collisions du mode nage (`viewer/src/collide.js`) |
 | Claude Code (Anthropic, modèle Claude Opus) | | [claude.com/claude-code](https://claude.com/claude-code) | assistant de programmation: site, visualiseur, chaîne de publication, scripts Blender |
 | Transcodeur Basis (KTX2) | celui de three 0.186.1 | `viewer/public/vendor/basis/`, copié de `node_modules/three/examples/jsm/libs/basis/` | décodage des textures KTX2 dans le navigateur. À recopier à chaque mise à jour de three. |
 
