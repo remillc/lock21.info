@@ -894,6 +894,22 @@ scene.add(world)
 // The model: one tileset per zone plus the non-tiled context. Loaded again (camera kept) when the tiles' source
 // changes; a load started later wins over one still running.
 let tilesets = []
+// The relief's normal maps only on the finest level (TODO #55): they weigh as much as the colour maps, and from the
+// distance a coarser level is seen at, their relief hardly shows. Dropped as a coarser tile is parsed, before the
+// tiles' cache counts its memory (3d-tiles-renderer's processTileModel): at the start view the coarser levels held
+// about 550 MB of normal maps, enough to fill the budget (PROFILES) and keep the finest level from loading
+// One plugin per tileset (a plugin can be registered to one tileset only)
+const coarseWithoutRelief = () => ({
+  name: 'CoarseWithoutRelief',
+  processTileModel(scene, tile) {
+    if (!tile.children?.length) return
+    scene.traverse((object) => {
+      if (!object.isMesh || !object.material.normalMap) return
+      object.material.normalMap.dispose()
+      object.material.normalMap = null
+    })
+  },
+})
 let contextModels = []
 let framed = false
 let loadCount = 0
@@ -914,6 +930,7 @@ async function loadModel() {
   tilesets = manifest.tilesets.map((entry) => {
     const tiles = new TilesRenderer(`${tilesUrl}/${entry.url}`)
     tiles.zoneId = entry.id
+    tiles.registerPlugin(coarseWithoutRelief())
     if (sharedCache) {
       tiles.lruCache = sharedCache
     } else {

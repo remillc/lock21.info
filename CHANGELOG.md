@@ -2,6 +2,12 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased
+
+- 3D viewer: the relief's normal maps only on the finest level of the tiles, dropped from the coarser levels as they
+  load (TODO #55): at the start view they held about 550 MB of the 1.2 GB budget, which kept the finest level from
+  loading and left light flakes on the floor.
+
 ## 0.9.1 - 2026-10-23
 
 - 3D viewer: the desktop memory budget for tiles back to 1.2 GB: at 2 GB (0.9.0) the browser ran out of memory
