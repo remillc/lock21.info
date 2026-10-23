@@ -15,6 +15,7 @@ import './tooltip.js'
 import { createUnderwater, FIELD_CELLS, FIELD_RANGE, FIELD_SIZE, SURFACE_Y } from './underwater.js'
 import { createSwim } from './swim.js'
 import { createCollider } from './collide.js'
+import { createCrawfish } from './crawfish.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
@@ -574,6 +575,7 @@ swimKeys.setAttribute('aria-label', t('swimKeys'))
 swimKeys.querySelector('.swim-hint').textContent = t('swimHint')
 // The diver can't go through the model: each move stops short of the surfaces and slides along them (collide.js)
 const collider = createCollider(() => [...tilesets.map((tiles) => tiles.group), ...contextModels])
+if (import.meta.env.DEV) window.l21.collider = collider
 const swim = createSwim({
   camera,
   element: renderer.domElement,
@@ -979,6 +981,8 @@ function unloadModel() {
     scene.remove(model)
     model.traverse((child) => child.geometry?.dispose())
   }
+  for (const crawfish of crawfishes) scene.remove(crawfish.object)
+  crawfishes = []
   tilesets = []
   contextModels = []
   mockupModels = []
@@ -989,6 +993,14 @@ function unloadModel() {
 // objects of the .blend): translucent ghosts that complete the lock's shape; a zone's mockup is hidden as soon as the
 // zone is online (in the manifest). No shadows, not solid for the swimmer
 let mockupModels = []
+// The crayfish (crawfish.js): lit like the surfaces, with the sun's shadows and the underwater look
+let crawfishes = []
+/** @param {THREE.Material} material */
+function prepareCreatureMaterial(material) {
+  material.onBeforeCompile = (shader) => underwater.patchShader(shader)
+  material.customProgramCacheKey = () => `creature-${material.color.getHexString()}`
+  return withShadowCascades(material)
+}
 const MOCKUP_OPACITY = 0.22
 const mockupMaterial = new THREE.MeshStandardMaterial({
   color: 0xd2dccb,
@@ -1007,6 +1019,16 @@ withShadowCascades(mockupMaterial)
  */
 function showMockups(model, manifest) {
   const online = new Set(manifest.tilesets.map((t) => t.id))
+  model.updateMatrixWorld(true)
+  // Crayfish at the « crawfish » empties (crawfish.js)
+  model.traverse((child) => {
+    if (!/^crawfish/i.test(child.name) || child.isMesh) return
+    const crawfish = createCrawfish({ prepare: prepareCreatureMaterial, ground: (x, y, z) => collider.groundAt(x, y, z) })
+    child.getWorldPosition(crawfish.object.position)
+    scene.add(crawfish.object)
+    crawfishes.push(crawfish)
+    if (import.meta.env.DEV) window.l21.crawfishes = crawfishes
+  })
   model.traverse((child) => {
     if (!child.isMesh) return
     // Node names from Blender, spaces turned to underscores by the loader: mockup_zone_9
@@ -1188,6 +1210,7 @@ function tileFacts() {
 setEndFacts(tileFacts)
 
 // Paused while AR runs (android-ar.js has its own renderer)
+let lastFrame = performance.now()
 function renderLoop() {
   updateStats()
   // update() returns true while the camera moves (including the damping glide after a gesture); swimming: the keys
@@ -1202,6 +1225,11 @@ function renderLoop() {
     buildParticleField()
     needsRender = true
   }
+  // The crayfish move while the camera is near them
+  const now = performance.now()
+  const dt = Math.min((now - lastFrame) / 1000, 0.1)
+  lastFrame = now
+  for (const crawfish of crawfishes) if (crawfish.update(camera, dt)) needsRender = true
   const loading = tilesets.some((t) => t.stats.queued + t.stats.downloading + t.stats.parsing > 0)
   updateLoading()
   if (!needsRender && !loading) return

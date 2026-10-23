@@ -16,7 +16,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ### Zones
 
-- [ ] #8 Zone 16: digitised (7 M faces) but not in the `.blend` yet
 - [ ] #9 Textures: the analysis targets 1.3 mm per texel; current exports are 2 to 5 times coarser. Decide the viewing
   distance, then retexture in Metashape where needed
 
@@ -39,8 +38,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #21 Relief: fold the relief steps (`relief_zones.ps1`) into `publish_zones.ps1`, so that one command republishes a
   zone with its relief
 - [ ] #22 Relief on phones: memory, heat, smoothness; probably off by default there
-- [ ] #23 Default light direction and strength (`?light=`, `?shade=`), after viewing from several angles; the photos
-  already contain the lamps' light, so some directions may look odd
 - [ ] #25 Optional: read each zone's Blender shader settings (wetness, roughness) and pass them through the manifest
 - [ ] #26 Move the viewer's shader patches to three-custom-shader-material (CSM) if the relief is kept
 

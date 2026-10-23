@@ -5,6 +5,8 @@ zone est publiée (TODO #6).
 - Les modificateurs sont appliqués; géométrie seulement (ni matériaux ni textures: le visualiseur a son propre aspect).
 - Coordonnées du monde de la scène (mètres), glTF Y vers le haut: même repère que les tuiles et le contexte.
 - Chaque objet garde son nom (« mockup zone 9 »): le visualiseur en tire le numéro de zone.
+- Aussi les empties dont le nom commence par « crawfish » (n'importe quelle collection): la place d'une écrevisse
+  animée dans le visualiseur (viewer/src/crawfish.js).
 
 Lecture seule pour le .blend (jamais sauvegardé).
 
@@ -30,6 +32,9 @@ assert collection, "pas de collection « mockups » dans le .blend"
 objects = [o for o in collection.all_objects if o.type == 'MESH' and re.fullmatch(r"mockup zone \d+", o.name)]
 assert objects, "aucun objet « mockup zone N » dans la collection « mockups »"
 print("[mockups] objets:", sorted(o.name for o in objects), flush=True)
+creatures = [o for o in bpy.data.objects if o.type == 'EMPTY' and o.name.lower().startswith("crawfish")]
+print("[mockups] écrevisses:", sorted(o.name for o in creatures), flush=True)
+objects += creatures
 
 for o in bpy.context.view_layer.objects:
     o.select_set(o in objects)

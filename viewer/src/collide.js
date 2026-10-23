@@ -70,6 +70,24 @@ export function createCollider(roots) {
       return best
     },
     /**
+     * The floor below a point: its height, and which surface it is (its zone or « context »), or null when there is
+     * none within reach or it is too steep to stand on
+     * @param {number} x
+     * @param {number} y - from just above this height
+     * @param {number} z
+     */
+    groundAt(x, y, z) {
+      const from = new THREE.Vector3(x, y + 0.3, z)
+      raycaster.set(from, new THREE.Vector3(0, -1, 0))
+      raycaster.far = 1
+      const meshes = near(from, 1.2)
+      const hit = meshes.length ? raycaster.intersectObjects(meshes, false)[0] : null
+      if (!hit) return null
+      normal.copy(hit.face.normal).transformDirection(hit.object.matrixWorld)
+      if (Math.abs(normal.y) < 0.75) return null
+      return { y: hit.point.y, floor: hit.object.userData.surface.zoneId ?? 'context' }
+    },
+    /**
      * Moves a position by a step, stopping short of the surfaces and sliding along them
      * @param {THREE.Vector3} position - changed in place
      * @param {THREE.Vector3} step
