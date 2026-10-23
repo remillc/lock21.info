@@ -382,7 +382,8 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
           if (r > 0.5) discard;
           float sparkle = 0.75 + 0.25 * sin(uTime * 3.0 + vSeed * 40.0);
           float lit = min(vLit, 3.0);
-          float alpha = smoothstep(0.5, 0.0, r) * (0.3 + 0.4 * vSeed) * sparkle * exp(-uAbsorb.g * vDistance) * (1.0 + lit);
+          // Hard edges: a plain disc (Christian, 2026-10-23)
+          float alpha = (0.3 + 0.4 * vSeed) * sparkle * exp(-uAbsorb.g * vDistance) * (1.0 + lit);
           gl_FragColor = vec4(mix(vec3(0.85, 0.95, 0.9), vec3(1.0, 0.94, 0.85), min(lit, 1.0)) * (1.0 + 0.5 * lit), min(alpha, 1.0));
         }`,
     }),
