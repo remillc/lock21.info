@@ -8,6 +8,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   for the same look (TODO #55): at the start view twice as many tiles of the finest level fit in the budget.
 - 3D viewer: a mesh view (settings, Advanced, « Maillage », or `?mesh=1`; not remembered between visits): the zones and
   the context as a solid, flat-shaded surface with its triangles' edges drawn over it.
+- 3D viewer on the /modele page: its settings are kept when the page reloads, and forgotten when a visitor arrives from
+  another page (a link, the address bar, back and forward): the viewer then starts from its defaults (`?reset=1`).
 - 3D viewer: the relief's normal maps only on the finest level of the tiles, dropped from the coarser levels as they
   load (TODO #55): at the start view they held about 550 MB of the 1.2 GB budget, which kept the finest level from
   loading and left light flakes on the floor.

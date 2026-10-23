@@ -255,6 +255,10 @@ const updated = zones.updated
   // A Custom Element (docs/guidelines.md): set up each time it is inserted, on a full
   // load as after a client-side navigation (ClientRouter, Head.astro), where a plain page script would run only once.
   // replaceState keeps history.state: the router stores its own entry there (back and forward buttons).
+  // Settings: kept when the page reloads (the viewer saves them, config-panel.js); forgotten when the visitor arrives
+  // from elsewhere (a link, the router's navigation, the address bar, back and forward): the viewer then starts from
+  // its defaults (?reset=1). Christian, 2026-10-23
+  let connectedBefore = false
   class ModelFrame extends HTMLElement {
     /** @param {MessageEvent} event */
     onMessage = (event) => {
@@ -267,7 +271,9 @@ const updated = zones.updated
 
     connectedCallback() {
       const frame = /** @type {HTMLIFrameElement} */ (this.querySelector('iframe'))
-      frame.src = (frame.dataset.src ?? '') + location.search
+      const reload = !connectedBefore && /** @type {PerformanceNavigationTiming | undefined} */ (performance.getEntriesByType('navigation')[0])?.type === 'reload'
+      connectedBefore = true
+      frame.src = (frame.dataset.src ?? '') + location.search + (reload ? '' : `${location.search ? '&' : '?'}reset=1`)
       const query = new URLSearchParams(location.search)
       const underwater = query.get('underwater') === '1'
       const shared = [...query].filter(([key]) => key === 'cam' || (underwater && ['underwater', 'season', 'lamp'].includes(key)))
