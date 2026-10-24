@@ -13,7 +13,13 @@ import { lang, t } from './i18n.js'
 // way, at most FLY_RISE_MAX m; it arrives along the step's line of sight over FLY_BACK of the way, at most FLY_BACK_MAX m
 // and per radian the line of sight turns (a half turn over 3 s more: Christian, 2026-10-24, from step 4 to 5 it turned
 // too fast)
-const FLY_TIME = [1.5, 8]
+// A flight's minimum-jerk easing peaks at 1.875 x its mean speed and 5.77 x way / time² in acceleration: its time is
+// also long enough for FLY_MAX_SPEED (m/s) and FLY_MAX_ACCEL (m/s²; Christian, 2026-10-24: the long flight to the
+// first step sped up at 6 m/s²)
+const FLY_TIME = [1.5, 40]
+// (6 m/s and 2 m/s²: at 4 and 1, everything was too slow, Christian, 2026-10-24)
+const FLY_MAX_SPEED = 6
+const FLY_MAX_ACCEL = 2
 const FLY_PER_METRE = 0.08
 const FLY_PER_RADIAN = 1
 const FLY_HIGH = 8
@@ -34,7 +40,8 @@ const TURN_OVERLAP = 0.6
 // A way with paces (a step's paces or flightPace) is driven as a vehicle would (Christian, 2026-10-24: physically
 // sound): from rest to rest, speeding up and slowing down at ACCEL m/s² at most, slowing ahead of a slower stretch so
 // as to be at its pace when it starts; planned every PROFILE_STEP m along the way
-const ACCEL = 0.4
+// (0.8: at 0.4, too slow, Christian, 2026-10-24)
+const ACCEL = 0.8
 const PROFILE_STEP = 0.05
 // A line of sight given as a direction (a step's looks: { dir }) aims this far along it
 const LOOK_FAR = 20
@@ -44,13 +51,18 @@ const LOOK_FAR = 20
 // MAX_TURN (rad/s) and its change at most MAX_TURN_ACCEL (rad/s²): the bell-shaped speed of a natural head turn (Flash
 // and Hogan's minimum jerk; a game camera's SmoothDamp). A flight that arrives before its turn is done finishes it in
 // place
-const MAX_TURN = 0.5
-const MAX_TURN_ACCEL = 1
+// (0.8 and 1.5: at 0.5 and 1, too slow, Christian, 2026-10-24)
+const MAX_TURN = 0.8
+const MAX_TURN_ACCEL = 1.5
 const TURN_SPRING = 9
 // The planned speeds smoothed over this length (m, each side) and passes: the acceleration itself rises and falls
 // gradually (an S-curve), no step at a start or a change of pace
 const SPEED_SMOOTH = 0.6
 const SPEED_PASSES = 2
+// The camera's place follows the planned one the same way (Christian, 2026-10-24: natural everywhere), a critically
+// damped spring (MOVE_SPRING, 1/s²: about 0.3 s behind): its speed never jumps, even when back or next interrupts a
+// motion, a hurried move speeds up, or a flight starts from a camera still moving
+const MOVE_SPRING = 36
 
 const UP = new THREE.Vector3(0, 1, 0)
 // Minimum jerk (the smoothest start and stop: no jolt in the acceleration, as a natural movement), for the turns and
@@ -99,6 +111,11 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   const pull = new THREE.Vector3()
   const twist = new THREE.Quaternion()
   let sightTime = 0
+  // The camera's place and velocity (m/s) as the spring moves it; the planned place
+  const place = new THREE.Vector3()
+  const velocity = new THREE.Vector3()
+  const planned = new THREE.Vector3()
+  const force = new THREE.Vector3()
   /** @type {{ begin: (now: number) => void, run: (now: number) => boolean, hurry?: (now: number) => void }[]} the motions
    *  left, the first running */
   let motions = []
@@ -178,7 +195,8 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
         }
       } else {
         const way = from.position.distanceTo(to.position)
-        duration = THREE.MathUtils.clamp(FLY_TIME[0] + way * FLY_PER_METRE + angle * FLY_PER_RADIAN, FLY_TIME[0], FLY_TIME[1]) * 1000
+        const physical = Math.max((1.875 * way) / FLY_MAX_SPEED, Math.sqrt((5.77 * way) / FLY_MAX_ACCEL))
+        duration = THREE.MathUtils.clamp(Math.max(FLY_TIME[0] + way * FLY_PER_METRE + angle * FLY_PER_RADIAN, physical), FLY_TIME[0], FLY_TIME[1]) * 1000
         const room = headroom ? Math.max(0, headroom(from.position) - 0.5) : Infinity
         const rise = way > FLY_HIGH ? Math.min(way * FLY_RISE, FLY_RISE_MAX, room) : 0
         const back = Math.min(way * FLY_BACK, FLY_BACK_MAX)
@@ -338,6 +356,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     motions = []
     sightTime = 0
     spin.set(0, 0, 0)
+    velocity.set(0, 0, 0)
     controls.enabled = true
     card.classList.remove('open')
     hideTimer = setTimeout(() => {
@@ -368,14 +387,29 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     update() {
       if (!motions.length && !sightTime) return false
       const now = performance.now()
-      // The line of sight before the motion moves the camera and its point
-      if (!sightTime) sight.subVectors(controls.target, camera.position).normalize()
+      // The line of sight and the place before the motion moves the camera and its point
+      if (!sightTime) {
+        sight.subVectors(controls.target, camera.position).normalize()
+        place.copy(camera.position)
+        velocity.set(0, 0, 0)
+      }
       const dt = sightTime ? Math.min((now - sightTime) / 1000, 0.1) : 0
       sightTime = now
+      // The motions plan from the camera's actual place (a flight begins where the camera is)
+      camera.position.copy(place)
       if (motions.length && motions[0].run(now)) {
         motions.shift()
         if (motions.length) motions[0].begin(now)
       }
+      // The place: toward the planned one by the spring
+      planned.copy(camera.position)
+      if (dt > 0) {
+        force.subVectors(planned, place).multiplyScalar(MOVE_SPRING).addScaledVector(velocity, -2 * Math.sqrt(MOVE_SPRING))
+        velocity.addScaledVector(force, dt)
+        place.addScaledVector(velocity, dt)
+      }
+      camera.position.copy(place)
+      // The point looked at, as the motion wants it, seen from where the camera actually is
       // The line of sight wanted, followed by the damped spring; the point looked at kept at its distance
       const distance = Math.max(controls.target.distanceTo(camera.position), 0.1)
       wanted.subVectors(controls.target, camera.position).normalize()
@@ -395,10 +429,12 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
       }
       controls.target.copy(camera.position).addScaledVector(sight, distance)
       camera.lookAt(controls.target)
-      // Done when the motions are, the line of sight has caught up and stopped turning
-      if (!motions.length && angle < 0.002 && spin.length() < 0.01) {
+      // Done when the motions are, the place and the line of sight have caught up and stopped
+      if (!motions.length && angle < 0.002 && spin.length() < 0.01 && place.distanceTo(planned) < 0.003 && velocity.length() < 0.01) {
+        camera.position.copy(planned)
         sightTime = 0
         spin.set(0, 0, 0)
+        velocity.set(0, 0, 0)
         controls.enabled = true
       }
       return true

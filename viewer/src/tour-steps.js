@@ -57,14 +57,16 @@ export const TOUR_STEPS = [
     // then one smooth move on to the view, the line of sight gliding toward its point (Christian, 2026-10-24: the dolly
     // and the turn after it were too mechanical).
     // Clear of every surface (about 1 m at least)
-    approach: [[-20.5, 2.0, -25.0], [-25.15, 2.0, -19.45], [-27.0, 5.0, -19.6], [-27.9, 8.0, -20.2], [-28.4, 9.3, -20.5]],
+    // (the climb starting 1 m sooner along the low way: Christian, 2026-10-24; was at -25.15, 2.0, -19.45)
+    approach: [[-20.5, 2.0, -25.0], [-24.51, 2.0, -20.22], [-27.0, 5.0, -19.6], [-27.9, 8.0, -20.2], [-28.4, 9.3, -20.5]],
     // Low, looking about level toward the pillars and the pier to climb (the floor in view); climbing, level toward the
     // west; near the top, tilting down to 25° (Christian, 2026-10-24: 11°, 18°, 30°, then 25°: the view's own); then gliding to the
     // view's point
     looks: [[-29, 2.2, -20.5], { dir: [-1, 0, 0] }, { dir: [-1, 0, 0] }, { dir: [-1, -0.23, 0] }, { dir: [-1, -0.466, 0] }],
     // Low over the floor (it first turns toward the first column, setting off near the end of the turn), the climb at
     // 0.75 m/s (Christian, 2026-10-24), the dolly and the end slower
-    paces: [2, 2, 0.75, 0.75, 0.75, 0.5],
+    // (the glide to the view 25 % faster: Christian, 2026-10-24)
+    paces: [2, 2, 0.75, 0.75, 0.75, 0.625],
     turnFirst: 2.5,
     title: { fr: 'Au-dessus des piliers', en: 'Above the piers' },
     text: {
@@ -80,8 +82,11 @@ export const TOUR_STEPS = [
     // way, the dive levelling off near the floor into a glide to the door. Clear of every surface (1.5 m at least)
     approach: [[-24, 9.2, -12], [-18, 5.5, -5], [-14.5, 2.1, 0], [-16.3, 1.8, 5.2]],
     looks: [[-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55]],
-    turnFirst: 5,
-    paces: [1.2, 2.2, 1.6, 1.0, 0.7],
+    // (about 30 % faster than first: Christian, 2026-10-24, too slow)
+    turnFirst: 4,
+    // (speeding up harder in the plunge: Christian, 2026-10-24)
+    paces: [1.6, 3.4, 2.1, 1.3, 0.9],
+    accel: 1.4,
     title: { fr: 'Une porte de vanne', en: 'A gate door' },
     text: {
       fr: 'Une des portes des vannes du déversoir, couchée sur le fond (zone 16). Le fer de son cadre est rongé par la rouille.',
@@ -95,7 +100,8 @@ export const TOUR_STEPS = [
     // over the floor east of the piers' ends, then diving into the bay, faster as it goes down, braking only at the
     // end, along the move's line of sight. Clear of every surface (1.3 m at least)
     approach: [[-18.4, 5.2, 5.5], [-19.0, 7.6, -2], [-20.5, 6.0, -9.5], [-23.6, 3.2, -15.0]],
-    paces: [0.8, 1.4, 1.9, 2.3, 0.9],
+    // (the first stretch faster: 1.4, was 0.8, Christian, 2026-10-24)
+    paces: [1.4, 1.4, 1.9, 2.3, 0.9],
     // Through the passage in line with the start (Christian, 2026-10-24: it went through the walls), in its middle: the
     // passages are 1.1 m wide (z -17.2 to -16.1 for this one) and 1.1 m high (y 1.8 to 2.9), their piers 0.8 m wide
     // and 3.1 m long (x -32.7 to -35.8); measured with the finest tiles, every surface counted
@@ -111,7 +117,7 @@ export const TOUR_STEPS = [
   {
     // Added by Christian, 2026-10-24
     kind: 'view',
-    cam: [-45.37, 1.98, -27.28, -40.73, 3.31, -29.09],
+    cam: [-45.27, 1.67, -26.26, -40.87, 2.8, -28.73],
     title: { fr: 'Les piliers, côté ouest', en: 'The piers, west side' },
     text: {
       fr: 'Du côté ouest, les piliers sont arrondis, montés en assises de pierre. Derrière, l’enclave est fermée par un mur de madriers.',
