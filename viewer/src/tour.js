@@ -29,11 +29,18 @@ const HURRY = 800
 // early, the point looked at reaches the step's within this share of the flight
 const APPROACH_TIME = [2, 9]
 const APPROACH_PER_METRE = 0.12
-// A turn first (a step's turnFirst): the camera sets off after this share of it
-const TURN_OVERLAP = 0.8
+// A turn first (a step's turnFirst): the camera sets off after this share of it (Christian, 2026-10-24: at 60 %)
+const TURN_OVERLAP = 0.6
+// A way with paces (a step's paces or flightPace) is driven as a vehicle would (Christian, 2026-10-24: physically
+// sound): from rest to rest, speeding up and slowing down at ACCEL m/s² at most, slowing ahead of a slower stretch so
+// as to be at its pace when it starts; planned every PROFILE_STEP m along the way
+const ACCEL = 0.4
+const PROFILE_STEP = 0.05
 
 const UP = new THREE.Vector3(0, 1, 0)
-const easeInOut = (k) => (k < 0.5 ? 4 * k * k * k : 1 - (-2 * k + 2) ** 3 / 2)
+// Minimum jerk (the smoothest start and stop: no jolt in the acceleration, as a natural movement), for the turns and
+// the flights without paces
+const easeInOut = (k) => k * k * k * (10 - 15 * k + 6 * k * k)
 // A move's speed: from rest, up to twice its pace in the middle, to rest (its mean is the pace)
 const travelEase = (k) => k - Math.sin(2 * Math.PI * k) / (2 * Math.PI)
 
@@ -85,8 +92,8 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     let start = 0
     // The points looked at along an approach: where the camera was looking, the step's, then the step's own point
     let looks = null
-    // With paces: the time at which the camera reaches each point (ms from the start)
-    let times = null
+    // With paces: the time (ms from the start) at each PROFILE_STEP along the way
+    let profile = null
     // From where the camera is when it begins (after a hurried move: its end)
     const begin = (now) => {
       start = now
@@ -100,18 +107,29 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
           looks = [step.turnFirst ? points[0] : from.target, ...points, to.target]
         }
         curve = new THREE.CatmullRomCurve3([from.position, ...step.approach.map((p) => new THREE.Vector3(...p)), to.position], false, 'centripetal')
-        if (step.paces) {
-          // A time for each stretch between the points, by its length and its pace; the curve's parameter is i / n at
-          // the i-th point
-          const n = curve.points.length - 1
-          const lengths = curve.getLengths(n * 50)
-          times = [0]
-          for (let i = 0; i < n; i++) times.push(times[i] + ((lengths[(i + 1) * 50] - lengths[i * 50]) / (step.paces[i] ?? 1)) * 1000)
-          duration = times[n]
-        } else
-        duration = step.flightPace
-          ? (curve.getLength() / step.flightPace) * 1000
-          : THREE.MathUtils.clamp(APPROACH_TIME[0] + curve.getLength() * APPROACH_PER_METRE + angle * FLY_PER_RADIAN, APPROACH_TIME[0], APPROACH_TIME[1]) * 1000
+        if (step.paces || step.flightPace) {
+          // The speed at each point of the way: its stretch's pace (the curve's parameter is i / n at the i-th point),
+          // at rest at both ends, then no faster than ACCEL allows from the speed before (forward) and toward the speed
+          // after (backward); the time to each point from the mean speeds
+          const length = curve.getLength()
+          const n = Math.max(2, Math.ceil(length / PROFILE_STEP))
+          const ds = length / n
+          const stretches = curve.points.length - 1
+          const speed = new Float64Array(n + 1)
+          for (let i = 0; i <= n; i++) {
+            const stretch = Math.min(Math.floor(curve.getUtoTmapping(i / n) * stretches), stretches - 1)
+            speed[i] = step.paces ? step.paces[stretch] ?? 1 : step.flightPace
+          }
+          speed[0] = 0
+          speed[n] = 0
+          for (let i = 1; i <= n; i++) speed[i] = Math.min(speed[i], Math.sqrt(speed[i - 1] ** 2 + 2 * ACCEL * ds))
+          for (let i = n - 1; i >= 0; i--) speed[i] = Math.min(speed[i], Math.sqrt(speed[i + 1] ** 2 + 2 * ACCEL * ds))
+          profile = new Float64Array(n + 1)
+          for (let i = 1; i <= n; i++) profile[i] = profile[i - 1] + (ds / Math.max((speed[i - 1] + speed[i]) / 2, 0.02)) * 1000
+          duration = profile[n]
+        } else {
+          duration = THREE.MathUtils.clamp(APPROACH_TIME[0] + curve.getLength() * APPROACH_PER_METRE + angle * FLY_PER_RADIAN, APPROACH_TIME[0], APPROACH_TIME[1]) * 1000
+        }
       } else {
         const way = from.position.distanceTo(to.position)
         duration = THREE.MathUtils.clamp(FLY_TIME[0] + way * FLY_PER_METRE + angle * FLY_PER_RADIAN, FLY_TIME[0], FLY_TIME[1]) * 1000
@@ -136,13 +154,19 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
         const k = THREE.MathUtils.clamp((elapsed - turnTime * TURN_OVERLAP) / duration, 0, 1)
         const e = easeInOut(k)
         let t
-        if (times) {
-          // The stretch the eased time falls in, and how far along it
-          const time = e * duration
-          let i = 0
-          while (i < times.length - 2 && time > times[i + 1]) i++
-          t = (i + (time - times[i]) / (times[i + 1] - times[i])) / (times.length - 1)
-          curve.getPoint(t, camera.position)
+        if (profile) {
+          // Where the planned speeds bring the camera at this time (a binary search in the profile's times)
+          const time = k * duration
+          let lo = 0
+          let hi = profile.length - 1
+          while (hi - lo > 1) {
+            const mid = (lo + hi) >> 1
+            if (profile[mid] <= time) lo = mid
+            else hi = mid
+          }
+          const u = (lo + (time - profile[lo]) / Math.max(profile[hi] - profile[lo], 1e-6)) / (profile.length - 1)
+          curve.getPointAt(Math.min(u, 1), camera.position)
+          t = curve.getUtoTmapping(Math.min(u, 1))
         } else {
           // Along the curve by its length (an even pace through the approach points)
           curve.getPointAt(e, camera.position)
