@@ -68,9 +68,9 @@ export default defineConfig({
         LanguageSelect: './src/components/Omitted.astro',
       },
       sidebar: [
+        { label: 'Modèle 3D', translations: { en: '3D model' }, link: '/modele' },
         { label: 'À propos', translations: { en: 'About' }, link: '/a-propos' },
         { label: 'Remerciements', translations: { en: 'Thanks' }, link: '/remerciements' },
-        { label: 'Modèle 3D', translations: { en: '3D model' }, link: '/modele' },
         { label: 'Découpage du site', translations: { en: 'Site zones' }, link: '/decoupage-du-site' },
         { label: 'La collecte des données', translations: { en: 'Data collection' }, items: [{ autogenerate: { directory: 'collecte' } }] },
         { label: 'Workflow', translations: { en: 'Workflow' }, items: [{ autogenerate: { directory: 'workflow' } }] },

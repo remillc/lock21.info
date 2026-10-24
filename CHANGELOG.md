@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Site menu: « Modèle 3D » first, before « À propos » (Christian, 2026-10-24).
 - 3D viewer, underwater: the creatures lit by the daylight as the surfaces around them (Christian, 2026-10-24): the
   bass's glTF had no metallic factor (1 by default, a metal), so it took no diffuse light from the environment and was
   dark outside the beam; creature materials are now not metallic.
