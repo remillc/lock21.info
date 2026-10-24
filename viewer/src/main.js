@@ -363,9 +363,11 @@ function releaseAfterUpload(surface) {
     }
   }
 }
-// Less detail far away (Christian, 2026-10-24: a far zone should use less): the library's falloff lowers each tile's
-// error by up to DETAIL_FALLOFF of the profile's errorTarget with the distance, along 1 - e^-(d x DETAIL_DENSITY)²
-// (half of it at 8 m, nearly all from 20 m). The finest level was asked for up to about 25 m, where its 1.6 mm texels
+// Less detail far away (Christian, 2026-10-24: a far zone should use less): each tile's error is multiplied by
+// 1 - DETAIL_FALLOFF x (1 - e^-(d x DETAIL_DENSITY)²) with its distance d (a third of the loss at 6 m, nearly all from
+// 20 m: there a tile needs three times the error to refine). A factor, not the library's errorFalloff, which subtracts:
+// zone 18's first tile, 118 m away, got an error of 0, and its root (refine ADD: a child is skipped when the parent
+// meets the error target there) then drew nothing (Christian, 2026-10-24: zone 18 not showing from afar). The finest level was asked for up to about 25 m, where its 1.6 mm texels
 // are a tenth of a pixel; at one view zone 8's 49 finest tiles, 19 m away and behind a wall, held 94 MB of the budget
 // while nearby tiles were refused (108 refused, 44 with it).
 // Lean loading on a computer (the profile's lean; Christian, 2026-10-24: a smaller budget, most visitors' graphics cards
@@ -378,8 +380,15 @@ const DETAIL_DENSITY = 0.1
 /** The profile's detail on a tile set: its error target, the falloff with distance, lean loading */
 function setDetail(tiles) {
   tiles.errorTarget = profile.errorTarget
-  tiles.errorFalloff = profile.errorTarget * DETAIL_FALLOFF
-  tiles.errorFalloffDensity = DETAIL_DENSITY
+  if (!tiles.userData?.falloff) {
+    const viewError = tiles.calculateTileViewError.bind(tiles)
+    tiles.calculateTileViewError = (tile, target) => {
+      viewError(tile, target)
+      const d = target.distanceFromCamera
+      if (Number.isFinite(d)) target.error *= 1 - DETAIL_FALLOFF * (1 - Math.exp(-((d * DETAIL_DENSITY) ** 2)))
+    }
+    tiles.userData = { ...tiles.userData, falloff: true }
+  }
   tiles.loadAncestors = tiles.loadSiblings = !profile.lean
 }
 // The tiles' texture sizes on the GPU (TODO #69, 2026-10-24: up close, the walls stayed at a coarse level). The
@@ -1831,16 +1840,20 @@ function keepAboveFloor() {
   return true
 }
 
-// Within the model's area (TODO #66, Christian, 2026-10-24), in both views and whatever the navigation: the zones'
-// bounds together (the scene's frame), SITE_MARGIN m wider on every side to step back and see the whole lock; a camera
+// Within the model's area (TODO #66, Christian, 2026-10-24), in both views and whatever the navigation: the whole
+// terrain (the context: Christian, 2026-10-24, it was the zones' bounds only, and zone 18 stopped the camera going
+// west), and the zones' bounds SITE_MARGIN m wider on every side to step back and see the whole lock; a camera
 // that leaves them horizontally is brought back to their edge, the orbit's point moved with it (the view keeps its
 // angle). Underwater it also stays below the surface (the render loop)
 const SITE_MARGIN = 10
 const site = new THREE.Box3()
 const zoneBox = new THREE.Box3()
+const terrainBox = new THREE.Box3()
 let siteFor = null
 function siteBounds() {
-  if (siteFor === tilesets && !site.isEmpty()) return site
+  // Computed again when the tile sets or the context models change (the context arrives after the zones)
+  const key = `${tilesets.length}:${contextModels.length}`
+  if (siteFor === key && !site.isEmpty()) return site
   site.makeEmpty()
   for (const tiles of tilesets) {
     if (!tiles.getBoundingBox(zoneBox)) continue
@@ -1848,8 +1861,10 @@ function siteBounds() {
     site.union(zoneBox.applyMatrix4(tiles.group.matrixWorld))
   }
   if (site.isEmpty()) return null
-  siteFor = tilesets
-  return site.expandByScalar(SITE_MARGIN)
+  site.expandByScalar(SITE_MARGIN)
+  for (const model of contextModels) site.union(terrainBox.setFromObject(model))
+  siteFor = key
+  return site
 }
 function keepInSite() {
   const bounds = siteBounds()
