@@ -1738,6 +1738,29 @@ function keepInFront() {
   if (hit) camera.position.copy(controls.target).addScaledVector(toCamera, Math.max(0.05, hit.distance - IN_FRONT))
 }
 
+// Underwater, the diver never under the floor (Christian, 2026-10-24): orbiting or panning (no collisions there), a gap
+// between tiles, or finer tiles not loaded yet could take the camera below it. A ray up from the camera that meets a
+// surface facing up (a floor seen from below; a ceiling faces down) within FLOOR_CHECK m brings it back FLOOR_CLEAR m
+// above that floor (the swimmer's distance from the surfaces), the orbit's point with it
+const FLOOR_CHECK = 4
+const FLOOR_CLEAR = 0.6
+const UP = new THREE.Vector3(0, 1, 0)
+const floorRay = new THREE.Raycaster()
+floorRay.firstHitOnly = true
+const floorNormal = new THREE.Vector3()
+function keepAboveFloor() {
+  floorRay.set(camera.position, UP)
+  floorRay.far = FLOOR_CHECK
+  const hit = floorRay.intersectObjects(collider.surfacesNear(camera.position, FLOOR_CHECK), false)[0]
+  if (!hit?.face) return false
+  floorNormal.copy(hit.face.normal).transformDirection(hit.object.matrixWorld)
+  if (floorNormal.y < 0.5) return false
+  const rise = hit.point.y + FLOOR_CLEAR - camera.position.y
+  camera.position.y += rise
+  if (!swim.looking) controls.target.y += rise
+  return true
+}
+
 // Paused while AR runs (android-ar.js has its own renderer)
 let lastFrame = performance.now()
 // Underwater, the share of the sun's lost direct light given back as the sky's diffuse light
@@ -1761,6 +1784,7 @@ function renderLoop() {
   // Underwater: the camera stays below the surface, and the caustics and particles move (a frame every time)
   if (underwater.on) {
     if (camera.position.y > SURFACE_Y - 0.5) camera.position.y = SURFACE_Y - 0.5
+    if (keepAboveFloor()) needsRender = true
     // The diver's arm first: the beam follows the light it holds
     diverArm.setVisible(underwater.lampVisible)
     diverArm.update(camera)

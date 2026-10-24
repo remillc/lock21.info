@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the diver never goes under the floor (Christian, 2026-10-24): a ray up from the camera that
+  meets a floor seen from below brings it back 60 cm above it, the orbit's point with it (orbiting or panning have no
+  collisions, and a gap between tiles or tiles not yet loaded let it through).
 - 3D viewer, the diver's dive computer a Shearwater Perdix 3 (TODO #65, shearwater.com pictures): 81 × 71 mm, its thick
   body, the strap bars across its ends, the bezel scalloped around its 8 screws, the black glass; light (about a
   thousand triangles, no texture in the file). Its screen live, drawn by the viewer (`viewer/src/dive-computer.js`)
