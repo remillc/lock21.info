@@ -1335,6 +1335,9 @@ if (import.meta.env.DEV) window.l21.bass = bass
 // A few fish here and there underwater (fishes.js, Christian, 2026-10-24): the bass's model shared, FISHES on a
 // computer, FISHES_PHONE on a phone; after the first view, once underwater
 const FISHES = 6
+const FLOOR_REACH = 10
+const DOWN = new THREE.Vector3(0, -1, 0)
+const floorFrom = new THREE.Vector3()
 const FISHES_PHONE = 3
 const fishes = createFishes({
   count: mobile ? FISHES_PHONE : FISHES,
@@ -1352,6 +1355,14 @@ const fishes = createFishes({
   },
   visibility: () => underwater.visibility,
   pace: () => [0.4, 0.7, 1, 0.8][Math.round(look.season)] ?? 1,
+  // The floor below a point: a ray down from just above it, FLOOR_REACH m at most
+  floor: (point) => {
+    pickRay.set(floorFrom.copy(point).setY(point.y + 0.5), DOWN)
+    pickRay.far = FLOOR_REACH
+    const hit = pickRay.intersectObjects([...tilesets.map((tiles) => tiles.group), ...contextModels], true)[0]
+    pickRay.far = Infinity
+    return hit ? hit.point.y : null
+  },
 })
 scene.add(fishes.object)
 if (import.meta.env.DEV) window.l21.fishes = fishes

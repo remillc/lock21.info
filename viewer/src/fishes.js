@@ -6,6 +6,9 @@
 //   side), nothing between the camera and it, between PLACE_NEAR and PLACE_FAR of the visibility (the water still
 //   hides it: it comes out of the haze), at least CLEARANCE m from every surface. Placed again once beyond the
 //   visibility (the diver swam on) or out of the view for UNSEEN_FOR s.
+// - Near the bottom (Christian, 2026-10-24: fish don't swim in open water, they stay close to the ground): each keeps
+//   its own height above the floor below it, within ALTITUDE m, when placed, at its waypoints and as it swims (the
+//   floor looked for every LOOK_EVERY s); a spot with no floor within reach is not taken.
 // - It swims to waypoints within WANDER m, clear of the walls and with nothing in between, slowly (CRUISE m/s, the
 //   season's pace), along its heading (arcs while it turns), slower in a turn; its body waves with its speed and the
 //   turn runs down it, as the bass's.
@@ -20,9 +23,15 @@ const URL = `${import.meta.env.BASE_URL}creatures/bass.glb`
 const LENGTH_MEAN = 0.36
 const LENGTH_SPREAD = 0.06
 const LENGTH_RANGE = [0.25, 0.5]
-const PLACE_NEAR = 0.7
+const PLACE_NEAR = 0.6
 const PLACE_FAR = 1
-const CLEARANCE = 0.4
+// ... and within PLACE_MAX m (near the floor, a spot farther away was nearly always hidden from the camera by a ridge
+// of the floor or a wall)
+const PLACE_MAX = [8, 15]
+const CLEARANCE = 0.15
+const ALTITUDE = [0.25, 0.7]
+// Its height follows the floor at most this fast (m/s)
+const CLIMB = 0.15
 const WANDER = 3
 const VIEW_MARGIN = 0.25
 // Never through the model (Christian, 2026-10-24): every LOOK_EVERY s, the water LOOK_AHEAD m ahead of it; closer than
@@ -65,9 +74,10 @@ export function bassLength() {
  * @param {(from: THREE.Vector3, to: THREE.Vector3) => boolean} [options.inSight] - nothing of the model between two points
  * @param {() => number} [options.visibility] - the season's visibility (m)
  * @param {() => number} [options.pace] - the season's pace (1 in summer, slower in cold water)
+ * @param {(point: THREE.Vector3) => number | null} [options.floor] - the height of the floor below a point (null: none)
  * @param {Promise<unknown>} [options.when] - the model loads once this settles (after the first view, underwater)
  */
-export function createFishes({ count, prepare = (m) => m, clearance = () => Infinity, inSight = () => true, visibility = () => 6, pace = () => 1, when = Promise.resolve() } = {}) {
+export function createFishes({ count, prepare = (m) => m, clearance = () => Infinity, inSight = () => true, visibility = () => 6, pace = () => 1, floor = () => null, when = Promise.resolve() } = {}) {
   const root = new THREE.Group()
   root.name = 'fishes'
   /** @type {object[]} */
@@ -105,7 +115,7 @@ export function createFishes({ count, prepare = (m) => m, clearance = () => Infi
       }
       fishes.push({
         group, spine, placed: false, heading: 0, turnRate: 0, speed: 0, cruise: between(CRUISE), phase: Math.random() * 10,
-        target: new THREE.Vector3(), turns: [], wait: Math.random() * 3,
+        target: new THREE.Vector3(), turns: [], wait: Math.random() * 3, altitude: between(ALTITUDE), floorY: null,
       })
     }
   }))
@@ -115,12 +125,16 @@ export function createFishes({ count, prepare = (m) => m, clearance = () => Infi
   const forward = new THREE.Vector3()
   const bend = new THREE.Quaternion()
 
-  /** A clear spot around a centre, between two distances, near a height, within `spread` rad of `heading` (or null) */
-  function clearSpot(centre, near, far, height, tries = 8, heading = 0, spread = Math.PI) {
+  /** A clear spot around a centre, between two distances, `altitude` m above the floor, within `spread` rad of
+   *  `heading` (or null) */
+  function clearSpot(centre, near, far, altitude, tries = 8, heading = 0, spread = Math.PI) {
     for (let i = 0; i < tries; i++) {
       const angle = heading + (Math.random() * 2 - 1) * spread
       const distance = near + Math.random() * (far - near)
-      point.set(centre.x + Math.sin(angle) * distance, height + (Math.random() - 0.5) * 2, centre.z + Math.cos(angle) * distance)
+      point.set(centre.x + Math.sin(angle) * distance, centre.y, centre.z + Math.cos(angle) * distance)
+      const ground = floor(point)
+      if (ground === null) continue
+      point.y = ground + altitude
       if (clearance(point) >= CLEARANCE) return point.clone()
     }
     return null
@@ -131,8 +145,10 @@ export function createFishes({ count, prepare = (m) => m, clearance = () => Infi
     camera.getWorldDirection(forward)
     const heading = Math.atan2(forward.x, forward.z)
     const half = Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect) + VIEW_MARGIN
-    for (let i = 0; i < 4; i++) {
-      const spot = clearSpot(camera.position, reach * PLACE_NEAR, reach * PLACE_FAR, camera.position.y, 3, heading, half)
+    const near = Math.min(reach * PLACE_NEAR, PLACE_MAX[0])
+    const far = Math.min(reach * PLACE_FAR, PLACE_MAX[1])
+    for (let i = 0; i < 6; i++) {
+      const spot = clearSpot(camera.position, near, far, between(ALTITUDE), 4, heading, half)
       if (spot && inSight(camera.position, spot)) return spot
     }
     return null
@@ -146,9 +162,13 @@ export function createFishes({ count, prepare = (m) => m, clearance = () => Infi
     const at = fish.group.position
     const away = at.distanceTo(camera.position) < SHY
     for (let i = 0; i < 6; i++) {
-      const spot = away
+      let spot = away
         ? at.clone().add(toTarget.subVectors(at, camera.position).setY(0).normalize().applyAxisAngle(UP, (Math.random() - 0.5) * 1.2).multiplyScalar(WANDER))
-        : clearSpot(at, 1, WANDER, at.y, 1)
+        : clearSpot(at, 1, WANDER, fish.altitude, 1)
+      if (spot && away) {
+        const ground = floor(spot)
+        spot = ground === null ? null : spot.setY(ground + fish.altitude)
+      }
       if (spot && clearance(spot) >= CLEARANCE && inSight(at, spot)) {
         fish.target.copy(spot)
         return
@@ -221,9 +241,12 @@ export function createFishes({ count, prepare = (m) => m, clearance = () => Infi
             nextTarget(fish, camera)
             fish.speed *= 0.5
           }
+          // The floor below it: its height follows it
+          fish.floorY = floor(at) ?? fish.floorY
         }
         point.copy(at).addScaledVector(forward, fish.speed * dt)
-        point.y += THREE.MathUtils.clamp(fish.target.y - at.y, -0.05, 0.05) * dt
+        const height = fish.floorY === null ? fish.target.y : fish.floorY + fish.altitude
+        point.y += THREE.MathUtils.clamp(height - at.y, -CLIMB * dt, CLIMB * dt)
         if (clearance(point) >= BODY_CLEAR) at.copy(point)
         else fish.speed = 0
         fish.group.rotation.set(0, fish.heading, 0)

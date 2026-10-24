@@ -8,7 +8,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   bass's model shared, each fish going its own way to waypoints clear of the walls, calm, swerving away from the diver;
   placed only where the diver may see them (in the view, nothing in between, where the water still hides them, so they
   come out of the haze), placed again once out of reach or out of the view for 10 s; never through the model (the water
-  ahead checked as it swims). Loaded after the first view, once underwater.
+  ahead checked as it swims). Loaded after the first view, once underwater. Near the bottom, as bass keep to structure
+  (Christian, 2026-10-24: not in open water): each keeps its own height above the floor below it (25 to 70 cm),
+  placed, at its waypoints and as it swims; placed 8 to 15 m away at most (near the floor, farther spots were hidden
+  from the camera).
 - 3D viewer, the bass model lightened: 40,000 → 6,000 triangles (`tools/creatures/rig_bass.py --faces`), 2 MB → 0.6 MB.
 - 3D viewer, bass lengths as in Ontario's waters (25 to 50 cm for an adult, ontario.ca): drawn around 36 cm, for the
   fish and for the curious bass on each visit (it was 40 cm).
