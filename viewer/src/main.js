@@ -317,6 +317,9 @@ const controls = new OrbitControls(camera, renderer.domElement)
 // Development builds only: the viewer's parts for tests in the browser console (window.l21)
 if (import.meta.env.DEV) window.l21 = { THREE, renderer, scene, camera, controls, underwater, get tilesets() { return tilesets } }
 controls.enableDamping = true
+// Turning with the left button (Christian, 2026-10-24: too fast): half OrbitControls' speed, half a turn for a drag
+// across the view's height
+controls.rotateSpeed = 0.5
 // Looking up (Christian, 2026-10-24: the standard view couldn't): the camera may go below the point it turns around,
 // up to ORBIT_UP from straight above it; it then stays in front of the surfaces between them (keepInFront). It used
 // to stay above that point's height, so as never to look from under the floor
