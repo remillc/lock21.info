@@ -88,6 +88,12 @@ export function settingsSchema({ mobile }) {
       ],
     },
     {
+      title: t('modelSection'),
+      items: [
+        { key: 'textures', label: t('textures'), hint: t('texturesHint'), type: 'select', def: '', options: [['', t('texturesAuto')], ['light', t('texturesLight')], ['full', t('texturesFull')]] },
+      ],
+    },
+    {
       title: t('advanced'),
       advanced: true,
       items: [

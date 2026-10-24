@@ -2,6 +2,13 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## 0.12.1 - 2026-10-24
+
+- 3D viewer, the light tiles: a phone or tablet that reports at least 8 GB of memory and 8 cores on a fast connection
+  (Chrome's class « 4g », no data saver) gets the full set (Christian's Pixel 10 Pro handled it well); every iPhone and
+  iPad, which report neither, the light one. A « Textures » setting (⚙, « Modèle »: automatique, légères,
+  complètes; `?textures=`) to choose; the visit's report says which set it got (`tile-set`).
+
 ## 0.12.0 - 2026-10-24
 
 - 3D model, phones and tablets (an old iPad and an iPhone 14 waited one to two minutes): a light set of tiles per

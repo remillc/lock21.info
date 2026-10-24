@@ -238,6 +238,29 @@ if (light) {
   renderer.setPixelRatio(profile.pixelRatio)
   log('light-profile', LIGHT)
 }
+// The tiles' textures (tile_zone.ps1 -Light; « Textures » setting, ?textures=light|full; Christian, 2026-10-24: his
+// Pixel 10 Pro handled the full set well): the full set on a computer, and on a phone or tablet that reports at least
+// STRONG_MEMORY GB and STRONG_CORES cores on a fast connection (Chrome's class « 4g », Wi-Fi included, no data saver:
+// its speed estimate, downlink, started at 1.6 Mbit/s on a fast line); the light one otherwise. Only
+// Chrome reports memory and connection: every iPhone and iPad takes the light set, unless chosen otherwise. After a
+// reload for lack of memory, always the light one
+const STRONG_MEMORY = 8
+const STRONG_CORES = 8
+let texturesChoice = params.get('textures') || ''
+function lightTextures() {
+  if (light || texturesChoice === 'light') return true
+  if (texturesChoice === 'full' || !mobile) return false
+  const net = navigator.connection
+  const strong = navigator.deviceMemory >= STRONG_MEMORY && navigator.hardwareConcurrency >= STRONG_CORES
+  const fast = !net || (!net.saveData && (!net.effectiveType || net.effectiveType === '4g'))
+  return !(strong && fast)
+}
+let lightSet = lightTextures()
+log('tile-set', {
+  set: lightSet ? 'light' : 'full', choice: texturesChoice || 'auto', memory: navigator.deviceMemory ?? null,
+  cores: navigator.hardwareConcurrency ?? null, downlink: navigator.connection?.downlink ?? null,
+  net: navigator.connection?.effectiveType ?? null, saveData: navigator.connection?.saveData ?? null,
+})
 
 // The view a visit starts from without ?cam= (same form: x,y,z of the camera, then of the point it looks at; scene
 // metres, y up), chosen by Christian on 2026-10-23 (was 2026-10-22's). To change it, place the camera where wanted and
@@ -1135,7 +1158,7 @@ async function loadModel() {
   tilesets = manifest.tilesets.map((entry) => {
     // Phones and tablets: the zone's light set where it has one (tile_zone.ps1 -Light: textures halved, no relief;
     // the finest tiles about five times lighter), the same tiling
-    const tiles = new TilesRenderer(`${tilesUrl}/${mobile && entry.light ? entry.light : entry.url}`)
+    const tiles = new TilesRenderer(`${tilesUrl}/${lightSet && entry.light ? entry.light : entry.url}`)
     tiles.zoneId = entry.id
     tiles.registerPlugin(coarseWithoutRelief())
     if (sharedCache) {
@@ -1379,8 +1402,19 @@ function showError(error) {
 }
 
 live.tiles = (v) => { tilesUrl = v || DEFAULT_TILES_URL; loadModel().catch(showError) }
+/** The other set of tiles when the choice or the profile changes it (the camera kept) */
+function switchTileSet() {
+  const now = lightTextures()
+  if (now === lightSet) return
+  lightSet = now
+  log('tile-set', { set: lightSet ? 'light' : 'full', choice: texturesChoice || 'auto' })
+  if (zoneEntries.some((entry) => entry.light)) loadModel().catch(showError)
+}
+live.textures = (v) => {
+  texturesChoice = v
+  switchTileSet()
+}
 live.profile = (v) => {
-  const wasMobile = mobile
   mobile = isMobile(v)
   showKeys()
   profile = PROFILES[mobile ? 'mobile' : 'desktop']
@@ -1395,7 +1429,7 @@ live.profile = (v) => {
   if (aoPass) aoQuality()
   resize()
   // The other set of tiles (light on phones)
-  if (mobile !== wasMobile && zoneEntries.some((entry) => entry.light)) loadModel().catch(showError)
+  switchTileSet()
 }
 
 function resize() {

@@ -2,14 +2,13 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#59**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#60**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
 
 ### Viewer
 
-- [ ] #1 If phones struggle: lower the texture resolution of the coarse levels
 - [ ] #3 Choose default ambient occlusion settings (radius, intensity) after viewing close up
 - [ ] #55 Floor flakes in the default view (light shards: coarse levels left over the detail): with the relief's normal
   maps, the view needs more than the desktop tiles budget (1.2 GB); at 2 GB the browser ran out of memory (« Array
@@ -60,6 +59,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #43 Check the site for accessibility issues (WCAG 2.2 AA): contrast in both themes, keyboard navigation and
   focus (menu, viewer frame, opt-out button), alt texts, headings order, the viewer's controls and the depth gauges
   (aria-hidden), French and English pages
+- [ ] #59 Are the /modele buttons MD3-compliant (docs/system-design.md, Buttons)? Check their sizes (40 dp button in
+  a 48 dp touch target, 24 dp icons), the spacing between them and from the edges, their types (filled tonal, text),
+  state layers and focus, on the page and in the viewer, on computer and phone
 - [ ] #44 Usability audit of the site: what a first-time visitor (diver, heritage enthusiast, photogrammetrist) finds
   and understands, the paths from the home page to the model and the dive log, the 3D viewer's controls on desktop and
   phone, navigation and search, on both languages
