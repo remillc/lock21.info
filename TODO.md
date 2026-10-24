@@ -64,8 +64,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   another, through a few waypoints if needed, at a set pace). The steps, in order (Christian, 2026-10-24):
   1. view: `?cam=-18.60,3.08,-27.91,-45.68,-28.73,-39.76`
   2. view: `?cam=-31.65,10.45,-10.50,-55.30,-7.97,-29.94`
+  3. view: zone 16, the spillway gate door on the floor: `?cam=-18.54,1.28,8.53,-17.08,-0.65,10.34`
   Stops noted before, not placed yet:
-  - zone 16, the spillway gate door on the floor: `?cam=-18.54,1.28,8.53,-17.08,-0.65,10.34`
   - looking down the stone passage through the wall, its pipes on the floor, the opening at the end (Christian's
     favourite, 2026-10-23; screenshot `images/views/2026-10-23-view-1.webp`): `?cam=-37.01,2.56,-14.66,-33.02,2.48,-14.40`
 
