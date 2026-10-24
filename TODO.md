@@ -77,7 +77,4 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ## Other
 
-- [ ] #62 In `docs/`, say which parts are done by AI (Claude): which steps of the pipeline, the viewer's code, the
-  translations, the guides themselves
-
 - [ ] #35 lock21.ca: owner contacted on 2026-10-18 through CIRA; reminder in Google Calendar on 2027-03-14 (expiry)

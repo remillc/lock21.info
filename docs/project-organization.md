@@ -67,6 +67,38 @@ même version. Ne pas changer de branche pendant qu'un outil lit le `.blend`, ni
 Les identifiants du stockage R2 sont dans `.env.local`, à la racine du projet, hors de Git (guide **Installation**,
 section 4). La publication du site sur GitHub n'a besoin d'aucun secret.
 
+## Ce que fait l'IA
+
+Une partie du travail est faite par une IA, **Claude** (Anthropic), dans Claude Code: elle écrit du code, lance des
+commandes et rédige des textes à la demande de Christian, qui décide, vérifie et approuve. Le partage est le suivant.
+
+**Fait par Christian, sans IA:**
+
+- les plongées, le tournage et les réglages de la caméra; le journal des plongées;
+- la photogrammétrie dans Metashape: alignement, nuage dense, maillage, texture (projets dans `O:\photogrammetry\`);
+- dans Blender, `modeles\lock-21-publishing.blend`: la place des zones, leurs découpes (booléens), les maquettes et
+  leurs matériaux, le terrain;
+- les textes des pages du site en français (carnet de terrain), sauf les passages notés plus bas;
+- les choix: ce qui est publié, l'aspect du site et du visualiseur, les réglages (lumière, saisons, visibilité).
+
+**Fait par l'IA, à la demande et sous le contrôle de Christian:**
+
+- le code: le visualiseur 3D (`viewer\`), les composants et les styles du site (`src\`), les outils de publication
+  (`tools\`, scripts Blender, Node et PowerShell), la configuration (Cloudflare, GitHub Actions);
+- l'exécution des étapes de publication sur l'ordinateur de Christian (guide **Traiter le fichier .blend**: vérifier,
+  tuiles, relief, contrôle, téléchargements); la mise en ligne (envoi vers R2, publication du site, versions) et toute
+  fusion dans `main` seulement après l'accord de Christian;
+- les traductions anglaises des pages (`src\content\docs\en\`);
+- les guides de `docs\`, les README des outils, `CHANGELOG.md`, `TODO.md` et `AGENTS.md`, tenus à jour à chaque
+  changement; quelques passages de pages du site rédigés à sa demande (Remerciements, À propos), relus par lui;
+- les vérifications: tests dans des navigateurs sans écran (Chrome, WebKit) et sur appareils loués (BrowserStack),
+  lecture du journal du visualiseur (Workers Logs) pour trouver les problèmes des visiteurs.
+
+**Jamais fait par l'IA:** modifier les projets Metashape d'origine (`O:\photogrammetry\`); enregistrer le `.blend`
+(elle le lit seulement, une fois qu'il est enregistré et fermé); afficher ou copier les secrets de `.env.local`;
+publier les adresses privées des documents de Save Ontario Shipwrecks. Ces règles sont dans `AGENTS.md`, que l'IA lit
+au début de chaque session.
+
 ## Où regarder pour…
 
 | Je veux… | Voir |
@@ -78,3 +110,4 @@ section 4). La publication du site sur GitHub n'a besoin d'aucun secret.
 | Google Earth et le GLB téléchargeable | `tools\google-earth\README.md` |
 | modifier une page du site | `src\content\docs\` (et `AGENTS.md`, section *Conventions for docs*) |
 | ce qui reste à faire | `TODO.md` |
+| savoir ce que fait l'IA | la section **Ce que fait l'IA**, plus haut |

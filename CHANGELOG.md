@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Docs (TODO #62): `docs/project-organization.md` says what the AI (Claude) does and doesn't in the project: Christian
+  dives, films, runs Metashape, works the .blend and writes the French pages; Claude writes the code, runs the
+  publishing steps (going online only with his OK), translates, keeps the guides, tests; what it never does. The
+  processing guide points to it.
 - 3D viewer, underwater: an empty area could show in the distance (Christian, 2026-10-24): the tiles beyond the
   visibility were no longer drawn, but the context behind them was, its haze a little darker than the water column.
   The whole view now stops at 1.2 times the visibility (tiles, context, mockups), and the water column fits inside it;

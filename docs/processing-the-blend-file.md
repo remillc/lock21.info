@@ -22,6 +22,10 @@ L'ordinateur doit être prêt: voir le guide **Installation** (`docs/installatio
 
 Les étapes 1 à 4 ne changent rien en ligne: on peut les refaire autant de fois que nécessaire. Les étapes 5 à 7 changent ce que les visiteurs voient.
 
+Ces étapes sont en général lancées par l'IA (Claude) à la demande de Christian; les étapes 5 à 7, qui changent le
+site en ligne, seulement après son accord (guide **Organisation du projet**, section *Ce que fait l'IA*). Elles se
+lancent aussi à la main, comme décrit ci-dessous.
+
 ## Avant de commencer
 
 - [ ] **Le `.blend` est sauvegardé**, et **aucun objet n'est en mode Édition** au moment de la sauvegarde. Un objet sauvegardé en mode Édition est enregistré incomplet dans le fichier (sans ses sommets ni ses UV), et les exports échouent (erreur `foreach_get(..) sequence length mismatch`). En cas de doute: Tab pour revenir en mode Objet, puis sauvegarder.
