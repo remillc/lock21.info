@@ -262,7 +262,10 @@ saddle = Vector((0, -0.035, -0.0425))
 light_turn = frame(F, B)
 fit = light_turn @ frame(Vector((0, 1, 0)), Vector((0, 0, 1))).inverted()
 seat = hand_centre + B * (top + STRAP_GAP + STRAP_THICK)
-light.matrix_world = Matrix.Translation(seat - fit @ saddle) @ fit.to_4x4()
+# Drawn at LIGHT_SCALE of its size (Christian, 2026-10-24: 20 % smaller), scaled about its saddle: still seated on the
+# back of the hand
+LIGHT_SCALE = 0.8
+light.matrix_world = Matrix.Translation(seat) @ fit.to_4x4() @ Matrix.Scale(LIGHT_SCALE, 4) @ Matrix.Translation(-saddle)
 # The light's front, for the viewer (diver-arm.js): the beam starts there, along its axis (-Z of the node in three.js)
 front = bpy.data.objects.new("lamp-front", None)
 scene.collection.objects.link(front)
