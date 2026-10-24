@@ -4,6 +4,13 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, a guided tour (TODO #48, Christian, 2026-10-24): « Visite guidée », first in the bottom-right row, plays
+  seven steps, each with a card (its number, title and text; back, next, close; Esc). A view: the camera flies there,
+  then the usual navigation. A move: it travels along its points at its pace (through a gate passage, up to the
+  gates). Flights rise above the walls on long ways and arrive along the step's line of sight; a step may give its
+  own approach (down to the floor east of the spillway before the gate door), turn toward its point first, or pause
+  before a move. Every way checked against all surfaces (tiles, context, mockups). `?tour=1` starts it. Hidden
+  underwater; the movement keys hidden while it plays.
 - 3D viewer, tiles: the library's requests for another pass (needs-update: a tile's children prepared a few at a
   time) now redraw; unheard, the tiles waited for the camera to move. The less-detail-far-away factor softened
   (half its effect at 12 m, was 8 m: zone 18 stayed coarse 13 m away).
