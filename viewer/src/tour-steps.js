@@ -17,8 +17,8 @@
  * @property {number} [wait] - a move's pause at its start before it sets off (s; tour.js MOVE_PAUSE by default)
  * @property {[number, number, number][]} [approach] - the flight into the step passes through these points (camera
  *   positions), instead of its own curve
- * @property {boolean} [turnEarly] - on the flight into the step, the camera turns toward the step's point first
- *   (within the first third of the flight)
+ * @property {number} [turn] - on the flight into the step, the camera turns toward the step's point first, within
+ *   this share of the flight (otherwise gradually, all along it)
  * @property {{ fr: string, en: string }} title
  * @property {{ fr: string, en: string }} text
  */
@@ -49,7 +49,7 @@ export const TOUR_STEPS = [
     // From step 2 (Christian, 2026-10-24): turning toward the door first, down close to the floor east of the spillway
     // (clear of its bays and of the mockups of zones 5 and 6), then low to the door
     approach: [[-12, 9, -1], [-12, 1.8, 1], [-15.5, 1.7, 6]],
-    turnEarly: true,
+    turn: 0.35,
     title: { fr: 'Une porte de vanne', en: 'A gate door' },
     text: {
       fr: 'Une des portes des vannes du déversoir, couchée sur le fond (zone 16). Le fer de son cadre est rongé par la rouille.',
@@ -95,7 +95,11 @@ export const TOUR_STEPS = [
   },
   {
     kind: 'view',
-    cam: [-106.95, 7.59, -10.04, -36.26, -20.92, 11.83],
+    // It looks at the top of the block, at its centre, from the start of the flight to the end (Christian, 2026-10-24:
+    // turning toward it as soon as the flight starts, the same point all the way); his view looked at
+    // -36.26, -20.92, 11.83, a little lower and further north
+    cam: [-106.95, 7.59, -10.04, -93.75, 6.42, -4.0],
+    turn: 0.12,
     title: { fr: 'La zone 18', en: 'Zone 18' },
     text: {
       fr: 'Dernier arrêt: le bloc de la zone 18, à l’ouest, et l’écluse au loin. Le relevé continue: les volumes violets sont les zones pas encore numérisées.',
