@@ -2,7 +2,7 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
-## Unreleased
+## 0.12.0 - 2026-10-24
 
 - 3D model, phones and tablets (an old iPad and an iPhone 14 waited one to two minutes): a light set of tiles per
   zone, the same tiling with textures halved and no relief maps (`tile_zone.ps1`, made after each version, or alone
