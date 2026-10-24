@@ -608,6 +608,8 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
       timer.update()
       uniforms.uUwTime.value = timer.getElapsed()
       column.position.copy(camera.position)
+      // Inside the view's far limit (it stops at the visibility underwater: main.js)
+      column.scale.setScalar(Math.min(1, (camera.far * 0.9) / 1000))
       surface.position.x = camera.position.x
       surface.position.z = camera.position.z
       particles.material.uniforms.uCentre.value.copy(camera.getWorldDirection(ahead)).multiplyScalar(0.6 * particleReach).add(camera.position)

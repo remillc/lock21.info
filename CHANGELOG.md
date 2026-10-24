@@ -4,6 +4,12 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: an empty area could show in the distance (Christian, 2026-10-24): the tiles beyond the
+  visibility were no longer drawn, but the context behind them was, its haze a little darker than the water column.
+  The whole view now stops at 1.2 times the visibility (tiles, context, mockups), and the water column fits inside it;
+  the distant silhouettes go too.
+- 3D viewer: the help that opens by itself on entering the water was the keys' help (« Navigation ») instead of the
+  swimming one (since 0.12.0).
 - 3D viewer, the movement keys' card (TODO #61): its W A S D are buttons, held with the mouse or a finger they move
   the camera as the keys do (lit while held; several at once); 40 px keycaps in 48 px touch targets, each with its
   name (« Avancer », « Reculer », « À gauche », « À droite »).

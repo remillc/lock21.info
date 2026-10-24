@@ -289,12 +289,21 @@ const underwater = createUnderwater(scene, renderer, { mobile })
 const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.05, 2000)
 // The tiles' own camera (Christian, 2026-10-24: does loading take the visibility into account?): the view's, but
 // underwater its far limit stops at TILES_VISIBILITY times the season's visibility. Beyond, the surfaces have the
-// water's colour: their tiles are neither loaded nor drawn (spring, 14 ft: about 5 m instead of the whole site)
+// water's colour: their tiles are neither loaded nor drawn (spring, 14 ft: about 5 m instead of the whole site).
+// The view itself stops there too (the context and the mockups as well, and the water column fits inside: an empty
+// area showed where tiles were missing in front of the context: Christian, 2026-10-24); FAR in the air
 const TILES_VISIBILITY = 1.2
+const FAR = 2000
 const tilesCamera = new THREE.PerspectiveCamera()
 function syncTilesCamera() {
+  const far = underwater.on ? Math.max(1, underwater.visibility * TILES_VISIBILITY) : FAR
+  if (camera.far !== far) {
+    camera.far = far
+    camera.updateProjectionMatrix()
+    // The shadow cascades are cut from the camera's frustum
+    csm.updateFrustums()
+  }
   tilesCamera.copy(camera)
-  if (underwater.on) tilesCamera.far = Math.max(1, underwater.visibility * TILES_VISIBILITY)
   tilesCamera.updateProjectionMatrix()
   tilesCamera.updateMatrixWorld()
 }
@@ -854,10 +863,11 @@ navigator.keyboard?.getLayoutMap?.().then((layout) => {
 /** @param {boolean} on */
 function setSwimming(on) {
   if (on === swim.looking) return
-  if (on) showSwimHelp()
   controls.enabled = !on
   swim.setActive(true, on)
   labelKeys(on)
+  // After the switch: the help picks its text from it (swimming, not the keys outside the water)
+  if (on) showSwimHelp()
   if (!on) {
     controls.target.copy(camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(SWIM_TARGET).add(camera.position))
     controls.update()
