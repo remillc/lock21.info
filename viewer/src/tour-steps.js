@@ -66,7 +66,8 @@ export const TOUR_STEPS = [
     // Low over the floor (it first turns toward the first column, setting off near the end of the turn), the climb at
     // 0.75 m/s (Christian, 2026-10-24), the dolly and the end slower
     // (the glide to the view 25 % faster: Christian, 2026-10-24)
-    paces: [2, 2, 0.75, 0.75, 0.75, 0.625],
+    // (the climb 50 % faster than 0.75 m/s: Christian, 2026-10-24)
+    paces: [2, 2, 1.125, 1.125, 1.125, 0.625],
     turnFirst: 2.5,
     title: { fr: 'Au-dessus des piliers', en: 'Above the piers' },
     text: {
