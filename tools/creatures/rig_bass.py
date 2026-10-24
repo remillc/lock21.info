@@ -6,8 +6,11 @@ held stiff); written as a skinned .glb for viewer/src/bass.js, which bends the s
 The model, as imported: head toward -Y, tail toward +Y, the body's middle line about BODY_Z high (Blender, metres of the
 file). Then pack its textures: node tools/publish-model/pack_creature.mjs <out.glb> viewer/public/creatures/bass.glb
 
+The model is lightened to --faces triangles first (Decimate, collapse: texture coordinates kept; Christian, 2026-10-24:
+a few fish here and there, the original's 40,000 triangles were as many as a tile of the lock).
+
 Run in Blender, headless:
-    blender -b --factory-startup --python tools/creatures/rig_bass.py -- -i O:/modeles/creatures/bass/scene.gltf -o <out.glb>
+    blender -b --factory-startup --python tools/creatures/rig_bass.py -- -i O:/modeles/creatures/bass/scene.gltf -o <out.glb> [-f 6000]
 """
 import argparse
 import sys
@@ -19,6 +22,7 @@ argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 p = argparse.ArgumentParser(prog="rig_bass.py", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 p.add_argument("-i", "--input", required=True, help="the bass model (.gltf)")
 p.add_argument("-o", "--out", required=True, help="the rigged .glb to write")
+p.add_argument("-f", "--faces", type=int, default=6000, help="triangles to keep (default 6000; 0: all)")
 a = p.parse_args(argv)
 
 # The spine's joints along the body (y, head to tail), at the body's middle height
@@ -37,6 +41,17 @@ mesh.data.transform(world)
 mesh.matrix_world.identity()
 for o in [o for o in scene.objects if o.type == 'EMPTY']:
     bpy.data.objects.remove(o, do_unlink=True)
+
+# Lighter: down to --faces triangles (before the weights, which are given per remaining vertex)
+before = sum(len(f.vertices) - 2 for f in mesh.data.polygons)
+if a.faces and before > a.faces:
+    bpy.context.view_layer.objects.active = mesh
+    decimate = mesh.modifiers.new("lighter", 'DECIMATE')
+    decimate.decimate_type = 'COLLAPSE'
+    decimate.ratio = a.faces / before
+    decimate.use_collapse_triangulate = True
+    bpy.ops.object.modifier_apply(modifier=decimate.name)
+    print(f"[rig] {before:,} -> {sum(len(f.vertices) - 2 for f in mesh.data.polygons):,} triangles", flush=True)
 
 # The armature: one chain, head first
 armature = bpy.data.armatures.new("bass-rig")

@@ -18,6 +18,7 @@ import { createCollider } from './collide.js'
 import { createCrawfish } from './crawfish.js'
 import { createBass } from './bass.js'
 import { createDiverArm } from './diver-arm.js'
+import { createFishes } from './fishes.js'
 import { createTouchNav } from './touch-nav.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
@@ -1331,6 +1332,29 @@ const bass = createBass({
 })
 scene.add(bass.object)
 if (import.meta.env.DEV) window.l21.bass = bass
+// A few fish here and there underwater (fishes.js, Christian, 2026-10-24): the bass's model shared, FISHES on a
+// computer, FISHES_PHONE on a phone; after the first view, once underwater
+const FISHES = 6
+const FISHES_PHONE = 3
+const fishes = createFishes({
+  count: mobile ? FISHES_PHONE : FISHES,
+  when: afterFirstViewUnderwater,
+  prepare: prepareCreatureMaterial,
+  clearance: (point) => collider.distanceTo(point, collider.surfacesNear(point, 0.6), 0.6),
+  inSight: (from, to) => {
+    const direction = to.clone().sub(from)
+    const distance = direction.length()
+    pickRay.set(from, direction.normalize())
+    pickRay.far = distance
+    const hit = pickRay.intersectObjects([...tilesets.map((tiles) => tiles.group), ...contextModels], true)[0]
+    pickRay.far = Infinity
+    return !hit
+  },
+  visibility: () => underwater.visibility,
+  pace: () => [0.4, 0.7, 1, 0.8][Math.round(look.season)] ?? 1,
+})
+scene.add(fishes.object)
+if (import.meta.env.DEV) window.l21.fishes = fishes
 // The diver's arm and its light, while underwater with the light on: the beam starts at the drawn light
 const diverArm = createDiverArm({ onLampPose: (front, axis) => underwater.setLampPose(front, axis), when: afterFirstViewUnderwater })
 if (import.meta.env.DEV) window.l21.diverArm = diverArm
@@ -1741,6 +1765,7 @@ function renderLoop() {
   lastFrame = now
   for (const crawfish of crawfishes) if (crawfish.update(camera, dt)) needsRender = true
   if (bass.update(camera, dt, underwater.on)) needsRender = true
+  if (fishes.update(camera, dt, underwater.on)) needsRender = true
   const loading = tilesets.some((t) => t.stats.queued + t.stats.downloading + t.stats.parsing > 0)
   updateLoading()
   if (!needsRender && !loading) return

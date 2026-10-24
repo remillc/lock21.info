@@ -4,6 +4,14 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: a few fish here and there (`viewer/src/fishes.js`; 6 on a computer, 3 on a phone): the
+  bass's model shared, each fish going its own way to waypoints clear of the walls, calm, swerving away from the diver;
+  placed only where the diver may see them (in the view, nothing in between, where the water still hides them, so they
+  come out of the haze), placed again once out of reach or out of the view for 10 s; never through the model (the water
+  ahead checked as it swims). Loaded after the first view, once underwater.
+- 3D viewer, the bass model lightened: 40,000 → 6,000 triangles (`tools/creatures/rig_bass.py --faces`), 2 MB → 0.6 MB.
+- 3D viewer, bass lengths as in Ontario's waters (25 to 50 cm for an adult, ontario.ca): drawn around 36 cm, for the
+  fish and for the curious bass on each visit (it was 40 cm).
 - 3D viewer, the bass leaving (Christian, 2026-10-24: its turn away didn't look natural): it swims where its body
   points, along an arc while it turns, slow facing away and faster as it lines up with its way out (it pivoted on the
   spot, then slid there in a straight line); fleeing, a C-start: the turn snaps in, the body bends into a C, then

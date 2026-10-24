@@ -11,6 +11,7 @@
 // tail.
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { bassLength } from './fishes.js'
 
 const URL = `${import.meta.env.BASE_URL}creatures/bass.glb`
 // An adult smallmouth bass (m, nose to tail)
@@ -135,7 +136,8 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
     const size = box.getSize(new THREE.Vector3())
     const centre = box.getCenter(new THREE.Vector3())
     model.position.sub(centre)
-    body.scale.setScalar(LENGTH / size.z)
+    unitScale = 1 / size.z
+    body.scale.setScalar(LENGTH * unitScale)
     body.add(model)
     body.updateMatrixWorld(true)
     // The spine, head first: each bone bends about the body's up axis, expressed in its parent's frame
@@ -168,6 +170,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   let speedNow = 0
   let leaveSpeed = 0
   let gaze = 0
+  let unitScale = 1
   /** @type {[number, number][]} time and turning rate, newest first (the turn running down the body) */
   const turns = []
   const ahead = new THREE.Vector3()
@@ -317,8 +320,9 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         root.visible = true
         near = camera.position.distanceTo(to)
         cameraAtArrival.copy(camera.position)
-        // This visit's angle to the diver
+        // This visit's angle to the diver, and its length (a different bass each time: 25 to 50 cm, fishes.js)
         gaze = (Math.random() * 2 - 1) * GAZE
+        body.scale.setScalar(bassLength() * unitScale)
         unseen = 0
         seen = false
       }
