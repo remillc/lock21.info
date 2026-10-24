@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#62**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#63**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -77,5 +77,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
     favourite, 2026-10-23; screenshot `images/views/2026-10-23-view-1.webp`): `?cam=-37.01,2.56,-14.66,-33.02,2.48,-14.40`
 
 ## Other
+
+- [ ] #62 In `docs/`, say which parts are done by AI (Claude): which steps of the pipeline, the viewer's code, the
+  translations, the guides themselves
 
 - [ ] #35 lock21.ca: owner contacted on 2026-10-18 through CIRA; reminder in Google Calendar on 2027-03-14 (expiry)

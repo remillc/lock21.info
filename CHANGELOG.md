@@ -7,7 +7,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - 3D viewer, standard view: looking up (it couldn't: the camera stayed above the height of the point it turns
   around). The camera may now go below that point, up to 171° from straight above it; a surface between them (the
   floor, a wall) brings it in front of that surface, so it never looks from under the floor.
-
+- 3D viewer, the mockups (Christian, 2026-10-24): a uniform purple paper, the same for all, with the .blend's texture
+  coordinates and roughness: the grain of the 1988 drawing's paper (its blankest square, mirrored without seams over
+  a 2,048 px WebP image, 280 KB in all) tinted #b7a3d6 (`export_mockups.py`); no line of the drawing is published.
+  Lit as the context. They were the south wall's texture tinted purple, projected by the viewer.
 - About page (TODO #57): the site's version at the bottom, in its own section, « Version », with its date and a link
   to the release notes (`SiteVersion.astro`, read from package.json and CHANGELOG.md at build time); the page becomes
   `about.mdx`, in French and English.
