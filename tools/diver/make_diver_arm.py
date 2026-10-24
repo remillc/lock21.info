@@ -276,33 +276,43 @@ front.matrix_world = light.matrix_world @ Matrix.Translation((0, 0.003, 0)) @ Ma
 # Its screen readable (Christian, 2026-10-24): moved up the forearm toward the hand (COMPUTER_BACK m behind the hand's
 # centre instead of 0.1: out from under the viewer's buttons, bottom right) and turned about the forearm toward the eye
 # (COMPUTER_TILT of the way from the back of the wrist's direction), as a diver turns the wrist to read it
-COMPUTER_BACK = 0.085
+COMPUTER_BACK = 0.105
 COMPUTER_TILT = 0.6
 # Centred on the forearm as it is (Christian, 2026-10-24: off-centre along the fingers' line, which the forearm doesn't
 # follow at the wrist): the sleeve's vertices in a slice COMPUTER_SLICE m wide there, their centre, and the top of the
 # forearm above it (along the back of the wrist)
 COMPUTER_SLICE = 0.04
 nominal = HAND_AT - hand_frame.col[0] * (COMPUTER_BACK + 0.03)
-slab = [v.co for v, h in zip(arm.data.vertices, is_hand) if not h and abs((v.co - nominal).dot(hand_frame.col[0])) < COMPUTER_SLICE / 2]
+def sleeve_slice(at):
+    return [v.co for v, h in zip(arm.data.vertices, is_hand) if not h and abs((v.co - at).dot(hand_frame.col[0])) < COMPUTER_SLICE / 2]
+
+
+slab = sleeve_slice(nominal)
 centre = sum(slab, Vector()) / len(slab)
-top = max((p - centre).dot(hand_frame.col[1]) for p in slab)
-computer_at = centre + hand_frame.col[1] * top
+# Along the forearm as it runs (Christian's drawing, 2026-10-24: its sides parallel to the forearm): its axis from the
+# sleeve's centres in two slices FOREARM_SPAN m apart, toward the hand
+FOREARM_SPAN = 0.07
+behind = sleeve_slice(nominal - hand_frame.col[0] * FOREARM_SPAN)
+forearm = (centre - sum(behind, Vector()) / len(behind)).normalized()
+back = (hand_frame.col[1] - forearm * hand_frame.col[1].dot(forearm)).normalized()
+top = max((p - centre).dot(back) for p in slab)
+computer_at = centre + back * top
 to_eye = -computer_at.normalized()
-to_eye = (to_eye - hand_frame.col[0] * to_eye.dot(hand_frame.col[0])).normalized()
-facing = hand_frame.col[1].lerp(to_eye, COMPUTER_TILT)
-case_turn = (frame(hand_frame.col[0], facing) @ frame(Vector((0, 1, 0)), Vector((0, 0, 1))).inverted()).to_4x4()
+to_eye = (to_eye - forearm * to_eye.dot(forearm)).normalized()
+facing = back.lerp(to_eye, COMPUTER_TILT)
+case_turn = (frame(forearm, facing) @ frame(Vector((0, 1, 0)), Vector((0, 0, 1))).inverted()).to_4x4()
 # Raised off the sleeve along the back of the wrist (tilted, its edge sank in; along its tilted face, it slid to one
 # side; Christian, 2026-10-24): its underside (the strap bars) plus what the tilt lowers its edge by; 2.5 cm nearer the
 # elbow than first placed
 COMPUTER_SCALE = 0.85
-tilt = hand_frame.col[1].angle(facing)
+tilt = back.angle(facing)
 COMPUTER_RAISE = COMPUTER_SCALE * (0.0135 + 0.5 * 0.071 * math.sin(tilt))
 # Its long side along the forearm, the picture reading left to right in the view (Christian, 2026-10-24: not from far
 # to near): a quarter turn about its face
 COMPUTER_SPIN = math.radians(90)
 # Drawn at COMPUTER_SCALE of its real size (Christian, 2026-10-24: 85 %; the real one looked too large on the wrist
 # from the eye), set above
-case_at = (Matrix.Translation(computer_at + hand_frame.col[1] * COMPUTER_RAISE) @ case_turn
+case_at = (Matrix.Translation(computer_at + back * COMPUTER_RAISE) @ case_turn
            @ Matrix.Rotation(COMPUTER_SPIN, 4, 'Z') @ Matrix.Scale(COMPUTER_SCALE, 4))
 WIDTH, LENGTH, HEIGHT = 0.081, 0.071, 0.02    # across the wrist, along the forearm, the case's thickness
 

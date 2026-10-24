@@ -13,7 +13,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   in the Perdix's « Big » layout, once a second: the depth (the camera's below the surface, ft) with the ascent
   chevrons, NDL on air for that depth less the time spent, with the nitrogen bar, TIME since entering the water, T1
   (an 80 cu ft tank emptied with depth), 21 % AIR, MAX, the compass, the battery (78 %). Turned toward the eye,
-  centred on the forearm (measured on the sleeve itself), the screen reading left to right, at 85 % of its real size
+  centred on the forearm and along it (both measured on the sleeve itself), at 85 % of its real size
   (Christian, 2026-10-24). The whole arm smooth-shaded (edges sharper than 40° kept).
 - 3D viewer, the diver's arm lighter (TODO #64): its geometry compressed with meshopt and simplified to 60 % where the
   error stays under 0.1 % (`pack_creature.mjs -m -s`), and the hand light without what the diver's eye never sees
