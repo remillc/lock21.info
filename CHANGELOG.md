@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+## 0.13.0 - 2026-10-24
+
 - 3D viewer, memory on a computer (Christian, 2026-10-24: most visitors' graphics cards have far less memory): tiles
   budget 1 GB (was 1.2); lean loading, only the tiles in view (not their siblings nor their coarser ancestors as a
   fallback; a part of the view newly turned to stays empty a moment instead of coarse; phones keep the fallback);
@@ -12,10 +14,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   nothing coarse within 6 m (they needed 1.3 to 1.75 GB before); the browser's own memory 0.12 to 0.16 GB (was 0.77).
 - 3D viewer, the mesh view: tiles loaded but not shown when it was turned on kept their texture when they came back
   into view (Christian, 2026-10-24).
-## 0.13.0 - 2026-10-24
-
-- 3D model online (R2): zone 16 republished (2026-10-24-0839, with its light set) and the mockups from the latest
-  .blend (2026-10-24-1049).
+- 3D model online (R2): zones 16 (2026-10-24-0839) and 2 (2026-10-24-1107: its Boolean.004 cut changed in the .blend)
+  republished, with their light sets; the mockups from the latest .blend (2026-10-24-1049).
 - 3D viewer, the finest detail loads again up close (TODO #69): the library shows a tile's finer children only once
   all of them are in, and since the relief each finest tile carried a 4096 px normal map (22 of its 34 MB); the 1.2 GB
   budget ran out first (zone 3: 6 of a wall's 7 children loaded, the wall still coarse). As each tile arrives, its
