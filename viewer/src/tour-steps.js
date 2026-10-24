@@ -14,6 +14,11 @@
  * @property {Cam} [to] - a move's last camera
  * @property {[number, number, number][]} [via] - a move's points in between
  * @property {number} [pace] - a move's speed (m/s)
+ * @property {number} [wait] - a move's pause at its start before it sets off (s; tour.js MOVE_PAUSE by default)
+ * @property {[number, number, number][]} [approach] - the flight into the step passes through these points (camera
+ *   positions), instead of its own curve
+ * @property {boolean} [turnEarly] - on the flight into the step, the camera turns toward the step's point first
+ *   (within the first third of the flight)
  * @property {{ fr: string, en: string }} title
  * @property {{ fr: string, en: string }} text
  */
@@ -41,6 +46,10 @@ export const TOUR_STEPS = [
   {
     kind: 'view',
     cam: [-18.3, 1.55, 8.64, -17.06, -0.43, 10.55],
+    // From step 2 (Christian, 2026-10-24): turning toward the door first, down close to the floor east of the spillway
+    // (clear of its bays and of the mockups of zones 5 and 6), then low to the door
+    approach: [[-12, 9, -1], [-12, 1.8, 1], [-15.5, 1.7, 6]],
+    turnEarly: true,
     title: { fr: 'Une porte de vanne', en: 'A gate door' },
     text: {
       fr: 'Une des portes des vannes du déversoir, couchée sur le fond (zone 16). Le fer de son cadre est rongé par la rouille.',
@@ -50,14 +59,16 @@ export const TOUR_STEPS = [
   {
     kind: 'move',
     from: [-27.28, 2.02, -16.28, -61.37, -7.37, -21.45],
-    // Over the sill in the middle passage (a straight line hit it 8.4 m along), centred between its uprights
-    via: [[-34.2, 2.2, -15.6], [-35.8, 2.35, -15.5], [-36.6, 2.1, -15.35]],
+    // Through the passage in line with the start (Christian, 2026-10-24: it went through the walls), in its middle: the
+    // passages are 1.1 m wide (z -17.2 to -16.1 for this one) and 1.1 m high (y 1.8 to 2.9), their piers 0.8 m wide
+    // and 3.1 m long (x -32.7 to -35.8); measured with the finest tiles, every surface counted
+    via: [[-31.6, 2.3, -16.6], [-34.2, 2.35, -16.65], [-36.5, 2.3, -16.4]],
     to: [-37.22, 1.69, -15.24, -75.0, -10.69, -21.69],
     pace: 1.2,
     title: { fr: 'Par le passage d’une vanne', en: 'Through a gate passage' },
     text: {
-      fr: 'Les vannes ouvertes laissaient passer l’eau sous la voûte. On traverse le passage du milieu, vers l’ouest.',
-      en: 'With the gates open, the water ran under the vault. We go through the middle passage, westward.',
+      fr: 'Les vannes ouvertes laissaient passer l’eau sous la voûte. On traverse un des passages, vers l’ouest.',
+      en: 'With the gates open, the water ran under the vault. We go through one of the passages, westward.',
     },
   },
   {
@@ -65,6 +76,8 @@ export const TOUR_STEPS = [
     from: [-46.34, 4.98, -16.15, -41.79, 3.96, -16.02],
     to: [-38.7, 3.99, -16.38, -37.72, 3.77, -16.35],
     pace: 0.8,
+    // A look at the gates before moving in (Christian, 2026-10-24)
+    wait: 3,
     title: { fr: 'Les vannes, de près', en: 'The gates, up close' },
     text: {
       fr: 'De l’autre côté, les trois vannes pendent encore à leurs tiges, au-dessus des passages. On s’approche.',

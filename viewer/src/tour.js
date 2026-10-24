@@ -18,8 +18,13 @@ const FLY_RISE = 0.25
 const FLY_RISE_MAX = 12
 const FLY_BACK = 0.3
 const FLY_BACK_MAX = 8
-// A move: a pause at its start (s) before it sets off
+// A move: a pause at its start (s) before it sets off (its step's wait otherwise)
 const MOVE_PAUSE = 0.5
+// A flight through a step's approach points: its length (s) at least, at most, and per metre of its curve; turning
+// early, the point looked at reaches the step's within this share of the flight
+const APPROACH_TIME = [2, 9]
+const APPROACH_PER_METRE = 0.12
+const TURN_EARLY = 0.35
 
 const UP = new THREE.Vector3(0, 1, 0)
 const easeInOut = (k) => (k < 0.5 ? 4 * k * k * k : 1 - (-2 * k + 2) ** 3 / 2)
@@ -59,27 +64,40 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   let motions = []
   let hideTimer = 0
 
-  /** A flight from where the camera is to a camera */
-  function flight(to) {
+  /**
+   * A flight from where the camera is to a camera: its own curve, or through the step's approach points
+   * @param {{ position: THREE.Vector3, target: THREE.Vector3 }} to
+   * @param {import('./tour-steps.js').TourStep} [step]
+   */
+  function flight(to, step) {
     const from = { position: camera.position.clone(), target: controls.target.clone() }
-    const way = from.position.distanceTo(to.position)
-    const duration = THREE.MathUtils.clamp(FLY_TIME[0] + way * FLY_PER_METRE, FLY_TIME[0], FLY_TIME[1]) * 1000
-    const rise = way > FLY_HIGH ? Math.min(way * FLY_RISE, FLY_RISE_MAX) : 0
-    const back = Math.min(way * FLY_BACK, FLY_BACK_MAX)
-    const look = to.target.clone().sub(to.position).normalize()
-    const curve = new THREE.CubicBezierCurve3(
-      from.position,
-      from.position.clone().addScaledVector(UP, rise),
-      to.position.clone().addScaledVector(look, -back).addScaledVector(UP, rise * 0.4),
-      to.position,
-    )
+    let curve
+    let duration
+    if (step?.approach) {
+      curve = new THREE.CatmullRomCurve3([from.position, ...step.approach.map((p) => new THREE.Vector3(...p)), to.position], false, 'centripetal')
+      duration = THREE.MathUtils.clamp(APPROACH_TIME[0] + curve.getLength() * APPROACH_PER_METRE, APPROACH_TIME[0], APPROACH_TIME[1]) * 1000
+    } else {
+      const way = from.position.distanceTo(to.position)
+      duration = THREE.MathUtils.clamp(FLY_TIME[0] + way * FLY_PER_METRE, FLY_TIME[0], FLY_TIME[1]) * 1000
+      const rise = way > FLY_HIGH ? Math.min(way * FLY_RISE, FLY_RISE_MAX) : 0
+      const back = Math.min(way * FLY_BACK, FLY_BACK_MAX)
+      const look = to.target.clone().sub(to.position).normalize()
+      curve = new THREE.CubicBezierCurve3(
+        from.position,
+        from.position.clone().addScaledVector(UP, rise),
+        to.position.clone().addScaledVector(look, -back).addScaledVector(UP, rise * 0.4),
+        to.position,
+      )
+    }
     return {
       start: 0,
       run(now) {
         const k = Math.min((now - this.start) / duration, 1)
         const e = easeInOut(k)
-        curve.getPoint(e, camera.position)
-        controls.target.lerpVectors(from.target, to.target, e)
+        // Along the curve by its length (an even pace through the approach points)
+        curve.getPointAt(e, camera.position)
+        const turn = step?.turnEarly ? 1 - (1 - Math.min(k / TURN_EARLY, 1)) ** 3 : e
+        controls.target.lerpVectors(from.target, to.target, turn)
         return k >= 1
       },
     }
@@ -99,9 +117,9 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   function travel(step) {
     const from = camOf(step.from)
     const to = camOf(step.to)
-    const curve = new THREE.CurvePath()
+    // A smooth curve through its points (centripetal: no loops or overshoot between close points)
     const points = [from.position, ...(step.via ?? []).map((p) => new THREE.Vector3(...p)), to.position]
-    for (let i = 1; i < points.length; i++) curve.add(new THREE.LineCurve3(points[i - 1], points[i]))
+    const curve = new THREE.CatmullRomCurve3(points, false, 'centripetal')
     const duration = (curve.getLength() / (step.pace ?? 1)) * 1000
     return {
       start: 0,
@@ -123,7 +141,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     text.textContent = step.text[lang] ?? step.text.fr
     prev.hidden = i === 0
     next.textContent = t(i === steps.length - 1 ? 'tourEnd' : 'tourNext')
-    motions = step.kind === 'move' ? [flight(camOf(step.from)), pause(MOVE_PAUSE), travel(step)] : [flight(camOf(step.cam))]
+    motions = step.kind === 'move' ? [flight(camOf(step.from), step), pause(step.wait ?? MOVE_PAUSE), travel(step)] : [flight(camOf(step.cam), step)]
     motions[0].start = performance.now()
     controls.enabled = false
     requestRender()

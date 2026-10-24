@@ -59,21 +59,10 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   phone, navigation and search, on both languages
 - [ ] #39 Design: applied (tokens, fonts, header and footer bars, home page, logo, tables); to do: a history page for the "L'histoire" entry (it points to the zone map for now), the 3D viewer in the same
   palette and fonts, check contrast (WCAG AA) in both themes
-- [ ] #48 A guided tour in the viewer: a sequence of steps, each with a short text. A step is a stop (a view) or a
-  move (Christian, 2026-10-24: at least one step is a movement between 2 points; the camera travels from one point to
-  another, through a few waypoints if needed, at a set pace). The steps, in order (Christian, 2026-10-24):
-  1. view: `?cam=-18.60,3.08,-27.91,-45.68,-28.73,-39.76`
-  2. view: `?cam=-31.65,10.45,-10.50,-55.30,-7.97,-29.94`
-  3. view: zone 16, the spillway gate door on the floor: `?cam=-18.30,1.55,8.64,-17.06,-0.43,10.55`
-  4. move: fly through the sluice gate, from `?cam=-27.28,2.02,-16.28,-61.37,-7.37,-21.45` to
-     `?cam=-37.22,1.69,-15.24,-75.00,-10.69,-21.69` (a straight line hits a surface 8.4 m along its 10 m: a waypoint through the
-     middle of the opening)
-  5. move: close-up fly, from `?cam=-46.34,4.98,-16.15,-41.79,3.96,-16.02` to `?cam=-38.70,3.99,-16.38,-37.72,3.77,-16.35`
-  6. view: `?cam=-56.68,6.62,-22.08,-56.34,3.94,-30.87`
-  7. view, the last: `?cam=-106.95,7.59,-10.04,-36.26,-20.92,11.83`
-  Stops noted before, not placed yet:
-  - looking down the stone passage through the wall, its pipes on the floor, the opening at the end (Christian's
-    favourite, 2026-10-23; screenshot `images/views/2026-10-23-view-1.webp`): `?cam=-37.01,2.56,-14.66,-33.02,2.48,-14.40`
+- [ ] #48 Guided tour (viewer/src/tour.js, tour-steps.js; 7 steps, Christian's views and moves, 2026-10-24): the texts
+  are drafts to review (zone 18 is not described on the zone map page); step 6 (the north wall's steps) is half hidden
+  by a context fill in front of the camera. Not placed: the stone passage through the wall (Christian's favourite,
+  `images/views/2026-10-23-view-1.webp`): `?cam=-37.01,2.56,-14.66,-33.02,2.48,-14.40`
 
 ## Other
 
