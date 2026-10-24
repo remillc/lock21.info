@@ -1381,7 +1381,7 @@ function prepareCreatureMaterial(material, { tint = false } = {}) {
   const key = material.customProgramCacheKey?.() ?? ''
   material.onBeforeCompile = (shader, renderer) => {
     own?.call(material, shader, renderer)
-    underwater.patchShader(shader, { creature: true })
+    underwater.patchShader(shader)
   }
   // tint: its colour changes (each bass its own: fishes.js), the same program for all (the colour is a uniform)
   material.customProgramCacheKey = () => (tint ? `creature-${key}-tinted` : `creature-${key}-${material.color.getHexString()}`)
