@@ -7,8 +7,12 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - 3D model, phones and tablets (an old iPad and an iPhone 14 waited one to two minutes): a light set of tiles per
   zone, the same tiling with textures halved and no relief maps (`tile_zone.ps1`, made after each version, or alone
   with `-Light` for a version already online; `halve_texture.mjs`; `light` in the manifest). The finest tiles go from
-  about 1.4 MB to 260 KB (zone 12), the whole model from 1.34 GB to 252 MB; a phone's first load from 136 to 49 MB.
+  about 1.4 MB to 260 KB (zone 12), the whole model from 1.34 GB to 232 MB; a phone's first load from 136 to 49 MB.
   The viewer takes it on phones and tablets. `upload_r2.mjs` sends both sets; the clean-ups keep both.
+- 3D model, coarse levels standardized: their textures capped at 2,048 px (1,024 in the light set) by dropping their
+  largest mip levels, without a new encoding (`cap_coarse_textures.mjs`, in `tile_zone.ps1`). The coarsest tile
+  followed the size of the zone's photo, 1,004 to 4,096 px (0.4 to 3.6 MB); in the light set now 0.26 to 0.66 MB.
+  The light set's halved photo is a multiple of 32 px (zone 7's coarsest came to 798 px, not a multiple of 4).
 - 3D viewer, loading order: every zone's coarsest tiles first, 6 downloads at a time on phones (25 before), the texture
   decoder fetched at once, the crayfish after the first view, the bass and the diver's arm only once underwater; the
   first view waits only for tiles in view. At 5 Mbit/s, the decoder came at 20 s and nothing showed for 20 to 40 s;

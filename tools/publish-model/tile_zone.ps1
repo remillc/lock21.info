@@ -137,6 +137,11 @@ if ($LASTEXITCODE -ne 0) { throw "simplification échouée ($LASTEXITCODE)" }
 node "$PSScriptRoot\compress_tiles.mjs" $out
 if ($LASTEXITCODE -ne 0) { throw "compression échouée ($LASTEXITCODE)" }
 
+# Textures des niveaux grossiers plafonnées (2048 px, 1024 pour le jeu léger): sinon elles suivaient la taille de la
+# photo de la zone, de 1004 à 4096 px pour la tuile la plus grossière (0,4 à 3,6 Mo)
+node "$PSScriptRoot\cap_coarse_textures.mjs" $out --max $(if ($Light) { 1024 } else { 2048 })
+if ($LASTEXITCODE -ne 0) { throw "cap_coarse_textures.mjs a échoué ($LASTEXITCODE)" }
+
 # Racine vide: erreur géométrique très grande, sinon la zone disparaît vue de loin; champs null retirés
 python -I "$PSScriptRoot\fix_tileset.py" $out
 
