@@ -29,7 +29,8 @@ await MeshoptDecoder.ready
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS)
   .registerDependencies({ 'meshopt.encoder': MeshoptEncoder, 'meshopt.decoder': MeshoptDecoder })
 const doc = await io.read(src)
-await doc.transform(dedup(), prune(), textureCompress({ encoder: sharp, targetFormat: 'webp', resize: [1024, 1024] }))
+// keepAttributes: a mesh whose texture the viewer adds keeps its texture coordinates (the dive computer's screen)
+await doc.transform(dedup(), prune({ keepAttributes: true }), textureCompress({ encoder: sharp, targetFormat: 'webp', resize: [1024, 1024] }))
 if (ratio) {
   await MeshoptSimplifier.ready
   await doc.transform(weld(), simplify({ simplifier: MeshoptSimplifier, ratio, error: 0.001 }))

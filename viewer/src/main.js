@@ -19,6 +19,7 @@ import { createCrawfish } from './crawfish.js'
 import { createBass } from './bass.js'
 import { createDiverArm } from './diver-arm.js'
 import { createFishes } from './fishes.js'
+import { createDiveComputer } from './dive-computer.js'
 import { createTouchNav } from './touch-nav.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
@@ -1367,7 +1368,9 @@ const fishes = createFishes({
 scene.add(fishes.object)
 if (import.meta.env.DEV) window.l21.fishes = fishes
 // The diver's arm and its light, while underwater with the light on: the beam starts at the drawn light
-const diverArm = createDiverArm({ onLampPose: (front, axis) => underwater.setLampPose(front, axis), when: afterFirstViewUnderwater })
+// The dive computer on its wrist, a Perdix 3, its screen live (dive-computer.js, TODO #65)
+const diveComputer = createDiveComputer({ surfaceY: SURFACE_Y })
+const diverArm = createDiverArm({ onLampPose: (front, axis) => underwater.setLampPose(front, axis), screen: diveComputer.material, when: afterFirstViewUnderwater })
 if (import.meta.env.DEV) window.l21.diverArm = diverArm
 // The river's current (m/s, world): west to east, 35 ft/min (measured 2024-06-08)
 const RIVER_CURRENT = new THREE.Vector3((35 * 0.3048) / 60, 0, 0)
@@ -1777,6 +1780,8 @@ function renderLoop() {
   for (const crawfish of crawfishes) if (crawfish.update(camera, dt)) needsRender = true
   if (bass.update(camera, dt, underwater.on)) needsRender = true
   if (fishes.update(camera, dt, underwater.on)) needsRender = true
+  // The dive goes on while underwater (its time, depth, gas), the computer's screen redrawn once a second
+  if (underwater.on) diveComputer.update(camera, dt)
   const loading = tilesets.some((t) => t.stats.queued + t.stats.downloading + t.stats.parsing > 0)
   updateLoading()
   if (!needsRender && !loading) return

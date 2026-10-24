@@ -59,7 +59,10 @@ sleeve_mat = material("wetsuit-sleeve", (0.018, 0.019, 0.021), roughness=0.72)
 glove_mat = material("wetsuit-glove", (0.01, 0.01, 0.011), roughness=0.62)
 seam_mat = material("wetsuit-seam", (0.06, 0.06, 0.065), roughness=0.7)
 computer_mat = material("computer-case", (0.02, 0.02, 0.022), roughness=0.4)
-screen_mat = material("computer-screen", (0.01, 0.02, 0.02), roughness=0.08, emission=(0.25, 0.6, 0.7), strength=0.15)
+screen_mat = material("computer-screen", (0.0, 0.0, 0.0), roughness=0.08)
+bezel_mat = material("computer-bezel", (0.035, 0.035, 0.038), roughness=0.35, metallic=0.6)
+screw_mat = material("computer-screw", (0.08, 0.08, 0.085), roughness=0.3, metallic=0.9)
+glass_mat = material("computer-glass", (0.004, 0.004, 0.005), roughness=0.05)
 
 # 1. The arm, as posed in the file, in world space (the file's metres, scaled by 100 on the way: undone)
 bpy.ops.import_scene.gltf(filepath=a.arm)
@@ -265,24 +268,78 @@ front = bpy.data.objects.new("lamp-front", None)
 scene.collection.objects.link(front)
 front.matrix_world = light.matrix_world @ Matrix.Translation((0, 0.003, 0)) @ Matrix.Rotation(math.radians(-90), 4, 'X')
 
-# 6. A dive computer on the back of the wrist: a rounded case and its screen
+# 6. A dive computer on the back of the wrist, a Shearwater Perdix 3 (TODO #65, Christian, 2026-10-24; shearwater.com):
+# 81 x 71 mm, its case, a scalloped bezel held by 8 screws, the screen (4:3, its picture drawn by the viewer:
+# viewer/src/dive-computer.js, on the mesh « computer-screen »), the two strap bars at its ends. Kept light (about a
+# thousand triangles): what shows at the bottom of the view, no detail beyond
 # (the wrist: behind the hand's centre, along the fingers' line; the forearm's bones run up to the elbow)
-wrist_at = HAND_AT - hand_frame.col[0] * 0.1
-case_turn = (frame(hand_frame.col[0], hand_frame.col[1]) @ frame(Vector((0, 1, 0)), Vector((0, 0, 1))).inverted()).to_4x4()
-case_at = Matrix.Translation(wrist_at + hand_frame.col[1] * 0.03 - hand_frame.col[0] * 0.03) @ case_turn
-# Sizes applied to the meshes (setting matrix_world afterwards would reset an object's scale)
-bpy.ops.mesh.primitive_cube_add(size=1)
-case = bpy.context.object
-case.data.transform(Matrix.Diagonal((0.045, 0.05, 0.014, 1)))
-bev = case.modifiers.new("bevel", 'BEVEL')
-bev.width, bev.segments = 0.006, 4
-case.data.materials.append(computer_mat)
-case.matrix_world = case_at
-bpy.ops.mesh.primitive_cube_add(size=1)
+# Its screen readable (Christian, 2026-10-24): moved up the forearm toward the hand (COMPUTER_BACK m behind the hand's
+# centre instead of 0.1: out from under the viewer's buttons, bottom right) and turned about the forearm toward the eye
+# (COMPUTER_TILT of the way from the back of the wrist's direction), as a diver turns the wrist to read it
+COMPUTER_BACK = 0.085
+COMPUTER_TILT = 0.6
+wrist_at = HAND_AT - hand_frame.col[0] * COMPUTER_BACK
+computer_at = wrist_at + hand_frame.col[1] * 0.03 - hand_frame.col[0] * 0.03
+to_eye = -computer_at.normalized()
+to_eye = (to_eye - hand_frame.col[0] * to_eye.dot(hand_frame.col[0])).normalized()
+facing = hand_frame.col[1].lerp(to_eye, COMPUTER_TILT)
+case_turn = (frame(hand_frame.col[0], facing) @ frame(Vector((0, 1, 0)), Vector((0, 0, 1))).inverted()).to_4x4()
+# Raised off the sleeve (tilted, its edge sank in), along the back of the wrist: centred on the forearm (raised along
+# its tilted face, it slid to one side; Christian, 2026-10-24); 2.5 cm nearer the elbow than first placed
+COMPUTER_RAISE = 0.015
+# Its long side along the forearm, the picture reading left to right in the view (Christian, 2026-10-24: not from far
+# to near): a quarter turn about its face
+COMPUTER_SPIN = math.radians(90)
+case_at = Matrix.Translation(computer_at + hand_frame.col[1] * COMPUTER_RAISE) @ case_turn @ Matrix.Rotation(COMPUTER_SPIN, 4, 'Z')
+WIDTH, LENGTH, HEIGHT = 0.081, 0.071, 0.02    # across the wrist, along the forearm, the case's thickness
+
+
+def block(name, size, at, mat, bevel=0.0, segments=2):
+    """A box (sizes applied to the mesh: setting matrix_world afterwards would reset an object's scale)"""
+    bpy.ops.mesh.primitive_cube_add(size=1)
+    o = bpy.context.object
+    o.name = name
+    o.data.transform(Matrix.Diagonal((*size, 1)))
+    if bevel:
+        mod = o.modifiers.new("bevel", 'BEVEL')
+        mod.width, mod.segments = bevel, segments
+    o.data.materials.append(mat)
+    o.matrix_world = case_at @ Matrix.Translation(at)
+    return o
+
+
+def rod(name, radius, length, at, axis, mat, vertices=16):
+    bpy.ops.mesh.primitive_cylinder_add(vertices=vertices, radius=radius, depth=length)
+    o = bpy.context.object
+    o.name = name
+    o.data.transform(Matrix.Rotation(math.radians(90), 4, axis) if axis else Matrix.Identity(4))
+    o.data.materials.append(mat)
+    o.matrix_world = case_at @ Matrix.Translation(at)
+    return o
+
+
+# As the Perdix 3's pictures (shearwater.com): a thick body with round edges; the two strap bars across its whole
+# width at its ends, under the face, their round caps showing; a bezel scalloped around its 8 screws (4 corners, the
+# middles of the four sides); the black glass almost the whole face, the screen under it
+block("computer-case", (WIDTH - 0.004, LENGTH - 0.014, HEIGHT), (0, 0, 0), computer_mat, bevel=0.006, segments=2)
+for end in (-1, 1):
+    rod("computer-bar", 0.0095, WIDTH - 0.002, (0, end * (LENGTH / 2 - 0.0095), -0.004), 'Y', computer_mat)
+SCREWS = [(sx * 0.034, sy * 0.0256) for sx in (-1, 1) for sy in (-1, 1)] + [(0, 0.028), (0, -0.028), (-0.036, 0), (0.036, 0)]
+TOP = HEIGHT / 2
+block("computer-bezel", (WIDTH - 0.01, LENGTH - 0.014, 0.004), (0, 0, TOP + 0.0015), bezel_mat, bevel=0.003, segments=1)
+for x, y in SCREWS:
+    # A boss under each screw: the bezel's scallops
+    rod("computer-boss", 0.0048, 0.004, (x, y, TOP + 0.0015), None, bezel_mat, vertices=12)
+    rod("computer-screw", 0.0022, 0.001, (x, y, TOP + 0.004), None, screw_mat, vertices=8)
+block("computer-glass", (0.068, 0.051, 0.001), (0, 0, TOP + 0.0038), glass_mat)
+# The screen: one rectangle at 4:3 (its long side across the wrist), its texture coordinates as drawn, the top of
+# the picture toward the hand
+bpy.ops.mesh.primitive_plane_add(size=1)
 screen = bpy.context.object
-screen.data.transform(Matrix.Diagonal((0.034, 0.036, 0.002, 1)))
+screen.name = "computer-screen"
+screen.data.transform(Matrix.Diagonal((0.062, 0.0465, 1, 1)))
 screen.data.materials.append(screen_mat)
-screen.matrix_world = case_at @ Matrix.Translation((0, 0, 0.0075))
+screen.matrix_world = case_at @ Matrix.Translation((0, 0, TOP + 0.0044))
 
 # 7. One file, in the camera's frame
 for o in scene.objects:

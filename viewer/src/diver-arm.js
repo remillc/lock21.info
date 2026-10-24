@@ -24,10 +24,11 @@ const SWAY = { pitch: 0.011, yaw: 0.014, roll: 0.008, periods: [4.3, 6.1, 5.2] }
  * @param {object} options
  * @param {(front: THREE.Vector3, axis: THREE.Vector3) => void} [options.onLampPose] - each frame while shown: where the
  *   drawn light's front is and where it points, in the camera's frame (m, unit vector), for the beam to follow it
+ * @param {THREE.Material} [options.screen] - the dive computer's screen (dive-computer.js), put on « computer-screen »
  * @param {Promise<unknown>} [options.when] - its model loads once this settles (the viewer: after the first view, so as
  *   not to share the bandwidth with the coarsest tiles)
  */
-export function createDiverArm({ onLampPose = () => {}, when = Promise.resolve() } = {}) {
+export function createDiverArm({ onLampPose = () => {}, screen = null, when = Promise.resolve() } = {}) {
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera()
   const arm = new THREE.Group()
@@ -62,6 +63,8 @@ export function createDiverArm({ onLampPose = () => {}, when = Promise.resolve()
     const model = gltf.scene
     model.traverse((object) => {
       if (object.isMesh) object.frustumCulled = false
+      // The dive computer's screen: its picture drawn by the viewer (dive-computer.js)
+      if (object.isMesh && screen && /^computer-screen/.test(object.name)) object.material = screen
     })
     model.updateMatrixWorld(true)
     model.getObjectByName('lamp-front')?.getWorldPosition(frontLocal)
