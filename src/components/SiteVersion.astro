@@ -1,7 +1,7 @@
 ---
-// The site's version at the bottom of the About page (TODO #57, Christian, 2026-10-24: discreet, at the bottom): the
-// version in package.json, its date from its CHANGELOG.md entry, and a link to the release notes (on GitHub, in
-// English). Read at build time: the published site shows the version it was built from.
+// The site's version in the About page's last section, « Version » (TODO #57, Christian, 2026-10-24), as plain
+// text: the version in package.json, its date from its CHANGELOG.md entry, and a link to the release notes (on GitHub,
+// in English). Read at build time: the published site shows the version it was built from.
 import changelog from '../../CHANGELOG.md?raw'
 import pkg from '../../package.json'
 import { locale, pageLang } from '../lib/i18n.js'
@@ -13,19 +13,6 @@ const date = day ? new Date(`${day}T12:00:00`).toLocaleDateString(locale(lang), 
 const notes = 'https://github.com/remillc/lock21.info/blob/main/CHANGELOG.md'
 ---
 
-<p class="site-version">
+<p>
   Version {version}{date && ` · ${date}`} · <a href={notes}>{lang === 'en' ? 'release notes' : 'notes de version (en anglais)'}</a>
 </p>
-
-<style>
-  /* Discreet: label-medium in the data font, after a hairline, in the text's own colour (Christian, 2026-10-24: not
-     dimmed) */
-  .site-version {
-    margin-top: 3rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--md-sys-color-outline-variant);
-    font-family: var(--lk-font-data);
-    font-size: 0.75rem;
-    color: var(--md-sys-color-on-surface);
-  }
-</style>

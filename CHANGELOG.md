@@ -4,8 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- About page (TODO #57): the site's version at the bottom, discreet, with its date and a link to the release notes
-  (`SiteVersion.astro`, read from package.json and CHANGELOG.md at build time); the page becomes `about.mdx`, in
+- About page (TODO #57): the site's version at the bottom, with its date and a link to the release notes
+  in its own section, « Version » (`SiteVersion.astro`, read from package.json and CHANGELOG.md at build time); the page becomes `about.mdx`, in
   French and English.
 
 ## 0.12.1 - 2026-10-24
