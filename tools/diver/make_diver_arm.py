@@ -307,7 +307,7 @@ case_turn = (frame(forearm, facing) @ frame(Vector((0, 1, 0)), Vector((0, 0, 1))
 # Raised off the sleeve along the back of the wrist (tilted, its edge sank in; along its tilted face, it slid to one
 # side; Christian, 2026-10-24): its underside (the strap bars) plus what the tilt lowers its edge by; 2.5 cm nearer the
 # elbow than first placed
-COMPUTER_SCALE = 0.85
+COMPUTER_SCALE = 0.72
 tilt = toward.angle(facing)
 COMPUTER_RAISE = COMPUTER_SCALE * (0.0135 + 0.5 * 0.071 * math.sin(tilt))
 # Its long side along the forearm, the picture reading left to right in the view (Christian, 2026-10-24: not from far
@@ -316,7 +316,7 @@ COMPUTER_RAISE = COMPUTER_SCALE * (0.0135 + 0.5 * 0.071 * math.sin(tilt))
 # 2026-10-24)
 COMPUTER_TURN = math.radians(15)
 COMPUTER_SPIN = math.radians(90) + COMPUTER_TURN
-# Drawn at COMPUTER_SCALE of its real size (Christian, 2026-10-24: 85 %; the real one looked too large on the wrist
+# Drawn at COMPUTER_SCALE of its real size (Christian, 2026-10-24: 85 %, then 15 % less: 72 %; the real one looked too large on the wrist
 # from the eye), set above
 case_at = (Matrix.Translation(computer_at + toward * COMPUTER_RAISE) @ case_turn
            @ Matrix.Rotation(COMPUTER_SPIN, 4, 'Z') @ Matrix.Scale(COMPUTER_SCALE, 4))
