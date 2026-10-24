@@ -20,7 +20,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
 - [ ] #68 Yellow perch schools in the underwater view
 - [ ] #69 Bug: the high-resolution textures don't load (Christian, 2026-10-24: close up, a wall and the floor stay
-  blurry, the coarse levels' textures)
+  blurry, the coarse levels' textures). Seen at `/en/modele?cam=-26.98,1.56,-17.84,-29.45,1.28,-20.03` (local dev)
 
 ### Pipeline
 
