@@ -841,7 +841,7 @@ l21-tooltip[data-shown='true'] {
   }
 }
 
-/* Swimming (main.js, swim.js): the movement keys, bottom left, while underwater on a computer. Keycaps in the style of
+/* The movement keys (main.js, swim.js), bottom left, on a computer, in and out of the water. Keycaps in the style of
    the other controls over the 3D view; a held key lights up (the accent colour) */
 .swim-keys {
   position: fixed;

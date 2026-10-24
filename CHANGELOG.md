@@ -4,6 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, outside the water too: the movement keys (W A S D, or the arrows; Shift faster) move the camera
+  forward, back and sideways, with the orbit's centre, so the mouse's orbit carries on from there; faster the farther
+  the camera is from that centre (the swimming speed, 1.2 m/s, times the distance over 4 m), and never through the
+  model. The keys' legend (bottom left, on a computer) shows outside the water too, with its own line (« avancer · Maj:
+  plus vite ») and help (« ? »); underwater, the swimming ones. The /modele page's navigation help says so.
 - 3D viewer, the bass: once in a while only. The camera still for 10 to 30 s (drawn at random again at each move),
   then 30 s to 2 min before its next visit, and not before 45 s after the viewer opens; it watches the diver 8 to 15 s
   (was: 6 s still, every 30 s, 8 to 20 s).

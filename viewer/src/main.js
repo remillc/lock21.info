@@ -679,21 +679,36 @@ live.underwater = (v) => setUnderwater(v === '1')
 // Swimming (swim.js): underwater on a computer, first-person navigation replaces the orbit; leaving it, the orbit
 // turns around the point SWIM_TARGET ahead of where the diver looks. The movement keys drawn bottom left
 const SWIM_TARGET = 4
+// On a computer, outside the water too (Christian, 2026-10-24), its line and help saying what the keys do there
 const swimKeys = document.querySelector('.swim-keys')
-swimKeys.setAttribute('aria-label', t('swimKeys'))
-swimKeys.querySelector('.swim-hint').textContent = t('swimHint')
+function labelKeys(swimming) {
+  swimKeys.setAttribute('aria-label', t(swimming ? 'swimKeys' : 'keysLabel'))
+  swimKeys.querySelector('.swim-hint').textContent = t(swimming ? 'swimHint' : 'keysHint')
+  swimHelpButton.setAttribute('aria-label', t(swimming ? 'swimHelpTitle' : 'keysHelpTitle'))
+  swimHelpButton.dataset.tooltip = t(swimming ? 'swimHelpTitle' : 'keysHelpTitle')
+}
 // The diver can't go through the model: each move stops short of the surfaces and slides along them (collide.js)
 const collider = createCollider(() => [...tilesets.map((tiles) => tiles.group), ...contextModels])
 if (import.meta.env.DEV) window.l21.collider = collider
+// Outside the water, the same keys move the camera and the orbit's centre together (the orbit kept as it was), at
+// the swimming speed times the orbit's distance over SWIM_TARGET (at least once)
+const walked = new THREE.Vector3()
 const swim = createSwim({
   camera,
   element: renderer.domElement,
-  move: (position, step) => collider.move(position, step),
+  move: (position, step) => {
+    walked.copy(position)
+    collider.move(position, step)
+    if (!swim.looking) controls.target.add(walked.subVectors(position, walked))
+  },
+  speed: () => (swim.looking ? 1 : Math.max(1, camera.position.distanceTo(controls.target) / SWIM_TARGET)),
   onKey: (code, down) => {
     const arrow = { ArrowUp: 'KeyW', ArrowDown: 'KeyS', ArrowLeft: 'KeyA', ArrowRight: 'KeyD' }[code] ?? code
     swimKeys.querySelector(`[data-code="${arrow}"]`)?.toggleAttribute('data-down', down)
   },
 })
+// The keys from the start, outside the water
+swim.setActive(true, false)
 // The keyboard's own letters for those positions (AZERTY: Z, Q, S, D), where the browser tells them
 navigator.keyboard?.getLayoutMap?.().then((layout) => {
   for (const key of swimKeys.querySelectorAll('kbd')) {
@@ -703,12 +718,11 @@ navigator.keyboard?.getLayoutMap?.().then((layout) => {
 }).catch(() => {})
 /** @param {boolean} on */
 function setSwimming(on) {
-  if (on === swim.active) return
+  if (on === swim.looking) return
   if (on) showSwimHelp()
   controls.enabled = !on
-  swim.setActive(on)
-  // The keys pad continues the season strip's sweep, leftward (SWEEP_DELAY)
-  reveal(swimKeys, on, 'inset(-8px -8px -8px 100%)', on ? SWEEP_DELAY : 0)
+  swim.setActive(true, on)
+  labelKeys(on)
   if (!on) {
     controls.target.copy(camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(SWIM_TARGET).add(camera.position))
     controls.update()
@@ -755,8 +769,12 @@ function buildParticleField() {
 const SWIM_HELP_KEY = 'l21-swim-help-seen'
 const swimHelp = document.querySelector('.swim-help')
 const swimHelpButton = swimKeys.querySelector('.swim-help-button')
-swimHelpButton.setAttribute('aria-label', t('swimHelpTitle'))
-swimHelpButton.dataset.tooltip = t('swimHelpTitle')
+labelKeys(false)
+// Shown from the start on a computer (not on a phone: no keys)
+const showKeys = () => {
+  swimKeys.hidden = mobile
+}
+showKeys()
 swimHelpButton.addEventListener('click', () => openSwimHelp())
 function showSwimHelp() {
   try {
@@ -769,8 +787,9 @@ function showSwimHelp() {
 }
 function openSwimHelp() {
   const letter = (code) => swimKeys.querySelector(`[data-code="${code}"]`)?.textContent ?? code.slice(3)
-  swimHelp.querySelector('h2').textContent = t('swimHelpTitle')
-  swimHelp.querySelector('.swim-help-text').innerHTML = t('swimHelpText', {
+  const swimming = swim.looking
+  swimHelp.querySelector('h2').textContent = t(swimming ? 'swimHelpTitle' : 'keysHelpTitle')
+  swimHelp.querySelector('.swim-help-text').innerHTML = t(swimming ? 'swimHelpText' : 'keysHelpText', {
     w: letter('KeyW'), a: letter('KeyA'), s: letter('KeyS'), d: letter('KeyD'),
     // The underwater button's own icon, in a small round like the button
     icon: `<span class="swim-help-icon">${underwaterButton.querySelector('svg').outerHTML}</span>`,
@@ -813,8 +832,7 @@ function showSeasonControl(on) {
   // Unrolls out of the 🤿 button: revealed from its right edge
   reveal(underwaterTools, on, 'inset(-8px -8px -8px 100%)', on ? 0 : SWEEP_DELAY)
 }
-// The season strip and the keys pad unroll as one sweep leftward from the 🤿 button: the pad (setSwimming) follows
-// the strip on the way in, and goes first on the way back
+// The season strip unrolls leftward from the 🤿 button
 const SWEEP_DELAY = 180
 /**
  * Shows or hides an element with the MD3 motion (SEASON_MOTION): revealed from one edge (away: its clip-path when
@@ -1259,6 +1277,7 @@ function showError(error) {
 live.tiles = (v) => { tilesUrl = v || DEFAULT_TILES_URL; loadModel().catch(showError) }
 live.profile = (v) => {
   mobile = isMobile(v)
+  showKeys()
   profile = PROFILES[mobile ? 'mobile' : 'desktop']
   renderer.setPixelRatio(profile.pixelRatio)
   composer?.setPixelRatio(profile.pixelRatio)
@@ -1452,9 +1471,11 @@ function renderLoop() {
   updateStats()
   // update() returns true while the camera moves (including the damping glide after a gesture); swimming: the keys
   // and the drag move the camera (swim.js), the address follows
-  if (swim.active) {
+  if (swim.looking) {
     if (swim.update()) swimMoved()
   } else {
+    // The movement keys (swim.js) move the camera and the orbit's centre; the orbit follows (its change event)
+    if (swim.update()) needsRender = true
     // Touch and double-tap navigation (touch-nav.js): a flight to a point, the orbit's centre kept ahead
     if (touchNav.update()) needsRender = true
     if (controls.update()) needsRender = true

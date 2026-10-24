@@ -2,7 +2,8 @@
 // diver where they look (W forward, S back, A and D sideways; the arrows too; Shift faster), dragging turns the head
 // (up, down, left, right). Keys by position (event.code): on an AZERTY keyboard they are Z, Q, S, D, and the keycaps
 // drawn at the bottom left (main.js) show the keyboard's own letters where the browser can tell
-// (navigator.keyboard.getLayoutMap).
+// (navigator.keyboard.getLayoutMap). Outside the water (Christian, 2026-10-24), the same keys only: the orbit keeps the
+// mouse, and the keys move the camera and the orbit's centre together (main.js), faster the farther the camera is.
 import * as THREE from 'three'
 
 // Swimming speed (m/s), and with Shift; head turn per pixel dragged (radians); the head's pitch limit
@@ -29,9 +30,12 @@ const MOVES = {
  * @param {(code: string, down: boolean) => void} [options.onKey] - a movement key pressed or released (the keycaps)
  * @param {(position: THREE.Vector3, step: THREE.Vector3) => void} [options.move] - moves the camera by a step (collisions:
  *   collide.js); by default straight
+ * @param {() => number} [options.speed] - a factor on the speed (outside the water: the orbit's distance)
  */
-export function createSwim({ camera, element, onKey, move: moveBy = (position, step) => position.add(step) }) {
+export function createSwim({ camera, element, onKey, move: moveBy = (position, step) => position.add(step), speed = () => 1 }) {
   let active = false
+  // Dragging turns the head (swimming); without it, the keys only
+  let looking = false
   const held = new Set()
   const euler = new THREE.Euler(0, 0, 0, 'YXZ')
   const move = new THREE.Vector3()
@@ -65,12 +69,12 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
   })
 
   element.addEventListener('pointerdown', (event) => {
-    if (!active || event.button !== 0) return
+    if (!active || !looking || event.button !== 0) return
     drag = { id: event.pointerId, x: event.clientX, y: event.clientY }
     element.setPointerCapture(event.pointerId)
   })
   element.addEventListener('pointermove', (event) => {
-    if (!active || !drag || event.pointerId !== drag.id) return
+    if (!active || !looking || !drag || event.pointerId !== drag.id) return
     euler.setFromQuaternion(camera.quaternion)
     euler.y -= (event.clientX - drag.x) * TURN
     euler.x = THREE.MathUtils.clamp(euler.x - (event.clientY - drag.y) * TURN, -PITCH_LIMIT, PITCH_LIMIT)
@@ -89,9 +93,17 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
     get active() {
       return active
     },
-    /** @param {boolean} on */
-    setActive(on) {
+    /** Swimming: the drag turns the head */
+    get looking() {
+      return active && looking
+    },
+    /**
+     * @param {boolean} on - the keys move the camera
+     * @param {boolean} [look] - and dragging turns the head (swimming)
+     */
+    setActive(on, look = true) {
       active = on
+      looking = look
       drag = null
       for (const code of held) onKey?.(code, false)
       held.clear()
@@ -115,7 +127,7 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
       move.set(0, 0, 0)
       for (const code of held) move.add(new THREE.Vector3(...MOVES[code]))
       if (!move.lengthSq()) return Boolean(drag)
-      move.normalize().multiplyScalar((fast ? SPEED * FAST : SPEED) * dt).applyQuaternion(camera.quaternion)
+      move.normalize().multiplyScalar((fast ? SPEED * FAST : SPEED) * speed() * dt).applyQuaternion(camera.quaternion)
       moveBy(camera.position, move)
       return true
     },
