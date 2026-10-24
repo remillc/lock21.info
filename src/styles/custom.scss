@@ -1,5 +1,11 @@
 // Global styles on top of Starlight (docs/system-design.md, docs/guidelines.md). Colours, fonts and radii come from tokens.scss.
 
+// The hidden attribute always hides (Christian, 2026-10-24): a rule that sets display on an element would otherwise
+// show it anyway; no element needs its own [hidden] rule
+[hidden] {
+  display: none !important;
+}
+
 // --- Type: Archivo for text and titles (800 for headings), JetBrains Mono for data
 
 .sl-markdown-content :is(h1, h2, h3, h4) ,

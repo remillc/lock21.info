@@ -79,5 +79,7 @@ content. Scripts must survive that:
 
 - Small files, one component per file, named in English.
 - Comments explain why, not what; match the surrounding density.
+- The `hidden` attribute always hides: a global `[hidden] { display: none !important; }` (site `custom.scss`, viewer
+  `style.css`). Hide and show with `hidden`, without a `[hidden]` rule per element.
 - Every script answers `-h` / `--help` (see `AGENTS.md`).
 - Dependencies: pinned exact versions for anything loaded from a CDN; prefer none.

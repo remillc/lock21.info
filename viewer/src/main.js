@@ -220,7 +220,16 @@ renderer.setPixelRatio(profile.pixelRatio)
 renderer.setSize(container.clientWidth, container.clientHeight)
 container.appendChild(renderer.domElement)
 // Telemetry for every visit (telemetry.js): device, errors, load time, end of the visit
-startTelemetry({ renderer, mobile, embedded })
+const { previousUnclosed } = startTelemetry({ renderer, mobile, embedded })
+// The page reloaded after running out of memory (Safari on an iPhone or iPad): a lighter model this time, and the
+// loading card says why (LIGHT)
+const LIGHT = { errorTarget: 24, maxBytes: 150e6, pixelRatio: 1 }
+const light = mobile && previousUnclosed
+if (light) {
+  Object.assign(PROFILES.mobile, LIGHT)
+  renderer.setPixelRatio(profile.pixelRatio)
+  log('light-profile', LIGHT)
+}
 
 // The view a visit starts from without ?cam= (same form: x,y,z of the camera, then of the point it looks at; scene
 // metres, y up), chosen by Christian on 2026-10-23 (was 2026-10-22's). To change it, place the camera where wanted and
@@ -279,6 +288,23 @@ let needsRender = true
 const requestRender = () => { needsRender = true }
 controls.addEventListener('change', requestRender)
 
+/**
+ * Lets a tile's compressed textures (KTX2) drop their data once on the GPU: three.js keeps it for nothing else than a
+ * new upload (a lost WebGL context: the model is then loaded again, see webglcontextrestored). About a third of the
+ * tiles' memory on a phone
+ * @param {{ map?: THREE.Texture, normalMap?: THREE.Texture }} surface - mesh.userData.surface (initSurface)
+ */
+function releaseAfterUpload(surface) {
+  for (const key of ['map', 'normalMap']) {
+    const texture = surface?.[key]
+    if (!texture?.isCompressedTexture || texture.userData.releases) continue
+    texture.userData.releases = true
+    texture.onUpdate = () => {
+      texture.mipmaps = []
+      texture.onUpdate = null
+    }
+  }
+}
 const ktx2Loader = new KTX2Loader().setTranscoderPath(`${import.meta.env.BASE_URL}vendor/basis/`).detectSupport(renderer)
 // The tiles' textures are ETC1S (Obj2Tiles): on a computer the loader would transcode them to BC7 (1 byte per pixel),
 // which holds no more than ETC1S does; BC1 (DXT1, half a byte per pixel) shows the same and halves the textures'
@@ -1034,6 +1060,7 @@ async function loadModel() {
   const load = ++loadCount
   status.start()
   rootsLoaded = false
+  loadWatch = { started: performance.now(), arrived: 0, seen: 0, progressAt: performance.now(), errors: 0, reports: 0, said: null }
   const manifest = await (await fetch(`${tilesUrl}/manifest.json`, { cache: 'no-cache' })).json()
   if (load !== loadCount) return
   unloadModel()
@@ -1061,10 +1088,19 @@ async function loadModel() {
     tiles.setCamera(camera)
     tiles.setResolutionFromRenderer(camera, renderer)
 
-    tiles.addEventListener('load-error', ({ error, url }) => log('tile-error', { zone: entry.id, url: String(url ?? '').slice(-200), ...errorText(error) }))
-    tiles.addEventListener('load-model', ({ scene: model }) => {
+    // Counted (the loading card, LOAD_ERRORS); only the first TILE_ERRORS_LOGGED of a visit are sent
+    tiles.addEventListener('load-error', ({ error, url }) => {
+      loadWatch.errors++
+      if (++tileErrors <= TILE_ERRORS_LOGGED) log('tile-error', { zone: entry.id, url: String(url ?? '').slice(-200), ...errorText(error) })
+    })
+    tiles.addEventListener('load-model', ({ scene: model, tile }) => {
+      // Memory (the iPad Air, 2026-10-24: Safari closed the page): the library keeps each tile's whole glTF result,
+      // its parser holding the downloaded file (a second copy of the tile); nothing reads it once the tile is in
+      tile.engineData.metadata = null
+      loadWatch.arrived++
       model.traverse((child) => {
         if (child.isMesh) initSurface(child, entry.id)
+        if (child.isMesh) releaseAfterUpload(child.userData.surface)
       })
     })
     tiles.addEventListener('dispose-model', ({ scene: model }) => {
@@ -1270,7 +1306,7 @@ function showMockups(model, manifest) {
 
 function showError(error) {
   log('load-failed', errorText(error))
-  status.showError(error.message)
+  status.showError(error.message, retryLoad)
   console.error(error)
 }
 
@@ -1415,6 +1451,60 @@ function firstViewDrawn() {
   }
   return visible > 0
 }
+// The first view watched (Christian, 2026-10-24: an iPad Air stayed on « Chargement » with no word why): after
+// LOAD_SLOW s the card says it is longer than usual; no tile in for LOAD_STALLED s while some are pending, or
+// LOAD_ERRORS tiles failed: it says so and offers « Réessayer ». While loading, a progress report every REPORT_EVERY s
+// (at most REPORTS) to the telemetry
+const LOAD_SLOW = 20
+const LOAD_STALLED = 20
+const LOAD_ERRORS = 5
+const REPORT_EVERY = 10
+const REPORTS = 9
+const TILE_ERRORS_LOGGED = 5
+let tileErrors = 0
+// arrived: tiles in since the load started (seen: as of the last look), progressAt: when the last came in
+let loadWatch = { started: 0, arrived: 0, seen: 0, progressAt: 0, errors: 0, reports: 0, said: null }
+function retryLoad() {
+  log('retry', tileFacts())
+  loadModel().catch(showError)
+}
+function watchLoading(pending) {
+  const now = performance.now()
+  const w = loadWatch
+  if (w.arrived !== w.seen) {
+    w.seen = w.arrived
+    w.progressAt = now
+  }
+  if (now - w.started > (w.reports + 1) * REPORT_EVERY * 1000 && w.reports < REPORTS) {
+    w.reports++
+    let visible = 0
+    let shallow = 0
+    for (const t of tilesets) {
+      visible += t.visibleTiles.size
+      for (const tile of t.loadingTiles) if (tile.internal.depthFromRenderedParent <= 1) shallow++
+    }
+    const stats = (key) => tilesets.reduce((n, t) => n + t.stats[key], 0)
+    log('progress', {
+      ...tileFacts(), first: status.active, roots: rootsLoaded, queued: stats('queued'), downloading: stats('downloading'),
+      parsing: stats('parsing'), failed: stats('failed'), visible, shallow, errors: w.errors,
+      stillFor: Math.round((now - w.progressAt) / 1000), canvas: `${renderer.domElement.width}x${renderer.domElement.height}`,
+    })
+  }
+  if (!status.active) return
+  let said = light ? 'light' : null
+  if (w.errors >= LOAD_ERRORS) said = 'errors'
+  else if (pending > 0 && now - w.progressAt > LOAD_STALLED * 1000) said = 'stalled'
+  else if (now - w.started > LOAD_SLOW * 1000) said = 'slow'
+  if (said === 'slow') status.note(t('loadSlow', { n: w.arrived }))
+  else if (said !== w.said) {
+    if (said === 'errors') status.note(t('loadErrors', { n: w.errors }), retryLoad)
+    else if (said === 'stalled') status.note(t('loadStalled'), retryLoad)
+    else if (said === 'light') status.note(t('loadLight'))
+    else status.note(null)
+  }
+  if (said !== w.said && said && said !== 'light') log('loading-note', { note: said, ...tileFacts(), errors: w.errors })
+  w.said = said
+}
 function updateLoading() {
   if (!status.busy) return
   let loaded = 0
@@ -1423,6 +1513,7 @@ function updateLoading() {
     loaded += t.stats.loaded
     pending += t.stats.queued + t.stats.downloading + t.stats.parsing
   }
+  watchLoading(pending)
   // The first view drawn (firstViewDrawn): the card gives way to the thin « Affinage des
   // détails » bar (loading.js), which stays while the finer detail keeps arriving
   if (status.active && rootsLoaded && firstViewDrawn()) {
@@ -1434,6 +1525,12 @@ function updateLoading() {
   if (!rootsLoaded || pending > 0) idleSince = 0
   else if (!idleSince) idleSince = performance.now()
   else if (performance.now() - idleSince > 800) {
+    // Nothing left to load, but the first view never came (its tiles failed): the error, with « Réessayer »
+    if (status.active && loadWatch.errors) {
+      log('load-failed', { msg: 'tiles failed', ...tileFacts() })
+      status.showError(t('loadErrors', { n: loadWatch.errors }), retryLoad)
+      return
+    }
     status.done()
     // Telemetry: the first full load of the visit (time since the page started, tiles, memory)
     if (!loadLogged) {
@@ -1456,6 +1553,7 @@ function tileFacts() {
   const cache = tilesets[0]?.lruCache
   return {
     tiles: tilesets.reduce((n, t) => n + t.stats.loaded, 0),
+    tileErrors,
     cacheMB: Math.round((cache?.cachedBytes || 0) / 1e6),
     maxMB: Math.round(profile.maxBytes / 1e6),
     zones: tilesets.length,
@@ -1522,4 +1620,7 @@ function drawScene() {
 }
 renderer.setAnimationLoop(renderLoop)
 
+// A lost WebGL context (graphics memory short, the page in the background) comes back empty: the tiles' textures have
+// dropped their data (releaseAfterUpload), so the model loads again
+renderer.domElement.addEventListener('webglcontextrestored', () => loadModel().catch(showError))
 loadModel().catch(showError)

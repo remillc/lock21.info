@@ -4,6 +4,19 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, loading (an iPad Air stayed on « Chargement » with no word why): the card now says what is going on.
+  After 20 s, that it takes longer than usual (with the pieces received); no piece in for 20 s, or 5 failed: that
+  loading is stalled or failing, with a « Réessayer » button (MD3 text button); when nothing could load, the error
+  instead of an empty view. After Safari reloaded the page for lack of memory, a lighter model (150 MB of tiles,
+  coarser detail, pixel ratio 1), and the card says why.
+- 3D viewer, memory: each tile's downloaded file is no longer kept once the tile is in (the tiles library kept the
+  whole glTF result, its parser holding the file), and the textures' data goes once on the GPU (the model loads again
+  after a lost WebGL context). In Chrome, the data held drops from 470 to 233 MB on the phone profile.
+- 3D viewer, telemetry: a progress report every 10 s while loading (tiles, queue, errors, canvas), the notes shown,
+  « Réessayer »; at most 5 tile errors sent per visit (all counted), and the visit's end always sent (39 tile errors
+  had used up the quota of an iPad visit).
+- Site and viewer: the `hidden` attribute always hides (one global rule, no rule per element).
+
 - 3D viewer, outside the water too: the movement keys (W A S D, or the arrows; Shift faster) move the camera
   forward, back and sideways, with the orbit's centre, so the mouse's orbit carries on from there; faster the farther
   the camera is from that centre (the swimming speed, 1.2 m/s, times the distance over 4 m), and never through the

@@ -7,8 +7,10 @@
 //   200 ms), and a thin indeterminate bar runs along the viewer's top edge with a small "Affinage des détails"
 //   ("Refining the details") label, until nothing is left to load.
 // Instantly, and with still dots and bars, when the system asks for reduced motion.
+// When the first view is slow, stalled or failing (Christian, 2026-10-24: an iPad Air never got past « Chargement »),
+// the card says so in a line under the bar (note), and can offer « Réessayer » (MD3 text button); errors too.
 //
-// Usage: status.start(), status.refine(), status.done(), status.showError(message)
+// Usage: status.start(), status.refine(), status.done(), status.showError(message, retry), status.note(text, retry)
 import { t } from './i18n.js'
 
 const EXIT = { duration: 200, easing: 'cubic-bezier(0.3, 0, 0.8, 0.15)' } // md.sys.motion: short4, emphasized-accelerate
@@ -22,6 +24,8 @@ class Loading extends HTMLElement {
       <div class="loading-card">
         <div class="loading-label">${t('loading')}<span class="loading-dots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span></div>
         <div class="loading-bar" role="progressbar" aria-label="${t('loadingBar')}"><div class="loading-fill"></div></div>
+        <p class="loading-note" hidden></p>
+        <button class="loading-retry" type="button" hidden>${t('retry')}</button>
       </div>
       <div class="refining">
         <div class="refining-bar" role="progressbar" aria-label="${t('refining')}"><div class="loading-fill"></div></div>
@@ -30,6 +34,9 @@ class Loading extends HTMLElement {
     this.card = this.querySelector('.loading-card')
     this.label = this.querySelector('.loading-label')
     this.refining = this.querySelector('.refining')
+    this.noteLine = this.querySelector('.loading-note')
+    this.retryButton = this.querySelector('.loading-retry')
+    this.retryButton.addEventListener('click', () => this.retry?.())
     this.start()
   }
 
@@ -49,6 +56,19 @@ class Loading extends HTMLElement {
     this.hidden = false
     this.classList.remove('error', 'refine')
     this.label.firstChild.textContent = t('loading')
+    this.note(null)
+  }
+
+  /**
+   * A line under the bar while the first view loads (null: none), with « Réessayer » when `retry` is given
+   * @param {string | null} text
+   * @param {() => void} [retry]
+   */
+  note(text, retry) {
+    if (this.noteLine.textContent !== (text ?? '')) this.noteLine.textContent = text ?? ''
+    this.noteLine.hidden = !text
+    this.retry = retry
+    this.retryButton.hidden = !retry
   }
 
   /** The first view is drawn: the card goes, the thin bar along the top edge stays until done() */
@@ -72,13 +92,18 @@ class Loading extends HTMLElement {
     }
   }
 
-  showError(message) {
+  /**
+   * @param {string} message
+   * @param {() => void} [retry] - offers « Réessayer »
+   */
+  showError(message, retry) {
     this.getAnimations({ subtree: true }).forEach((a) => a.cancel())
     this.leaving = false
     this.hidden = false
     this.classList.remove('refine')
     this.classList.add('error')
     this.label.firstChild.textContent = t('error', { message })
+    this.note(null, retry)
   }
 }
 customElements.define('l21-loading', Loading)

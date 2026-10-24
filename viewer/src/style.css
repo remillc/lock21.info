@@ -1,3 +1,9 @@
+/* The hidden attribute always hides (Christian, 2026-10-24): a rule that sets display on an element would otherwise show
+   it anyway; no element needs its own [hidden] rule */
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   margin: 0;
@@ -51,10 +57,6 @@ l21-loading {
   background: rgb(18 20 14 / 85%);
   color: #e3e6d8;
   box-shadow: 0 4px 16px rgb(0 0 0 / 30%);
-}
-
-l21-loading[hidden] {
-  display: none;
 }
 
 .loading-bar {
@@ -160,6 +162,44 @@ l21-loading.error .loading-dots,
 l21-loading.error .loading-bar {
   display: none;
 }
+l21-loading.error .loading-label {
+  max-width: min(320px, 80vw);
+  text-align: center;
+}
+
+/* What is going on when the first view is slow, stalled or failing (main.js, updateLoading): a short text under the
+   bar, and « Réessayer », an MD3 text button (40 dp high, label-large, state layers); the card then takes touches */
+.loading-note {
+  max-width: min(280px, 70vw);
+  margin: 0;
+  color: #c6c9bb;
+  font: 400 13px/18px system-ui, sans-serif;
+  text-align: center;
+}
+.loading-retry {
+  height: 40px;
+  margin-bottom: -6px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #b8c97a;
+  font: 500 14px/20px system-ui, sans-serif;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.loading-retry:hover {
+  background: rgb(184 201 122 / 8%);
+}
+.loading-retry:focus-visible,
+.loading-retry:active {
+  background: rgb(184 201 122 / 10%);
+}
+.loading-retry:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: 2px;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .loading-dots i {
@@ -206,9 +246,6 @@ l21-loading.error .loading-bar {
   color: #e3e6d8;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-}
-.icon-button[hidden] {
-  display: none;
 }
 /* 48 dp touch target */
 .icon-button::before {
@@ -279,9 +316,6 @@ l21-loading.error .loading-bar {
   display: flex;
   align-items: center;
   gap: 16px;
-}
-.underwater-tools[hidden] {
-  display: none;
 }
 .season-control {
   display: flex;
@@ -420,9 +454,6 @@ l21-loading.error .loading-bar {
     max-width: calc(100% - 136px);
   }
 }
-.touch-hint[hidden] {
-  display: none;
-}
 .touch-hint strong {
   display: block;
   margin-bottom: 4px;
@@ -450,10 +481,6 @@ l21-settings-panel {
   color: #e3e6d8;
   font-size: 14px;
   box-shadow: 0 8px 24px rgb(0 0 0 / 40%);
-}
-
-l21-settings-panel[hidden] {
-  display: none;
 }
 
 .settings-head {
@@ -500,10 +527,6 @@ l21-settings-panel[hidden] {
 
 .settings-section summary {
   cursor: pointer;
-}
-
-.settings-row[hidden] {
-  display: none;
 }
 
 .settings-row {
@@ -886,9 +909,6 @@ l21-tooltip[data-shown='true'] {
 .swim-help-button:focus-visible {
   outline: 2px solid #b8c97a;
   outline-offset: 2px;
-}
-.swim-keys[hidden] {
-  display: none;
 }
 .swim-row {
   display: flex;

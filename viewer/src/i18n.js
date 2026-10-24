@@ -52,6 +52,11 @@ const TEXTS = {
     loadingBar: 'Chargement du modèle',
     refining: 'Affinage des détails',
     error: ({ message }) => `Erreur: ${message}`,
+    retry: 'Réessayer',
+    loadSlow: ({ n }) => `C’est plus long que d’habitude (${n} morceaux reçus). La connexion est peut-être lente, ou le modèle lourd pour cet appareil.`,
+    loadStalled: 'Le chargement ne progresse plus. Vérifiez la connexion Internet, puis réessayez.',
+    loadErrors: ({ n }) => `${n} morceaux du modèle n’ont pas pu être téléchargés. Vérifiez la connexion Internet, puis réessayez.`,
+    loadLight: 'La page a été rechargée: l’appareil manquait de mémoire. Le modèle s’affiche en version allégée.',
 
 
     // ?compare= segmented button (main.js)
@@ -149,6 +154,11 @@ const TEXTS = {
     loadingBar: 'Loading the model',
     refining: 'Refining the details',
     error: ({ message }) => `Error: ${message}`,
+    retry: 'Try again',
+    loadSlow: ({ n }) => `This is taking longer than usual (${n} pieces received). The connection may be slow, or the model heavy for this device.`,
+    loadStalled: 'Loading has stopped making progress. Check the Internet connection, then try again.',
+    loadErrors: ({ n }) => `${n} pieces of the model could not be downloaded. Check the Internet connection, then try again.`,
+    loadLight: 'The page was reloaded: the device ran short of memory. The model is shown in a lighter version.',
 
 
     // ?compare= segmented button (main.js)

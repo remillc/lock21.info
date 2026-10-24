@@ -7,7 +7,8 @@
 // Development: printed in the console, not sent (the dev servers have no /api/log).
 
 const ENDPOINT = '/api/log'
-// A session sends at most this many messages (a loop of errors must not flood the logs)
+// A session sends at most this many messages (a loop of errors must not flood the logs); the visit's end always goes
+// (2026-10-24: 39 tile errors used them up, and the end of that iPad visit never came)
 const MAX_MESSAGES = 40
 const ALIVE_KEY = 'l21-viewer-alive'
 
@@ -17,7 +18,7 @@ export const session = Array.from(crypto.getRandomValues(new Uint8Array(4)), (n)
 
 let sent = 0
 export function log(type, data = {}) {
-  if (sent >= MAX_MESSAGES) return
+  if (sent >= MAX_MESSAGES && type !== 'end') return
   sent++
   const message = { s: session, t: type, ms: Math.round(performance.now()), ...data }
   if (import.meta.env.DEV) {
@@ -39,7 +40,11 @@ export function log(type, data = {}) {
 
 const errorText = (error) => ({ msg: String(error?.message ?? error).slice(0, 500), stack: String(error?.stack ?? '').slice(0, 2000) })
 
-/** Starts the session: device facts, the previous visit's end, and the global error handlers */
+/**
+ * Starts the session: device facts, the previous visit's end, and the global error handlers
+ * @returns {{ previousUnclosed: boolean }} whether the previous visit in this tab never closed (Safari's reload when
+ *   memory runs out)
+ */
 export function startTelemetry({ renderer, mobile, embedded }) {
   const gl = renderer.getContext()
   const debug = gl.getExtension('WEBGL_debug_renderer_info')
@@ -58,8 +63,10 @@ export function startTelemetry({ renderer, mobile, embedded }) {
   })
 
   // A visit whose page never closed normally (crash, or Safari's reload when memory runs out) left its mark behind
+  let previousUnclosed = false
   try {
     const previous = sessionStorage.getItem(ALIVE_KEY)
+    previousUnclosed = Boolean(previous)
     if (previous) log('previous-unclosed', { previous })
     sessionStorage.setItem(ALIVE_KEY, session)
   } catch {
@@ -85,6 +92,7 @@ export function startTelemetry({ renderer, mobile, embedded }) {
     ended = true
     log('end', { duration: Math.round((performance.now() - started) / 1000), ...endFacts?.() })
   })
+  return { previousUnclosed }
 }
 
 // Facts added to the 'end' message (tiles loaded, memory used), supplied by the viewer
