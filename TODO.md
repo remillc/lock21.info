@@ -64,7 +64,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   another, through a few waypoints if needed, at a set pace). The steps, in order (Christian, 2026-10-24):
   1. view: `?cam=-18.60,3.08,-27.91,-45.68,-28.73,-39.76`
   2. view: `?cam=-31.65,10.45,-10.50,-55.30,-7.97,-29.94`
-  3. view: zone 16, the spillway gate door on the floor: `?cam=-18.54,1.28,8.53,-17.08,-0.65,10.34`
+  3. view: zone 16, the spillway gate door on the floor: `?cam=-18.30,1.55,8.64,-17.06,-0.43,10.55`
   4. move: fly through the sluice gate, from `?cam=-27.28,2.02,-16.28,-61.37,-7.37,-21.45` to
      `?cam=-37.22,1.69,-15.24,-75.00,-10.69,-21.69` (a straight line hits a surface 8.4 m along its 10 m: a waypoint through the
      middle of the opening)

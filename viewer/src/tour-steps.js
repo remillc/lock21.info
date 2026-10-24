@@ -40,7 +40,7 @@ export const TOUR_STEPS = [
   },
   {
     kind: 'view',
-    cam: [-18.54, 1.28, 8.53, -17.08, -0.65, 10.34],
+    cam: [-18.3, 1.55, 8.64, -17.06, -0.43, 10.55],
     title: { fr: 'Une porte de vanne', en: 'A gate door' },
     text: {
       fr: 'Une des portes des vannes du déversoir, couchée sur le fond (zone 16). Le fer de son cadre est rongé par la rouille.',
