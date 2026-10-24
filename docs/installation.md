@@ -156,10 +156,13 @@ Pour voir le site ou le visualiseur pendant qu'on travaille, on lance de petits 
 
 ## 7. Le serveur en ligne (Cloudflare R2)
 
-Rien à faire sur un nouvel ordinateur, sauf dans un cas: le serveur n'accepte que les pages venant d'adresses
-autorisées (**CORS**). Sont autorisées `https://lock21.info`, `http://localhost:3100` et `http://localhost:4321`.
-Si un visualiseur lancé sur un autre port affiche une erreur « blocked by CORS policy », ajouter son adresse dans le
-tableau de bord Cloudflare: **R2** › `lock21-tiles` › **Settings** › **CORS Policy**.
+Rien à faire sur un nouvel ordinateur. Toute page peut lire les tuiles (**CORS**): la règle **Tuiles CORS** du domaine
+`lock21.info` (**Rules** › **Overview**, une *Response Header Transform Rule*: *Hostname equals `tiles.lock21.info`*,
+*Set static* `Access-Control-Allow-Origin: *`) ajoute l'en-tête à chaque réponse, même servie par le cache. Sans elle
+(2026-10-24), le cache de Cloudflare gardait une seule copie de chaque fichier, avec l'en-tête de la première adresse
+qui l'avait demandé: une autre adresse (un aperçu de branche, un autre port) recevait la copie sans le bon en-tête,
+et le navigateur la refusait (« Load failed », « blocked by CORS policy »). La liste d'adresses de R2
+(**R2** › `lock21-tiles` › **Settings** › **CORS Policy**) ne sert plus qu'aux réponses hors cache.
 
 Le cache de Cloudflare garde les fichiers de `tiles.lock21.info` près des visiteurs: règle **Tuiles R2** (domaine
 `lock21.info` › **Caching** › **Cache Rules**: *Hostname equals `tiles.lock21.info`*, *Eligible for cache*). Il suit
