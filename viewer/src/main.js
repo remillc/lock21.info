@@ -26,6 +26,7 @@ import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
 import { homePath, t } from './i18n.js'
 import { createTour } from './tour.js'
+import { createPointerOrbit } from './pointer-orbit.js'
 import { TOUR_STEPS } from './tour-steps.js'
 
 // 3d-tiles-renderer warns, for each tileset, that version 1.1 has limited support: our tiles declare 1.1 (needed for
@@ -343,6 +344,37 @@ const touchNav = createTouchNav({
     const hit = pickRay.intersectObjects([...tilesets.map((tiles) => tiles.group), ...contextModels], true)[0]
     return hit ? hit.point.clone() : null
   },
+})
+
+// The left button turns around the point pressed (pointer-orbit.js, Christian, 2026-10-24), in the standard view
+const pointerOrbit = createPointerOrbit({
+  controls,
+  camera,
+  surface: renderer.domElement,
+  maxPolar: ORBIT_UP,
+  requestRender: () => requestRender(),
+  pick: (x, y) => {
+    const box = renderer.domElement.getBoundingClientRect()
+    pickPointer.set(((x - box.left) / box.width) * 2 - 1, -((y - box.top) / box.height) * 2 + 1)
+    pickRay.setFromCamera(pickPointer, camera)
+    // As far as the model goes (another use of this ray may have left it short); the first surface shown (the raycaster
+    // does not skip hidden objects: the mockups of the zones online are there, hidden)
+    pickRay.far = Infinity
+    const shown = (object) => {
+      for (let o = object; o; o = o.parent) if (!o.visible) return false
+      return true
+    }
+    const hit = pickRay.intersectObjects([...tilesets.map((tiles) => tiles.group), ...contextModels, ...mockupModels], true).find((h) => shown(h.object))
+    return hit ? hit.point.clone() : null
+  },
+})
+
+// Diving (swimming), a double-click makes the point under the pointer the one the drag turns around (swim.js setPivot;
+// Christian, 2026-10-24)
+renderer.domElement.addEventListener('dblclick', (event) => {
+  if (!swim.looking || tour.active) return
+  const point = pointerOrbit.pick(event.clientX, event.clientY)
+  if (point) swim.setPivot(point)
 })
 
 // Draw only when something changed (camera, tiles, size): a scene redrawn 60 times per second for nothing
@@ -1940,6 +1972,8 @@ function renderLoop() {
     if (swim.update()) needsRender = true
     // Touch and double-tap navigation (touch-nav.js): a flight to a point, the orbit's centre kept ahead
     if (touchNav.update()) needsRender = true
+    // The left button's turn around the point pressed: its glide after release
+    if (pointerOrbit.update()) needsRender = true
     if (controls.update()) {
       keepInFront()
       needsRender = true

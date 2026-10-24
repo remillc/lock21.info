@@ -42,6 +42,18 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
   let drag = null
   let last = 0
   let fast = false
+  // A point to turn around (setPivot: a double-click, Christian, 2026-10-24): the drag circles the diver around it,
+  // looking at it, instead of turning the head; the head first turns to face it (PIVOT_TURN ms). A move by the keys
+  // forgets it
+  let pivot = null
+  let facing = null
+  const PIVOT_TURN = 500
+  const offset = new THREE.Vector3()
+  const toward = new THREE.Vector3()
+  const right = new THREE.Vector3()
+  const UP = new THREE.Vector3(0, 1, 0)
+  // A camera's lookAt turns its -z axis to the point (an Object3D's turns +z)
+  const looker = new THREE.PerspectiveCamera()
   window.addEventListener('keydown', (event) => {
     if (event.key === 'Shift') fast = true
   })
@@ -75,6 +87,22 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
   })
   element.addEventListener('pointermove', (event) => {
     if (!active || !looking || !drag || event.pointerId !== drag.id) return
+    if (pivot) {
+      // Around the pivot: a pixel turns by the angle a pixel covers (the background moves with the pointer); not over
+      // nor under it (PITCH_LIMIT from level); the walls stop the diver (move)
+      const perPixel = THREE.MathUtils.degToRad(camera.fov) / (element.clientHeight || 1)
+      facing = null
+      offset.subVectors(camera.position, pivot)
+      offset.applyAxisAngle(UP, -(event.clientX - drag.x) * perPixel)
+      right.crossVectors(UP, offset).normalize()
+      const tilted = offset.clone().applyAxisAngle(right, -(event.clientY - drag.y) * perPixel)
+      if (Math.abs(Math.asin(THREE.MathUtils.clamp(tilted.y / tilted.length(), -1, 1))) < PITCH_LIMIT) offset.copy(tilted)
+      moveBy(camera.position, toward.copy(pivot).add(offset).sub(camera.position))
+      camera.lookAt(pivot)
+      drag.x = event.clientX
+      drag.y = event.clientY
+      return
+    }
     euler.setFromQuaternion(camera.quaternion)
     euler.y -= (event.clientX - drag.x) * TURN
     euler.x = THREE.MathUtils.clamp(euler.x - (event.clientY - drag.y) * TURN, -PITCH_LIMIT, PITCH_LIMIT)
@@ -104,6 +132,18 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
         if (!held.has(code)) onKey?.(code, true)
         held.add(code)
       } else if (!down && held.delete(code)) onKey?.(code, false)
+    },
+    /**
+     * A point to turn around (a double-click while swimming): the head turns to face it, then the drag circles around
+     * it, until a key moves the diver; null forgets it
+     * @param {THREE.Vector3 | null} point
+     */
+    setPivot(point) {
+      pivot = point ? point.clone() : null
+      if (!pivot) return
+      looker.position.copy(camera.position)
+      looker.lookAt(pivot)
+      facing = { from: camera.quaternion.clone(), to: looker.quaternion.clone(), start: performance.now() }
     },
     /** Swimming: the drag turns the head */
     get looking() {
@@ -135,7 +175,17 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
       const now = performance.now()
       const dt = last ? Math.min((now - last) / 1000, 0.1) : 0
       last = now
+      // Turning to face a new pivot
+      if (facing) {
+        const k = Math.min((now - facing.start) / PIVOT_TURN, 1)
+        camera.quaternion.slerpQuaternions(facing.from, facing.to, 1 - (1 - k) ** 3)
+        if (k >= 1) facing = null
+        if (!held.size) return true
+      }
       if (!active || !held.size) return Boolean(drag)
+      // Swimming away: the pivot forgotten
+      pivot = null
+      facing = null
       move.set(0, 0, 0)
       for (const code of held) move.add(new THREE.Vector3(...MOVES[code]))
       if (!move.lengthSq()) return Boolean(drag)

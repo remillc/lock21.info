@@ -4,6 +4,12 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, turning with the left button around the point pressed (Christian, 2026-10-24; viewer/src/pointer-orbit.js):
+  the camera and its orbit's centre turn around the model's point under the pointer, which stays where it is on the
+  screen; a pixel dragged turns by the angle a pixel covers, so the background moves with the pointer; Ctrl or Shift
+  with the left button still pans. Diving, a double-click makes a point the one the drag turns around (the head turns
+  to face it; a movement key forgets it). The pick skips hidden objects (the mockups of the zones online) and is never
+  left short by another use of its ray. The /modele page's navigation help says so, and lists the guided tour.
 - 3D viewer, a guided tour (TODO #48, Christian, 2026-10-24): « Visite guidée », first in the bottom-right row, plays
   seven steps, each with a card (its number, title and text; back, next, close; Esc). A view: the camera flies there,
   then the usual navigation. A move: it travels along its points at its pace (through a gate passage, up to the
