@@ -310,6 +310,47 @@ const ktx2Loader = new KTX2Loader().setTranscoderPath(`${import.meta.env.BASE_UR
 // which holds no more than ETC1S does; BC1 (DXT1, half a byte per pixel) shows the same and halves the textures'
 // memory (TODO #55). Phones transcode ETC1S to ETC1/ETC2 already
 if (ktx2Loader.workerConfig.dxtSupported) ktx2Loader.workerConfig.bptcSupported = false
+watchTextures(ktx2Loader)
+
+// Telemetry on texture decoding (2026-10-24: an iPad Air's tiles came without their textures, about 3 MB each instead
+// of 12, and its first view never came): the formats the GPU takes, the first texture's decoding time, and a report
+// when one takes over TEXTURE_SLOW s (once) or fails (at most TEXTURE_ERRORS times)
+const TEXTURE_SLOW = 10
+const TEXTURE_ERRORS = 3
+function watchTextures(loader) {
+  const c = loader.workerConfig
+  log('textures', { astc: c.astcSupported, etc1: c.etc1Supported, etc2: c.etc2Supported, dxt: c.dxtSupported, bptc: c.bptcSupported, pvrtc: c.pvrtcSupported })
+  const create = loader._createTexture.bind(loader)
+  let first = true
+  let slowLogged = false
+  let errors = 0
+  let pending = 0
+  loader._createTexture = (buffer, config) => {
+    const started = performance.now()
+    pending++
+    const slow = setTimeout(() => {
+      if (slowLogged) return
+      slowLogged = true
+      log('texture-slow', { after: TEXTURE_SLOW, pending, bytes: buffer.byteLength })
+    }, TEXTURE_SLOW * 1000)
+    const done = () => {
+      clearTimeout(slow)
+      pending--
+    }
+    return create(buffer, config).then((texture) => {
+      done()
+      if (first) {
+        first = false
+        log('texture-first', { ms: Math.round(performance.now() - started), format: texture.format, size: `${texture.image?.width}x${texture.image?.height}` })
+      }
+      return texture
+    }, (error) => {
+      done()
+      if (++errors <= TEXTURE_ERRORS) log('texture-error', errorText(error))
+      throw error
+    })
+  }
+}
 
 // Sharper textures on surfaces seen at a grazing angle (floors, walls along the line of sight)
 const maxAnisotropy = renderer.capabilities.getMaxAnisotropy()

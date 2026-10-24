@@ -15,6 +15,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - 3D viewer, telemetry: a progress report every 10 s while loading (tiles, queue, errors, canvas), the notes shown,
   « Réessayer »; at most 5 tile errors sent per visit (all counted), and the visit's end always sent (39 tile errors
   had used up the quota of an iPad visit).
+- 3D viewer, telemetry on textures: whether WebAssembly works (the decoders run on it; Lockdown Mode turns it off), the
+  texture formats the GPU takes, the first texture's decoding time, and a report when one takes over 10 s or fails.
 - Site and viewer: the `hidden` attribute always hides (one global rule, no rule per element).
 
 - 3D viewer, outside the water too: the movement keys (W A S D, or the arrows; Shift faster) move the camera

@@ -38,6 +38,18 @@ export function log(type, data = {}) {
   }
 }
 
+/** WebAssembly (the texture and geometry decoders run on it): 'ok', 'missing' (Lockdown Mode, some browsers) or 'fails' */
+function wasmState() {
+  if (typeof WebAssembly !== 'object') return 'missing'
+  try {
+    // The smallest valid module: its header
+    new WebAssembly.Module(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0]))
+    return 'ok'
+  } catch {
+    return 'fails'
+  }
+}
+
 const errorText = (error) => ({ msg: String(error?.message ?? error).slice(0, 500), stack: String(error?.stack ?? '').slice(0, 2000) })
 
 /**
@@ -57,6 +69,7 @@ export function startTelemetry({ renderer, mobile, embedded }) {
     cores: navigator.hardwareConcurrency ?? null,
     gpu: debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER),
     maxTexture: gl.getParameter(gl.MAX_TEXTURE_SIZE),
+    wasm: wasmState(),
     profile: mobile ? 'mobile' : 'desktop',
     embedded,
     page: location.pathname + location.search,
