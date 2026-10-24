@@ -70,10 +70,11 @@
       </button>
     </div>
     <!-- The movement keys (main.js, swim.js), bottom left, on a computer (swimming underwater, moving outside); a key lights up
-         while held. Letters set from the keyboard's layout where the browser tells it -->
+         while held. Letters set from the keyboard's layout where the browser tells it. Each is a button too (TODO #61):
+         held with the mouse or a finger, it moves the camera as the key does -->
     <div class="swim-keys" hidden>
-      <div class="swim-row"><kbd data-code="KeyW">W</kbd></div>
-      <div class="swim-row"><kbd data-code="KeyA">A</kbd><kbd data-code="KeyS">S</kbd><kbd data-code="KeyD">D</kbd></div>
+      <div class="swim-row"><button class="swim-key" type="button" data-code="KeyW"><kbd>W</kbd></button></div>
+      <div class="swim-row"><button class="swim-key" type="button" data-code="KeyA"><kbd>A</kbd></button><button class="swim-key" type="button" data-code="KeyS"><kbd>S</kbd></button><button class="swim-key" type="button" data-code="KeyD"><kbd>D</kbd></button></div>
       <p class="swim-hint"></p>
       <!-- Opens the swim mode's help again (Material Symbols « help ») -->
       <button class="swim-help-button" type="button">

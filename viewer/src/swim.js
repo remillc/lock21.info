@@ -93,6 +93,18 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
     get active() {
       return active
     },
+    /**
+     * A movement key pressed or released other than on the keyboard: the card's buttons (main.js, TODO #61)
+     * @param {string} code - KeyW, KeyA, KeyS or KeyD
+     * @param {boolean} down
+     */
+    press(code, down) {
+      if (!(code in MOVES)) return
+      if (down && active) {
+        if (!held.has(code)) onKey?.(code, true)
+        held.add(code)
+      } else if (!down && held.delete(code)) onKey?.(code, false)
+    },
     /** Swimming: the drag turns the head */
     get looking() {
       return active && looking

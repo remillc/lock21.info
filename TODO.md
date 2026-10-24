@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#63**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#64**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -18,8 +18,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   (`--lod-texture-scale` below 0.5, a full re-tiling). Measured 2026-10-23 before that: the budget is full right after the start
   view (phone 462 of 450 MB with 15 tiles, desktop 1201 of 1200 MB), so turning or moving loads no new detail, during
   a gesture or after it
-- [ ] #61 The movement keys' card (bottom left, W A S D): make its keys real buttons (pressed with the mouse or a finger
-  they move the camera as the keyboard does; MD3, 48 dp targets), not only a picture of the keyboard
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
 
 ### Zones
@@ -61,6 +59,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #43 Check the site for accessibility issues (WCAG 2.2 AA): contrast in both themes, keyboard navigation and
   focus (menu, viewer frame, opt-out button), alt texts, headings order, the viewer's controls and the depth gauges
   (aria-hidden), French and English pages
+- [ ] #63 English URLs for the English site (e.g. /en/data-collection/dive-log instead of
+  /en/collecte/journal-des-plongees), the French ↔ English mapping of the pages kept (language switch, hreflang,
+  translation tracking in tools/i18n), old /en/ addresses redirected
 - [ ] #44 Usability audit of the site: what a first-time visitor (diver, heritage enthusiast, photogrammetrist) finds
   and understands, the paths from the home page to the model and the dive log, the 3D viewer's controls on desktop and
   phone, navigation and search, on both languages

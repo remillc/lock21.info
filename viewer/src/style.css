@@ -956,20 +956,48 @@ l21-tooltip[data-shown='true'] {
 }
 .swim-row {
   display: flex;
-  gap: 6px;
 }
-.swim-keys kbd {
+/* Each key a button (TODO #61): its 40 px keycap in a 48 px touch target (the button, its keycap inside it); held
+   with the mouse or a finger, it moves as the key does (main.js). State layers on the keycap, lit while held */
+.swim-key {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.swim-key kbd {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
   border: 1px solid #8f9482;
   border-bottom-width: 3px;
-  border-radius: 6px;
-  font: 600 13px/1 system-ui, sans-serif;
+  border-radius: 8px;
+  font: 600 14px/1 system-ui, sans-serif;
   transition: background 100ms, color 100ms;
 }
-.swim-keys kbd[data-down] {
+.swim-key:hover kbd {
+  background: rgb(227 230 216 / 8%);
+}
+.swim-key:focus-visible kbd {
+  background: rgb(227 230 216 / 10%);
+  outline: 2px solid #b8c97a;
+  outline-offset: 2px;
+}
+.swim-key:focus-visible {
+  outline: none;
+}
+.swim-key[data-down] kbd {
   background: #b8c97a;
   color: #12140e;
   border-color: #b8c97a;

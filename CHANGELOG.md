@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, the movement keys' card (TODO #61): its W A S D are buttons, held with the mouse or a finger they move
+  the camera as the keys do (lit while held; several at once); 40 px keycaps in 48 px touch targets, each with its
+  name (« Avancer », « Reculer », « À gauche », « À droite »).
 - 3D viewer, the bass (TODO #60): its swim in and its turn toward the diver are one movement: it slows over its last
   30 cm (to 15 % of its speed) and starts turning over its last 35 cm, its aim shifting from its path to the diver;
   it used to stop, then turn.

@@ -822,13 +822,33 @@ const swim = createSwim({
     swimKeys.querySelector(`[data-code="${arrow}"]`)?.toggleAttribute('data-down', down)
   },
 })
+// The card's keys are buttons too (TODO #61): held with the mouse or a finger, a key moves as on the keyboard (its own
+// pointer: several can be held at once, and one released outside its button still stops)
+for (const key of swimKeys.querySelectorAll('.swim-key')) {
+  const code = key.dataset.code
+  key.setAttribute('aria-label', t({ KeyW: 'keyForward', KeyS: 'keyBack', KeyA: 'keyLeft', KeyD: 'keyRight' }[code]))
+  key.addEventListener('pointerdown', (event) => {
+    key.setPointerCapture(event.pointerId)
+    swim.press(code, true)
+  })
+  const release = () => swim.press(code, false)
+  key.addEventListener('pointerup', release)
+  key.addEventListener('pointercancel', release)
+  key.addEventListener('lostpointercapture', release)
+  // Keyboard on the button itself (Space, Enter): one press, as a short tap
+  key.addEventListener('click', (event) => {
+    if (event.detail !== 0) return
+    swim.press(code, true)
+    setTimeout(() => swim.press(code, false), 250)
+  })
+}
 // The keys from the start, outside the water
 swim.setActive(true, false)
 // The keyboard's own letters for those positions (AZERTY: Z, Q, S, D), where the browser tells them
 navigator.keyboard?.getLayoutMap?.().then((layout) => {
-  for (const key of swimKeys.querySelectorAll('kbd')) {
+  for (const key of swimKeys.querySelectorAll('.swim-key')) {
     const letter = layout.get(key.dataset.code)
-    if (letter) key.textContent = letter.toUpperCase()
+    if (letter) key.querySelector('kbd').textContent = letter.toUpperCase()
   }
 }).catch(() => {})
 /** @param {boolean} on */
