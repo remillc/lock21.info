@@ -4,8 +4,22 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+## 0.14.0 - 2026-10-24
+
+- 3D model online (R2): zones 1, 4, 10, 11, 12 and 13 republished with Christian's new boolean cuts (zone 13's
+  `boolean.019` now applied: its Show in Render was off), zone 3 with its changed modifiers, all with their relief;
+  zone 16 at 15,000 triangles per m² (the gate door's planks and frame finer: 467,000 triangles, within 0.3 mm of the
+  source); the context with the resurfaced terrain (the hillside by the north wall's west stairs at the steps'
+  height, the ledge at their foot and the ridge east of them lowered); the mockups from the reworked .blend.
+- Publishing: a zone may have its own density (`tools/publish-model/zone-density.json`, used by `publish_zones.ps1`
+  without `-Density`; zone 16: 15,000).
+- 3D viewer, the guided tour: Back goes straight and quickly to the step before (up to 12 m/s and 6 m/s², the line of
+  sight turning twice as fast), no longer replaying that step's way in; the camera's place follows the planned one as a
+  critically damped spring and the motions keep their own clock (no jump after a slow frame, no hard braking when Next
+  interrupts a motion: it brakes at 1 m/s² first); flights take as long as 6 m/s and 2 m/s² allow; the step in the
+  address (`#tour-3`), replaced at each step, gone on free movement, kept through a reload.
 - 3D viewer, the tour's camera moves naturally (Christian, 2026-10-24: no turn may go from a speed to zero at once):
-  its line of sight follows the one wanted as a critically damped spring, at most 0.5 rad/s and 1 rad/s² (a bell-shaped
+  its line of sight follows the one wanted as a critically damped spring, at most 0.8 rad/s and 1.5 rad/s² (a bell-shaped
   speed, as a natural head turn: Flash and Hogan's minimum jerk; a game camera's SmoothDamp); a way with paces is
   driven from rest to rest at limited acceleration, its speeds smoothed into an S-curve; turns glide between lines of
   sight, not between the points looked at (which overshot).
@@ -16,7 +30,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   to face it; a movement key forgets it). The pick skips hidden objects (the mockups of the zones online) and is never
   left short by another use of its ray. The /modele page's navigation help says so, and lists the guided tour.
 - 3D viewer, a guided tour (TODO #48, Christian, 2026-10-24): « Visite guidée », first in the bottom-right row, plays
-  seven steps, each with a card (its number, title and text; back, next, close; Esc). A view: the camera flies there,
+  eight steps, each with a card (its number, title and text; back, next, close; Esc). A view: the camera flies there,
   then the usual navigation. A move: it travels along its points at its pace (through a gate passage, up to the
   gates). Flights rise above the walls on long ways and arrive along the step's line of sight; a step may give its
   own approach (down to the floor east of the spillway before the gate door), turn toward its point first, or pause
@@ -24,7 +38,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   underwater; the movement keys hidden while it plays.
 - 3D viewer, tiles: the library's requests for another pass (needs-update: a tile's children prepared a few at a
   time) now redraw; unheard, the tiles waited for the camera to move. The less-detail-far-away factor softened
-  (half its effect at 12 m, was 8 m: zone 18 stayed coarse 13 m away).
+  (half its effect at about 17 m, was 8 m: zone 18 stayed coarse 13 m away).
 - 3D viewer, zone 18 shown again from afar (Christian, 2026-10-24): the less-detail-far-away falloff subtracted from
   each tile's error, which reached 0 for zone 18's first tile 118 m away, and its root (refine ADD) then drew nothing.
   The error is now multiplied by a factor (down to a third far away), never 0. At the four views checked for 0.13.0,
