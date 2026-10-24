@@ -219,7 +219,9 @@ const PROFILES = {
   // Phones (Christian, 2026-10-23: old iPhones struggled): 300 MB (was 450: old iPhones ran out of memory before the
   // model was complete) and less fine detail (errorTarget 16, was 12)
   mobile: { errorTarget: 16, maxBytes: 300e6, pixelRatio: Math.min(window.devicePixelRatio, 1.5) },
-  desktop: { errorTarget: 6, maxBytes: 1200e6, pixelRatio: Math.min(window.devicePixelRatio, 2) },
+  // Computers (Christian, 2026-10-24): 1 GB (was 1.2: most visitors' graphics cards have far less memory than a
+  // high-end one), lean loading (setDetail)
+  desktop: { errorTarget: 6, maxBytes: 1000e6, pixelRatio: Math.min(window.devicePixelRatio, 2), lean: true },
 }
 const isMobile = (forced) => (forced ? forced === 'mobile' : window.matchMedia('(pointer: coarse)').matches)
 let mobile = isMobile(params.get('profile'))
@@ -361,15 +363,35 @@ function releaseAfterUpload(surface) {
     }
   }
 }
+// Less detail far away (Christian, 2026-10-24: a far zone should use less): the library's falloff lowers each tile's
+// error by up to DETAIL_FALLOFF of the profile's errorTarget with the distance, along 1 - e^-(d x DETAIL_DENSITY)²
+// (half of it at 8 m, nearly all from 20 m). The finest level was asked for up to about 25 m, where its 1.6 mm texels
+// are a tenth of a pixel; at one view zone 8's 49 finest tiles, 19 m away and behind a wall, held 94 MB of the budget
+// while nearby tiles were refused (108 refused, 44 with it).
+// Lean loading on a computer (the profile's lean; Christian, 2026-10-24: a smaller budget, most visitors' graphics cards
+// have far less memory): only the tiles in view are loaded, not their siblings nor their coarser ancestors as a
+// fallback. At one view, of 1.33 GB, 0.3 GB went to finest siblings not shown and 0.15 GB to ancestors not shown: 0.88
+// GB with it, the same detail in sight. A part of the view newly turned to stays empty a moment (under 2 s on a fast
+// connection) instead of coarse: phones, slower, keep the fallback
+const DETAIL_FALLOFF = 2 / 3
+const DETAIL_DENSITY = 0.1
+/** The profile's detail on a tile set: its error target, the falloff with distance, lean loading */
+function setDetail(tiles) {
+  tiles.errorTarget = profile.errorTarget
+  tiles.errorFalloff = profile.errorTarget * DETAIL_FALLOFF
+  tiles.errorFalloffDensity = DETAIL_DENSITY
+  tiles.loadAncestors = tiles.loadSiblings = !profile.lean
+}
 // The tiles' texture sizes on the GPU (TODO #69, 2026-10-24: up close, the walls stayed at a coarse level). The
 // library shows a tile's finer children only once all of them are loaded; since the relief (2026-10-19) each finest
 // tile also carried a 4096 px normal map, 22 of its 34 MB, and the 1.2 GB budget ran out before every child of a near
 // wall came in (zone 3: 6 of 7 loaded, 204 MB in memory, the wall still coarse). As each tile arrives: its normal map
-// at most NORMAL_MAX px (the relief shows the same; the photo keeps its full size), and on the coarser levels the photo
-// at most COARSE_MAX px (cap_coarse_textures.mjs does it for the tile sets published since 2026-10-24; zone 3's
-// coarse level still had an 8192 px one, 45 MB). The larger mipmap levels dropped, nothing encoded again (sizes stay
-// multiples of 4); the tile's memory counted again
-const NORMAL_MAX = 2048
+// at most NORMAL_MAX px (1 byte a pixel on the GPU, the photo half a byte: at 2048 it outweighed the tile's photo; the
+// relief at 1024 shows the joints and mussels still), and on the coarser levels the photo at most COARSE_MAX px
+// (cap_coarse_textures.mjs does it for the tile sets published since 2026-10-24; zone 3's coarse level still had an
+// 8192 px one, 45 MB). The finest photos keep their 4096 px (at 2048, a wall a metre away turned blocky). The larger
+// mipmap levels dropped, nothing encoded again (sizes stay multiples of 4); the tile's memory counted again
+const NORMAL_MAX = 1024
 const COARSE_MAX = 2048
 /**
  * @param {THREE.Object3D} model - a tile's scene
@@ -572,9 +594,13 @@ function meshEdges(mesh) {
   }
 }
 
-// Rebuilds every material after a change of display mode (sky, relief, wet, mesh)
+// Rebuilds every material after a change of display mode (sky, relief, wet, mesh): the scene's, and the loaded tiles
+// not shown now, which the library keeps out of the scene (Christian, 2026-10-24: in the mesh view, moving back showed
+// tiles with their texture)
 function rebuildMaterials() {
-  scene.traverse((child) => {
+  const roots = [scene]
+  for (const tiles of tilesets) tiles.forEachLoadedModel((model) => { if (!model.parent) roots.push(model) })
+  for (const root of roots) root.traverse((child) => {
     if (!child.isMesh || !child.userData.surface) return
     const old = child.material
     child.material = surfaceMaterial(child)
@@ -1241,7 +1267,7 @@ async function loadModel() {
     gltfLoader.setKTX2Loader(ktx2Loader)
     gltfLoader.setMeshoptDecoder(MeshoptDecoder) // geometry compressed by tools/publish-model/compress_tiles.mjs
     tiles.manager.addHandler(/\.(gltf|glb)$/g, gltfLoader)
-    tiles.errorTarget = profile.errorTarget
+    setDetail(tiles)
     coarseFirst(tiles)
     tiles.setCamera(tilesCamera)
     tiles.setResolutionFromRenderer(tilesCamera, renderer)
@@ -1497,7 +1523,7 @@ live.profile = (v) => {
     cache.maxBytesSize = profile.maxBytes
     cache.minBytesSize = profile.maxBytes * 0.6
   }
-  tilesets.forEach((t) => { t.errorTarget = profile.errorTarget })
+  tilesets.forEach(setDetail)
   if (aoPass) aoQuality()
   resize()
   // The other set of tiles (light on phones)

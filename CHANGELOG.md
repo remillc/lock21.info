@@ -4,6 +4,14 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, memory on a computer (Christian, 2026-10-24: most visitors' graphics cards have far less memory): tiles
+  budget 1 GB (was 1.2); lean loading, only the tiles in view (not their siblings nor their coarser ancestors as a
+  fallback; a part of the view newly turned to stays empty a moment instead of coarse; phones keep the fallback);
+  less detail far away (the library's error falloff: the finest level was asked for up to about 25 m); normal maps at
+  1024 px (at 2048 they outweighed the tiles' photos). At four reported views, 0.54 to 0.88 GB, nothing refused and
+  nothing coarse within 6 m (they needed 1.3 to 1.75 GB before); the browser's own memory 0.12 to 0.16 GB (was 0.77).
+- 3D viewer, the mesh view: tiles loaded but not shown when it was turned on kept their texture when they came back
+  into view (Christian, 2026-10-24).
 ## 0.13.0 - 2026-10-24
 
 - 3D model online (R2): zone 16 republished (2026-10-24-0839, with its light set) and the mockups from the latest
