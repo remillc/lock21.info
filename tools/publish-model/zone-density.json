@@ -1,0 +1,4 @@
+{
+  "_comment": "Triangles par m² après décimation pour les zones qui ne prennent pas la densité par défaut de publish_zones.ps1 (3000). Zone 16, une porte de vanne presque plane: la décimation y mettait peu de triangles, les bords et le cadre grossiers (Christian, 2026-10-24); petite (31 m²), elle peut en porter cinq fois plus.",
+  "zone 16": 15000
+}

@@ -20,7 +20,8 @@ Avec -Changed: lister les zones modifiées sans publier (npm run model:check).
 Nom du dossier de la nouvelle version (défaut: date et heure, yyyy-MM-dd-HHmm).
 
 .PARAMETER Density
-Triangles visés par m² après décimation (défaut 3000).
+Triangles visés par m² après décimation, pour toutes les zones de l'appel. Sans elle: la densité de la zone dans
+zone-density.json, sinon 3000.
 
 .PARAMETER Blend
 Fichier .blend de travail (défaut modeles\lock-21-publishing.blend).
@@ -67,6 +68,9 @@ if ($Changed) {
 }
 if (-not $Zones) { throw "Indiquer -Zones ou -Changed" }
 
+# Les densités propres à certaines zones (zone-density.json: "zone 16": 15000)
+$densities = Get-Content -Raw -Encoding UTF8 (Join-Path $PSScriptRoot "zone-density.json") | ConvertFrom-Json
+
 foreach ($zone in $Zones) {
     if ($zone -eq "context") {
         # Contexte (fillers + terrain): un .glb non tuilé
@@ -90,13 +94,17 @@ foreach ($zone in $Zones) {
     $started = Get-Date
     Write-Host "=== $zone"
 
+    # La densité de la zone: -Density, sinon zone-density.json, sinon 3000
+    $zoneDensity = if ($PSBoundParameters.ContainsKey('Density')) { $Density } elseif ($densities.$zone) { $densities.$zone } else { $Density }
+    if ($zoneDensity -ne 3000) { Write-Host "   densité: $zoneDensity triangles par m²" }
+
     # Préparation (remplace l'OBJ préparé précédent)
     if (Test-Path $prepared) { Remove-Item -Recurse -Force $prepared }
     # Windows PowerShell 5.1 traite la sortie d'erreur d'un programme comme fatale sous "Stop":
     # un échec de Blender sur une zone ne doit pas interrompre les suivantes
     $ErrorActionPreference = "Continue"
     & $Blender -b $Blend --factory-startup --python "$PSScriptRoot\prepare_zone.py" -- `
-        --zone $zone --density $Density --out $prepared *> $log
+        --zone $zone --density $zoneDensity --out $prepared *> $log
     $ErrorActionPreference = "Stop"
     if (-not (Test-Path (Join-Path $prepared "$slug.obj"))) {
         Get-Content $log | Select-String "Error|assert|Traceback|line \d+" | ForEach-Object { Write-Host "   $($_.Line)" }
