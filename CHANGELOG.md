@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, standard view: looking up (it couldn't: the camera stayed above the height of the point it turns
+  around). The camera may now go below that point, up to 171° from straight above it; a surface between them (the
+  floor, a wall) brings it in front of that surface, so it never looks from under the floor.
+
 - About page (TODO #57): the site's version at the bottom, in its own section, « Version », with its date and a link
   to the release notes (`SiteVersion.astro`, read from package.json and CHANGELOG.md at build time); the page becomes
   `about.mdx`, in French and English.

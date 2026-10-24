@@ -302,8 +302,11 @@ const controls = new OrbitControls(camera, renderer.domElement)
 // Development builds only: the viewer's parts for tests in the browser console (window.l21)
 if (import.meta.env.DEV) window.l21 = { THREE, renderer, scene, camera, controls, underwater, get tilesets() { return tilesets } }
 controls.enableDamping = true
-// The camera never goes below the height of the point it turns around: it can't look from under the floor
-controls.maxPolarAngle = Math.PI / 2 - 0.02
+// Looking up (Christian, 2026-10-24: the standard view couldn't): the camera may go below the point it turns around,
+// up to ORBIT_UP from straight above it; it then stays in front of the surfaces between them (keepInFront). It used
+// to stay above that point's height, so as never to look from under the floor
+const ORBIT_UP = Math.PI * 0.95
+controls.maxPolarAngle = ORBIT_UP
 // Touch navigation, the double-tap's flight (touch-nav.js): the model's point under the finger (the zones' tiles and
 // the context)
 const pickRay = new THREE.Raycaster()
@@ -1692,6 +1695,24 @@ function tileFacts() {
 }
 setEndFacts(tileFacts)
 
+// The orbiting camera lower than its point (looking up): a surface between them (the floor, a wall) brings it in
+// front of that surface, IN_FRONT m short, so it never looks from under the floor or inside a wall
+const IN_FRONT = 0.2
+const frontRay = new THREE.Raycaster()
+frontRay.firstHitOnly = true
+const toCamera = new THREE.Vector3()
+function keepInFront() {
+  if (camera.position.y >= controls.target.y) return
+  toCamera.subVectors(camera.position, controls.target)
+  const distance = toCamera.length()
+  if (distance < 1e-3) return
+  toCamera.divideScalar(distance)
+  frontRay.set(controls.target, toCamera)
+  frontRay.far = distance
+  const hit = frontRay.intersectObjects([...tilesets.map((tiles) => tiles.group), ...contextModels], true)[0]
+  if (hit) camera.position.copy(controls.target).addScaledVector(toCamera, Math.max(0.05, hit.distance - IN_FRONT))
+}
+
 // Paused while AR runs (android-ar.js has its own renderer)
 let lastFrame = performance.now()
 // Underwater, the share of the sun's lost direct light given back as the sky's diffuse light
@@ -1707,7 +1728,10 @@ function renderLoop() {
     if (swim.update()) needsRender = true
     // Touch and double-tap navigation (touch-nav.js): a flight to a point, the orbit's centre kept ahead
     if (touchNav.update()) needsRender = true
-    if (controls.update()) needsRender = true
+    if (controls.update()) {
+      keepInFront()
+      needsRender = true
+    }
   }
   // Underwater: the camera stays below the surface, and the caustics and particles move (a frame every time)
   if (underwater.on) {
