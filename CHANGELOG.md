@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, within the site (TODO #66): in both views and whatever the navigation, the camera stays within the
+  zones' bounds plus 10 m; leaving them, it is brought back to their edge, the orbit's point with it. Underwater it
+  already stays below the surface.
 - 3D viewer, the bass in real colours (Christian, 2026-10-24): golden brown, bronze, olive green or dark brown, drawn
   for each fish and for the curious bass on each visit (a multiplier of the model's light tan texture), darker in clear
   water and paler in murky water as the species (WDFW, Tackleshare); one GPU program for all (the colour a uniform:

@@ -1762,6 +1762,41 @@ function keepAboveFloor() {
   return true
 }
 
+// Within the model's area (TODO #66, Christian, 2026-10-24), in both views and whatever the navigation: the zones'
+// bounds together (the scene's frame), SITE_MARGIN m wider on every side to step back and see the whole lock; a camera
+// that leaves them horizontally is brought back to their edge, the orbit's point moved with it (the view keeps its
+// angle). Underwater it also stays below the surface (the render loop)
+const SITE_MARGIN = 10
+const site = new THREE.Box3()
+const zoneBox = new THREE.Box3()
+let siteFor = null
+function siteBounds() {
+  if (siteFor === tilesets && !site.isEmpty()) return site
+  site.makeEmpty()
+  for (const tiles of tilesets) {
+    if (!tiles.getBoundingBox(zoneBox)) continue
+    tiles.group.updateMatrixWorld()
+    site.union(zoneBox.applyMatrix4(tiles.group.matrixWorld))
+  }
+  if (site.isEmpty()) return null
+  siteFor = tilesets
+  return site.expandByScalar(SITE_MARGIN)
+}
+function keepInSite() {
+  const bounds = siteBounds()
+  if (!bounds) return false
+  const x = THREE.MathUtils.clamp(camera.position.x, bounds.min.x, bounds.max.x) - camera.position.x
+  const z = THREE.MathUtils.clamp(camera.position.z, bounds.min.z, bounds.max.z) - camera.position.z
+  if (!x && !z) return false
+  camera.position.x += x
+  camera.position.z += z
+  if (!swim.looking) {
+    controls.target.x += x
+    controls.target.z += z
+  }
+  return true
+}
+
 // Paused while AR runs (android-ar.js has its own renderer)
 let lastFrame = performance.now()
 // Underwater, the share of the sun's lost direct light given back as the sky's diffuse light
@@ -1782,6 +1817,8 @@ function renderLoop() {
       needsRender = true
     }
   }
+  // Within the site, in both views (keepInSite)
+  if (keepInSite()) needsRender = true
   // Underwater: the camera stays below the surface, and the caustics and particles move (a frame every time)
   if (underwater.on) {
     if (camera.position.y > SURFACE_Y - 0.5) camera.position.y = SURFACE_Y - 0.5
