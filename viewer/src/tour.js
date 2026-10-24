@@ -38,6 +38,9 @@ const ACCEL = 0.4
 const PROFILE_STEP = 0.05
 // A line of sight given as a direction (a step's looks: { dir }) aims this far along it
 const LOOK_FAR = 20
+// Never a fast turn (Christian, 2026-10-24): the line of sight turns at most this fast (rad/s), whatever a step asks;
+// a flight that arrives before its turn is done finishes it in place
+const MAX_TURN = 0.5
 
 const UP = new THREE.Vector3(0, 1, 0)
 // Minimum jerk (the smoothest start and stop: no jolt in the acceleration, as a natural movement), for the turns and
@@ -58,10 +61,11 @@ const camOf = (cam) => ({ position: new THREE.Vector3(cam[0], cam[1], cam[2]), t
  * @param {() => void} [options.onStart] - the tour starts (the standard view, the movement keys hidden)
  * @param {() => void} [options.onEnd] - the tour ends
  * @param {(type: string, data?: object) => void} [options.log] - telemetry
+ * @param {(index: number) => void} [options.onStep] - a step shown (its index), or -1 when the tour ends
  * @param {(position: THREE.Vector3) => number} [options.headroom] - the free height above a point (m): a flight rises
  *   no higher than it allows (from inside a passage, Next pressed during a move, it rose through the lintel)
  */
-export function createTour({ steps, camera, controls, requestRender, onStart, onEnd, log, headroom }) {
+export function createTour({ steps, camera, controls, requestRender, onStart, onEnd, log, headroom, onStep }) {
   const button = /** @type {HTMLButtonElement} */ (document.querySelector('.tour-button'))
   const card = /** @type {HTMLElement} */ (document.querySelector('.tour-card'))
   const count = card.querySelector('.tour-count')
@@ -77,6 +81,10 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   close.dataset.tooltip = t('tourClose')
 
   let index = -1
+  // The line of sight the camera actually has (MAX_TURN), and when it was last turned
+  const sight = new THREE.Vector3()
+  const wanted = new THREE.Vector3()
+  let sightTime = 0
   /** @type {{ begin: (now: number) => void, run: (now: number) => boolean, hurry?: (now: number) => void }[]} the motions
    *  left, the first running */
   let motions = []
@@ -129,8 +137,9 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
           }
           speed[0] = 0
           speed[n] = 0
-          for (let i = 1; i <= n; i++) speed[i] = Math.min(speed[i], Math.sqrt(speed[i - 1] ** 2 + 2 * ACCEL * ds))
-          for (let i = n - 1; i >= 0; i--) speed[i] = Math.min(speed[i], Math.sqrt(speed[i + 1] ** 2 + 2 * ACCEL * ds))
+          const accel = step.accel ?? ACCEL
+          for (let i = 1; i <= n; i++) speed[i] = Math.min(speed[i], Math.sqrt(speed[i - 1] ** 2 + 2 * accel * ds))
+          for (let i = n - 1; i >= 0; i--) speed[i] = Math.min(speed[i], Math.sqrt(speed[i + 1] ** 2 + 2 * accel * ds))
           profile = new Float64Array(n + 1)
           for (let i = 1; i <= n; i++) profile[i] = profile[i - 1] + (ds / Math.max((speed[i - 1] + speed[i]) / 2, 0.02)) * 1000
           duration = profile[n]
@@ -244,6 +253,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   function show(i) {
     index = i
     const step = steps[i]
+    onStep?.(i)
     count.textContent = t('tourCount', { n: i + 1, total: steps.length })
     title.textContent = step.title[lang] ?? step.title.fr
     text.textContent = step.text[lang] ?? step.text.fr
@@ -280,7 +290,9 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     if (index < 0) return
     log?.('tour', { action: 'end', step: index + 1, of: steps.length })
     index = -1
+    onStep?.(-1)
     motions = []
+    sightTime = 0
     controls.enabled = true
     card.classList.remove('open')
     hideTimer = setTimeout(() => {
@@ -309,14 +321,31 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     },
     /** Each frame: the running motion; true while it moves the camera */
     update() {
-      if (!motions.length) return false
+      if (!motions.length && !sightTime) return false
       const now = performance.now()
-      if (motions[0].run(now)) {
+      // The line of sight before the motion moves the camera and its point
+      if (!sightTime) sight.subVectors(controls.target, camera.position).normalize()
+      const dt = sightTime ? Math.min((now - sightTime) / 1000, 0.1) : 0
+      sightTime = now
+      if (motions.length && motions[0].run(now)) {
         motions.shift()
         if (motions.length) motions[0].begin(now)
-        else controls.enabled = true
       }
+      // The line of sight wanted, reached at MAX_TURN at most; the point looked at kept at its distance
+      const distance = Math.max(controls.target.distanceTo(camera.position), 0.1)
+      wanted.subVectors(controls.target, camera.position).normalize()
+      const angle = sight.angleTo(wanted)
+      const step = MAX_TURN * dt
+      if (angle > step) {
+        sight.lerp(wanted, step / angle).normalize()
+        controls.target.copy(camera.position).addScaledVector(sight, distance)
+      } else sight.copy(wanted)
       camera.lookAt(controls.target)
+      // Done when the motions are and the line of sight has caught up
+      if (!motions.length && angle <= step) {
+        sightTime = 0
+        controls.enabled = true
+      }
       return true
     },
   }

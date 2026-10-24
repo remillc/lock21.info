@@ -1043,6 +1043,12 @@ const tour = createTour({
   controls,
   requestRender: () => requestRender(),
   log,
+  // The step in the address (the debugging setting tourHash): #tour-3, each replacing the last (no new history entry),
+  // gone when the tour ends
+  onStep: (i) => {
+    tourHash = i >= 0 ? `#tour-${i + 1}` : ''
+    updateAddress()
+  },
   // The free height above a point: a ray up to the model's surfaces (tiles, context)
   headroom: (position) => {
     pickRay.set(position, UP)
@@ -1637,11 +1643,19 @@ function keepCamera() {
     sessionStorage.setItem(CAM_KEY, [...camera.position.toArray(), ...controls.target.toArray()].map((n) => n.toFixed(2)).join(','))
   } catch {}
 }
+// The tour's step in the address (the advanced setting « Étape de la visite dans l'adresse », for debugging)
+let tourHashOn = params.get('tourHash') === '1'
+let tourHash = ''
+live.tourHash = (v) => {
+  tourHashOn = v === '1'
+  updateAddress()
+}
 function updateAddress() {
   keepCamera()
-  history.replaceState(null, '', viewUrl())
+  const hash = tourHashOn ? tourHash : ''
+  history.replaceState(null, '', viewUrl() + hash)
   // The /modele page shows the same query string in its own address, so that copying it shares this view
-  if (embedded) window.parent.postMessage({ type: 'lock21:cam', search: location.search }, location.origin)
+  if (embedded) window.parent.postMessage({ type: 'lock21:cam', search: location.search, hash }, location.origin)
 }
 let urlTimer = 0
 controls.addEventListener('change', () => {

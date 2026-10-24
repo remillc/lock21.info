@@ -100,6 +100,7 @@ export function settingsSchema({ mobile }) {
         { key: 'profile', label: t('profile'), type: 'select', def: '', options: [['', t('profileAuto')], ['desktop', t('profileDesktop')], ['mobile', t('profileMobile')]] },
         { key: 'stats', label: t('stats'), type: 'toggle', def: '0' },
         { key: 'mesh', label: t('meshView'), hint: t('meshViewHint'), type: 'toggle', def: '0', remember: false },
+        { key: 'tourHash', label: t('tourHash'), hint: t('tourHashHint'), type: 'toggle', def: '0' },
         { key: 'tone', label: t('tone'), type: 'select', def: 'agx', options: [['agx', 'AgX'], ['neutral', t('toneNeutral')], ['aces', 'ACES'], ['none', t('toneNone')]] },
       ],
     },

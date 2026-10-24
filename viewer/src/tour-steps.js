@@ -24,6 +24,7 @@
  *   seconds; the camera sets off a little before it ends (tour.js TURN_OVERLAP)
  * @property {number[]} [paces] - with approach: a speed (m/s) for each stretch between its points (from the camera to
  *   the first, ..., from the last to the step's camera), instead of flightPace
+ * @property {number} [accel] - with paces: the most the speed changes (m/s²; tour.js ACCEL otherwise)
  * @property {number} [flightPace] - the flight into the step at this mean speed (m/s), instead of its usual length
  * @property {number} [turn] - on the flight into the step, the camera turns toward the step's point first, within
  *   this share of the flight (otherwise gradually, all along it)
@@ -68,10 +69,13 @@ export const TOUR_STEPS = [
   {
     kind: 'view',
     cam: [-18.3, 1.55, 8.64, -17.06, -0.43, 10.55],
-    // From step 2 (Christian, 2026-10-24): turning toward the door first, down close to the floor east of the spillway
-    // (clear of its bays and of the mockups of zones 5 and 6), then low to the door
-    approach: [[-12, 9, -1], [-12, 1.8, 1], [-15.5, 1.7, 6]],
-    turn: 0.35,
+    // From step 2 (Christian, 2026-10-24: the first try's fast turn was horrible): turning around in place toward the
+    // door, then out over the edge east of the piers' ends and plunging toward the floor, looking at the door all the
+    // way, the dive levelling off near the floor into a glide to the door. Clear of every surface (1.5 m at least)
+    approach: [[-24, 9.2, -12], [-18, 5.5, -5], [-14.5, 2.1, 0], [-16.3, 1.8, 5.2]],
+    looks: [[-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55]],
+    turnFirst: 5,
+    paces: [1.2, 2.2, 1.6, 1.0, 0.7],
     title: { fr: 'Une porte de vanne', en: 'A gate door' },
     text: {
       fr: 'Une des portes des vannes du déversoir, couchée sur le fond (zone 16). Le fer de son cadre est rongé par la rouille.',
@@ -81,6 +85,11 @@ export const TOUR_STEPS = [
   {
     kind: 'move',
     from: [-27.28, 2.02, -16.28, -61.37, -7.37, -21.45],
+    // From step 3 (Christian, 2026-10-24: accelerating softly while the way plunges): up slowly out of the door's area,
+    // over the floor east of the piers' ends, then diving into the bay, faster as it goes down, braking only at the
+    // end, along the move's line of sight. Clear of every surface (1.3 m at least)
+    approach: [[-18.4, 5.2, 5.5], [-19.0, 7.6, -2], [-20.5, 6.0, -9.5], [-23.6, 3.2, -15.0]],
+    paces: [0.8, 1.4, 1.9, 2.3, 0.9],
     // Through the passage in line with the start (Christian, 2026-10-24: it went through the walls), in its middle: the
     // passages are 1.1 m wide (z -17.2 to -16.1 for this one) and 1.1 m high (y 1.8 to 2.9), their piers 0.8 m wide
     // and 3.1 m long (x -32.7 to -35.8); measured with the finest tiles, every surface counted

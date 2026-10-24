@@ -279,7 +279,8 @@ const updated = zones.updated
       const frame = this.querySelector('iframe')
       if (event.origin !== location.origin || event.source !== frame?.contentWindow) return
       if (event.data?.type === 'lock21:cam' && typeof event.data.search === 'string') {
-        history.replaceState(history.state, '', location.pathname + event.data.search)
+        // (and the tour's step, a debugging setting of the viewer: #tour-3, or none)
+        history.replaceState(history.state, '', location.pathname + event.data.search + (typeof event.data.hash === 'string' ? event.data.hash : ''))
       }
     }
 
