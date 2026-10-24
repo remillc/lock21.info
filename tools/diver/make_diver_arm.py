@@ -295,24 +295,27 @@ FOREARM_SPAN = 0.07
 behind = sleeve_slice(nominal - hand_frame.col[0] * FOREARM_SPAN)
 forearm = (centre - sum(behind, Vector()) / len(behind)).normalized()
 back = (hand_frame.col[1] - forearm * hand_frame.col[1].dot(forearm)).normalized()
-top = max((p - centre).dot(back) for p in slab)
-computer_at = centre + back * top
-to_eye = -computer_at.normalized()
-to_eye = (to_eye - forearm * to_eye.dot(forearm)).normalized()
+# On the side of the forearm that faces the eye (Christian, 2026-10-24: on the back of the wrist, it showed beside the
+# arm from the eye): the sleeve's surface toward the eye, seen in the middle of the forearm
+toward = -centre.normalized()
+toward = (toward - forearm * toward.dot(forearm)).normalized()
+top = max((p - centre).dot(toward) for p in slab)
+computer_at = centre + toward * top
+to_eye = toward
 facing = back.lerp(to_eye, COMPUTER_TILT)
 case_turn = (frame(forearm, facing) @ frame(Vector((0, 1, 0)), Vector((0, 0, 1))).inverted()).to_4x4()
 # Raised off the sleeve along the back of the wrist (tilted, its edge sank in; along its tilted face, it slid to one
 # side; Christian, 2026-10-24): its underside (the strap bars) plus what the tilt lowers its edge by; 2.5 cm nearer the
 # elbow than first placed
 COMPUTER_SCALE = 0.85
-tilt = back.angle(facing)
+tilt = toward.angle(facing)
 COMPUTER_RAISE = COMPUTER_SCALE * (0.0135 + 0.5 * 0.071 * math.sin(tilt))
 # Its long side along the forearm, the picture reading left to right in the view (Christian, 2026-10-24: not from far
 # to near): a quarter turn about its face
 COMPUTER_SPIN = math.radians(90)
 # Drawn at COMPUTER_SCALE of its real size (Christian, 2026-10-24: 85 %; the real one looked too large on the wrist
 # from the eye), set above
-case_at = (Matrix.Translation(computer_at + back * COMPUTER_RAISE) @ case_turn
+case_at = (Matrix.Translation(computer_at + toward * COMPUTER_RAISE) @ case_turn
            @ Matrix.Rotation(COMPUTER_SPIN, 4, 'Z') @ Matrix.Scale(COMPUTER_SCALE, 4))
 WIDTH, LENGTH, HEIGHT = 0.081, 0.071, 0.02    # across the wrist, along the forearm, the case's thickness
 
