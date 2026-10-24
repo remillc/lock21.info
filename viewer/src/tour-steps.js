@@ -19,6 +19,8 @@
  *   positions), instead of its own curve
  * @property {[number, number, number][]} [looks] - with approach: the point looked at as the camera passes each approach
  *   point (one each), the line of sight gliding from one to the next
+ * @property {number} [turnFirst] - with looks: first a turn in place toward the first point looked at, over this many
+ *   seconds; the camera sets off a little before it ends (tour.js TURN_OVERLAP)
  * @property {number[]} [paces] - with approach: a speed (m/s) for each stretch between its points (from the camera to
  *   the first, ..., from the last to the step's camera), instead of flightPace
  * @property {number} [flightPace] - the flight into the step at this mean speed (m/s), instead of its usual length
@@ -50,8 +52,11 @@ export const TOUR_STEPS = [
     // Low, looking about level toward the pillars and the pier to climb (the floor in view); climbing, looking up toward
     // the view's point (Christian, 2026-10-24)
     looks: [[-29, 2.2, -20.5], [-31, 3.2, -20], [-33.72, 8.21, -20.01], [-33.72, 8.21, -20.01]],
-    // Low over the floor, slower up the pier (Christian, 2026-10-24), then to the view
-    paces: [2, 2, 0.8, 0.8, 1.2],
+    // Low over the floor, slower up the pier (Christian, 2026-10-24), then to the view; it first turns toward the first
+    // column, setting off near the end of the turn
+    // (the climb 1.3333 times slower than its first 0.8 m/s: Christian, 2026-10-24)
+    paces: [2, 2, 0.6, 0.6, 1.2],
+    turnFirst: 2.5,
     title: { fr: 'Au-dessus des piliers', en: 'Above the piers' },
     text: {
       fr: 'Le dessus du déversoir: les piliers, la passerelle qui les relie et les mécanismes qui levaient les vannes. Le haut des murs est à 40 pieds (12 m) sous la surface.',

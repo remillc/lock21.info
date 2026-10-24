@@ -29,6 +29,8 @@ const HURRY = 800
 // early, the point looked at reaches the step's within this share of the flight
 const APPROACH_TIME = [2, 9]
 const APPROACH_PER_METRE = 0.12
+// A turn first (a step's turnFirst): the camera sets off after this share of it
+const TURN_OVERLAP = 0.8
 
 const UP = new THREE.Vector3(0, 1, 0)
 const easeInOut = (k) => (k < 0.5 ? 4 * k * k * k : 1 - (-2 * k + 2) ** 3 / 2)
@@ -92,7 +94,11 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
       // How far the line of sight turns
       const angle = from.target.clone().sub(from.position).angleTo(to.target.clone().sub(to.position))
       if (step?.approach) {
-        if (step.looks) looks = [from.target, ...step.looks.map((p) => new THREE.Vector3(...p)), to.target]
+        if (step.looks) {
+          const points = step.looks.map((p) => new THREE.Vector3(...p))
+          // Turning first: the line of sight starts from the first point looked at (the turn brings it there)
+          looks = [step.turnFirst ? points[0] : from.target, ...points, to.target]
+        }
         curve = new THREE.CatmullRomCurve3([from.position, ...step.approach.map((p) => new THREE.Vector3(...p)), to.position], false, 'centripetal')
         if (step.paces) {
           // A time for each stretch between the points, by its length and its pace; the curve's parameter is i / n at
@@ -124,7 +130,10 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     return {
       begin,
       run(now) {
-        const k = Math.min((now - start) / duration, 1)
+        // A turn in place first (the step's turnFirst), the move setting off before it ends
+        const turnTime = step?.turnFirst && looks ? step.turnFirst * 1000 : 0
+        const elapsed = now - start
+        const k = THREE.MathUtils.clamp((elapsed - turnTime * TURN_OVERLAP) / duration, 0, 1)
         const e = easeInOut(k)
         let t
         if (times) {
@@ -145,7 +154,9 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
           const at = t * (looks.length - 1)
           const i = Math.min(Math.floor(at), looks.length - 2)
           const f = THREE.MathUtils.smoothstep(at - i, 0, 1)
-          controls.target.lerpVectors(looks[i] ?? from.target, looks[i + 1], f)
+          controls.target.lerpVectors(looks[i], looks[i + 1], f)
+          // Still turning: from where it looked, toward that line of sight
+          if (elapsed < turnTime) controls.target.lerpVectors(from.target, controls.target, easeInOut(elapsed / turnTime))
         } else {
           // Turning first (the step's turn: within that share of the flight, easing out), or along with the flight
           const turn = step?.turn ? 1 - (1 - Math.min(k / step.turn, 1)) ** 3 : e
