@@ -26,6 +26,12 @@ const DISTANCE = 1
 const VISIBILITY_SHARE = 0.5
 // Fleeing (Christian, 2026-10-23: it rushes out): a quick turn away and a dash, speeding up over its first second
 const SWIM = 0.16
+// Arriving (TODO #60, Christian, 2026-10-24: the turn toward the diver should follow the swim in, not start after a
+// stop): over its last SLOW_DOWN m it slows to SLOWEST of its speed, and over its last TURN_BEFORE m its aim shifts
+// from its path to the diver, so it is already turning when it arrives
+const SLOW_DOWN = 0.3
+const SLOWEST = 0.15
+const TURN_BEFORE = 0.35
 const FLEE = 2.2
 const TURN = 1.4
 const FLEE_TURN = 7
@@ -139,6 +145,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   let speedNow = 0
   const ahead = new THREE.Vector3()
   const toCamera = new THREE.Vector3()
+  const aim = new THREE.Vector3()
   let heading = 0
   let lastPlan = null
   let leftAt = 0
@@ -297,8 +304,13 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         if (react) leave(react === 'calm', camera)
         else if (left < 0.02) state = 'turning'
         else {
-          face(step, dt)
-          root.position.addScaledVector(step.normalize(), Math.min(left, SWIM * slow * dt))
+          step.normalize()
+          // Its aim: the path, then more and more the diver
+          toCamera.copy(camera.position).sub(root.position).setY(0).normalize()
+          const toward = THREE.MathUtils.smoothstep(1 - left / TURN_BEFORE, 0, 1)
+          face(aim.copy(step).lerp(toCamera, toward), dt)
+          const speed = SWIM * slow * Math.max(SLOWEST, Math.min(1, left / SLOW_DOWN))
+          root.position.addScaledVector(step, Math.min(left, speed * dt))
         }
       } else if (state === 'turning' || state === 'staying') {
         // Facing the diver, its eyes on them, following them as they move; a sudden move sends it away, and it gets bored

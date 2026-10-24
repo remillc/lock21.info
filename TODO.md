@@ -18,8 +18,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   (`--lod-texture-scale` below 0.5, a full re-tiling). Measured 2026-10-23 before that: the budget is full right after the start
   view (phone 462 of 450 MB with 15 tiles, desktop 1201 of 1200 MB), so turning or moving loads no new detail, during
   a gesture or after it
-- [ ] #60 The bass: make the change from swimming in to turning toward the diver more fluid (`viewer/src/bass.js`:
-  the « arriving » state stops, then « turning » starts its turn)
 - [ ] #61 The movement keys' card (bottom left, W A S D): make its keys real buttons (pressed with the mouse or a finger
   they move the camera as the keyboard does; MD3, 48 dp targets), not only a picture of the keyboard
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
