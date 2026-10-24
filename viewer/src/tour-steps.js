@@ -89,11 +89,11 @@ export const TOUR_STEPS = [
     approach: [[-24, 9.2, -12], [-18, 5.5, -5], [-13.09, 2.1, 1.41], [-11.6, 1.9, 3.6], [-12.0, 1.8, 6.4], [-14.4, 1.7, 8.0]],
     looks: [[-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55]],
     // (about 30 % faster than first: Christian, 2026-10-24, too slow)
-    turnFirst: 3.2,
+    turnFirst: 2.6,
     // (speeding up harder in the plunge, then 50 % faster: Christian, 2026-10-24); the loop slower
-    // (all 25 % faster: Christian, 2026-10-24)
-    paces: [2, 6.4, 3.9, 2, 1.6, 1.4, 1.1],
-    accel: 2.6,
+    // (all 25 % faster, twice: Christian, 2026-10-24)
+    paces: [2.5, 8, 4.9, 2.5, 2, 1.75, 1.4],
+    accel: 3.25,
     title: { fr: 'Une porte de vanne', en: 'A gate door' },
     text: {
       fr: 'Une des portes des vannes du déversoir, couchée sur le fond (zone 16). Le fer de son cadre est rongé par la rouille.',
