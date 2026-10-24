@@ -364,8 +364,9 @@ function releaseAfterUpload(surface) {
   }
 }
 // Less detail far away (Christian, 2026-10-24: a far zone should use less): each tile's error is multiplied by
-// 1 - DETAIL_FALLOFF x (1 - e^-(d x DETAIL_DENSITY)²) with its distance d (a third of the loss at 6 m, nearly all from
-// 20 m: there a tile needs three times the error to refine). A factor, not the library's errorFalloff, which subtracts:
+// 1 - DETAIL_FALLOFF x (1 - e^-(d x DETAIL_DENSITY)²) with its distance d (a sixth of the loss at 6 m, half at 12 m,
+// nearly all from 30 m: there a tile needs three times the error to refine; at 0.1, zone 18 stayed coarse 13 m away).
+// A factor, not the library's errorFalloff, which subtracts:
 // zone 18's first tile, 118 m away, got an error of 0, and its root (refine ADD: a child is skipped when the parent
 // meets the error target there) then drew nothing (Christian, 2026-10-24: zone 18 not showing from afar). The finest level was asked for up to about 25 m, where its 1.6 mm texels
 // are a tenth of a pixel; at one view zone 8's 49 finest tiles, 19 m away and behind a wall, held 94 MB of the budget
@@ -376,7 +377,7 @@ function releaseAfterUpload(surface) {
 // GB with it, the same detail in sight. A part of the view newly turned to stays empty a moment (under 2 s on a fast
 // connection) instead of coarse: phones, slower, keep the fallback
 const DETAIL_FALLOFF = 2 / 3
-const DETAIL_DENSITY = 0.1
+const DETAIL_DENSITY = 0.07
 /** The profile's detail on a tile set: its error target, the falloff with distance, lean loading */
 function setDetail(tiles) {
   tiles.errorTarget = profile.errorTarget
@@ -1307,6 +1308,9 @@ async function loadModel() {
       requestRender()
     })
     tiles.addEventListener('load-model', requestRender)
+    // Another pass wanted: a tile's children prepared a few at a time (maxTilesProcessed), then the traversal goes on.
+    // Unheard, it stopped until the camera moved: far zones stayed missing at a still view (Christian, 2026-10-24)
+    tiles.addEventListener('needs-update', requestRender)
     tiles.addEventListener('tile-visibility-change', requestRender)
     tiles.addEventListener('load-tile-set', requestRender)
     world.add(tiles.group)

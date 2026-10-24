@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, tiles: the library's requests for another pass (needs-update: a tile's children prepared a few at a
+  time) now redraw; unheard, the tiles waited for the camera to move. The less-detail-far-away factor softened
+  (half its effect at 12 m, was 8 m: zone 18 stayed coarse 13 m away).
 - 3D viewer, zone 18 shown again from afar (Christian, 2026-10-24): the less-detail-far-away falloff subtracted from
   each tile's error, which reached 0 for zone 18's first tile 118 m away, and its root (refine ADD) then drew nothing.
   The error is now multiplied by a factor (down to a third far away), never 0. At the four views checked for 0.13.0,
