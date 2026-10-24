@@ -55,10 +55,9 @@ const BEND_LAG = 0.06
 // Each spine bone's whole bend (the swimming wave and the turn together, rad), head to tail: added up, they folded the
 // tail to 1.25 rad leaving (Christian, 2026-10-24: not natural)
 const BEND_LIMIT = [0.2, 0.3, 0.4, 0.5, 0.6]
-// Facing the diver (Christian, 2026-10-24: make that angle vary): it holds an angle up to GAZE rad to one side or the
-// other, a new one every GAZE_EVERY s (at random), as a fish looking around
-const GAZE = 0.5
-const GAZE_EVERY = [2, 5]
+// Facing the diver (Christian, 2026-10-24: each visit a slightly different angle): it faces them at an angle drawn at
+// random for each visit, up to GAZE rad to one side or the other, held for the whole visit
+const GAZE = 0.3
 // How long it watches the diver before it gets bored (s, at random in between: Christian, 2026-10-23), its calm
 // departure's speed (m/s), and its gentle hover (m)
 const STAY = [8, 15]
@@ -169,7 +168,6 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   let speedNow = 0
   let leaveSpeed = 0
   let gaze = 0
-  let gazeUntil = 0
   /** @type {[number, number][]} time and turning rate, newest first (the turn running down the body) */
   const turns = []
   const ahead = new THREE.Vector3()
@@ -319,6 +317,8 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         root.visible = true
         near = camera.position.distanceTo(to)
         cameraAtArrival.copy(camera.position)
+        // This visit's angle to the diver
+        gaze = (Math.random() * 2 - 1) * GAZE
         unseen = 0
         seen = false
       }
@@ -336,7 +336,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         else {
           step.normalize()
           // Its aim: the path, then more and more the diver
-          toCamera.copy(camera.position).sub(root.position).setY(0).normalize()
+          toCamera.copy(camera.position).sub(root.position).setY(0).normalize().applyAxisAngle(UP, gaze)
           const toward = THREE.MathUtils.smoothstep(1 - left / TURN_BEFORE, 0, 1)
           face(aim.copy(step).lerp(toCamera, toward), dt)
           const speed = SWIM * slow * Math.max(SLOWEST, Math.min(1, left / SLOW_DOWN))
@@ -346,17 +346,11 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         // Facing the diver, its eyes on them, following them as they move; a sudden move sends it away, and it gets bored
         // after a while
         toCamera.copy(camera.position).sub(root.position).setY(0)
-        if (state === 'staying' && since > gazeUntil) {
-          gaze = (Math.random() * 2 - 1) * GAZE
-          gazeUntil = since + between(GAZE_EVERY)
-        }
-        const faced = face(toCamera.applyAxisAngle(UP, state === 'staying' ? gaze : 0), dt, TURN * slow)
+        const faced = face(toCamera.applyAxisAngle(UP, gaze), dt, TURN * slow)
         if (state === 'turning' && faced) {
           state = 'staying'
           since = 0
           stayFor = between(STAY)
-          gaze = 0
-          gazeUntil = between(GAZE_EVERY)
         }
         if (react) leave(react === 'calm', camera)
         else if (state === 'staying' && since > stayFor) leave(true, camera)

@@ -9,8 +9,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   spot, then slid there in a straight line); fleeing, a C-start: the turn snaps in, the body bends into a C, then
   the dash. The turn runs down its body (each spine bone 60 ms behind the one before: the head leads, the tail follows
   its line; the whole body bent at once), and each bone's whole bend is capped, 0.2 rad at the head to 0.6 at the
-  tail (the swimming wave and the turn added up to 1.25 rad at the tail). Facing the diver, it holds an angle that
-  varies (up to 0.5 rad to either side, a new one every 2 to 5 s), as a fish looking around.
+  tail (the swimming wave and the turn added up to 1.25 rad at the tail). It faces the diver at a slightly different
+  angle on each visit (up to 0.3 rad to either side, drawn when it arrives, held for the visit).
 - About page (TODO #58): at `/a-propos` (`/en/a-propos` for now: English addresses are TODO #63), the former `/about`
   and `/en/about` redirected; a « Mes autres projets » section: Lock 23 3D (lock23.ca), Thousand Islands Shipwrecks,
   Open Caves (opencaves.org, without www).
