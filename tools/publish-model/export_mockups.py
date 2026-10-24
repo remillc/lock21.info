@@ -3,12 +3,18 @@ visualiseur: il montre en fantôme translucide la maquette de chaque zone pas en
 zone est publiée (TODO #6).
 
 - Les modificateurs sont appliqués.
-- Un papier violet uniforme (Christian, 2026-10-24), la même texture pour toutes: le grain du papier du plan de 1988
-  numérisé (img397.jpg, emballé dans le .blend), pris dans le carré de PATCH px le plus blanc du plan réduit à
-  TEXTURE_WIDTH px, répété en miroir (sans couture) sur une image de TEXTURE_WIDTH px, multiplié par le violet TINT
-  (lumière linéaire). Coordonnées de texture et rugosité de chaque maquette gardées. Exportée en WebP. Aucun trait du
-  plan n'est publié; l'adresse et les numéros de téléphone de son auteur (en bas à droite, jamais publiés: AGENTS.md)
-  sont de plus recouverts du papier (PRIVATE_AREAS) avant le choix du carré.
+- Leur aspect du .blend (Christian, 2026-10-24): chaque maquette projette une image emballée dans le .blend (le plan de
+  1988, img397.jpg, ou sa version sans texte) à travers une ou plusieurs rampes de couleurs (Color Ramp) vers la
+  couleur de base. Le glTF ne porte pas de rampe: pour chaque chaîne distincte, l'image réduite à TEXTURE_WIDTH px
+  est calculée comme Blender le fait (pixels en lumière linéaire, luminance Rec. 709, chaque rampe à son tour) et
+  devient l'image de la couleur de base; coordonnées de texture et rugosité gardées. Exportées en WebP. Ce que le
+  glTF ne porte pas est laissé (le relief procédural de la zone 7, la transparence par l'alpha d'une image JPEG).
+- Les maquettes de PAPER_ZONES (5, 6, 14, 15) en papier violet uniforme (Christian, 2026-10-24): le grain du papier
+  du plan, pris dans son carré de PATCH px le plus blanc, répété en miroir (sans couture), multiplié par le violet
+  TINT.
+- Le plan porte l'adresse et les numéros de téléphone personnels de son auteur (en bas à droite): jamais publiés
+  (AGENTS.md); PRIVATE_AREAS les recouvre de la couleur du papier (la médiane du plan) avant tout calcul. Son nom
+  (« BY: NICK BAETS ») reste: c'est le crédit.
 - Coordonnées du monde de la scène (mètres), glTF Y vers le haut: même repère que les tuiles et le contexte.
 - Chaque objet garde son nom (« mockup zone 9 »): le visualiseur en tire le numéro de zone.
 - Aussi les empties dont le nom commence par « crawfish » (n'importe quelle collection): la place d'une écrevisse
@@ -55,13 +61,15 @@ for o in objects:
     o.hide_select = False
     o.select_set(True)
 
-# La texture de papier violet, en mémoire seulement
+# Les textures, en mémoire seulement: une image par chaîne image + rampes distincte, et le papier violet
 TEXTURE_WIDTH = 2048
+PAPER_ZONES = {5, 6, 14, 15}
 PATCH = 256
 TINT = (0xb7, 0xa3, 0xd6)
-# Zones privées du plan, par image: (u min, u max, v min, v max), en fractions de l'image, v vers le haut (UV de
-# Blender). img397.jpg: les quatre lignes sous « BY: NICK BAETS » (adresse, ville, deux téléphones)
-PRIVATE_AREAS = {"img397.jpg": [(0.79, 0.97, 0.02, 0.101)]}
+# Zones privées, par image: (u min, u max, v min, v max), en fractions de l'image, v vers le haut (UV de Blender).
+# img397.jpg et sa version sans texte (même cadrage, l'adresse y est restée): les quatre lignes sous
+# « BY: NICK BAETS » (adresse, ville, deux téléphones)
+PRIVATE_AREAS = {name: [(0.79, 0.97, 0.02, 0.101)] for name in ("img397.jpg", "img397-without-text.jpg")}
 LUMINANCE = np.array([0.2126, 0.7152, 0.0722])
 
 
@@ -74,20 +82,78 @@ def to_srgb(c):
     return np.where(c <= 0.0031308, c * 12.92, 1.055 * c ** (1 / 2.4) - 0.055)
 
 
-def paper_texture(image):
-    """Le grain du papier du plan, sans couture, teinté TINT: une image Blender de TEXTURE_WIDTH px"""
-    small = image.copy()
-    small.scale(TEXTURE_WIDTH, round(image.size[1] * TEXTURE_WIDTH / image.size[0]))
-    w, h = small.size
-    px = np.empty(w * h * 4, dtype=np.float32)
-    small.pixels.foreach_get(px)
-    bpy.data.images.remove(small)
-    rgb = px.reshape(h, w, 4)[:, :, :3].copy()
-    paper = np.median(rgb.reshape(-1, 3), axis=0)
-    for u0, u1, v0, v1 in PRIVATE_AREAS.get(image.name, []):
-        rgb[int(v0 * h):int(np.ceil(v1 * h)), int(u0 * w):int(np.ceil(u1 * w))] = paper
-    lum = to_linear(rgb) @ LUMINANCE
-    # The blankest square: the fewest dark pixels (lines, dots, letters), then the lightest
+def new_image(name, color):
+    """Une image Blender (sRGB, 8 bits) de pixels sRGB H x W x 3, rangées depuis le bas"""
+    h, w = color.shape[:2]
+    out = bpy.data.images.new(name, w, h, alpha=False)
+    out.pixels.foreach_set(np.dstack([color, np.ones((h, w))]).astype(np.float32).ravel())
+    return out
+
+
+scans = {}
+
+
+def scan(image):
+    """L'image réduite, en lumière linéaire (H x W x 3, rangées depuis le bas), zones privées recouvertes"""
+    if image.name not in scans:
+        small = image.copy()
+        small.scale(TEXTURE_WIDTH, round(image.size[1] * TEXTURE_WIDTH / image.size[0]))
+        w, h = small.size
+        px = np.empty(w * h * 4, dtype=np.float32)
+        small.pixels.foreach_get(px)
+        bpy.data.images.remove(small)
+        rgb = px.reshape(h, w, 4)[:, :, :3].copy()
+        paper = np.median(rgb.reshape(-1, 3), axis=0)
+        for u0, u1, v0, v1 in PRIVATE_AREAS.get(image.name, []):
+            rgb[int(v0 * h):int(np.ceil(v1 * h)), int(u0 * w):int(np.ceil(u1 * w))] = paper
+        scans[image.name] = to_linear(rgb) if image.colorspace_settings.name == 'sRGB' else rgb
+    return scans[image.name]
+
+
+def chain(material):
+    """L'image et les rampes (de l'image vers la couleur de base) qui donnent la couleur de base, et le BSDF; ou None"""
+    nodes = material.node_tree.nodes if material and material.use_nodes else []
+    bsdf = next((n for n in nodes if n.type == 'BSDF_PRINCIPLED'), None)
+    if not bsdf or not bsdf.inputs['Base Color'].is_linked:
+        return None
+    ramps = []
+    node = bsdf.inputs['Base Color'].links[0].from_node
+    while node.type == 'VALTORGB':
+        ramps.insert(0, node.color_ramp)
+        if not node.inputs['Fac'].is_linked:
+            return None
+        node = node.inputs['Fac'].links[0].from_node
+    if node.type != 'TEX_IMAGE' or not node.image:
+        return None
+    return node.image, ramps, bsdf
+
+
+baked = {}
+
+
+def blend_texture(image, ramps):
+    """L'image à travers ses rampes, comme Blender (luminance, puis chaque rampe), une fois par chaîne"""
+    key = (image.name, tuple(tuple((round(e.position, 4), tuple(round(c, 4) for c in e.color)) for e in cr.elements)
+                             + (cr.color_mode, cr.interpolation) for cr in ramps))
+    if key not in baked:
+        color = scan(image)
+        for cr in ramps:
+            lut = np.array([cr.evaluate(i / 1023)[:3] for i in range(1024)], dtype=np.float32)
+            color = lut[np.rint(np.clip(color @ LUMINANCE, 0, 1) * 1023).astype(np.int32)]
+        baked[key] = new_image(f"mockup-texture-{len(baked) + 1}", to_srgb(color))
+    return baked[key]
+
+
+paper_image = None
+
+
+def paper_texture():
+    """Le grain du papier du plan, sans couture, teinté TINT (une fois)"""
+    global paper_image
+    if paper_image:
+        return paper_image
+    lum = scan(bpy.data.images["img397.jpg"]) @ LUMINANCE
+    h, w = lum.shape
     dark = lum < 0.6
     best = None
     for y in range(0, h - PATCH, PATCH // 4):
@@ -97,39 +163,42 @@ def paper_texture(image):
                 best = (score, x, y)
     _, x, y = best
     patch = lum[y:y + PATCH, x:x + PATCH]
-    grain = patch / patch.mean()
-    # Mirrored copies: seamless, then tiled over the image
-    tile = np.block([[grain, grain[:, ::-1]], [grain[::-1, :], grain[::-1, ::-1]]])
+    tile = patch / patch.mean()
+    tile = np.block([[tile, tile[:, ::-1]], [tile[::-1, :], tile[::-1, ::-1]]])
     reps = TEXTURE_WIDTH // tile.shape[0]
     grain = np.tile(tile, (reps, reps))
-    tint = to_linear(np.array(TINT) / 255)
-    color = to_srgb(grain[:, :, None] * tint)
-    size = grain.shape[0]
-    out = bpy.data.images.new("mockup-paper", size, size, alpha=False)
-    out.pixels.foreach_set(np.dstack([color, np.ones((size, size))]).astype(np.float32).ravel())
-    print(f"[mockups] papier: carré {PATCH} px pris en ({x}, {y}) du plan réduit, {(best[0][0] * 100):.2f} % de pixels "
-          f"sombres; grain de {grain.min():.2f} à {grain.max():.2f}", flush=True)
-    return out
+    paper_image = new_image("mockup-paper", to_srgb(grain[:, :, None] * to_linear(np.array(TINT) / 255)))
+    return paper_image
 
 
-scan_image = bpy.data.images.get("img397.jpg")
-assert scan_image, "pas d'image img397.jpg dans le .blend (le papier des maquettes)"
-paper = paper_texture(scan_image)
+def textured(name, image, roughness):
+    material = bpy.data.materials.new(name)
+    material.use_nodes = True
+    principled = material.node_tree.nodes['Principled BSDF']
+    texture = material.node_tree.nodes.new('ShaderNodeTexImage')
+    texture.image = image
+    material.node_tree.links.new(texture.outputs['Color'], principled.inputs['Base Color'])
+    principled.inputs['Roughness'].default_value = roughness
+    return material
+
+
+papers = []
 for o in objects:
     if o.type != 'MESH':
         continue
+    zone = int(o.name.split()[-1])
     for slot in o.material_slots:
-        old = slot.material
-        bsdf = next((n for n in old.node_tree.nodes if n.type == 'BSDF_PRINCIPLED'), None) if old and old.use_nodes else None
-        material = bpy.data.materials.new(f"mockup paper {old.name if old else o.name}")
-        material.use_nodes = True
-        principled = material.node_tree.nodes['Principled BSDF']
-        texture = material.node_tree.nodes.new('ShaderNodeTexImage')
-        texture.image = paper
-        material.node_tree.links.new(texture.outputs['Color'], principled.inputs['Base Color'])
-        principled.inputs['Roughness'].default_value = bsdf.inputs['Roughness'].default_value if bsdf else 0.5
-        slot.material = material
-print(f"[mockups] texture: papier violet {TEXTURE_WIDTH} px, la même pour toutes", flush=True)
+        found = chain(slot.material)
+        roughness = found[2].inputs['Roughness'].default_value if found else 0.5
+        if zone in PAPER_ZONES:
+            slot.material = textured(f"mockup paper {o.name}", paper_texture(), roughness)
+            papers.append(zone)
+        elif found:
+            slot.material = textured(f"mockup {o.name}", blend_texture(found[0], found[1]), roughness)
+        else:
+            print(f"[mockups] {o.name}: matériau sans image + rampes, gardé tel quel", flush=True)
+print(f"[mockups] textures: {len(baked)} image(s) du .blend, papier violet pour les zones {sorted(set(papers))}",
+      flush=True)
 
 glb = os.path.join(a.out_dir, "mockups.glb")
 bpy.ops.export_scene.gltf(filepath=glb, export_format='GLB', use_selection=True, export_apply=True,
