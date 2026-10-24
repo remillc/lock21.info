@@ -25,6 +25,8 @@ import { errorText, log, session, setEndFacts, startTelemetry } from './telemetr
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
 import { homePath, t } from './i18n.js'
+import { createTour } from './tour.js'
+import { TOUR_STEPS } from './tour-steps.js'
 
 // 3d-tiles-renderer warns, for each tileset, that version 1.1 has limited support: our tiles declare 1.1 (needed for
 // their .glb content) and use none of the features it lacks. That one message only is silenced (12 lines a visit)
@@ -863,6 +865,8 @@ function setUnderwater(on) {
   look.underwater = on
   underwater.setOn(on)
   underwaterButton.setAttribute('aria-pressed', String(on))
+  // The tour runs in the standard view (tour.js): its button hidden underwater, and while it plays (its card shown)
+  document.querySelector('.tour-button').hidden = on || !document.querySelector('.tour-card').hidden
   showSeasonControl(on)
   setSwimming(on && !mobile)
   updateAddress()
@@ -993,6 +997,23 @@ const showKeys = () => {
 }
 showKeys()
 swimHelpButton.addEventListener('click', () => openSwimHelp())
+
+// The guided tour (tour.js, tour-steps.js; TODO #48): in the standard view (it leaves the underwater view), the
+// movement keys hidden while it plays (its card takes the bottom of the view). ?tour=1 starts it after the first view
+const tour = createTour({
+  steps: TOUR_STEPS,
+  camera,
+  controls,
+  requestRender: () => requestRender(),
+  log,
+  onStart: () => {
+    if (underwater.on) setUnderwater(false)
+    swimKeys.hidden = true
+  },
+  onEnd: showKeys,
+})
+tour.button.hidden = underwater.on
+if (params.get('tour') === '1') firstView.then(() => tour.start())
 function showSwimHelp() {
   try {
     if (localStorage.getItem(SWIM_HELP_KEY)) return
@@ -1895,6 +1916,9 @@ function renderLoop() {
   // and the drag move the camera (swim.js), the address follows
   if (swim.looking) {
     if (swim.update()) swimMoved()
+  } else if (tour.update()) {
+    // The tour moves the camera (a flight between its steps, or a move): no other navigation meanwhile
+    needsRender = true
   } else {
     // The movement keys (swim.js) move the camera and the orbit's centre; the orbit follows (its change event)
     if (swim.update()) needsRender = true

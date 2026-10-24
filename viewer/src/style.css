@@ -1091,3 +1091,181 @@ l21-tooltip[data-shown='true'] {
   width: 16px;
   height: 16px;
 }
+
+/* « Visite guidée » (tour.js, TODO #48): first in the bottom-right row, left of the other buttons (the AR button
+   too where it is offered). MD3 filled tonal button with a leading icon: 40 dp high in a 48 dp touch target (the
+   transparent border, its background inside it), 16 dp before the 18 dp icon, 8 dp to the label, 24 dp after;
+   label-large; state layers; the container the other buttons' tonal colour */
+.tour-button {
+  position: fixed;
+  right: calc(max(16px, env(safe-area-inset-right)) + 108px);
+  bottom: calc(max(16px, env(safe-area-inset-bottom)) - 4px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  height: 48px;
+  padding: 0 24px 0 16px;
+  border: 4px solid transparent;
+  border-radius: 999px;
+  background: rgb(60 66 50 / 92%);
+  background-clip: padding-box;
+  color: #e3e6d8;
+  font: 500 14px/20px system-ui, sans-serif;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ar-button:not([hidden]) ~ .tour-button {
+  right: calc(max(16px, env(safe-area-inset-right)) + 164px);
+}
+.tour-button:hover {
+  background: rgb(80 87 68 / 94%);
+}
+.tour-button:focus-visible,
+.tour-button:active {
+  background: rgb(86 93 73 / 95%);
+}
+.tour-button:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: 0;
+}
+.tour-button svg {
+  flex: none;
+}
+
+/* The tour's card (tour.js): bottom centre, above the buttons' row on narrow windows. Surface container high, 20 dp
+   corners; the step's number (label-medium), its title (title-medium) and text (body-medium); back (text button) and
+   next (filled button), a close icon button top right. MD3 motion: in, 400 ms emphasized decelerate, sliding up; out,
+   200 ms emphasized accelerate */
+.tour-card {
+  position: fixed;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  width: min(440px, calc(100vw - 32px));
+  padding: 12px 16px 12px 20px;
+  border-radius: 20px;
+  background: rgb(35 38 29 / 94%);
+  color: #e3e6d8;
+  font: 400 14px/20px system-ui, sans-serif;
+  letter-spacing: 0.25px;
+  opacity: 0;
+  transform: translate(-50%, 16px);
+  transition: opacity 200ms cubic-bezier(0.3, 0, 0.8, 0.15), transform 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
+}
+.tour-card.open {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  transition: opacity 400ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
+}
+@media (max-width: 960px) {
+  .tour-card {
+    bottom: calc(max(16px, env(safe-area-inset-bottom)) + 56px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tour-card,
+  .tour-card.open {
+    transform: translate(-50%, 0);
+    transition: opacity 150ms linear;
+  }
+}
+.tour-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: -8px;
+}
+.tour-count {
+  color: #b8c97a;
+  font: 500 12px/16px system-ui, sans-serif;
+  letter-spacing: 0.5px;
+}
+/* MD3 standard icon button: 40 dp in a 48 dp touch target */
+.tour-close {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 4px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  background-clip: padding-box;
+  color: #c6c9bb;
+  cursor: pointer;
+}
+.tour-close:hover {
+  background-color: rgb(227 230 216 / 8%);
+}
+.tour-close:focus-visible,
+.tour-close:active {
+  background-color: rgb(227 230 216 / 10%);
+}
+.tour-close:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: -2px;
+}
+.tour-title {
+  margin: -4px 0 4px;
+  font: 500 16px/24px system-ui, sans-serif;
+  letter-spacing: 0.15px;
+}
+.tour-text {
+  margin: 0;
+  color: #c6c9bb;
+}
+.tour-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  margin: 12px -4px 0 0;
+}
+/* MD3 text and filled buttons: 40 dp in a 48 dp touch target, label-large */
+.tour-prev,
+.tour-next {
+  box-sizing: border-box;
+  height: 48px;
+  padding: 0 16px;
+  border: 4px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+  font: 500 14px/20px system-ui, sans-serif;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+}
+.tour-prev {
+  padding: 0 12px;
+  background-color: transparent;
+  color: #b8c97a;
+}
+.tour-prev:hover {
+  background-color: rgb(184 201 122 / 8%);
+}
+.tour-prev:focus-visible,
+.tour-prev:active {
+  background-color: rgb(184 201 122 / 10%);
+}
+.tour-next {
+  padding: 0 24px;
+  background-color: #b8c97a;
+  color: #12140e;
+}
+.tour-next:hover {
+  background-color: #c3d389;
+}
+.tour-next:focus-visible,
+.tour-next:active {
+  background-color: #c8d790;
+}
+.tour-prev:focus-visible,
+.tour-next:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: 0;
+}
+.tour-prev[hidden] {
+  display: none;
+}
