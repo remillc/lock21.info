@@ -56,9 +56,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #43 Check the site for accessibility issues (WCAG 2.2 AA): contrast in both themes, keyboard navigation and
   focus (menu, viewer frame, opt-out button), alt texts, headings order, the viewer's controls and the depth gauges
   (aria-hidden), French and English pages
-- [ ] #63 English URLs for the English site (e.g. /en/data-collection/dive-log instead of
-  /en/collecte/journal-des-plongees), the French ↔ English mapping of the pages kept (language switch, hreflang,
-  translation tracking in tools/i18n), old /en/ addresses redirected
 - [ ] #44 Usability audit of the site: what a first-time visitor (diver, heritage enthusiast, photogrammetrist) finds
   and understands, the paths from the home page to the model and the dive log, the 3D viewer's controls on desktop and
   phone, navigation and search, on both languages

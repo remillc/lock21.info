@@ -4,6 +4,7 @@
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 import homeSlash from './src/integrations/home-slash.mjs'
+import englishPaths from './src/integrations/english-paths.mjs'
 
 // Dev server only: /modele/viewer (embedded by the /modele page) is forwarded to the viewer's own dev server
 // (npm run viewer:dev, port 3100, same path), so the page shows the viewer's source and reloads with it, websocket
@@ -17,8 +18,9 @@ export default defineConfig({
   // Pages are still built as <path>/index.html; the hosting serves them at <path> and redirects <path>/ there
   // (wrangler.jsonc, html_handling)
   trailingSlash: 'never',
-  // Former addresses (TODO #58, 2026-10-24: the About page under its French name)
-  redirects: { '/about': '/a-propos', '/en/about': '/en/a-propos' },
+  // Former addresses (TODO #58, 2026-10-24: the About page under its French name; /en/about is the English page's own
+  // address again since TODO #63, its French path /en/a-propos redirected by src/integrations/english-paths.mjs)
+  redirects: { '/about': '/a-propos' },
   // preview.proxy: {} because Vite's preview server would otherwise inherit the forwarding and serve the dev viewer
   // instead of the build (astro preview must show what the hosting serves)
   vite: { server: { proxy: { '/modele/viewer': viewerDev } }, preview: { proxy: {} } },
@@ -80,5 +82,7 @@ export default defineConfig({
     }),
     // After Starlight (and its search index): / and /en/ for the home pages
     homeSlash(),
+    // Then the English pages at their English addresses, and the search index rebuilt (TODO #63)
+    englishPaths(),
   ],
 })
