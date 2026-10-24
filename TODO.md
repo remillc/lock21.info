@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#60**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#62**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -18,6 +18,10 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   (`--lod-texture-scale` below 0.5, a full re-tiling). Measured 2026-10-23 before that: the budget is full right after the start
   view (phone 462 of 450 MB with 15 tiles, desktop 1201 of 1200 MB), so turning or moving loads no new detail, during
   a gesture or after it
+- [ ] #60 The bass: make the change from swimming in to turning toward the diver more fluid (`viewer/src/bass.js`:
+  the « arriving » state stops, then « turning » starts its turn)
+- [ ] #61 The movement keys' card (bottom left, W A S D): make its keys real buttons (pressed with the mouse or a finger
+  they move the camera as the keyboard does; MD3, 48 dp targets), not only a picture of the keyboard
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
 
 ### Zones
@@ -67,8 +71,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   phone, navigation and search, on both languages
 - [ ] #39 Design: applied (tokens, fonts, header and footer bars, home page, logo, tables); to do: a history page for the "L'histoire" entry (it points to the zone map for now), the 3D viewer in the same
   palette and fonts, check contrast (WCAG AA) in both themes
-- [ ] #57 Show the site's version (package.json, e.g. 0.10.0) on the About page, perhaps with its date and a link to
-  the release notes; Christian finds it a little odd on a field-notes site: maybe discreet, at the bottom
 - [ ] #58 About page: links to Christian's other works, https://lock23.ca, https://thousandislandsshipwrecks.ca and
   https://opencaves.org (checked 2026-10-23: all answer; www.opencaves.org does not, use the bare domain). And move
   the page from /about to /a-propos (French slug; English /en/about, its redirects from the old address)
