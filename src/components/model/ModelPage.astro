@@ -288,7 +288,9 @@ const updated = zones.updated
       const frame = /** @type {HTMLIFrameElement} */ (this.querySelector('iframe'))
       const reload = !connectedBefore && /** @type {PerformanceNavigationTiming | undefined} */ (performance.getEntriesByType('navigation')[0])?.type === 'reload'
       connectedBefore = true
-      frame.src = (frame.dataset.src ?? '') + location.search + (reload ? '' : `${location.search ? '&' : '?'}reset=1`)
+      // (and the tour's step, #tour-3: kept through a reload, Christian, 2026-10-24)
+      const tourHash = /^#tour-\d+$/.test(location.hash) ? location.hash : ''
+      frame.src = (frame.dataset.src ?? '') + location.search + (reload ? '' : `${location.search ? '&' : '?'}reset=1`) + tourHash
       const query = new URLSearchParams(location.search)
       const underwater = query.get('underwater') === '1'
       const shared = [...query].filter(([key]) => key === 'cam' || (underwater && ['underwater', 'season', 'lamp'].includes(key)))

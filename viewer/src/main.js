@@ -69,7 +69,9 @@ const live = {}
 // The address keeps only what makes the view shareable (viewUrl): the camera, and underwater with its season and lamp
 const SHARED_KEYS = ['cam', 'underwater', 'season', 'lamp']
 const shared = new URLSearchParams([...params].filter(([key]) => SHARED_KEYS.includes(key) && (key === 'cam' || params.get('underwater') === '1')))
-history.replaceState(null, '', location.pathname + (shared.size ? `?${shared}` : '').replaceAll('%2C', ','))
+// (the tour's step, #tour-3, kept: a reload keeps it, Christian, 2026-10-24)
+const startHash = /^#tour-\d+$/.test(location.hash) ? location.hash : ''
+history.replaceState(null, '', location.pathname + (shared.size ? `?${shared}` : '').replaceAll('%2C', ',') + startHash)
 
 // Root of the published tiles (manifest.json + tilesets). Override with ?tiles=<url> (e.g. phone tests on the LAN)
 const DEFAULT_TILES_URL = import.meta.env.VITE_TILES_URL || 'http://localhost:8081'
@@ -1645,7 +1647,7 @@ function keepCamera() {
 }
 // The tour's step in the address (#tour-3, for debugging; Christian, 2026-10-24: always, no setting): gone as soon as
 // the visitor moves freely (the mouse or a finger on the model, the wheel, the movement keys); the next step puts it back
-let tourHash = ''
+let tourHash = startHash
 const freeMove = () => {
   if (!tourHash) return
   tourHash = ''

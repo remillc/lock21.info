@@ -80,13 +80,16 @@ export const TOUR_STEPS = [
     // From step 2 (Christian, 2026-10-24: the first try's fast turn was horrible): turning around in place toward the
     // door, then out over the edge east of the piers' ends and plunging toward the floor, looking at the door all the
     // way, the dive levelling off near the floor into a glide to the door. Clear of every surface (1.5 m at least)
-    approach: [[-24, 9.2, -12], [-18, 5.5, -5], [-14.5, 2.1, 0], [-16.3, 1.8, 5.2]],
-    looks: [[-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55]],
+    // (landing 2 m farther south-east: Christian, 2026-10-24; was -14.5, 2.1, 0); then an elegant loop to the right on
+    // the floor, round the door by the south and east, to its view, the door looked at all the way (Christian,
+    // 2026-10-24). Clear of every surface (1.5 m at least)
+    approach: [[-24, 9.2, -12], [-18, 5.5, -5], [-13.09, 2.1, 1.41], [-11.6, 1.9, 3.6], [-12.0, 1.8, 6.4], [-14.4, 1.7, 8.0]],
+    looks: [[-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55], [-17.06, -0.43, 10.55]],
     // (about 30 % faster than first: Christian, 2026-10-24, too slow)
     turnFirst: 4,
-    // (speeding up harder in the plunge: Christian, 2026-10-24)
-    paces: [1.6, 3.4, 2.1, 1.3, 0.9],
-    accel: 1.4,
+    // (speeding up harder in the plunge, then 50 % faster: Christian, 2026-10-24); the loop slower
+    paces: [1.6, 5.1, 3.15, 1.6, 1.3, 1.1, 0.9],
+    accel: 2.1,
     title: { fr: 'Une porte de vanne', en: 'A gate door' },
     text: {
       fr: 'Une des portes des vannes du déversoir, couchée sur le fond (zone 16). Le fer de son cadre est rongé par la rouille.',

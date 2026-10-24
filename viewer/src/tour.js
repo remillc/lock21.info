@@ -63,6 +63,15 @@ const SPEED_PASSES = 2
 // damped spring (MOVE_SPRING, 1/s²: about 0.3 s behind): its speed never jumps, even when back or next interrupts a
 // motion, a hurried move speeds up, or a flight starts from a camera still moving
 const MOVE_SPRING = 36
+// Back or next while the camera moves (a flight under way): it first brakes along its way at BRAKE m/s², then the new
+// flight starts from rest (the spring alone stopped it from 1.6 m/s in 0.3 s)
+const BRAKE = 1
+// Back (Christian, 2026-10-24: its ways were absurd, grotesque and slow): straight back to the step's view (a move's
+// end), quick: a plain flight, none of the step's own way in, at up to BACK_SPEED m/s and BACK_ACCEL m/s², the line of
+// sight turning up to BACK_TURN times faster
+const BACK_SPEED = 12
+const BACK_ACCEL = 6
+const BACK_TURN = 2
 
 const UP = new THREE.Vector3(0, 1, 0)
 // Minimum jerk (the smoothest start and stop: no jolt in the acceleration, as a natural movement), for the turns and
@@ -111,11 +120,20 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   const pull = new THREE.Vector3()
   const twist = new THREE.Quaternion()
   let sightTime = 0
+  // The motions' clock (ms): it runs with the frames, at most 0.1 s a frame, so a slow frame (tiles loading) pauses the
+  // motion instead of making it jump ahead
+  let clock = 0
   // The camera's place and velocity (m/s) as the spring moves it; the planned place
   const place = new THREE.Vector3()
   const velocity = new THREE.Vector3()
   const planned = new THREE.Vector3()
   const force = new THREE.Vector3()
+  // The planned place's velocity: a new motion starts from the planned place and brakes from its velocity (not the
+  // camera's, about 0.3 s behind: starting from it pulled the plan back, and the camera braked hard)
+  const plannedLast = new THREE.Vector3()
+  const plannedVelocity = new THREE.Vector3()
+  // A back flight under way: the line of sight may turn faster (BACK_TURN)
+  let quick = false
   /** @type {{ begin: (now: number) => void, run: (now: number) => boolean, hurry?: (now: number) => void }[]} the motions
    *  left, the first running */
   let motions = []
@@ -153,6 +171,9 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
           looks = [step.turnFirst ? points[0] : from.target, ...points, to.target]
         }
         curve = new THREE.CatmullRomCurve3([from.position, ...step.approach.map((p) => new THREE.Vector3(...p)), to.position], false, 'centripetal')
+        // A fine table of lengths (2 cm): a coarse one made the camera advance by small jumps at the points
+        curve.arcLengthDivisions = Math.max(200, Math.ceil(curve.getLength() / 0.02))
+        curve.updateArcLengths()
         if (step.paces || step.flightPace) {
           // The speed at each point of the way: its stretch's pace (the curve's parameter is i / n at the i-th point),
           // at rest at both ends, then no faster than ACCEL allows from the speed before (forward) and toward the speed
@@ -195,8 +216,13 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
         }
       } else {
         const way = from.position.distanceTo(to.position)
-        const physical = Math.max((1.875 * way) / FLY_MAX_SPEED, Math.sqrt((5.77 * way) / FLY_MAX_ACCEL))
-        duration = THREE.MathUtils.clamp(Math.max(FLY_TIME[0] + way * FLY_PER_METRE + angle * FLY_PER_RADIAN, physical), FLY_TIME[0], FLY_TIME[1]) * 1000
+        if (step?.back) {
+          // Back: as quick as BACK_SPEED and BACK_ACCEL allow (a second at least)
+          duration = Math.max(1, (1.875 * way) / BACK_SPEED, Math.sqrt((5.77 * way) / BACK_ACCEL), angle * 0.4) * 1000
+        } else {
+          const physical = Math.max((1.875 * way) / FLY_MAX_SPEED, Math.sqrt((5.77 * way) / FLY_MAX_ACCEL))
+          duration = THREE.MathUtils.clamp(Math.max(FLY_TIME[0] + way * FLY_PER_METRE + angle * FLY_PER_RADIAN, physical), FLY_TIME[0], FLY_TIME[1]) * 1000
+        }
         const room = headroom ? Math.max(0, headroom(from.position) - 0.5) : Infinity
         const rise = way > FLY_HIGH ? Math.min(way * FLY_RISE, FLY_RISE_MAX, room) : 0
         const back = Math.min(way * FLY_BACK, FLY_BACK_MAX)
@@ -269,6 +295,27 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     }
   }
 
+  /** Braking to rest along the way the camera moves (BRAKE m/s²), the point looked at kept */
+  function brake() {
+    let start = 0
+    const from = new THREE.Vector3()
+    const direction = new THREE.Vector3()
+    let speed = 0
+    return {
+      begin(now) {
+        start = now
+        from.copy(planned)
+        speed = plannedVelocity.length()
+        direction.copy(plannedVelocity).normalize()
+      },
+      run(now) {
+        const t = Math.min((now - start) / 1000, speed / BRAKE)
+        camera.position.copy(from).addScaledVector(direction, speed * t - (BRAKE * t * t) / 2)
+        return t >= speed / BRAKE
+      },
+    }
+  }
+
   /** A pause where the camera is */
   function pause(seconds) {
     let start = 0
@@ -289,6 +336,8 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     // A smooth curve through its points (centripetal: no loops or overshoot between close points)
     const points = [from.position, ...(step.via ?? []).map((p) => new THREE.Vector3(...p)), to.position]
     const curve = new THREE.CatmullRomCurve3(points, false, 'centripetal')
+    curve.arcLengthDivisions = Math.max(200, Math.ceil(curve.getLength() / 0.02))
+    curve.updateArcLengths()
     let duration = (curve.getLength() / (step.pace ?? 1)) * 1000
     let start = 0
     return {
@@ -312,26 +361,41 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     }
   }
 
-  function show(i) {
+  /**
+   * @param {number} i
+   * @param {boolean} [back] - back from the next step: straight and quick to the step's view (a move's end)
+   */
+  function show(i, back = false) {
     index = i
     const step = steps[i]
+    quick = back
     onStep?.(i)
     count.textContent = t('tourCount', { n: i + 1, total: steps.length })
     title.textContent = step.title[lang] ?? step.title.fr
     text.textContent = step.text[lang] ?? step.text.fr
     prev.hidden = i === 0
     next.textContent = t(i === steps.length - 1 ? 'tourEnd' : 'tourNext')
-    const now = performance.now()
-    const queued = step.kind === 'move' ? [flight(camOf(step.from), step), pause(step.wait ?? MOVE_PAUSE), travel(step)] : [flight(camOf(step.cam), step)]
+    const now = clock
+    // The motions start from the planned place (the camera follows it a little behind)
+    if (sightTime) camera.position.copy(planned)
+    const queued = back
+      ? [flight(camOf(step.kind === 'move' ? step.to : step.cam), { back: true })]
+      : step.kind === 'move' ? [flight(camOf(step.from), step), pause(step.wait ?? MOVE_PAUSE), travel(step)] : [flight(camOf(step.cam), step)]
     // A move under way ends its way first (hurried); otherwise the new step's motions start at once
     const running = motions[0]
     if (running?.hurry) {
       running.hurry(now)
       motions = [running, ...queued]
+    } else if (sightTime && plannedVelocity.length() > 0.1) {
+      // Moving: braking first
+      motions = [brake(), ...queued]
+      motions[0].begin(now)
     } else {
       motions = queued
       motions[0].begin(now)
     }
+    // The camera itself stays where it is (the spring takes it on)
+    if (sightTime) camera.position.copy(place)
     controls.enabled = false
     requestRender()
   }
@@ -369,7 +433,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
 
   button.addEventListener('click', start)
   close.addEventListener('click', stop)
-  prev.addEventListener('click', () => index > 0 && show(index - 1))
+  prev.addEventListener('click', () => index > 0 && show(index - 1, true))
   next.addEventListener('click', () => (index < steps.length - 1 ? show(index + 1) : stop()))
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && index >= 0) stop()
@@ -392,17 +456,22 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
         sight.subVectors(controls.target, camera.position).normalize()
         place.copy(camera.position)
         velocity.set(0, 0, 0)
+        plannedLast.copy(camera.position)
+        plannedVelocity.set(0, 0, 0)
       }
       const dt = sightTime ? Math.min((now - sightTime) / 1000, 0.1) : 0
       sightTime = now
+      clock += dt * 1000
       // The motions plan from the camera's actual place (a flight begins where the camera is)
       camera.position.copy(place)
-      if (motions.length && motions[0].run(now)) {
+      if (motions.length && motions[0].run(clock)) {
         motions.shift()
-        if (motions.length) motions[0].begin(now)
+        if (motions.length) motions[0].begin(clock)
       }
       // The place: toward the planned one by the spring
       planned.copy(camera.position)
+      if (dt > 0) plannedVelocity.subVectors(planned, plannedLast).divideScalar(dt)
+      plannedLast.copy(planned)
       if (dt > 0) {
         force.subVectors(planned, place).multiplyScalar(MOVE_SPRING).addScaledVector(velocity, -2 * Math.sqrt(MOVE_SPRING))
         velocity.addScaledVector(force, dt)
@@ -421,9 +490,10 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
         if (pull.lengthSq() > 1e-12) pull.normalize().multiplyScalar(angle * TURN_SPRING)
         else pull.set(0, 0, 0)
         pull.addScaledVector(spin, -2 * Math.sqrt(TURN_SPRING))
-        if (pull.length() > MAX_TURN_ACCEL) pull.setLength(MAX_TURN_ACCEL)
+        const fast = quick ? BACK_TURN : 1
+        if (pull.length() > MAX_TURN_ACCEL * fast) pull.setLength(MAX_TURN_ACCEL * fast)
         spin.addScaledVector(pull, dt)
-        if (spin.length() > MAX_TURN) spin.setLength(MAX_TURN)
+        if (spin.length() > MAX_TURN * fast) spin.setLength(MAX_TURN * fast)
         const turn = spin.length() * dt
         if (turn > 0) sight.applyQuaternion(twist.setFromAxisAngle(pull.copy(spin).normalize(), turn)).normalize()
       }
