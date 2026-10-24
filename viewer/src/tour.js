@@ -38,9 +38,19 @@ const ACCEL = 0.4
 const PROFILE_STEP = 0.05
 // A line of sight given as a direction (a step's looks: { dir }) aims this far along it
 const LOOK_FAR = 20
-// Never a fast turn (Christian, 2026-10-24): the line of sight turns at most this fast (rad/s), whatever a step asks;
-// a flight that arrives before its turn is done finishes it in place
+// Never a fast turn, and never a sudden start or stop of one (Christian, 2026-10-24: going from a turning speed to
+// zero in an instant is not physical). The line of sight follows the one the motion wants as a critically damped
+// spring (TURN_SPRING: its stiffness, 1/s²; damped at 2 x its square root: no overshoot), its turning speed at most
+// MAX_TURN (rad/s) and its change at most MAX_TURN_ACCEL (rad/s²): the bell-shaped speed of a natural head turn (Flash
+// and Hogan's minimum jerk; a game camera's SmoothDamp). A flight that arrives before its turn is done finishes it in
+// place
 const MAX_TURN = 0.5
+const MAX_TURN_ACCEL = 1
+const TURN_SPRING = 9
+// The planned speeds smoothed over this length (m, each side) and passes: the acceleration itself rises and falls
+// gradually (an S-curve), no step at a start or a change of pace
+const SPEED_SMOOTH = 0.6
+const SPEED_PASSES = 2
 
 const UP = new THREE.Vector3(0, 1, 0)
 // Minimum jerk (the smoothest start and stop: no jolt in the acceleration, as a natural movement), for the turns and
@@ -81,9 +91,13 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   close.dataset.tooltip = t('tourClose')
 
   let index = -1
-  // The line of sight the camera actually has (MAX_TURN), and when it was last turned
+  // The line of sight the camera actually has, its turning velocity (rad/s, as an axis times a speed), and when it was
+  // last turned
   const sight = new THREE.Vector3()
   const wanted = new THREE.Vector3()
+  const spin = new THREE.Vector3()
+  const pull = new THREE.Vector3()
+  const twist = new THREE.Quaternion()
   let sightTime = 0
   /** @type {{ begin: (now: number) => void, run: (now: number) => boolean, hurry?: (now: number) => void }[]} the motions
    *  left, the first running */
@@ -140,6 +154,22 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
           const accel = step.accel ?? ACCEL
           for (let i = 1; i <= n; i++) speed[i] = Math.min(speed[i], Math.sqrt(speed[i - 1] ** 2 + 2 * accel * ds))
           for (let i = n - 1; i >= 0; i--) speed[i] = Math.min(speed[i], Math.sqrt(speed[i + 1] ** 2 + 2 * accel * ds))
+          // An S-curve: the speeds averaged over SPEED_SMOOTH m each side, a few passes (never above the planned speed, at
+          // rest at both ends)
+          const half = Math.max(1, Math.round(SPEED_SMOOTH / ds))
+          for (let pass = 0; pass < SPEED_PASSES; pass++) {
+            const sums = new Float64Array(n + 2)
+            for (let i = 0; i <= n; i++) sums[i + 1] = sums[i] + speed[i]
+            const smooth = new Float64Array(n + 1)
+            for (let i = 0; i <= n; i++) {
+              const a = Math.max(0, i - half)
+              const b = Math.min(n, i + half)
+              smooth[i] = Math.min(speed[i] + 1e-9, (sums[b + 1] - sums[a]) / (b - a + 1))
+            }
+            speed.set(smooth)
+            speed[0] = 0
+            speed[n] = 0
+          }
           profile = new Float64Array(n + 1)
           for (let i = 1; i <= n; i++) profile[i] = profile[i - 1] + (ds / Math.max((speed[i - 1] + speed[i]) / 2, 0.02)) * 1000
           duration = profile[n]
@@ -202,7 +232,15 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
           lookA.normalize().lerp(lookB.normalize(), f).normalize()
           controls.target.copy(camera.position).addScaledVector(lookA, reach)
           // Still turning: from where it looked, toward that line of sight
-          if (elapsed < turnTime) controls.target.lerpVectors(from.target, controls.target, easeInOut(elapsed / turnTime))
+          if (elapsed < turnTime) {
+            // Between the lines of sight (not their points)
+            lookA.subVectors(from.target, camera.position)
+            lookB.subVectors(controls.target, camera.position)
+            const g = easeInOut(elapsed / turnTime)
+            const reach = THREE.MathUtils.lerp(lookA.length(), lookB.length(), g)
+            lookA.normalize().lerp(lookB.normalize(), g).normalize()
+            controls.target.copy(camera.position).addScaledVector(lookA, reach)
+          }
         } else {
           // Turning first (the step's turn: within that share of the flight, easing out), or along with the flight
           const turn = step?.turn ? 1 - (1 - Math.min(k / step.turn, 1)) ** 3 : e
@@ -299,6 +337,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     onStep?.(-1)
     motions = []
     sightTime = 0
+    spin.set(0, 0, 0)
     controls.enabled = true
     card.classList.remove('open')
     hideTimer = setTimeout(() => {
@@ -337,19 +376,29 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
         motions.shift()
         if (motions.length) motions[0].begin(now)
       }
-      // The line of sight wanted, reached at MAX_TURN at most; the point looked at kept at its distance
+      // The line of sight wanted, followed by the damped spring; the point looked at kept at its distance
       const distance = Math.max(controls.target.distanceTo(camera.position), 0.1)
       wanted.subVectors(controls.target, camera.position).normalize()
       const angle = sight.angleTo(wanted)
-      const step = MAX_TURN * dt
-      if (angle > step) {
-        sight.lerp(wanted, step / angle).normalize()
-        controls.target.copy(camera.position).addScaledVector(sight, distance)
-      } else sight.copy(wanted)
+      if (dt > 0) {
+        // The spring's pull toward the wanted line (its axis times the angle), less the damping of the turning velocity;
+        // its change and the velocity capped
+        pull.crossVectors(sight, wanted)
+        if (pull.lengthSq() > 1e-12) pull.normalize().multiplyScalar(angle * TURN_SPRING)
+        else pull.set(0, 0, 0)
+        pull.addScaledVector(spin, -2 * Math.sqrt(TURN_SPRING))
+        if (pull.length() > MAX_TURN_ACCEL) pull.setLength(MAX_TURN_ACCEL)
+        spin.addScaledVector(pull, dt)
+        if (spin.length() > MAX_TURN) spin.setLength(MAX_TURN)
+        const turn = spin.length() * dt
+        if (turn > 0) sight.applyQuaternion(twist.setFromAxisAngle(pull.copy(spin).normalize(), turn)).normalize()
+      }
+      controls.target.copy(camera.position).addScaledVector(sight, distance)
       camera.lookAt(controls.target)
-      // Done when the motions are and the line of sight has caught up
-      if (!motions.length && angle <= step) {
+      // Done when the motions are, the line of sight has caught up and stopped turning
+      if (!motions.length && angle < 0.002 && spin.length() < 0.01) {
         sightTime = 0
+        spin.set(0, 0, 0)
         controls.enabled = true
       }
       return true

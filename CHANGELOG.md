@@ -4,6 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, the tour's camera moves naturally (Christian, 2026-10-24: no turn may go from a speed to zero at once):
+  its line of sight follows the one wanted as a critically damped spring, at most 0.5 rad/s and 1 rad/s² (a bell-shaped
+  speed, as a natural head turn: Flash and Hogan's minimum jerk; a game camera's SmoothDamp); a way with paces is
+  driven from rest to rest at limited acceleration, its speeds smoothed into an S-curve; turns glide between lines of
+  sight, not between the points looked at (which overshot).
 - 3D viewer, turning with the left button around the point pressed (Christian, 2026-10-24; viewer/src/pointer-orbit.js):
   the camera and its orbit's centre turn around the model's point under the pointer, which stays where it is on the
   screen; a pixel dragged turns by the angle a pixel covers, so the background moves with the pointer; Ctrl or Shift
