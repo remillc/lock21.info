@@ -4,6 +4,13 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, zone 18 shown again from afar (Christian, 2026-10-24): the less-detail-far-away falloff subtracted from
+  each tile's error, which reached 0 for zone 18's first tile 118 m away, and its root (refine ADD) then drew nothing.
+  The error is now multiplied by a factor (down to a third far away), never 0. At the four views checked for 0.13.0,
+  0.46 to 0.75 GB.
+- 3D viewer, the navigation bounds are the whole terrain (Christian, 2026-10-24): the zones' bounds plus 10 m stopped
+  the camera at zone 18 going west; now the context's extent (x from -115 to 100 m), the zones with their margin
+  included.
 ## 0.13.0 - 2026-10-24
 
 - 3D viewer, memory on a computer (Christian, 2026-10-24: most visitors' graphics cards have far less memory): tiles
