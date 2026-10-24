@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+## 0.13.0 - 2026-10-24
+
+- 3D model online (R2): zone 16 republished (2026-10-24-0839, with its light set) and the mockups from the latest
+  .blend (2026-10-24-1049).
 - 3D viewer, the finest detail loads again up close (TODO #69): the library shows a tile's finer children only once
   all of them are in, and since the relief each finest tile carried a 4096 px normal map (22 of its 34 MB); the 1.2 GB
   budget ran out first (zone 3: 6 of a wall's 7 children loaded, the wall still coarse). As each tile arrives, its
