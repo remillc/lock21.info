@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#69**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#70**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -19,6 +19,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   a gesture or after it
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
 - [ ] #68 Yellow perch schools in the underwater view
+- [ ] #69 Bug: the high-resolution textures don't load (Christian, 2026-10-24: close up, a wall and the floor stay
+  blurry, the coarse levels' textures)
 
 ### Pipeline
 
