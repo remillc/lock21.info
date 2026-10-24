@@ -35,6 +35,19 @@ const TURN_BEFORE = 0.35
 const FLEE = 2.2
 const TURN = 1.4
 const FLEE_TURN = 7
+// Leaving as a fish does (Christian, 2026-10-24: its turn away didn't look natural; it pivoted on the spot, then slid
+// to its way out): it swims where its body points, so it follows an arc while it turns, at LEAVE_SLOWEST of its speed
+// facing away and full speed once lined up, reaching it with LEAVE_ACCEL (calm) or FLEE_ACCEL (per second). Fleeing,
+// a C-start: its turn snaps in (FLEE_EASE instead of TURN_EASE) and its body bends into a C, then the tail kick
+// carries it off. Gone once LEAVE_NEAR m from its way out, or after LEAVE_MAX s
+const LEAVE_SLOWEST = 0.3
+const LEAVE_ACCEL = 1.2
+const FLEE_ACCEL = 4
+const FLEE_EASE = 14
+const LEAVE_NEAR = 0.3
+const LEAVE_MAX = 10
+// The most a spine bone bends in a turn (rad): a fast turn (the flight) folded the body
+const MAX_BEND = 0.45
 // How long it watches the diver before it gets bored (s, at random in between: Christian, 2026-10-23), its calm
 // departure's speed (m/s), and its gentle hover (m)
 const STAY = [8, 15]
@@ -143,6 +156,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   let turnRate = 0
   const lastRoot = new THREE.Vector3()
   let speedNow = 0
+  let leaveSpeed = 0
   const ahead = new THREE.Vector3()
   const toCamera = new THREE.Vector3()
   const aim = new THREE.Vector3()
@@ -210,6 +224,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
     state = 'leaving'
     calm = bored
     leftAt = since
+    leaveSpeed = 0
     // The diver moved since it came: its way out, away from them (straight, or up to 60° to a side), where it is clear
     if (!camera || camera.position.distanceTo(cameraAtArrival) < 0.3) return
     const away = root.position.clone().sub(camera.position).setY(0).normalize()
@@ -226,11 +241,11 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   /** Turns toward a direction as a fish does (Christian, 2026-10-23: the even pivot was not natural): its turning rate
    *  eases in and out (toward TURN_GAIN times what is left, at most `turn`), and while it turns its body curves into a C
    *  (the spine below) and it glides forward a little; true once it faces that way and has stopped turning */
-  function face(direction, dt, turn = TURN) {
+  function face(direction, dt, turn = TURN, ease = TURN_EASE) {
     const target = Math.atan2(direction.x, direction.z)
     const delta = Math.atan2(Math.sin(target - heading), Math.cos(target - heading))
     const wanted = THREE.MathUtils.clamp(delta * TURN_GAIN, -turn, turn)
-    turnRate += (wanted - turnRate) * Math.min(1, TURN_EASE * dt)
+    turnRate += (wanted - turnRate) * Math.min(1, ease * dt)
     heading += turnRate * dt
     root.position.addScaledVector(forward.set(Math.sin(heading), 0, Math.cos(heading)), Math.abs(turnRate) * GLIDE * dt)
     return Math.abs(delta) < 0.05 && Math.abs(turnRate) < 0.1
@@ -240,7 +255,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
     object: root,
     /** For tests */
     get debug() {
-      return { state, idle, cooldown, lastPlan }
+      return { state, idle, cooldown, lastPlan, leaveSpeed, toExit: exit.distanceTo(root.position) }
     },
     /**
      * Each frame while underwater
@@ -327,17 +342,21 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
       } else if (state === 'leaving') {
         const step = exit.clone().sub(root.position)
         const left = step.length()
-        if (left < 0.05) {
+        if (left < LEAVE_NEAR || since - leftAt > LEAVE_MAX) {
           state = 'away'
           root.visible = false
           cooldown = between(COOLDOWN)
           return true
         }
-        // Turned away first, then the dash, speeding up (an easing on its first second); bored, a slow turn and an easy
-        // swim. In cold water, everything slower (pace)
-        const turned = face(step, dt, calm ? TURN * slow : FLEE_TURN)
-        const speed = calm ? WANDER_OFF * slow : FLEE * Math.sqrt(slow) * Math.min(1, (since - leftAt) / 1) ** 2
-        if (turned || since - leftAt > (calm ? 1.5 : 0.3)) root.position.addScaledVector(step.normalize(), Math.min(left, Math.max(speed, 0.3) * dt))
+        // Turning toward its way out while swimming where it points (an arc); faster as it lines up. In cold water,
+        // everything slower (pace)
+        face(step, dt, calm ? TURN * slow : FLEE_TURN, calm ? TURN_EASE : FLEE_EASE)
+        const delta = Math.atan2(Math.sin(Math.atan2(step.x, step.z) - heading), Math.cos(Math.atan2(step.x, step.z) - heading))
+        const lined = (1 + Math.cos(delta)) / 2
+        const top = calm ? WANDER_OFF * slow : FLEE * Math.sqrt(slow)
+        const wanted = top * (LEAVE_SLOWEST + (1 - LEAVE_SLOWEST) * lined * lined)
+        leaveSpeed += (wanted - leaveSpeed) * Math.min(1, (calm ? LEAVE_ACCEL : FLEE_ACCEL) * dt)
+        root.position.addScaledVector(forward.set(Math.sin(heading), 0, Math.cos(heading)), leaveSpeed * dt)
       }
       // Its speed this frame (smoothed), its turn counted in: the wave's pace and size follow it (in cold water it goes
       // slower, so it waves slower too)
@@ -348,7 +367,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
       const size = speedNow < SIZE_SPEED ? SIZE_REST + (1 - SIZE_REST) * (speedNow / SIZE_SPEED) : Math.min(WAVE_MAX, 1 + (speedNow - SIZE_SPEED) * 0.2)
       spine.forEach(({ bone, rest, axis }, k) => {
         const wave = WAVE[k] * size * Math.sin(phase - k * WAVE_LAG)
-        bone.quaternion.copy(rest).premultiply(bend.setFromAxisAngle(axis, wave - turnRate * CURVE[k]))
+        bone.quaternion.copy(rest).premultiply(bend.setFromAxisAngle(axis, wave - THREE.MathUtils.clamp(turnRate * CURVE[k], -MAX_BEND, MAX_BEND)))
       })
       root.rotation.set(0, heading, 0)
       body.position.y = BOB * Math.sin(time * 1.3)

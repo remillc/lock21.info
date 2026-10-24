@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, the bass leaving (Christian, 2026-10-24: its turn away didn't look natural): it swims where its body
+  points, along an arc while it turns, slow facing away and faster as it lines up with its way out (it pivoted on the
+  spot, then slid there in a straight line); fleeing, a C-start: the turn snaps in, the body bends into a C, then
+  the dash. A spine bone bends at most 0.45 rad in a turn.
 - About page (TODO #58): at `/a-propos` (`/en/a-propos` for now: English addresses are TODO #63), the former `/about`
   and `/en/about` redirected; a « Mes autres projets » section: Lock 23 3D (lock23.ca), Thousand Islands Shipwrecks,
   Open Caves (opencaves.org, without www).
