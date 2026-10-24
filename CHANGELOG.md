@@ -4,6 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, the finest detail loads again up close (TODO #69): the library shows a tile's finer children only once
+  all of them are in, and since the relief each finest tile carried a 4096 px normal map (22 of its 34 MB); the 1.2 GB
+  budget ran out first (zone 3: 6 of a wall's 7 children loaded, the wall still coarse). As each tile arrives, its
+  normal map is kept at 2048 px and a coarse level's photo at 2048 px (larger mipmap levels dropped): a finest tile
+  about 17 MB. At the reported view, 43 finest tiles shown instead of 7, in the same budget.
 - Site, English pages at English addresses (TODO #63): /en/data-collection/dive-log, /en/model, /en/about,
   /en/problems/banana-effect... instead of their French paths. The files keep the French path (Starlight pairs the
   translations by it: language menu, hreflang, sidebar; tools/i18n too); `src/data/englishPaths.js` gives each its

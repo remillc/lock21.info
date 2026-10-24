@@ -361,6 +361,40 @@ function releaseAfterUpload(surface) {
     }
   }
 }
+// The tiles' texture sizes on the GPU (TODO #69, 2026-10-24: up close, the walls stayed at a coarse level). The
+// library shows a tile's finer children only once all of them are loaded; since the relief (2026-10-19) each finest
+// tile also carried a 4096 px normal map, 22 of its 34 MB, and the 1.2 GB budget ran out before every child of a near
+// wall came in (zone 3: 6 of 7 loaded, 204 MB in memory, the wall still coarse). As each tile arrives: its normal map
+// at most NORMAL_MAX px (the relief shows the same; the photo keeps its full size), and on the coarser levels the photo
+// at most COARSE_MAX px (cap_coarse_textures.mjs does it for the tile sets published since 2026-10-24; zone 3's
+// coarse level still had an 8192 px one, 45 MB). The larger mipmap levels dropped, nothing encoded again (sizes stay
+// multiples of 4); the tile's memory counted again
+const NORMAL_MAX = 2048
+const COARSE_MAX = 2048
+/**
+ * @param {THREE.Object3D} model - a tile's scene
+ * @param {boolean} finest - a tile without children
+ * @returns {boolean} whether a texture got smaller
+ */
+function capTileTextures(model, finest) {
+  let capped = false
+  const cap = (texture, max) => {
+    if (!texture?.isCompressedTexture || !texture.mipmaps?.length) return
+    let drop = 0
+    while (drop < texture.mipmaps.length - 1 && Math.max(texture.mipmaps[drop].width, texture.mipmaps[drop].height) > max && texture.mipmaps[drop + 1].width % 4 === 0 && texture.mipmaps[drop + 1].height % 4 === 0) drop++
+    if (!drop) return
+    texture.mipmaps = texture.mipmaps.slice(drop)
+    texture.image = { width: texture.mipmaps[0].width, height: texture.mipmaps[0].height }
+    texture.needsUpdate = true
+    capped = true
+  }
+  model.traverse((child) => {
+    if (!child.isMesh) return
+    cap(child.material?.normalMap, NORMAL_MAX)
+    if (!finest) cap(child.material?.map, COARSE_MAX)
+  })
+  return capped
+}
 const ktx2Loader = new KTX2Loader().setTranscoderPath(`${import.meta.env.BASE_URL}vendor/basis/`).detectSupport(renderer)
 // The tiles' textures are ETC1S (Obj2Tiles): on a computer the loader would transcode them to BC7 (1 byte per pixel),
 // which holds no more than ETC1S does; BC1 (DXT1, half a byte per pixel) shows the same and halves the textures'
@@ -1222,6 +1256,12 @@ async function loadModel() {
       // its parser holding the downloaded file (a second copy of the tile); nothing reads it once the tile is in
       tile.engineData.metadata = null
       loadWatch.arrived++
+      // Smaller textures (capTileTextures), before the surfaces are set up; its memory counted again
+      // (the library keeps its first count of each tile: forgotten first)
+      if (capTileTextures(model, !tile.children?.length)) {
+        tiles._bytesUsed?.delete(tile)
+        tiles.recalculateBytesUsed(tile)
+      }
       model.traverse((child) => {
         if (child.isMesh) initSurface(child, entry.id)
         if (child.isMesh) releaseAfterUpload(child.userData.surface)
