@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#65**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#66**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -18,8 +18,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   (`--lod-texture-scale` below 0.5, a full re-tiling). Measured 2026-10-23 before that: the budget is full right after the start
   view (phone 462 of 450 MB with 15 tiles, desktop 1201 of 1200 MB), so turning or moving loads no new detail, during
   a gesture or after it
-- [ ] #64 The diver's arm and its light (`viewer/public/diver/`, `tools/diver/`): check their weight (download, triangles,
-  textures and their sizes, graphics memory) and lighten them if needed, as the bass (40,000 → 6,000 triangles)
+- [ ] #65 The arm's dive computer as a Shearwater Perdix 3 (https://shearwater.com/en-ca/products/perdix-3: its
+  product images), with realistic data on its screen (depth, dive time, no-decompression limit, gas, etc.)
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
 
 ### Zones

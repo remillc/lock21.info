@@ -8,6 +8,7 @@
 // camera's turns and sways gently, as an arm held out in the water; the light's beam moves with it (onLampPose).
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js'
 
 const URL = `${import.meta.env.BASE_URL}diver/diver-arm.glb`
 // How fast the arm catches up with the camera's turns (1/s), and how far it may lag (rad)
@@ -56,7 +57,8 @@ export function createDiverArm({ onLampPose = () => {}, when = Promise.resolve()
   const front = new THREE.Vector3()
   const axis = new THREE.Vector3()
 
-  when.then(() => new GLTFLoader().load(URL, (gltf) => {
+  // Its geometry is meshopt-compressed (tools/publish-model/pack_creature.mjs -m, TODO #64)
+  when.then(() => new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(URL, (gltf) => {
     const model = gltf.scene
     model.traverse((object) => {
       if (object.isMesh) object.frustumCulled = false

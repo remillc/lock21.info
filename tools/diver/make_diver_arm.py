@@ -7,9 +7,11 @@ The arm's shape: « First Person hands rigged » (Sketchfab, CC BY 4.0), its rig
 rig came through the FBX conversion with garbled bones: the shape is used, not the rig). The hand's frame is measured
 on the shape itself: the fingers' direction, and the back of the hand (the hand's thinnest direction).
 
-Run in Blender, headless:
+Run in Blender, headless, then pack it for the viewer (TODO #64, 2026-10-24: geometry compressed with meshopt and
+simplified to 60 %, 638 KB and 19,000 triangles -> 137 KB and 13,300, no visible change; diver-arm.js has the decoder):
     blender -b --factory-startup --python tools/diver/make_diver_arm.py -- -a O:/modeles/diver/hands/scene.gltf
-        -l viewer/public/diver/dive-light.glb -o viewer/public/diver/diver-arm.glb [-p preview.png]
+        -l tools/diver/dive-light.glb -o O:/temp/diver-arm.glb [-p preview.png]
+    node tools/publish-model/pack_creature.mjs O:/temp/diver-arm.glb viewer/public/diver/diver-arm.glb -m -s 0.6
 """
 import argparse
 import math

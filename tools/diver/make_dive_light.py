@@ -3,14 +3,15 @@ reference, 2026-10-23): a compact turned head, black anodized, fluted for the gr
 indicator there), its front recessed behind clear glass: a polished reflector with six flood LEDs and three spot LEDs
 in their cups, framed by a knurled blue anodized bezel; a slide switch in its track on top, and a wide rubber hand
 strap with a buckle below (the light rides on the back of the hand). Written as a .glb (metres) for the viewer
-(viewer/public/diver/dive-light.glb), and a preview render.
+(tools/diver/dive-light.glb: only an input of make_diver_arm.py, which sets it on the hand; the viewer loads the
+arm), and a preview render.
 
 Built in Blender's frame: forward +Y (the front face at y = 0), up +Z; the strap's loop centred at (0, -0.035, -0.062),
 the saddle's underside at z = -0.0425 (make_diver_arm.py sets it on the back of the hand and swaps the loop, the buckle
 and the keeper for a strap fitted to the hand).
 
 Run in Blender, headless:
-    blender -b --factory-startup --python tools/diver/make_dive_light.py -- -o viewer/public/diver/dive-light.glb [-p preview.png]
+    blender -b --factory-startup --python tools/diver/make_dive_light.py -- -o tools/diver/dive-light.glb [-p preview.png]
 """
 import argparse
 import math
