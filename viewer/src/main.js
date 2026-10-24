@@ -416,7 +416,7 @@ function releaseAfterUpload(surface) {
 // GB with it, the same detail in sight. A part of the view newly turned to stays empty a moment (under 2 s on a fast
 // connection) instead of coarse: phones, slower, keep the fallback
 const DETAIL_FALLOFF = 2 / 3
-const DETAIL_DENSITY = 0.07
+const DETAIL_DENSITY = 0.05
 /** The profile's detail on a tile set: its error target, the falloff with distance, lean loading */
 function setDetail(tiles) {
   tiles.errorTarget = profile.errorTarget

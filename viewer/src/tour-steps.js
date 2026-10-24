@@ -103,12 +103,11 @@ export const TOUR_STEPS = [
   {
     kind: 'move',
     from: [-27.28, 2.02, -16.28, -61.37, -7.37, -21.45],
-    // From step 3 (Christian, 2026-10-24: accelerating softly while the way plunges): up slowly out of the door's area,
-    // over the floor east of the piers' ends, then diving into the bay, faster as it goes down, braking only at the
-    // end, along the move's line of sight. Clear of every surface (1.3 m at least)
-    approach: [[-18.4, 5.2, 5.5], [-19.0, 7.6, -2], [-20.5, 6.0, -9.5], [-23.6, 3.2, -15.0]],
-    // (the first stretch faster: 1.4, was 0.8, Christian, 2026-10-24)
-    paces: [1.4, 1.4, 1.9, 2.3, 0.9],
+    // From step 3 (Christian, 2026-10-24): at floor level along the piers' ends (about 3.5 m east of them, 1.6 to 2 m
+    // high), looking west toward the structures, then to the passage's start. Clear of every surface (1.2 m at least)
+    approach: [[-21.5, 1.6, 5.0], [-24.5, 1.7, 0], [-25.0, 1.9, -6], [-25.0, 2.0, -11], [-25.6, 2.0, -14.6]],
+    looks: [{ dir: [-1, 0.05, -0.35] }, { dir: [-1, 0.05, -0.3] }, { dir: [-1, 0.05, -0.2] }, { dir: [-1, 0.05, -0.2] }, { dir: [-1, -0.1, -0.15] }],
+    paces: [1.6, 1.8, 1.8, 1.8, 1.4, 1.0],
     // Through the passage in line with the start (Christian, 2026-10-24: it went through the walls), in its middle: the
     // passages are 1.1 m wide (z -17.2 to -16.1 for this one) and 1.1 m high (y 1.8 to 2.9), their piers 0.8 m wide
     // and 3.1 m long (x -32.7 to -35.8); measured with the finest tiles, every surface counted
@@ -159,7 +158,14 @@ export const TOUR_STEPS = [
     // turning toward it as soon as the flight starts, the same point all the way); his view looked at
     // -36.26, -20.92, 11.83, a little lower and further north
     cam: [-106.95, 7.59, -10.04, -93.75, 6.42, -4.0],
-    turn: 0.12,
+    // From step 7 (Christian, 2026-10-24: at floor level, faster): down to about 2 m over the floor, west low north of
+    // the block, rising to the view only at the end; looking at the block's top all the way, turning to it first.
+    // Clear of every surface (1.4 m at least)
+    approach: [[-60, 2.4, -18.5], [-72, 2.2, -16], [-86, 2.2, -14.5], [-99, 2.4, -13.5], [-104.5, 5.0, -11.5]],
+    looks: [[-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0]],
+    turnFirst: 1.5,
+    paces: [2.5, 5, 5, 4, 2, 1.2],
+    accel: 1.5,
     title: { fr: 'La zone 18', en: 'Zone 18' },
     text: {
       fr: 'Dernier arrêt: le bloc de la zone 18, à l’ouest, et l’écluse au loin. Le relevé continue: les volumes violets sont les zones pas encore numérisées.',
