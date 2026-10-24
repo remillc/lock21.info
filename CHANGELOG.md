@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, the diver's hand light 20 % smaller (Christian, 2026-10-24), still seated on the back of the hand.
 - 3D viewer, underwater: the diver never goes under the floor (Christian, 2026-10-24): a ray up from the camera that
   meets a floor seen from below brings it back 60 cm above it, the orbit's point with it (orbiting or panning have no
   collisions, and a gap between tiles or tiles not yet loaded let it through).
