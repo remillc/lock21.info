@@ -66,6 +66,9 @@ const TURN_GAIN = 2.5
 const CURVE = [0, 0.5, 0.64, 0.64, 0.5]
 const GLIDE = 0.05
 
+/** A number at random in [min, max] */
+const between = ([min, max]) => min + Math.random() * (max - min)
+
 /**
  * @param {object} options
  * @param {(material: THREE.Material) => THREE.Material} [options.prepare] - the viewer's material set-up (underwater)
@@ -77,11 +80,10 @@ const GLIDE = 0.05
  *   saves its energy: slower waves, turns and swimming, a shorter dash)
  * @param {boolean} [options.always] - debug (?bass=1): shown at once and all the time, its place kept in front of the
  *   camera (re-placed when the camera moves), facing the diver; no wait, pause or wall check
+ * @param {Promise<unknown>} [options.when] - its model loads once this settles (the viewer: after the first view, so as
+ *   not to share the bandwidth with the coarsest tiles)
  */
-/** A number at random in [min, max] */
-const between = ([min, max]) => min + Math.random() * (max - min)
-
-export function createBass({ prepare = (m) => m, clearance = () => Infinity, visibility = () => 6, inSight = () => true, pace = () => 1, always = false } = {}) {
+export function createBass({ prepare = (m) => m, clearance = () => Infinity, visibility = () => 6, inSight = () => true, pace = () => 1, always = false, when = Promise.resolve() } = {}) {
   const root = new THREE.Group()
   root.name = 'bass'
   root.visible = false
@@ -92,7 +94,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   const spine = []
   const bend = new THREE.Quaternion()
 
-  new GLTFLoader().load(URL, (gltf) => {
+  when.then(() => new GLTFLoader().load(URL, (gltf) => {
     const model = gltf.scene
     model.traverse((object) => {
       if (!object.isMesh) return
@@ -116,7 +118,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
       spine.push({ bone, rest: bone.quaternion.clone(), axis: new THREE.Vector3(0, 1, 0).applyQuaternion(toLocal).normalize() })
     }
     ready = true
-  })
+  }))
 
   // States: away (none), arriving, turning (to the diver), staying, leaving
   let state = 'away'

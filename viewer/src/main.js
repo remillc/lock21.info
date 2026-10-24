@@ -132,6 +132,14 @@ const arName = arFull ? 'lock-21-ar-full' : 'lock-21-ar'
 const arLink = document.querySelector('.ar-button')
 // Run once the 3D view has finished its first load (updateLoading): the AR model's background download waits for it
 const afterFirstLoad = []
+// The first view drawn, and the underwater view opened once (Christian, 2026-10-24: on a slow connection, the crayfish,
+// the bass, the diver's arm and the texture decoder all came with the coarsest tiles, and nothing showed for 20 s):
+// the creatures and the arm load after the first view; the bass and the arm only once underwater (?bass=1: at once)
+let firstViewReached
+const firstView = new Promise((resolve) => { firstViewReached = resolve })
+let underwaterReached
+const underwaterOnce = new Promise((resolve) => { underwaterReached = resolve })
+const afterFirstViewUnderwater = Promise.all([firstView, underwaterOnce])
 if (arFull) arLink.dataset.tooltip = t('arFull')
 if (arLink.relList?.supports?.('ar')) {
   arLink.href = `${AR_URL}/${arName}.usdz?v=${AR_VERSION}`
@@ -256,6 +264,17 @@ scene.background = backdrop
 // material carries (litMaterial); off until the 🤿 button or the setting turns it on (setUnderwater)
 const underwater = createUnderwater(scene, renderer, { mobile })
 const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.05, 2000)
+// The tiles' own camera (Christian, 2026-10-24: does loading take the visibility into account?): the view's, but
+// underwater its far limit stops at TILES_VISIBILITY times the season's visibility. Beyond, the surfaces have the
+// water's colour: their tiles are neither loaded nor drawn (spring, 14 ft: about 5 m instead of the whole site)
+const TILES_VISIBILITY = 1.2
+const tilesCamera = new THREE.PerspectiveCamera()
+function syncTilesCamera() {
+  tilesCamera.copy(camera)
+  if (underwater.on) tilesCamera.far = Math.max(1, underwater.visibility * TILES_VISIBILITY)
+  tilesCamera.updateProjectionMatrix()
+  tilesCamera.updateMatrixWorld()
+}
 const controls = new OrbitControls(camera, renderer.domElement)
 // Development builds only: the viewer's parts for tests in the browser console (window.l21)
 if (import.meta.env.DEV) window.l21 = { THREE, renderer, scene, camera, controls, underwater, get tilesets() { return tilesets } }
@@ -310,6 +329,8 @@ const ktx2Loader = new KTX2Loader().setTranscoderPath(`${import.meta.env.BASE_UR
 // which holds no more than ETC1S does; BC1 (DXT1, half a byte per pixel) shows the same and halves the textures'
 // memory (TODO #55). Phones transcode ETC1S to ETC1/ETC2 already
 if (ktx2Loader.workerConfig.dxtSupported) ktx2Loader.workerConfig.bptcSupported = false
+// Its decoder (0.5 MB of WebAssembly) fetched at once: otherwise only with the first texture, among the tiles
+ktx2Loader.init()
 watchTextures(ktx2Loader)
 
 // Telemetry on texture decoding (2026-10-24: an iPad Air's tiles came without their textures, about 3 MB each instead
@@ -731,6 +752,7 @@ underwaterButton.hidden = false
 underwaterButton.addEventListener('click', () => setUnderwater(!underwater.on))
 /** @param {boolean} on */
 function setUnderwater(on) {
+  if (on) underwaterReached()
   look.underwater = on
   underwater.setOn(on)
   underwaterButton.setAttribute('aria-pressed', String(on))
@@ -1111,7 +1133,9 @@ async function loadModel() {
   // large textures and stopped loading, leaving zones missing on phones.
   let sharedCache = null
   tilesets = manifest.tilesets.map((entry) => {
-    const tiles = new TilesRenderer(`${tilesUrl}/${entry.url}`)
+    // Phones and tablets: the zone's light set where it has one (tile_zone.ps1 -Light: textures halved, no relief;
+    // the finest tiles about five times lighter), the same tiling
+    const tiles = new TilesRenderer(`${tilesUrl}/${mobile && entry.light ? entry.light : entry.url}`)
     tiles.zoneId = entry.id
     tiles.registerPlugin(coarseWithoutRelief())
     if (sharedCache) {
@@ -1126,8 +1150,9 @@ async function loadModel() {
     gltfLoader.setMeshoptDecoder(MeshoptDecoder) // geometry compressed by tools/publish-model/compress_tiles.mjs
     tiles.manager.addHandler(/\.(gltf|glb)$/g, gltfLoader)
     tiles.errorTarget = profile.errorTarget
-    tiles.setCamera(camera)
-    tiles.setResolutionFromRenderer(camera, renderer)
+    coarseFirst(tiles)
+    tiles.setCamera(tilesCamera)
+    tiles.setResolutionFromRenderer(tilesCamera, renderer)
 
     // Counted (the loading card, LOAD_ERRORS); only the first TILE_ERRORS_LOGGED of a visit are sent
     tiles.addEventListener('load-error', ({ error, url }) => {
@@ -1237,6 +1262,7 @@ let crawfishes = []
 // The curious bass underwater (bass.js, TODO #56): when the camera stays still, it comes to look at the diver; its path
 // clear of the surfaces (collide.js)
 const bass = createBass({
+  when: params.get('bass') === '1' ? firstView : afterFirstViewUnderwater,
   prepare: prepareCreatureMaterial,
   clearance: (point) => collider.distanceTo(point, collider.surfacesNear(point, 0.6), 0.6),
   visibility: () => underwater.visibility,
@@ -1258,7 +1284,7 @@ const bass = createBass({
 scene.add(bass.object)
 if (import.meta.env.DEV) window.l21.bass = bass
 // The diver's arm and its light, while underwater with the light on: the beam starts at the drawn light
-const diverArm = createDiverArm({ onLampPose: (front, axis) => underwater.setLampPose(front, axis) })
+const diverArm = createDiverArm({ onLampPose: (front, axis) => underwater.setLampPose(front, axis), when: afterFirstViewUnderwater })
 if (import.meta.env.DEV) window.l21.diverArm = diverArm
 // The river's current (m/s, world): west to east, 35 ft/min (measured 2024-06-08)
 const RIVER_CURRENT = new THREE.Vector3((35 * 0.3048) / 60, 0, 0)
@@ -1322,6 +1348,7 @@ function showMockups(model, manifest) {
   model.traverse((child) => {
     if (!/^crawfish/i.test(child.name) || child.isMesh) return
     const crawfish = createCrawfish({
+      when: firstView,
       prepare: prepareCreatureMaterial,
       ground: (x, y, z) => collider.groundAt(x, y, z),
       // The river's current as the particles drift in it (underwater.js), or as measured outside the underwater view
@@ -1353,6 +1380,7 @@ function showError(error) {
 
 live.tiles = (v) => { tilesUrl = v || DEFAULT_TILES_URL; loadModel().catch(showError) }
 live.profile = (v) => {
+  const wasMobile = mobile
   mobile = isMobile(v)
   showKeys()
   profile = PROFILES[mobile ? 'mobile' : 'desktop']
@@ -1366,6 +1394,8 @@ live.profile = (v) => {
   tilesets.forEach((t) => { t.errorTarget = profile.errorTarget })
   if (aoPass) aoQuality()
   resize()
+  // The other set of tiles (light on phones)
+  if (mobile !== wasMobile && zoneEntries.some((entry) => entry.light)) loadModel().catch(showError)
 }
 
 function resize() {
@@ -1373,7 +1403,8 @@ function resize() {
   camera.updateProjectionMatrix()
   renderer.setSize(container.clientWidth, container.clientHeight)
   composer?.setSize(container.clientWidth, container.clientHeight)
-  tilesets.forEach((tiles) => tiles.setResolutionFromRenderer(camera, renderer))
+  syncTilesCamera()
+  tilesets.forEach((tiles) => tiles.setResolutionFromRenderer(tilesCamera, renderer))
   requestRender()
 }
 window.addEventListener('resize', resize)
@@ -1488,7 +1519,9 @@ function firstViewDrawn() {
   let visible = 0
   for (const tiles of tilesets) {
     visible += tiles.visibleTiles.size
-    for (const tile of tiles.loadingTiles) if (tile.internal.depthFromRenderedParent <= 1) return false
+    // Only tiles in the view: a zone behind the camera or off to the side does not hold the card (2026-10-24: zone 18,
+    // out of view, came last on a slow connection and kept « Chargement » up)
+    for (const tile of tiles.loadingTiles) if (tile.internal.depthFromRenderedParent <= 1 && tile.traversal.inFrustum) return false
   }
   return visible > 0
 }
@@ -1505,6 +1538,26 @@ const TILE_ERRORS_LOGGED = 5
 let tileErrors = 0
 // arrived: tiles in since the load started (seen: as of the last look), progressAt: when the last came in
 let loadWatch = { started: 0, arrived: 0, seen: 0, progressAt: 0, errors: 0, reports: 0, said: null }
+// Download and decode the coarsest level first, every zone's (Christian, 2026-10-24: an old iPad, a phone): the
+// library puts first the tile with the largest error on screen, so a fine tile close to the camera came before
+// another zone's coarse one, and the 25 downloads at a time shared the bandwidth: at 5 Mbit/s, nothing was drawn for
+// 22 s. Among the tiles of the same level, the library's own order. Phones: DOWNLOADS_PHONE at a time. The queues are
+// shared by every zone: set once.
+const DOWNLOADS_PHONE = 6
+function coarseFirst(tiles) {
+  for (const queue of [tiles.downloadQueue, tiles.parseQueue]) {
+    if (queue.coarseFirst) continue
+    queue.coarseFirst = true
+    const own = queue.priorityCallback
+    queue.priorityCallback = (a, b) => {
+      const da = a.internal?.depthFromRenderedParent
+      const db = b.internal?.depthFromRenderedParent
+      if (da !== undefined && db !== undefined && da !== db && a.traversal?.used && b.traversal?.used) return da < db ? 1 : -1
+      return own(a, b)
+    }
+  }
+  if (mobile) tiles.downloadQueue.maxJobsPerOrigin = DOWNLOADS_PHONE
+}
 function retryLoad() {
   log('retry', tileFacts())
   loadModel().catch(showError)
@@ -1559,6 +1612,7 @@ function updateLoading() {
   // détails » bar (loading.js), which stays while the finer detail keeps arriving
   if (status.active && rootsLoaded && firstViewDrawn()) {
     status.refine()
+    firstViewReached()
     log('first-view', tileFacts())
   }
   // Right after the roots, nothing is queued for a moment (the next tiles are only asked on the next update): done
@@ -1568,11 +1622,13 @@ function updateLoading() {
   else if (performance.now() - idleSince > 800) {
     // Nothing left to load, but the first view never came (its tiles failed): the error, with « Réessayer »
     if (status.active && loadWatch.errors) {
+      firstViewReached()
       log('load-failed', { msg: 'tiles failed', ...tileFacts() })
       status.showError(t('loadErrors', { n: loadWatch.errors }), retryLoad)
       return
     }
     status.done()
+    firstViewReached()
     // Telemetry: the first full load of the visit (time since the page started, tiles, memory)
     if (!loadLogged) {
       loadLogged = true
@@ -1645,6 +1701,7 @@ function renderLoop() {
   if (!needsRender && !loading) return
   needsRender = false
   camera.updateMatrixWorld()
+  syncTilesCamera()
   tilesets.forEach((tiles) => tiles.update())
   drawScene()
 }

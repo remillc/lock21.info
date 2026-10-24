@@ -28,6 +28,14 @@ Profondeur de découpage du niveau le plus grossier (défaut 0).
 .PARAMETER NormalUastc
 Carte de relief (map_Bump) en UASTC plutôt qu'en ETC1S qualité maximale: plus fidèle, 6 fois plus lourde.
 
+.PARAMETER Light
+Seulement le jeu léger (téléphones et tablettes) de la zone: texture réduite de moitié (halve_texture.mjs), sans
+relief, dans le dossier -Version (ex. 2026-10-23-1540-light pour la version active 2026-10-23-1540); le manifeste
+garde l'adresse de la version complète et inscrit celle-ci comme « light ». Pour les versions publiées avant ce jeu.
+
+.PARAMETER NoLight
+Ne pas faire le jeu léger après la version complète (il est fait par défaut, dans <version>-light).
+
 .PARAMETER Help
 Afficher cette aide (-h, -Help ou --help).
 
@@ -43,6 +51,8 @@ param(
     [double]$LongZone = 25,
     [int]$Divisions = 0,
     [switch]$NormalUastc,
+    [switch]$Light,
+    [switch]$NoLight,
     [string]$TilesRoot = "O:\publishing\tiles",
     [string]$Obj2Tiles = "O:\publishing\bin\obj2tiles-1.8.0\Obj2Tiles.exe",
     [Alias('h')][switch]$Help,
@@ -59,6 +69,21 @@ if (Test-Path $out) { throw "$out existe déjà: choisir une autre -Version (les
 # Garde-fou: sans map_Kd dans le MTL, Obj2Tiles produit des tuiles sans texture (blanches)
 $mtl = Join-Path $Prepared "$Zone.mtl"
 if (-not (Select-String -Path $mtl -Pattern "^map_Kd" -Quiet)) { throw "$mtl ne référence aucune texture (map_Kd)" }
+
+# Jeu léger (-Light): l'OBJ préparé (lien physique), sa texture réduite de moitié, sans relief. Téléphones et
+# tablettes (Christian, 2026-10-24: un vieil iPad et un iPhone 14 attendaient une à deux minutes): leur cadre est bien
+# plus petit qu'un écran d'ordinateur, et les tuiles les plus fines pesaient environ 6,6 Mo, dont 3,3 de relief que le
+# visualiseur n'y affiche pas et 2,9 de photo 4096 px.
+$source = $Prepared
+if ($Light) {
+    $source = "$out-src"
+    New-Item -ItemType Directory -Force $source | Out-Null
+    New-Item -ItemType HardLink -Path (Join-Path $source "$Zone.obj") -Target (Join-Path $Prepared "$Zone.obj") | Out-Null
+    $photo = (Select-String -Path $mtl -Pattern "^map_Kd\s+(.+)$").Matches[0].Groups[1].Value.Trim()
+    node "$PSScriptRoot\halve_texture.mjs" (Join-Path $Prepared $photo) (Join-Path $source $photo)
+    if ($LASTEXITCODE -ne 0) { throw "halve_texture.mjs a échoué" }
+    Get-Content $mtl -Encoding UTF8 | Where-Object { $_ -notmatch "^map_Bump" } | Set-Content (Join-Path $source "$Zone.mtl") -Encoding UTF8
+}
 
 # Niveaux de détail selon la taille de la zone (rapport de prepare_zone.py: boîte englobante en mètres, Z vers le haut).
 # Test sur la zone 12 (10 m): un 4e niveau ne gagne que 9 % de téléchargement de près, pour 4 fois plus de requêtes;
@@ -80,9 +105,10 @@ $obj2tilesArgs = @('--preset', 'standard', '--texture-format', 'Ktx2', '--unlit'
 # Carte de relief (map_Bump, bake_relief.py): Obj2Tiles la range mal dans chaque tuile (zones noires) et la
 # compresse comme une photo (ETC1S, sRGB). Elle est donc ignorée ici, puis tuilée à part comme si c'était la photo,
 # en UASTC, et greffée dans les tuiles par merge_normal_maps.mjs (même géométrie: même rangement).
-$normalLine = Select-String -Path $mtl -Pattern "^map_Bump\s+(.+)$"
-& $Obj2Tiles @obj2tilesArgs --ignore-normal-maps (Join-Path $Prepared "$Zone.obj") $out
+$normalLine = if ($Light) { $null } else { Select-String -Path $mtl -Pattern "^map_Bump\s+(.+)$" }
+& $Obj2Tiles @obj2tilesArgs --ignore-normal-maps (Join-Path $source "$Zone.obj") $out
 if ($LASTEXITCODE -ne 0) { throw "Obj2Tiles a échoué ($LASTEXITCODE)" }
+if ($Light) { Remove-Item -Recurse -Force $source }
 if ($normalLine) {
     $normalMap = $normalLine.Matches[0].Groups[1].Value.Trim()
     $normalSrc = "$out-normal-src"
@@ -114,6 +140,12 @@ if ($LASTEXITCODE -ne 0) { throw "compression échouée ($LASTEXITCODE)" }
 # Racine vide: erreur géométrique très grande, sinon la zone disparaît vue de loin; champs null retirés
 python -I "$PSScriptRoot\fix_tileset.py" $out
 
+if ($Light) {
+    python -I "$PSScriptRoot\update_manifest.py" $TilesRoot $Zone "$Zone/$Version/tileset.json" --light
+    if ($LASTEXITCODE -ne 0) { throw "update_manifest.py a échoué" }
+    return
+}
+
 # Empreinte de l'état de la zone dans le .blend au moment de la préparation (voir check_changes.py)
 $fp = Join-Path $Prepared "$Zone-fingerprint.json"
 if (Test-Path $fp) { Copy-Item $fp (Join-Path $out "fingerprint.json") }
@@ -124,3 +156,8 @@ $color = (node "$PSScriptRoot\texture_stats.mjs" $texture) -split " "
 if ($LASTEXITCODE -ne 0) { throw "texture_stats.mjs a échoué sur $texture" }
 
 python -I "$PSScriptRoot\update_manifest.py" $TilesRoot $Zone "$Zone/$Version/tileset.json" --color @color
+
+# Le jeu léger de cette version (téléphones et tablettes), sauf -NoLight
+if (-not $NoLight) {
+    & $PSCommandPath -Zone $Zone -Prepared $Prepared -Version "$Version-light" -Light -Lods $Lods -Divisions $Divisions -TilesRoot $TilesRoot -Obj2Tiles $Obj2Tiles
+}

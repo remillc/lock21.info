@@ -86,9 +86,11 @@ async function put(path, cacheControl) {
   return (await stat(path)).size
 }
 
+// The sets a manifest points to: each entry's url, and a zone's light set (phones and tablets, tile_zone.ps1 -Light)
+const setsOf = (manifest) => [...(manifest?.tilesets || []), ...(manifest?.models || [])]
+  .flatMap((entry) => [{ id: entry.id, url: entry.url }, ...(entry.light ? [{ id: `${entry.id} (léger)`, url: entry.light }] : [])])
 // Version folders referenced by a manifest: "zone-12/2026-10-18-1332/tileset.json" -> "zone-12/2026-10-18-1332/"
-const versionsOf = (manifest) => new Set([...(manifest?.tilesets || []), ...(manifest?.models || [])]
-  .map((entry) => entry.url.slice(0, entry.url.lastIndexOf('/') + 1)))
+const versionsOf = (manifest) => new Set(setsOf(manifest).map(({ url }) => url.slice(0, url.lastIndexOf('/') + 1)))
 
 const local = JSON.parse(await readFile(join(root, 'manifest.json'), 'utf8'))
 const previous = await remoteManifest()
@@ -99,7 +101,7 @@ console.log(`bucket ${bucket}${dryRun ? ' (essai, rien n\'est envoyé)' : ''}: $
 // 1. Missing versions (entry file absent from the bucket), uploaded with a few requests in parallel
 let uploadedFiles = 0
 let uploadedBytes = 0
-for (const entry of [...(local.tilesets || []), ...(local.models || [])]) {
+for (const entry of setsOf(local)) {
   if (await exists(entry.url)) {
     console.log(`  ${entry.id}: déjà en ligne (${entry.url})`)
     continue

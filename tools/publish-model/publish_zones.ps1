@@ -111,8 +111,10 @@ foreach ($zone in $Zones) {
 
     # Ménage: versions de la zone qui ne sont plus dans le manifeste
     $manifest = Get-Content (Join-Path $TilesRoot "manifest.json") -Raw | ConvertFrom-Json
-    $active = ($manifest.tilesets | Where-Object { $_.id -eq $slug }).url.Split("/")[1]
-    Get-ChildItem (Join-Path $TilesRoot $slug) -Directory | Where-Object { $_.Name -ne $active } | ForEach-Object {
+    # (la version active et son jeu léger, tile_zone.ps1)
+    $entry = $manifest.tilesets | Where-Object { $_.id -eq $slug }
+    $active = @($entry.url, $entry.light) | Where-Object { $_ } | ForEach-Object { $_.Split("/")[1] }
+    Get-ChildItem (Join-Path $TilesRoot $slug) -Directory | Where-Object { $active -notcontains $_.Name } | ForEach-Object {
         Remove-Item -Recurse -Force $_.FullName
         Write-Host "   supprimé: $($_.Name)"
     }

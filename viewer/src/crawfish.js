@@ -92,8 +92,10 @@ const Y = new THREE.Vector3(0, 1, 0)
  * @param {(x: number, y: number, z: number) => ({ y: number, floor: string } | null)} [options.ground] - the floor
  *   below a point: its height and which floor it is (a zone), or null; without it, no wandering
  * @param {() => THREE.Vector3} [options.current] - the river's current (m/s, world): the antennae bend with it
+ * @param {Promise<unknown>} [options.when] - its model loads once this settles (the viewer: after the first view, so as
+ *   not to share the bandwidth with the coarsest tiles)
  */
-export function createCrawfish({ prepare = (m) => m, ground = null, current = () => DEFAULT_CURRENT } = {}) {
+export function createCrawfish({ prepare = (m) => m, ground = null, current = () => DEFAULT_CURRENT, when = Promise.resolve() } = {}) {
   const root = new THREE.Group()
   root.name = 'crawfish'
   // The model, turned and scaled so that it faces +z, its feet at y = 0
@@ -104,7 +106,7 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
   let ready = false
   let side = 1
 
-  new GLTFLoader().load(URL, (gltf) => {
+  when.then(() => new GLTFLoader().load(URL, (gltf) => {
     const model = gltf.scene
     model.updateMatrixWorld(true)
     let skinned = null
@@ -140,7 +142,7 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
       bones[object.name] = { bone: object, rest: object.quaternion.clone(), toLocal }
     })
     ready = true
-  })
+  }))
 
   /** The pincers' orange tips: a copy of the material that tints them (the claw bones' weights, near the fingers' end) */
   function tintClaws(mesh) {

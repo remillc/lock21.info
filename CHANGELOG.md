@@ -4,6 +4,18 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D model, phones and tablets (an old iPad and an iPhone 14 waited one to two minutes): a light set of tiles per
+  zone, the same tiling with textures halved and no relief maps (`tile_zone.ps1`, made after each version, or alone
+  with `-Light` for a version already online; `halve_texture.mjs`; `light` in the manifest). The finest tiles go from
+  about 1.4 MB to 260 KB (zone 12), the whole model from 1.34 GB to 252 MB; a phone's first load from 136 to 49 MB.
+  The viewer takes it on phones and tablets. `upload_r2.mjs` sends both sets; the clean-ups keep both.
+- 3D viewer, loading order: every zone's coarsest tiles first, 6 downloads at a time on phones (25 before), the texture
+  decoder fetched at once, the crayfish after the first view, the bass and the diver's arm only once underwater; the
+  first view waits only for tiles in view. At 5 Mbit/s, the decoder came at 20 s and nothing showed for 20 to 40 s;
+  now the decoder at 5 s, the first tiles at 9 s.
+- 3D viewer, underwater: the tiles beyond the visibility (1.2 times, about 5 m in spring) are neither loaded nor drawn
+  (they had the water's colour anyway): 111 MB instead of 134 on a phone, in spring.
+
 - 3D viewer, loading (an iPad Air stayed on « Chargement » with no word why): the card now says what is going on.
   After 20 s, that it takes longer than usual (with the pieces received); no piece in for 20 s, or 5 failed: that
   loading is stalled or failing, with a « Réessayer » button (MD3 text button); when nothing could load, the error
