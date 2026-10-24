@@ -1,9 +1,9 @@
 {
   "pages": {
-    "about.md": {
-      "source": "cabfb83ce72c52b3ad74545b1ca1294ecdb1bc02",
-      "commit": "7f71860",
-      "recorded": "2026-10-23"
+    "about.mdx": {
+      "source": "f4caeb8bac099defcfe9da66adb3b3518d478ef1",
+      "commit": "52f5867",
+      "recorded": "2026-10-24"
     },
     "collecte/journal-des-plongees.mdx": {
       "source": "7cd41bfffa22c6e349d9cc2afa0dd396cc57ed8e",
