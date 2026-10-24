@@ -17,6 +17,8 @@ export default defineConfig({
   // Pages are still built as <path>/index.html; the hosting serves them at <path> and redirects <path>/ there
   // (wrangler.jsonc, html_handling)
   trailingSlash: 'never',
+  // Former addresses (TODO #58, 2026-10-24: the About page under its French name)
+  redirects: { '/about': '/a-propos', '/en/about': '/en/a-propos' },
   // preview.proxy: {} because Vite's preview server would otherwise inherit the forwarding and serve the dev viewer
   // instead of the build (astro preview must show what the hosting serves)
   vite: { server: { proxy: { '/modele/viewer': viewerDev } }, preview: { proxy: {} } },
@@ -66,7 +68,7 @@ export default defineConfig({
         LanguageSelect: './src/components/Omitted.astro',
       },
       sidebar: [
-        { label: 'À propos', translations: { en: 'About' }, link: '/about' },
+        { label: 'À propos', translations: { en: 'About' }, link: '/a-propos' },
         { label: 'Remerciements', translations: { en: 'Thanks' }, link: '/remerciements' },
         { label: 'Modèle 3D', translations: { en: '3D model' }, link: '/modele' },
         { label: 'Découpage du site', translations: { en: 'Site zones' }, link: '/decoupage-du-site' },

@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- About page (TODO #58): at `/a-propos` (`/en/a-propos` for now: English addresses are TODO #63), the former `/about`
+  and `/en/about` redirected; a « Mes autres projets » section: Lock 23 3D (lock23.ca), Thousand Islands Shipwrecks,
+  Open Caves (opencaves.org, without www).
 - Docs (TODO #62): `docs/project-organization.md` says what the AI (Claude) does and doesn't in the project: Christian
   dives, films, runs Metashape, works the .blend and writes the French pages; Claude writes the code, runs the
   publishing steps (going online only with his OK), translates, keeps the guides, tests; what it never does. The

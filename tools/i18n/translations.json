@@ -1,10 +1,5 @@
 {
   "pages": {
-    "about.mdx": {
-      "source": "6fd0aeb3ebc74beedbe4e8b513b2bbf733c10b91",
-      "commit": "677b867",
-      "recorded": "2026-10-24"
-    },
     "collecte/journal-des-plongees.mdx": {
       "source": "7cd41bfffa22c6e349d9cc2afa0dd396cc57ed8e",
       "commit": "9d608a8",
@@ -124,6 +119,11 @@
       "source": "0bbad6b4356f4cc2d7d93b3b4e9029e1e23242e3",
       "commit": "9d608a8",
       "recorded": "2026-10-21"
+    },
+    "a-propos.mdx": {
+      "source": "6fd0aeb3ebc74beedbe4e8b513b2bbf733c10b91",
+      "commit": "677b867",
+      "recorded": "2026-10-24"
     }
   }
 }
