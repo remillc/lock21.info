@@ -17,6 +17,9 @@
  * @property {number} [wait] - a move's pause at its start before it sets off (s; tour.js MOVE_PAUSE by default)
  * @property {[number, number, number][]} [approach] - the flight into the step passes through these points (camera
  *   positions), instead of its own curve
+ * @property {[number, number, number][]} [looks] - with approach: the point looked at as the camera passes each approach
+ *   point (one each), the line of sight gliding from one to the next
+ * @property {number} [flightPace] - the flight into the step at this mean speed (m/s), instead of its usual length
  * @property {number} [turn] - on the flight into the step, the camera turns toward the step's point first, within
  *   this share of the flight (otherwise gradually, all along it)
  * @property {{ fr: string, en: string }} title
@@ -36,7 +39,15 @@ export const TOUR_STEPS = [
   },
   {
     kind: 'view',
-    cam: [-31.65, 10.45, -10.5, -55.3, -7.97, -29.94],
+    // Christian's view (2026-10-24, was -31.65, 10.45, -10.5 looking at -55.3, -7.97, -29.94). From step 1, close to
+    // the floor east of the piers' ends (open, about 1 m high), then up along the south side of the pier at z -21 to
+    // the view; slowly. Checked against every surface: never closer than 1.2 m
+    cam: [-31.65, 10.45, -17.28, -34.3, 8.39, -19.46],
+    approach: [[-20.5, 2.0, -25.0], [-25.5, 2.0, -19.8], [-27.6, 5.5, -19.4], [-29.5, 9.2, -18.4]],
+    // Low, looking about level toward the pillars and the pier to climb (the floor in view); climbing, looking up toward
+    // the view's point (Christian, 2026-10-24)
+    looks: [[-29, 2.2, -20.5], [-31, 3.2, -20], [-34.3, 8.39, -19.46], [-34.3, 8.39, -19.46]],
+    flightPace: 2,
     title: { fr: 'Au-dessus des piliers', en: 'Above the piers' },
     text: {
       fr: 'Le dessus du déversoir: les piliers, la passerelle qui les relie et les mécanismes qui levaient les vannes. Le haut des murs est à 40 pieds (12 m) sous la surface.',
@@ -69,6 +80,16 @@ export const TOUR_STEPS = [
     text: {
       fr: 'Les vannes ouvertes laissaient passer l’eau sous la voûte. On traverse un des passages, vers l’ouest.',
       en: 'With the gates open, the water ran under the vault. We go through one of the passages, westward.',
+    },
+  },
+  {
+    // Added by Christian, 2026-10-24
+    kind: 'view',
+    cam: [-45.37, 1.98, -27.28, -40.73, 3.31, -29.09],
+    title: { fr: 'Les piliers, côté ouest', en: 'The piers, west side' },
+    text: {
+      fr: 'Du côté ouest, les piliers sont arrondis, montés en assises de pierre. Derrière, l’enclave est fermée par un mur de madriers.',
+      en: 'On the west side, the piers are rounded, built in courses of stone. Behind them, the bay is closed by a wall of timbers.',
     },
   },
   {

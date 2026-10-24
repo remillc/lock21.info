@@ -1120,6 +1120,12 @@ l21-tooltip[data-shown='true'] {
 .ar-button:not([hidden]) ~ .tour-button {
   right: calc(max(16px, env(safe-area-inset-right)) + 164px);
 }
+/* Underwater the season and the lamp take its place: above the row, at the right edge (Christian, 2026-10-24: the tour
+   in dive mode too) */
+.underwater-tools:not([hidden]) ~ .tour-button {
+  right: calc(max(16px, env(safe-area-inset-right)) - 4px);
+  bottom: calc(max(16px, env(safe-area-inset-bottom)) + 52px);
+}
 .tour-button:hover {
   background: rgb(80 87 68 / 94%);
 }

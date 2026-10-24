@@ -868,8 +868,8 @@ function setUnderwater(on) {
   look.underwater = on
   underwater.setOn(on)
   underwaterButton.setAttribute('aria-pressed', String(on))
-  // The tour runs in the standard view (tour.js): its button hidden underwater, and while it plays (its card shown)
-  document.querySelector('.tour-button').hidden = on || !document.querySelector('.tour-card').hidden
+  // The tour's button (tour.js), in both views (Christian, 2026-10-24: in dive mode too), hidden while it plays
+  document.querySelector('.tour-button').hidden = !document.querySelector('.tour-card').hidden
   showSeasonControl(on)
   setSwimming(on && !mobile)
   updateAddress()
@@ -1001,21 +1001,34 @@ const showKeys = () => {
 showKeys()
 swimHelpButton.addEventListener('click', () => openSwimHelp())
 
-// The guided tour (tour.js, tour-steps.js; TODO #48): in the standard view (it leaves the underwater view), the
-// movement keys hidden while it plays (its card takes the bottom of the view). ?tour=1 starts it after the first view
+// The guided tour (tour.js, tour-steps.js; TODO #48): in both views (Christian, 2026-10-24: in dive mode too). Diving,
+// the swim is suspended while it plays (the tour drives the camera as the orbit does) and taken up again from where it
+// ends; the movement keys hidden meanwhile (its card takes the bottom of the view). ?tour=1 starts it after the first
+// view
 const tour = createTour({
   steps: TOUR_STEPS,
   camera,
   controls,
   requestRender: () => requestRender(),
   log,
+  // The free height above a point: a ray up to the model's surfaces (tiles, context)
+  headroom: (position) => {
+    pickRay.set(position, UP)
+    pickRay.far = 30
+    const hit = pickRay.intersectObjects([...tilesets.map((tiles) => tiles.group), ...contextModels, ...mockupModels], true)[0]
+    pickRay.far = Infinity
+    return hit ? hit.distance : Infinity
+  },
   onStart: () => {
-    if (underwater.on) setUnderwater(false)
+    setSwimming(false)
     swimKeys.hidden = true
   },
-  onEnd: showKeys,
+  onEnd: () => {
+    setSwimming(underwater.on && !mobile)
+    showKeys()
+  },
 })
-tour.button.hidden = underwater.on
+tour.button.hidden = false
 if (params.get('tour') === '1') firstView.then(() => tour.start())
 function showSwimHelp() {
   try {
