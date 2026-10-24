@@ -2,6 +2,16 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased
+
+- 3D viewer, the bass: once in a while only. The camera still for 10 to 30 s (drawn at random again at each move),
+  then 30 s to 2 min before its next visit, and not before 45 s after the viewer opens; it watches the diver 8 to 15 s
+  (was: 6 s still, every 30 s, 8 to 20 s).
+- 3D viewer, the bass: it tolerates movement most of the time. It keeps watching the diver, turning to follow them, and
+  flees only from a sudden move (faster than 2.5 m/s, as when swimming with Shift, or a turn faster than 3 rad/s), the
+  camera nearer than 40 cm, or, 15 % of the time, when the camera sets off; out of view for 2 s, or three times as far
+  as when it came, it loses interest and swims off calmly, away from the diver, where its way is clear.
+
 ## 0.11.0 - 2026-10-23
 
 - 3D viewer, the bass: its swimming wave's pace and size follow how fast it actually goes (its turns included): slow

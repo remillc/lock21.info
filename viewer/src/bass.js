@@ -1,8 +1,9 @@
 // A curious smallmouth bass in the underwater view (TODO #56, Christian, 2026-10-23): when the camera has been still for
-// IDLE s, it comes slowly from one side of the view, swims about a sixth of the view's width, stops, and turns toward
-// the diver, its two big eyes on them; it stays, hovering. When the camera moves again, it turns away and dashes off the
-// way it came; or it gets bored after a while (STAY, at random) and swims off calmly. At most once every COOLDOWN s, and
-// only where its whole path stays CLEARANCE m from the surfaces.
+// a while (IDLE, at random), it comes slowly from one side of the view, swims about a sixth of the view's width, stops,
+// and turns toward the diver, its two big eyes on them; it stays, hovering, following the diver as they move gently. A
+// sudden move (STARTLE), or now and then a gentle one (SKITTISH), sends it off in a dash; it gets bored after a while
+// (STAY, at random), or loses sight of the diver (LOST), and swims off calmly. Once in a while
+// only (COOLDOWN, at random, after each visit), and only where its whole path stays CLEARANCE m from the surfaces.
 //
 // The model: « Smallmouth bass » by faerbogdan99 (Sketchfab, CC BY 4.0, credited on the /modele page), packed into
 // public/creatures/bass.glb (rigged by tools/creatures/rig_bass.py: a spine of five bones, head to tail; textures
@@ -14,8 +15,11 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 const URL = `${import.meta.env.BASE_URL}creatures/bass.glb`
 // An adult smallmouth bass (m, nose to tail)
 const LENGTH = 0.4
-const IDLE = 6
-const COOLDOWN = 30
+// Once in a while only (Christian, 2026-10-24): the camera still for IDLE s (drawn again at each move), then COOLDOWN s
+// (at random) before the next visit, FIRST s at the earliest after the viewer opens
+const IDLE = [10, 30]
+const COOLDOWN = [30, 120]
+const FIRST = 45
 const CLEARANCE = 0.15
 // Its distance ahead of the camera (m, at most a share of the visibility), its speeds (m/s), its turn (rad/s)
 const DISTANCE = 1
@@ -27,9 +31,19 @@ const TURN = 1.4
 const FLEE_TURN = 7
 // How long it watches the diver before it gets bored (s, at random in between: Christian, 2026-10-23), its calm
 // departure's speed (m/s), and its gentle hover (m)
-const STAY = [8, 20]
+const STAY = [8, 15]
 const WANDER_OFF = 0.35
 const BOB = 0.02
+// Movement tolerated most of the time (Christian, 2026-10-24): it flees from a sudden move only, the camera faster than
+// STARTLE (m/s, swimming with Shift; rad/s, a quick turn) or nearer than TOO_CLOSE (m); a gentle move scares it only at
+// random, SKITTISH each time the camera sets off. Out of view for LOST s, or farther than LOST_DISTANCE times its
+// distance, it loses interest and swims off calmly
+const STARTLE = { speed: 2.5, turn: 3 }
+const TOO_CLOSE = 0.4
+const UP = new THREE.Vector3(0, 1, 0)
+const SKITTISH = 0.15
+const LOST = 2
+const LOST_DISTANCE = 3
 // The swimming wave down the spine: each bone's bend (rad, head to tail) and the lag between bones (rad). Its pace and
 // size follow how fast it actually goes (Christian, 2026-10-23), turning included: beats per second at rest plus per
 // m/s (at most BEAT_MAX), size at rest up to 1 at SIZE_SPEED m/s and WAVE_MAX at full dash
@@ -64,6 +78,9 @@ const GLIDE = 0.05
  * @param {boolean} [options.always] - debug (?bass=1): shown at once and all the time, its place kept in front of the
  *   camera (re-placed when the camera moves), facing the diver; no wait, pause or wall check
  */
+/** A number at random in [min, max] */
+const between = ([min, max]) => min + Math.random() * (max - min)
+
 export function createBass({ prepare = (m) => m, clearance = () => Infinity, visibility = () => 6, inSight = () => true, pace = () => 1, always = false } = {}) {
   const root = new THREE.Group()
   root.name = 'bass'
@@ -104,7 +121,8 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   // States: away (none), arriving, turning (to the diver), staying, leaving
   let state = 'away'
   let idle = 0
-  let cooldown = 8
+  let cooldown = FIRST
+  let idleFor = between(IDLE)
   let time = 0
   let since = 0
   const from = new THREE.Vector3()
@@ -125,8 +143,15 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   let calm = false
   let stayFor = STAY[1]
   let phase = 0
+  let camSpeed = 0
+  let camTurn = 0
+  let moving = false
+  let stillFor = 0
+  const cameraAtArrival = new THREE.Vector3()
+  let unseen = 0
+  let seen = false
+  let near = DISTANCE
 
-  /** Its path for this view: from just outside one side to a sixth of the view's width inside, or null */
   /** Its path for this view: from just outside one side to a sixth of the view's width inside, at the first height,
    *  distance (DISTANCE, then closer) and side that work; false when none does */
   function plan(camera) {
@@ -155,11 +180,38 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
     return always || (lastPlan.every((c) => c >= CLEARANCE) && [from, mid, to].every((p) => inSight(camera.position, p)))
   }
 
+  /** Whether the camera's move sends it off now: 'flee', 'calm' (lost interest) or false (tolerated) */
+  function reaction(camera, moved, setOff) {
+    const gap = camera.position.distanceTo(root.position)
+    if (camSpeed > STARTLE.speed || camTurn > STARTLE.turn || gap < TOO_CLOSE) return 'flee'
+    if (setOff && Math.random() < SKITTISH) return 'flee'
+    if (!moved) return false
+    if (gap > LOST_DISTANCE * near) return 'calm'
+    return unseen > LOST ? 'calm' : false
+  }
+
+  /** In the view's frame (with a margin) */
+  function inView(camera) {
+    const p = root.position.clone().project(camera)
+    return p.z < 1 && Math.abs(p.x) < 1.1 && Math.abs(p.y) < 1.1
+  }
+
   /** @param {boolean} [bored] - a calm departure (bored), not a flight */
-  function leave(bored = false) {
+  function leave(bored = false, camera = null) {
     state = 'leaving'
     calm = bored
     leftAt = since
+    // The diver moved since it came: its way out, away from them (straight, or up to 60° to a side), where it is clear
+    if (!camera || camera.position.distanceTo(cameraAtArrival) < 0.3) return
+    const away = root.position.clone().sub(camera.position).setY(0).normalize()
+    for (const angle of [0, 0.5, -0.5, 1, -1]) {
+      const way = away.clone().applyAxisAngle(UP, angle)
+      const end = root.position.clone().addScaledVector(way, 3)
+      if (clearance(end) >= CLEARANCE && clearance(root.position.clone().addScaledVector(way, 1.5)) >= CLEARANCE) {
+        exit.copy(end)
+        return
+      }
+    }
   }
 
   /** Turns toward a direction as a fish does (Christian, 2026-10-23: the even pivot was not natural): its turning rate
@@ -191,11 +243,19 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
     update(camera, dt, on) {
       if (!ready) return false
       time += dt
-      // The camera still: idle grows; any move resets it
+      // The camera still: idle grows; any move resets it. Its speed and turn (smoothed over about a fifth of a second)
       const moved = lastPosition.distanceToSquared(camera.position) > 1e-8 || lastQuaternion.angleTo(camera.quaternion) > 1e-4
+      const smooth = Math.min(1, 5 * dt)
+      camSpeed += ((dt > 0 ? lastPosition.distanceTo(camera.position) / dt : 0) - camSpeed) * smooth
+      camTurn += ((dt > 0 ? lastQuaternion.angleTo(camera.quaternion) / dt : 0) - camTurn) * smooth
+      // Setting off: moving after a quarter second still (a still frame in the middle of a drag is not a new start)
+      stillFor = moved ? 0 : stillFor + dt
+      const setOff = moved && !moving
+      moving = moved || stillFor < 0.25
       lastPosition.copy(camera.position)
       lastQuaternion.copy(camera.quaternion)
       idle = moved ? 0 : idle + dt
+      if (moved) idleFor = between(IDLE)
       cooldown = Math.max(0, cooldown - dt)
       if (!on) {
         state = 'away'
@@ -205,7 +265,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
       // Debug: whenever the camera moves, it starts over from its new place (no flight)
       if (always && moved && state !== 'away') state = 'away'
       if (state === 'away') {
-        if (!always && (idle < IDLE || cooldown > 0)) return false
+        if (!always && (idle < idleFor || cooldown > 0)) return false
         if (!plan(camera)) {
           cooldown = 5
           return false
@@ -218,36 +278,45 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         lastRoot.copy(from)
         speedNow = 0
         root.visible = true
+        near = camera.position.distanceTo(to)
+        cameraAtArrival.copy(camera.position)
+        unseen = 0
+        seen = false
       }
       since += dt
+      // Out of view: counted once it has come into it (it arrives from just outside)
+      if (inView(camera)) seen = true
+      unseen = !seen || inView(camera) ? 0 : unseen + dt
+      const react = state === 'leaving' ? false : reaction(camera, moved, setOff)
       const slow = pace()
       if (state === 'arriving') {
         const step = to.clone().sub(root.position)
         const left = step.length()
-        if (moved) leave()
+        if (react) leave(react === 'calm', camera)
         else if (left < 0.02) state = 'turning'
         else {
           face(step, dt)
           root.position.addScaledVector(step.normalize(), Math.min(left, SWIM * slow * dt))
         }
       } else if (state === 'turning' || state === 'staying') {
-        // Facing the diver, its eyes on them; a move of the camera sends it away, and it gets bored after a while
+        // Facing the diver, its eyes on them, following them as they move; a sudden move sends it away, and it gets bored
+        // after a while
         toCamera.copy(camera.position).sub(root.position).setY(0)
         const faced = face(toCamera, dt, TURN * slow)
         if (state === 'turning' && faced) {
           state = 'staying'
           since = 0
-          stayFor = STAY[0] + Math.random() * (STAY[1] - STAY[0])
+          stayFor = between(STAY)
         }
-        if (moved) leave()
-        else if (state === 'staying' && since > stayFor) leave(true)
+        if (react) leave(react === 'calm', camera)
+        else if (state === 'staying' && since > stayFor) leave(true, camera)
       } else if (state === 'leaving') {
         const step = exit.clone().sub(root.position)
         const left = step.length()
         if (left < 0.05) {
           state = 'away'
           root.visible = false
-          cooldown = COOLDOWN
+          cooldown = between(COOLDOWN)
           return true
         }
         // Turned away first, then the dash, speeding up (an easing on its first second); bored, a slow turn and an easy
