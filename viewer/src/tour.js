@@ -36,6 +36,8 @@ const TURN_OVERLAP = 0.6
 // as to be at its pace when it starts; planned every PROFILE_STEP m along the way
 const ACCEL = 0.4
 const PROFILE_STEP = 0.05
+// A line of sight given as a direction (a step's looks: { dir }) aims this far along it
+const LOOK_FAR = 20
 
 const UP = new THREE.Vector3(0, 1, 0)
 // Minimum jerk (the smoothest start and stop: no jolt in the acceleration, as a natural movement), for the turns and
@@ -94,6 +96,10 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     let looks = null
     // With paces: the time (ms from the start) at each PROFILE_STEP along the way
     let profile = null
+    // A line of sight's point: itself, or LOOK_FAR m along its direction from the camera
+    const lookA = new THREE.Vector3()
+    const lookB = new THREE.Vector3()
+    const lookAt = (look, out) => (look.isVector3 ? out.copy(look) : out.copy(camera.position).addScaledVector(look.dir, LOOK_FAR))
     // From where the camera is when it begins (after a hurried move: its end)
     const begin = (now) => {
       start = now
@@ -102,7 +108,8 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
       const angle = from.target.clone().sub(from.position).angleTo(to.target.clone().sub(to.position))
       if (step?.approach) {
         if (step.looks) {
-          const points = step.looks.map((p) => new THREE.Vector3(...p))
+          // A point, or a direction from the camera ({ dir }: resolved as it moves)
+          const points = step.looks.map((p) => (Array.isArray(p) ? new THREE.Vector3(...p) : { dir: new THREE.Vector3(...p.dir).normalize() }))
           // Turning first: the line of sight starts from the first point looked at (the turn brings it there)
           looks = [step.turnFirst ? points[0] : from.target, ...points, to.target]
         }
@@ -178,7 +185,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
           const at = t * (looks.length - 1)
           const i = Math.min(Math.floor(at), looks.length - 2)
           const f = THREE.MathUtils.smoothstep(at - i, 0, 1)
-          controls.target.lerpVectors(looks[i], looks[i + 1], f)
+          controls.target.lerpVectors(lookAt(looks[i], lookA), lookAt(looks[i + 1], lookB), f)
           // Still turning: from where it looked, toward that line of sight
           if (elapsed < turnTime) controls.target.lerpVectors(from.target, controls.target, easeInOut(elapsed / turnTime))
         } else {

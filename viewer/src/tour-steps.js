@@ -17,8 +17,9 @@
  * @property {number} [wait] - a move's pause at its start before it sets off (s; tour.js MOVE_PAUSE by default)
  * @property {[number, number, number][]} [approach] - the flight into the step passes through these points (camera
  *   positions), instead of its own curve
- * @property {[number, number, number][]} [looks] - with approach: the point looked at as the camera passes each approach
- *   point (one each), the line of sight gliding from one to the next
+ * @property {([number, number, number] | { dir: [number, number, number] })[]} [looks] - with approach: what the camera
+ *   looks at as it passes each approach point (one each), the line of sight gliding from one to the next: a point, or a
+ *   direction from wherever the camera is ({ dir: [-1, 0, 0] }: level, due west)
  * @property {number} [turnFirst] - with looks: first a turn in place toward the first point looked at, over this many
  *   seconds; the camera sets off a little before it ends (tour.js TURN_OVERLAP)
  * @property {number[]} [paces] - with approach: a speed (m/s) for each stretch between its points (from the camera to
@@ -49,9 +50,10 @@ export const TOUR_STEPS = [
     // the view; slowly. Checked against every surface: never closer than 1.2 m
     cam: [-31.09, 9.78, -17.83, -33.72, 8.21, -20.01],
     approach: [[-20.5, 2.0, -25.0], [-25.5, 2.0, -19.8], [-27.6, 5.5, -19.4], [-29.5, 9.2, -18.4]],
-    // Low, looking about level toward the pillars and the pier to climb (the floor in view); climbing, looking up toward
-    // the view's point (Christian, 2026-10-24)
-    looks: [[-29, 2.2, -20.5], [-31, 3.2, -20], [-33.72, 8.21, -20.01], [-33.72, 8.21, -20.01]],
+    // Low, looking about level toward the pillars and the pier to climb (the floor in view); climbing, level toward the
+    // west wall until 82 % of the climb (the fourth point), then the rail on the pier's top (its middle, -33.54, 8.33,
+    // -19.59), then the view's point (Christian, 2026-10-24)
+    looks: [[-29, 2.2, -20.5], { dir: [-1, 0, 0] }, { dir: [-1, 0, 0] }, [-33.54, 8.33, -19.59]],
     // Low over the floor, slower up the pier (Christian, 2026-10-24), then to the view; it first turns toward the first
     // column, setting off near the end of the turn
     // (the climb 1.3333 times slower than its first 0.8 m/s: Christian, 2026-10-24)
