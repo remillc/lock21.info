@@ -2,14 +2,13 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#67**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#69**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
 
 ### Viewer
 
-- [ ] #3 Choose default ambient occlusion settings (radius, intensity) after viewing close up
 - [ ] #55 Floor flakes in the default view (light shards: coarse levels left over the detail): with the relief's normal
   maps, the view needs more than the desktop tiles budget (1.2 GB); at 2 GB the browser ran out of memory (« Array
   buffer allocation failed », 0.9.0). Make the tiles lighter (smaller normal maps, or none on coarse levels) or load
@@ -19,11 +18,17 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   view (phone 462 of 450 MB with 15 tiles, desktop 1201 of 1200 MB), so turning or moving loads no new detail, during
   a gesture or after it
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
+- [ ] #67 Underwater: a particle that hits the camera leaves a trace on the view (a speck on the mask's glass), which
+  fades and disappears with time
+- [ ] #68 Yellow perch schools in the underwater view
 
 ### Zones
 
-- [ ] #9 Textures: the analysis targets 1.3 mm per texel; current exports are 2 to 5 times coarser. Decide the viewing
-  distance, then retexture in Metashape where needed
+- [ ] #9 Textures: measured on the published zones (`tools/model-analysis/measure_prepared.py`, 2026-10-24), 0.91 to
+  1.74 mm per texel (median), 0.7 to 1.34 times the 1.3 mm target (a screen pixel at 1.5 m); the « 2 to 5 times
+  coarser » of the .blend analysis came from its 4k preview textures. Over the 1.25 tolerance: zones 12 (1.34), 2
+  and 3 (1.27, 1.26). Either retexture those three in Metashape (about 1.35 times the pixels a side: zone 12 12,467 →
+  17,000 px; more memory and download) or take 2 m as the closest viewing distance (every zone within it)
 
 ### Pipeline
 

@@ -36,6 +36,7 @@ Le script enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape
 | # | Étape | Script | Entrées | Sorties |
 | --- | --- | --- | --- | --- |
 | 0 | Analyse de résolution | `../model-analysis/run.ps1` | `.blend` | `../model-analysis/reports/<date>.{json,md}` |
+| 0b | Texels publiés | `../model-analysis/measure_prepared.py` (Python avec numpy, ex. `tools/google-earth/.venv`) | zones préparées | tableau à l’écran: taille des texels des zones telles que publiées (le `.blend` n’a pour certaines zones qu’une texture d’aperçu 4k) |
 | 1 | Inventaire des projets Metashape | `scan_projects.py` | `O:\photogrammetry\*.psx` | `projects-scan.json` |
 | 2 | Source de chaque zone | propriété `source` des objets de zone dans le `.blend` (`zones.json`: inventaire de travail) | | |
 | 3 | Vérification du repère des exports | `verify_sources.py` | `O:\modeles\zone-*\*.glb` + `.blend` | `sources-check.json` |
