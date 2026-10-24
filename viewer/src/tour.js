@@ -83,6 +83,8 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     let start = 0
     // The points looked at along an approach: where the camera was looking, the step's, then the step's own point
     let looks = null
+    // With paces: the time at which the camera reaches each point (ms from the start)
+    let times = null
     // From where the camera is when it begins (after a hurried move: its end)
     const begin = (now) => {
       start = now
@@ -92,6 +94,15 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
       if (step?.approach) {
         if (step.looks) looks = [from.target, ...step.looks.map((p) => new THREE.Vector3(...p)), to.target]
         curve = new THREE.CatmullRomCurve3([from.position, ...step.approach.map((p) => new THREE.Vector3(...p)), to.position], false, 'centripetal')
+        if (step.paces) {
+          // A time for each stretch between the points, by its length and its pace; the curve's parameter is i / n at
+          // the i-th point
+          const n = curve.points.length - 1
+          const lengths = curve.getLengths(n * 50)
+          times = [0]
+          for (let i = 0; i < n; i++) times.push(times[i] + ((lengths[(i + 1) * 50] - lengths[i * 50]) / (step.paces[i] ?? 1)) * 1000)
+          duration = times[n]
+        } else
         duration = step.flightPace
           ? (curve.getLength() / step.flightPace) * 1000
           : THREE.MathUtils.clamp(APPROACH_TIME[0] + curve.getLength() * APPROACH_PER_METRE + angle * FLY_PER_RADIAN, APPROACH_TIME[0], APPROACH_TIME[1]) * 1000
@@ -115,12 +126,23 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
       run(now) {
         const k = Math.min((now - start) / duration, 1)
         const e = easeInOut(k)
-        // Along the curve by its length (an even pace through the approach points)
-        curve.getPointAt(e, camera.position)
+        let t
+        if (times) {
+          // The stretch the eased time falls in, and how far along it
+          const time = e * duration
+          let i = 0
+          while (i < times.length - 2 && time > times[i + 1]) i++
+          t = (i + (time - times[i]) / (times[i + 1] - times[i])) / (times.length - 1)
+          curve.getPoint(t, camera.position)
+        } else {
+          // Along the curve by its length (an even pace through the approach points)
+          curve.getPointAt(e, camera.position)
+          t = curve.getUtoTmapping ? curve.getUtoTmapping(e) : e
+        }
         if (looks) {
           // The step's points looked at, one per approach point: where the camera is along its points, the line of sight
           // between theirs (smoothly)
-          const at = curve.getUtoTmapping(e) * (looks.length - 1)
+          const at = t * (looks.length - 1)
           const i = Math.min(Math.floor(at), looks.length - 2)
           const f = THREE.MathUtils.smoothstep(at - i, 0, 1)
           controls.target.lerpVectors(looks[i] ?? from.target, looks[i + 1], f)

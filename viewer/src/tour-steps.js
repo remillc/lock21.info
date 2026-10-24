@@ -19,6 +19,8 @@
  *   positions), instead of its own curve
  * @property {[number, number, number][]} [looks] - with approach: the point looked at as the camera passes each approach
  *   point (one each), the line of sight gliding from one to the next
+ * @property {number[]} [paces] - with approach: a speed (m/s) for each stretch between its points (from the camera to
+ *   the first, ..., from the last to the step's camera), instead of flightPace
  * @property {number} [flightPace] - the flight into the step at this mean speed (m/s), instead of its usual length
  * @property {number} [turn] - on the flight into the step, the camera turns toward the step's point first, within
  *   this share of the flight (otherwise gradually, all along it)
@@ -39,15 +41,17 @@ export const TOUR_STEPS = [
   },
   {
     kind: 'view',
-    // Christian's view (2026-10-24, was -31.65, 10.45, -10.5 looking at -55.3, -7.97, -29.94). From step 1, close to
+    // Christian's view (2026-10-24; was -31.65, 10.45, -10.5 looking at -55.3, -7.97, -29.94, then -31.65, 10.45,
+    // -17.28 looking at -34.3, 8.39, -19.46). From step 1, close to
     // the floor east of the piers' ends (open, about 1 m high), then up along the south side of the pier at z -21 to
     // the view; slowly. Checked against every surface: never closer than 1.2 m
-    cam: [-31.65, 10.45, -17.28, -34.3, 8.39, -19.46],
+    cam: [-31.09, 9.78, -17.83, -33.72, 8.21, -20.01],
     approach: [[-20.5, 2.0, -25.0], [-25.5, 2.0, -19.8], [-27.6, 5.5, -19.4], [-29.5, 9.2, -18.4]],
     // Low, looking about level toward the pillars and the pier to climb (the floor in view); climbing, looking up toward
     // the view's point (Christian, 2026-10-24)
-    looks: [[-29, 2.2, -20.5], [-31, 3.2, -20], [-34.3, 8.39, -19.46], [-34.3, 8.39, -19.46]],
-    flightPace: 2,
+    looks: [[-29, 2.2, -20.5], [-31, 3.2, -20], [-33.72, 8.21, -20.01], [-33.72, 8.21, -20.01]],
+    // Low over the floor, slower up the pier (Christian, 2026-10-24), then to the view
+    paces: [2, 2, 0.8, 0.8, 1.2],
     title: { fr: 'Au-dessus des piliers', en: 'Above the piers' },
     text: {
       fr: 'Le dessus du déversoir: les piliers, la passerelle qui les relie et les mécanismes qui levaient les vannes. Le haut des murs est à 40 pieds (12 m) sous la surface.',
