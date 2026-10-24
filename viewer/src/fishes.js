@@ -12,6 +12,11 @@
 // - It swims to waypoints within WANDER m, clear of the walls and with nothing in between, slowly (CRUISE m/s, the
 //   season's pace), along its heading (arcs while it turns), slower in a turn; its body waves with its speed and the
 //   turn runs down it, as the bass's.
+// - Colours as real smallmouth bass (Christian, 2026-10-24): golden brown to olive green, bronze, some dark brown
+//   (fact sheets: Tackleshare; Washington's Department of Fish and Wildlife): one of COLOURS for each fish, as a
+//   multiplier of the model's texture (its average 170, 157, 123, a light tan); darker in clear water, paler and more
+//   bronze in murky water (WDFW: in clear lakes the fish are darker, their bars pronounced; in productive waters
+//   yellowish brown), with a little variation of its own.
 // - Lengths as the smallmouth bass of Ontario's waters (Christian, 2026-10-24: realistic sizes): an adult is 25 to 50 cm
 //   long (Ontario, « Smallmouth bass », ontario.ca; the species' record is about 69 cm); drawn on a bell curve around
 //   LENGTH_MEAN (LENGTH_SPREAD), kept within LENGTH_RANGE: mostly 30 to 42 cm, now and then a big one.
@@ -31,7 +36,17 @@ const PLACE_MAX = [8, 15]
 const CLEARANCE = 0.15
 const ALTITUDE = [0.25, 0.7]
 // Its height follows the floor at most this fast (m/s)
-const CLIMB = 0.15
+// Level, as fish swim (Christian, 2026-10-24: their ups and downs were not natural): its height set once per stretch
+// (the floor at its waypoint, its own altitude above it) and reached at CLIMB m/s at most; faster (RISE) only when the
+// floor under it comes nearer than FLOOR_NEAR
+const CLIMB = 0.03
+const RISE = 0.12
+const FLOOR_NEAR = 0.2
+// At rest more often (Christian, 2026-10-24): at a waypoint, it stays REST_CHANCE of the time, for REST s (hovering,
+// its fins barely moving, its heading drifting a little)
+const REST_CHANCE = 0.65
+const REST = [5, 15]
+const DRIFT = 0.08
 const WANDER = 3
 const VIEW_MARGIN = 0.25
 // Never through the model (Christian, 2026-10-24): every LOOK_EVERY s, the water LOOK_AHEAD m ahead of it; closer than
@@ -59,6 +74,30 @@ const BEND_LAG = 0.06
 const BEND_LIMIT = [0.2, 0.3, 0.4, 0.5, 0.6]
 const UP = new THREE.Vector3(0, 1, 0)
 const between = ([min, max]) => min + Math.random() * (max - min)
+// Real colours (sRGB) and the texture's average, from which the multipliers are drawn
+const COLOURS = [[150, 120, 70], [140, 105, 60], [110, 112, 62], [90, 72, 48]]
+const TEXTURE_AVERAGE = [170, 157, 123]
+// Clear water (visibility, m): from CLEAR[0] (murky, paler by SHADE[0]) to CLEAR[1] (clear, darker by SHADE[1])
+const CLEAR = [4, 15]
+const SHADE = [1.1, 0.85]
+/** An sRGB channel (0 to 255) in linear light */
+const linear = (c) => ((c /= 255) <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
+/**
+ * A bass's colour: a multiplier of the texture, for its material's colour
+ * @param {number} visibility - the season's visibility (m)
+ * @param {THREE.Color} [target]
+ */
+export function bassColour(visibility, target = new THREE.Color()) {
+  const [r, g, b] = COLOURS[Math.floor(Math.random() * COLOURS.length)]
+  const clear = THREE.MathUtils.smoothstep(visibility, CLEAR[0], CLEAR[1])
+  const shade = THREE.MathUtils.lerp(SHADE[0], SHADE[1], clear) * between([0.92, 1.08])
+  return target.setRGB(
+    (shade * linear(r)) / linear(TEXTURE_AVERAGE[0]),
+    (shade * linear(g)) / linear(TEXTURE_AVERAGE[1]),
+    (shade * linear(b)) / linear(TEXTURE_AVERAGE[2]),
+    THREE.LinearSRGBColorSpace,
+  )
+}
 /** A bass's length (m): a bell curve around LENGTH_MEAN, within LENGTH_RANGE */
 export function bassLength() {
   // Box-Muller: a normal draw
@@ -69,7 +108,8 @@ export function bassLength() {
 /**
  * @param {object} options
  * @param {number} options.count - how many (fewer on a phone)
- * @param {(material: THREE.Material) => THREE.Material} [options.prepare] - the viewer's material set-up
+ * @param {(material: THREE.Material, options?: { tint?: boolean }) => THREE.Material} [options.prepare] - the viewer's
+ *   material set-up (tint: its colour varies, one program for all)
  * @param {(point: THREE.Vector3) => number} [options.clearance] - distance from a point to the nearest surface (m)
  * @param {(from: THREE.Vector3, to: THREE.Vector3) => boolean} [options.inSight] - nothing of the model between two points
  * @param {() => number} [options.visibility] - the season's visibility (m)
@@ -84,12 +124,15 @@ export function createFishes({ count, prepare = (m) => m, clearance = () => Infi
   const fishes = []
   let time = 0
 
+  /** @type {Map<string, THREE.Material>} the model's materials as loaded, by mesh name */
+  const loaded = new Map()
   when.then(() => new GLTFLoader().load(URL, (gltf) => {
     const source = gltf.scene
     source.traverse((object) => {
       if (!object.isMesh) return
       object.frustumCulled = false
-      object.material = prepare(object.material.clone())
+      // Kept as loaded (by mesh name: a clone copies userData as JSON): each fish its own copy, prepared and tinted
+      loaded.set(object.name, object.material)
     })
     const box = new THREE.Box3().setFromObject(source)
     const size = box.getSize(new THREE.Vector3())
@@ -97,6 +140,12 @@ export function createFishes({ count, prepare = (m) => m, clearance = () => Infi
     source.position.sub(centre)
     for (let i = 0; i < count; i++) {
       const model = SkeletonUtils.clone(source)
+      const colour = bassColour(visibility())
+      model.traverse((object) => {
+        if (!object.isMesh) return
+        object.material = prepare((loaded.get(object.name) ?? object.material).clone(), { tint: true })
+        object.material.color.copy(colour)
+      })
       const body = new THREE.Group()
       body.scale.setScalar(bassLength() / size.z)
       body.add(model)
@@ -116,6 +165,7 @@ export function createFishes({ count, prepare = (m) => m, clearance = () => Infi
       fishes.push({
         group, spine, placed: false, heading: 0, turnRate: 0, speed: 0, cruise: between(CRUISE), phase: Math.random() * 10,
         target: new THREE.Vector3(), turns: [], wait: Math.random() * 3, altitude: between(ALTITUDE), floorY: null,
+        level: null, rest: 0, drift: 0,
       })
     }
   }))
@@ -171,6 +221,7 @@ export function createFishes({ count, prepare = (m) => m, clearance = () => Infi
       }
       if (spot && clearance(spot) >= CLEARANCE && inSight(at, spot)) {
         fish.target.copy(spot)
+        fish.level = spot.y
         return
       }
     }
@@ -217,39 +268,64 @@ export function createFishes({ count, prepare = (m) => m, clearance = () => Infi
           fish.placed = true
           fish.group.visible = true
           nextTarget(fish, camera)
+          // Often found at rest
+          if (Math.random() < REST_CHANCE) {
+            fish.rest = between(REST)
+            fish.drift = (Math.random() * 2 - 1) * DRIFT
+          }
         }
-        // Its waypoint reached, or the diver too close: the next one
+        // Its waypoint reached: a rest now and then, else the next; the diver too close: away at once
         toTarget.subVectors(fish.target, at)
-        if (toTarget.length() < 0.3 || (at.distanceTo(camera.position) < SHY && fish.target.distanceTo(camera.position) < SHY)) {
-          nextTarget(fish, camera)
+        const shy = at.distanceTo(camera.position) < SHY && fish.target.distanceTo(camera.position) < SHY
+        if (shy) fish.rest = 0
+        if (fish.rest > 0) {
+          fish.rest -= dt
+          if (fish.rest <= 0) nextTarget(fish, camera)
+        } else if (toTarget.length() < 0.3 || shy) {
+          if (!shy && Math.random() < REST_CHANCE) {
+            fish.rest = between(REST)
+            fish.drift = (Math.random() * 2 - 1) * DRIFT
+          } else nextTarget(fish, camera)
           toTarget.subVectors(fish.target, at)
         }
-        // Turning toward it, eased; swimming where it points, slower in a turn
-        const target = Math.atan2(toTarget.x, toTarget.z)
-        const delta = Math.atan2(Math.sin(target - fish.heading), Math.cos(target - fish.heading))
-        const wanted = THREE.MathUtils.clamp(delta * TURN_GAIN, -TURN * slow, TURN * slow)
-        fish.turnRate += (wanted - fish.turnRate) * Math.min(1, TURN_EASE * dt)
-        fish.heading += fish.turnRate * dt
-        const lined = (1 + Math.cos(delta)) / 2
-        fish.speed += (fish.cruise * slow * (0.4 + 0.6 * lined) - fish.speed) * Math.min(1, dt)
-        forward.set(Math.sin(fish.heading), 0, Math.cos(fish.heading))
-        // The water ahead, now and then: a surface coming, another way, slower
-        fish.look = (fish.look ?? 0) - dt
-        if (fish.look <= 0) {
-          fish.look = LOOK_EVERY
-          if (clearance(point.copy(at).addScaledVector(forward, LOOK_AHEAD)) < AHEAD_CLEAR) {
-            nextTarget(fish, camera)
-            fish.speed *= 0.5
+        if (fish.rest > 0) {
+          // Hovering: no way on, its heading drifting, its fins slow
+          fish.speed += (0 - fish.speed) * Math.min(1, 1.5 * dt)
+          fish.turnRate += (fish.drift - fish.turnRate) * Math.min(1, dt)
+          fish.heading += fish.turnRate * dt
+          at.addScaledVector(forward.set(Math.sin(fish.heading), 0, Math.cos(fish.heading)), fish.speed * dt)
+          fish.group.rotation.set(0, fish.heading, 0)
+        } else {
+          // Turning toward it, eased; swimming where it points, slower in a turn
+          const target = Math.atan2(toTarget.x, toTarget.z)
+          const delta = Math.atan2(Math.sin(target - fish.heading), Math.cos(target - fish.heading))
+          const wanted = THREE.MathUtils.clamp(delta * TURN_GAIN, -TURN * slow, TURN * slow)
+          fish.turnRate += (wanted - fish.turnRate) * Math.min(1, TURN_EASE * dt)
+          fish.heading += fish.turnRate * dt
+          const lined = (1 + Math.cos(delta)) / 2
+          fish.speed += (fish.cruise * slow * (0.4 + 0.6 * lined) - fish.speed) * Math.min(1, dt)
+          forward.set(Math.sin(fish.heading), 0, Math.cos(fish.heading))
+          // The water ahead, now and then: a surface coming, another way, slower
+          fish.look = (fish.look ?? 0) - dt
+          if (fish.look <= 0) {
+            fish.look = LOOK_EVERY
+            if (clearance(point.copy(at).addScaledVector(forward, LOOK_AHEAD)) < AHEAD_CLEAR) {
+              nextTarget(fish, camera)
+              fish.speed *= 0.5
+            }
+            // The floor below it: its height follows it
+            fish.floorY = floor(at) ?? fish.floorY
           }
-          // The floor below it: its height follows it
-          fish.floorY = floor(at) ?? fish.floorY
+          point.copy(at).addScaledVector(forward, fish.speed * dt)
+          // Level: the stretch's height, reached slowly; up faster only over a floor coming near
+          const level = fish.level ?? fish.target.y
+          const tooLow = fish.floorY !== null && at.y - fish.floorY < FLOOR_NEAR
+          const height = tooLow ? fish.floorY + FLOOR_NEAR : level
+          point.y += THREE.MathUtils.clamp(height - at.y, -CLIMB * dt, (tooLow ? RISE : CLIMB) * dt)
+          if (clearance(point) >= BODY_CLEAR) at.copy(point)
+          else fish.speed = 0
+          fish.group.rotation.set(0, fish.heading, 0)
         }
-        point.copy(at).addScaledVector(forward, fish.speed * dt)
-        const height = fish.floorY === null ? fish.target.y : fish.floorY + fish.altitude
-        point.y += THREE.MathUtils.clamp(height - at.y, -CLIMB * dt, CLIMB * dt)
-        if (clearance(point) >= BODY_CLEAR) at.copy(point)
-        else fish.speed = 0
-        fish.group.rotation.set(0, fish.heading, 0)
         // Its body: the wave with its speed, the turn running down it
         fish.phase += dt * (BEAT_REST + BEAT_PER_SPEED * fish.speed) * Math.PI * 2
         const size = 0.3 + 0.7 * Math.min(1, fish.speed / 0.2)

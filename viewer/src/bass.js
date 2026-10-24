@@ -11,7 +11,7 @@
 // tail.
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import { bassLength } from './fishes.js'
+import { bassColour, bassLength } from './fishes.js'
 
 const URL = `${import.meta.env.BASE_URL}creatures/bass.glb`
 // An adult smallmouth bass (m, nose to tail)
@@ -129,7 +129,8 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
     model.traverse((object) => {
       if (!object.isMesh) return
       object.frustumCulled = false
-      object.material = prepare(object.material.clone())
+      object.material = prepare(object.material.clone(), { tint: true })
+      materials.push(object.material)
     })
     // Centred, scaled to LENGTH, its head toward +z (as the model is)
     const box = new THREE.Box3().setFromObject(model)
@@ -171,6 +172,8 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   let leaveSpeed = 0
   let gaze = 0
   let unitScale = 1
+  /** @type {THREE.Material[]} */
+  const materials = []
   /** @type {[number, number][]} time and turning rate, newest first (the turn running down the body) */
   const turns = []
   const ahead = new THREE.Vector3()
@@ -323,6 +326,9 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         // This visit's angle to the diver, and its length (a different bass each time: 25 to 50 cm, fishes.js)
         gaze = (Math.random() * 2 - 1) * GAZE
         body.scale.setScalar(bassLength() * unitScale)
+        // ... and its colour (fishes.js: the real colours, by the water's clarity)
+        const colour = bassColour(visibility())
+        for (const material of materials) material.color.copy(colour)
         unseen = 0
         seen = false
       }

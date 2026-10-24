@@ -4,6 +4,13 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, the bass in real colours (Christian, 2026-10-24): golden brown, bronze, olive green or dark brown, drawn
+  for each fish and for the curious bass on each visit (a multiplier of the model's light tan texture), darker in clear
+  water and paler in murky water as the species (WDFW, Tackleshare); one GPU program for all (the colour a uniform:
+  `prepareCreatureMaterial(…, { tint: true })`).
+- 3D viewer, the background fish more natural (Christian, 2026-10-24): at rest about half the time (two times in three
+  at a waypoint or when placed, 5 to 15 s, hovering, the heading drifting), and level: their height set once per
+  stretch and reached at 3 cm/s (they bobbed with every bump of the floor), faster only over a floor coming near.
 - 3D viewer, the diver's hand light 20 % smaller (Christian, 2026-10-24), still seated on the back of the hand.
 - 3D viewer, underwater: the diver never goes under the floor (Christian, 2026-10-24): a ray up from the camera that
   meets a floor seen from below brings it back 60 cm above it, the orbit's point with it (orbiting or panning have no

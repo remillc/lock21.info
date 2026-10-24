@@ -1375,7 +1375,7 @@ if (import.meta.env.DEV) window.l21.diverArm = diverArm
 // The river's current (m/s, world): west to east, 35 ft/min (measured 2024-06-08)
 const RIVER_CURRENT = new THREE.Vector3((35 * 0.3048) / 60, 0, 0)
 /** @param {THREE.Material} material */
-function prepareCreatureMaterial(material) {
+function prepareCreatureMaterial(material, { tint = false } = {}) {
   // After its own patches (the crayfish's blue claws)
   const own = material.onBeforeCompile
   const key = material.customProgramCacheKey?.() ?? ''
@@ -1383,7 +1383,8 @@ function prepareCreatureMaterial(material) {
     own?.call(material, shader, renderer)
     underwater.patchShader(shader, { creature: true })
   }
-  material.customProgramCacheKey = () => `creature-${key}-${material.color.getHexString()}`
+  // tint: its colour changes (each bass its own: fishes.js), the same program for all (the colour is a uniform)
+  material.customProgramCacheKey = () => (tint ? `creature-${key}-tinted` : `creature-${key}-${material.color.getHexString()}`)
   return withShadowCascades(material)
 }
 // The mockups of the zones not yet online: their own textures from the .blend (Christian, 2026-10-24: the 1988 drawing

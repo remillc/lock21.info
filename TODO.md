@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#66**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#67**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -18,6 +18,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   (`--lod-texture-scale` below 0.5, a full re-tiling). Measured 2026-10-23 before that: the budget is full right after the start
   view (phone 462 of 450 MB with 15 tiles, desktop 1201 of 1200 MB), so turning or moving loads no new detail, during
   a gesture or after it
+- [ ] #66 In the standard and underwater views, keep the camera at 0 ft or below (not above the water's surface) and
+  within the model's area (its bounds), whatever the navigation (orbit, pan, keys, swimming, double-tap)
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
 
 ### Zones
