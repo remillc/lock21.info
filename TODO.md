@@ -66,7 +66,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   2. view: `?cam=-31.65,10.45,-10.50,-55.30,-7.97,-29.94`
   3. view: zone 16, the spillway gate door on the floor: `?cam=-18.54,1.28,8.53,-17.08,-0.65,10.34`
   4. move: fly through the sluice gate, from `?cam=-27.28,2.02,-16.28,-61.37,-7.37,-21.45` to
-     `?cam=-37.22,1.69,-15.24,-75.00,-10.69,-21.69`
+     `?cam=-37.22,1.69,-15.24,-75.00,-10.69,-21.69` (a straight line hits a surface 8.4 m along its 10 m: a waypoint through the
+     middle of the opening)
+  5. move: close-up fly, from `?cam=-46.34,4.98,-16.15,-41.79,3.96,-16.02` to `?cam=-38.70,3.99,-16.38,-37.72,3.77,-16.35`
   Stops noted before, not placed yet:
   - looking down the stone passage through the wall, its pipes on the floor, the opening at the end (Christian's
     favourite, 2026-10-23; screenshot `images/views/2026-10-23-view-1.webp`): `?cam=-37.01,2.56,-14.66,-33.02,2.48,-14.40`
