@@ -1335,11 +1335,11 @@ scene.add(bass.object)
 if (import.meta.env.DEV) window.l21.bass = bass
 // A few fish here and there underwater (fishes.js, Christian, 2026-10-24): the bass's model shared, FISHES on a
 // computer, FISHES_PHONE on a phone; after the first view, once underwater
-const FISHES = 6
+const FISHES = 4
 const FLOOR_REACH = 10
 const DOWN = new THREE.Vector3(0, -1, 0)
 const floorFrom = new THREE.Vector3()
-const FISHES_PHONE = 3
+const FISHES_PHONE = 2
 const fishes = createFishes({
   count: mobile ? FISHES_PHONE : FISHES,
   when: afterFirstViewUnderwater,

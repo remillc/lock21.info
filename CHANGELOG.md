@@ -32,7 +32,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   `make_dive_light.py --front` builds it whole): 638 KB and 19,000 triangles → 98 KB and 8,900, no visible change;
   it had no textures. The hand light's own model (an input of the arm) leaves `viewer/public/` for
   `tools/diver/` (it was copied to the site for nothing).
-- 3D viewer, underwater: a few fish here and there (`viewer/src/fishes.js`; 6 on a computer, 3 on a phone): the
+- 3D viewer, underwater: a few fish here and there (`viewer/src/fishes.js`; 4 on a computer, 2 on a phone): the
   bass's model shared, each fish going its own way to waypoints clear of the walls, calm, swerving away from the diver;
   placed only where the diver may see them (in the view, nothing in between, where the water still hides them, so they
   come out of the haze), placed again once out of reach or out of the view for 10 s; never through the model (the water
