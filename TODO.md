@@ -22,14 +22,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   fades and disappears with time
 - [ ] #68 Yellow perch schools in the underwater view
 
-### Zones
-
-- [ ] #9 Textures: measured on the published zones (`tools/model-analysis/measure_prepared.py`, 2026-10-24), 0.91 to
-  1.74 mm per texel (median), 0.7 to 1.34 times the 1.3 mm target (a screen pixel at 1.5 m); the « 2 to 5 times
-  coarser » of the .blend analysis came from its 4k preview textures. Over the 1.25 tolerance: zones 12 (1.34), 2
-  and 3 (1.27, 1.26). Either retexture those three in Metashape (about 1.35 times the pixels a side: zone 12 12,467 →
-  17,000 px; more memory and download) or take 2 m as the closest viewing distance (every zone within it)
-
 ### Pipeline
 
 - [ ] #10 `model:post-modified` and others only run on Windows (PowerShell); fine for now

@@ -2,8 +2,8 @@
   "_comment": "Paramètres de l'analyse de résolution. Les seuils sont provisoires, à ajuster après le test de publication web.",
   "collection": "zones",
   "viewing": {
-    "_comment": "Conditions de visionnement les plus exigeantes: la caméra web la plus proche permise d'une surface.",
-    "min_view_distance_m": 1.5,
+    "_comment": "Conditions de visionnement les plus exigeantes: la caméra web la plus proche permise d’une surface. 2 m (TODO #9, 2026-10-24): textures publiées de 0,91 à 1,74 mm par texel, pas de nouvelle texture Metashape.",
+    "min_view_distance_m": 2,
     "vertical_fov_deg": 50,
     "screen_height_px": 1080
   },

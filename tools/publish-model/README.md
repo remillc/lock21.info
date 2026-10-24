@@ -49,6 +49,8 @@ Le script enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape
 | 7 | Aperçu local | `serve-tiles.ps1` + `viewer/`: `npm run dev` | `O:\publishing\tiles\` | `http://localhost:3100/modele/viewer` |
 | 8 | Mise en ligne | `upload_r2.mjs` (`npm run model:upload`) | `O:\publishing\tiles\` + `.env.local` | bucket R2 `lock21-tiles` |
 
+**Résolution des textures (2026-10-24, TODO #9):** les zones publiées ont de 0,91 à 1,74 mm par texel (médiane; zone 13 la plus fine, zone 12 la plus grossière), mesuré par `measure_prepared.py`. Distance de visionnement retenue: **2 m** (`thresholds.json`), à laquelle un texel de chaque zone couvre au plus un pixel d’écran (1080 px, FOV 50°). Pas de nouvelle texture Metashape: les zones 2, 3 et 12 auraient gagné environ 1,35 fois les pixels d’un côté, pour plus de mémoire et de téléchargement. L’analyse du `.blend` (`run.ps1`) mesure, pour certaines zones, une texture d’aperçu 4k: ses « 2 à 5 fois trop gros » ne valent pas pour ce qui est publié.
+
 ### 3. Vérification du repère
 
 Échantillonne 20 000 sommets de chaque export et mesure la distance au sommet le plus proche du mesh Blender, en coordonnées locales de l'objet:
