@@ -8,7 +8,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   /en/problems/banana-effect... instead of their French paths. The files keep the French path (Starlight pairs the
   translations by it: language menu, hreflang, sidebar; tools/i18n too); `src/data/englishPaths.js` gives each its
   English address, applied after the build by `src/integrations/english-paths.mjs` (pages moved, links rewritten,
-  search index rebuilt); the former addresses redirected (`_redirects`, 301); the dev server serves both.
+  search index rebuilt); the former addresses redirected (`_redirects`, 301); the dev server the same (pages served
+  at their English addresses with their links rewritten, the former addresses redirected).
 - Site menu: « Modèle 3D » first, before « À propos » (Christian, 2026-10-24).
 - 3D viewer, underwater: the creatures lit by the daylight as the surfaces around them (Christian, 2026-10-24): the
   bass's glTF had no metallic factor (1 by default, a metal), so it took no diffuse light from the environment and was

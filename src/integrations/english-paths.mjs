@@ -2,8 +2,9 @@
 // Starlight builds them at /en/<French path>; after the build, each page moves to /en/<English path>, every link to it
 // in the built pages and the sitemap is rewritten (sidebar, language menu, canonical and alternate addresses, links in
 // the text), the former addresses are redirected (_redirects, read by the hosting: a 301), and the search index is
-// rebuilt (Pagefind takes the addresses from the files' places; Starlight indexed them before the move). On the dev
-// server the English address serves the page too (its links keep the French path there).
+// rebuilt (Pagefind takes the addresses from the files' places; Starlight indexed them before the move). The dev
+// server does the same as it serves (Christian, 2026-10-24: the real addresses in dev too): the English address serves
+// the page, the pages' links are rewritten, the former address is redirected (a 302: not kept by the browser).
 import { mkdir, readdir, readFile, rename, rm, rmdir, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -19,6 +20,8 @@ const fixes = moves.map(([french, english]) => [
   new RegExp(`(["'=(]|lock21\\.info)/en/${escape(french)}(?=["'#?<\\s)])`, 'g'),
   `$1/en/${english}`,
 ])
+/** @param {string} text */
+const rewrite = (text) => fixes.reduce((result, [pattern, replacement]) => result.replace(pattern, replacement), text)
 
 async function* files(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -42,10 +45,51 @@ export default function englishPathsIntegration() {
     hooks: {
       'astro:server:setup': ({ server }) => {
         const toFrench = new Map(moves.map(([french, english]) => [`/en/${english}`, `/en/${french}`]))
-        server.middlewares.use((req, _res, next) => {
-          const [path, query] = (req.url ?? '').split(/(?=\?)/)
-          const french = toFrench.get(path.replace(/\/$/, ''))
-          if (french) req.url = french + (query ?? '')
+        const toEnglish = new Map(moves.map(([french, english]) => [`/en/${french}`, `/en/${english}`]))
+        server.middlewares.use((req, res, next) => {
+          const url = req.url ?? ''
+          const cut = url.search(/[?#]/)
+          const path = (cut < 0 ? url : url.slice(0, cut)).replace(/(.)\/$/, '$1')
+          const rest = cut < 0 ? '' : url.slice(cut)
+          // The former address: to the English one
+          const english = toEnglish.get(path)
+          if (english) {
+            res.writeHead(302, { Location: english + rest })
+            res.end()
+            return
+          }
+          // The English address: Starlight's page at the French path
+          const french = toFrench.get(path)
+          if (french) req.url = french + rest
+          // A page (no file extension, not Vite's own nor the viewer): its links rewritten, as in the build
+          if (req.method !== 'GET' || /\.[a-z0-9]+$/i.test(path) || path.startsWith('/@') || path.startsWith('/modele/viewer')) return next()
+          const chunks = []
+          const write = res.write.bind(res)
+          const end = res.end.bind(res)
+          const writeHead = res.writeHead.bind(res)
+          const isHtml = () => /text\/html/.test(String(res.getHeader('content-type') ?? ''))
+          // Its length changes: sent without one
+          res.writeHead = (status, ...args) => {
+            for (const headers of args) {
+              if (!headers || typeof headers !== 'object' || Array.isArray(headers)) continue
+              for (const key of Object.keys(headers)) if (key.toLowerCase() === 'content-length') delete headers[key]
+            }
+            res.removeHeader('content-length')
+            return writeHead(status, ...args)
+          }
+          res.write = (chunk, ...args) => {
+            if (chunk == null || typeof chunk === 'function') return write(chunk, ...args)
+            chunks.push(Buffer.from(chunk))
+            return true
+          }
+          res.end = (chunk, ...args) => {
+            if (chunk != null && typeof chunk !== 'function') chunks.push(Buffer.from(chunk))
+            const body = Buffer.concat(chunks)
+            const out = isHtml() ? Buffer.from(rewrite(body.toString('utf8'))) : body
+            if (!res.headersSent) res.removeHeader('content-length')
+            if (out.length) write(out)
+            return end(...[chunk, ...args].filter((a) => typeof a === 'function'))
+          }
           next()
         })
       },
@@ -73,7 +117,7 @@ export default function englishPathsIntegration() {
         let changed = 0
         for await (const path of files(root)) {
           const before = await readFile(path, 'utf8')
-          const after = fixes.reduce((text, [pattern, replacement]) => text.replace(pattern, replacement), before)
+          const after = rewrite(before)
           if (after !== before) {
             await writeFile(path, after)
             changed++
