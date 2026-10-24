@@ -70,6 +70,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
      middle of the opening)
   5. move: close-up fly, from `?cam=-46.34,4.98,-16.15,-41.79,3.96,-16.02` to `?cam=-38.70,3.99,-16.38,-37.72,3.77,-16.35`
   6. view: `?cam=-56.68,6.62,-22.08,-56.34,3.94,-30.87`
+  7. view, the last: `?cam=-106.95,7.59,-10.04,-36.26,-20.92,11.83`
   Stops noted before, not placed yet:
   - looking down the stone passage through the wall, its pipes on the floor, the opening at the end (Christian's
     favourite, 2026-10-23; screenshot `images/views/2026-10-23-view-1.webp`): `?cam=-37.01,2.56,-14.66,-33.02,2.48,-14.40`
