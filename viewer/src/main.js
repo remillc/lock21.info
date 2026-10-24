@@ -1043,8 +1043,8 @@ const tour = createTour({
   controls,
   requestRender: () => requestRender(),
   log,
-  // The step in the address (the debugging setting tourHash): #tour-3, each replacing the last (no new history entry),
-  // gone when the tour ends
+  // The step in the address (#tour-3, for debugging: Christian, 2026-10-24), each replacing the last (no new history
+  // entry), gone when the tour ends
   onStep: (i) => {
     tourHash = i >= 0 ? `#tour-${i + 1}` : ''
     updateAddress()
@@ -1643,16 +1643,22 @@ function keepCamera() {
     sessionStorage.setItem(CAM_KEY, [...camera.position.toArray(), ...controls.target.toArray()].map((n) => n.toFixed(2)).join(','))
   } catch {}
 }
-// The tour's step in the address (the advanced setting « Étape de la visite dans l'adresse », for debugging)
-let tourHashOn = params.get('tourHash') === '1'
+// The tour's step in the address (#tour-3, for debugging; Christian, 2026-10-24: always, no setting): gone as soon as
+// the visitor moves freely (the mouse or a finger on the model, the wheel, the movement keys); the next step puts it back
 let tourHash = ''
-live.tourHash = (v) => {
-  tourHashOn = v === '1'
+const freeMove = () => {
+  if (!tourHash) return
+  tourHash = ''
   updateAddress()
 }
+renderer.domElement.addEventListener('pointerdown', freeMove)
+renderer.domElement.addEventListener('wheel', freeMove, { passive: true })
+window.addEventListener('keydown', (event) => {
+  if (/^(Key[WASD]|Arrow(Up|Down|Left|Right))$/.test(event.code)) freeMove()
+})
 function updateAddress() {
   keepCamera()
-  const hash = tourHashOn ? tourHash : ''
+  const hash = tourHash
   history.replaceState(null, '', viewUrl() + hash)
   // The /modele page shows the same query string in its own address, so that copying it shares this view
   if (embedded) window.parent.postMessage({ type: 'lock21:cam', search: location.search, hash }, location.origin)
