@@ -4,6 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, the mockups keep their textures from the .blend (Christian, 2026-10-24): the 1988 drawing (Nick Baets, via
+  Save Ontario Shipwrecks) through each mockup's colour ramp, computed by `export_mockups.py` (one 2,048 px WebP
+  image per ramp, 1 MB in all; the author's address and phone numbers covered with the paper's colour, his name kept
+  for the credit); lit as the context. They were the south wall's texture tinted purple.
+
 - About page (TODO #57): the site's version at the bottom, in its own section, « Version », with its date and a link
   to the release notes (`SiteVersion.astro`, read from package.json and CHANGELOG.md at build time); the page becomes
   `about.mdx`, in French and English.

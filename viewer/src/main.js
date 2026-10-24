@@ -1216,14 +1216,6 @@ async function loadModel() {
       }
       model.traverse((child) => {
         if (child.isMesh) initSurface(child, null)
-        // The south wall's texture, for the mockups (repeated)
-        if (child.isMesh && child.name === 'mur_sud' && child.userData.surface.map) {
-          const map = child.userData.surface.map
-          map.wrapS = map.wrapT = THREE.RepeatWrapping
-          map.needsUpdate = true
-          mockupTexture.value = map
-          requestRender()
-        }
       })
       scene.add(model)
       contextModels.push(model)
@@ -1323,43 +1315,9 @@ function prepareCreatureMaterial(material) {
   material.customProgramCacheKey = () => `creature-${key}-${material.color.getHexString()}`
   return withShadowCascades(material)
 }
-// The mockups of the zones not yet online: opaque, with the south wall's texture (mur_sud of the context) tinted purple
-// (Christian, 2026-10-23; they were translucent ghosts). They have no texture coordinates: the texture is projected in
-// world space from the three axes, blended by the surface's orientation (MOCKUP_TEXTURE_SIZE m per repeat)
-const MOCKUP_TINT = 0xb7a3d6
-const MOCKUP_TEXTURE_SIZE = 4
-// White until the context's south wall has loaded
-const mockupTexture = { value: new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1) }
-mockupTexture.value.needsUpdate = true
-const mockupMaterial = new THREE.MeshStandardMaterial({ color: MOCKUP_TINT, roughness: 1, side: THREE.DoubleSide })
-mockupMaterial.onBeforeCompile = (shader) => {
-  shader.uniforms.mockupMap = mockupTexture
-  shader.vertexShader = `varying vec3 vMockupWorld;
-varying vec3 vMockupNormal;
-${shader.vertexShader.replace(
-    '#include <project_vertex>',
-    `#include <project_vertex>
-vMockupWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;
-vMockupNormal = normalize(mat3(modelMatrix) * objectNormal);`,
-  )}`
-  shader.fragmentShader = `uniform sampler2D mockupMap;
-varying vec3 vMockupWorld;
-varying vec3 vMockupNormal;
-` + shader.fragmentShader.replace(
-    '#include <map_fragment>',
-    `#include <map_fragment>
-    {
-      vec3 w = pow(abs(normalize(vMockupNormal)), vec3(4.0));
-      w /= w.x + w.y + w.z;
-      vec3 p = vMockupWorld / ${MOCKUP_TEXTURE_SIZE.toFixed(1)};
-      vec4 t = texture2D(mockupMap, p.zy) * w.x + texture2D(mockupMap, p.xz) * w.y + texture2D(mockupMap, p.xy) * w.z;
-      diffuseColor.rgb *= t.rgb;
-    }`,
-  )
-  underwater.patchShader(shader)
-}
-mockupMaterial.customProgramCacheKey = () => 'mockup-textured'
-withShadowCascades(mockupMaterial)
+// The mockups of the zones not yet online: their own textures from the .blend (Christian, 2026-10-24: the 1988 drawing
+// through each mockup's colour ramp, computed by export_mockups.py), lit as the context (sky, sun, shadows, water);
+// they were the south wall's texture tinted purple
 /**
  * @param {THREE.Object3D} model - the mockups' GLB
  * @param {{ tilesets: { id: string }[] }} manifest
@@ -1387,8 +1345,7 @@ function showMockups(model, manifest) {
     // Node names from Blender, spaces turned to underscores by the loader: mockup_zone_9
     const zone = child.name.match(/(\d+)$/)?.[1]
     child.visible = Boolean(zone) && !online.has(`zone-${zone}`)
-    child.material = mockupMaterial
-    child.renderOrder = 1
+    initSurface(child, null)
   })
   scene.add(model)
   mockupModels.push(model)
