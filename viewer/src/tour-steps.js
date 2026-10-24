@@ -67,8 +67,10 @@ export const TOUR_STEPS = [
     // 0.75 m/s (Christian, 2026-10-24), the dolly and the end slower
     // (the glide to the view 25 % faster: Christian, 2026-10-24)
     // (the climb 50 % faster than 0.75 m/s: Christian, 2026-10-24)
-    paces: [2, 2, 1.125, 1.125, 1.125, 0.625],
-    turnFirst: 2.5,
+    // (then the whole way 25 % faster: Christian, 2026-10-24)
+    paces: [2.5, 2.5, 1.4, 1.4, 1.4, 0.78],
+    accel: 1,
+    turnFirst: 2,
     title: { fr: 'Au-dessus des piliers', en: 'Above the piers' },
     text: {
       fr: 'Le dessus du déversoir: les piliers, la passerelle qui les relie et les mécanismes qui levaient les vannes. Le haut des murs est à 40 pieds (12 m) sous la surface.',
