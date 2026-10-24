@@ -7,6 +7,13 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - About page (TODO #57): the site's version at the bottom, in its own section, « Version », with its date and a link
   to the release notes (`SiteVersion.astro`, read from package.json and CHANGELOG.md at build time); the page becomes
   `about.mdx`, in French and English.
+- Buttons MD3 everywhere on /modele (TODO #59), measured on a computer and a phone: the header's magnifier (32 or 40 px,
+  square corners) and ☰ (32 px) are 40 px rounds in 48 px touch targets, « Modèle 3D » has its 48 px target; the
+  downloads are MD3 filled buttons (40 px, full corners, were 48 px with 12 px corners) with Material Symbols icons
+  and pressed and focus state layers; in the viewer, the keys' « ? » (32 px) is 40 in 48 with a 24 px icon, the
+  settings' close button a Material Symbols « close » (was a « × » character, 36 px), « Réinitialiser » an MD3
+  outlined button (was a wide rectangle), « Compris » and « Réessayer » have 48 px targets. Form fields (theme and
+  language selects, the settings' selects) are not buttons and were left as they are.
 
 ## 0.12.1 - 2026-10-24
 

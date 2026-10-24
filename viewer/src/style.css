@@ -177,12 +177,14 @@ l21-loading.error .loading-label {
   text-align: center;
 }
 .loading-retry {
-  height: 40px;
-  margin-bottom: -6px;
+  box-sizing: border-box;
+  height: 48px;
+  margin-bottom: -10px;
   padding: 0 12px;
-  border: 0;
+  border: 4px solid transparent;
   border-radius: 999px;
   background: transparent;
+  background-clip: padding-box;
   color: #b8c97a;
   font: 500 14px/20px system-ui, sans-serif;
   letter-spacing: 0.1px;
@@ -498,15 +500,33 @@ l21-settings-panel {
   font-size: 16px;
 }
 
+/* Closes the panel: MD3 standard icon button, 40 dp in a 48 dp touch target (the transparent border), Material Symbols
+   « close » 24 dp, state layers and focus ring */
 .settings-close {
-  width: 36px;
-  height: 36px;
-  border: 0;
-  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 48px;
+  height: 48px;
+  margin: -4px -4px -4px 0;
+  padding: 0;
+  border: 4px solid transparent;
+  border-radius: 999px;
   background: transparent;
-  color: inherit;
-  font-size: 22px;
+  background-clip: padding-box;
+  color: #c6c9bb;
   cursor: pointer;
+}
+.settings-close:hover {
+  background-color: rgb(198 201 187 / 8%);
+}
+.settings-close:focus-visible,
+.settings-close:active {
+  background-color: rgb(198 201 187 / 10%);
+}
+.settings-close:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: -2px;
 }
 
 .settings-section {
@@ -592,15 +612,36 @@ l21-settings-panel {
   margin-top: 16px;
 }
 
+/* « Réinitialiser »: MD3 outlined button (40 dp high, full corners, outline, label-large in the primary colour), its
+   width that of its label; a 48 dp touch target (::before), state layers and focus ring */
 .settings-actions button {
-  flex: 1 1 auto;
+  position: relative;
+  flex: 0 0 auto;
   min-height: 40px;
-  padding: 0 12px;
-  border: 1px solid #3c4232;
-  border-radius: 10px;
-  background: #1f231a;
-  color: inherit;
+  padding: 0 24px;
+  border: 1px solid #8f9482;
+  border-radius: 999px;
+  background: transparent;
+  color: #b8c97a;
+  font: 500 14px/20px system-ui, sans-serif;
+  letter-spacing: 0.1px;
   cursor: pointer;
+}
+.settings-actions button::before {
+  content: '';
+  position: absolute;
+  inset: -5px -1px;
+}
+.settings-actions button:hover {
+  background: rgb(184 201 122 / 8%);
+}
+.settings-actions button:focus-visible,
+.settings-actions button:active {
+  background: rgb(184 201 122 / 10%);
+}
+.settings-actions button:focus-visible {
+  outline: 2px solid #b8c97a;
+  outline-offset: 2px;
 }
 
 /* Augmented reality on Android (android-ar.js, WebXR): the AR canvas, and the overlay Chrome shows over the camera
@@ -882,19 +923,22 @@ l21-tooltip[data-shown='true'] {
   letter-spacing: 0.5px;
   pointer-events: none;
 }
-/* The « ? » (MD3 standard icon button, 32 dp here): opens the help; the only part of the keys that takes clicks */
+/* The « ? » (MD3 standard icon button: 40 dp in a 48 dp touch target, the transparent border; 24 dp icon): opens the
+   help; the only part of the keys that takes clicks */
 .swim-help-button {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 0;
+  right: 0;
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  box-sizing: border-box;
+  width: 48px;
+  height: 48px;
   padding: 0;
-  border: 0;
+  border: 4px solid transparent;
   border-radius: 999px;
   background: transparent;
+  background-clip: padding-box;
   color: #c6c9bb;
   cursor: pointer;
   pointer-events: auto;
@@ -977,17 +1021,21 @@ l21-tooltip[data-shown='true'] {
   text-align: center;
   color: #e3e6d8;
 }
+/* « Compris »: MD3 text button, 40 dp in a 48 dp touch target (the transparent border, its background inside it); the
+   negative margin keeps it where a 40 dp button stands */
 .swim-help-actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 24px;
+  margin: 20px -4px -4px 0;
 }
 .swim-help-ok {
-  height: 40px;
+  box-sizing: border-box;
+  height: 48px;
   padding: 0 12px;
-  border: 0;
+  border: 4px solid transparent;
   border-radius: 999px;
   background: transparent;
+  background-clip: padding-box;
   color: #b8c97a;
   font: 500 14px/20px system-ui, sans-serif;
   letter-spacing: 0.1px;

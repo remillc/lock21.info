@@ -388,27 +388,68 @@ main > .content-panel:last-child > .sl-container {
 
 // The search, on every page, wide screens: Starlight's one search component as a 24 px magnifier at the bar's right,
 // before « Modèle 3D », as first done on /modele (Christian, 2026-10-23): no box, label or shortcut shown (Ctrl+K
-// still opens it). Phones keep Starlight's magnifier
+// still opens it)
 @media (min-width: 50rem) {
   header.header .header > :nth-child(2) {
     justify-content: flex-end;
   }
   site-search button[data-open-modal] {
-    width: auto;
     max-width: none;
-    padding: 0.5rem;
-    border: 0;
-    background-color: transparent;
-
-    > svg {
-      width: 1.5rem;
-      height: 1.5rem;
-    }
 
     > span,
     > kbd {
       display: none;
     }
+  }
+}
+
+// The magnifier, every screen: an MD3 standard icon button (TODO #59, 2026-10-24: 32 or 40 px, square corners): a 40 px
+// round in a 48 px touch target (the transparent border, the state layers inside it), its icon 24 px
+site-search button[data-open-modal] {
+  justify-content: center;
+  box-sizing: border-box;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border: 4px solid transparent;
+  border-radius: 50%;
+  background-color: transparent;
+  background-clip: padding-box;
+
+  > svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  &:hover {
+    border-color: transparent;
+    background-color: color-mix(in srgb, currentColor 8%, transparent); // MD3 hover state layer
+  }
+
+  &:focus-visible,
+  &:active {
+    background-color: color-mix(in srgb, currentColor 10%, transparent); // MD3 focus and pressed state layers
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: -2px;
+  }
+}
+
+// The menu button (☰): the same 40 px round in a 48 px touch target (Starlight's is 32 px); its size also sets the
+// space the bar keeps for it (PageFrame.astro)
+:root {
+  --sl-menu-button-size: 3rem;
+}
+.sl-menu-button {
+  box-sizing: border-box;
+  border: 4px solid transparent !important;
+  background-clip: padding-box;
+
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: -2px;
   }
 }
 

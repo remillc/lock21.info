@@ -63,9 +63,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #43 Check the site for accessibility issues (WCAG 2.2 AA): contrast in both themes, keyboard navigation and
   focus (menu, viewer frame, opt-out button), alt texts, headings order, the viewer's controls and the depth gauges
   (aria-hidden), French and English pages
-- [ ] #59 Are the /modele buttons MD3-compliant (docs/system-design.md, Buttons)? Check their sizes (40 dp button in
-  a 48 dp touch target, 24 dp icons), the spacing between them and from the edges, their types (filled tonal, text),
-  state layers and focus, on the page and in the viewer, on computer and phone
 - [ ] #44 Usability audit of the site: what a first-time visitor (diver, heritage enthusiast, photogrammetrist) finds
   and understands, the paths from the home page to the model and the dive log, the 3D viewer's controls on desktop and
   phone, navigation and search, on both languages

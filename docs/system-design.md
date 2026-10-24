@@ -95,7 +95,11 @@ Tabular figures in tables and data.
   type (filled, filled tonal, outlined, text, or icon button), its sizes (an icon button: 40 dp container in a 48 dp
   touch target; a button: 40 dp high, full corners), **Material Symbols** icons at 24 dp (never a text character
   such as "×" for an icon), the state layers and focus ring below, and a selected state for toggles. Over the 3D
-  view: filled tonal icon buttons (`viewer/src/style.css`, `.icon-button`).
+  view: filled tonal icon buttons (`viewer/src/style.css`, `.icon-button`). The 48 dp touch target around a 40 dp
+  button: a 4 px transparent border with `background-clip: padding-box` (its colour and state layers inside it), or a
+  `::before` 4 px larger when the border shows (outlined button) or the pseudo-elements are taken (the ☰'s bars).
+  Checked on 2026-10-24 (TODO #59): the header's magnifier, ☰ and « Modèle 3D », the /modele downloads, every
+  viewer button.
 - **Icon buttons get an MD3 plain tooltip** (Christian, 2026-10-23), not the browser's `title` tooltip: its text in
   `data-tooltip`, shown by one `<l21-tooltip>` element (`viewer/src/tooltip.js`) after a 500 ms hover or at once on
   keyboard focus; inverse surface, body-small, 24 dp high, 4 dp corners, above the button or below when there is no
