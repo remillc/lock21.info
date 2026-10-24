@@ -10,8 +10,13 @@ Built in Blender's frame: forward +Y (the front face at y = 0), up +Z; the strap
 the saddle's underside at z = -0.0425 (make_diver_arm.py sets it on the back of the hand and swaps the loop, the buckle
 and the keeper for a strap fitted to the hand).
 
+Only what the viewer's camera sees, by default (Christian, 2026-10-24: no details where we won't see them): the light
+rides on the back of the hand, seen from behind and above, so its front (reflector, LED cups and dies, glass) is left
+out, the opening closed by a dark disc, and the bezel turned with BEZEL_SEGMENTS instead of 288. --front builds it
+whole (the preview render).
+
 Run in Blender, headless:
-    blender -b --factory-startup --python tools/diver/make_dive_light.py -- -o tools/diver/dive-light.glb [-p preview.png]
+    blender -b --factory-startup --python tools/diver/make_dive_light.py -- -o tools/diver/dive-light.glb [-p preview.png] [--front]
 """
 import argparse
 import math
@@ -25,6 +30,7 @@ argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 p = argparse.ArgumentParser(prog="make_dive_light.py", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 p.add_argument("-o", "--out", required=True, help="the .glb to write")
 p.add_argument("-p", "--preview", help="a preview render (.png), optional")
+p.add_argument("-f", "--front", action="store_true", help="the front's details too (reflector, LEDs, glass): not seen in the viewer")
 a = p.parse_args(argv)
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -152,18 +158,24 @@ def knurl(r, y, angle):
 
 bezel = [(0.0245, -0.0042), (0.0315, -0.0042), (0.0322, -0.003), (0.0322, 0.0012), (0.031, 0.0024), (0.0262, 0.0024),
          (0.0252, 0.0012), (0.0252, -0.0042)]
-add(lathe("bezel", bezel, segments=288, radius=knurl), blue, sharp=30)
-add(lathe("reflector", [(0.0, FACE + 0.0002), (0.0245, FACE + 0.0002)]), reflector)
+BEZEL_SEGMENTS = 96
+add(lathe("bezel", bezel, segments=288 if a.front else BEZEL_SEGMENTS, radius=knurl), blue, sharp=30)
+if a.front:
+    add(lathe("reflector", [(0.0, FACE + 0.0002), (0.0245, FACE + 0.0002)]), reflector)
+else:
+    # The front, never seen from the diver's eye: a dark disc closes the opening
+    add(lathe("face", [(0.0, -0.0030), (0.0253, -0.0030)], segments=48), groove_mat)
 cups = [(0.0165, math.radians(90 + i * 60), 0.0058) for i in range(6)] + \
        [(0.0062, math.radians(-90 + i * 120), 0.0044) for i in range(3)]
-for ring, angle, size in cups:
+for ring, angle, size in (cups if a.front else []):
     cx, cz = ring * math.cos(angle), ring * math.sin(angle)
     # A polished cup opening forward (a curved cone), the LED's die at its bottom
     cup = [(0.0014, FACE + 0.0004)] + [(0.0014 + (size - 0.0014) * (k / 6) ** 0.7, FACE + 0.0004 + 0.0055 * (k / 6) ** 1.6)
                                        for k in range(1, 7)]
     add(lathe("cup", cup, segments=32, centre=(cx, cz)), reflector, sharp=60)
     add(box("die", (0.0022, 0.0006, 0.0022), (cx, FACE + 0.0007, cz)), led, smooth=False)
-add(lathe("glass", [(0.0, -0.0022), (0.0252, -0.0022), (0.0252, -0.0010), (0.0, -0.0010)], segments=96), glass)
+if a.front:
+    add(lathe("glass", [(0.0, -0.0022), (0.0252, -0.0022), (0.0252, -0.0010), (0.0, -0.0010)], segments=96), glass)
 
 # 3. The slide switch on top, in its track, its slider ridged; the battery indicator at the back
 add(box("track", (0.013, 0.034, 0.003), (0, -0.05, RB + 0.0005)), groove_mat, smooth=False, bevel=0.001)

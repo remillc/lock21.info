@@ -5,8 +5,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - 3D viewer, the diver's arm lighter (TODO #64): its geometry compressed with meshopt and simplified to 60 % where the
-  error stays under 0.1 % (`pack_creature.mjs -m -s`), 638 KB and 19,000 triangles → 137 KB and 13,300, no visible
-  change; it had no textures. The hand light's own model (an input of the arm) leaves `viewer/public/` for
+  error stays under 0.1 % (`pack_creature.mjs -m -s`), and the hand light without what the diver's eye never sees
+  (Christian, 2026-10-24: its front, reflector, LED cups, glass; the bezel at 96 segments instead of 288;
+  `make_dive_light.py --front` builds it whole): 638 KB and 19,000 triangles → 98 KB and 8,900, no visible change;
+  it had no textures. The hand light's own model (an input of the arm) leaves `viewer/public/` for
   `tools/diver/` (it was copied to the site for nothing).
 - 3D viewer, underwater: a few fish here and there (`viewer/src/fishes.js`; 6 on a computer, 3 on a phone): the
   bass's model shared, each fish going its own way to waypoints clear of the walls, calm, swerving away from the diver;
