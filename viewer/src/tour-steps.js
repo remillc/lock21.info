@@ -50,7 +50,8 @@ export const TOUR_STEPS = [
     // the floor east of the piers' ends (open, about 1 m high), then up along the south side of the pier at z -21 to
     // the view; slowly. Checked against every surface: never closer than 1.2 m
     cam: [-31.09, 9.78, -17.83, -33.72, 8.21, -20.01],
-    approach: [[-20.5, 2.0, -25.0], [-25.5, 2.0, -19.8], [-27.6, 5.5, -19.4], [-29.5, 9.2, -18.4]],
+    // The climb 50 cm farther from the pier than first (Christian, 2026-10-24): away from it, south-east, then south
+    approach: [[-20.5, 2.0, -25.0], [-25.15, 2.0, -19.45], [-27.25, 5.5, -19.05], [-29.5, 9.2, -17.9]],
     // Low, looking about level toward the pillars and the pier to climb (the floor in view); climbing, level toward the
     // west wall until 82 % of the climb (the fourth point), then the rail on the pier's top (its middle, -33.54, 8.33,
     // -19.59), then the view's point (Christian, 2026-10-24)
