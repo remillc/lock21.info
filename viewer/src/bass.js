@@ -48,6 +48,17 @@ const LEAVE_NEAR = 0.3
 const LEAVE_MAX = 10
 // The most a spine bone bends in a turn (rad): a fast turn (the flight) folded the body
 const MAX_BEND = 0.45
+// The turn runs down the body (Christian, 2026-10-24: the C bend didn't look natural, the whole body bent at once and
+// stayed so): each spine bone bends with the turning rate of BEND_LAG s earlier than the one before it, so the head
+// leads and the tail follows its line, as a fish's body follows the path of its head
+const BEND_LAG = 0.06
+// Each spine bone's whole bend (the swimming wave and the turn together, rad), head to tail: added up, they folded the
+// tail to 1.25 rad leaving (Christian, 2026-10-24: not natural)
+const BEND_LIMIT = [0.2, 0.3, 0.4, 0.5, 0.6]
+// Facing the diver (Christian, 2026-10-24: make that angle vary): it holds an angle up to GAZE rad to one side or the
+// other, a new one every GAZE_EVERY s (at random), as a fish looking around
+const GAZE = 0.5
+const GAZE_EVERY = [2, 5]
 // How long it watches the diver before it gets bored (s, at random in between: Christian, 2026-10-23), its calm
 // departure's speed (m/s), and its gentle hover (m)
 const STAY = [8, 15]
@@ -157,6 +168,10 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   const lastRoot = new THREE.Vector3()
   let speedNow = 0
   let leaveSpeed = 0
+  let gaze = 0
+  let gazeUntil = 0
+  /** @type {[number, number][]} time and turning rate, newest first (the turn running down the body) */
+  const turns = []
   const ahead = new THREE.Vector3()
   const toCamera = new THREE.Vector3()
   const aim = new THREE.Vector3()
@@ -331,11 +346,17 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         // Facing the diver, its eyes on them, following them as they move; a sudden move sends it away, and it gets bored
         // after a while
         toCamera.copy(camera.position).sub(root.position).setY(0)
-        const faced = face(toCamera, dt, TURN * slow)
+        if (state === 'staying' && since > gazeUntil) {
+          gaze = (Math.random() * 2 - 1) * GAZE
+          gazeUntil = since + between(GAZE_EVERY)
+        }
+        const faced = face(toCamera.applyAxisAngle(UP, state === 'staying' ? gaze : 0), dt, TURN * slow)
         if (state === 'turning' && faced) {
           state = 'staying'
           since = 0
           stayFor = between(STAY)
+          gaze = 0
+          gazeUntil = between(GAZE_EVERY)
         }
         if (react) leave(react === 'calm', camera)
         else if (state === 'staying' && since > stayFor) leave(true, camera)
@@ -365,9 +386,15 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
       speedNow += (travelled + Math.abs(turnRate) * TURN_AS_SPEED - speedNow) * Math.min(1, 4 * dt)
       phase += dt * Math.min(BEAT_MAX, BEAT_REST + BEAT_PER_SPEED * speedNow) * Math.PI * 2
       const size = speedNow < SIZE_SPEED ? SIZE_REST + (1 - SIZE_REST) * (speedNow / SIZE_SPEED) : Math.min(WAVE_MAX, 1 + (speedNow - SIZE_SPEED) * 0.2)
+      // The recent turning rates (BEND_LAG apart down the body), newest first
+      turns.unshift([time, turnRate])
+      while (turns.length > 2 && turns[turns.length - 2][0] < time - BEND_LAG * spine.length) turns.pop()
+      const turnAt = (ago) => (turns.find(([t]) => t <= time - ago) ?? turns[turns.length - 1])[1]
       spine.forEach(({ bone, rest, axis }, k) => {
         const wave = WAVE[k] * size * Math.sin(phase - k * WAVE_LAG)
-        bone.quaternion.copy(rest).premultiply(bend.setFromAxisAngle(axis, wave - THREE.MathUtils.clamp(turnRate * CURVE[k], -MAX_BEND, MAX_BEND)))
+        const curve = THREE.MathUtils.clamp(turnAt(k * BEND_LAG) * CURVE[k], -MAX_BEND, MAX_BEND)
+        const limit = BEND_LIMIT[k] ?? BEND_LIMIT[BEND_LIMIT.length - 1]
+        bone.quaternion.copy(rest).premultiply(bend.setFromAxisAngle(axis, THREE.MathUtils.clamp(wave - curve, -limit, limit)))
       })
       root.rotation.set(0, heading, 0)
       body.position.y = BOB * Math.sin(time * 1.3)
