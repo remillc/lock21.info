@@ -314,7 +314,7 @@ COMPUTER_RAISE = COMPUTER_SCALE * (0.0135 + 0.5 * 0.071 * math.sin(tilt))
 # to near): a quarter turn about its face
 # ... and a further COMPUTER_TURN counterclockwise as seen from the eye, parallel to the forearm on screen (Christian,
 # 2026-10-24)
-COMPUTER_TURN = math.radians(35)
+COMPUTER_TURN = math.radians(15)
 COMPUTER_SPIN = math.radians(90) + COMPUTER_TURN
 # Drawn at COMPUTER_SCALE of its real size (Christian, 2026-10-24: 85 %; the real one looked too large on the wrist
 # from the eye), set above
