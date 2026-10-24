@@ -6,7 +6,6 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 - 3D model, texture resolution (TODO #9): measured on the zones as published (`measure_prepared.py`), 0.91 to 1.74 mm
   per texel; the closest viewing distance is set at 2 m, where every zone meets a screen pixel. No retexturing.
-
 - 3D viewer, within the site (TODO #66): in both views and whatever the navigation, the camera stays within the
   zones' bounds plus 10 m; leaving them, it is brought back to their edge, the orbit's point with it. Underwater it
   already stays below the surface.
