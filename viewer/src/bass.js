@@ -65,10 +65,11 @@ const STAY = [8, 15]
 const WANDER_OFF = 0.35
 const BOB = 0.02
 // Movement tolerated most of the time (Christian, 2026-10-24): it flees from a sudden move only, the camera faster than
-// STARTLE (m/s, swimming with Shift; rad/s, a quick turn) or nearer than TOO_CLOSE (m); a gentle move scares it only at
-// random, SKITTISH each time the camera sets off. Out of view for LOST s, or farther than LOST_DISTANCE times its
-// distance, it loses interest and swims off calmly
-const STARTLE = { speed: 2.5, turn: 3 }
+// STARTLE (m/s, swimming with Shift) or nearer than TOO_CLOSE (m); a gentle swim scares it only at random, SKITTISH each
+// time the camera sets off. Turning the head never scares it (Christian, 2026-10-24: turning the light toward it sent it
+// off): only the camera's place counts. Out of view for LOST s, or farther than LOST_DISTANCE times its distance, it
+// loses interest and swims off calmly
+const STARTLE = 2.5
 const TOO_CLOSE = 0.4
 const UP = new THREE.Vector3(0, 1, 0)
 const SKITTISH = 0.15
@@ -186,7 +187,6 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   let stayFor = STAY[1]
   let phase = 0
   let camSpeed = 0
-  let camTurn = 0
   let moving = false
   let stillFor = 0
   const cameraAtArrival = new THREE.Vector3()
@@ -225,7 +225,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   /** Whether the camera's move sends it off now: 'flee', 'calm' (lost interest) or false (tolerated) */
   function reaction(camera, moved, setOff) {
     const gap = camera.position.distanceTo(root.position)
-    if (camSpeed > STARTLE.speed || camTurn > STARTLE.turn || gap < TOO_CLOSE) return 'flee'
+    if (camSpeed > STARTLE || gap < TOO_CLOSE) return 'flee'
     if (setOff && Math.random() < SKITTISH) return 'flee'
     if (!moved) return false
     if (gap > LOST_DISTANCE * near) return 'calm'
@@ -286,15 +286,16 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
     update(camera, dt, on) {
       if (!ready) return false
       time += dt
-      // The camera still: idle grows; any move resets it. Its speed and turn (smoothed over about a fifth of a second)
-      const moved = lastPosition.distanceToSquared(camera.position) > 1e-8 || lastQuaternion.angleTo(camera.quaternion) > 1e-4
+      // The camera still: idle grows; any move resets it, a turn included. Its speed (smoothed over about a fifth of a
+      // second)
+      const swam = lastPosition.distanceToSquared(camera.position) > 1e-8
+      const moved = swam || lastQuaternion.angleTo(camera.quaternion) > 1e-4
       const smooth = Math.min(1, 5 * dt)
       camSpeed += ((dt > 0 ? lastPosition.distanceTo(camera.position) / dt : 0) - camSpeed) * smooth
-      camTurn += ((dt > 0 ? lastQuaternion.angleTo(camera.quaternion) / dt : 0) - camTurn) * smooth
-      // Setting off: moving after a quarter second still (a still frame in the middle of a drag is not a new start)
-      stillFor = moved ? 0 : stillFor + dt
-      const setOff = moved && !moving
-      moving = moved || stillFor < 0.25
+      // Setting off: swimming after a quarter second in place (a still frame in the middle of a swim is not a new start)
+      stillFor = swam ? 0 : stillFor + dt
+      const setOff = swam && !moving
+      moving = swam || stillFor < 0.25
       lastPosition.copy(camera.position)
       lastQuaternion.copy(camera.quaternion)
       idle = moved ? 0 : idle + dt

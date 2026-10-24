@@ -1385,6 +1385,9 @@ function prepareCreatureMaterial(material, { tint = false } = {}) {
   }
   // tint: its colour changes (each bass its own: fishes.js), the same program for all (the colour is a uniform)
   material.customProgramCacheKey = () => (tint ? `creature-${key}-tinted` : `creature-${key}-${material.color.getHexString()}`)
+  // Not metal: the bass's glTF gives no metallic factor (1 by default), so it took no diffuse light from the
+  // environment, dark outside the dive light's beam (Christian, 2026-10-24: lit by the environment, as the surfaces)
+  if ('metalness' in material) material.metalness = 0
   return withShadowCascades(material)
 }
 // The mockups of the zones not yet online: their own textures from the .blend (Christian, 2026-10-24: the 1988 drawing

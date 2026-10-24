@@ -4,6 +4,12 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the creatures lit by the daylight as the surfaces around them (Christian, 2026-10-24): the
+  bass's glTF had no metallic factor (1 by default, a metal), so it took no diffuse light from the environment and was
+  dark outside the beam; creature materials are now not metallic.
+- 3D viewer, the curious bass: turning the head never scares it, only swimming does (Christian, 2026-10-24: turning
+  the light toward it sent it off, and its visit started over); a quick turn and the start of a drag counted as
+  sudden moves.
 - 3D viewer, underwater: the creatures (bass, crayfish) lit only by the dive light's beam, as the walls: the wider cone
   they had (up to 25° from its axis at 60 % of the hotspot) lit a fish beside the beam (Christian, 2026-10-24).
 - 3D model, texture resolution (TODO #9): measured on the zones as published (`measure_prepared.py`), 0.91 to 1.74 mm
