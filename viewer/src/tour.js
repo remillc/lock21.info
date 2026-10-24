@@ -194,7 +194,13 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
           const at = t * (looks.length - 1)
           const i = Math.min(Math.floor(at), looks.length - 2)
           const f = THREE.MathUtils.smoothstep(at - i, 0, 1)
-          controls.target.lerpVectors(lookAt(looks[i], lookA), lookAt(looks[i + 1], lookB), f)
+          // Between the two lines of sight, not between their points (at different distances, the points' glide made the
+          // view rise past its goal and come back: Christian, 2026-10-24, mechanical)
+          lookAt(looks[i], lookA).sub(camera.position)
+          lookAt(looks[i + 1], lookB).sub(camera.position)
+          const reach = THREE.MathUtils.lerp(lookA.length(), lookB.length(), f)
+          lookA.normalize().lerp(lookB.normalize(), f).normalize()
+          controls.target.copy(camera.position).addScaledVector(lookA, reach)
           // Still turning: from where it looked, toward that line of sight
           if (elapsed < turnTime) controls.target.lerpVectors(from.target, controls.target, easeInOut(elapsed / turnTime))
         } else {

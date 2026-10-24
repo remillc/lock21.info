@@ -53,18 +53,18 @@ export const TOUR_STEPS = [
     // The climb 50 cm farther from the pier than first (Christian, 2026-10-24): away from it, south-east, then south
     // The climb (Christian, 2026-10-24) up the pier's east end (its top flat at 8.36 m, 1.4 m wide from z -21.2 to
     // -19.8, from x -29.4 westward; its end stepping down to 4.2 m at x -27.5), to about 1 m over its top; tilting
-    // down near the top (30° at the top: the sky behind the highest structure above, the pier's top below);
-    // then a 2 m dolly west over the top, the same tilt; then up toward the view's point while moving to the view.
+    // down near the top (25° at the top: the sky behind the highest structure above, the pier's top below);
+    // then one smooth move on to the view, the line of sight gliding toward its point (Christian, 2026-10-24: the dolly
+    // and the turn after it were too mechanical).
     // Clear of every surface (about 1 m at least)
-    approach: [[-20.5, 2.0, -25.0], [-25.15, 2.0, -19.45], [-27.0, 5.0, -19.6], [-27.9, 8.0, -20.2], [-28.4, 9.3, -20.5], [-29.7, 9.3, -20.5], [-30.4, 9.3, -20.5]],
+    approach: [[-20.5, 2.0, -25.0], [-25.15, 2.0, -19.45], [-27.0, 5.0, -19.6], [-27.9, 8.0, -20.2], [-28.4, 9.3, -20.5]],
     // Low, looking about level toward the pillars and the pier to climb (the floor in view); climbing, level toward the
-    // west; near the top, tilting down to 30° (Christian, 2026-10-24: 11°, then 18°, then 30°), kept for the dolly's
-    // first 1.3 m; then turning toward the view's point (about 2 s sooner than at the dolly's end, near 24 s:
-    // Christian, 2026-10-24)
-    looks: [[-29, 2.2, -20.5], { dir: [-1, 0, 0] }, { dir: [-1, 0, 0] }, { dir: [-1, -0.27, 0] }, { dir: [-1, -0.577, 0] }, { dir: [-1, -0.577, 0] }, [-33.72, 8.21, -20.01]],
+    // west; near the top, tilting down to 25° (Christian, 2026-10-24: 11°, 18°, 30°, then 25°: the view's own); then gliding to the
+    // view's point
+    looks: [[-29, 2.2, -20.5], { dir: [-1, 0, 0] }, { dir: [-1, 0, 0] }, { dir: [-1, -0.23, 0] }, { dir: [-1, -0.466, 0] }],
     // Low over the floor (it first turns toward the first column, setting off near the end of the turn), the climb at
     // 0.75 m/s (Christian, 2026-10-24), the dolly and the end slower
-    paces: [2, 2, 0.75, 0.75, 0.75, 0.6, 0.6, 0.6],
+    paces: [2, 2, 0.75, 0.75, 0.75, 0.5],
     turnFirst: 2.5,
     title: { fr: 'Au-dessus des piliers', en: 'Above the piers' },
     text: {
