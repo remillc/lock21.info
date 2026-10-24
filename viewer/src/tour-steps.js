@@ -52,9 +52,9 @@ export const TOUR_STEPS = [
     cam: [-31.09, 9.78, -17.83, -33.72, 8.21, -20.01],
     // The climb 50 cm farther from the pier than first (Christian, 2026-10-24): away from it, south-east, then south
     // Near the end of the climb, below the iron bar's height (8.33 m), it starts toward the bar (on the pier's top, from
-    // x -32.83, its start on this side, to -34.53, at z -19.59), still rising; near the bar's start (about 1 m), it turns
+    // x -32.83, its start on this side, to -34.53, at z -19.59), still rising; near the bar's start (about 2 m), it turns
     // toward the view's point and rises on to it (Christian, 2026-10-24). Clear of every surface (1.1 m at least)
-    approach: [[-20.5, 2.0, -25.0], [-25.15, 2.0, -19.45], [-27.25, 5.5, -19.05], [-28.6, 7.0, -18.6], [-31.2, 8.4, -18.7], [-32.1, 8.8, -18.95]],
+    approach: [[-20.5, 2.0, -25.0], [-25.15, 2.0, -19.45], [-27.25, 5.5, -19.05], [-28.6, 7.0, -18.6], [-30.4, 8.1, -18.5], [-31.53, 8.8, -18.14]],
     // Low, looking about level toward the pillars and the pier to climb (the floor in view); climbing, level toward the
     // west wall; heading for the bar, its start; near it, the view's point (Christian, 2026-10-24)
     looks: [[-29, 2.2, -20.5], { dir: [-1, 0, 0] }, { dir: [-1, 0, 0] }, { dir: [-1, 0, 0] }, [-32.83, 8.33, -19.59], [-33.72, 8.21, -20.01]],
