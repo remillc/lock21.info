@@ -18,8 +18,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   view (phone 462 of 450 MB with 15 tiles, desktop 1201 of 1200 MB), so turning or moving loads no new detail, during
   a gesture or after it
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
-- [ ] #67 Underwater: a particle that hits the camera leaves a trace on the view (a speck on the mask's glass), which
-  fades and disappears with time
 - [ ] #68 Yellow perch schools in the underwater view
 
 ### Pipeline
