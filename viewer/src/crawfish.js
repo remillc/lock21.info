@@ -6,10 +6,10 @@
 // Behaviour: it faces a diver closer than REACT m (and turns again, REACTION s after they have moved round it by more
 // than REFACE); its threat posture eases in from REACT and is full at THREAT m: front raised, tail held up in an arc
 // (the legs stay down), claws raised, spread and open; now and then both arms open out wider together, their pincers
-// opening wide too, and come back. And when the diver keeps still in front of it for a while (DANCE_STILL s, at
-// random in between), it dances, as Family Guy's dancing lobster (the « Iraq lobster » GIF): it stands up on its tail,
-// facing the diver, goes through the GIF's poses on the beat (snapping into each, then holding it), for DANCE s, then
-// sits back down into its threat; the diver moving ends it. Left alone, it
+// opening wide too, and come back. And now and then (DANCE_CHANCE) when the diver keeps still in front of it for a
+// while (DANCE_STILL s, at random in between), it dances, as Family Guy's dancing lobster (the « Iraq lobster » GIF,
+// measured frame by frame: crawfish-dance.json): it stands up on its rear legs, facing the diver, plays the GIF for
+// DANCE s, then sits back down into its threat; the diver moving ends it. Left alone, it
 // wanders: a few steps now and then to a spot within WANDER m of its place, only where the ground below is the same
 // floor (options.ground), legs paddling.
 //
@@ -51,6 +51,9 @@ const DRIFT_PACE = [0.5, 1.1]
 // its lower rear foot on the ground, its tail folded back behind it; STAND_SPRING, 1/s: about a second), then plays the GIF's
 // FRAMES at its pace (DANCE_FRAME s each), smoothly from one to the next, looping; then it sits back down
 const DANCE_STILL = [8, 12]
+// Not every time (Christian, 2026-10-25: « once in 3 or 4 »): one draw for each time the diver stops in front of it,
+// once the wait is over; drawn or not, no other dance until the diver moves on
+const DANCE_CHANCE = 1 / 3.5
 const DANCE = [6, 10]
 const STAND = 1.25
 const STAND_SPRING = 4
@@ -289,7 +292,7 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
   // The dance: how long the diver has kept still, the wait drawn for this time, the dance's clock (-1: not dancing)
   // and its weight (eased in and out)
   const dance = {
-    still: 0, after: between(DANCE_STILL), t: -1, length: 0, endedAt: 0, grooveFrom: -1,
+    still: 0, after: between(DANCE_STILL), drawn: false, t: -1, length: 0, endedAt: 0, grooveFrom: -1,
     stand: 0, standSpeed: 0, groove: 0, grooveSpeed: 0, at: new THREE.Vector3(),
   }
   let frozenFrame = -1
@@ -483,6 +486,7 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
       } else if (camera.position.distanceTo(dance.at) > STILL) {
         dance.at.copy(camera.position)
         dance.still = 0
+        dance.drawn = false
         if (dance.t >= 0) {
           dance.endedAt = dance.t
           dance.t = -1
@@ -497,9 +501,12 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
           dance.still = 0
           dance.after = between(DANCE_STILL)
         }
-      } else if (p > 0.8 && dance.still > dance.after) {
-        dance.t = 0
-        dance.length = between(DANCE)
+      } else if (p > 0.8 && dance.still > dance.after && (alwaysDance || !dance.drawn)) {
+        dance.drawn = true
+        if (alwaysDance || Math.random() < DANCE_CHANCE) {
+          dance.t = 0
+          dance.length = between(DANCE)
+        }
       }
       // It stands up, then grooves once up; at the end it stops grooving, then sits back down (two springs)
       const dancing = dance.t >= 0

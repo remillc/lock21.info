@@ -5,7 +5,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - 3D viewer: the crayfish dances (Christian, 2026-10-25, after Family Guy's dancing lobster): in its threat posture,
-  once the diver has kept still for 8 to 12 s, it stands up on its rear legs, plays the « Iraq lobster » GIF, then
+  once the diver has kept still for 8 to 12 s, about one time in 3.5 (one draw each time the diver stops before it),
+  it stands up on its rear legs, plays the « Iraq lobster » GIF, then
   sits back down; moving ends it. The GIF measured frame by frame (46 frames at 10 per second: the keypoints of every
   joint read off a grid, `tools/creatures/dance-keypoints.json`), the crayfish's skeleton fitted to them seen from the
   front (`tools/creatures/fit_dance.mjs`: every segment within 10° of the GIF's, most within 1 to 4°), into
