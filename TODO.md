@@ -25,11 +25,11 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   of the Metashape project (`O:\publishing\metashape\zone-3`) to them and rebuild only the texture (the alignment and
   mesh kept); then republish and compare with `?compare=`.
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
-  - In trial (2026-10-25): `color_zone.py` with `color.json` (whole-texture balance, `color_correct.py`, and local
-    patches, `color_patch.py`), to be called by `tile_zone.ps1` before tiling; every zone corrected in the test root
-    `O:\temp\color-test\tiles` for a before/after comparison. The root cause is upstream: the colour grading at frame
-    extraction in DaVinci Resolve (uneven from one dive to the next); a better grade there, then only the texture
-    rebuilt in Metashape (same photos' names, the alignment and mesh kept), would replace these corrections.
+  - Tried and dropped (2026-10-25): a whole-texture balance before tiling (`color_correct.py`) turned the model mauve
+    and flat in the viewer, whose own corrections then applied twice; the blue and red the water took are not in the
+    textures. The viewer's look stays the reference: bake its corrections (zone balance, green and cyan removal,
+    saturation) into the downloadable model. `color_patch.py` (a part of a zone brought to its neighbours' colour) stays
+    for local cases. The real fix is upstream: #75.
 - [ ] #68 Yellow perch schools in the underwater view
 
 ### Pipeline
