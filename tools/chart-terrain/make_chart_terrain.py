@@ -36,6 +36,8 @@ cell = float(grid["cell"])
 ox, oy = (float(v) for v in grid["origin"])
 rows, cols = height.shape
 
+z = height + SURFACE
+
 # A clean file
 bpy.ops.wm.read_factory_settings(use_empty=True)
 scene = bpy.context.scene
@@ -43,7 +45,7 @@ scene.unit_settings.system = 'METRIC'
 
 # Vertices row by row: x east, y north, z up
 c, r = np.meshgrid(np.arange(cols), np.arange(rows))
-verts = np.column_stack([((c - ox) * cell).ravel(), (-(r - oy) * cell).ravel(), (height + SURFACE).ravel()])
+verts = np.column_stack([((c - ox) * cell).ravel(), (-(r - oy) * cell).ravel(), z.ravel()])
 i = (r[:-1, :-1] * cols + c[:-1, :-1]).ravel()
 faces = np.column_stack([i, i + cols, i + cols + 1, i + 1])
 mesh = bpy.data.meshes.new("chart terrain")

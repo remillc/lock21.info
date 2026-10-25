@@ -10,6 +10,9 @@ le `.blend` de publication n'est ni ouvert ni modifié.
 ```powershell
 # 1. La grille des hauteurs (Python du système: numpy, scipy, scikit-image, Pillow), 35 s
 python tools\chart-terrain\chart_terrain.py
+# 1b. Le plancher du modèle sur cette grille (lecture seule du .blend de publication), 15 s, puis refaire 1
+& "C:\Program Files\Blender Foundation\Blender 5.2lender.exe" -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\model_floor.py
+python tools\chart-terrain\chart_terrain.py
 # 2. Le .blend (Blender, sans interface)
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\chart-terrain\make_chart_terrain.py
 ```
@@ -33,11 +36,18 @@ du nombre, profondeur en pieds) et les zones à ignorer (boutons et barres de l'
    le haut-fond fixent les profondeurs. Moindres carrés, l'intervalle étant lui-même une inconnue: compter les lignes
    ne suffit pas, elles se confondent sur les talus raides. Une bande reste à 8 pi au plus de la première surface
    (`-b`): au-delà, des fentes étroites.
-4. **La surface finale:** chaque bande à sa profondeur, lissée (les gradins deviennent des pentes qui suivent les
-   lignes), sur une grille de 1 m (`-c`).
+4. **La surface finale, sans gradins:** chaque ligne à la profondeur de sa courbe (la moyenne de ses deux bandes),
+   le milieu de chaque bande à la profondeur de la bande, linéaire entre les deux: le fond descend régulièrement d'une
+   ligne à l'autre (des bandes plates se rencontraient en marches, Christian, 2026-10-25), sur une grille de 1 m (`-c`).
+5. **Le rivage, sans marches:** une plage sur le haut-fond (de 0,5 pi au bord de l'eau à 0 sur 6 m), puis la terre
+   qui monte à sa hauteur sur 15 m.
+6. **Jamais au-dessus du plancher du modèle** (Christian, 2026-10-25), si `model_floor.py` l'a mesuré (`-f`): 5 cm
+   sous lui là où est le modèle (zones et contexte publiés, tels que rendus); au-delà de son bord, la limite remonte de
+   0,3 m par mètre, floue et rejointe en douceur, pour retrouver les hauteurs de la carte sans falaise. Sous le modèle,
+   le terrain de la carte porte l'empreinte des facettes et des murs du modèle: cachée par lui.
 
-Résultat sur la carte du 2026-10-25: 1 112 bandes, intervalle trouvé de 1,48 pi; écart aux sondes médian 0,7 pi,
-7,2 pi au pire; 550 × 302 m.
+Résultat sur la carte du 2026-10-25: 1 112 bandes, intervalle trouvé de 1,48 pi; écart aux sondes médian 0,4 pi,
+3,5 pi au pire; 550 × 302 m; 37 198 points sous le modèle.
 
 ## Le .blend (`make_chart_terrain.py`)
 

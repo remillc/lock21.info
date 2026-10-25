@@ -10,7 +10,9 @@ writes a height grid in metres, ready for make_chart_terrain.py (Blender):
 3. the bands between the contour lines (the water once the lines are taken out): two bands facing each other across a
    line differ by one contour interval, deeper on the side where S0 is deeper; the soundings and the shoal fix the
    depths; least squares, the interval one of the unknowns;
-4. each band at its depth, smoothed: the terraces become slopes that follow the lines.
+4. each line at its contour's depth (the mean of its two bands), each band's middle at the band's depth, linear
+   between them: the bottom slopes evenly from line to line, no terraces; the shore a beach across the shoal, then the
+   land rising over 15 m.
 
 Heights in metres from the water surface (up positive: the land above it, the bottom below). The grid is north-up,
 east to the right, in metres from the data file's origin (the green cross by the dive flag: the lock).
@@ -43,6 +45,8 @@ p.add_argument("-k", "--dark", type=int, default=620,
 p.add_argument("-b", "--band-limit", type=float, default=8.0,
                help="a band's depth stays within this many feet of the first surface (default 8: 90 %% of the bands "
                     "are within it on the 2026-10-25 chart; beyond, narrow slits)")
+p.add_argument("-f", "--floor", default="O:/temp/chart-terrain/floor.npz",
+               help="the model's floor on this grid (model_floor.py), kept above the chart terrain; skipped if missing")
 p.add_argument("-l", "--land", type=float, default=5.0, help="height of the land above the water, in feet (default 5)")
 a = p.parse_args()
 
@@ -173,29 +177,78 @@ print(f"[chart] band depth minus first surface: p5 {np.percentile(gap[big], 5):.
       f"p95 {np.percentile(gap[big], 95):.1f}, extremes {gap[big].min():.1f} / {gap[big].max():.1f} ft", flush=True)
 print(f"[chart] {int((area >= 20).sum())} bands, {len(pairs)} neighbour pairs; contour interval {solution[iv]:.2f} ft", flush=True)
 
-# 4. The final surface: each band at its depth, the lines and small bits from the nearest band, smoothed (the terraces
-# become slopes); the shoal at 0 to 0.5 ft, the land above the water
+# 4. The final surface, without terraces (Christian, 2026-10-25: the shallows' wide flat bands met in sudden steps):
+# each line at the mean of the bands on its two sides (its contour), each band's middle (its medial axis) at the band's
+# depth, linear between them, so the bottom slopes evenly from one line to the next
 known = labels > 0
-_, (iy2, ix2) = ndimage.distance_transform_edt(~known, return_indices=True)
-full = band_depth[labels[iy2, ix2]]
-full = ndimage.gaussian_filter(full, 4.0)
-D = ndimage.map_coordinates(full, [GY, GX], order=1, mode="nearest")
-D = ndimage.gaussian_filter(D, 0.8)
+depth_map = np.where(known, band_depth[labels], np.nan)
+hi = ndimage.maximum_filter(np.where(known, depth_map, -np.inf), size=7)
+lo = ndimage.minimum_filter(np.where(known, depth_map, np.inf), size=7)
+line_px = ~known & chart & water & np.isfinite(hi) & np.isfinite(lo)
+inside = ndimage.distance_transform_edt(known)
+middle = known & (inside >= 3) & (inside >= ndimage.maximum_filter(inside, size=5))
+py_l, px_l = np.nonzero(line_px)
+py_m, px_m = np.nonzero(middle)
+pts = np.column_stack([np.concatenate([px_l[::2], px_m[::2], sx]), np.concatenate([py_l[::2], py_m[::2], sy])])
+val = np.concatenate([(hi[py_l[::2], px_l[::2]] + lo[py_l[::2], px_l[::2]]) / 2, depth_map[py_m[::2], px_m[::2]], sd])
+D = griddata(pts, val, (GX, GY), method="linear")
+nearest = griddata(pts, val, (GX, GY), method="nearest")
+D = np.where(np.isnan(D), nearest, D)
+D = ndimage.gaussian_filter(D, 1.0)
+
+# The shore, without steps (Christian, 2026-10-25): from the water's edge a beach across the shoal, from about 0.5 ft
+# to 0 over SHOAL_RAMP m, then the land rising to its height over LAND_RAMP m (a smooth step), smoothed with the water
+SHOAL_RAMP = 6.0
+LAND_RAMP = 15.0
 gcls = cls[np.clip(GY.astype(int), 0, H - 1), np.clip(GX.astype(int), 0, W - 1)]
-D[gcls == 1] = np.minimum(D[gcls == 1], 0.5)
-D[gcls == 2] = land_ft
-D = np.maximum(D, land_ft)
+from_water = ndimage.distance_transform_edt(gcls != 0) * a.cell
+into_land = ndimage.distance_transform_edt(gcls == 2) * a.cell
+
+
+def smooth_step(t):
+    t = np.clip(t, 0, 1)
+    return t * t * (3 - 2 * t)
+
+
+shore = np.where(gcls == 2, land_ft * smooth_step(into_land / LAND_RAMP), 0.5 * (1 - smooth_step(from_water / SHOAL_RAMP)))
+D = np.where(gcls == 0, np.maximum(D, 0.3), shore)
+D = ndimage.gaussian_filter(D, 1.5)
 # The soundings' fit
 fit = D[np.clip(((sy - TOP) / cell).round().astype(int), 0, D.shape[0] - 1), np.clip((sx / cell).round().astype(int), 0, D.shape[1] - 1)] - sd
 print(f"[chart] soundings: surface minus sounding, median {np.median(np.abs(fit)):.1f} ft, worst {np.abs(fit).max():.1f} ft", flush=True)
 
 height = -D * FOOT
+
+# Never above the model's floor (Christian, 2026-10-25), when model_floor.py has measured it on this grid (--floor; the
+# first run has none): FLOOR_CLEAR m below it where the model is; beyond its edge the limit rises FLOOR_RISE m per
+# metre from the nearest floor point, so the chart terrain rejoins its own heights without a cliff. The floor is in the
+# publishing .blend's heights (the water surface at 55 ft), the grid's from the water surface
+FLOOR_CLEAR = 0.05
+FLOOR_RISE = 0.3
+SURFACE = 55 * FOOT
+if a.floor and os.path.exists(a.floor):
+    floor = np.load(a.floor)["floor"]
+    if floor.shape == height.shape:
+        over = np.isfinite(floor)
+        distance, (fy, fx) = ndimage.distance_transform_edt(~over, return_indices=True)
+        cap = floor[fy, fx] - SURFACE - FLOOR_CLEAR + FLOOR_RISE * distance * a.cell
+        # Past the model's edge, no planes nor creases: the limit blurred, and met softly (a smooth minimum, FLOOR_SOFT
+        # m wide); under the model, exact
+        FLOOR_SOFT = 0.4
+        blurred = ndimage.gaussian_filter(cap, 4.0)
+        soft = -FLOOR_SOFT * np.logaddexp(-height / FLOOR_SOFT, -blurred / FLOOR_SOFT)
+        lowered = height > cap
+        height = np.where(over, np.minimum(height, cap), np.minimum(height, soft))
+        print(f"[chart] model floor: {int(over.sum()):,} points over the model, {int(lowered.sum()):,} lowered", flush=True)
+    else:
+        print(f"[chart] model floor: {a.floor} is for another grid, skipped (run model_floor.py again)", flush=True)
 os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
 np.savez_compressed(a.out, height=height.astype(np.float32), cls=gcls.astype(np.int8), cell=a.cell,
                     origin=np.array([ox / cell, (oy - TOP) / cell]), mpp=mpp)
 print(f"[chart] heights {height.min():.1f} to {height.max():.1f} m -> {a.out}", flush=True)
 
-# Preview: depth in colour, the soundings over it
+# Preview: depth in colour (the final heights: the model's floor applied), shaded
+D = -height / FOOT
 depth = np.clip(D, 0, 85) / 85
 rgb = np.stack([0.85 - 0.75 * depth, 0.9 - 0.6 * depth, 0.95 - 0.35 * depth], -1)
 rgb[gcls == 1] = (0.62, 0.81, 0.0)
