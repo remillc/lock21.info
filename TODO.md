@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#75**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#76**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -17,6 +17,13 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   (`--lod-texture-scale` below 0.5, a full re-tiling). Done 2026-10-24 (TODO #69): the viewer caps, as each tile arrives, the normal maps (now 1024 px) and the coarse levels' photos at 2048 px; computers load lean in a 1 GB budget, with less detail far away. Measured 2026-10-23 before that: the budget is full right after the start
   view (phone 462 of 450 MB with 15 tiles, desktop 1201 of 1200 MB), so turning or moving loads no new detail, during
   a gesture or after it
+- [ ] #75 Redo the colour grading in DaVinci Resolve, at frame extraction (the root of the textures' colour cast; the
+  corrections after the fact only invent the lost blue and red: on 2026-10-25 a whole-texture balance turned the model
+  mauve and flat in the viewer). Try on zone 3 first: a flagrant case (yellow-olive, the wall of the three sluice gates
+  more olive than its side walls) and, with zone 12, the zone with the most visual potential. Grade per dive from the
+  Protune footage (the colour chart where it is usable), export the TIFFs under the same names, point a working copy
+  of the Metashape project (`O:\publishing\metashape\zone-3`) to them and rebuild only the texture (the alignment and
+  mesh kept); then republish and compare with `?compare=`.
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
   - In trial (2026-10-25): `color_zone.py` with `color.json` (whole-texture balance, `color_correct.py`, and local
     patches, `color_patch.py`), to be called by `tile_zone.ps1` before tiling; every zone corrected in the test root
