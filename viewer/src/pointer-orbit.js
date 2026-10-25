@@ -9,6 +9,8 @@
 import * as THREE from 'three'
 
 const UP = new THREE.Vector3(0, 1, 0)
+// Panning's pace against the pointer (1: the point pressed follows it exactly)
+const PAN = 0.5
 // The glide: the share of its speed kept each 60th of a second, and the speed below which it stops (rad per frame)
 const GLIDE = 0.88
 const GLIDE_STOP = 1e-4
@@ -37,7 +39,8 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
     const centre = camera.position.distanceTo(controls.target)
     camera.getWorldDirection(offset)
     const depth = point ? point.clone().sub(camera.position).dot(offset) : 0
-    controls.panSpeed = depth > 0 && centre > 0 ? THREE.MathUtils.clamp(depth / centre, 0.2, 100) : 1
+    // Half that (Christian, 2026-10-25: too strong): the point pressed moves at half the pointer's pace
+    controls.panSpeed = PAN * (depth > 0 && centre > 0 ? THREE.MathUtils.clamp(depth / centre, 0.2, 100) : 1)
   }, { capture: true })
   const pivot = new THREE.Vector3()
   const right = new THREE.Vector3()
