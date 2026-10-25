@@ -365,7 +365,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
    * @param {number} i
    * @param {boolean} [back] - back from the next step: straight and quick to the step's view (a move's end)
    */
-  function show(i, back = false) {
+  function show(i, back = false, jump = false) {
     index = i
     const step = steps[i]
     quick = back
@@ -375,6 +375,19 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     text.textContent = step.text[lang] ?? step.text.fr
     prev.hidden = i === 0
     next.textContent = t(i === steps.length - 1 ? 'tourEnd' : 'tourNext')
+    if (jump) {
+      // Straight there, no flight (a step restored from the address): the step's view, a move's end
+      const view = camOf(step.kind === 'move' ? step.to : step.cam)
+      motions = []
+      sightTime = 0
+      camera.position.copy(view.position)
+      controls.target.copy(view.target)
+      camera.lookAt(view.target)
+      controls.enabled = true
+      controls.update()
+      requestRender()
+      return
+    }
     const now = clock
     // The motions start from the planned place (the camera follows it a little behind)
     if (sightTime) camera.position.copy(planned)
@@ -400,15 +413,19 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     requestRender()
   }
 
-  function start() {
+  /**
+   * @param {number} [at] - the step to start at (0: the first)
+   * @param {{ jump?: boolean }} [options] - jump: straight to the step's view, without the flight
+   */
+  function start(at = 0, { jump = false } = {}) {
     clearTimeout(hideTimer)
     onStart?.()
     button.hidden = true
     card.hidden = false
     // The next frame: from hidden, the transition needs a first style
     requestAnimationFrame(() => card.classList.add('open'))
-    log?.('tour', { action: 'start' })
-    show(0)
+    log?.('tour', { action: 'start', step: at + 1 })
+    show(Math.min(Math.max(0, at), steps.length - 1), false, jump)
     next.focus({ preventScroll: true })
   }
 
@@ -431,7 +448,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     requestRender()
   }
 
-  button.addEventListener('click', start)
+  button.addEventListener('click', () => start())
   close.addEventListener('click', stop)
   prev.addEventListener('click', () => index > 0 && show(index - 1, true))
   next.addEventListener('click', () => (index < steps.length - 1 ? show(index + 1) : stop()))

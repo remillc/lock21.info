@@ -326,8 +326,9 @@ controls.enableDamping = true
 // across the view's height
 controls.rotateSpeed = 0.5
 // Looking up (Christian, 2026-10-24: the standard view couldn't): the camera may go below the point it turns around,
-// up to ORBIT_UP from straight above it; it then stays in front of the surfaces between them (keepInFront). It used
-// to stay above that point's height, so as never to look from under the floor
+// up to ORBIT_UP from straight above it; the soft floor (keepAboveFloor) keeps it above the model. It used to stay
+// above that point's height, so as never to look from under the floor; then (2026-10-24) in front of any surface
+// between them, which made it jump forward when a pan lowered that line onto a surface (Christian, 2026-10-25)
 const ORBIT_UP = Math.PI * 0.95
 controls.maxPolarAngle = ORBIT_UP
 // Touch navigation, the double-tap's flight (touch-nav.js): the model's point under the finger (the zones' tiles and
@@ -1088,7 +1089,11 @@ homeButton.addEventListener('click', () => {
   requestRender()
   log('home', {})
 })
-if (params.get('tour') === '1') firstView.then(() => tour.start())
+// A step in the address at load (#tour-3, Christian, 2026-10-25): the tour starts there, the camera straight at that
+// step's view, without a flight; else ?tour=1 starts it at the first
+const startStep = startHash ? Number(startHash.slice(6)) - 1 : -1
+if (startStep >= 0 && startStep < TOUR_STEPS.length) firstView.then(() => tour.start(startStep, { jump: true }))
+else if (params.get('tour') === '1') firstView.then(() => tour.start())
 function showSwimHelp() {
   try {
     if (localStorage.getItem(SWIM_HELP_KEY)) return
@@ -1945,24 +1950,6 @@ function tileFacts() {
 }
 setEndFacts(tileFacts)
 
-// The orbiting camera lower than its point (looking up): a surface between them (the floor, a wall) brings it in
-// front of that surface, IN_FRONT m short, so it never looks from under the floor or inside a wall
-const IN_FRONT = 0.2
-const frontRay = new THREE.Raycaster()
-frontRay.firstHitOnly = true
-const toCamera = new THREE.Vector3()
-function keepInFront() {
-  if (camera.position.y >= controls.target.y) return
-  toCamera.subVectors(camera.position, controls.target)
-  const distance = toCamera.length()
-  if (distance < 1e-3) return
-  toCamera.divideScalar(distance)
-  frontRay.set(controls.target, toCamera)
-  frontRay.far = distance
-  const hit = frontRay.intersectObjects([...tilesets.map((tiles) => tiles.group), ...contextModels], true)[0]
-  if (hit) camera.position.copy(controls.target).addScaledVector(toCamera, Math.max(0.05, hit.distance - IN_FRONT))
-}
-
 // Never under the model (underwater, Christian, 2026-10-24; in both views, TODO #71, 2026-10-25): orbiting or panning
 // (no collisions there), a gap between tiles, or finer tiles not loaded yet could take the camera below it. The floor
 // is a soft one (Christian, 2026-10-25: panning down near the floor went under it, a flash, then a jump up): the camera
@@ -2104,10 +2091,7 @@ function renderLoop() {
     if (touchNav.update()) needsRender = true
     // The left button's turn around the point pressed: its glide after release
     if (pointerOrbit.update()) needsRender = true
-    if (controls.update()) {
-      keepInFront()
-      needsRender = true
-    }
+    if (controls.update()) needsRender = true
   }
   // Within the site, in both views (keepInSite)
   if (keepInSite()) needsRender = true
