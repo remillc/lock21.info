@@ -2,7 +2,7 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
-## Unreleased
+## 0.15.1 - 2026-10-25
 
 - The site's Google Earth file (`public/downloads/lock-21.kmz`) rebuilt: its description with links to the site and the
   model page.
