@@ -572,11 +572,14 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
       // Dancing (the GIF): it swings to one side and curls up toward a hip, the move running down its joints
       TAIL.forEach((name, i) => {
         const m = i ? dancePose(Math.max(0, grooveTime - i * TAIL_LAG)) : move
-        // To one side it goes a little away from the diver (back), never toward them (Christian, 2026-10-25); the curl
-        // toward the hip bends its far joints on, in the plane facing the diver
-        const swing = 0.28 * m.tailSwing + 0.1 * m.hips
-        pose(name, [X, bend + (i === 0 ? -lift : 0) + g * 0.12 * Math.abs(m.tailSwing)],
-          [Y, -g * side * swing * (1 + 0.5 * i * m.tailCurl)])
+        // Always behind it, never folded forward (Christian, 2026-10-25: « it stays at the back, from back to further
+        // back, with the move »): each joint bends back, more as it swings and curls. The swing to one side turns its
+        // first joint only (about the body's own axis: on the later joints, already bent, that axis leans and the
+        // turn brought the tail forward), the next two following a little
+        // (wider: Christian, 2026-10-25, « more amplitude from left to right »)
+        const swing = 0.45 * m.tailSwing + 0.15 * m.hips
+        const back = g * (0.08 + 0.1 * Math.abs(m.tailSwing) + 0.12 * m.tailCurl)
+        pose(name, [X, bend + (i === 0 ? -lift : 0) + back], [Y, i < 3 ? -g * side * swing * [1.6, 0.5, 0.3][i] : 0])
       })
       stride = walking ? stride + dt * 9 : stride
       // Standing: the rear legs turned down as its legs, knees bent in a crouch, one raised now and then; the others
