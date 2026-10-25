@@ -25,10 +25,9 @@ const WATER_INDEX = 1.333
 // River current, west to east: 35 ft/min, measured by drifting in the canal (2024-06-08), in m/s; the particles drift
 // SEASONS[].current times faster (Christian, 2026-10-23: the murkier the water, the faster: spring's runoff)
 const CURRENT = (35 * 0.3048) / 60
-// The particles' drift against that: in summer, the current as measured (Christian, 2026-10-25: « the particles don't
-// go fast »; it was 85 % of the seasons' multiples, about 0.9 m/s in summer), the other seasons in proportion (spring
-// 0.24 m/s, autumn 0.12, winter 0.05)
-const DRIFT_SHARE = 1 / 6
+// The particles' drift against that: 15 % slower (Christian, 2026-10-23; slowed to the measured current for a moment
+// on 2026-10-25, too slow: the flow's direction was lost)
+const DRIFT_SHARE = 0.85
 // Suspended particles, only where they can be seen: in a box ahead of the camera (it covers the view's cone), as deep
 // as the visibility (PARTICLE_REACH m at most, PARTICLE_MIN at least); SEASONS[].density particles per m³ (the
 // murkier, dramatically more; doubled 2026-10-23), so the drawn count follows the box (at most PARTICLE_COUNT; MOBILE_SHARE of them on a
