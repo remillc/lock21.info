@@ -569,7 +569,7 @@ const look = {
   tone: ['neutral', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'agx',
   exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.2,
   // Bump map from the photo's brightness (?bump=0..5, see litMaterial)
-  bump: params.has('bump') ? Number(params.get('bump')) : 1,
+  bump: params.has('bump') ? Number(params.get('bump')) : 0.75,
   // « Ambiance sous-marine » (?underwater=1) and its season (?season=0..3: winter, spring, summer, autumn; default
   // summer, the diving season), see underwater.js
   underwater: params.get('underwater') === '1',
@@ -723,8 +723,9 @@ function addDespill(shader) {
 //
 // No wet look any more (a clear-coat film reflecting the sky, ?wet=, removed by Christian on 2026-10-25: barely seen,
 // it made the surfaces read smoother, cost the heaviest material, and the site is under water)
-// The photo's relief: its height at full contrast (m, ?bump=1: 2.4 cm, chosen on zone 3's wooden floor, 2026-10-25:
-// it brings out the wood's grain; from about twice that, the mussels and the sediment crackle)
+// The photo's relief: its height at full contrast at ?bump=1 (m: 2.4 cm, tried on zone 3's wooden floor, 2026-10-25:
+// it brings out the wood's grain; from about twice that, the mussels and the sediment crackle). Default 0.75, 1.8 cm
+// (Christian: 1 a little strong)
 const BUMP = 0.024
 function litMaterial(surface, mesh, normalMap, sky) {
   if (!normalMap && !mesh.geometry.attributes.normal) mesh.geometry.computeVertexNormals()
