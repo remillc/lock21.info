@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: a compass at the top left, its card (N, E, S, W) turning with the view, the red tip toward magnetic north.
+- Google Earth: the model turned to -30° (was 0°), after Nick Baets' north arrow on the zone map, taken as true north;
+  the landing view turned with it.
+
 ## 0.14.0 - 2026-10-24
 
 - 3D model online (R2): zones 1, 4, 10, 11, 12 and 13 republished with Christian's new boolean cuts (zone 13's

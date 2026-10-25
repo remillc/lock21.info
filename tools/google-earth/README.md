@@ -136,7 +136,12 @@ Essais sur la zone 12 seule (2026-10-19, Google Earth Pro 7.3.6):
 - **Taille de modèle:** avec des maillages de 30 000 sommets au plus, 100 000, 150 000 et 200 000 triangles s'affichent.
   Google Earth Pro plante aussi parfois sans raison après des plantages précédents: le relancer avant de conclure.
 - **Échelle:** juste (zone 12, environ 10 m, apparaît à environ 10 m): le modèle est en mètres réels.
-- **Orientation:** juste avec `-H 0`: le repère du `.blend` est déjà aligné sur le nord.
+- **Orientation:** `-H -30` par défaut depuis le 2026-10-25 (avant: `-H 0`, le repère du `.blend` pris pour aligné
+  sur le nord, jugé à l'œil). La flèche du nord de Nick Baets, sur le plan du découpage en zones, fait 30,0° dans le
+  sens horaire avec l'axe +Y du `.blend` (le côté du mur nord), prise pour le nord vrai. Lue comme le nord magnétique
+  de septembre 1988 (déclinaison −14,33°, NOAA), elle donnait −44,3°, qui paraissait faux dans Google Earth. La vue
+  d'arrivée tourne avec le modèle (−70° → −100°). Le visualiseur 3D a une boussole (nord magnétique d'aujourd'hui,
+  déclinaison −12,87°).
 - **Position:** les coordonnées (44°59.809′ N, 74°53.997′ O) épinglent le **centre de l'ensemble des zones**, figé au
   2026-10-19 comme **ancre du site**: (−29,05; 21,70) dans le repère du `.blend`, en mètres (zones 1, 2, 3, 4, 7, 8,
   10, 11, 12 et 13: 70,6 × 38,0 m). Figé, pour que les zones ajoutées plus tard gardent leur place au lieu de déplacer
