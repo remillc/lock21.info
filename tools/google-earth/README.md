@@ -140,8 +140,8 @@ Essais sur la zone 12 seule (2026-10-19, Google Earth Pro 7.3.6):
   sur le nord, jugé à l'œil). La flèche du nord de Nick Baets, sur le plan du découpage en zones, fait 30,0° dans le
   sens horaire avec l'axe +Y du `.blend` (le côté du mur nord), prise pour le nord vrai. Lue comme le nord magnétique
   de septembre 1988 (déclinaison −14,33°, NOAA), elle donnait −44,3°, qui paraissait faux dans Google Earth. La vue
-  d'arrivée tourne avec le modèle (−70° → −100°). Le visualiseur 3D a une boussole (nord magnétique d'aujourd'hui,
-  déclinaison −12,87°).
+  d'arrivée tourne avec le modèle (−70° → −100°). Le visualiseur 3D a une boussole: le nord magnétique du jour de
+  la visite (déclinaison −12,87° le 2026-09-21, +0,08° par an, NOAA IGRF 2025).
 - **Position:** les coordonnées (44°59.814′ N, 74°53.983′ O, données par Christian le 2026-10-25; avant: 44°59.809′ N,
   74°53.997′ O) épinglent le **centre de l'ensemble des zones**, figé au 2026-10-19 comme **ancre du site**: (−29,05; 21,70) dans le repère du `.blend`, en mètres (zones 1, 2, 3, 4, 7, 8,
   10, 11, 12 et 13: 70,6 × 38,0 m). Figé, pour que les zones ajoutées plus tard gardent leur place au lieu de déplacer

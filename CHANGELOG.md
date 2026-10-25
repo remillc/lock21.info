@@ -4,7 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- 3D viewer: a compass at the top left, its card (N, E, S, W) turning with the view, the red tip toward magnetic north.
+- 3D viewer: a compass at the top left, its card (N, E, S, W) turning with the view, the red tip toward magnetic north on the day
+  of the visit (the declination from NOAA's IGRF 2025: -12.87° in 2026, +0.08° a year).
 - Google Earth: the model turned to -30° (was 0°), after Nick Baets' north arrow on the zone map, taken as true north;
   the landing view turned with it.
 - The site's coordinates moved to 44°59.814′ N, 74°53.983′ W (44.996900, −74.899721; was 44°59.809′ N, 74°53.997′ W):
