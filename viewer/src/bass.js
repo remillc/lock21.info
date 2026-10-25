@@ -87,6 +87,8 @@ const WAVE = [0.04, 0.1, 0.18, 0.28, 0.44]
 const WAVE_LAG = 0.9
 const BEAT_REST = 0.3
 const BEAT_PER_SPEED = 4
+// The body's and tail's wave 20 % slower than those beats (Christian, 2026-10-25), the swimming speed unchanged
+const BEAT_PACE = 0.8
 const BEAT_MAX = 4
 const SIZE_REST = 0.25
 const SIZE_SPEED = 0.2
@@ -404,7 +406,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
       const travelled = dt > 0 ? root.position.distanceTo(lastRoot) / dt : 0
       lastRoot.copy(root.position)
       speedNow += (travelled + Math.abs(turnRate) * TURN_AS_SPEED - speedNow) * Math.min(1, 4 * dt)
-      phase += dt * Math.min(BEAT_MAX, BEAT_REST + BEAT_PER_SPEED * speedNow) * Math.PI * 2
+      phase += dt * Math.min(BEAT_MAX, BEAT_REST + BEAT_PER_SPEED * speedNow) * BEAT_PACE * Math.PI * 2
       const size = speedNow < SIZE_SPEED ? SIZE_REST + (1 - SIZE_REST) * (speedNow / SIZE_SPEED) : Math.min(WAVE_MAX, 1 + (speedNow - SIZE_SPEED) * 0.2)
       // The recent turning rates (BEND_LAG apart down the body), newest first
       turns.unshift([time, turnRate])
