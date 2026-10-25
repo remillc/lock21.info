@@ -5,7 +5,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - Google Earth: a new arrival view (Christian): 44.996898, -74.899692, 132 m, heading -89°, tilt 48°.
-- 3D viewer: panning (right button) at half the pointer's pace (too strong).
+- 3D viewer: panning (right button) at a quarter of the pointer's pace (too strong).
 - 3D viewer: the wheel's zoom much gentler (0.075 of its former speed: it was far too strong).
 - 3D viewer, standard view: the left button's vertical axis back as it was (the background follows the pointer up and
   down); diving keeps it inverted.
@@ -18,11 +18,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - Google Earth: the model raised just enough for its lowest point to meet the ground (`make_kmz.py -a/--altitude`,
   auto by default): the chart terrain's channel, about 4 m below the lock's floor, went under Google Earth's ground.
 - Google Earth: the KML descriptions in HTML, the site (lock21.info) and the model page (lock21.info/modele) as links.
-- Google Earth: the Lock 21 Scuba Park pinned on the model's terrain (its height in the .blend plus the model's
+- Google Earth: the Macdonnel Island mark (first named « Lock 21 Scuba Park ») pinned on the model's terrain (its height in the .blend plus the model's
   altitude), not on Google Earth's ground under it.
 - Google Earth: a new arrival view (Christian), farther out to show the chart terrain: 44.997063, -74.899483, 485 m,
   heading -15°, tilt 28°.
-- Google Earth: the list of parts open in « Places » and each part numbered (« Zone 3 (3/19) »): Google Earth shows no
+- Google Earth: the folders of parts open in « Places » (the model's own folder closed at first) and each part numbered (« Zone 3 (3/19) »): Google Earth shows no
   progress for models, only each part's spinning icon while it downloads.
 
 ## 0.15.0 - 2026-10-25
