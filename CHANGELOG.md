@@ -7,6 +7,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - The context's export (`export_context.py`) applies the objects' modifiers before keeping only the baked UV map: the
   chart terrain's Boolean added its cutter's UV map, and the export carried two, the first all zero (no texture in
   Google Earth, which reads only the first).
+- Google Earth: the model raised just enough for its lowest point to meet the ground (`make_kmz.py -a/--altitude`,
+  auto by default): the chart terrain's channel, about 4 m below the lock's floor, went under Google Earth's ground.
 
 ## 0.15.0 - 2026-10-25
 

@@ -9,7 +9,7 @@ téléchargements de `/modele` et pour Google Earth (TODO #13). Deux télécharg
 | `lock-21.glb` (114 Mo) | sur R2: `https://tiles.lock21.info/downloads/lock-21.glb` | **Google Earth Web** (importer, puis placer à la main), Blender, visionneuse 3D de Windows, Sketchfab… |
 
 Liés depuis la page `/modele` (`src/data/site.js`, `downloads`). Le modèle est posé **au sol** (profondeur 0): Google
-Earth n'a pas de profondeur négative, l'écluse y est montrée au niveau du sol plutôt qu'à 55 pi (16,8 m) sous l'eau.
+Earth n'a pas de profondeur négative, l'écluse y est montrée au niveau du sol plutôt qu'à 55 pi (16,8 m) sous l'eau. Il est élevé juste assez pour que son point le plus bas touche le sol (`make_kmz.py -a/--altitude`, automatique par défaut): le chenal du terrain de la carte descend environ 4 m sous le plancher de l'écluse, le zéro du modèle, et passait sous le sol de Google Earth (2026-10-25).
 
 ## Réalité augmentée
 

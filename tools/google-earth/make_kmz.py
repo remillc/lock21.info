@@ -3,8 +3,10 @@ model that grows zone by zone.
 
 Converts <name>.obj (+ .mtl and its .jpg textures, one material per zone and per piece of context) into one COLLADA model
 per part (pycollada; Blender 5 no longer exports COLLADA), sitting on Google Earth's ground at the lock's coordinates
-(relativeToGround, altitude 0: Google Earth has no negative depth, so the lock is shown at depth 0 rather than 55 ft
-under the water). -H/--heading turns the model (degrees clockwise from true north): -30 by default, the .blend's +Y axis
+(relativeToGround: Google Earth has no negative depth, so the lock is shown above ground rather than 55 ft under the
+water). -a/--altitude raises it: by default just enough for its lowest point to meet the ground (Christian, 2026-10-25:
+the chart terrain's channel goes about 4 m below the lock's floor, the model's zero, and went under Google Earth's
+ground). -H/--heading turns the model (degrees clockwise from true north): -30 by default, the .blend's +Y axis
 (the lock's north wall side) after Nick Baets' north arrow on the zone map (30.0° clockwise from that axis), taken as
 true north (Christian, 2026-10-25; read as the magnetic north of 1988, -44.3, it looked wrong in Google Earth).
 
@@ -39,6 +41,8 @@ COPYRIGHT = copyright_line()
 p = argparse.ArgumentParser(prog="make_kmz.py", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 p.add_argument("-d", "--dir", required=True, help="folder of <name>.obj/.mtl/.jpg (make_model.py output)")
 p.add_argument("-n", "--name", default="lock-21", help="base name of the files (default lock-21)")
+p.add_argument("-a", "--altitude", default="auto",
+               help="the model's zero above Google Earth's ground, m (default auto: its lowest point on the ground)")
 p.add_argument("--lat", type=float, default=44.996900, help="latitude (default: Lock 21, 44°59.814' N)")
 p.add_argument("--lon", type=float, default=-74.899721, help="longitude (default: Lock 21, 74°53.983' W)")
 p.add_argument("-H", "--heading", type=float, default=-30,
@@ -125,6 +129,9 @@ def read_obj(path):
 
 materials = read_mtl(os.path.join(a.dir, f"{a.name}.mtl"))
 positions, uvs, groups = read_obj(os.path.join(a.dir, f"{a.name}.obj"))
+# Its height above the ground (the OBJ is Z up): its lowest point on the ground, 5 cm above, unless given
+altitude = max(0.0, -float(positions[:, 2].min())) + 0.05 if a.altitude == "auto" else float(a.altitude)
+print(f"altitude: {altitude:.2f} m (lowest point {positions[:, 2].min():.2f} m)", flush=True)
 
 # Google Earth Pro drops or crashes on large COLLADA meshes: a single mesh of 30,000 vertices / 50,000 triangles
 # shows, meshes of 60,000 vertices / 90,000 triangles don't (2026-10-19 tests). Each material's triangles are split
@@ -208,7 +215,7 @@ def placemark(mat_name):
       <description>{COPYRIGHT}</description>
       <Model>
         <altitudeMode>relativeToGround</altitudeMode>
-        <Location><longitude>{a.lon}</longitude><latitude>{a.lat}</latitude><altitude>0</altitude></Location>
+        <Location><longitude>{a.lon}</longitude><latitude>{a.lat}</latitude><altitude>{altitude:.2f}</altitude></Location>
         <Orientation><heading>{a.heading}</heading><tilt>0</tilt><roll>0</roll></Orientation>
         <Scale><x>1</x><y>1</y><z>1</z></Scale>
         <Link><href>models/{mat_name}.dae</href></Link>
