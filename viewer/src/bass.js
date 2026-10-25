@@ -33,15 +33,17 @@ const SWIM = 0.16
 const SLOW_DOWN = 0.3
 const SLOWEST = 0.15
 const TURN_BEFORE = 0.35
-const FLEE = 2.2
+const FLEE = 3.3
 const TURN = 1.4
 const FLEE_TURN = 7
 // Leaving as a fish does (Christian, 2026-10-24: its turn away didn't look natural; it pivoted on the spot, then slid
 // to its way out): it swims where its body points, so it follows an arc while it turns, at LEAVE_SLOWEST of its speed
 // facing away and full speed once lined up, reaching it with LEAVE_ACCEL (calm) or FLEE_ACCEL (per second). Fleeing,
 // a C-start: its turn snaps in (FLEE_EASE instead of TURN_EASE) and its body bends into a C, then the tail kick
-// carries it off. Gone once LEAVE_NEAR m from its way out, or after LEAVE_MAX s
+// carries it off. Gone once LEAVE_NEAR m from its way out, or after LEAVE_MAX s. Fleeing (Christian, 2026-10-25: faster,
+// and faster still while it turns), FLEE m/s once lined up and FLEE_SLOWEST of it facing away
 const LEAVE_SLOWEST = 0.3
+const FLEE_SLOWEST = 0.6
 const LEAVE_ACCEL = 1.2
 const FLEE_ACCEL = 4
 const FLEE_EASE = 14
@@ -392,7 +394,8 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         const delta = Math.atan2(Math.sin(Math.atan2(step.x, step.z) - heading), Math.cos(Math.atan2(step.x, step.z) - heading))
         const lined = (1 + Math.cos(delta)) / 2
         const top = calm ? WANDER_OFF * slow : FLEE * Math.sqrt(slow)
-        const wanted = top * (LEAVE_SLOWEST + (1 - LEAVE_SLOWEST) * lined * lined)
+        const slowest = calm ? LEAVE_SLOWEST : FLEE_SLOWEST
+        const wanted = top * (slowest + (1 - slowest) * lined * lined)
         leaveSpeed += (wanted - leaveSpeed) * Math.min(1, (calm ? LEAVE_ACCEL : FLEE_ACCEL) * dt)
         root.position.addScaledVector(forward.set(Math.sin(heading), 0, Math.cos(heading)), leaveSpeed * dt)
       }

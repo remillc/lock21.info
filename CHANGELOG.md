@@ -9,6 +9,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   the air.
 - 3D viewer, the curious bass: turning the head toward it (to light it) no longer sends it off nor, with ?bass=1,
   makes it vanish; it is gone only once out of sight (out of the view or beyond the visibility), never in plain view.
+  Its flight faster: 3.3 m/s once lined up (was 2.2), and 60 % of that while it turns away (was 30 %), so about three
+  times its former speed in the turn.
 - A terrain from the Boating app's chart of the lock's surroundings (TODO #73, `tools/chart-terrain/`): the depth
   contours and soundings turned into a 550 × 302 m height grid, in the publishing .blend (collection `chart terrain`,
   the riprap material, green above the water), against the zones without gaps and never above the model.
