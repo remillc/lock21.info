@@ -551,7 +551,7 @@ const look = {
   // Colour balance between zones (?neutral=0..1), see colorBalance
   neutral: params.has('neutral') ? Number(params.get('neutral')) : 0.2,
   // Relief from the zones' normal maps (?relief=1 default, 0 = without) or the normal map shown as the colour
-  // (?relief=debug); wet look (?wet=0..1). The sun's direction: azimuth (0 = from the south, 90 = from the east),
+  // (?relief=debug). The sun's direction: azimuth (0 = from the south, 90 = from the east),
   // elevation, in degrees
   relief: ['0', 'debug'].includes(params.get('relief')) ? params.get('relief') : '1',
   // Mesh view (?mesh=1, settings « Maillage »): the zones and the context as their triangles
@@ -568,7 +568,6 @@ const look = {
   // (?hdri=0) keeps none: the textures as they are
   tone: ['neutral', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'agx',
   exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.2,
-  wet: wetness(params.has('wet') ? params.get('wet') : 0.15),
   // Fine relief from the photo's brightness (?bump=0..3, see litMaterial)
   bump: params.has('bump') ? Number(params.get('bump')) : 1,
   // « Ambiance sous-marine » (?underwater=1) and its season (?season=0..3: winter, spring, summer, autumn; default
@@ -591,10 +590,6 @@ function contrastOf(v) {
 
 function saturationOf(v) {
   return Math.min(Math.max(Number(v) || 0, 0), 2)
-}
-
-function wetness(v) {
-  return Math.min(Math.max(Number(v) || 0, 0), 1)
 }
 
 // Every mesh keeps in userData.surface what its material is built from: the original textures (the tiles'
@@ -655,7 +650,7 @@ function meshEdges(mesh) {
   }
 }
 
-// Rebuilds every material after a change of display mode (sky, relief, wet, mesh): the scene's, and the loaded tiles
+// Rebuilds every material after a change of display mode (sky, relief, fine relief, mesh): the scene's, and the loaded tiles
 // not shown now, which the library keeps out of the scene (Christian, 2026-10-24: in the mesh view, moving back showed
 // tiles with their texture)
 function rebuildMaterials() {
@@ -726,16 +721,12 @@ function addDespill(shader) {
 // colour (checks that it lines up with the photo texture). The sun (updateLights) lights them too, through the same
 // normals: the relief shows from its direction.
 //
-// Wet look (?wet=0..1, default 0.15, chosen on zone 12; 0.1 for a day with the neutral tone mapping; 0 turns it off), zones only: glossy surface with a clear-coat
-// film (sharp highlights that slide over the relief when the camera moves) reflecting the sky, colours slightly
-// darker and more saturated. The photos already hold the lamps' real reflections: keep it subtle.
-// Not underwater (Christian, 2026-10-25): everything there is wet, and the film's sky reflections and highlights
-// don't belong under the water
+// No wet look any more (a clear-coat film reflecting the sky, ?wet=, removed by Christian on 2026-10-25: barely seen,
+// it made the surfaces read smoother, cost the heaviest material, and the site is under water)
 // The photo's relief: its height at full contrast (m, ?bump=1: 2.4 cm, chosen on zone 3's wooden floor, 2026-10-25:
 // it brings out the wood's grain; from about twice that, the mussels and the sediment crackle)
 const BUMP = 0.024
 function litMaterial(surface, mesh, normalMap, sky) {
-  const wet = surface.zoneId && !underwater.on ? look.wet : 0
   if (!normalMap && !mesh.geometry.attributes.normal) mesh.geometry.computeVertexNormals()
   const options = { map: surface.map, color: surfaceColor(surface), side: THREE.DoubleSide }
   if (normalMap) {
@@ -747,19 +738,9 @@ function litMaterial(surface, mesh, normalMap, sky) {
       flatShading: true,
     })
   }
-  const material = wet > 0
-    ? new THREE.MeshPhysicalMaterial({
-      ...options,
-      metalness: 0,
-      roughness: 0.9 - 0.5 * wet,
-      clearcoat: wet,
-      clearcoatRoughness: 0.08,
-      // Under the sky, the environment is the whole lighting; under the sun test, only the reflections
-      envMapIntensity: sky ? 1 : 0.6 * wet,
-    })
-    : sky
-      ? new THREE.MeshStandardMaterial({ ...options, roughness: 1, metalness: 0 })
-      : new THREE.MeshLambertMaterial(options)
+  const material = sky
+    ? new THREE.MeshStandardMaterial({ ...options, roughness: 1, metalness: 0 })
+    : new THREE.MeshLambertMaterial(options)
   material.onBeforeCompile = (shader) => {
     if (surface.zoneId) addDespill(shader)
     if (look.saturation !== 1 || look.contrast !== 1) {
@@ -768,27 +749,12 @@ function litMaterial(surface, mesh, normalMap, sky) {
         float contrastLuma = max(dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722)), 1e-4);
         diffuseColor.rgb *= 0.18 * pow(contrastLuma / 0.18, ${look.contrast.toFixed(3)}) / contrastLuma; diffuseColor.rgb = min(diffuseColor.rgb, vec3(1.0));`)
     }
-    if (wet > 0) {
-      shader.fragmentShader = shader.fragmentShader
-        // Wet colours: darker and more saturated
-        .replace('#include <map_fragment>', `#include <map_fragment>
-          float wetLuma = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-          diffuseColor.rgb = mix(vec3(wetLuma), diffuseColor.rgb, ${(1 + 0.35 * wet).toFixed(3)}) * ${(1 - 0.2 * wet).toFixed(3)};`)
-        // The clear coat follows the relief (by default it would use the flat face normal: faceted highlights)
-        .replace('#include <clearcoat_normal_fragment_begin>', normalMap ? 'vec3 clearcoatNormal = normal;' : '#include <clearcoat_normal_fragment_begin>')
-        // Specular antialiasing: seen from afar, one pixel covers many mussels and the sharp highlights sparkle.
-        // Where the normal varies a lot from one pixel to the next, the gloss is blurred accordingly.
-        .replace('#include <lights_physical_fragment>', `#include <lights_physical_fragment>
-          float normalVariation = clamp(length(fwidth(normal)) * 4.0, 0.0, 1.0);
-          material.roughness = max(material.roughness, normalVariation);
-          material.clearcoatRoughness = max(material.clearcoatRoughness, normalVariation);`)
-    }
     // Double-sided: three.js flips the normal of faces seen from behind. The triangle winding of the
     // photogrammetry meshes is not consistent from one texture chart to the next, so whole charts came out
     // inverted (dark patches with sharp edges). An object-space normal is already the true orientation: no flip by
     // winding. But a surface seen from behind (a wall from the other side) must face the viewer, like the computed
     // normals: flipped when it points away from the face actually seen (the flat-shading normal, from screen
-    // derivatives, always faces the camera). Otherwise the sky lights it from behind (dark) and the gloss sparkles.
+    // derivatives, always faces the camera). Otherwise the sky lights it from behind (dark).
     if (normalMap) {
       shader.fragmentShader = shader.fragmentShader.replace(
         '#include <normal_fragment_maps>',
@@ -817,9 +783,9 @@ function litMaterial(surface, mesh, normalMap, sky) {
     }
     underwater.patchShader(shader)
   }
-  // The patches depend on these values (the wetness is written into the shader): one compiled program per
+  // The patches depend on these values (written into the shader): one compiled program per
   // combination (three.js would otherwise reuse the first one, its cache key being the function's source)
-  material.customProgramCacheKey = () => `lit-${sky}-${Boolean(normalMap)}-${Boolean(surface.zoneId)}-${look.bump.toFixed(2)}-${wet.toFixed(3)}-${look.saturation.toFixed(3)}-${look.contrast.toFixed(3)}`
+  material.customProgramCacheKey = () => `lit-${sky}-${Boolean(normalMap)}-${Boolean(surface.zoneId)}-${look.bump.toFixed(2)}-${look.saturation.toFixed(3)}-${look.contrast.toFixed(3)}`
   return withShadowCascades(material)
 }
 
@@ -946,8 +912,6 @@ function setUnderwater(on) {
   settings.reflect('underwater', on ? '1' : '0')
   updateLights()
   updateEnvironment()
-  // The wet look is off underwater (litMaterial)
-  if (look.wet > 0) rebuildMaterials()
 }
 live.underwater = (v) => setUnderwater(v === '1')
 
@@ -1280,7 +1244,6 @@ live.tone = (v) => { look.tone = TONES[v] !== undefined ? v : 'agx'; updateTone(
 live.exposure = (v) => { look.exposure = Number(v); updateTone() }
 live.saturation = (v) => { look.saturation = saturationOf(v); rebuildMaterials() }
 live.contrast = (v) => { look.contrast = contrastOf(v); rebuildMaterials() }
-live.wet = (v) => { look.wet = wetness(v); rebuildMaterials(); updateEnvironment() }
 live.bump = (v) => { look.bump = Number(v); rebuildMaterials() }
 live.light = (v) => { look.light = v.split(',').map(Number); updateLights() }
 

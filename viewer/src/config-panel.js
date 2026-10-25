@@ -77,8 +77,8 @@ export function settingsSchema({ mobile }) {
         { key: 'exposure', label: t('exposure'), type: 'range', min: 0.25, max: 3, step: 0.05, def: '1.2' },
         { key: 'contrast', label: t('contrast'), hint: t('contrastHint'), type: 'range', min: 0.5, max: 2, step: 0.05, def: '1' },
         { key: 'saturation', label: t('saturation'), hint: t('saturationHint'), type: 'range', min: 0, max: 2, step: 0.05, def: '1.3' },
-        { key: 'bump', label: t('bump'), hint: t('bumpHint'), type: 'range', min: 0, max: 3, step: 0.1, def: '1' },
-        { key: 'wet', label: t('wet'), hint: t('wetHint'), type: 'range', min: 0, max: 1, step: 0.05, def: '0.15' },
+        // Fine relief from the photo (Christian, 2026-10-25: to try strengths), 0 to 5 times its default 2.4 cm
+        { key: 'bump', label: t('bump'), hint: t('bumpHint'), type: 'range', min: 0, max: 5, step: 0.1, def: '1' },
       ],
     },
     {
