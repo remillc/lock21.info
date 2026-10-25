@@ -3,6 +3,7 @@
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
 ## Unreleased
+
 - 3D viewer: the left button's vertical axis inverted (the orbit around the point pressed: up and down turn the other
   way).
 - 3D viewer: the dive light's beam as the Light & Motion Sola Dive 1200's: a 12° hotspot in a 60° spill 5 times weaker
