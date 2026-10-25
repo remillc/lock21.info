@@ -2040,10 +2040,10 @@ function renderLoop() {
 }
 // The compass (below the settings): its red tip toward magnetic north, as a diver's compass (Christian, 2026-10-25),
 // as the view turns. TRUE_HEADING: the true bearing of the scene's -z axis (the .blend's +Y), degrees clockwise from
-// north, the same as make_kmz.py -H: Nick Baets' north arrow on the zone map is 30.0° clockwise from it, read as
-// magnetic north in September 1988, when the declination there was -14.33° (NOAA, DGRF). DECLINATION: today's
-// (NOAA, IGRF 2025, 2026-10), about +0.08° a year
-const TRUE_HEADING = -44.3
+// north, the same as make_kmz.py -H: Nick Baets' north arrow on the zone map is 30.0° clockwise from it, taken as true
+// north (Christian, 2026-10-25). DECLINATION: today's magnetic declination there (NOAA, IGRF 2025, 2026-10), about
+// +0.08° a year
+const TRUE_HEADING = -30
 const DECLINATION = -12.87
 const NORTH_HEADING = TRUE_HEADING - DECLINATION
 const compassRose = document.querySelector('.compass-rose')

@@ -4,9 +4,9 @@ model that grows zone by zone.
 Converts <name>.obj (+ .mtl and its .jpg textures, one material per zone and per piece of context) into one COLLADA model
 per part (pycollada; Blender 5 no longer exports COLLADA), sitting on Google Earth's ground at the lock's coordinates
 (relativeToGround, altitude 0: Google Earth has no negative depth, so the lock is shown at depth 0 rather than 55 ft
-under the water). -H/--heading turns the model (degrees clockwise from true north): -44.3 by default, the .blend's +Y axis
-(the lock's north wall side) after Nick Baets' north arrow on the zone map (30.0° clockwise from that axis), read as
-magnetic north in September 1988, when the declination there was -14.33° (NOAA, DGRF).
+under the water). -H/--heading turns the model (degrees clockwise from true north): -30 by default, the .blend's +Y axis
+(the lock's north wall side) after Nick Baets' north arrow on the zone map (30.0° clockwise from that axis), taken as
+true north (Christian, 2026-10-25; read as the magnetic north of 1988, -44.3, it looked wrong in Google Earth).
 
 Written in <dir>/network/:
   lock-21.kmz   the downloaded file (lock21.info/downloads/, copied into public/downloads/): only a link to the list
@@ -39,13 +39,13 @@ p.add_argument("-d", "--dir", required=True, help="folder of <name>.obj/.mtl/.jp
 p.add_argument("-n", "--name", default="lock-21", help="base name of the files (default lock-21)")
 p.add_argument("--lat", type=float, default=44.996817, help="latitude (default: Lock 21, 44°59.809' N)")
 p.add_argument("--lon", type=float, default=-74.89995, help="longitude (default: Lock 21, 74°53.997' W)")
-p.add_argument("-H", "--heading", type=float, default=-44.3,
-               help="model heading, degrees clockwise from true north (default -44.3: Baets' arrow, magnetic 1988)")
+p.add_argument("-H", "--heading", type=float, default=-30,
+               help="model heading, degrees clockwise from true north (default -30: Baets' arrow as true north)")
 # Landing view, set in Google Earth Pro by Christian (2026-10-20) with the model at heading 0: over the lock, looking
-# west-northwest along it; turned with the model since (-70 - 44.3)
-p.add_argument("--view", default="44.996863,-74.899940,66,-114.3,60", metavar="LAT,LON,RANGE,HEADING,TILT",
+# west-northwest along it; turned with the model since (-70 - 30)
+p.add_argument("--view", default="44.996863,-74.899940,66,-100,60", metavar="LAT,LON,RANGE,HEADING,TILT",
                help="view when the file opens: latitude, longitude, distance (m), direction and tilt (degrees), as in "
-                    "Google Earth's camera properties (default 44.996863,-74.899940,66,-114.3,60)")
+                    "Google Earth's camera properties (default 44.996863,-74.899940,66,-100,60)")
 p.add_argument("--network", metavar="URL", default="https://tiles.lock21.info/downloads/google-earth",
                help="where the list and the parts are served (default https://tiles.lock21.info/downloads/google-earth)")
 a = p.parse_args()

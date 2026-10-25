@@ -5,8 +5,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - 3D viewer: a compass at the top left, its card (N, E, S, W) turning with the view, the red tip toward magnetic north.
-- Google Earth: the model turned to -44.3° (was 0°), after Nick Baets' north arrow read as magnetic north in 1988
-  (declination -14.33°, NOAA); the landing view turned with it.
+- Google Earth: the model turned to -30° (was 0°), after Nick Baets' north arrow on the zone map, taken as true north;
+  the landing view turned with it.
 
 ## 0.14.0 - 2026-10-24
 

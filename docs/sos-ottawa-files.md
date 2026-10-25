@@ -137,9 +137,9 @@ des caissons selon SOS. La rivière, au sud de la digue, descend plus bas: le te
 
 - Nord en haut sur le plan img397 et sur la vue 3D du guide. L'île Macdonell est au nord, de l'autre côté de l'eau.
 - Le plan du découpage en zones (dessin de Nick Baets) a une flèche du nord, à 30° dans le sens horaire de l'axe du
-  mur nord: lue comme le nord magnétique de 1988 (déclinaison −14,33°), l'écluse est orientée à environ 44° à l'ouest
-  du nord vrai, son axe vers l'aval au relèvement 46° environ. C'est l'orientation du modèle dans Google Earth et de
-  la boussole du visualiseur (2026-10-25).
+  mur nord: prise pour le nord vrai, l'axe de l'écluse vers l'aval est au relèvement 60°. C'est l'orientation du
+  modèle dans Google Earth et de la boussole du visualiseur (2026-10-25; lue comme le nord magnétique de 1988, elle
+  donnait 46°, qui paraissait faux dans Google Earth).
 - Courant d'ouest en est, de 2 à 3 nœuds, du déversoir (amont, ouest) vers les puits à chaîne (aval, est).
 - L'écluse longe la rive sud; on l'atteint par le déversoir. Entrée et sortie depuis la rive de l'île Macdonell, en
   suivant les cordes. Visibilité de 8 à 12 pi.
