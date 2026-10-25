@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Home page: the « L'histoire » card removed (no history page planned; it led to the zone map).
 - 3D viewer: a pan no longer makes the camera jump forward (it used to come in front of any surface between it and the
   point it turns around; the soft floor now keeps it above the model).
 - 3D viewer, the guided tour: a step in the address at load (`#tour-3`) starts the tour at that step, the camera
