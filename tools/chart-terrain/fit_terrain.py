@@ -6,10 +6,10 @@ fitted heights for fit_mesh.py --apply. Every vertex keeps its height, unless:
   a wall's face or top, a pier's top, is no ground): FLOOR_CLEAR m under it, up or down (hidden under the zone; no gap seen through it);
 - in a hole of a zone's scan (not under a solid, which covers it): FLOOR_CLEAR m under the lowest ground around it within HOLE_REACH m (the nearest scanned
   point could be a wall's top: the hole filled up to it, in spikes seen through the face);
-- near the zones, outside them: never higher than their top plus TOP_RISE m per metre away (a bank above the walls'
-  tops, Christian, 2026-10-25: « elevated terrain that needs to be lowered»), never lower than their ground's edge minus
-  EDGE_DROP m per metre, reached around walls, not over them (the gaps beside the stairs), over FIT_REACH m; both met
-  softly (SOFT m);
+- near the model, outside the zones (within FIT_REACH m of a zone or a solid): a smooth surface (a Laplace fill)
+  stretched between the terrain further out, as edited, and the edges of the zones' ground; walls and solids hold
+  nothing up (Christian, 2026-10-25: terraces climbing a wall to its top, a pit with holes around the filler, « as low
+  and flat as its surroundings »); never higher than the zones' top plus TOP_RISE m per metre (met softly, SOFT m);
 - inside a wall or a solid (the context's walls and fillers, the mockups): never above its top.
 
 Usage:
@@ -26,6 +26,7 @@ HOLE_REACH = 1.5
 TOP_RISE = 0.25
 EDGE_DROP = 0.5
 FIT_REACH = 8.0
+FILL_ITERATIONS = 3000
 SOFT = 0.3
 
 p = argparse.ArgumentParser(description=__doc__.split("\n\n")[0], formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -71,31 +72,30 @@ hidden = walls | (np.isfinite(solid) & ~on_ground)
 z = z0.copy()
 z[on_ground] = floor[on_ground] - FLOOR_CLEAR
 
-# Near the zones, outside them: the top of the nearest zone (any of it: a wall's top too), and the ground's edge reached
-# around walls (one cell a step, the mean of the cells already reached)
+# Near the model, outside the zones (within FIT_REACH m of a zone or a solid): a smooth surface stretched between the
+# terrain further out (as edited) and the edges of the zones' ground, walls and solids holding nothing up (Christian,
+# 2026-10-25: the terrain climbed beside a wall in terraces up to its top, and stayed in a pit with holes around the
+# filler: « as low and flat as its surroundings »). A Laplace fill: each point the mean of its neighbours, the walls and
+# solids left out of the means; then never higher than the zones' top plus TOP_RISE m per metre away
 zone_any = covered | holes
+model = zone_any | np.isfinite(solid)
+distance = ndimage.distance_transform_edt(~model) * cell
+band = ~zone_any & ~hidden & (distance <= FIT_REACH)
+# The walls' and solids' footprints too: kept at their former heights, they stood as steps beside the smoothed ground
+# (where a solid's surface is lower than its outline, or a wall's outer face is not scanned); capped at their top below
+free = (band | hidden) & ~on_ground
+open_ = np.ones_like(free)
+kernel = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]], float)
+weights = ndimage.convolve(open_.astype(float), kernel, mode="constant")
+for _ in range(FILL_ITERATIONS):
+    total = ndimage.convolve(np.where(open_, z, 0.0), kernel, mode="constant")
+    z = np.where(free & (weights > 0), total / np.maximum(weights, 1), z)
 top_at = np.where(np.isfinite(top), top, np.where(np.isfinite(low), low, np.nan))
-distance, (ty, tx) = ndimage.distance_transform_edt(~(zone_any & np.isfinite(top_at)), return_indices=True)
-distance = distance * cell
-cap = top_at[ty, tx] - FLOOR_CLEAR + TOP_RISE * distance
-steps = int(round(FIT_REACH / cell))
-reached = on_ground.copy()
-edge = np.where(on_ground, floor - FLOOR_CLEAR, 0.0)
-around = np.where(on_ground, 0.0, np.inf)
-kernel = np.ones((3, 3))
-for k in range(1, steps + 1):
-    total = ndimage.convolve(np.where(reached, edge, 0.0), kernel, mode="constant")
-    count = ndimage.convolve(reached.astype(float), kernel, mode="constant")
-    new = ~reached & ~hidden & (count > 0)
-    edge = np.where(new, total / np.maximum(count, 1), edge)
-    around = np.where(new, k * cell, around)
-    reached |= new
-outside = ~zone_any & ~hidden
-near = outside & (distance <= FIT_REACH)
-z = np.where(near, soft_min(z, cap), z)
-low_bound = edge - EDGE_DROP * around
-lift = outside & reached & ~on_ground
-z = np.where(lift, soft_max(z, low_bound), z)
+far, (ty, tx) = ndimage.distance_transform_edt(~(zone_any & np.isfinite(top_at)), return_indices=True)
+cap = top_at[ty, tx] - FLOOR_CLEAR + TOP_RISE * far * cell
+z = np.where(band, soft_min(z, cap), z)
+near = band
+lift = band & (z > z0 + 0.01)
 
 # Inside walls and solids: never above their top
 # (where a wall of a zone covers the point, its top: a low filler inside a wall pulled the terrain under the wall's top

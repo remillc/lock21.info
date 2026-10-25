@@ -46,13 +46,15 @@ Move-Item -Force O:\temp\lock-21-publishing-chart.blend modeles\lock-21-publishi
 - **sous le sol d'une zone** (un plancher ou une berge: au plus 1,2 m au-dessus du plus bas de la zone dans un rayon de
   3 m; le dessus d'un mur ou d'un pilier n'en est pas): 5 cm dessous, en montant ou en descendant;
 - **dans un trou d'un scan** (pas sous un solide, qui le couvre): 5 cm sous le sol le plus bas autour, dans 1,5 m;
-- **près des zones, dehors** (sur 8 m): jamais plus haut que leur dessus plus 0,25 m par mètre (la berge au-dessus du
-  mur nord, abaissée), jamais plus bas que le bord de leur sol moins 0,5 m par mètre, atteint en contournant les murs
-  (les vides à côté des escaliers, comblés); les deux en douceur;
+- **près du modèle, hors des zones** (à 8 m au plus d'une zone ou d'un solide), emprises des murs et des solides
+  comprises: une surface lisse (un remplissage de Laplace) tendue entre le terrain plus loin, tel que retouché, et les
+  bords du sol des zones; murs et solides ne la soutiennent pas (des gradins grimpaient le long d'un mur jusqu'à son
+  dessus, une fosse à trous entourait le remplissage: « aussi bas et plat que ses environs », Christian, 2026-10-25);
+  jamais plus haute que le dessus des zones plus 0,25 m par mètre;
 - **dans un mur ou un solide**: jamais au-dessus de son dessus (sous le mur d'une zone, le dessus du mur).
 
 Le maillage doit rester la grille d'origine (les retouches déplacent les sommets, sans en ajouter ni en retirer).
-Premier ajustement (2026-10-25): 2 018 sommets sur 166 100 déplacés.
+Ajustements du 2026-10-25: 2 018 puis 9 950 sommets sur 166 100 déplacés.
 
 ## Données
 
