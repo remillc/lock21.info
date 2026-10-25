@@ -93,6 +93,7 @@ for (const [selector, label, tooltip] of [
   ['.ar-button', 'ar', 'ar'],
   ['.underwater-button', 'underwater', 'underwater'],
   ['.fullscreen', 'fullscreen', 'fullscreenTitle'],
+  ['.home-button', 'homeView', 'homeView'],
 ]) {
   const element = document.querySelector(selector)
   element.setAttribute('aria-label', t(label))
@@ -1069,6 +1070,22 @@ const tour = createTour({
   },
 })
 tour.button.hidden = false
+// Home: straight back to the start view (START_VIEW, as at the start: stepped back on a narrow frame), at once
+// (Christian, 2026-10-25), the tour stopped if it was on. Diving, the swim starts again from there
+const homeButton = document.querySelector('.home-button')
+homeButton.hidden = false
+homeButton.addEventListener('click', () => {
+  tour.stop()
+  setSwimming(false)
+  const cam = startView(container.clientWidth / container.clientHeight)
+  camera.position.set(cam[0], cam[1], cam[2])
+  controls.target.set(cam[3], cam[4], cam[5])
+  controls.update()
+  setSwimming(underwater.on && !mobile)
+  updateAddress()
+  requestRender()
+  log('home', {})
+})
 if (params.get('tour') === '1') firstView.then(() => tour.start())
 function showSwimHelp() {
   try {

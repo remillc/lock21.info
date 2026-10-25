@@ -46,6 +46,7 @@ const TEXTS = {
     fullscreen: 'Plein écran',
     fullscreenTitle: 'Plein écran (Échap pour sortir)',
     fullscreenExit: 'Quitter le plein écran',
+    homeView: 'Vue de départ',
 
     // Loading indicator (loading.js)
     loading: 'Chargement',
@@ -165,6 +166,7 @@ const TEXTS = {
     fullscreen: 'Full screen',
     fullscreenTitle: 'Full screen (Esc to exit)',
     fullscreenExit: 'Exit full screen',
+    homeView: 'Start view',
 
     // Loading indicator (loading.js)
     loading: 'Loading',

@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#70**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#72**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -19,6 +19,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   a gesture or after it
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
 - [ ] #68 Yellow perch schools in the underwater view
+- [ ] #70 Bug: a mouse move in the 3D viewer (`/modele`) sometimes leaks out of it and scrolls the page; keep the
+  viewer's pointer and wheel gestures inside it
+- [ ] #71 Standard (non-diving) view: keep the camera from going too far away from the model, and from going under it
 
 ### Pipeline
 

@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: a home button (between full screen and the diver's button) jumps straight back to the start view;
+  it stops the guided tour if it is on, and in dive mode the swim goes on from there.
+
 ## 0.14.0 - 2026-10-24
 
 - 3D model online (R2): zones 1, 4, 10, 11, 12 and 13 republished with Christian's new boolean cuts (zone 13's
