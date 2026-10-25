@@ -125,7 +125,8 @@ export const TOUR_STEPS = [
   {
     // Added by Christian, 2026-10-24
     kind: 'view',
-    cam: [-45.27, 1.67, -26.26, -40.87, 2.8, -28.73],
+    // Christian, 2026-10-25 (was -45.27, 1.67, -26.26, -40.87, 2.8, -28.73)
+    cam: [-48.84, 0.69, -27.52, -33.75, 5.58, -28.62],
     title: { fr: 'Les piliers, côté ouest', en: 'The piers, west side' },
     text: {
       fr: 'Du côté ouest, les piliers sont arrondis, montés en assises de pierre. Derrière, l’enclave est fermée par un mur de madriers.',
