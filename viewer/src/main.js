@@ -568,7 +568,7 @@ const look = {
   // (?hdri=0) keeps none: the textures as they are
   tone: ['neutral', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'agx',
   exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.2,
-  // Fine relief from the photo's brightness (?bump=0..3, see litMaterial)
+  // Bump map from the photo's brightness (?bump=0..5, see litMaterial)
   bump: params.has('bump') ? Number(params.get('bump')) : 1,
   // « Ambiance sous-marine » (?underwater=1) and its season (?season=0..3: winter, spring, summer, autumn; default
   // summer, the diving season), see underwater.js
@@ -762,7 +762,7 @@ function litMaterial(surface, mesh, normalMap, sky) {
           '\nif (dot(normal, nonPerturbedNormal) < 0.0) normal = -normal;',
       )
     }
-    // Fine relief from the photo (?bump=0..3, zones only; Christian, 2026-10-25: the wooden floor lacked roughness):
+    // Bump map from the photo (?bump=0..5, zones only; Christian, 2026-10-25: the wooden floor lacked roughness):
     // the photogrammetry's mesh, and so the relief baked from it, is smooth where the wood's grain, the planks' seams
     // and the nail holes are only in the photo. Its brightness taken as a height (darker: lower), BUMP m at full
     // contrast, the normal tilted by its slope on screen (three.js's bump mapping, from screen derivatives)

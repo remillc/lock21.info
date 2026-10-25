@@ -7,7 +7,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - 3D viewer: a fine relief drawn from the photo (Christian, 2026-10-25: the wooden floor lacked roughness): the
   photogrammetry's mesh, and the relief baked from it, are smooth where the wood's grain and the planks' seams are only
   in the photo; its brightness taken as a height (2.4 cm at full contrast) tilts the zones' normals (bump mapping).
-  Settings « Relief fin » (`?bump=0..5`, 1 by default).
+  Settings « Bump map » (`?bump=0..5`, 1 by default).
 - 3D viewer: no more wet look (`?wet=`, its setting « Aspect mouillé »): barely seen, it made the surfaces read
   smoother, cost the heaviest material, and the site is under water.
 - 3D viewer: the crayfish dances (Christian, 2026-10-25, after Family Guy's dancing lobster): in its threat posture,
