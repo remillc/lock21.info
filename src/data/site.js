@@ -4,11 +4,11 @@ export const site = {
   bottomDepthFt: 60, // canal floor: 60 ft (SOS Ottawa, 1989: lock floor and base of the approach cribs; docs/sos-ottawa-files.md)
   bottomDepthM: 18.3,
   zonesTotal: 25,
-  // Lock 21: 44°59.809' N, 74°53.997' W (degrees and decimal minutes)
+  // Lock 21: 44°59.814' N, 74°53.983' W (degrees and decimal minutes; Christian, 2026-10-25, was 44°59.809', 74°53.997')
   coordinates: {
-    lat: 44.996817,
-    lon: -74.89995,
-    label: { fr: '44°59.809′ N · 74°53.997′ O', en: '44°59.809′ N · 74°53.997′ W' },
+    lat: 44.996900,
+    lon: -74.899721,
+    label: { fr: '44°59.814′ N · 74°53.983′ O', en: '44°59.814′ N · 74°53.983′ W' },
   },
   viewer: '/modele',
   manifest: 'https://tiles.lock21.info/manifest.json',

@@ -15,8 +15,8 @@ import json
 import struct
 
 FIRST_YEAR = 2024  # first dive
-LATITUDE = 44.996817  # the site anchor: Lock 21, 44°59.809' N
-LONGITUDE = -74.89995  # 74°53.997' W
+LATITUDE = 44.996900  # the site anchor: Lock 21, 44°59.814' N (2026-10-25)
+LONGITUDE = -74.899721  # 74°53.983' W
 
 
 def copyright_line(year=None):
@@ -36,7 +36,7 @@ def metadata(year=None, scale=1.0):
             "longitude": LONGITUDE,
             "note": "the model's origin (0, 0, 0) is at these coordinates (WGS 84): the site anchor, centre of the zones",
         },
-        "orientation": "glTF axes: +Y up, -Z north, +X east",
+        "orientation": "glTF axes: +Y up; -Z toward 30° west of true north (the lock's north wall side; heading -30, after Nick Baets' north arrow), +X toward 60°",
         "units": "metres" if scale == 1 else f"metres at 1:{round(1 / scale)} (1 unit = {1 / scale:g} m on the site)",
         "scale": scale,
         "vertical": "y = 0 is the lock's reference level; the lock lies about 55 ft (16.8 m) under water",
