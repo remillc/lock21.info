@@ -8,8 +8,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   computed once (`tools/flow/`: the site voxelized at 60 cm from the downloadable model and the mockups of the zones
   not yet surveyed, an ideal flow from the west solved around it, a turbulence index in the obstacles' wake), in
   `viewer/public/flow/` (555 kB, loaded when the view first goes underwater). Each particle is born, follows the field
-  for 10 s (bending around the walls, faster through the gaps, slower in their lee, swirling in the wake), fading in
-  and out; outside the field, the even current as before.
+  for 10 s in nearly straight lines (bending around the walls, faster through the gaps, slower in their lee, a
+  little swirl in the wake), fading in and out; outside the field, the even current as before.
 - 3D viewer, underwater: the particles slower, the measured current in summer (35 ft/min, 0.18 m/s; they drifted at
   about 0.9 m/s), the other seasons in proportion.
 - 3D viewer, underwater: the fish's body and tail wave 20 % slower (their swimming speed unchanged).

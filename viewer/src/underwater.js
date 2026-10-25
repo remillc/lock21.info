@@ -47,12 +47,12 @@ const FIELD_PUSH = 0.15
 // a field computed once (tools/flow: the site's solids, an ideal flow from the west, a turbulence index downstream of
 // the obstacles), public/flow/flow.bin.gz, loaded when the view first goes underwater. Each particle is born, follows it
 // for FLOW_LIFE s (FLOW_STEPS steps from its birth: it bends around the walls, speeds up through the gaps, slows in
-// their lee), fading in and out, then is born again elsewhere; in the wake it swirls more (FLOW_SWIRL times). Outside the
+// their lee), fading in and out, then is born again elsewhere; in the wake it swirls a little (FLOW_SWIRL cm). Outside the
 // field, and until it has loaded, the even current as before
 const FLOW_URL = `${import.meta.env.BASE_URL}flow/`
 const FLOW_LIFE = 10
 const FLOW_STEPS = 6
-const FLOW_SWIRL = 3
+const FLOW_SWIRL = 10
 // The scattered light's strength against the lit surfaces (brighter washed every surface to the water's colour)
 const WATER_BRIGHTNESS = 0.6
 // The surfaces are seen as they are up to this share of the visibility (Christian, 2026-10-23: textures seen up close,
@@ -449,7 +449,12 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
               swirl = max(swirl, f.w);
             }
             // In the wake of the obstacles, it swirls (faster and wider)
-            p += sway * (1.0 + ${FLOW_SWIRL.toFixed(1)} * swirl) + swirl * 0.3 * vec3(sin(uTime * 1.3 + seed.x * 6.28), sin(uTime * 1.1 + seed.y * 6.28), cos(uTime * 1.7 + seed.z * 6.28));
+            // Nearly straight lines along the current (Christian, 2026-10-25: the ±25 cm sway made waves): a slight
+            // wobble, a slow settling over its life (1 cm/s; it was on the page's clock, so they sank as the minutes went
+            // by), and in the wake a little swirl, FLOW_SWIRL cm at most
+            vec3 wobble = vec3(sin(uTime * 0.3 + seed.w * 6.28), sin(uTime * 0.21 + seed.z * 6.28), cos(uTime * 0.25 + seed.w * 3.14));
+            p += wobble * 0.03 + vec3(0.0, -0.01 * age, 0.0)
+              + swirl * ${(FLOW_SWIRL / 100).toFixed(2)} * vec3(sin(uTime * 1.3 + seed.x * 6.28), sin(uTime * 1.1 + seed.y * 6.28), cos(uTime * 1.7 + seed.z * 6.28));
             // Fading in at its birth and out at its end
             float t = age / ${FLOW_LIFE.toFixed(1)};
             vFade = smoothstep(0.0, 0.12, t) * (1.0 - smoothstep(0.85, 1.0, t));
