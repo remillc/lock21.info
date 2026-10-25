@@ -10,7 +10,7 @@
 //    network of the waves) on surfaces facing it, fading with depth;
 //  - the water surface seen from below; suspended particles carried west to east by the current;
 //  - a dive light held at the bottom right of the view, aimed at its middle (« Lampe de plongée » setting): warm white,
-//    a hotspot (8°) in a spill 3 times wider and weaker (24°), soft edges, fading with distance, out of reach beyond about 1.5 times the visibility; its beam seen in
+//    a hotspot (8.8° half-angle) in a spill 2.5 times wider and 3 times weaker (22°), soft edges, fading with distance, out of reach beyond about 1.5 times the visibility; its beam seen in
 //    the water (the light the water scatters toward the eye), computed in each pixel's shading (uwBeam): samples along
 //    the line of sight, lit where they fall in the lamp's cone. It only adds light (a cone drawn as a mesh veiled the
 //    model when seen along its axis);
