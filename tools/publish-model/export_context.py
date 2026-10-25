@@ -76,11 +76,43 @@ def flat_uv_share(ob):
     return flat / total if total else 0.0
 
 
-def bake_uv(ob):
-    """Nouvelle carte UV dépliée, active pour la cuisson; la carte de rendu (lue par le matériau) ne change pas."""
+def tiled_uv(ob):
+    """Carte UV de rendu qui se répète (des coordonnées hors de 0..1: le terrain d'après la carte, sa texture tous les
+    1,5 m): une image cuite dedans s'empilerait sur elle-même."""
+    layer = next((u for u in ob.data.uv_layers if u.active_render), None)
+    if layer is None or not len(layer.data):
+        return False
+    import numpy as np
+    uv = np.empty(len(layer.data) * 2, np.float32)
+    layer.data.foreach_get("uv", uv)
+    return bool(uv.min() < -0.01 or uv.max() > 1.01)
+
+
+def bake_uv(ob, planar=False):
+    """Nouvelle carte UV, active pour la cuisson; la carte de rendu (lue par le matériau) ne change pas. Dépliée
+    (Smart UV Project), ou vue du dessus sur une seule image (planar: un terrain, sa carte qui se répète)."""
     me = ob.data
     layer = me.uv_layers.new(name="context-bake")
     me.uv_layers.active = layer
+    if planar:
+        # Seen from above in the .blend's axes, over what is left once the modifiers are applied (a Boolean keeps a part
+        # of the chart terrain, square to the .blend: projected on the grid's own axes, the image was half empty)
+        import numpy as np
+        world = np.array(ob.matrix_world)
+        co = np.empty(len(me.vertices) * 3, np.float32)
+        me.vertices.foreach_get("co", co)
+        co = co.reshape(-1, 3) @ world[:3, :3].T + world[:3, 3]
+        evaluated = ob.evaluated_get(bpy.context.evaluated_depsgraph_get())
+        kept = evaluated.to_mesh()
+        ev = np.empty(len(kept.vertices) * 3, np.float32)
+        kept.vertices.foreach_get("co", ev)
+        ev = ev.reshape(-1, 3) @ world[:3, :3].T + world[:3, 3]
+        evaluated.to_mesh_clear()
+        lo, size = ev[:, :2].min(0), max(np.ptp(ev[:, 0]), np.ptp(ev[:, 1]), 1e-6)
+        loops = np.empty(len(me.loops), np.int32)
+        me.loops.foreach_get("vertex_index", loops)
+        layer.data.foreach_set("uv", ((co[loops, :2] - lo) / size).astype(np.float32).ravel())
+        return
     bpy.context.view_layer.objects.active = ob
     for o in bpy.context.view_layer.objects:
         o.select_set(o is ob)
@@ -125,8 +157,9 @@ if to_bake:
 own_uv = set()  # objets cuits dans leur propre carte UV (bake_uv): seule carte exportée
 for ob in to_bake:
     share = flat_uv_share(ob)
-    if share > 0.01:
-        bake_uv(ob)
+    tiled = tiled_uv(ob)
+    if share > 0.01 or tiled:
+        bake_uv(ob, planar=tiled)
         own_uv.add(ob.name)
         print(f"[context] {ob.name}: {share * 100:.0f} % de la surface sans place dans la carte UV, cuit dans une carte "
               "dépliée", flush=True)
@@ -212,5 +245,12 @@ bpy.ops.export_scene.gltf(filepath=glb, export_format='GLB', use_selection=True,
                           export_image_format='JPEG', export_jpeg_quality=88, export_normals=False,
                           export_materials='EXPORT')
 json.dump(fp, open(os.path.join(out_dir, "fingerprint.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+# The marks of the collection « markers » (Lock 21 Scuba Park, Christian, 2026-10-25): their place in the .blend, for
+# the Google Earth map (make_kmz.py)
+markers = bpy.data.collections.get("markers")
+marks = [{"name": o.name, "location": [round(v, 3) for v in o.matrix_world.translation],
+          "what": o.get("what", "")} for o in (markers.objects if markers else []) if o.type == 'EMPTY']
+json.dump(marks, open(os.path.join(out_dir, "markers.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+print(f"[context] marks: {[m['name'] for m in marks]}", flush=True)
 faces = sum(len(o.data.polygons) for o in objects)
 print(f"[context] glb: {glb} ({os.path.getsize(glb) / 1e6:.1f} Mo, {faces:,} faces)", flush=True)

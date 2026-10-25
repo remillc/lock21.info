@@ -33,20 +33,24 @@ const SWIM = 0.16
 const SLOW_DOWN = 0.3
 const SLOWEST = 0.15
 const TURN_BEFORE = 0.35
-const FLEE = 2.2
+const FLEE = 3.3
 const TURN = 1.4
 const FLEE_TURN = 7
 // Leaving as a fish does (Christian, 2026-10-24: its turn away didn't look natural; it pivoted on the spot, then slid
 // to its way out): it swims where its body points, so it follows an arc while it turns, at LEAVE_SLOWEST of its speed
 // facing away and full speed once lined up, reaching it with LEAVE_ACCEL (calm) or FLEE_ACCEL (per second). Fleeing,
 // a C-start: its turn snaps in (FLEE_EASE instead of TURN_EASE) and its body bends into a C, then the tail kick
-// carries it off. Gone once LEAVE_NEAR m from its way out, or after LEAVE_MAX s
+// carries it off. Gone once LEAVE_NEAR m from its way out, or after LEAVE_MAX s. Fleeing (Christian, 2026-10-25: faster,
+// and faster still while it turns), FLEE m/s once lined up and FLEE_SLOWEST of it facing away
 const LEAVE_SLOWEST = 0.3
+const FLEE_SLOWEST = 0.6
 const LEAVE_ACCEL = 1.2
 const FLEE_ACCEL = 4
 const FLEE_EASE = 14
 const LEAVE_NEAR = 0.3
 const LEAVE_MAX = 10
+// ... and if it is still in sight then, it swims on until it is not, LEAVE_GIVE_UP s at most
+const LEAVE_GIVE_UP = 40
 // The most a spine bone bends in a turn (rad): a fast turn (the flight) folded the body
 const MAX_BEND = 0.45
 // The turn runs down the body (Christian, 2026-10-24: the C bend didn't look natural, the whole body bent at once and
@@ -222,7 +226,8 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
     return always || (lastPlan.every((c) => c >= CLEARANCE) && [from, mid, to].every((p) => inSight(camera.position, p)))
   }
 
-  /** Whether the camera's move sends it off now: 'flee', 'calm' (lost interest) or false (tolerated) */
+  /** Whether the camera's move sends it off now: 'flee', 'calm' (lost interest) or false (tolerated); `moved`: the
+   *  camera changed place (a turn of the head alone never counts) */
   function reaction(camera, moved, setOff) {
     const gap = camera.position.distanceTo(root.position)
     if (camSpeed > STARTLE || gap < TOO_CLOSE) return 'flee'
@@ -306,8 +311,9 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         root.visible = false
         return false
       }
-      // Debug: whenever the camera moves, it starts over from its new place (no flight)
-      if (always && moved && state !== 'away') state = 'away'
+      // Debug: whenever the camera changes place, it flees (then comes back, at once); a turn of the head does not count
+      // (Christian, 2026-10-25: turning to light it made it vanish at once; « it must flee, not vanish »)
+      if (always && swam && (state === 'arriving' || state === 'turning' || state === 'staying')) leave(false, camera)
       if (state === 'away') {
         if (!always && (idle < idleFor || cooldown > 0)) return false
         if (!plan(camera)) {
@@ -337,7 +343,9 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
       // Out of view: counted once it has come into it (it arrives from just outside)
       if (inView(camera)) seen = true
       unseen = !seen || inView(camera) ? 0 : unseen + dt
-      const react = state === 'leaving' ? false : reaction(camera, moved, setOff)
+      // (its place only: turning the head toward it, to light it, sent it off when it was out of view: Christian,
+      // 2026-10-25)
+      const react = state === 'leaving' ? false : reaction(camera, swam, setOff)
       const slow = pace()
       if (state === 'arriving') {
         const step = to.clone().sub(root.position)
@@ -368,11 +376,17 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
       } else if (state === 'leaving') {
         const step = exit.clone().sub(root.position)
         const left = step.length()
+        // Gone only out of the diver's sight: out of the view or beyond the visibility (Christian, 2026-10-25: it vanished
+        // in plain sight at its way out); still seen there, it swims on the way it goes
+        const outOfSight = !inView(camera) || camera.position.distanceTo(root.position) > visibility()
         if (left < LEAVE_NEAR || since - leftAt > LEAVE_MAX) {
-          state = 'away'
-          root.visible = false
-          cooldown = between(COOLDOWN)
-          return true
+          if (outOfSight || since - leftAt > LEAVE_GIVE_UP) {
+            state = 'away'
+            root.visible = false
+            cooldown = between(COOLDOWN)
+            return true
+          }
+          exit.copy(root.position).addScaledVector(forward.set(Math.sin(heading), 0, Math.cos(heading)), 3)
         }
         // Turning toward its way out while swimming where it points (an arc); faster as it lines up. In cold water,
         // everything slower (pace)
@@ -380,7 +394,8 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         const delta = Math.atan2(Math.sin(Math.atan2(step.x, step.z) - heading), Math.cos(Math.atan2(step.x, step.z) - heading))
         const lined = (1 + Math.cos(delta)) / 2
         const top = calm ? WANDER_OFF * slow : FLEE * Math.sqrt(slow)
-        const wanted = top * (LEAVE_SLOWEST + (1 - LEAVE_SLOWEST) * lined * lined)
+        const slowest = calm ? LEAVE_SLOWEST : FLEE_SLOWEST
+        const wanted = top * (slowest + (1 - slowest) * lined * lined)
         leaveSpeed += (wanted - leaveSpeed) * Math.min(1, (calm ? LEAVE_ACCEL : FLEE_ACCEL) * dt)
         root.position.addScaledVector(forward.set(Math.sin(heading), 0, Math.cos(heading)), leaveSpeed * dt)
       }

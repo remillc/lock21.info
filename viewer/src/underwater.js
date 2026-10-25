@@ -9,8 +9,8 @@
 //  - the sun bent toward the vertical by the surface (Snell), from the « Soleil » setting; caustics (the moving light
 //    network of the waves) on surfaces facing it, fading with depth;
 //  - the water surface seen from below; suspended particles carried west to east by the current;
-//  - a dive light held at the bottom right of the view, aimed at its middle (« Lampe de plongée » setting): warm white,
-//    a hotspot (8°) in a spill 3 times wider and weaker (24°), soft edges, fading with distance, out of reach beyond about 1.5 times the visibility; its beam seen in
+//  - a dive light held at the bottom right of the view, aimed at its middle (« Lampe de plongée » setting): 5000 K (the warm end of dive lights, 5000–6500 K; Light & Motion Sola 6000–6500 K),
+//    a hotspot (6° half-angle) in a spill 5 times wider and 5 times weaker (30°), soft edges, fading with distance, out of reach beyond about 1.5 times the visibility; its beam seen in
 //    the water (the light the water scatters toward the eye), computed in each pixel's shading (uwBeam): samples along
 //    the line of sight, lit where they fall in the lamp's cone. It only adds light (a cone drawn as a mesh veiled the
 //    model when seen along its axis);
@@ -59,12 +59,13 @@ const DAYLIGHT_SHIFT = 0.5
 // spot and brings the reds back (at full strength the green daylight swamped it)
 // 0.35: more absorbed at depth than the first 0.5 (Christian, 2026-10-23; 0.25 was too dark)
 const DAYLIGHT_LEVEL = 0.35
-// The beam's two parts, as a real dive light: a narrow, strong hotspot (16° across) and a spill around it, 40° across
-// in all (was 48°, then 32°) and 3 times weaker (Christian, 2026-10-23); half-angles, and the spill's strength against the
-// hotspot's
-const LAMP_HOT_ANGLE = 8
-const LAMP_WIDE_ANGLE = 20
-const LAMP_SPILL = 1 / 3
+// The beam's two parts, as a real dive light: a narrow, strong hotspot (12° across) and a spill around it, 60° across
+// in all and 5 times weaker, as the Light & Motion Sola Dive 1200's spot and flood (Christian, 2026-10-25; was 17.6°
+// and 44°, 3 times weaker: the spill wider, its light spread over about twice the area); half-angles, and the spill's
+// strength against the hotspot's
+const LAMP_HOT_ANGLE = 6
+const LAMP_WIDE_ANGLE = 30
+const LAMP_SPILL = 1 / 5
 // The share of the water's scattering that dims the lamp's beam (forward scattering keeps the rest in it), and the
 // saturation of the colours it lights
 const LAMP_SCATTER = 0.33
@@ -162,7 +163,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
     uUwSpectral: { value: new THREE.Vector3() },
     uUwLampPower: { value: 0 },
     // Warm, like a halogen dive light: more red to bring back (Christian, 2026-10-23)
-    uUwLampColor: { value: new THREE.Color(0xffcc9c) },
+    uUwLampColor: { value: new THREE.Color(0xffe4ce) },
     uUwTop: { value: new THREE.Vector3() },
     uUwDeep: { value: new THREE.Vector3() },
     uUwGone: { value: 6 },
@@ -449,7 +450,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
           vec3 uwColor = gl_FragColor.rgb * uwDown * ${DAYLIGHT_LEVEL.toFixed(2)} * (1.0 + 1.5 * uwCaustic) * exp(-uUwSpectral * vUwDepth);
           // The dive light: dimmed and its red absorbed from the lamp to here by the whole water attenuation (the lamp
           // is at the eye: the way back is about the same, counted once), so its reds come back up close and it fades
-          // with distance (Lambert, warm white)
+          // with distance (Lambert, 5000 K)
           vec3 uwToLamp = uUwLampPos - vUwWorld;
           float uwLampDist = max(length(uwToLamp), 0.05);
           vec3 uwLampDir = normalize((viewMatrix * vec4(uwToLamp, 0.0)).xyz);

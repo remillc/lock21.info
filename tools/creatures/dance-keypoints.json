@@ -1,0 +1,5330 @@
+[
+ {
+  "frame": 1,
+  "head": [
+   86,
+   96
+  ],
+  "pelvis": [
+   88,
+   136
+  ],
+  "tail_mid": [
+   75,
+   145
+  ],
+  "tail_end": [
+   56,
+   137
+  ],
+  "claw_SL": {
+   "shoulder": [
+    76,
+    102
+   ],
+   "elbow": [
+    70,
+    94
+   ],
+   "wrist": [
+    63,
+    84
+   ],
+   "tip": [
+    37,
+    53
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    100,
+    114
+   ],
+   "elbow": [
+    110,
+    110
+   ],
+   "wrist": [
+    123,
+    114
+   ],
+   "tip": [
+    156,
+    107
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    71,
+    138
+   ],
+   "knee": [
+    61,
+    147
+   ],
+   "foot": [
+    68,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    98,
+    130
+   ],
+   "knee": [
+    120,
+    130
+   ],
+   "foot": [
+    120,
+    155
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    31,
+    101
+   ],
+   "bottom": [
+    30,
+    115
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": null,
+   "bottom": null,
+   "count": 0
+  },
+  "antenna_SL": [
+   62,
+   47
+  ],
+  "antenna_SR": [
+   88,
+   47
+  ],
+  "notes": "SR claw held horizontal to the right; SR leg drawn as a horizontal thigh then a vertical shin. Tail curls toward SL (fan near the SL leg). No SR small legs visible (hidden behind the SR claw)."
+ },
+ {
+  "frame": 2,
+  "head": [
+   94,
+   95
+  ],
+  "pelvis": [
+   92,
+   132
+  ],
+  "tail_mid": [
+   75,
+   142
+  ],
+  "tail_end": [
+   47,
+   130
+  ],
+  "claw_SL": {
+   "shoulder": [
+    80,
+    105
+   ],
+   "elbow": [
+    75,
+    97
+   ],
+   "wrist": [
+    68,
+    87
+   ],
+   "tip": [
+    41,
+    59
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    103,
+    120
+   ],
+   "elbow": [
+    107,
+    130
+   ],
+   "wrist": [
+    103,
+    140
+   ],
+   "tip": [
+    131,
+    151
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    71,
+    137
+   ],
+   "knee": [
+    60,
+    143
+   ],
+   "foot": [
+    67,
+    159
+   ]
+  },
+  "leg_SR": {
+   "hip": null,
+   "knee": null,
+   "foot": null
+  },
+  "grounded": "SL",
+  "small_SL": {
+   "top": [
+    40,
+    101
+   ],
+   "bottom": [
+    34,
+    114
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    139,
+    116
+   ],
+   "bottom": [
+    139,
+    125
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   64,
+   47
+  ],
+  "antenna_SR": [
+   90,
+   46
+  ],
+  "notes": "SR claw lowered, pincer resting on the floor at bottom right, hiding the SR leg. Tail fan curls up at SL."
+ },
+ {
+  "frame": 3,
+  "head": [
+   94,
+   95
+  ],
+  "pelvis": [
+   92,
+   132
+  ],
+  "tail_mid": [
+   75,
+   142
+  ],
+  "tail_end": [
+   47,
+   130
+  ],
+  "claw_SL": {
+   "shoulder": [
+    80,
+    105
+   ],
+   "elbow": [
+    75,
+    97
+   ],
+   "wrist": [
+    68,
+    87
+   ],
+   "tip": [
+    41,
+    59
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    103,
+    120
+   ],
+   "elbow": [
+    107,
+    130
+   ],
+   "wrist": [
+    103,
+    140
+   ],
+   "tip": [
+    131,
+    151
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    71,
+    137
+   ],
+   "knee": [
+    60,
+    143
+   ],
+   "foot": [
+    67,
+    159
+   ]
+  },
+  "leg_SR": {
+   "hip": null,
+   "knee": null,
+   "foot": null
+  },
+  "grounded": "SL",
+  "small_SL": {
+   "top": [
+    40,
+    101
+   ],
+   "bottom": [
+    34,
+    114
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    139,
+    116
+   ],
+   "bottom": [
+    139,
+    125
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   64,
+   47
+  ],
+  "antenna_SR": [
+   90,
+   46
+  ],
+  "notes": "Identical to frame 02 (a few pixels of compression noise)."
+ },
+ {
+  "frame": 4,
+  "head": [
+   92,
+   94
+  ],
+  "pelvis": [
+   91,
+   131
+  ],
+  "tail_mid": [
+   73,
+   141
+  ],
+  "tail_end": [
+   47,
+   130
+  ],
+  "claw_SL": {
+   "shoulder": [
+    78,
+    105
+   ],
+   "elbow": [
+    73,
+    95
+   ],
+   "wrist": [
+    68,
+    87
+   ],
+   "tip": [
+    37,
+    61
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    103,
+    120
+   ],
+   "elbow": [
+    107,
+    126
+   ],
+   "wrist": [
+    105,
+    135
+   ],
+   "tip": [
+    135,
+    145
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    70,
+    137
+   ],
+   "knee": [
+    61,
+    145
+   ],
+   "foot": [
+    67,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": null,
+   "knee": null,
+   "foot": [
+    123,
+    159
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    36,
+    102
+   ],
+   "bottom": [
+    32,
+    116
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    138,
+    113
+   ],
+   "bottom": [
+    139,
+    122
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   61,
+   47
+  ],
+  "antenna_SR": [
+   88,
+   46
+  ],
+  "notes": "Like 02 but the SR pincer lifted off the floor, pointing right-down; only the SR foot shows below it (hip and knee hidden)."
+ },
+ {
+  "frame": 5,
+  "head": [
+   79,
+   87
+  ],
+  "pelvis": [
+   78,
+   124
+  ],
+  "tail_mid": [
+   70,
+   138
+  ],
+  "tail_end": [
+   42,
+   130
+  ],
+  "claw_SL": {
+   "shoulder": [
+    67,
+    102
+   ],
+   "elbow": [
+    58,
+    97
+   ],
+   "wrist": [
+    52,
+    83
+   ],
+   "tip": [
+    21,
+    78
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    92,
+    105
+   ],
+   "elbow": [
+    98,
+    107
+   ],
+   "wrist": [
+    103,
+    102
+   ],
+   "tip": [
+    134,
+    102
+   ],
+   "open": "open"
+  },
+  "leg_SL": {
+   "hip": [
+    65,
+    130
+   ],
+   "knee": [
+    59,
+    140
+   ],
+   "foot": [
+    67,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    92,
+    125
+   ],
+   "knee": [
+    97,
+    140
+   ],
+   "foot": [
+    103,
+    160
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    27,
+    111
+   ],
+   "bottom": [
+    27,
+    126
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": null,
+   "bottom": null,
+   "count": 0
+  },
+  "antenna_SL": [
+   37,
+   42
+  ],
+  "antenna_SR": [
+   75,
+   37
+  ],
+  "notes": "Body leans/turns to SL; SL pincer held high pointing left, SR pincer cupped upward at chest height. SR small legs hidden. SL knee/hip uncertain (inside the red tail mass)."
+ },
+ {
+  "frame": 6,
+  "head": [
+   80,
+   87
+  ],
+  "pelvis": [
+   82,
+   127
+  ],
+  "tail_mid": [
+   73,
+   143
+  ],
+  "tail_end": [
+   52,
+   138
+  ],
+  "claw_SL": {
+   "shoulder": [
+    67,
+    103
+   ],
+   "elbow": [
+    60,
+    100
+   ],
+   "wrist": [
+    53,
+    87
+   ],
+   "tip": [
+    21,
+    75
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    95,
+    102
+   ],
+   "elbow": [
+    103,
+    98
+   ],
+   "wrist": [
+    110,
+    102
+   ],
+   "tip": [
+    139,
+    106
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    65,
+    133
+   ],
+   "knee": [
+    62,
+    145
+   ],
+   "foot": [
+    67,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    95,
+    128
+   ],
+   "knee": [
+    103,
+    143
+   ],
+   "foot": [
+    107,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    27,
+    112
+   ],
+   "bottom": [
+    27,
+    128
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": null,
+   "bottom": null,
+   "count": 0
+  },
+  "antenna_SL": [
+   40,
+   42
+  ],
+  "antenna_SR": [
+   80,
+   35
+  ],
+  "notes": "Close to 05 (slight shift right), SR pincer more horizontal, SR leg bent at the knee."
+ },
+ {
+  "frame": 7,
+  "head": [
+   88,
+   89
+  ],
+  "pelvis": [
+   97,
+   125
+  ],
+  "tail_mid": [
+   113,
+   135
+  ],
+  "tail_end": [
+   133,
+   140
+  ],
+  "claw_SL": {
+   "shoulder": [
+    83,
+    113
+   ],
+   "elbow": [
+    70,
+    110
+   ],
+   "wrist": [
+    62,
+    97
+   ],
+   "tip": [
+    42,
+    72
+   ],
+   "open": "half"
+  },
+  "claw_SR": {
+   "shoulder": [
+    103,
+    103
+   ],
+   "elbow": [
+    107,
+    95
+   ],
+   "wrist": [
+    113,
+    90
+   ],
+   "tip": [
+    155,
+    102
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    85,
+    123
+   ],
+   "knee": [
+    77,
+    143
+   ],
+   "foot": [
+    66,
+    159
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    113,
+    130
+   ],
+   "knee": [
+    120,
+    143
+   ],
+   "foot": [
+    121,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    45,
+    117
+   ],
+   "bottom": [
+    45,
+    133
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    145,
+    112
+   ],
+   "bottom": [
+    145,
+    112
+   ],
+   "count": 1
+  },
+  "antenna_SL": [
+   66,
+   44
+  ],
+  "antenna_SR": [
+   103,
+   36
+  ],
+  "notes": "Tail now swings to SR. SL leg is a long straight diagonal down-left (knee placed mid-length, no visible bend); it crosses the SL small legs in an X near (85,128). SL claw pincer raised, SR pincer horizontal to the right."
+ },
+ {
+  "frame": 8,
+  "head": [
+   93,
+   94
+  ],
+  "pelvis": [
+   105,
+   126
+  ],
+  "tail_mid": [
+   123,
+   135
+  ],
+  "tail_end": [
+   143,
+   127
+  ],
+  "claw_SL": {
+   "shoulder": [
+    90,
+    117
+   ],
+   "elbow": [
+    80,
+    115
+   ],
+   "wrist": [
+    68,
+    108
+   ],
+   "tip": [
+    60,
+    75
+   ],
+   "open": "closed"
+  },
+  "claw_SR": {
+   "shoulder": [
+    110,
+    100
+   ],
+   "elbow": [
+    113,
+    93
+   ],
+   "wrist": [
+    117,
+    86
+   ],
+   "tip": [
+    159,
+    95
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    93,
+    130
+   ],
+   "knee": [
+    82,
+    145
+   ],
+   "foot": [
+    66,
+    159
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    128,
+    130
+   ],
+   "knee": [
+    137,
+    138
+   ],
+   "foot": [
+    130,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    55,
+    118
+   ],
+   "bottom": [
+    57,
+    135
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    145,
+    108
+   ],
+   "bottom": [
+    150,
+    117
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   77,
+   45
+  ],
+  "antenna_SR": [
+   112,
+   37
+  ],
+  "notes": "Body tilted toward SR. SL pincer raised vertically, closed (seen edge-on). SR elbow/wrist partly hidden behind the large SR pincer: estimated."
+ },
+ {
+  "frame": 9,
+  "head": [
+   93,
+   94
+  ],
+  "pelvis": [
+   105,
+   126
+  ],
+  "tail_mid": [
+   123,
+   135
+  ],
+  "tail_end": [
+   143,
+   127
+  ],
+  "claw_SL": {
+   "shoulder": [
+    90,
+    117
+   ],
+   "elbow": [
+    80,
+    115
+   ],
+   "wrist": [
+    68,
+    108
+   ],
+   "tip": [
+    60,
+    75
+   ],
+   "open": "closed"
+  },
+  "claw_SR": {
+   "shoulder": [
+    110,
+    100
+   ],
+   "elbow": [
+    113,
+    93
+   ],
+   "wrist": [
+    117,
+    86
+   ],
+   "tip": [
+    159,
+    95
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    93,
+    130
+   ],
+   "knee": [
+    82,
+    145
+   ],
+   "foot": [
+    66,
+    159
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    128,
+    130
+   ],
+   "knee": [
+    137,
+    138
+   ],
+   "foot": [
+    130,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    55,
+    118
+   ],
+   "bottom": [
+    57,
+    135
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    145,
+    108
+   ],
+   "bottom": [
+    150,
+    117
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   77,
+   45
+  ],
+  "antenna_SR": [
+   112,
+   37
+  ],
+  "notes": "Identical to frame 08 (compression noise only)."
+ },
+ {
+  "frame": 10,
+  "head": [
+   113,
+   77
+  ],
+  "pelvis": [
+   117,
+   113
+  ],
+  "tail_mid": [
+   138,
+   123
+  ],
+  "tail_end": [
+   158,
+   118
+  ],
+  "claw_SL": {
+   "shoulder": [
+    104,
+    100
+   ],
+   "elbow": [
+    98,
+    98
+   ],
+   "wrist": [
+    90,
+    97
+   ],
+   "tip": [
+    52,
+    74
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    130,
+    88
+   ],
+   "elbow": [
+    133,
+    83
+   ],
+   "wrist": [
+    138,
+    77
+   ],
+   "tip": [
+    180,
+    69
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    105,
+    113
+   ],
+   "knee": [
+    97,
+    123
+   ],
+   "foot": [
+    94,
+    150
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    130,
+    117
+   ],
+   "knee": [
+    135,
+    133
+   ],
+   "foot": [
+    130,
+    158
+   ]
+  },
+  "grounded": "SR",
+  "small_SL": {
+   "top": [
+    57,
+    102
+   ],
+   "bottom": [
+    60,
+    118
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    169,
+    93
+   ],
+   "bottom": [
+    167,
+    108
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   88,
+   28
+  ],
+  "antenna_SR": [
+   126,
+   25
+  ],
+  "notes": "Jumps up and right (head ~17 px higher). SL foot lifted (y 150), SR foot planted. Both pincers raised outward."
+ },
+ {
+  "frame": 11,
+  "head": [
+   142,
+   68
+  ],
+  "pelvis": [
+   137,
+   106
+  ],
+  "tail_mid": [
+   153,
+   120
+  ],
+  "tail_end": [
+   170,
+   112
+  ],
+  "claw_SL": {
+   "shoulder": [
+    125,
+    85
+   ],
+   "elbow": [
+    117,
+    88
+   ],
+   "wrist": [
+    108,
+    84
+   ],
+   "tip": [
+    72,
+    79
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    153,
+    85
+   ],
+   "elbow": [
+    162,
+    77
+   ],
+   "wrist": [
+    165,
+    60
+   ],
+   "tip": [
+    195,
+    42
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    125,
+    107
+   ],
+   "knee": [
+    108,
+    95
+   ],
+   "foot": [
+    114,
+    121
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    137,
+    125
+   ],
+   "knee": [
+    134,
+    140
+   ],
+   "foot": [
+    130,
+    158
+   ]
+  },
+  "grounded": "SR",
+  "small_SL": {
+   "top": [
+    82,
+    63
+   ],
+   "bottom": [
+    82,
+    63
+   ],
+   "count": 1
+  },
+  "small_SR": {
+   "top": [
+    192,
+    83
+   ],
+   "bottom": [
+    195,
+    102
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   108,
+   20
+  ],
+  "antenna_SR": [
+   144,
+   17
+  ],
+  "notes": "Standing on the SR leg only (foot at the same spot as frame 10). SL leg kicked up and folded (foot hanging at ~(114,121)); its identification is doubtful (could be a small leg). Body far right; SR pincer near the frame's top-right edge."
+ },
+ {
+  "frame": 12,
+  "head": [
+   142,
+   68
+  ],
+  "pelvis": [
+   137,
+   106
+  ],
+  "tail_mid": [
+   153,
+   120
+  ],
+  "tail_end": [
+   170,
+   112
+  ],
+  "claw_SL": {
+   "shoulder": [
+    125,
+    85
+   ],
+   "elbow": [
+    117,
+    88
+   ],
+   "wrist": [
+    108,
+    84
+   ],
+   "tip": [
+    72,
+    79
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    153,
+    85
+   ],
+   "elbow": [
+    162,
+    77
+   ],
+   "wrist": [
+    165,
+    60
+   ],
+   "tip": [
+    195,
+    42
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    125,
+    107
+   ],
+   "knee": [
+    108,
+    95
+   ],
+   "foot": [
+    114,
+    121
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    137,
+    125
+   ],
+   "knee": [
+    134,
+    140
+   ],
+   "foot": [
+    130,
+    158
+   ]
+  },
+  "grounded": "SR",
+  "small_SL": {
+   "top": [
+    82,
+    63
+   ],
+   "bottom": [
+    82,
+    63
+   ],
+   "count": 1
+  },
+  "small_SR": {
+   "top": [
+    192,
+    83
+   ],
+   "bottom": [
+    195,
+    102
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   108,
+   20
+  ],
+  "antenna_SR": [
+   144,
+   17
+  ],
+  "notes": "Identical to frame 11 (compression noise only)."
+ },
+ {
+  "frame": 13,
+  "head": [
+   117,
+   78
+  ],
+  "pelvis": [
+   110,
+   114
+  ],
+  "tail_mid": [
+   102,
+   130
+  ],
+  "tail_end": [
+   88,
+   115
+  ],
+  "claw_SL": {
+   "shoulder": [
+    99,
+    95
+   ],
+   "elbow": [
+    90,
+    89
+   ],
+   "wrist": [
+    81,
+    84
+   ],
+   "tip": [
+    51,
+    67
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    129,
+    104
+   ],
+   "elbow": [
+    142,
+    104
+   ],
+   "wrist": [
+    157,
+    104
+   ],
+   "tip": [
+    188,
+    103
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    87,
+    128
+   ],
+   "knee": [
+    80,
+    139
+   ],
+   "foot": [
+    73,
+    150
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    124,
+    128
+   ],
+   "knee": [
+    128,
+    143
+   ],
+   "foot": [
+    130,
+    159
+   ]
+  },
+  "grounded": "SR",
+  "small_SL": {
+   "top": [
+    53,
+    90
+   ],
+   "bottom": [
+    53,
+    90
+   ],
+   "count": 1
+  },
+  "small_SR": {
+   "top": [
+    160,
+    93
+   ],
+   "bottom": [
+    160,
+    93
+   ],
+   "count": 1
+  },
+  "antenna_SL": [
+   89,
+   31
+  ],
+  "antenna_SR": [
+   118,
+   27
+  ],
+  "notes": "Body upright, slightly rotated. Tail fan flipped up to the SL side of the abdomen (small red blob ~82-94,109-121); abdomen is the round red mass under the plate, tail_mid on its curve. SR arm nearly straight, horizontal (elbow placed on the line). SR small leg is a faint thin line merging into the claw's upper edge: doubtful. SL foot lifted (higher than SR)."
+ },
+ {
+  "frame": 14,
+  "head": [
+   108,
+   86
+  ],
+  "pelvis": [
+   103,
+   123
+  ],
+  "tail_mid": [
+   90,
+   134
+  ],
+  "tail_end": [
+   73,
+   121
+  ],
+  "claw_SL": {
+   "shoulder": [
+    90,
+    104
+   ],
+   "elbow": [
+    83,
+    97
+   ],
+   "wrist": [
+    76,
+    91
+   ],
+   "tip": [
+    48,
+    63
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    113,
+    110
+   ],
+   "elbow": [
+    123,
+    117
+   ],
+   "wrist": [
+    131,
+    126
+   ],
+   "tip": [
+    161,
+    133
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    75,
+    131
+   ],
+   "knee": [
+    72,
+    141
+   ],
+   "foot": [
+    67,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    114,
+    130
+   ],
+   "knee": [
+    121,
+    141
+   ],
+   "foot": [
+    131,
+    159
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    44,
+    101
+   ],
+   "bottom": [
+    69,
+    106
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    154,
+    108
+   ],
+   "bottom": [
+    157,
+    120
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   77,
+   39
+  ],
+  "antenna_SR": [
+   106,
+   37
+  ],
+  "notes": "SR claw swinging down to lower right. Tail fan to the lower SL side (red blob ~66-82,111-131). Second SL small leg only partly visible (short stub behind the first)."
+ },
+ {
+  "frame": 15,
+  "head": [
+   95,
+   96
+  ],
+  "pelvis": [
+   91,
+   130
+  ],
+  "tail_mid": [
+   78,
+   140
+  ],
+  "tail_end": [
+   55,
+   132
+  ],
+  "claw_SL": {
+   "shoulder": [
+    83,
+    108
+   ],
+   "elbow": [
+    79,
+    100
+   ],
+   "wrist": [
+    75,
+    93
+   ],
+   "tip": [
+    44,
+    60
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    104,
+    126
+   ],
+   "elbow": [
+    101,
+    135
+   ],
+   "wrist": [
+    97,
+    145
+   ],
+   "tip": [
+    125,
+    155
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    61,
+    141
+   ],
+   "knee": [
+    64,
+    150
+   ],
+   "foot": [
+    67,
+    157
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    105,
+    131
+   ],
+   "knee": [
+    119,
+    145
+   ],
+   "foot": [
+    132,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    42,
+    99
+   ],
+   "bottom": [
+    36,
+    113
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    139,
+    119
+   ],
+   "bottom": [
+    138,
+    129
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   68,
+   50
+  ],
+  "antenna_SR": [
+   92,
+   51
+  ],
+  "notes": "Crouched pose. SR claw hangs below the body, pincer pointing right (jaws nearly closed, thin gap); the SR leg's dark shin crosses in front of the pincer. Tail fan spread to the lower SL (~45-72,124-141). SR claw elbow/wrist approximate (arm hidden behind the abdomen)."
+ },
+ {
+  "frame": 16,
+  "head": [
+   95,
+   96
+  ],
+  "pelvis": [
+   91,
+   130
+  ],
+  "tail_mid": [
+   78,
+   140
+  ],
+  "tail_end": [
+   55,
+   132
+  ],
+  "claw_SL": {
+   "shoulder": [
+    83,
+    108
+   ],
+   "elbow": [
+    79,
+    100
+   ],
+   "wrist": [
+    75,
+    93
+   ],
+   "tip": [
+    44,
+    60
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    104,
+    126
+   ],
+   "elbow": [
+    101,
+    135
+   ],
+   "wrist": [
+    97,
+    145
+   ],
+   "tip": [
+    125,
+    155
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    61,
+    141
+   ],
+   "knee": [
+    64,
+    150
+   ],
+   "foot": [
+    67,
+    157
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    105,
+    131
+   ],
+   "knee": [
+    119,
+    145
+   ],
+   "foot": [
+    132,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    42,
+    99
+   ],
+   "bottom": [
+    36,
+    113
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    139,
+    119
+   ],
+   "bottom": [
+    138,
+    129
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   68,
+   50
+  ],
+  "antenna_SR": [
+   92,
+   51
+  ],
+  "notes": "Identical to frame 15 (only compression noise)."
+ },
+ {
+  "frame": 17,
+  "head": [
+   95,
+   96
+  ],
+  "pelvis": [
+   91,
+   130
+  ],
+  "tail_mid": [
+   78,
+   140
+  ],
+  "tail_end": [
+   55,
+   132
+  ],
+  "claw_SL": {
+   "shoulder": [
+    83,
+    108
+   ],
+   "elbow": [
+    79,
+    100
+   ],
+   "wrist": [
+    75,
+    93
+   ],
+   "tip": [
+    44,
+    60
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    104,
+    126
+   ],
+   "elbow": [
+    101,
+    135
+   ],
+   "wrist": [
+    97,
+    145
+   ],
+   "tip": [
+    125,
+    155
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    61,
+    141
+   ],
+   "knee": [
+    64,
+    150
+   ],
+   "foot": [
+    67,
+    157
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    105,
+    131
+   ],
+   "knee": [
+    119,
+    145
+   ],
+   "foot": [
+    132,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    42,
+    99
+   ],
+   "bottom": [
+    36,
+    113
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    139,
+    119
+   ],
+   "bottom": [
+    138,
+    129
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   68,
+   50
+  ],
+  "antenna_SR": [
+   92,
+   51
+  ],
+  "notes": "Identical to frame 15 (only compression noise)."
+ },
+ {
+  "frame": 18,
+  "head": [
+   95,
+   96
+  ],
+  "pelvis": [
+   91,
+   130
+  ],
+  "tail_mid": [
+   78,
+   140
+  ],
+  "tail_end": [
+   55,
+   132
+  ],
+  "claw_SL": {
+   "shoulder": [
+    83,
+    108
+   ],
+   "elbow": [
+    79,
+    100
+   ],
+   "wrist": [
+    75,
+    93
+   ],
+   "tip": [
+    44,
+    60
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    104,
+    126
+   ],
+   "elbow": [
+    101,
+    135
+   ],
+   "wrist": [
+    97,
+    145
+   ],
+   "tip": [
+    125,
+    155
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    61,
+    141
+   ],
+   "knee": [
+    64,
+    150
+   ],
+   "foot": [
+    67,
+    157
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    105,
+    131
+   ],
+   "knee": [
+    119,
+    145
+   ],
+   "foot": [
+    132,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    42,
+    99
+   ],
+   "bottom": [
+    36,
+    113
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    139,
+    119
+   ],
+   "bottom": [
+    138,
+    129
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   68,
+   50
+  ],
+  "antenna_SR": [
+   92,
+   51
+  ],
+  "notes": "Identical to frame 15 (only compression noise)."
+ },
+ {
+  "frame": 19,
+  "head": [
+   89,
+   92
+  ],
+  "pelvis": [
+   85,
+   135
+  ],
+  "tail_mid": [
+   92,
+   141
+  ],
+  "tail_end": [
+   93,
+   149
+  ],
+  "claw_SL": {
+   "shoulder": [
+    80,
+    101
+   ],
+   "elbow": [
+    70,
+    95
+   ],
+   "wrist": [
+    60,
+    90
+   ],
+   "tip": [
+    26,
+    81
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    104,
+    108
+   ],
+   "elbow": [
+    117,
+    110
+   ],
+   "wrist": [
+    130,
+    111
+   ],
+   "tip": [
+    167,
+    113
+   ],
+   "open": "open"
+  },
+  "leg_SL": {
+   "hip": [
+    70,
+    133
+   ],
+   "knee": [
+    68,
+    147
+   ],
+   "foot": [
+    67,
+    159
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    108,
+    135
+   ],
+   "knee": [
+    113,
+    144
+   ],
+   "foot": [
+    123,
+    156
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    40,
+    109
+   ],
+   "bottom": [
+    44,
+    121
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": null,
+   "bottom": null,
+   "count": 0
+  },
+  "antenna_SL": [
+   67,
+   45
+  ],
+  "antenna_SR": [
+   105,
+   45
+  ],
+  "notes": "Both claws held out horizontally. SR small legs hidden behind the SR claw. Abdomen a round red mass under the plate, curled toward the viewer; tail fan not distinct (tail_end = bottom of the mass, doubtful). Arms nearly straight: elbows on the line."
+ },
+ {
+  "frame": 20,
+  "head": [
+   88,
+   93
+  ],
+  "pelvis": [
+   86,
+   133
+  ],
+  "tail_mid": [
+   100,
+   138
+  ],
+  "tail_end": [
+   93,
+   145
+  ],
+  "claw_SL": {
+   "shoulder": [
+    80,
+    105
+   ],
+   "elbow": [
+    77,
+    103
+   ],
+   "wrist": [
+    73,
+    99
+   ],
+   "tip": [
+    24,
+    101
+   ],
+   "open": "wide"
+  },
+  "claw_SR": {
+   "shoulder": [
+    105,
+    102
+   ],
+   "elbow": [
+    117,
+    96
+   ],
+   "wrist": [
+    129,
+    93
+   ],
+   "tip": [
+    165,
+    82
+   ],
+   "open": "open"
+  },
+  "leg_SL": {
+   "hip": [
+    66,
+    131
+   ],
+   "knee": [
+    68,
+    143
+   ],
+   "foot": [
+    71,
+    155
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    111,
+    138
+   ],
+   "knee": [
+    112,
+    148
+   ],
+   "foot": [
+    114,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    48,
+    121
+   ],
+   "bottom": [
+    48,
+    121
+   ],
+   "count": 1
+  },
+  "small_SR": {
+   "top": [
+    148,
+    106
+   ],
+   "bottom": [
+    149,
+    119
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   79,
+   40
+  ],
+  "antenna_SR": [
+   102,
+   41
+  ],
+  "notes": "SR claw raised up-right, SL claw out left, its upper arm strongly foreshortened (shoulder/elbow/wrist bunched near the body). Abdomen visible on the SR side of the plate, tail fan at the bottom centre (~80-105,136-150)."
+ },
+ {
+  "frame": 21,
+  "head": [
+   86,
+   90
+  ],
+  "pelvis": [
+   88,
+   127
+  ],
+  "tail_mid": [
+   105,
+   138
+  ],
+  "tail_end": [
+   93,
+   145
+  ],
+  "claw_SL": {
+   "shoulder": [
+    79,
+    101
+   ],
+   "elbow": [
+    74,
+    97
+   ],
+   "wrist": [
+    70,
+    95
+   ],
+   "tip": [
+    27,
+    117
+   ],
+   "open": "wide"
+  },
+  "claw_SR": {
+   "shoulder": [
+    102,
+    99
+   ],
+   "elbow": [
+    108,
+    89
+   ],
+   "wrist": [
+    115,
+    79
+   ],
+   "tip": [
+    151,
+    55
+   ],
+   "open": "open"
+  },
+  "leg_SL": {
+   "hip": [
+    72,
+    121
+   ],
+   "knee": [
+    67,
+    131
+   ],
+   "foot": [
+    79,
+    144
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    109,
+    145
+   ],
+   "knee": [
+    106,
+    152
+   ],
+   "foot": [
+    102,
+    160
+   ]
+  },
+  "grounded": "SR",
+  "small_SL": {
+   "top": [
+    54,
+    117
+   ],
+   "bottom": [
+    54,
+    117
+   ],
+   "count": 1
+  },
+  "small_SR": {
+   "top": [
+    151,
+    101
+   ],
+   "bottom": [
+    151,
+    115
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   84,
+   41
+  ],
+  "antenna_SR": [
+   100,
+   40
+  ],
+  "notes": "SR claw raised high; SL claw held low to the left, pincer opening downward (outer finger tip 27,117; inner finger tip ~52,123). SL leg kicked up/bent (foot off the floor). Segmented abdomen seen on the SR side; tail fan at bottom centre. Only one SL small leg visible."
+ },
+ {
+  "frame": 22,
+  "head": [
+   86,
+   90
+  ],
+  "pelvis": [
+   88,
+   127
+  ],
+  "tail_mid": [
+   105,
+   138
+  ],
+  "tail_end": [
+   93,
+   145
+  ],
+  "claw_SL": {
+   "shoulder": [
+    79,
+    101
+   ],
+   "elbow": [
+    74,
+    97
+   ],
+   "wrist": [
+    70,
+    95
+   ],
+   "tip": [
+    27,
+    117
+   ],
+   "open": "wide"
+  },
+  "claw_SR": {
+   "shoulder": [
+    102,
+    99
+   ],
+   "elbow": [
+    108,
+    89
+   ],
+   "wrist": [
+    115,
+    79
+   ],
+   "tip": [
+    151,
+    55
+   ],
+   "open": "open"
+  },
+  "leg_SL": {
+   "hip": [
+    72,
+    121
+   ],
+   "knee": [
+    67,
+    131
+   ],
+   "foot": [
+    79,
+    144
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    109,
+    145
+   ],
+   "knee": [
+    106,
+    152
+   ],
+   "foot": [
+    102,
+    160
+   ]
+  },
+  "grounded": "SR",
+  "small_SL": {
+   "top": [
+    54,
+    117
+   ],
+   "bottom": [
+    54,
+    117
+   ],
+   "count": 1
+  },
+  "small_SR": {
+   "top": [
+    151,
+    101
+   ],
+   "bottom": [
+    151,
+    115
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   84,
+   41
+  ],
+  "antenna_SR": [
+   100,
+   40
+  ],
+  "notes": "Identical to frame 21 (only compression noise)."
+ },
+ {
+  "frame": 23,
+  "head": [
+   99,
+   95
+  ],
+  "pelvis": [
+   98,
+   136
+  ],
+  "tail_mid": [
+   75,
+   118
+  ],
+  "tail_end": null,
+  "claw_SL": {
+   "shoulder": [
+    84,
+    100
+   ],
+   "elbow": [
+    73,
+    96
+   ],
+   "wrist": [
+    62,
+    96
+   ],
+   "tip": [
+    25,
+    89
+   ],
+   "open": "half"
+  },
+  "claw_SR": {
+   "shoulder": [
+    110,
+    108
+   ],
+   "elbow": [
+    116,
+    102
+   ],
+   "wrist": [
+    122,
+    96
+   ],
+   "tip": [
+    156,
+    74
+   ],
+   "open": "open"
+  },
+  "leg_SL": {
+   "hip": [
+    85,
+    135
+   ],
+   "knee": [
+    84,
+    142
+   ],
+   "foot": [
+    81,
+    150
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    108,
+    135
+   ],
+   "knee": [
+    111,
+    142
+   ],
+   "foot": [
+    102,
+    160
+   ]
+  },
+  "grounded": "SR",
+  "small_SL": {
+   "top": [
+    44,
+    119
+   ],
+   "bottom": [
+    46,
+    125
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    151,
+    110
+   ],
+   "bottom": [
+    147,
+    121
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   80,
+   47
+  ],
+  "antenna_SR": [
+   109,
+   45
+  ],
+  "notes": "Body turning: the segmented abdomen shows as a vertical red band left of the plate (x 64-88, y 93-135); tail fan hidden (tail_end null). SL leg short and raised (red thigh, dark tip at 81,150), only partly visible below the abdomen."
+ },
+ {
+  "frame": 24,
+  "head": [
+   104,
+   99
+  ],
+  "pelvis": [
+   102,
+   140
+  ],
+  "tail_mid": [
+   77,
+   112
+  ],
+  "tail_end": null,
+  "claw_SL": {
+   "shoulder": [
+    86,
+    102
+   ],
+   "elbow": [
+    74,
+    97
+   ],
+   "wrist": [
+    64,
+    95
+   ],
+   "tip": [
+    36,
+    69
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    112,
+    112
+   ],
+   "elbow": [
+    122,
+    110
+   ],
+   "wrist": [
+    130,
+    106
+   ],
+   "tip": [
+    160,
+    82
+   ],
+   "open": "open"
+  },
+  "leg_SL": {
+   "hip": [
+    76,
+    131
+   ],
+   "knee": [
+    80,
+    140
+   ],
+   "foot": [
+    85,
+    151
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    110,
+    137
+   ],
+   "knee": [
+    111,
+    142
+   ],
+   "foot": [
+    103,
+    160
+   ]
+  },
+  "grounded": "SR",
+  "small_SL": {
+   "top": [
+    49,
+    108
+   ],
+   "bottom": [
+    45,
+    120
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    146,
+    119
+   ],
+   "bottom": [
+    142,
+    130
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   88,
+   53
+  ],
+  "antenna_SR": [
+   109,
+   51
+  ],
+  "notes": "Both claws raised, pincers opening upward. Abdomen a large red segmented block left of the plate (x 65-90, y 92-133), overlapping the SL shoulder (shoulder approximate); tail fan hidden. SL foot raised."
+ },
+ {
+  "frame": 25,
+  "head": [
+   107,
+   110
+  ],
+  "pelvis": [
+   103,
+   146
+  ],
+  "tail_mid": [
+   82,
+   106
+  ],
+  "tail_end": [
+   64,
+   113
+  ],
+  "claw_SL": {
+   "shoulder": [
+    92,
+    103
+   ],
+   "elbow": [
+    78,
+    105
+   ],
+   "wrist": [
+    66,
+    98
+   ],
+   "tip": [
+    60,
+    56
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    118,
+    111
+   ],
+   "elbow": [
+    128,
+    114
+   ],
+   "wrist": [
+    134,
+    106
+   ],
+   "tip": [
+    163,
+    92
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    89,
+    124
+   ],
+   "knee": [
+    79,
+    131
+   ],
+   "foot": [
+    86,
+    152
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    109,
+    143
+   ],
+   "knee": [
+    106,
+    151
+   ],
+   "foot": [
+    103,
+    160
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    57,
+    103
+   ],
+   "bottom": [
+    43,
+    118
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    136,
+    134
+   ],
+   "bottom": [
+    136,
+    134
+   ],
+   "count": 1
+  },
+  "antenna_SL": [
+   95,
+   57
+  ],
+  "antenna_SR": [
+   110,
+   56
+  ],
+  "notes": "Body turned/leaning; tail appears swung up behind the SL arm (red segmented mass x60-95,y85-122): tail points are a doubtful guess. Upper SL pincer finger tip used as tip; SR tip = lower (longer) finger tip."
+ },
+ {
+  "frame": 26,
+  "head": [
+   107,
+   110
+  ],
+  "pelvis": [
+   103,
+   146
+  ],
+  "tail_mid": [
+   82,
+   106
+  ],
+  "tail_end": [
+   64,
+   113
+  ],
+  "claw_SL": {
+   "shoulder": [
+    92,
+    103
+   ],
+   "elbow": [
+    78,
+    105
+   ],
+   "wrist": [
+    66,
+    98
+   ],
+   "tip": [
+    60,
+    56
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    118,
+    111
+   ],
+   "elbow": [
+    128,
+    114
+   ],
+   "wrist": [
+    134,
+    106
+   ],
+   "tip": [
+    163,
+    92
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    89,
+    124
+   ],
+   "knee": [
+    79,
+    131
+   ],
+   "foot": [
+    86,
+    152
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    109,
+    143
+   ],
+   "knee": [
+    106,
+    151
+   ],
+   "foot": [
+    103,
+    160
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    57,
+    103
+   ],
+   "bottom": [
+    43,
+    118
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    136,
+    134
+   ],
+   "bottom": [
+    136,
+    134
+   ],
+   "count": 1
+  },
+  "antenna_SL": [
+   95,
+   57
+  ],
+  "antenna_SR": [
+   110,
+   56
+  ],
+  "notes": "Identical to frame 25 (pixel diff noise only). Body turned/leaning; tail appears swung up behind the SL arm (red segmented mass x60-95,y85-122): tail points are a doubtful guess. Upper SL pincer finger tip used as tip; SR tip = lower (longer) finger tip."
+ },
+ {
+  "frame": 27,
+  "head": [
+   77,
+   94
+  ],
+  "pelvis": [
+   80,
+   126
+  ],
+  "tail_mid": [
+   57,
+   118
+  ],
+  "tail_end": [
+   42,
+   127
+  ],
+  "claw_SL": {
+   "shoulder": [
+    64,
+    104
+   ],
+   "elbow": [
+    52,
+    103
+   ],
+   "wrist": [
+    42,
+    98
+   ],
+   "tip": [
+    32,
+    61
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    96,
+    100
+   ],
+   "elbow": [
+    105,
+    98
+   ],
+   "wrist": [
+    110,
+    92
+   ],
+   "tip": [
+    139,
+    69
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    65,
+    128
+   ],
+   "knee": [
+    64,
+    140
+   ],
+   "foot": [
+    67,
+    157
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    88,
+    128
+   ],
+   "knee": [
+    93,
+    138
+   ],
+   "foot": [
+    101,
+    157
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    23,
+    107
+   ],
+   "bottom": [
+    23,
+    107
+   ],
+   "count": 1
+  },
+  "small_SR": {
+   "top": [
+    129,
+    104
+   ],
+   "bottom": [
+    130,
+    116
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   76,
+   38
+  ],
+  "antenna_SR": [
+   100,
+   41
+  ],
+  "notes": "Lobster shifted left; tail curls out to SL behind the SL leg, fan lower-left. Legs nearly straight."
+ },
+ {
+  "frame": 28,
+  "head": [
+   51,
+   87
+  ],
+  "pelvis": [
+   56,
+   113
+  ],
+  "tail_mid": [
+   62,
+   128
+  ],
+  "tail_end": [
+   38,
+   137
+  ],
+  "claw_SL": {
+   "shoulder": [
+    44,
+    108
+   ],
+   "elbow": [
+    38,
+    112
+   ],
+   "wrist": [
+    30,
+    110
+   ],
+   "tip": [
+    22,
+    78
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    72,
+    95
+   ],
+   "elbow": [
+    80,
+    92
+   ],
+   "wrist": [
+    82,
+    86
+   ],
+   "tip": [
+    113,
+    73
+   ],
+   "open": "open"
+  },
+  "leg_SL": {
+   "hip": [
+    54,
+    138
+   ],
+   "knee": [
+    61,
+    148
+   ],
+   "foot": [
+    67,
+    157
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    82,
+    112
+   ],
+   "knee": [
+    93,
+    118
+   ],
+   "foot": [
+    115,
+    130
+   ]
+  },
+  "grounded": "SL",
+  "small_SL": {
+   "top": [
+    5,
+    121
+   ],
+   "bottom": [
+    5,
+    121
+   ],
+   "count": 1
+  },
+  "small_SR": {
+   "top": [
+    125,
+    97
+   ],
+   "bottom": [
+    125,
+    105
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   51,
+   32
+  ],
+  "antenna_SR": [
+   77,
+   33
+  ],
+  "notes": "Body leaning, far left. SL leg hip hidden behind tail (estimated). SR leg kicked out sideways (thin dark line to (115,130)); could also be read as a small leg."
+ },
+ {
+  "frame": 29,
+  "head": [
+   57,
+   88
+  ],
+  "pelvis": [
+   63,
+   121
+  ],
+  "tail_mid": [
+   68,
+   133
+  ],
+  "tail_end": [
+   43,
+   140
+  ],
+  "claw_SL": {
+   "shoulder": [
+    50,
+    106
+   ],
+   "elbow": [
+    40,
+    107
+   ],
+   "wrist": [
+    31,
+    104
+   ],
+   "tip": [
+    21,
+    69
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    75,
+    93
+   ],
+   "elbow": [
+    80,
+    91
+   ],
+   "wrist": [
+    85,
+    85
+   ],
+   "tip": [
+    119,
+    65
+   ],
+   "open": "open"
+  },
+  "leg_SL": {
+   "hip": [
+    52,
+    140
+   ],
+   "knee": [
+    60,
+    149
+   ],
+   "foot": [
+    67,
+    157
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    83,
+    118
+   ],
+   "knee": [
+    101,
+    127
+   ],
+   "foot": [
+    122,
+    136
+   ]
+  },
+  "grounded": "SL",
+  "small_SL": {
+   "top": [
+    5,
+    118
+   ],
+   "bottom": [
+    5,
+    118
+   ],
+   "count": 1
+  },
+  "small_SR": {
+   "top": [
+    128,
+    94
+   ],
+   "bottom": [
+    131,
+    104
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   47,
+   32
+  ],
+  "antenna_SR": [
+   82,
+   33
+  ],
+  "notes": "Like 28, slightly more upright; SR leg kicked further out. SL hip hidden behind tail."
+ },
+ {
+  "frame": 30,
+  "head": [
+   63,
+   88
+  ],
+  "pelvis": [
+   72,
+   122
+  ],
+  "tail_mid": [
+   72,
+   134
+  ],
+  "tail_end": [
+   47,
+   141
+  ],
+  "claw_SL": {
+   "shoulder": [
+    55,
+    107
+   ],
+   "elbow": [
+    43,
+    102
+   ],
+   "wrist": [
+    32,
+    95
+   ],
+   "tip": [
+    21,
+    58
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    80,
+    100
+   ],
+   "elbow": [
+    83,
+    93
+   ],
+   "wrist": [
+    88,
+    84
+   ],
+   "tip": [
+    120,
+    55
+   ],
+   "open": "open"
+  },
+  "leg_SL": {
+   "hip": [
+    60,
+    132
+   ],
+   "knee": [
+    58,
+    144
+   ],
+   "foot": [
+    67,
+    157
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    91,
+    125
+   ],
+   "knee": [
+    100,
+    132
+   ],
+   "foot": [
+    115,
+    151
+   ]
+  },
+  "grounded": "SL",
+  "small_SL": {
+   "top": [
+    8,
+    114
+   ],
+   "bottom": [
+    29,
+    137
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    132,
+    91
+   ],
+   "bottom": [
+    135,
+    104
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   44,
+   37
+  ],
+  "antenna_SR": [
+   87,
+   34
+  ],
+  "notes": "Returning to centre; SR leg coming down (foot near floor at (115,151)). SL hip/knee hidden behind tail, only shin visible."
+ },
+ {
+  "frame": 31,
+  "head": [
+   79,
+   99
+  ],
+  "pelvis": [
+   85,
+   136
+  ],
+  "tail_mid": [
+   83,
+   144
+  ],
+  "tail_end": [
+   62,
+   145
+  ],
+  "claw_SL": {
+   "shoulder": [
+    69,
+    112
+   ],
+   "elbow": [
+    59,
+    96
+   ],
+   "wrist": [
+    52,
+    81
+   ],
+   "tip": [
+    25,
+    48
+   ],
+   "open": "half"
+  },
+  "claw_SR": {
+   "shoulder": [
+    93,
+    107
+   ],
+   "elbow": [
+    96,
+    93
+   ],
+   "wrist": [
+    100,
+    78
+   ],
+   "tip": [
+    122,
+    47
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    68,
+    134
+   ],
+   "knee": [
+    46,
+    133
+   ],
+   "foot": [
+    68,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    100,
+    134
+   ],
+   "knee": [
+    120,
+    134
+   ],
+   "foot": [
+    102,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    21,
+    106
+   ],
+   "bottom": [
+    24,
+    117
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    135,
+    91
+   ],
+   "bottom": [
+    140,
+    107
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   50,
+   46
+  ],
+  "antenna_SR": [
+   97,
+   43
+  ],
+  "notes": "Symmetric front pose, both claws raised, legs spread (thighs horizontal, shins in). Tail tucked under plate; tail_end uncertain (fan merged with SL shin)."
+ },
+ {
+  "frame": 32,
+  "head": [
+   79,
+   99
+  ],
+  "pelvis": [
+   85,
+   136
+  ],
+  "tail_mid": [
+   83,
+   144
+  ],
+  "tail_end": [
+   62,
+   145
+  ],
+  "claw_SL": {
+   "shoulder": [
+    69,
+    112
+   ],
+   "elbow": [
+    59,
+    96
+   ],
+   "wrist": [
+    52,
+    81
+   ],
+   "tip": [
+    25,
+    48
+   ],
+   "open": "half"
+  },
+  "claw_SR": {
+   "shoulder": [
+    93,
+    107
+   ],
+   "elbow": [
+    96,
+    93
+   ],
+   "wrist": [
+    100,
+    78
+   ],
+   "tip": [
+    122,
+    47
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    68,
+    134
+   ],
+   "knee": [
+    46,
+    133
+   ],
+   "foot": [
+    68,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    100,
+    134
+   ],
+   "knee": [
+    120,
+    134
+   ],
+   "foot": [
+    102,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    21,
+    106
+   ],
+   "bottom": [
+    24,
+    117
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    135,
+    91
+   ],
+   "bottom": [
+    140,
+    107
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   50,
+   46
+  ],
+  "antenna_SR": [
+   97,
+   43
+  ],
+  "notes": "Identical to frame 31 (pixel diff noise only). Symmetric front pose, both claws raised, legs spread (thighs horizontal, shins in). Tail tucked under plate; tail_end uncertain (fan merged with SL shin)."
+ },
+ {
+  "frame": 33,
+  "head": [
+   81,
+   94
+  ],
+  "pelvis": [
+   86,
+   131
+  ],
+  "tail_mid": [
+   86,
+   141
+  ],
+  "tail_end": [
+   66,
+   146
+  ],
+  "claw_SL": {
+   "shoulder": [
+    70,
+    105
+   ],
+   "elbow": [
+    62,
+    98
+   ],
+   "wrist": [
+    55,
+    90
+   ],
+   "tip": [
+    29,
+    49
+   ],
+   "open": "half"
+  },
+  "claw_SR": {
+   "shoulder": [
+    95,
+    104
+   ],
+   "elbow": [
+    99,
+    99
+   ],
+   "wrist": [
+    103,
+    93
+   ],
+   "tip": [
+    145,
+    61
+   ],
+   "open": "open"
+  },
+  "leg_SL": {
+   "hip": [
+    74,
+    130
+   ],
+   "knee": [
+    52,
+    133
+   ],
+   "foot": [
+    68,
+    157
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    100,
+    130
+   ],
+   "knee": [
+    119,
+    134
+   ],
+   "foot": [
+    101,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    23,
+    102
+   ],
+   "bottom": [
+    24,
+    117
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    139,
+    97
+   ],
+   "bottom": [
+    142,
+    112
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   52,
+   41
+  ],
+  "antenna_SR": [
+   103,
+   39
+  ],
+  "notes": "Like 31, SR claw lowered and opened toward the right. Tail tucked; tail_end uncertain."
+ },
+ {
+  "frame": 34,
+  "head": [
+   89,
+   78
+  ],
+  "pelvis": [
+   86,
+   111
+  ],
+  "tail_mid": [
+   90,
+   122
+  ],
+  "tail_end": [
+   98,
+   139
+  ],
+  "claw_SL": {
+   "shoulder": [
+    74,
+    93
+   ],
+   "elbow": [
+    62,
+    88
+   ],
+   "wrist": [
+    65,
+    80
+   ],
+   "tip": [
+    41,
+    60
+   ],
+   "open": "half"
+  },
+  "claw_SR": {
+   "shoulder": [
+    101,
+    92
+   ],
+   "elbow": [
+    106,
+    86
+   ],
+   "wrist": [
+    112,
+    90
+   ],
+   "tip": [
+    145,
+    112
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    67,
+    107
+   ],
+   "knee": [
+    51,
+    110
+   ],
+   "foot": [
+    69,
+    133
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    104,
+    117
+   ],
+   "knee": [
+    112,
+    131
+   ],
+   "foot": [
+    102,
+    158
+   ]
+  },
+  "grounded": "SR",
+  "small_SL": {
+   "top": [
+    32,
+    98
+   ],
+   "bottom": [
+    36,
+    116
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    131,
+    130
+   ],
+   "bottom": [
+    131,
+    130
+   ],
+   "count": 1
+  },
+  "antenna_SL": [
+   60,
+   27
+  ],
+  "antenna_SR": [
+   125,
+   31
+  ],
+  "notes": "Body tilted, raised; tail curls down to SR. SL leg lifted (kick). SR claw hangs down-right. SR hip hidden behind tail (estimated)."
+ },
+ {
+  "frame": 35,
+  "head": [
+   89,
+   78
+  ],
+  "pelvis": [
+   86,
+   111
+  ],
+  "tail_mid": [
+   90,
+   122
+  ],
+  "tail_end": [
+   98,
+   139
+  ],
+  "claw_SL": {
+   "shoulder": [
+    74,
+    93
+   ],
+   "elbow": [
+    62,
+    88
+   ],
+   "wrist": [
+    65,
+    80
+   ],
+   "tip": [
+    41,
+    60
+   ],
+   "open": "half"
+  },
+  "claw_SR": {
+   "shoulder": [
+    101,
+    92
+   ],
+   "elbow": [
+    106,
+    86
+   ],
+   "wrist": [
+    112,
+    90
+   ],
+   "tip": [
+    145,
+    112
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    67,
+    107
+   ],
+   "knee": [
+    51,
+    110
+   ],
+   "foot": [
+    69,
+    133
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    104,
+    117
+   ],
+   "knee": [
+    112,
+    131
+   ],
+   "foot": [
+    102,
+    158
+   ]
+  },
+  "grounded": "SR",
+  "small_SL": {
+   "top": [
+    32,
+    98
+   ],
+   "bottom": [
+    36,
+    116
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    131,
+    130
+   ],
+   "bottom": [
+    131,
+    130
+   ],
+   "count": 1
+  },
+  "antenna_SL": [
+   60,
+   27
+  ],
+  "antenna_SR": [
+   125,
+   31
+  ],
+  "notes": "Identical to frame 34 (pixel diff noise only). Body tilted, raised; tail curls down to SR. SL leg lifted (kick). SR claw hangs down-right. SR hip hidden behind tail (estimated)."
+ },
+ {
+  "frame": 36,
+  "head": [
+   88,
+   77
+  ],
+  "pelvis": [
+   83,
+   115
+  ],
+  "tail_mid": [
+   91,
+   124
+  ],
+  "tail_end": [
+   106,
+   136
+  ],
+  "claw_SL": {
+   "shoulder": [
+    72,
+    92
+   ],
+   "elbow": [
+    60,
+    88
+   ],
+   "wrist": [
+    62,
+    80
+   ],
+   "tip": [
+    37,
+    57
+   ],
+   "open": "half"
+  },
+  "claw_SR": {
+   "shoulder": [
+    103,
+    87
+   ],
+   "elbow": [
+    110,
+    84
+   ],
+   "wrist": [
+    118,
+    92
+   ],
+   "tip": [
+    150,
+    103
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    69,
+    116
+   ],
+   "knee": [
+    52,
+    120
+   ],
+   "foot": [
+    67,
+    146
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    104,
+    117
+   ],
+   "knee": [
+    111,
+    131
+   ],
+   "foot": [
+    101,
+    158
+   ]
+  },
+  "grounded": "SR",
+  "small_SL": {
+   "top": [
+    30,
+    99
+   ],
+   "bottom": [
+    32,
+    117
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    134,
+    127
+   ],
+   "bottom": [
+    134,
+    127
+   ],
+   "count": 1
+  },
+  "antenna_SL": [
+   56,
+   28
+  ],
+  "antenna_SR": [
+   122,
+   32
+  ],
+  "notes": "Close to 34/35 (small change): SL foot coming down to (67,146), SR claw raised slightly. SR hip hidden (estimated)."
+ },
+ {
+  "frame": 37,
+  "head": [
+   82,
+   92
+  ],
+  "pelvis": [
+   83,
+   132
+  ],
+  "tail_mid": [
+   82,
+   138
+  ],
+  "tail_end": [
+   82,
+   148
+  ],
+  "claw_SL": {
+   "shoulder": [
+    67,
+    101
+   ],
+   "elbow": [
+    58,
+    92
+   ],
+   "wrist": [
+    54,
+    77
+   ],
+   "tip": [
+    28,
+    50
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    98,
+    102
+   ],
+   "elbow": [
+    103,
+    92
+   ],
+   "wrist": [
+    113,
+    80
+   ],
+   "tip": [
+    145,
+    61
+   ],
+   "open": "open"
+  },
+  "leg_SL": {
+   "hip": [
+    65,
+    132
+   ],
+   "knee": [
+    52,
+    134
+   ],
+   "foot": [
+    68,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    103,
+    132
+   ],
+   "knee": [
+    118,
+    133
+   ],
+   "foot": [
+    101,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    22,
+    102
+   ],
+   "bottom": [
+    24,
+    117
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    140,
+    97
+   ],
+   "bottom": [
+    142,
+    112
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   52,
+   41
+  ],
+  "antenna_SR": [
+   106,
+   39
+  ],
+  "notes": "Both claws raised in a V, pincers open. Tail curled under the body as a red blob; tail_end is its lower edge."
+ },
+ {
+  "frame": 38,
+  "head": [
+   78,
+   96
+  ],
+  "pelvis": [
+   85,
+   136
+  ],
+  "tail_mid": [
+   80,
+   142
+  ],
+  "tail_end": [
+   80,
+   150
+  ],
+  "claw_SL": {
+   "shoulder": [
+    67,
+    106
+   ],
+   "elbow": [
+    60,
+    97
+   ],
+   "wrist": [
+    49,
+    75
+   ],
+   "tip": [
+    25,
+    48
+   ],
+   "open": "half"
+  },
+  "claw_SR": {
+   "shoulder": [
+    94,
+    104
+   ],
+   "elbow": [
+    98,
+    95
+   ],
+   "wrist": [
+    102,
+    73
+   ],
+   "tip": [
+    123,
+    46
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    65,
+    135
+   ],
+   "knee": [
+    50,
+    136
+   ],
+   "foot": [
+    68,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    103,
+    134
+   ],
+   "knee": [
+    120,
+    134
+   ],
+   "foot": [
+    101,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    21,
+    106
+   ],
+   "bottom": [
+    24,
+    117
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    135,
+    91
+   ],
+   "bottom": [
+    140,
+    107
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   50,
+   46
+  ],
+  "antenna_SR": [
+   97,
+   43
+  ],
+  "notes": "Crouched (body ~4 px lower), both claws straight up, nearly parallel, pincers half closed. Tail curled under (blob)."
+ },
+ {
+  "frame": 39,
+  "head": [
+   78,
+   96
+  ],
+  "pelvis": [
+   85,
+   136
+  ],
+  "tail_mid": [
+   80,
+   142
+  ],
+  "tail_end": [
+   80,
+   150
+  ],
+  "claw_SL": {
+   "shoulder": [
+    67,
+    106
+   ],
+   "elbow": [
+    60,
+    97
+   ],
+   "wrist": [
+    49,
+    75
+   ],
+   "tip": [
+    25,
+    48
+   ],
+   "open": "half"
+  },
+  "claw_SR": {
+   "shoulder": [
+    94,
+    104
+   ],
+   "elbow": [
+    98,
+    95
+   ],
+   "wrist": [
+    102,
+    73
+   ],
+   "tip": [
+    123,
+    46
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    65,
+    135
+   ],
+   "knee": [
+    50,
+    136
+   ],
+   "foot": [
+    68,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    103,
+    134
+   ],
+   "knee": [
+    120,
+    134
+   ],
+   "foot": [
+    101,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    21,
+    106
+   ],
+   "bottom": [
+    24,
+    117
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    135,
+    91
+   ],
+   "bottom": [
+    140,
+    107
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   50,
+   46
+  ],
+  "antenna_SR": [
+   97,
+   43
+  ],
+  "notes": "Identical to frame 38 (2 pixels differ)."
+ },
+ {
+  "frame": 40,
+  "head": [
+   80,
+   91
+  ],
+  "pelvis": [
+   87,
+   123
+  ],
+  "tail_mid": [
+   82,
+   135
+  ],
+  "tail_end": [
+   75,
+   150
+  ],
+  "claw_SL": {
+   "shoulder": [
+    72,
+    97
+   ],
+   "elbow": [
+    60,
+    97
+   ],
+   "wrist": [
+    48,
+    97
+   ],
+   "tip": [
+    11,
+    83
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    98,
+    95
+   ],
+   "elbow": [
+    101,
+    85
+   ],
+   "wrist": [
+    103,
+    72
+   ],
+   "tip": [
+    129,
+    52
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    72,
+    123
+   ],
+   "knee": [
+    58,
+    133
+   ],
+   "foot": [
+    68,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    103,
+    123
+   ],
+   "knee": [
+    112,
+    134
+   ],
+   "foot": [
+    101,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    35,
+    117
+   ],
+   "bottom": [
+    27,
+    122
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    143,
+    89
+   ],
+   "bottom": [
+    144,
+    103
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   51,
+   38
+  ],
+  "antenna_SR": [
+   104,
+   34
+  ],
+  "notes": "Body stretched up. SL claw swung out horizontally to the left (arm nearly straight, elbow/wrist on one line), big pincer open; SR claw raised. SL small legs mostly hidden behind the SL claw (points uncertain). Tail hangs down, fan between the legs."
+ },
+ {
+  "frame": 41,
+  "head": [
+   82,
+   85
+  ],
+  "pelvis": [
+   89,
+   118
+  ],
+  "tail_mid": [
+   82,
+   130
+  ],
+  "tail_end": [
+   70,
+   147
+  ],
+  "claw_SL": {
+   "shoulder": [
+    73,
+    93
+   ],
+   "elbow": [
+    63,
+    91
+   ],
+   "wrist": [
+    55,
+    93
+   ],
+   "tip": [
+    15,
+    102
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    99,
+    92
+   ],
+   "elbow": [
+    103,
+    80
+   ],
+   "wrist": [
+    104,
+    70
+   ],
+   "tip": [
+    130,
+    55
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    72,
+    117
+   ],
+   "knee": [
+    60,
+    132
+   ],
+   "foot": [
+    68,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    105,
+    117
+   ],
+   "knee": [
+    118,
+    125
+   ],
+   "foot": [
+    103,
+    150
+   ]
+  },
+  "grounded": "SL",
+  "small_SL": {
+   "top": [
+    35,
+    116
+   ],
+   "bottom": [
+    32,
+    125
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    146,
+    88
+   ],
+   "bottom": [
+    146,
+    102
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   50,
+   33
+  ],
+  "antenna_SR": [
+   107,
+   31
+  ],
+  "notes": "SR leg lifting (kick begins), foot off the floor. SL claw pointing left and slightly down. SL small legs partly hidden by the claw (uncertain). Tail swings toward SL, some motion smear."
+ },
+ {
+  "frame": 42,
+  "head": [
+   83,
+   81
+  ],
+  "pelvis": [
+   92,
+   112
+  ],
+  "tail_mid": [
+   83,
+   123
+  ],
+  "tail_end": [
+   66,
+   133
+  ],
+  "claw_SL": {
+   "shoulder": [
+    75,
+    88
+   ],
+   "elbow": [
+    67,
+    90
+   ],
+   "wrist": [
+    60,
+    87
+   ],
+   "tip": [
+    29,
+    111
+   ],
+   "open": "half"
+  },
+  "claw_SR": {
+   "shoulder": [
+    101,
+    88
+   ],
+   "elbow": [
+    103,
+    78
+   ],
+   "wrist": [
+    102,
+    68
+   ],
+   "tip": [
+    131,
+    57
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    75,
+    113
+   ],
+   "knee": [
+    63,
+    130
+   ],
+   "foot": [
+    68,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    108,
+    110
+   ],
+   "knee": [
+    124,
+    112
+   ],
+   "foot": [
+    102,
+    135
+   ]
+  },
+  "grounded": "SL",
+  "small_SL": {
+   "top": [
+    30,
+    93
+   ],
+   "bottom": [
+    39,
+    125
+   ],
+   "count": 3
+  },
+  "small_SR": {
+   "top": [
+    149,
+    89
+   ],
+   "bottom": [
+    146,
+    101
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   51,
+   32
+  ],
+  "antenna_SR": [
+   107,
+   31
+  ],
+  "notes": "Peak of the SR kick: SR knee raised out to the side, foot tucked back under at ~y135. Body highest, leaning slightly toward SR. SL claw points down-left. Tail swung to SL, merging with the SL leg (tail_end approximate). SL small-leg count uncertain."
+ },
+ {
+  "frame": 43,
+  "head": [
+   83,
+   81
+  ],
+  "pelvis": [
+   92,
+   112
+  ],
+  "tail_mid": [
+   83,
+   123
+  ],
+  "tail_end": [
+   66,
+   133
+  ],
+  "claw_SL": {
+   "shoulder": [
+    75,
+    88
+   ],
+   "elbow": [
+    67,
+    90
+   ],
+   "wrist": [
+    60,
+    87
+   ],
+   "tip": [
+    29,
+    111
+   ],
+   "open": "half"
+  },
+  "claw_SR": {
+   "shoulder": [
+    101,
+    88
+   ],
+   "elbow": [
+    103,
+    78
+   ],
+   "wrist": [
+    102,
+    68
+   ],
+   "tip": [
+    131,
+    57
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    75,
+    113
+   ],
+   "knee": [
+    63,
+    130
+   ],
+   "foot": [
+    68,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    108,
+    110
+   ],
+   "knee": [
+    124,
+    112
+   ],
+   "foot": [
+    102,
+    135
+   ]
+  },
+  "grounded": "SL",
+  "small_SL": {
+   "top": [
+    30,
+    93
+   ],
+   "bottom": [
+    39,
+    125
+   ],
+   "count": 3
+  },
+  "small_SR": {
+   "top": [
+    149,
+    89
+   ],
+   "bottom": [
+    146,
+    101
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   51,
+   32
+  ],
+  "antenna_SR": [
+   107,
+   31
+  ],
+  "notes": "Identical to frame 42 (0 pixels differ)."
+ },
+ {
+  "frame": 44,
+  "head": [
+   83,
+   82
+  ],
+  "pelvis": [
+   91,
+   114
+  ],
+  "tail_mid": [
+   83,
+   126
+  ],
+  "tail_end": [
+   65,
+   138
+  ],
+  "claw_SL": {
+   "shoulder": [
+    75,
+    90
+   ],
+   "elbow": [
+    67,
+    90
+   ],
+   "wrist": [
+    58,
+    92
+   ],
+   "tip": [
+    21,
+    108
+   ],
+   "open": "half"
+  },
+  "claw_SR": {
+   "shoulder": [
+    101,
+    88
+   ],
+   "elbow": [
+    103,
+    80
+   ],
+   "wrist": [
+    102,
+    69
+   ],
+   "tip": [
+    131,
+    57
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    74,
+    115
+   ],
+   "knee": [
+    62,
+    132
+   ],
+   "foot": [
+    68,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    107,
+    113
+   ],
+   "knee": [
+    119,
+    123
+   ],
+   "foot": [
+    102,
+    145
+   ]
+  },
+  "grounded": "SL",
+  "small_SL": {
+   "top": [
+    31,
+    116
+   ],
+   "bottom": [
+    37,
+    125
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    148,
+    89
+   ],
+   "bottom": [
+    146,
+    102
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   49,
+   32
+  ],
+  "antenna_SR": [
+   108,
+   31
+  ],
+  "notes": "SR leg coming down from the kick (foot still off the floor). Close to frame 41 in pose. SL claw reaches further left; its lower finger and the SL small legs overlap (uncertain)."
+ },
+ {
+  "frame": 45,
+  "head": [
+   78,
+   96
+  ],
+  "pelvis": [
+   85,
+   136
+  ],
+  "tail_mid": [
+   80,
+   142
+  ],
+  "tail_end": [
+   80,
+   150
+  ],
+  "claw_SL": {
+   "shoulder": [
+    67,
+    106
+   ],
+   "elbow": [
+    60,
+    97
+   ],
+   "wrist": [
+    49,
+    75
+   ],
+   "tip": [
+    25,
+    48
+   ],
+   "open": "half"
+  },
+  "claw_SR": {
+   "shoulder": [
+    94,
+    104
+   ],
+   "elbow": [
+    98,
+    95
+   ],
+   "wrist": [
+    102,
+    73
+   ],
+   "tip": [
+    123,
+    46
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    65,
+    135
+   ],
+   "knee": [
+    50,
+    136
+   ],
+   "foot": [
+    68,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    103,
+    134
+   ],
+   "knee": [
+    120,
+    134
+   ],
+   "foot": [
+    101,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    21,
+    106
+   ],
+   "bottom": [
+    24,
+    117
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    135,
+    91
+   ],
+   "bottom": [
+    140,
+    107
+   ],
+   "count": 2
+  },
+  "antenna_SL": [
+   51,
+   47
+  ],
+  "antenna_SR": [
+   97,
+   43
+  ],
+  "notes": "Nearly identical to frames 38/39 (crouch, claws straight up; ~400 pixels differ, mostly antenna/edges)."
+ },
+ {
+  "frame": 46,
+  "head": [
+   78,
+   92
+  ],
+  "pelvis": [
+   82,
+   130
+  ],
+  "tail_mid": [
+   80,
+   138
+  ],
+  "tail_end": [
+   77,
+   148
+  ],
+  "claw_SL": {
+   "shoulder": [
+    67,
+    103
+   ],
+   "elbow": [
+    56,
+    97
+   ],
+   "wrist": [
+    50,
+    78
+   ],
+   "tip": [
+    19,
+    65
+   ],
+   "open": "open"
+  },
+  "claw_SR": {
+   "shoulder": [
+    95,
+    103
+   ],
+   "elbow": [
+    98,
+    98
+   ],
+   "wrist": [
+    110,
+    93
+   ],
+   "tip": [
+    143,
+    85
+   ],
+   "open": "half"
+  },
+  "leg_SL": {
+   "hip": [
+    65,
+    130
+   ],
+   "knee": [
+    50,
+    137
+   ],
+   "foot": [
+    68,
+    158
+   ]
+  },
+  "leg_SR": {
+   "hip": [
+    98,
+    130
+   ],
+   "knee": [
+    110,
+    137
+   ],
+   "foot": [
+    101,
+    158
+   ]
+  },
+  "grounded": "both",
+  "small_SL": {
+   "top": [
+    21,
+    107
+   ],
+   "bottom": [
+    26,
+    122
+   ],
+   "count": 2
+  },
+  "small_SR": {
+   "top": [
+    134,
+    102
+   ],
+   "bottom": [
+    134,
+    102
+   ],
+   "count": 1
+  },
+  "antenna_SL": [
+   44,
+   44
+  ],
+  "antenna_SR": [
+   86,
+   40
+  ],
+  "notes": "SL claw raised up-left, open; SR claw swung out to the right roughly horizontal. Body turned slightly to SL. SR small legs mostly hidden behind the SR claw (only one tip clear). SR antenna nearly vertical."
+ }
+]

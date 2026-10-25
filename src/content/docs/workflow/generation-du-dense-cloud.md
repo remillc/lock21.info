@@ -3,6 +3,8 @@ title: Génération du dense point cloud
 sidebar:
   order: 3
 ---
+Le nuage de points ne fait pas partie des extrants du projet, mais nous allons tout de même le généré pour utilisation futur.
+
 1. Sélectionner le chunk à traiter
 2. Menu `Workflow` > `Batch Process...`
 3. Load...
@@ -12,10 +14,12 @@ sidebar:
 
 ### Filter by confidence
 
+*Cette étape est exécutée automatiquement par le workflow.*
+
 1. `Tools > Dense cloud > Filter by Confidence...`
-2. Min: 0, `Max: 2`
+2. `Min: 0`, `Max: 2`
 3. `Select all points`
-4. Delete
+4. `Delete`
 5. `Tools > Dense cloud > Reset Filter`
 
 ### Filtrage additionnel
@@ -26,5 +30,5 @@ sidebar:
 
 ## Filter Dense Cloud
 
-1. Tools > Dense Cloud > Filter Dense Cloud...
-2. Point spacing (m): .004 (4mm)
+1. `Tools` > `Dense Cloud` > `Filter Dense Cloud...`
+2. `Point spacing (m)`: .004 (4mm)

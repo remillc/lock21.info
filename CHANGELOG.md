@@ -2,8 +2,40 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
-## Unreleased
+## 0.15.0 - 2026-10-25
 
+- 3D viewer: a fine relief drawn from the photo (Christian, 2026-10-25: the wooden floor lacked roughness): the
+  photogrammetry's mesh, and the relief baked from it, are smooth where the wood's grain and the planks' seams are only
+  in the photo; its brightness taken as a height (2.4 cm at full contrast) tilts the zones' normals (bump mapping).
+  Settings « Bump map » (`?bump=0..5`, 0.55 by default: 1.3 cm; Christian, 2026-10-25).
+- 3D viewer: no more wet look (`?wet=`, its setting « Aspect mouillé »): barely seen, it made the surfaces read
+  smoother, cost the heaviest material, and the site is under water.
+- 3D viewer: the crayfish dances (Christian, 2026-10-25, after Family Guy's dancing lobster): in its threat posture,
+  once the diver has kept still for 8 to 12 s, about one time in 3.5 (one draw each time the diver stops before it),
+  it stands up on its rear legs, plays the « Iraq lobster » GIF, then
+  sits back down; moving ends it. The GIF measured frame by frame (46 frames at 10 per second: the keypoints of every
+  joint read off a grid, `tools/creatures/dance-keypoints.json`), the crayfish's skeleton fitted to them seen from the
+  front (`tools/creatures/fit_dance.mjs`: every segment within 10° of the GIF's, most within 1 to 4°), into
+  `viewer/src/crawfish-dance.json`: the claws (arm, elbow, wrist, pincer), the rear legs (hip, knee, ankle; the
+  body on the lower foot), the small legs fanned and limp, the tail always behind it, the antennae whipping. The
+  joints down a chain now turn about the crayfish's frame as their parent is posed (about the rest axes, a knee or
+  the tail's end swept a cone instead of the plane facing the diver). `?dance=1` (debug; also in the settings'
+  advanced section, « Écrevisse qui danse »): it dances all through its threat posture.
+- 3D viewer: panning (right button) drags the point pressed with the pointer, at its depth: it crept, the orbit's
+  centre often a metre ahead.
+- 3D viewer: the left button's vertical axis inverted, in both views (the orbit around the point pressed, and diving,
+  looking around and the orbit around the pivot: up and down turn the other way).
+- 3D viewer: the dive light's beam as the Light & Motion Sola Dive 1200's: a 12° hotspot in a 60° spill 5 times weaker
+  (was 16° and 40°, 3 times weaker).
+- 3D viewer, the curious bass: turning the head toward it (to light it) no longer sends it off nor, with ?bass=1,
+  makes it vanish; it is gone only once out of sight (out of the view or beyond the visibility), never in plain view.
+  Its flight faster: 3.3 m/s once lined up (was 2.2), and 60 % of that while it turns away (was 30 %), so about three
+  times its former speed in the turn.
+- 3D viewer, underwater: the dive light at 5000 K (#ffe4ce; it was a 3800 K warm white, #ffcc9c), the warm end of
+  dive lights (5000–6500 K; the Light & Motion Sola 1200, its model, 6000–6500 K).
+- A terrain from the Boating app's chart of the lock's surroundings (TODO #73, `tools/chart-terrain/`): the depth
+  contours and soundings turned into a 550 × 302 m height grid, in the publishing .blend (collection `chart terrain`,
+  the riprap material, green above the water), against the zones without gaps and never above the model.
 - 3D viewer in the site's fonts and colours (TODO #39): Archivo for text and titles, JetBrains Mono for labels and
   data (self-hosted, @fontsource), the site's dark tokens for its colours.
 - Google Earth: the model at 700,000 triangles (was 600,000: it still opens in Google Earth Pro); the downloads rebuilt
@@ -33,7 +65,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   the header, the Google Earth model and the GLB's metadata.
 - 3D viewer: a home button (between full screen and the diver's button) jumps straight back to the start view;
   it stops the guided tour if it is on, and in dive mode the swim goes on from there.
-- 3D viewer: a new start view (Christian, 2026-10-25), at `cam=-15.20,2.04,-18.24,-19.20,2.02,-18.26`.
+- 3D viewer: a new start view (Christian, 2026-10-25), at `cam=-19.06,4.02,-16.60,-20.06,3.96,-16.63`.
 
 ## 0.14.0 - 2026-10-24
 
