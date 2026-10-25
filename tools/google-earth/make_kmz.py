@@ -3,8 +3,10 @@ model that grows zone by zone.
 
 Converts <name>.obj (+ .mtl and its .jpg textures, one material per zone and per piece of context) into one COLLADA model
 per part (pycollada; Blender 5 no longer exports COLLADA), sitting on Google Earth's ground at the lock's coordinates
-(relativeToGround, altitude 0: Google Earth has no negative depth, so the lock is shown at depth 0 rather than 55 ft
-under the water). -H/--heading turns the model (degrees clockwise from true north): -30 by default, the .blend's +Y axis
+(relativeToGround: Google Earth has no negative depth, so the lock is shown above ground rather than 55 ft under the
+water). -a/--altitude raises it: by default just enough for its lowest point to meet the ground (Christian, 2026-10-25:
+the chart terrain's channel goes about 4 m below the lock's floor, the model's zero, and went under Google Earth's
+ground). -H/--heading turns the model (degrees clockwise from true north): -30 by default, the .blend's +Y axis
 (the lock's north wall side) after Nick Baets' north arrow on the zone map (30.0° clockwise from that axis), taken as
 true north (Christian, 2026-10-25; read as the magnetic north of 1988, -44.3, it looked wrong in Google Earth).
 
@@ -35,19 +37,26 @@ from glb_metadata import copyright_line
 # Every public file carries the copyright (Christian Rémillard, CC BY 4.0): the downloaded KMZ, the list, each part and
 # each COLLADA model
 COPYRIGHT = copyright_line()
+# The KML descriptions in HTML (Google Earth shows them in the balloon), the site and the model page as links
+# (Christian, 2026-10-25); in CDATA, so the markup needs no escaping
+SITE = '<a href="https://lock21.info/">lock21.info</a>'
+MODEL_PAGE = '<a href="https://lock21.info/modele">lock21.info/modele</a>'
+COPYRIGHT_HTML = COPYRIGHT.replace("lock21.info", SITE)
 
 p = argparse.ArgumentParser(prog="make_kmz.py", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 p.add_argument("-d", "--dir", required=True, help="folder of <name>.obj/.mtl/.jpg (make_model.py output)")
 p.add_argument("-n", "--name", default="lock-21", help="base name of the files (default lock-21)")
+p.add_argument("-a", "--altitude", default="auto",
+               help="the model's zero above Google Earth's ground, m (default auto: its lowest point on the ground)")
 p.add_argument("--lat", type=float, default=44.996900, help="latitude (default: Lock 21, 44°59.814' N)")
 p.add_argument("--lon", type=float, default=-74.899721, help="longitude (default: Lock 21, 74°53.983' W)")
 p.add_argument("-H", "--heading", type=float, default=-30,
                help="model heading, degrees clockwise from true north (default -30: Baets' arrow as true north)")
 # Landing view, set in Google Earth Pro by Christian (2026-10-20) with the model at heading 0: over the lock, looking
 # west-northwest along it; turned and moved with the model since (-70 - 30; the site anchor moved on 2026-10-25)
-p.add_argument("--view", default="44.996946,-74.899711,66,-100,60", metavar="LAT,LON,RANGE,HEADING,TILT",
+p.add_argument("--view", default="44.997063,-74.899483,485,-15,28", metavar="LAT,LON,RANGE,HEADING,TILT",
                help="view when the file opens: latitude, longitude, distance (m), direction and tilt (degrees), as in "
-                    "Google Earth's camera properties (default 44.996946,-74.899711,66,-100,60)")
+                    "Google Earth's camera properties (default 44.997063,-74.899483,485,-15,28)")
 p.add_argument("-m", "--markers", default="O:/temp/google-earth/context/markers.json",
                help="the .blend's marks (export_context.py), pinned on the map (default "
                     "O:/temp/google-earth/context/markers.json; none if missing)")
@@ -74,10 +83,13 @@ def mark_lat_lon(location):
 
 def mark_placemark(mark):
     lat, lon = mark_lat_lon(mark["location"])
+    # On the model's terrain, not Google Earth's ground (Christian, 2026-10-25: « pinned onto the terrain »): its
+    # height in the .blend (the terrain's surface there, where the mark was set) plus the model's own altitude
+    height = mark["location"][2] + altitude
     return f"""  <Placemark>
     <name>{mark["name"]}</name>
-    <description>{mark.get("what", "")}</description>
-    <Point><coordinates>{lon:.7f},{lat:.7f},0</coordinates></Point>
+    <description><![CDATA[{mark.get("what", "")}]]></description>
+    <Point><altitudeMode>relativeToGround</altitudeMode><coordinates>{lon:.7f},{lat:.7f},{height:.2f}</coordinates></Point>
   </Placemark>"""
 
 
@@ -125,6 +137,9 @@ def read_obj(path):
 
 materials = read_mtl(os.path.join(a.dir, f"{a.name}.mtl"))
 positions, uvs, groups = read_obj(os.path.join(a.dir, f"{a.name}.obj"))
+# Its height above the ground (the OBJ is Z up): its lowest point on the ground, 5 cm above, unless given
+altitude = max(0.0, -float(positions[:, 2].min())) + 0.05 if a.altitude == "auto" else float(a.altitude)
+print(f"altitude: {altitude:.2f} m (lowest point {positions[:, 2].min():.2f} m)", flush=True)
 
 # Google Earth Pro drops or crashes on large COLLADA meshes: a single mesh of 30,000 vertices / 50,000 triangles
 # shows, meshes of 60,000 vertices / 90,000 triangles don't (2026-10-19 tests). Each material's triangles are split
@@ -205,10 +220,10 @@ def label(mat_name):
 def placemark(mat_name):
     return f"""    <Placemark>
       <name>{label(mat_name)}</name>
-      <description>{COPYRIGHT}</description>
+      <description><![CDATA[{COPYRIGHT_HTML}]]></description>
       <Model>
         <altitudeMode>relativeToGround</altitudeMode>
-        <Location><longitude>{a.lon}</longitude><latitude>{a.lat}</latitude><altitude>0</altitude></Location>
+        <Location><longitude>{a.lon}</longitude><latitude>{a.lat}</latitude><altitude>{altitude:.2f}</altitude></Location>
         <Orientation><heading>{a.heading}</heading><tilt>0</tilt><roll>0</roll></Orientation>
         <Scale><x>1</x><y>1</y><z>1</z></Scale>
         <Link><href>models/{mat_name}.dae</href></Link>
@@ -264,9 +279,13 @@ def write_network():
                 kmz.write(path, arcname)
         links[mat_name] = f"{base}/parts/{part}"
 
+    # Google Earth shows no progress for models: in « Places », each part's icon spins while it downloads. The list
+    # open and the parts numbered (Christian, 2026-10-25), the visitor sees how far it has got
+    order = {name: k + 1 for k, name in enumerate(zones + context)}
+
     def network_link(mat_name):
         return f"""    <NetworkLink>
-      <name>{label(mat_name)}</name>
+      <name>{label(mat_name)} ({order[mat_name]}/{len(order)})</name>
       <Link><href>{links[mat_name]}</href></Link>
     </NetworkLink>"""
 
@@ -275,18 +294,21 @@ def write_network():
 <Document>
   <name>Écluse 21</name>
   {look_at}
-  <description>{COPYRIGHT}. Modèle 3D de l'écluse 21 (Dickinson Landing), photogrammétrie sous-marine de Christian Rémillard, lock21.info, licence CC BY 4.0. {len(zones)} zones, {triangles:,} triangles; les zones s'ajoutent au fil des plongées. Posé au sol (profondeur 0): l'écluse est en réalité à 55 pi (16,8 m) sous l'eau.</description>
+  <description><![CDATA[{COPYRIGHT_HTML}. Modèle 3D de l'écluse 21 (Dickinson Landing), photogrammétrie sous-marine de Christian Rémillard, {SITE}, licence CC BY 4.0. {len(zones)} zones, {triangles:,} triangles; les zones s'ajoutent au fil des plongées. Le modèle en 3D dans le navigateur: {MODEL_PAGE}. Posé sur le sol de Google Earth: l'écluse est en réalité à 55 pi (16,8 m) sous l'eau.]]></description>
   <Placemark>
     <name>Écluse 21</name>
     <Point><coordinates>{a.lon},{a.lat},0</coordinates></Point>
   </Placemark>
 {newline.join(mark_placemark(m) for m in marks)}
+  <open>1</open>
   <Folder>
     <name>Zones</name>
+    <open>1</open>
 {newline.join(network_link(z) for z in zones)}
   </Folder>
   <Folder>
     <name>Contexte (maquette)</name>
+    <open>1</open>
 {newline.join(network_link(c) for c in context)}
   </Folder>
 </Document>
@@ -298,7 +320,7 @@ def write_network():
 <kml xmlns="http://www.opengis.net/kml/2.2">
 <NetworkLink>
   <name>Écluse 21</name>
-  <description>{COPYRIGHT}. Modèle 3D de l'écluse 21 (Dickinson Landing), https://lock21.info/modele</description>
+  <description><![CDATA[{COPYRIGHT_HTML}. Modèle 3D de l'écluse 21 (Dickinson Landing): {MODEL_PAGE}]]></description>
   <open>1</open>
   <flyToView>1</flyToView>
   <Link><href>{base}/{a.name}.kml</href></Link>

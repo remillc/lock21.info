@@ -2,6 +2,21 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased
+
+- The context's export (`export_context.py`) applies the objects' modifiers before keeping only the baked UV map: the
+  chart terrain's Boolean added its cutter's UV map, and the export carried two, the first all zero (no texture in
+  Google Earth, which reads only the first).
+- Google Earth: the model raised just enough for its lowest point to meet the ground (`make_kmz.py -a/--altitude`,
+  auto by default): the chart terrain's channel, about 4 m below the lock's floor, went under Google Earth's ground.
+- Google Earth: the KML descriptions in HTML, the site (lock21.info) and the model page (lock21.info/modele) as links.
+- Google Earth: the Lock 21 Scuba Park pinned on the model's terrain (its height in the .blend plus the model's
+  altitude), not on Google Earth's ground under it.
+- Google Earth: a new arrival view (Christian), farther out to show the chart terrain: 44.997063, -74.899483, 485 m,
+  heading -15°, tilt 28°.
+- Google Earth: the list of parts open in « Places » and each part numbered (« Zone 3 (3/19) »): Google Earth shows no
+  progress for models, only each part's spinning icon while it downloads.
+
 ## 0.15.0 - 2026-10-25
 
 - 3D viewer: a fine relief drawn from the photo (Christian, 2026-10-25: the wooden floor lacked roughness): the
