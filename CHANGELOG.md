@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: no wet look underwater (its sky reflections and highlights don't belong under the water); unchanged in
+  the air.
 - 3D viewer, the curious bass: turning the head toward it (to light it) no longer sends it off nor, with ?bass=1,
   makes it vanish; it is gone only once out of sight (out of the view or beyond the visibility), never in plain view.
 - A terrain from the Boating app's chart of the lock's surroundings (TODO #73, `tools/chart-terrain/`): the depth

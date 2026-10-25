@@ -725,8 +725,10 @@ function addDespill(shader) {
 // Wet look (?wet=0..1, default 0.15, chosen on zone 12; 0.1 for a day with the neutral tone mapping; 0 turns it off), zones only: glossy surface with a clear-coat
 // film (sharp highlights that slide over the relief when the camera moves) reflecting the sky, colours slightly
 // darker and more saturated. The photos already hold the lamps' real reflections: keep it subtle.
+// Not underwater (Christian, 2026-10-25): everything there is wet, and the film's sky reflections and highlights
+// don't belong under the water
 function litMaterial(surface, mesh, normalMap, sky) {
-  const wet = surface.zoneId ? look.wet : 0
+  const wet = surface.zoneId && !underwater.on ? look.wet : 0
   if (!normalMap && !mesh.geometry.attributes.normal) mesh.geometry.computeVertexNormals()
   const options = { map: surface.map, color: surfaceColor(surface), side: THREE.DoubleSide }
   if (normalMap) {
@@ -918,6 +920,8 @@ function setUnderwater(on) {
   settings.reflect('underwater', on ? '1' : '0')
   updateLights()
   updateEnvironment()
+  // The wet look is off underwater (litMaterial)
+  if (look.wet > 0) rebuildMaterials()
 }
 live.underwater = (v) => setUnderwater(v === '1')
 
