@@ -5,12 +5,15 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - 3D viewer: the crayfish dances (Christian, 2026-10-25, after Family Guy's dancing lobster): in its threat posture,
-  once the diver has kept still for 8 to 12 s, it stands up on its rear legs, plays the « Iraq lobster » GIF read frame
-  by frame (46 frames at 10 per second: the claws with elbow, wrist and pincer, the small legs fanned and limp, the
-  rear legs with their knee, one foot always on the ground, the lean, twist and hips, the tail swinging and curling, the
-  antennae whipping), smoothly from one frame to the next, for 6 to 10 s, then sits back down; moving ends it.
-  `?dance=1` (debug; also in the settings' advanced section, « Écrevisse qui danse »): it dances all through its
-  threat posture.
+  once the diver has kept still for 8 to 12 s, it stands up on its rear legs, plays the « Iraq lobster » GIF, then
+  sits back down; moving ends it. The GIF measured frame by frame (46 frames at 10 per second: the keypoints of every
+  joint read off a grid, `tools/creatures/dance-keypoints.json`), the crayfish's skeleton fitted to them seen from the
+  front (`tools/creatures/fit_dance.mjs`: every segment within 10° of the GIF's, most within 1 to 4°), into
+  `viewer/src/crawfish-dance.json`: the claws (arm, elbow, wrist, pincer), the rear legs (hip, knee, ankle; the
+  body on the lower foot), the small legs fanned and limp, the tail always behind it, the antennae whipping. The
+  joints down a chain now turn about the crayfish's frame as their parent is posed (about the rest axes, a knee or
+  the tail's end swept a cone instead of the plane facing the diver). `?dance=1` (debug; also in the settings'
+  advanced section, « Écrevisse qui danse »): it dances all through its threat posture.
 - 3D viewer: panning (right button) drags the point pressed with the pointer, at its depth: it crept, the orbit's
   centre often a metre ahead.
 - 3D viewer: the left button's vertical axis inverted, in both views (the orbit around the point pressed, and diving,

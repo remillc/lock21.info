@@ -17,6 +17,7 @@
 // bone's parent space from the rest pose: no need to know how each bone's own axes were set in the rig.
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import DANCE_DATA from './crawfish-dance.json'
 
 const URL = `${import.meta.env.BASE_URL}creatures/crayfish.glb`
 // Its length from claws to tail fan (m): a large rusty crayfish
@@ -55,86 +56,26 @@ const STAND = 1.25
 const STAND_SPRING = 4
 const GROOVE_SPRING = 10
 const STILL = 0.02
-const DANCE_FRAME = 0.1
-// The « Iraq lobster » GIF (tenor.com, 46 frames at 10 per second), read frame by frame (Christian, 2026-10-25: « why
-// not take every position frame by frame? »), as seen: standing, belly to the viewer. Per frame: the screen-left claw
-// (the lobster's right) and the screen-right claw (its left), each [upper arm from straight up toward its side (0 up,
-// 1.5 out level, 2.5 down), forearm bent back up]; lean (its top toward screen right, rad), twist (turned to show its
-// screen-right side), crouch (knees bent, 1 a deep squat, below 0 standing tall), leg (a foot raised: screen left -1,
-// right 1), hips (its lower body out to screen right, + or left, -); then (Christian: « every limb: the legs have
-// movements of their own, and the antennae too ») the small legs' fan on screen left and right (from level, + up),
-// the antennae's lean (their tops toward screen right) and spread (each from the middle); then (« the claws open and
-// close, three segments with the pincers »; « the tail is very lively ») the pincers' opening on screen left and right
-// (0 shut, 1 wide), the tail's swing (its end toward screen right, + or left, -) and curl (up toward the hip, 0 to 1)
-const FRAMES = [
-  // 01-06: one claw high, the other out or low; the left foot up
-  [0.5, 0.3, 1.5, 0.1, 0, 0, 0.2, -0.6, 0.3, -0.1, 0.3, -0.15, 0.25, 0.6, 0.5, -0.8, 0.4],
-  [0.5, 0.3, 2.5, 0.3, 0.1, 0, 0.3, -0.8, 0.3, -0.05, -0.35, 0, 0.25, 0.6, 0.3, -0.8, 0.5],
-  [0.5, 0.3, 2.5, 0.3, 0.1, 0, 0.3, -0.8, 0.3, -0.05, -0.35, 0, 0.25, 0.6, 0.3, -0.8, 0.5],
-  [0.5, 0.3, 2.5, 0.3, 0.1, 0, 0.3, -0.8, 0.4, -0.05, -0.35, 0, 0.25, 0.6, 0.3, -0.8, 0.5],
-  [1.0, 0.6, 1.6, 0.4, -0.25, 0, 0.2, -0.7, 0.5, -0.3, 0.2, -0.35, 0.3, 0.7, 0.4, -0.8, 0.4],
-  [1.0, 0.6, 1.6, 0.4, -0.25, 0, 0.2, -0.7, 0.5, -0.3, 0.2, -0.35, 0.3, 0.7, 0.4, -0.8, 0.4],
-  // 07-12: both claws up and out, the right foot kicked, then a hop on one leg
-  [1.0, 0.9, 1.3, 0.9, 0.1, 0, 0.1, 0.6, -0.2, -0.3, -0.1, 0.05, 0.25, 0.5, 0.5, 0.8, 0.4],
-  [0.6, 1.2, 1.1, 0.9, 0.15, 0, 0.1, 0.8, -0.3, -0.4, 0.1, 0.1, 0.3, 0.3, 0.5, 0.8, 0.5],
-  [0.7, 1.2, 1.2, 0.9, 0.2, 0, 0.1, 0.9, -0.3, -0.4, 0, 0.15, 0.25, 0.3, 0.5, 0.8, 0.5],
-  [1.3, 0.8, 0.9, 0.9, 0, 0, -0.3, 0.5, 0, -0.1, -0.2, 0, 0.3, 0.5, 0.6, 1, 0.8],
-  [1.5, 0.5, 0.5, 0.5, -0.1, 0, -0.5, 1, 0, 0.1, 0, -0.2, 0.3, 0.5, 0.6, 1, 0.8],
-  [1.5, 0.5, 0.5, 0.5, -0.1, 0, -0.5, 1, 0, 0.05, 0, -0.2, 0.3, 0.5, 0.6, 1, 0.8],
-  // 13-18: landing, one claw high, the other down low; the left foot up
-  [0.9, 0.7, 1.6, 0.2, -0.1, 0, 0.2, 0, 0, 0, -0.1, -0.15, 0.2, 0.6, 0.5, 0, 0.2],
-  [0.6, 0.5, 2.2, 0.3, 0.1, 0, 0.3, 0, 0, -0.05, 0.1, -0.2, 0.2, 0.6, 0.4, -0.8, 0.5],
-  [0.5, 0.4, 2.6, 0.3, 0.1, 0, 0.3, -0.8, 0.3, -0.1, -0.3, -0.1, 0.2, 0.6, 0.4, -0.8, 0.5],
-  [0.5, 0.4, 2.6, 0.3, 0.1, 0, 0.3, -0.8, 0.3, -0.1, -0.3, -0.1, 0.2, 0.6, 0.4, -0.8, 0.5],
-  [0.5, 0.4, 2.6, 0.3, 0.15, 0, 0.3, -0.8, 0.3, -0.1, -0.3, -0.1, 0.2, 0.6, 0.4, -0.8, 0.5],
-  [0.5, 0.4, 2.6, 0.3, 0.15, 0, 0.3, -0.8, 0.3, -0.1, -0.3, -0.1, 0.2, 0.6, 0.4, -0.8, 0.5],
-  // 19-24: claws out, the body turning one way then the other
-  [1.2, 0.4, 1.6, 0.2, 0, 0.3, 0.3, 0, 0, -0.15, -0.1, 0, 0.2, 0.6, 0.5, 0.3, 0.3],
-  [1.4, 0.5, 1.2, 0.6, 0.1, 0.4, 0.2, 0, 0, -0.2, -0.1, 0, 0.15, 0.6, 0.5, 0.3, 0.3],
-  [2.0, 0.8, 0.6, 0.6, -0.1, 0.6, 0.2, 0.5, 0, -0.3, -0.05, -0.05, 0.15, 0.4, 0.6, 0.6, 0.4],
-  [2.0, 0.8, 0.6, 0.6, -0.1, 0.6, 0.2, 0.5, 0, -0.3, -0.05, -0.05, 0.15, 0.4, 0.6, 0.6, 0.4],
-  [1.4, 0.4, 0.8, 0.8, -0.1, -0.4, 0.2, 0, 0, -0.25, -0.2, 0, 0.2, 0.6, 0.5, -0.6, 0.4],
-  [0.8, 0.5, 1.2, 0.6, 0, -0.6, 0.1, 0.5, 0, -0.4, -0.4, 0, 0.15, 0.5, 0.6, -0.6, 0.4],
-  // 25-30: leaning hard to the left, hips out to the right; the left foot up
-  [0.6, 0.5, 1.0, 0.8, -0.35, 0, -0.2, 0, 0.6, -0.3, -0.2, 0, 0.1, 0.3, 0.6, 0, 0.1],
-  [0.6, 0.5, 1.0, 0.8, -0.35, 0, -0.2, 0, 0.6, -0.3, -0.2, 0, 0.1, 0.3, 0.6, 0, 0.1],
-  [0.9, 0.7, 1.0, 0.8, 0, 0, -0.2, -0.6, 0, -0.4, 0, 0, 0.2, 0.4, 0.5, -0.7, 0.5],
-  [1.9, 1.0, 0.9, 0.7, -0.3, 0, 0.2, -0.8, 0.5, -0.3, 0, 0.05, 0.2, 0.3, 0.6, -0.9, 0.6],
-  [1.7, 0.6, 0.7, 0.6, -0.2, 0, 0.2, -0.8, 0.4, -0.3, 0.05, 0.05, 0.25, 0.3, 0.6, -0.9, 0.6],
-  [1.7, 0.6, 0.7, 0.6, -0.2, 0, 0.2, -0.8, 0.4, -0.3, 0.1, 0.05, 0.25, 0.3, 0.6, -0.9, 0.6],
-  // 31-33: both claws up in a V, a deep squat
-  [0.4, 0.4, 0.4, 0.4, 0, 0, 1, 0, 0, -0.2, 0.1, 0, 0.3, 0.6, 0.6, 0, 0.2],
-  [0.4, 0.4, 0.4, 0.4, 0, 0, 1, 0, 0, -0.2, 0.1, 0, 0.3, 0.6, 0.6, 0, 0.2],
-  [0.9, 0.7, 0.9, 0.7, 0, 0, 0.8, 0, 0, -0.15, -0.1, 0, 0.3, 0.5, 0.5, 0, 0.2],
-  // 34-36: one claw high, the other down; leaning right
-  [0.7, 0.7, 2.3, 0.4, 0.15, 0, 0.5, 0, -0.2, -0.1, -0.3, 0, 0.45, 0.6, 0.6, 0.4, 0.4],
-  [0.7, 0.7, 2.3, 0.4, 0.15, 0, 0.5, 0, -0.2, -0.1, -0.3, 0, 0.45, 0.6, 0.6, 0.4, 0.4],
-  [0.8, 0.6, 2.0, 0.5, 0.1, 0, 0.4, 0.5, -0.2, -0.15, -0.3, 0.05, 0.45, 0.6, 0.6, 0.5, 0.4],
-  // 37-39: both claws up, the squat again
-  [0.6, 0.6, 0.6, 0.6, 0, 0, 0.8, 0, 0, -0.2, -0.1, 0, 0.35, 0.5, 0.5, 0, 0.2],
-  [0.4, 0.4, 0.4, 0.4, 0, 0, 1, 0, 0, -0.3, 0.1, 0.1, 0.35, 0.6, 0.6, 0, 0.2],
-  [0.4, 0.4, 0.4, 0.4, 0, 0, 1, 0, 0, -0.3, 0.1, 0.1, 0.35, 0.6, 0.6, 0, 0.2],
-  // 40-44: the left claw out low, the right one high; the left foot up
-  [1.5, 0.3, 0.5, 0.5, 0.1, 0, 0.3, -0.6, 0, -0.3, 0, 0, 0.35, 0.6, 0.5, -0.7, 0.5],
-  [1.8, 0.3, 0.5, 0.4, -0.1, 0, 0.2, -0.8, 0.2, -0.25, -0.1, 0, 0.4, 0.6, 0.5, -0.7, 0.5],
-  [1.8, 0.5, 0.6, 0.5, -0.15, 0, 0.2, -0.9, 0.3, -0.3, -0.05, 0, 0.4, 0.6, 0.5, -0.7, 0.5],
-  [1.8, 0.5, 0.6, 0.5, -0.15, 0, 0.2, -0.9, 0.3, -0.3, -0.05, 0, 0.4, 0.6, 0.5, -0.7, 0.5],
-  [1.8, 0.5, 0.6, 0.5, -0.15, 0, 0.2, -0.9, 0.3, -0.3, -0.1, 0, 0.45, 0.6, 0.5, -0.7, 0.5],
-  // 45-46: both claws up, then back to the first pose
-  [0.5, 0.5, 0.5, 0.5, 0, 0, 0.9, 0, 0, -0.2, 0, 0, 0.35, 0.6, 0.6, 0, 0.2],
-  [0.5, 0.4, 1.6, 0.3, 0.1, 0, 0.2, -0.6, 0, -0.1, -0.3, 0.05, 0.3, 0.6, 0.6, -0.8, 0.4],
-]
-// The pose the dance starts from and ends on: standing, claws up (the same columns)
-const STAND_FRAME = [0.6, 0.6, 0.6, 0.6, 0, 0, 0, 0, 0, -0.2, -0.2, 0, 0.25, 0.4, 0.4, 0, 0.2]
-// The tail's swing runs down it, each joint TAIL_LAG s after the one before
+// The « Iraq lobster » GIF (tenor.com, 46 frames at 10 per second), measured frame by frame (Christian, 2026-10-25:
+// « every position frame by frame; every limb »): the joints' keypoints read off a grid on each frame, then the
+// crayfish's skeleton fitted to them, seen from the front (tools/creatures/fit_dance.mjs): crawfish-dance.json, one
+// row of DANCE_DATA.params per frame. Angles in radians, in the plane facing the diver, each limb's outward turn
+// positive: lean (its top toward screen right), twist (turned to show its screen-right side), tail (its swing toward
+// screen right), curl (folded further back), then per side (R: the crayfish's right, on screen left; L) the claw's
+// arm, elbow, wrist and pincer opening, the rear leg's hip, knee and ankle, the small legs' fan and the antenna
+const PARAMS = DANCE_DATA.params
+const FRAMES = DANCE_DATA.frames
+const STAND_FRAME = DANCE_DATA.stand
+const DANCE_FRAME = DANCE_DATA.frameTime
 // The small legs (front, mid1, mid2: the rear pair stands): each a little later than the one before (LEG_LAG s,
-// a wave down the fan), their joints bending with how fast they swing (LEG_DRAG rad per rad/s: limp, not rigid)
+// a wave down the fan) and spread FAN_SPREAD apart, their joints bending with how fast they swing (LEG_DRAG rad per
+// rad/s: limp, not rigid); the tail's joints, each TAIL_LAG s after the one before; the antennae's tips, ANTENNA_LAG s
 const SMALL_LEGS = ['front', 'mid1', 'mid2']
 const LEG_LAG = 0.04
+const FAN_SPREAD = 0.25
 const LEG_DRAG = 0.08
 const TAIL_LAG = 0.03
-// The hips' shift at hips 1 (m)
-const HIPS_SHIFT = 0.02
+const ANTENNA_LAG = 0.08
 // The tail's arc in the threat posture: its joints, and the total bend (rad, about 100°)
 const TAIL = ['tail_000', 'tail_001', 'tail_002', 'tail_003', 'tail_004', 'tail_005']
 const TAIL_ARC = 1.75
@@ -302,6 +243,24 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
       entry.bone.quaternion.premultiply(turn.setFromAxisAngle(axis, angle))
     }
   }
+  const liveToLocal = new THREE.Quaternion()
+  const frameNow = new THREE.Quaternion()
+  /** As pose, about the crayfish's frame as its parent bone is posed now (not at rest): for the joints down a chain
+   *  (knee, ankle, elbow, wrist, the tail's and antennae's later joints), whose parents have already turned (standing,
+   *  the hips turned 72°: about the rest axes, a knee swept a cone and couldn't reach the plane facing the diver, and
+   *  the tail came forward). Its parent must be posed first */
+  function poseLive(name, ...turns) {
+    const entry = bones[name]
+    if (!entry) return
+    entry.bone.parent.updateWorldMatrix(true, false)
+    liveToLocal.copy(entry.bone.parent.getWorldQuaternion(liveToLocal)).invert().multiply(body.getWorldQuaternion(frameNow))
+    entry.bone.quaternion.copy(entry.rest)
+    for (const [frameAxis, angle] of turns) {
+      if (!angle) continue
+      axis.copy(frameAxis).applyQuaternion(liveToLocal)
+      entry.bone.quaternion.premultiply(turn.setFromAxisAngle(axis, angle))
+    }
+  }
 
   let posture = 0
   let postureSpeed = 0
@@ -337,27 +296,25 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
   // The rear feet (the legs' end bones), found once loaded: standing, the body rests on the lower one
   let feet = []
   const footAt = new THREE.Vector3()
-  /** The dance's pose t s into the groove: the GIF's frames, smoothly through them (Catmull-Rom), looping; the first
-   *  frame eased in from the standing pose */
+  /** The dance's pose t s into the groove: the frames, smoothly through them (Catmull-Rom), looping; the first frame
+   *  eased in from the standing pose. Its values by name (lean, R.arm…) */
   function dancePose(t) {
+    if (override) return named(override)
     const f = t / DANCE_FRAME
     const k = Math.floor(f)
     const u = f - k
     const at = (i) => (i < 0 ? STAND_FRAME : FRAMES[i % FRAMES.length])
     const [a, b, c, d] = [at(k - 1), at(k), at(k + 1), at(k + 2)]
-    const v = b.map((_, n) => {
+    return named(b.map((_, n) => {
       const p0 = a[n], p1 = b[n], p2 = c[n], p3 = d[n]
       return 0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u)
-    })
-    // The antennae whip: how fast the lean changes
-    const whip = (c[4] - b[4]) * 0.5
-    // The lobster's right claw (and legs) are on screen left
-    return {
-      R: [v[0], v[1]], L: [v[2], v[3]], lean: v[4], twist: v[5], crouch: v[6], leg: v[7], hips: v[8], whip,
-      fanR: v[9], fanL: v[10], antennaLean: v[11], antennaSpread: v[12],
-      openR: v[13], openL: v[14], tailSwing: v[15], tailCurl: v[16],
-    }
+    }))
   }
+  function named(values) {
+    return Object.fromEntries(PARAMS.map((name, i) => [name, values[i]]))
+  }
+  // For tests (the fit): a pose given as a row, held standing
+  let override = null
 
   const legs = ['front', 'mid1', 'mid2', 'rear'].flatMap((leg) => [`leg_${leg}_L_000`, `leg_${leg}_R_000`])
 
@@ -389,6 +346,34 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
     /** For tests: the dance held on one of the GIF's frames (counted from 0; -1: playing) */
     set danceFrame(n) {
       frozenFrame = n
+    },
+    /** For tests (the fit): a pose held, standing (a row of DANCE_DATA.params), or null */
+    set danceOverride(row) {
+      override = row
+    },
+    /** For tests (the fit): its joints seen from the front, in its own frame (x to screen right as the diver sees it,
+     *  y up, m) */
+    get danceKeypoints() {
+      root.updateMatrixWorld(true)
+      const at = (name) => {
+        const bone = body.getObjectByName(name)
+        if (!bone) return null
+        const v = root.worldToLocal(bone.getWorldPosition(new THREE.Vector3()))
+        return [v.x * side, v.y]
+      }
+      const out = {}
+      for (const name of ['tail_000', 'tail_002', 'tail_005', 'fin_middle_end', 'antenna_L_000', 'antenna_R_000',
+        'antenna_L_001_end', 'antenna_R_001_end']) out[name] = at(name)
+      for (const S of ['L', 'R']) {
+        for (const j of ['000', '001', '002', '003', '003_end']) out[`claw_${S}_${j}`] = at(`claw_${S}_${j}`)
+        for (const j of ['000', '001', '002', '002_end']) out[`leg_rear_${S}_${j}`] = at(`leg_rear_${S}_${j}`)
+        for (const leg of SMALL_LEGS) {
+          out[`leg_${leg}_${S}_000`] = at(`leg_${leg}_${S}_000`)
+          const end = body.getObjectByName(`leg_${leg}_${S}_002_end`) ? `leg_${leg}_${S}_002_end` : `leg_${leg}_${S}_003_end`
+          out[`leg_${leg}_${S}_end`] = at(end)
+        }
+      }
+      return out
     },
     /** For tests: its state */
     get debug() {
@@ -531,8 +516,8 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
       ;[dance.groove, dance.grooveSpeed] = spring(dance.groove, dance.grooveSpeed, dancing && dance.stand > 0.9 ? 1 : 0, GROOVE_SPRING)
       if (dancing && dance.stand > 0.9 && dance.grooveFrom < 0) dance.grooveFrom = dance.t
       if (!dancing && dance.groove < 0.01) dance.grooveFrom = -1
-      const w = dance.stand
-      const g = dance.groove
+      const w = override ? 1 : dance.stand
+      const g = override ? 1 : dance.groove
       // The pose, held where the dance ended while it eases out
       const grooveTime = frozenFrame >= 0 ? frozenFrame * DANCE_FRAME
         : dance.grooveFrom < 0 ? 0 : Math.max(0, (dancing ? dance.t : dance.endedAt) - dance.grooveFrom)
@@ -559,61 +544,45 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
       // rear legs, turned down, reach the ground; its front lift and the threat's tail arc give way to it
       const lift = -0.45 * p * (1 - w)
       body.rotation.x = -STAND * w
-      // Its hips swing out to one side as its body leans to the other
-      // (its height: set below, from its feet)
-      // Screen right, seen by the diver, is its left (side: its left's sign along x)
-      body.position.x = g * HIPS_SHIFT * move.hips * side
-      // In the dance (standing, belly to the diver, its frame's y now pointing back): the body leans to its side (about
-      // y), more with the hips' swing, and turns (about z, now up)
+      body.position.x = 0
+      // In the dance (standing, belly to the diver, its frame's y now pointing back, z up): the body leans to its side
+      // (about y) and turns (about z). Screen right, seen by the diver, is its left (side: its left's sign along x)
       pose('body', [X, lift], [Y, g * move.lean * side], [Z, g * move.twist * side])
-      // The tail: the threat's arc, or standing, folded back behind it (Christian, 2026-10-25: back, not forward; a
-      // positive turn takes its end back), and swinging out with the hips
+      // The tail: the threat's arc, or standing, folded back behind it (Christian, 2026-10-25: always behind it, never
+      // folded forward; from back to further back with the move). Its swing turns its first joint (about the body's
+      // own axis: on the later joints, already bent, that axis leans and the turn brought the tail forward), the next
+      // two following a little, each TAIL_LAG s later
       const bend = (TAIL_ARC / TAIL.length) * p * (1 - w) + 0.3 * w
-      // Dancing (the GIF): it swings to one side and curls up toward a hip, the move running down its joints
       TAIL.forEach((name, i) => {
         const m = i ? dancePose(Math.max(0, grooveTime - i * TAIL_LAG)) : move
-        // Always behind it, never folded forward (Christian, 2026-10-25: « it stays at the back, from back to further
-        // back, with the move »): each joint bends back, more as it swings and curls. The swing to one side turns its
-        // first joint only (about the body's own axis: on the later joints, already bent, that axis leans and the
-        // turn brought the tail forward), the next two following a little
-        // (wider: Christian, 2026-10-25, « more amplitude from left to right »)
-        const swing = 0.75 * m.tailSwing + 0.2 * m.hips
-        const back = g * (0.08 + 0.1 * Math.abs(m.tailSwing) + 0.12 * m.tailCurl)
-        pose(name, [X, bend + (i === 0 ? -lift : 0) + back], [Y, i < 3 ? -g * side * swing * [1.6, 0.6, 0.4][i] : 0])
+        const back = g * (0.08 + 0.15 * Math.abs(m.tail) + 0.12 * m.curl)
+        ;(i ? poseLive : pose)(name, [X, bend + (i === 0 ? -lift : 0) + back], [Y, i < 3 ? -g * side * m.tail * [1, 0.35, 0.25][i] : 0])
       })
       stride = walking ? stride + dt * 9 : stride
-      // Standing: the rear legs turned down as its legs, knees bent in a crouch, one raised now and then; the others
-      // fanned out to the sides (about its frame's z, then up or down about y), each at the GIF's angle a little after
-      // the one before, their joints bending with their swing
+      // Standing: the rear legs turned down as its legs (hip, knee, ankle in the plane facing the diver: Christian, « the
+      // rear legs have a knee, 2 or 3 segments »); the others fanned out to the sides (about its frame's z, then up or
+      // down about y), each a little after the one before, their joints bending with their swing (limp)
+      const blend = (name) => STAND_FRAME[PARAMS.indexOf(name)] + (move[name] - STAND_FRAME[PARAMS.indexOf(name)]) * g
       legs.forEach((name, i) => {
         const left = name.includes('_L_')
+        const S = left ? 'L' : 'R'
         const out = left ? side : -side
         const step = walking ? 0.25 * Math.sin(stride + i * 1.3) : 0
         if (/rear/.test(name)) {
-          // Its hip, knee and ankle (Christian: « the rear legs have 2, maybe 3 animated segments »): the thigh forward
-          // and the knee bent as it crouches or lifts that foot, the ankle keeping the foot under it
-          const raised = (left ? Math.max(move.leg, 0) : Math.max(-move.leg, 0)) * g
-          const bent = g * Math.max(move.crouch, 0)
-          // In the plane facing the diver (about its frame's y): the thigh out to the side (wider in a squat, the knee up
-          // to the side when that foot is raised), the shin back down
-          // A knee always (Christian: « the rear legs have a knee »): bow-legged, the thigh out and the shin back in
-          pose(name, [X, -lift + w * 1.25], [Y, step - out * (w * 0.6 + bent * 0.5 + raised * 1.0)])
-          pose(name.replace('_000', '_001'), [Y, out * (w * 0.8 + bent * 0.6 + raised * 1.2)])
-          pose(name.replace('_000', '_002'), [Y, -out * (w * 0.2 + bent * 0.2)])
+          pose(name, [X, -lift + w * 1.25], [Y, step - out * w * blend(`${S}.hip`)])
+          poseLive(name.replace('_000', '_001'), [Y, -out * w * blend(`${S}.knee`)])
+          poseLive(name.replace('_000', '_002'), [Y, -out * w * blend(`${S}.ankle`)])
           return
         }
         const k = SMALL_LEGS.findIndex((leg) => name.includes(`_${leg}_`))
-        const fanAt = (time) => {
-          const m = dancePose(Math.max(0, time))
-          return left ? m.fanL : m.fanR
-        }
+        const fanAt = (time) => dancePose(Math.max(0, time))[`${S}.fan`]
         const later = grooveTime - k * LEG_LAG
-        const fan = fanAt(later) + (k - 1) * 0.25
+        const fan = STAND_FRAME[PARAMS.indexOf(`${S}.fan`)] + (fanAt(later) - STAND_FRAME[PARAMS.indexOf(`${S}.fan`)]) * g
         const swing = (fanAt(later) - fanAt(later - 0.05)) / 0.05
-        pose(name, [X, -lift], [Z, out * w * 1.5], [Y, step - out * g * fan])
+        pose(name, [X, -lift], [Z, out * w * 1.5], [Y, step - out * w * (fan - (k - 1) * FAN_SPREAD)])
         const drag = THREE.MathUtils.clamp(-swing * LEG_DRAG, -0.6, 0.6) * g
-        pose(name.replace('_000', '_001'), [Y, out * drag])
-        pose(name.replace('_000', '_002'), [Y, out * drag * 1.5])
+        poseLive(name.replace('_000', '_001'), [Y, out * drag])
+        poseLive(name.replace('_000', '_002'), [Y, out * drag * 1.5])
       })
       // The antennae bend toward where the current goes (in its own frame, as it turns), more at the tip and the
       // stronger the current; raised a little in the threat posture
@@ -624,39 +593,31 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
       const toward = THREE.MathUtils.clamp(Math.atan2(Math.sin(local), Math.cos(local)), -1.2, 1.2)
       // A slow, slight sway only: they bend more than they flutter (Christian, 2026-10-23)
       const flutter = (phase) => 0.03 * Math.sin(time * 0.8 + phase)
-      // Dancing: the GIF's lean and spread (its left antenna on screen right), their tips following later (a whip)
-      const antennaAt = (time) => dancePose(Math.max(0, time))
-      const tipLater = antennaAt(grooveTime - 0.08)
+      // Dancing: the measured angle, the tip following later (a whip)
+      const tipLater = dancePose(Math.max(0, grooveTime - ANTENNA_LAG))
       for (const [name, phase] of [['L', 0], ['R', 1.7]]) {
         const out = name === 'L' ? side : -side
-        const angle = (m) => side * m.antennaLean + out * (m.antennaSpread - 0.25)
-        const base = angle(move)
-        pose(`antenna_${name}_000`, [Y, (toward * ANTENNA_BEND[0] * strength + flutter(phase)) * (1 - w) + g * base],
+        const base = blend(`${name}.antenna`)
+        pose(`antenna_${name}_000`, [Y, (toward * ANTENNA_BEND[0] * strength + flutter(phase)) * (1 - w) + out * w * base],
           [X, -0.25 * p * (1 - w)])
-        pose(`antenna_${name}_001`, [Y, (toward * ANTENNA_BEND[1] * strength + flutter(phase + 0.8)) * (1 - w) + g * 1.5 * (angle(tipLater) - base)])
+        poseLive(`antenna_${name}_001`, [Y, (toward * ANTENNA_BEND[1] * strength + flutter(phase + 0.8)) * (1 - w) +
+          out * g * 1.5 * (tipLater[`${name}.antenna`] - move[`${name}.antenna`])])
       }
       // Claws: raised and spread, open, drifting together; in a gesture both arms open out wider and rise, and their
-      // pincers open wide a moment later (TODO #51)
+      // pincers open wide a moment later (TODO #51). Standing, each claw is an arm in the plane facing the diver (about
+      // its frame's y): arm, elbow, wrist and pincer as measured
       const e = arms.t >= 0 ? gestureAt(arms.t, arms.length) : 0
       const pincer = arms.t >= 0 ? gestureAt(arms.t - GESTURE_FOLLOW, arms.length) : 0
       const rise = DRIFT * p * Math.sin(time * arms.pace[0] + arms.phase[0])
       const spread = DRIFT * p * Math.sin(time * arms.pace[1] + arms.phase[1])
       for (const name of ['L', 'R']) {
         const out = name === 'L' ? side : -side
-        // Standing, each claw is an arm in the plane facing the diver (about its frame's y): its upper arm from up
-        // toward its side, the forearm bent back up, the pincer open (the standing pose, then the dance's)
-        const rest = name === 'R' ? STAND_FRAME.slice(0, 2) : STAND_FRAME.slice(2, 4)
-        const [arm, elbow] = move[name].map((v, k) => rest[k] + (v - rest[k]) * g)
-        // The wrist bent on with the forearm (three segments to the pincer); the pincer's opening from the GIF
-        const wrist = 0.4 * elbow
-        const rest2 = name === 'R' ? STAND_FRAME[13] : STAND_FRAME[14]
-        const open = rest2 + ((name === 'R' ? move.openR : move.openL) - rest2) * g
         const threat = 1 - w
         pose(`claw_${name}_000`, [X, (-0.7 * p - rise - 0.2 * e * arms.raise) * threat],
-          [Y, out * ((0.45 * p + spread + 0.45 * e * arms.open) * threat + arm * w)])
-        pose(`claw_${name}_001`, [Y, out * (0.25 * e * arms.open * threat - elbow * w)])
-        pose(`claw_${name}_002`, [Y, -out * wrist * w])
-        pose(`claw_${name}_003`, [Y, -out * ((0.35 * p + 0.5 * pincer) * threat + open * w)])
+          [Y, out * ((0.45 * p + spread + 0.45 * e * arms.open) * threat + blend(`${name}.arm`) * w)])
+        poseLive(`claw_${name}_001`, [Y, out * (0.25 * e * arms.open * threat + blend(`${name}.elbow`) * w)])
+        poseLive(`claw_${name}_002`, [Y, out * blend(`${name}.wrist`) * w])
+        poseLive(`claw_${name}_003`, [Y, -out * ((0.35 * p + 0.5 * pincer) * threat + blend(`${name}.open`) * w)])
       }
       // Standing, on its feet: the body set so that the lower rear foot is on the ground (Christian, 2026-10-25: one
       // leg at least on the ground at all times; the raised one higher). Measured after the pose, in its own frame
