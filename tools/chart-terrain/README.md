@@ -31,13 +31,13 @@ le referait depuis la carte et **effacerait ces retouches**: ne plus le lancer. 
 modèle, ajuster le terrain là seulement où il rencontre le modèle (Blender fermé):
 
 ```powershell
-$blender = "C:\Program Files\Blender Foundation\Blender 5.2lender.exe"
+$blender = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe"
 # 1. Mesurer chaque sommet du terrain et le modèle sous lui et au-dessus (lecture seule), 15 s
-& $blender -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrainit_mesh.py -- --measure
+& $blender -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\fit_mesh.py -- --measure
 # 2. Les hauteurs ajustées (Python du système)
-python tools\chart-terrainit_terrain.py
+python tools\chart-terrain\fit_terrain.py
 # 3. Les écrire dans le maillage, dans une copie du .blend, puis la copie à la place du .blend
-& $blender -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrainit_mesh.py -- --apply
+& $blender -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\fit_mesh.py -- --apply
 Move-Item -Force O:	emp\lock-21-publishing-chart.blend modeles\lock-21-publishing.blend
 ```
 
