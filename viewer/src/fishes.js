@@ -69,6 +69,8 @@ const WAVE = [0.04, 0.1, 0.18, 0.28, 0.44]
 const WAVE_LAG = 0.9
 const BEAT_REST = 0.3
 const BEAT_PER_SPEED = 4
+// The body's and tail's wave 20 % slower than those beats (Christian, 2026-10-25), the swimming speed unchanged
+const BEAT_PACE = 0.8
 const CURVE = [0, 0.5, 0.64, 0.64, 0.5]
 const BEND_LAG = 0.06
 const BEND_LIMIT = [0.2, 0.3, 0.4, 0.5, 0.6]
@@ -327,7 +329,7 @@ export function createFishes({ count, prepare = (m) => m, clearance = () => Infi
           fish.group.rotation.set(0, fish.heading, 0)
         }
         // Its body: the wave with its speed, the turn running down it
-        fish.phase += dt * (BEAT_REST + BEAT_PER_SPEED * fish.speed) * Math.PI * 2
+        fish.phase += dt * (BEAT_REST + BEAT_PER_SPEED * fish.speed) * BEAT_PACE * Math.PI * 2
         const size = 0.3 + 0.7 * Math.min(1, fish.speed / 0.2)
         fish.turns.unshift([time, fish.turnRate])
         while (fish.turns.length > 2 && fish.turns[fish.turns.length - 2][0] < time - BEND_LAG * fish.spine.length) fish.turns.pop()

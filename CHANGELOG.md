@@ -2,6 +2,18 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## 0.16.0 - 2026-10-25
+
+- 3D viewer, underwater: many more particles in spring (800 per m³, was 300; up to 250,000 drawn, 40 % of that on a
+  phone).
+- 3D viewer, underwater: the particles follow the river's flow around the lock (Christian, 2026-10-25): a field
+  computed once (`tools/flow/`: the site voxelized at 60 cm from the downloadable model and the mockups of the zones
+  not yet surveyed, an ideal flow from the west solved around it, a turbulence index in the obstacles' wake), in
+  `viewer/public/flow/` (555 kB, loaded when the view first goes underwater). Each particle is born, follows the field
+  for 6 s in nearly straight lines (bending around the walls, faster through the gaps, slower in their lee, a
+  little swirl in the wake), fading in and out; outside the field, the even current as before.
+- 3D viewer, underwater: the fish's body and tail wave 20 % slower (their swimming speed unchanged).
+
 ## 0.15.1 - 2026-10-25
 
 - The site's Google Earth file (`public/downloads/lock-21.kmz`) rebuilt: its description with links to the site and the
