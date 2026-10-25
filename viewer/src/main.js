@@ -1687,6 +1687,22 @@ window.addEventListener('wheel', (event) => {
 window.addEventListener('mousedown', (event) => {
   if (event.button === 1) event.preventDefault()
 })
+// The right or middle button held on the model, then released outside the frame: the /modele page holds back its
+// context menu meanwhile (ModelPage.astro, lock21:drag); the viewer has none either
+let draggingAside = false
+const dragAside = (on) => {
+  if (draggingAside === on) return
+  draggingAside = on
+  if (embedded) window.parent.postMessage({ type: 'lock21:drag', on }, location.origin)
+}
+renderer.domElement.addEventListener('pointerdown', (event) => {
+  if (event.button === 1 || event.button === 2) dragAside(true)
+})
+window.addEventListener('pointerup', () => dragAside(false))
+window.addEventListener('pointercancel', () => dragAside(false))
+window.addEventListener('contextmenu', (event) => {
+  if (!(event.target instanceof Element && event.target.closest('input, textarea'))) event.preventDefault()
+})
 window.addEventListener('keydown', (event) => {
   if (!/^(Space|PageUp|PageDown|Home|End|Arrow(Up|Down|Left|Right))$/.test(event.code)) return
   if (scrollsInside(event.target) || (event.target instanceof Element && event.target.closest('input, select, textarea, button'))) return

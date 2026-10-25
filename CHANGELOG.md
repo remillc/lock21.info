@@ -5,7 +5,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - 3D viewer, in the /modele page: nothing done in the viewer scrolls the page any more (TODO #70): the wheel while
-  the orbit is off (the guided tour, swimming), the middle button's autoscroll, the scrolling keys (Page Down, Space...).
+  the orbit is off (the guided tour, swimming), the middle button's autoscroll, the scrolling keys (Page Down, Space...),
+  and the page's context menu after a right-button drag released outside the viewer.
 - 3D viewer: a compass at the top left, its card (N, E, S, W) turning with the view, the red tip toward magnetic north on the day
   of the visit (the declination from NOAA's IGRF 2025: -12.87° in 2026, +0.08° a year).
 - Google Earth: the model turned to -30° (was 0°), after Nick Baets' north arrow on the zone map, taken as true north;
