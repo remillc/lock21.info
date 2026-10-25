@@ -93,6 +93,7 @@ for (const [selector, label, tooltip] of [
   ['.ar-button', 'ar', 'ar'],
   ['.underwater-button', 'underwater', 'underwater'],
   ['.fullscreen', 'fullscreen', 'fullscreenTitle'],
+  ['.compass', 'compass', 'compass'],
 ]) {
   const element = document.querySelector(selector)
   element.setAttribute('aria-label', t(label))
@@ -2037,7 +2038,28 @@ function renderLoop() {
   tilesets.forEach((tiles) => tiles.update())
   drawScene()
 }
+// The compass (below the settings): its red tip toward magnetic north, as a diver's compass (Christian, 2026-10-25),
+// as the view turns. TRUE_HEADING: the true bearing of the scene's -z axis (the .blend's +Y), degrees clockwise from
+// north, the same as make_kmz.py -H: Nick Baets' north arrow on the zone map is 30.0° clockwise from it, read as
+// magnetic north in September 1988, when the declination there was -14.33° (NOAA, DGRF). DECLINATION: today's
+// (NOAA, IGRF 2025, 2026-10), about +0.08° a year
+const TRUE_HEADING = -44.3
+const DECLINATION = -12.87
+const NORTH_HEADING = TRUE_HEADING - DECLINATION
+const compassRose = document.querySelector('.compass-rose')
+const compassAxis = new THREE.Vector3()
+let compassBearing = NaN
+function updateCompass() {
+  // The bearing of the view: where the camera looks, or, looking straight down, the screen's top
+  camera.getWorldDirection(compassAxis)
+  if (Math.hypot(compassAxis.x, compassAxis.z) < 0.01) compassAxis.set(0, 1, 0).applyQuaternion(camera.quaternion)
+  const bearing = THREE.MathUtils.radToDeg(Math.atan2(compassAxis.x, -compassAxis.z)) + NORTH_HEADING
+  if (Math.abs(bearing - compassBearing) < 0.2) return
+  compassBearing = bearing
+  compassRose.setAttribute('transform', `rotate(${(-bearing).toFixed(1)})`)
+}
 function drawScene() {
+  updateCompass()
   // The shadow cascades follow the camera
   csm.update()
   // No ambient occlusion underwater: it darkened the creases of surfaces the water had erased, which redrew the lock

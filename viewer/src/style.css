@@ -427,6 +427,20 @@ l21-loading.error .loading-label {
   top: max(16px, env(safe-area-inset-top));
   right: max(16px, env(safe-area-inset-right));
 }
+/* Compass (main.js): below the settings, the same 40 dp tonal disc in its 48 dp place; shown only, no state layer */
+.compass {
+  position: fixed;
+  top: calc(max(16px, env(safe-area-inset-top)) + 56px);
+  right: max(16px, env(safe-area-inset-right));
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgb(60 66 50 / 92%);
+  color: #e3e6d8;
+}
+.compass svg {
+  display: block;
+}
 /* Touch screens (touch-nav.js): the gestures' card again, left of the settings */
 .touch-help-button {
   top: max(16px, env(safe-area-inset-top));

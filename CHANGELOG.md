@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: a compass below the settings button, its red tip toward magnetic north as the view turns.
+- Google Earth: the model turned to -44.3° (was 0°), after Nick Baets' north arrow read as magnetic north in 1988
+  (declination -14.33°, NOAA); the landing view turned with it.
+
 ## 0.14.0 - 2026-10-24
 
 - 3D model online (R2): zones 1, 4, 10, 11, 12 and 13 republished with Christian's new boolean cuts (zone 13's
