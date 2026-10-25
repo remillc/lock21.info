@@ -2,7 +2,7 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
-## Unreleased
+## 0.15.0 - 2026-10-25
 
 - 3D viewer: a fine relief drawn from the photo (Christian, 2026-10-25: the wooden floor lacked roughness): the
   photogrammetry's mesh, and the relief baked from it, are smooth where the wood's grain and the planks' seams are only
