@@ -55,6 +55,9 @@ Move-Item -Force O:\temp\lock-21-publishing-chart.blend modeles\lock-21-publishi
   en abaissant seulement le sol à moins de 2,5 à 4 m au-dessus (une berge garde sa hauteur); contre la face extérieure
   d'un mur, le sol monte à son dessus s'il en est à moins de 3 m (les vides le long du mur); jamais plus haute que le
   dessus des zones plus 0,25 m par mètre;
+- **dans les zones à aplatir** (`FLATTEN` dans `fit_terrain.py`, des rectangles demandés par Christian, d'un seul côté
+  des murs): à plat, au niveau du plancher de l'écluse, raccordé sur 1 m; le sol des zones gardé. Première: x −44 à −24,
+  y 22 à 36, une butte de 9 m près du bout nord de la passerelle (2026-10-25);
 - **dans un mur ou un solide** (murs du contexte, maquettes): jamais au-dessus de son dessus (sous le mur d'une zone, le
   dessus du mur). Les remplissages (sédiments) sont à part: le sol n'est pas plafonné par eux et ne descend pas sous le
   niveau du plancher dans leur emprise (plafonné sous eux, il tombait dans leurs creux, en fosse).

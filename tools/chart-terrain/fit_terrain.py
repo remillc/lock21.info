@@ -12,6 +12,7 @@ fitted heights for fit_mesh.py --apply. Every vertex keeps its height, unless:
   and flat as its surroundings »); then the lock's floor kept flat within FLOOR_FLAT m of a zone's ground (lowering
   only), not below that level inside a solid's outline, the ground against a wall's outer side rising to meet its top
   where it is close to it; never higher than the zones' top plus TOP_RISE m per metre (met softly, SOFT m);
+- in the areas listed in FLATTEN (asked by Christian): flat, at the lock floor's level;
 - inside a wall or a solid (the context's walls and fillers, the mockups): never above its top.
 
 Usage:
@@ -185,6 +186,24 @@ cap = top_at[ty, tx] - FLOOR_CLEAR + TOP_RISE * far * cell
 z = np.where(band, soft_min(z, cap), z)
 near = band
 lift = band & (z > z0 + 0.01)
+
+# Areas Christian asked to make flat, at the lock floor's level (rectangles x0, x1, y0, y1 in the .blend's frame, in
+# metres; on one side of the walls, so as not to reach the ground behind them): the floor's level inside, the zones'
+# ground kept, joined to the ground around over the last FLATTEN_EDGE m
+FLATTEN_EDGE = 1.0
+FLATTEN = [
+    (-44.0, -24.0, 22.0, 36.0),  # 2026-10-25: a 9 m mound by the walkway's north end, over the fillers, south of the
+                                 # north wall
+]
+for x0, x1, y0, y1 in FLATTEN:
+    px, py = pos[..., 0], pos[..., 1]
+    edge_in = np.minimum.reduce([px - x0, x1 - px, py - y0, y1 - py])
+    inside = (edge_in >= 0) & ~on_ground
+    e = np.clip(edge_in / FLATTEN_EDGE, 0, 1)
+    weight = e * e * (3 - 2 * e)
+    z = np.where(inside, weight * floor_level + (1 - weight) * z, z)
+    print(f"[fit] flattened x {x0}..{x1}, y {y0}..{y1}: {int(inside.sum())} vertices at the floor's level "
+          f"({np.median(floor_level[inside]):.2f} m)", flush=True)
 
 # Inside walls and solids: never above their top
 # (where a wall of a zone covers the point, its top: a low filler inside a wall pulled the terrain under the wall's top
