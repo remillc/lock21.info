@@ -279,9 +279,13 @@ def write_network():
                 kmz.write(path, arcname)
         links[mat_name] = f"{base}/parts/{part}"
 
+    # Google Earth shows no progress for models: in « Places », each part's icon spins while it downloads. The list
+    # open and the parts numbered (Christian, 2026-10-25), the visitor sees how far it has got
+    order = {name: k + 1 for k, name in enumerate(zones + context)}
+
     def network_link(mat_name):
         return f"""    <NetworkLink>
-      <name>{label(mat_name)}</name>
+      <name>{label(mat_name)} ({order[mat_name]}/{len(order)})</name>
       <Link><href>{links[mat_name]}</href></Link>
     </NetworkLink>"""
 
@@ -296,12 +300,15 @@ def write_network():
     <Point><coordinates>{a.lon},{a.lat},0</coordinates></Point>
   </Placemark>
 {newline.join(mark_placemark(m) for m in marks)}
+  <open>1</open>
   <Folder>
     <name>Zones</name>
+    <open>1</open>
 {newline.join(network_link(z) for z in zones)}
   </Folder>
   <Folder>
     <name>Contexte (maquette)</name>
+    <open>1</open>
 {newline.join(network_link(c) for c in context)}
   </Folder>
 </Document>

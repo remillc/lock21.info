@@ -14,6 +14,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   altitude), not on Google Earth's ground under it.
 - Google Earth: a new arrival view (Christian), farther out to show the chart terrain: 44.997063, -74.899483, 485 m,
   heading -15°, tilt 28°.
+- Google Earth: the list of parts open in « Places » and each part numbered (« Zone 3 (3/19) »): Google Earth shows no
+  progress for models, only each part's spinning icon while it downloads.
 
 ## 0.15.0 - 2026-10-25
 
