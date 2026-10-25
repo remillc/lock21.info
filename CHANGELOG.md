@@ -2,6 +2,10 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased
+
+- 3D viewer, underwater: the fish's body and tail wave 20 % slower (their swimming speed unchanged).
+
 ## 0.15.1 - 2026-10-25
 
 - The site's Google Earth file (`public/downloads/lock-21.kmz`) rebuilt: its description with links to the site and the
