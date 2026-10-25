@@ -25,8 +25,10 @@ const WATER_INDEX = 1.333
 // River current, west to east: 35 ft/min, measured by drifting in the canal (2024-06-08), in m/s; the particles drift
 // SEASONS[].current times faster (Christian, 2026-10-23: the murkier the water, the faster: spring's runoff)
 const CURRENT = (35 * 0.3048) / 60
-// The particles' drift against that: 15 % slower (Christian, 2026-10-23)
-const DRIFT_SHARE = 0.85
+// The particles' drift against that: in summer, the current as measured (Christian, 2026-10-25: « the particles don't
+// go fast »; it was 85 % of the seasons' multiples, about 0.9 m/s in summer), the other seasons in proportion (spring
+// 0.24 m/s, autumn 0.12, winter 0.05)
+const DRIFT_SHARE = 1 / 6
 // Suspended particles, only where they can be seen: in a box ahead of the camera (it covers the view's cone), as deep
 // as the visibility (PARTICLE_REACH m at most, PARTICLE_MIN at least); SEASONS[].density particles per m³ (the
 // murkier, dramatically more; doubled 2026-10-23), so the drawn count follows the box (at most PARTICLE_COUNT; MOBILE_SHARE of them on a
@@ -41,6 +43,16 @@ export const FIELD_CELLS = 32
 export const FIELD_SIZE = 16
 export const FIELD_RANGE = 2
 const FIELD_PUSH = 0.15
+// The river's flow around the lock (Christian, 2026-10-25: particles that flow around the obstacles, not through them):
+// a field computed once (tools/flow: the site's solids, an ideal flow from the west, a turbulence index downstream of
+// the obstacles), public/flow/flow.bin.gz, loaded when the view first goes underwater. Each particle is born, follows it
+// for FLOW_LIFE s (FLOW_STEPS steps from its birth: it bends around the walls, speeds up through the gaps, slows in
+// their lee), fading in and out, then is born again elsewhere; in the wake it swirls more (FLOW_SWIRL times). Outside the
+// field, and until it has loaded, the even current as before
+const FLOW_URL = `${import.meta.env.BASE_URL}flow/`
+const FLOW_LIFE = 10
+const FLOW_STEPS = 6
+const FLOW_SWIRL = 3
 // The scattered light's strength against the lit surfaces (brighter washed every surface to the water's colour)
 const WATER_BRIGHTNESS = 0.6
 // The surfaces are seen as they are up to this share of the visibility (Christian, 2026-10-23: textures seen up close,
@@ -308,6 +320,41 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
   field.texture.minFilter = field.texture.magFilter = THREE.LinearFilter
   field.texture.unpackAlignment = 1
 
+  // The flow field (tools/flow): an RGBA 3D texture, empty until loaded
+  const flow = {
+    texture: null,
+    min: new THREE.Vector3(),
+    size: new THREE.Vector3(1, 1, 1),
+    loading: null,
+  }
+  flow.texture = new THREE.Data3DTexture(new Uint8Array([128, 128, 128, 0]), 1, 1, 1)
+  flow.texture.format = THREE.RGBAFormat
+  flow.texture.needsUpdate = true
+  /** Loads the flow field once (gzip: decompressed here, unless the server already did) */
+  function loadFlow() {
+    flow.loading ??= (async () => {
+      const meta = await (await fetch(`${FLOW_URL}flow.json`)).json()
+      let bytes = new Uint8Array(await (await fetch(`${FLOW_URL}flow.bin.gz`)).arrayBuffer())
+      if (bytes[0] === 0x1f && bytes[1] === 0x8b) {
+        const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))
+        bytes = new Uint8Array(await new Response(stream).arrayBuffer())
+      }
+      const [nx, ny, nz] = meta.size
+      const texture = new THREE.Data3DTexture(bytes, nx, ny, nz)
+      texture.format = THREE.RGBAFormat
+      texture.minFilter = texture.magFilter = THREE.LinearFilter
+      texture.unpackAlignment = 1
+      texture.needsUpdate = true
+      flow.texture = texture
+      flow.min.fromArray(meta.min)
+      flow.size.set(nx, ny, nz).multiplyScalar(meta.cell)
+      const u = particles.material.uniforms
+      u.uFlow.value = texture
+      u.uFlowScale.value = meta.scale
+      u.uFlowOn.value = 1
+    })().catch((error) => console.warn('flow field:', error))
+  }
+
   // Suspended particles, wrapped in a box that follows the camera; they sparkle a little
   const seeds = new Float32Array(PARTICLE_COUNT * 4)
   for (let i = 0; i < seeds.length; i++) seeds[i] = Math.random()
@@ -330,6 +377,11 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
         uFieldMin: { value: field.min },
         uFieldSize: { value: FIELD_SIZE },
         uFieldOn: { value: 0 },
+        uFlow: { value: flow.texture },
+        uFlowMin: { value: flow.min },
+        uFlowSize: { value: flow.size },
+        uFlowScale: { value: 2 },
+        uFlowOn: { value: 0 },
         uUwLampPos: uniforms.uUwLampPos,
         uUwLampDir: uniforms.uUwLampDir,
         uUwLampHot: uniforms.uUwLampHot,
@@ -350,6 +402,19 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
         uniform vec3 uFieldMin;
         uniform float uFieldSize;
         uniform float uFieldOn;
+        // The flow field (tools/flow): velocity in units of the current, and the turbulence
+        uniform highp sampler3D uFlow;
+        uniform vec3 uFlowMin;
+        uniform vec3 uFlowSize;
+        uniform float uFlowScale;
+        uniform float uFlowOn;
+        vec4 flowAt(vec3 p) {
+          vec3 uvw = (p - uFlowMin) / uFlowSize;
+          if (uFlowOn < 0.5 || any(lessThan(uvw, vec3(0.0))) || any(greaterThan(uvw, vec3(1.0)))) return vec4(1.0, 0.0, 0.0, 0.0);
+          vec4 f = texture(uFlow, uvw);
+          return vec4((f.rgb * 2.0 - 1.0) * uFlowScale, f.a);
+        }
+        varying float vFade;
         uniform vec3 uUwLampPos;
         uniform vec3 uUwLampDir;
         uniform float uUwLampHot;
@@ -364,8 +429,34 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
         void main() {
           // Carried by the current (speed varies a little per particle), with a slight turbulent sway
           vec3 sway = vec3(sin(uTime * 0.3 + seed.w * 6.28), sin(uTime * 0.21 + seed.z * 6.28) - 0.03 * uTime, cos(uTime * 0.25 + seed.w * 3.14)) * 0.25;
-          vec3 p = seed.xyz * uBox + uCurrent * uTime * (0.8 + 0.4 * seed.w) + sway;
-          p = mod(p - uCentre + uBox * 0.5, uBox) - uBox * 0.5 + uCentre;
+          vec3 p;
+          vFade = 1.0;
+          if (uFlowOn > 0.5) {
+            // Following the flow field: born at a place of its own (anchored in the world, wrapped into the box around
+            // the camera), then carried along the field for its age, a few steps at a time; a new place each life
+            float life = uTime / ${FLOW_LIFE.toFixed(1)} + seed.w;
+            float cycle = floor(life);
+            float age = fract(life) * ${FLOW_LIFE.toFixed(1)};
+            vec3 jitter = fract(sin(vec3(cycle * 12.9898 + seed.x * 78.233, cycle * 39.346 + seed.y * 11.135, cycle * 73.156 + seed.z * 3.317)) * 43758.5453);
+            p = fract(seed.xyz + jitter) * uBox;
+            p = mod(p - uCentre + uBox * 0.5, uBox) - uBox * 0.5 + uCentre;
+            float speed = length(uCurrent) * (0.8 + 0.4 * seed.w);
+            float dt = age / ${FLOW_STEPS}.0;
+            float swirl = 0.0;
+            for (int i = 0; i < ${FLOW_STEPS}; i++) {
+              vec4 f = flowAt(p);
+              p += f.xyz * speed * dt;
+              swirl = max(swirl, f.w);
+            }
+            // In the wake of the obstacles, it swirls (faster and wider)
+            p += sway * (1.0 + ${FLOW_SWIRL.toFixed(1)} * swirl) + swirl * 0.3 * vec3(sin(uTime * 1.3 + seed.x * 6.28), sin(uTime * 1.1 + seed.y * 6.28), cos(uTime * 1.7 + seed.z * 6.28));
+            // Fading in at its birth and out at its end
+            float t = age / ${FLOW_LIFE.toFixed(1)};
+            vFade = smoothstep(0.0, 0.12, t) * (1.0 - smoothstep(0.85, 1.0, t));
+          } else {
+            p = seed.xyz * uBox + uCurrent * uTime * (0.8 + 0.4 * seed.w) + sway;
+            p = mod(p - uCentre + uBox * 0.5, uBox) - uBox * 0.5 + uCentre;
+          }
           // Around the surfaces, not through them: pushed out of the distance field's skin, along its gradient (they
           // flow around the walls and over the floor)
           vec3 uvw = (p - uFieldMin) / uFieldSize;
@@ -399,12 +490,13 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
         varying float vDistance;
         varying float vSeed;
         varying float vLit;
+        varying float vFade;
         void main() {
           float r = length(gl_PointCoord - 0.5);
           if (r > 0.5) discard;
           float sparkle = 0.75 + 0.25 * sin(uTime * 3.0 + vSeed * 40.0);
           float lit = min(vLit, 3.0);
-          float alpha = smoothstep(0.5, 0.0, r) * (0.3 + 0.4 * vSeed) * sparkle * exp(-uAbsorb.g * vDistance) * (1.0 + lit);
+          float alpha = smoothstep(0.5, 0.0, r) * (0.3 + 0.4 * vSeed) * sparkle * exp(-uAbsorb.g * vDistance) * (1.0 + lit) * vFade;
           gl_FragColor = vec4(mix(vec3(0.85, 0.95, 0.9), vec3(1.0, 0.94, 0.85), min(lit, 1.0)) * (1.0 + 0.5 * lit), min(alpha, 1.0));
         }`,
     }),
@@ -556,6 +648,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
     /** @param {boolean} value */
     setOn(value) {
       on = value
+      if (on) loadFlow()
       uniforms.uUwOn.value = on ? 1 : 0
       column.visible = surface.visible = particles.visible = on
       lamp.visible = on && lampWanted
