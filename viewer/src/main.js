@@ -2047,6 +2047,7 @@ const TRUE_HEADING = -44.3
 const DECLINATION = -12.87
 const NORTH_HEADING = TRUE_HEADING - DECLINATION
 const compassRose = document.querySelector('.compass-rose')
+compassRose.querySelector('.compass-w').textContent = t('compassWest')
 const compassAxis = new THREE.Vector3()
 let compassBearing = NaN
 function updateCompass() {

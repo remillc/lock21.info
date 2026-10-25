@@ -427,16 +427,20 @@ l21-loading.error .loading-label {
   top: max(16px, env(safe-area-inset-top));
   right: max(16px, env(safe-area-inset-right));
 }
-/* Compass (main.js): below the settings, the same 40 dp tonal disc in its 48 dp place; shown only, no state layer */
+/* Compass (main.js): top left, a 56 dp tonal disc with the four cardinal letters; below the way back to the site when
+   the viewer is on its own page; shown only, no state layer */
 .compass {
   position: fixed;
-  top: calc(max(16px, env(safe-area-inset-top)) + 56px);
-  right: max(16px, env(safe-area-inset-right));
-  width: 40px;
-  height: 40px;
+  top: max(16px, env(safe-area-inset-top));
+  left: max(16px, env(safe-area-inset-left));
+  width: 56px;
+  height: 56px;
   border-radius: 999px;
   background: rgb(60 66 50 / 92%);
   color: #e3e6d8;
+}
+html:not(.embedded) .compass {
+  top: calc(max(12px, env(safe-area-inset-top)) + 40px);
 }
 .compass svg {
   display: block;
