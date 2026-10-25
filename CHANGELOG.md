@@ -11,6 +11,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   makes it vanish; it is gone only once out of sight (out of the view or beyond the visibility), never in plain view.
   Its flight faster: 3.3 m/s once lined up (was 2.2), and 60 % of that while it turns away (was 30 %), so about three
   times its former speed in the turn.
+- 3D viewer, underwater: the dive light at 5600 K (#ffeee3, a video light's daylight white; it was a 3800 K warm
+  white, #ffcc9c), as dive lights are (5000–6500 K; the Light & Motion Sola 1200, its model, 6000–6500 K).
 - A terrain from the Boating app's chart of the lock's surroundings (TODO #73, `tools/chart-terrain/`): the depth
   contours and soundings turned into a 550 × 302 m height grid, in the publishing .blend (collection `chart terrain`,
   the riprap material, green above the water), against the zones without gaps and never above the model.

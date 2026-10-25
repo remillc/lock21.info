@@ -9,7 +9,7 @@
 //  - the sun bent toward the vertical by the surface (Snell), from the « Soleil » setting; caustics (the moving light
 //    network of the waves) on surfaces facing it, fading with depth;
 //  - the water surface seen from below; suspended particles carried west to east by the current;
-//  - a dive light held at the bottom right of the view, aimed at its middle (« Lampe de plongée » setting): warm white,
+//  - a dive light held at the bottom right of the view, aimed at its middle (« Lampe de plongée » setting): 5600 K (a video light's daylight white; Light & Motion Sola 6000–6500 K),
 //    a hotspot (8.8° half-angle) in a spill 2.5 times wider and 3 times weaker (22°), soft edges, fading with distance, out of reach beyond about 1.5 times the visibility; its beam seen in
 //    the water (the light the water scatters toward the eye), computed in each pixel's shading (uwBeam): samples along
 //    the line of sight, lit where they fall in the lamp's cone. It only adds light (a cone drawn as a mesh veiled the
@@ -162,7 +162,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
     uUwSpectral: { value: new THREE.Vector3() },
     uUwLampPower: { value: 0 },
     // Warm, like a halogen dive light: more red to bring back (Christian, 2026-10-23)
-    uUwLampColor: { value: new THREE.Color(0xffcc9c) },
+    uUwLampColor: { value: new THREE.Color(0xffeee3) },
     uUwTop: { value: new THREE.Vector3() },
     uUwDeep: { value: new THREE.Vector3() },
     uUwGone: { value: 6 },
@@ -449,7 +449,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
           vec3 uwColor = gl_FragColor.rgb * uwDown * ${DAYLIGHT_LEVEL.toFixed(2)} * (1.0 + 1.5 * uwCaustic) * exp(-uUwSpectral * vUwDepth);
           // The dive light: dimmed and its red absorbed from the lamp to here by the whole water attenuation (the lamp
           // is at the eye: the way back is about the same, counted once), so its reds come back up close and it fades
-          // with distance (Lambert, warm white)
+          // with distance (Lambert, 5600 K)
           vec3 uwToLamp = uUwLampPos - vUwWorld;
           float uwLampDist = max(length(uwToLamp), 0.05);
           vec3 uwLampDir = normalize((viewMatrix * vec4(uwToLamp, 0.0)).xyz);
