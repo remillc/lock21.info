@@ -83,13 +83,17 @@ CONTEXT_ID = "context"
 
 
 def context_objects():
-    """Objets du contexte: noms contenant « filler » et collection `terrain`, sauf la collection
-    `terrain - drawings`."""
+    """Objets du contexte, rendus seulement: noms contenant « filler » et collection `terrain` (le terrain d'après la
+    carte, TODO #73; plus « terrain - SOS data »), sauf la collection `terrain - drawings`."""
     import bpy
     terrain = bpy.data.collections.get("terrain")
     objects = {o for o in bpy.data.objects if "filler" in o.name.lower() and o.type == 'MESH'}
     if terrain:
         objects |= {o for o in terrain.all_objects if o.type == 'MESH'}
+    # Only what renders (Show in Render decides): the chart terrain, moved into `terrain` with its frame (its modifiers
+    # applied at export; its reference water plane, not rendered, left out); « terrain - SOS data » no longer exported
+    # (Christian, 2026-10-25; not rendered, and left out by name as well)
+    objects = {o for o in objects if not o.hide_render and o.name != "terrain - SOS data"}
     # Les objets dessinés d'après les plans (collection « terrain - drawings ») ne sont jamais publiés, même nommés
     # « filler »
     drawings = bpy.data.collections.get("terrain - drawings")

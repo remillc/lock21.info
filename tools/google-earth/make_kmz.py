@@ -21,6 +21,8 @@ Setup once: python -m venv tools/google-earth/.venv; tools/google-earth/.venv/Sc
 """
 import argparse
 import hashlib
+import json
+import math
 import os
 import re
 import shutil
@@ -46,12 +48,37 @@ p.add_argument("-H", "--heading", type=float, default=-30,
 p.add_argument("--view", default="44.996946,-74.899711,66,-100,60", metavar="LAT,LON,RANGE,HEADING,TILT",
                help="view when the file opens: latitude, longitude, distance (m), direction and tilt (degrees), as in "
                     "Google Earth's camera properties (default 44.996946,-74.899711,66,-100,60)")
+p.add_argument("-m", "--markers", default="O:/temp/google-earth/context/markers.json",
+               help="the .blend's marks (export_context.py), pinned on the map (default "
+                    "O:/temp/google-earth/context/markers.json; none if missing)")
 p.add_argument("--network", metavar="URL", default="https://tiles.lock21.info/downloads/google-earth",
                help="where the list and the parts are served (default https://tiles.lock21.info/downloads/google-earth)")
 a = p.parse_args()
 view_lat, view_lon, view_range, view_heading, view_tilt = (float(v) for v in a.view.split(","))
 look_at = (f"<LookAt><longitude>{view_lon}</longitude><latitude>{view_lat}</latitude><altitude>0</altitude>"
            f"<heading>{view_heading}</heading><tilt>{view_tilt}</tilt><range>{view_range}</range></LookAt>")
+
+# The .blend's marks on the map (Lock 21 Scuba Park, Christian, 2026-10-25): from their place in the .blend to latitude
+# and longitude, by the site anchor (the model's origin, at --lat/--lon) and the heading (the .blend's +Y turned -H)
+BLEND_ANCHOR = (-29.05, 21.70)
+marks = json.load(open(a.markers, encoding="utf-8")) if a.markers and os.path.exists(a.markers) else []
+
+
+def mark_lat_lon(location):
+    dx, dy = location[0] - BLEND_ANCHOR[0], location[1] - BLEND_ANCHOR[1]
+    h = math.radians(a.heading)
+    east = dx * math.cos(h) + dy * math.sin(h)
+    north = -dx * math.sin(h) + dy * math.cos(h)
+    return a.lat + north / 111132.0, a.lon + east / (111320.0 * math.cos(math.radians(a.lat)))
+
+
+def mark_placemark(mark):
+    lat, lon = mark_lat_lon(mark["location"])
+    return f"""  <Placemark>
+    <name>{mark["name"]}</name>
+    <description>{mark.get("what", "")}</description>
+    <Point><coordinates>{lon:.7f},{lat:.7f},0</coordinates></Point>
+  </Placemark>"""
 
 
 def read_mtl(path):
@@ -253,6 +280,7 @@ def write_network():
     <name>Écluse 21</name>
     <Point><coordinates>{a.lon},{a.lat},0</coordinates></Point>
   </Placemark>
+{newline.join(mark_placemark(m) for m in marks)}
   <Folder>
     <name>Zones</name>
 {newline.join(network_link(z) for z in zones)}
