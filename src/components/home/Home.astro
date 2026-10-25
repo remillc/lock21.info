@@ -89,10 +89,13 @@ const entries = (
     ? [
         { no: '01', title: 'Diving the site', text: 'Zones, depths, the current in the canal.', label: 'divers', href: '/decoupage-du-site' },
         { no: '02', title: 'The method', text: 'GoPro Hero6, Metashape, Blender.', label: 'photogrammetry', href: '/workflow/extraction-des-photos' },
+        // The problems section's first page (it has no index), Christian, 2026-10-25
+        { no: '03', title: 'The problems', text: 'Distortion, current, sharpness: what went wrong.', label: 'lessons', href: '/questions/alignement-chunks' },
       ]
     : [
         { no: '01', title: 'Plonger le site', text: 'Zones, profondeurs, courant du canal.', label: 'plongeurs', href: '/decoupage-du-site' },
         { no: '02', title: 'La méthode', text: 'GoPro Hero6, Metashape, Blender.', label: 'photogrammétrie', href: '/workflow/extraction-des-photos' },
+        { no: '03', title: 'Les problèmes', text: 'Distorsion, courant, netteté: ce qui a mal tourné.', label: 'leçons', href: '/questions/alignement-chunks' },
       ]
 ).map((e) => ({ ...e, href: localPath(e.href, lang) }))
 ---
