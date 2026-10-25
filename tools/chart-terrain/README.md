@@ -53,11 +53,16 @@ Move-Item -Force O:\temp\lock-21-publishing-chart.blend modeles\lock-21-publishi
   le plancher de l'écluse gardé plat dans 10 m du sol des zones (contourné), à son niveau (une surface lisse par le
   sol des zones à moins d'un mètre de sa hauteur type, 0,55 m: marches, rebords et une pièce profonde laissés de côté),
   en abaissant seulement le sol à moins de 2,5 à 4 m au-dessus (une berge garde sa hauteur); contre la face extérieure
-  d'un mur, le sol monte à son dessus s'il en est à moins de 3 m (les vides le long du mur); jamais plus haute que le
+  d'un mur, sur 4 m, le sol monte à son dessus (la surface la plus haute de la zone), à pleine hauteur sur les premiers
+  1,5 m, sauf le plancher de l'écluse (à moins d'un mètre de son niveau), qui reste à plat; sous le mur lui-même, à côté,
+  il monte aussi (caché), sinon des dents le long d'un mur en biais sur la grille; jamais plus haute que le
   dessus des zones plus 0,25 m par mètre;
 - **dans les zones à aplatir** (`FLATTEN` dans `fit_terrain.py`, des rectangles demandés par Christian, d'un seul côté
   des murs): à plat, au niveau du plancher de l'écluse, raccordé sur 1 m; le sol des zones gardé. Première: x −44 à −24,
   y 22 à 36, une butte de 9 m près du bout nord de la passerelle (2026-10-25);
+- **dans les zones « rejoindre le mur »** (`MEET` dans `fit_terrain.py`, des rectangles demandés par Christian, côté
+  extérieur des murs): le sol monte au dessus du mur quelle que soit sa hauteur, sur 6 m. Première: x −66 à 8, y 36,5
+  à 42, tout le côté nord du mur nord (2026-10-25);
 - **dans un mur ou un solide** (murs du contexte, maquettes): jamais au-dessus de son dessus (sous le mur d'une zone, le
   dessus du mur). Les remplissages (sédiments) sont à part: le sol n'est pas plafonné par eux et ne descend pas sous le
   niveau du plancher dans leur emprise (plafonné sous eux, il tombait dans leurs creux, en fosse).

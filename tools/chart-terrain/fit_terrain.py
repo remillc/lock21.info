@@ -12,7 +12,8 @@ fitted heights for fit_mesh.py --apply. Every vertex keeps its height, unless:
   and flat as its surroundings »); then the lock's floor kept flat within FLOOR_FLAT m of a zone's ground (lowering
   only), not below that level inside a solid's outline, the ground against a wall's outer side rising to meet its top
   where it is close to it; never higher than the zones' top plus TOP_RISE m per metre (met softly, SOFT m);
-- in the areas listed in FLATTEN (asked by Christian): flat, at the lock floor's level;
+- in the areas listed in FLATTEN (asked by Christian): flat, at the lock floor's level; in those of MEET, the ground
+  against a wall rises to its top whatever its height;
 - inside a wall or a solid (the context's walls and fillers, the mockups): never above its top.
 
 Usage:
@@ -167,18 +168,40 @@ z = np.where(solid_only, np.maximum(z, floor_level), z)
 under_filler = np.isfinite(filler) & ~on_ground & ~hidden & reached
 z = np.where(under_filler, np.maximum(z, floor_level), z)
 
-# Against a wall's outer side, no gap (Christian, 2026-10-25): within WALL_REACH m outside a zone's wall, where the ground
-# is no more than WALL_CLIMB m below the wall's top, it rises to meet the top (a smooth step); lower ground (the lock's
-# floor) does not climb
+# Against a wall's outer side, no gap (Christian, 2026-10-25, twice: « the same height as the zones there »): within
+# WALL_REACH m of a zone's wall, the ground rises to meet its top (a smooth step), however deep the gap; the lock's floor
+# (ground within FLOOR_NEAR m of the floor's level) does not climb, inside stays flat
 WALL_REACH = 4.0
-WALL_CLIMB = 3.0
+FLOOR_NEAR = 1.0
 wall_dist, (wy, wx) = ndimage.distance_transform_edt(~walls, return_indices=True)
 wall_dist = wall_dist * cell
-wall_top = low[wy, wx] - FLOOR_CLEAR
-u = np.clip(wall_dist / WALL_REACH, 0, 1)
+# (the wall's top: the zone's highest surface there; its lowest facing up can be a ledge low on its outer face)
+wall_top = np.where(np.isfinite(top[wy, wx]), top[wy, wx], low[wy, wx]) - FLOOR_CLEAR
+# (the wall's full height over the first MEET_FULL m, then the step: starting at the wall, the ground stayed short of
+# its top)
+MEET_FULL = 1.5
+u = np.clip((wall_dist - MEET_FULL) / (WALL_REACH - MEET_FULL), 0, 1)
 meet = 1 - u * u * (3 - 2 * u)
-climb = band & (wall_dist <= WALL_REACH) & (z >= wall_top - WALL_CLIMB) & (z < wall_top)
+# Areas where Christian asked the ground to meet the walls' top (rectangles x0, x1, y0, y1 in the .blend's frame, on the
+# walls' outer side): there it rises whatever its height (low, it passed for the lock's floor)
+MEET = [
+    (-66.0, 8.0, 36.5, 42.0),  # 2026-10-25: the north wall, its outer (north) side, from the stairs to its east end
+]
+in_meet = np.zeros(z.shape, bool)
+for x0, x1, y0, y1 in MEET:
+    in_meet |= (pos[..., 0] >= x0) & (pos[..., 0] <= x1) & (pos[..., 1] >= y0) & (pos[..., 1] <= y1)
+# (farther in those areas, MEET_REACH m: a trough stayed between the wall and the bank behind it)
+MEET_REACH = 6.0
+reach_ = np.where(in_meet, MEET_REACH, WALL_REACH)
+u = np.clip((wall_dist - MEET_FULL) / (reach_ - MEET_FULL), 0, 1)
+meet = 1 - u * u * (3 - 2 * u)
+climb = band & (wall_dist <= reach_) & (z < wall_top) & ((z - floor_level > FLOOR_NEAR) | in_meet)
 z = np.where(climb, meet * wall_top + (1 - meet) * z, z)
+# Under the wall itself, next to ground that climbed: up to its top too, hidden under it (left low, every other row along
+# a wall at a slant to the grid stayed down: teeth)
+wall_here_top = np.where(np.isfinite(top), top, low) - FLOOR_CLEAR
+climbed_near = ndimage.binary_dilation(climb, iterations=int(round(MEET_FULL / cell)) + 1)
+z = np.where(walls & climbed_near, np.maximum(z, wall_here_top), z)
 
 top_at = np.where(np.isfinite(top), top, np.where(np.isfinite(low), low, np.nan))
 far, (ty, tx) = ndimage.distance_transform_edt(~(zone_any & np.isfinite(top_at)), return_indices=True)
@@ -208,7 +231,7 @@ for x0, x1, y0, y1 in FLATTEN:
 # Inside walls and solids: never above their top
 # (where a wall of a zone covers the point, its top: a low filler inside a wall pulled the terrain under the wall's top
 # down to the filler's)
-solid_cap = np.where(walls, low, np.where(np.isfinite(solid), solid, np.inf)) - FLOOR_CLEAR
+solid_cap = np.where(walls, np.where(np.isfinite(top), top, low), np.where(np.isfinite(solid), solid, np.inf)) - FLOOR_CLEAR
 z = np.where(hidden, np.minimum(z, solid_cap), z)
 
 moved = np.abs(z - z0) > 0.01
