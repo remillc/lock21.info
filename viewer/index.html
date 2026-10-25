@@ -65,7 +65,12 @@
     </a>
     <!-- Full screen (the site's /modele/ page embeds the viewer in an iframe with allow="fullscreen"); main.js sets
          data-full while full screen, which shows the exit icon -->
-    <!-- « Ambiance sous-marine » (main.js, underwater.js): left of the full-screen button; selected (aria-pressed) while
+    <!-- Home (main.js): back to the start view, by a quick flight; between the full-screen and the underwater buttons
+         (Christian, 2026-10-25). Material Symbols « home » -->
+    <button class="home-button icon-button" type="button" aria-label="Vue de départ" data-tooltip="Vue de départ" hidden>
+      <svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
+    </button>
+    <!-- « Ambiance sous-marine » (main.js, underwater.js): left of the home button; selected (aria-pressed) while
          on. Material Symbols « scuba_diving » -->
     <button class="underwater-button icon-button" type="button" aria-label="Ambiance sous-marine" data-tooltip="Ambiance sous-marine" aria-pressed="false" hidden>
       <svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M160-40 96-88l114-152 31-178q3-24 19-42.5t41-24.5l379-115 80-160 120-120 40 40-100 116-60 184-200 140-234 74-46 126L160-40Zm-40-320q-33 0-56.5-23.5T40-440q0-33 23.5-56.5T120-520q33 0 56.5 23.5T200-440q0 33-23.5 56.5T120-360Zm236-196q-24 7-45.5-5.5T282-598q-7-24 5.5-46t36.5-28l182-48 31 116-181 48Z"/></svg>

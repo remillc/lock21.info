@@ -94,6 +94,7 @@ for (const [selector, label, tooltip] of [
   ['.underwater-button', 'underwater', 'underwater'],
   ['.fullscreen', 'fullscreen', 'fullscreenTitle'],
   ['.compass', 'compass', 'compass'],
+  ['.home-button', 'homeView', 'homeView'],
 ]) {
   const element = document.querySelector(selector)
   element.setAttribute('aria-label', t(label))
@@ -273,9 +274,9 @@ log('tile-set', {
 })
 
 // The view a visit starts from without ?cam= (same form: x,y,z of the camera, then of the point it looks at; scene
-// metres, y up), chosen by Christian on 2026-10-23 (was 2026-10-22's). To change it, place the camera where wanted and
+// metres, y up), chosen by Christian on 2026-10-25 (was 2026-10-23's). To change it, place the camera where wanted and
 // copy the numbers from the address bar (?cam=).
-const START_VIEW = [-25.48, 2.04, -18.51, -26.34, 1.88, -19.0]
+const START_VIEW = [-15.2, 2.04, -18.24, -19.2, 2.02, -18.26]
 // It was framed on a computer, about START_ASPECT wide for 1 high. A narrower frame (a phone: the /modele page's frame
 // is nearly square, the full screen tall) sees less of it across (the field of view is vertical): the camera steps
 // back along the same line of sight until it sees as much across, at most START_BACK times as far (farther, walls
@@ -1070,6 +1071,22 @@ const tour = createTour({
   },
 })
 tour.button.hidden = false
+// Home: straight back to the start view (START_VIEW, as at the start: stepped back on a narrow frame), at once
+// (Christian, 2026-10-25), the tour stopped if it was on. Diving, the swim starts again from there
+const homeButton = document.querySelector('.home-button')
+homeButton.hidden = false
+homeButton.addEventListener('click', () => {
+  tour.stop()
+  setSwimming(false)
+  const cam = startView(container.clientWidth / container.clientHeight)
+  camera.position.set(cam[0], cam[1], cam[2])
+  controls.target.set(cam[3], cam[4], cam[5])
+  controls.update()
+  setSwimming(underwater.on && !mobile)
+  updateAddress()
+  requestRender()
+  log('home', {})
+})
 if (params.get('tour') === '1') firstView.then(() => tour.start())
 function showSwimHelp() {
   try {

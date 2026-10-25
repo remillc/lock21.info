@@ -25,7 +25,7 @@ visionneuse.
 
 Le visiteur lance la RA de deux façons:
 
-- **dans le visualiseur 3D**, avec le bouton en forme de cube, à gauche du bouton plein écran. Il n'apparaît que sur
+- **dans le visualiseur 3D**, avec le bouton en forme de cube, à gauche du bouton du plongeur. Il n'apparaît que sur
   les téléphones et tablettes qui savent afficher la RA. Par défaut, il ouvre la version « sur une table »; avec
   `?ar=full` dans l'adresse de la page, la version « taille réelle »;
 - **depuis un ordinateur**, avec les deux codes QR de la section « Réalité augmentée » de la page `/modele`: on les

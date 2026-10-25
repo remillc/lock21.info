@@ -298,9 +298,14 @@ l21-loading.error .loading-label {
 .fullscreen[data-full='true'] .icon-exit {
   display: block;
 }
-/* « Ambiance sous-marine » (main.js): left of the full-screen button; filled while on (selected) */
-.underwater-button {
+/* Home (main.js): left of the full-screen button */
+.home-button {
   right: calc(max(16px, env(safe-area-inset-right)) + 56px);
+  bottom: max(16px, env(safe-area-inset-bottom));
+}
+/* « Ambiance sous-marine » (main.js): left of the home button; filled while on (selected) */
+.underwater-button {
+  right: calc(max(16px, env(safe-area-inset-right)) + 112px);
   bottom: max(16px, env(safe-area-inset-bottom));
 }
 .icon-button[aria-pressed='true'] {
@@ -313,7 +318,7 @@ l21-loading.error .loading-label {
    the right (showSeasonControl). Narrow screens: above the buttons' row */
 .underwater-tools {
   position: fixed;
-  right: calc(max(16px, env(safe-area-inset-right)) + 112px);
+  right: calc(max(16px, env(safe-area-inset-right)) + 168px);
   bottom: max(16px, env(safe-area-inset-bottom));
   display: flex;
   align-items: center;
@@ -366,14 +371,14 @@ l21-loading.error .loading-label {
 @media (max-width: 600px) {
   .underwater-tools {
     left: max(16px, env(safe-area-inset-left));
-    right: calc(max(16px, env(safe-area-inset-right)) + 168px);
+    right: calc(max(16px, env(safe-area-inset-right)) + 224px);
     bottom: max(16px, env(safe-area-inset-bottom));
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
   }
   .ar-button[hidden] ~ .underwater-tools {
-    right: calc(max(16px, env(safe-area-inset-right)) + 112px);
+    right: calc(max(16px, env(safe-area-inset-right)) + 168px);
   }
   .underwater-tools .lamp-button {
     order: -1;
@@ -400,7 +405,7 @@ l21-loading.error .loading-label {
 
 /* Augmented reality (main.js, phones): left of the underwater button */
 .ar-button {
-  right: calc(max(16px, env(safe-area-inset-right)) + 112px);
+  right: calc(max(16px, env(safe-area-inset-right)) + 168px);
   bottom: max(16px, env(safe-area-inset-bottom));
 }
 
@@ -1116,7 +1121,7 @@ l21-tooltip[data-shown='true'] {
    label-large; state layers; the container the other buttons' tonal colour */
 .tour-button {
   position: fixed;
-  right: calc(max(16px, env(safe-area-inset-right)) + 108px);
+  right: calc(max(16px, env(safe-area-inset-right)) + 164px);
   bottom: calc(max(16px, env(safe-area-inset-bottom)) - 4px);
   display: flex;
   align-items: center;
@@ -1136,7 +1141,7 @@ l21-tooltip[data-shown='true'] {
   -webkit-tap-highlight-color: transparent;
 }
 .ar-button:not([hidden]) ~ .tour-button {
-  right: calc(max(16px, env(safe-area-inset-right)) + 164px);
+  right: calc(max(16px, env(safe-area-inset-right)) + 220px);
 }
 /* Underwater the season and the lamp take its place: above the row, at the right edge (Christian, 2026-10-24: the tour
    in dive mode too) */

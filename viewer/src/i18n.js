@@ -48,6 +48,7 @@ const TEXTS = {
     fullscreenExit: 'Quitter le plein écran',
     compass: 'Boussole (la pointe rouge indique le nord magnétique)',
     compassWest: 'O',
+    homeView: 'Vue de départ',
 
     // Loading indicator (loading.js)
     loading: 'Chargement',
@@ -169,6 +170,7 @@ const TEXTS = {
     fullscreenExit: 'Exit full screen',
     compass: 'Compass (the red tip points to magnetic north)',
     compassWest: 'W',
+    homeView: 'Start view',
 
     // Loading indicator (loading.js)
     loading: 'Loading',
