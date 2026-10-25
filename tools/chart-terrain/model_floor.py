@@ -1,12 +1,13 @@
 """The model's floor under the chart terrain's grid (TODO #73): read-only, from the publishing .blend.
 
 For each point of the height grid of chart_terrain.py, set in the .blend by the « chart frame » empty (linked from the
-chart terrain's .blend: its place and turn, overrides included), a ray down from above meets the published model: the
-zones (« zone N » objects, the boolean cutters excluded) and the context (blend_state.context_objects: the `terrain`
-collection and the fillers) and the mockups, as rendered (modifiers applied, Show in Render only). The lowest surface
-facing up met is the floor there (the first could be a wall's top; a wall's bottom face, facing down, is not a floor);
-none: NaN. The zones' own lowest surface too (floor_zones):
-chart_terrain.py keeps the chart terrain below the model, and just under the zones (no gap between them).
+chart terrain's .blend: its place and turn, overrides included), rays down from above meet the published model, as
+rendered (modifiers applied, Show in Render only), in two kinds of parts:
+- the zones (« zone N » objects, the boolean cutters excluded), scanned open surfaces: their lowest surface facing up
+  (floor_zones), which the ground meets from below;
+- the solids, the context's walls and fillers (blend_state.context_objects) and the mockups: their top (solid_top), which
+  the ground never rises above.
+« terrain - SOS data » is left out: the chart terrain replaces it. None: NaN.
 
 The .blend is never saved.
 
@@ -42,50 +43,63 @@ frame = bpy.data.objects.get("chart frame")
 to_world = frame.matrix_world.copy() if frame else Matrix.Translation((-29.05, 21.70, 0)) @ Matrix.Rotation(-0.5236, 4, 'Z')
 
 depsgraph = bpy.context.evaluated_depsgraph_get()
+visible = lambda o: o.type == 'MESH' and not o.hide_render and all(not c.hide_render for c in o.users_collection)
+# Not the coarse terrain the chart terrain replaces (Christian hides it, 2026-10-25: the chart terrain kept below it
+# left gaps against the zones)
+REPLACED = {"terrain - SOS data"}
+# Two kinds of parts (Christian, 2026-10-25): the zones, scanned open surfaces, that the ground meets from below (their
+# lowest surface facing up); the solids, the context's walls, the fillers and the mockups (boxes), that the ground may
+# run into unseen but never rise above (their top; following their lowest faces made hollows, their tops plateaus)
+zones = [o for o in bpy.data.objects if re.match(r"^zone \d+", o.name) and visible(o)]
 mockups = bpy.data.collections.get("mockups")
-model = ([o for o in bpy.data.objects if o.type == 'MESH' and re.match(r"^zone \d+", o.name)] + context_objects()
-         + ([o for o in mockups.all_objects if o.type == 'MESH'] if mockups else []))
-model = [o for o in model if not o.hide_render and all(not c.hide_render for c in o.users_collection)]
-trees = []
-is_zone = [bool(re.match(r"^zone \d+", o.name)) for o in model]
-for ob in model:
-    evaluated = ob.evaluated_get(depsgraph)
-    mesh = evaluated.to_mesh()
-    world = evaluated.matrix_world
-    verts = [world @ v.co for v in mesh.vertices]
-    trees.append(BVHTree.FromPolygons(verts, [tuple(f.vertices) for f in mesh.polygons]))
-    evaluated.to_mesh_clear()
-print(f"[floor] {len(model)} objects: {', '.join(o.name for o in model)}", flush=True)
+solids = [o for o in context_objects() + ([o for o in mockups.all_objects] if mockups else [])
+          if visible(o) and o.name not in REPLACED]
+
+
+def trees_of(objects):
+    trees = []
+    for ob in objects:
+        evaluated = ob.evaluated_get(depsgraph)
+        mesh = evaluated.to_mesh()
+        world = evaluated.matrix_world
+        trees.append(BVHTree.FromPolygons([world @ v.co for v in mesh.vertices], [tuple(f.vertices) for f in mesh.polygons]))
+        evaluated.to_mesh_clear()
+    return trees
+
+
+zone_trees, solid_trees = trees_of(zones), trees_of(solids)
+print(f"[floor] zones: {', '.join(o.name for o in zones)}; solids: {', '.join(o.name for o in solids)}", flush=True)
 
 TOP = 80.0
 down = Vector((0, 0, -1))
-floor = np.full((rows, cols), np.nan, np.float32)
 floor_zones = np.full((rows, cols), np.nan, np.float32)
+solid_top = np.full((rows, cols), np.nan, np.float32)
 for r in range(rows):
     for c in range(cols):
         at = to_world @ Vector(((c - ox) * cell, -(r - oy) * cell, 0))
         origin = Vector((at.x, at.y, TOP))
-        # The lowest surface under the point: the ray goes on through every surface (the first one met can be the top
-        # of a wall: the terrain then rose beside the walls in teeth, Christian, 2026-10-25)
-        best = zone_best = None
-        for tree, zone in zip(trees, is_zone):
+        # The zones' lowest surface facing up: the ray goes on through every surface (the first one met can be the top
+        # of a wall; a face turned down, under a wall, is no floor)
+        low = None
+        for tree in zone_trees:
             start = origin.copy()
             while True:
                 hit = tree.ray_cast(start, down)
                 if hit[0] is None:
                     break
-                # Surfaces facing up only: a floor (the bottom faces of walls that go deep under the ground, facing down,
-                # made the floor metres too low and left a gap beside the zones, Christian, 2026-10-25)
-                if hit[1].z > 0.2:
-                    if best is None or hit[0].z < best:
-                        best = hit[0].z
-                    if zone and (zone_best is None or hit[0].z < zone_best):
-                        zone_best = hit[0].z
+                if hit[1].z > 0.2 and (low is None or hit[0].z < low):
+                    low = hit[0].z
                 start = hit[0] + down * 1e-3
-        if best is not None:
-            floor[r, c] = best
-        if zone_best is not None:
-            floor_zones[r, c] = zone_best
-np.savez_compressed(a.out, floor=floor, floor_zones=floor_zones)
-print(f"[floor] {int(np.isfinite(floor).sum()):,} of {rows * cols:,} grid points over the model, "
-      f"{int(np.isfinite(floor_zones).sum()):,} over the zones -> {a.out}", flush=True)
+        if low is not None:
+            floor_zones[r, c] = low
+        # The solids' top: the first surface met
+        top = None
+        for tree in solid_trees:
+            hit = tree.ray_cast(origin, down)
+            if hit[0] is not None and (top is None or hit[0].z > top):
+                top = hit[0].z
+        if top is not None:
+            solid_top[r, c] = top
+np.savez_compressed(a.out, floor_zones=floor_zones, solid_top=solid_top)
+print(f"[floor] {int(np.isfinite(floor_zones).sum()):,} grid points under the zones, {int(np.isfinite(solid_top).sum()):,} "
+      f"under the solids -> {a.out}", flush=True)

@@ -1,23 +1,28 @@
 # Terrain d'après une carte (TODO #73)
 
-Refait le terrain des abords de l'écluse 21 d'après une capture de la carte de l'application Boating
+Refait le terrain des abords de l'écluse 21 d'après une capture de la carte de l'application Navionics Boating
 (`C:\Users\chris\Downloads\Screenshot_20261025_073716_Boating.jpg`, 2026-10-25): lignes de profondeur, sondes en
-pieds, terre en jaune, haut-fond en vert. Le résultat est un **nouveau** fichier, `O:\modeles\chart-terrain\lock-21-chart-terrain.blend`:
-le `.blend` de publication n'est ni ouvert ni modifié.
+pieds, terre en jaune, haut-fond en vert. Le terrain vit **dans le `.blend` de publication**, collection `chart terrain`
+(pas de fichier à part: Christian, 2026-10-25). Il remplace « terrain - SOS data », que Christian masque.
 
 ## Commandes
 
+Blender fermé (le `.blend` de publication est ouvert sans interface, puis remplacé):
+
 ```powershell
+$blender = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe"
 # 1. La grille des hauteurs (Python du système: numpy, scipy, scikit-image, Pillow), 35 s
 python tools\chart-terrain\chart_terrain.py
-# 1b. Le plancher du modèle sur cette grille (lecture seule du .blend de publication), 15 s, puis refaire 1
-& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\model_floor.py
+# 2. Le modèle sous cette grille (lecture seule du .blend), 15 s, puis refaire la grille avec lui
+& $blender -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\model_floor.py
 python tools\chart-terrain\chart_terrain.py
-# 2. Le .blend (Blender, sans interface)
-& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\chart-terrain\make_chart_terrain.py
+# 3. Le terrain dans une copie du .blend, puis la copie à la place du .blend
+& $blender -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\make_chart_terrain.py
+Move-Item -Force O:\temp\lock-21-publishing-chart.blend modeles\lock-21-publishing.blend
 ```
 
-Sorties intermédiaires dans `O:\temp\chart-terrain\`: `heights.npz` (la grille) et `heights-preview.png` (un aperçu).
+L'étape 2 n'est à refaire que si le modèle a changé (zones, murs, remplissages, maquettes). Sorties intermédiaires dans
+`O:\temp\chart-terrain\`: `heights.npz` (la grille), `heights-preview.png` (un aperçu), `floor.npz` (le modèle).
 
 ## Données
 
@@ -36,47 +41,39 @@ du nombre, profondeur en pieds) et les zones à ignorer (boutons et barres de l'
    le haut-fond fixent les profondeurs. Moindres carrés, l'intervalle étant lui-même une inconnue: compter les lignes
    ne suffit pas, elles se confondent sur les talus raides. Une bande reste à 8 pi au plus de la première surface
    (`-b`): au-delà, des fentes étroites.
-4. **La surface finale, sans gradins:** chaque ligne à la profondeur de sa courbe (la moyenne de ses deux bandes),
-   le milieu de chaque bande à la profondeur de la bande, linéaire entre les deux: le fond descend régulièrement d'une
-   ligne à l'autre (des bandes plates se rencontraient en marches, Christian, 2026-10-25), sur une grille de 1 m (`-c`).
+4. **La surface, sans gradins:** chaque ligne à la profondeur de sa courbe (la moyenne de ses deux bandes), le milieu
+   de chaque bande à la profondeur de la bande, linéaire entre les deux: le fond descend régulièrement d'une ligne à
+   l'autre (des bandes plates se rencontraient en marches), sur une grille de 1 m (`-c`).
 5. **Le rivage, sans marches:** une plage sur le haut-fond (de 0,5 pi au bord de l'eau à 0 sur 6 m), puis la terre
    qui monte à sa hauteur sur 15 m.
-6. **Jamais au-dessus du plancher du modèle** (Christian, 2026-10-25), si `model_floor.py` l'a mesuré (`-f`): 5 cm
-   sous lui là où est le modèle (zones, contexte publiés et maquettes, tels que rendus). Le plancher est la surface la
-   plus basse du modèle sous chaque point (la première rencontrée pouvait être le haut d'un mur: le terrain montait en
-   dents le long des murs), et chaque point prend le plus bas de ses 8 voisins (le terrain entre les points de la grille
-   reste dessous aussi). Seules les surfaces tournées vers le haut comptent: la face du dessous d'un mur qui s'enfonce
-   sous le sol le plaçait des mètres trop bas, et laissait un vide à côté des zones; au-delà de son bord, la limite remonte de
-   0,3 m par mètre, floue et rejointe en douceur, pour retrouver les hauteurs de la carte sans falaise.
-7. **Contre les zones, sans vide** (Christian, 2026-10-25): là où une zone est le plancher le plus bas (rien du modèle
-   dessous, l'obscurité vue par ses trous et sous ses bords), le terrain suit la zone, 5 cm dessous, en montant ou en
-   descendant, et rejoint ses propres hauteurs sur 8 m au-delà de son bord. Là où le contexte est sous une zone, c'est
-   lui qui comble, et le terrain de la carte reste dessous. Vérifié tous les 25 cm: au bord des zones, l'écart médian
-   est de −0,05 m (les grandes chutes restantes sont la face du mur nord); 9 points sur 299 023 dépassent le modèle
-   visiblement (jusqu'à 1,4 m), là où le terrain enjambe la marche entre une zone et le contexte plus bas. Sous le modèle,
-   le terrain de la carte porte l'empreinte des facettes et des murs du modèle: cachée par lui.
+6. **Contre le modèle** (`-f`, mesuré par `model_floor.py`, tel que rendu, sans « terrain - SOS data »), deux sortes de
+   parties (Christian, 2026-10-25):
+   - **les zones**, surfaces scannées ouvertes: le sol les rejoint par-dessous, 5 cm sous leur surface la plus basse
+     tournée vers le haut, en montant ou en descendant (ni au-dessus d'elles, ni de vide sous leurs bords ou par leurs
+     trous); les trous d'une zone prennent le plancher voisin; au-delà de son bord, le sol rejoint ses propres hauteurs
+     sur 8 m. Chaque point prend le plus bas de ses 8 voisins: le sol entre les points de la grille reste dessous aussi;
+   - **les solides** (murs et remplissages du contexte, maquettes): le sol ne dépasse jamais leur dessus; dedans, il
+     est caché. (Suivre leurs faces les plus basses creusait des vides; suivre leur dessus, des plateaux.)
 
 Résultat sur la carte du 2026-10-25: 1 112 bandes, intervalle trouvé de 1,48 pi; écart aux sondes médian 0,4 pi,
-3,5 pi au pire; 550 × 302 m; 37 198 points sous le modèle.
+3,5 pi au pire; 550 × 302 m; 1 199 points sous les zones, 423 gardés sous le dessus des solides.
 
-## Le .blend (`make_chart_terrain.py`)
+## Dans le .blend (`make_chart_terrain.py`)
 
+- Remplace la collection `chart terrain` (et, au besoin, l'ancien lien vers un fichier à part): à la racine de la
+  scène, hors de la collection `terrain`, elle n'est pas publiée (`blend_state.py`, `context_objects`; `model:check`
+  le confirme).
 - Le maillage, nord en haut, en mètres, son origine celle de la carte, sous un vide « chart frame » qui le place dans le
-  repère du `.blend` de publication: à l'ancre du site (−29,05; 21,70) et tourné de −30° (le cap du modèle,
-  `make_kmz.py -H`). Déplacer ou tourner ce vide pour caler la carte sur le modèle.
+  repère du `.blend`: à l'ancre du site (−29,05; 21,70) et tourné de −30° (le cap du modèle, `make_kmz.py -H`).
 - Hauteurs dans ce repère: la surface de l'eau à 55 pi (16,764 m) au-dessus du niveau de référence de l'écluse
   (`SURFACE_Y` du visualiseur), un plan « water surface (55 ft) » pour repère (fil de fer, pas rendu).
-
-## Dans le .blend de publication
-
-La collection `chart terrain` y est **liée** (2026-10-25: Fichier > Lier, par chemin absolu, le `.blend` étant sur un
-autre disque): refaire `make_chart_terrain.py` met à jour le `.blend` de publication à sa prochaine ouverture. Elle est
-à la racine de la scène, hors de la collection `terrain`: elle n'est pas publiée (`blend_state.py`, `context_objects`;
-`model:check` le confirme). Pour la caler, ajouter une surcharge de bibliothèque (Library Override) sur « chart frame ».
+- Son matériau, « chart terrain »: une copie de « terrain - SOS (riprap on the banks) » (moules, enrochement sur les
+  pentes), sa carte UV calculée comme celle de « terrain - SOS data » (la position sur 1,5 m: les textures se
+  continuent de l'un à l'autre), **vert hors de l'eau** (au-dessus de 16,764 m, fondu sur 45 cm).
 
 ## Limites
 
-- La croix verte est prise pour l'ancre du site: à vérifier en calant le terrain sur le modèle.
+- La croix verte est prise pour l'ancre du site.
 - La terre est plate (la carte ne donne pas son relief), le haut-fond à 0 pi.
 - La carte montre aussi l'écluse elle-même (les bosses de 36 à 44 pi à l'est du drapeau): le terrain les contient,
-  à découper là où le modèle photogrammétrique les remplace.
+  sous les zones.

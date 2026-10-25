@@ -5,8 +5,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - A terrain from the Boating app's chart of the lock's surroundings (TODO #73, `tools/chart-terrain/`): the depth
-  contours and soundings turned into a 550 × 302 m height grid, in a new .blend (`O:\modeles\chart-terrain\`), set in
-  the publishing .blend's frame.
+  contours and soundings turned into a 550 × 302 m height grid, in the publishing .blend (collection `chart terrain`,
+  the riprap material, green above the water), against the zones without gaps and never above the model.
 - 3D viewer in the site's fonts and colours (TODO #39): Archivo for text and titles, JetBrains Mono for labels and
   data (self-hosted, @fontsource), the site's dark tokens for its colours.
 - Google Earth: the model at 700,000 triangles (was 600,000: it still opens in Google Earth Pro); the downloads rebuilt
