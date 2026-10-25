@@ -276,16 +276,19 @@ const entries = (
     text-decoration: none;
   }
   .filled {
-    background: var(--md-sys-color-primary);
+    background-color: var(--md-sys-color-primary);
     color: var(--md-sys-color-on-primary);
   }
   .outlined {
     border: 2px solid var(--md-sys-color-primary);
     color: var(--md-sys-color-primary);
   }
+  /* MD3 hover state layer: a layer over the whole surface, under its content (an inset shadow covered only 100 px from
+     each edge: the cards' middle stayed bare, a light rectangle, Christian 2026-10-25); their colour is a
+     background-color, so the layer adds to it */
   .button:hover,
   .card:hover {
-    box-shadow: inset 0 0 0 100px color-mix(in srgb, currentColor 8%, transparent); /* MD3 hover state layer */
+    background-image: linear-gradient(color-mix(in srgb, currentColor 8%, transparent) 0 0);
   }
 
   .panel {
@@ -408,13 +411,13 @@ const entries = (
     padding: 1.5rem;
     border: 2px solid var(--md-sys-color-outline);
     border-radius: var(--md-sys-shape-large-increased);
-    background: var(--md-sys-color-surface-container-lowest);
+    background-color: var(--md-sys-color-surface-container-lowest);
     color: var(--md-sys-color-on-surface);
     text-decoration: none;
   }
   :global([data-theme='dark']) .card,
   :global(:root:not([data-theme='light'])) .card {
-    background: var(--md-sys-color-surface-container);
+    background-color: var(--md-sys-color-surface-container);
   }
   .card-no {
     font-family: var(--lk-font-data);

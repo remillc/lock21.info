@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Home page: hovering a card shades all of it (a light rectangle stayed in its middle).
 - Home page: the « L'histoire » card (no history page planned; it led to the zone map) replaced by « Les problèmes »,
   leading to the problems encountered.
 - 3D viewer: a pan no longer makes the camera jump forward (it used to come in front of any surface between it and the
