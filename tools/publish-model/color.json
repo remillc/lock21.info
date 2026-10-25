@@ -1,0 +1,17 @@
+{
+  "_doc": "Colour correction of the zones' textures before tiling (TODO #5; color_zone.py, called by tile_zone.ps1). default: color_correct.py's options for every zone (target R,G,B; strength; alpha); zones.<id>: off (false: the texture as it is), the same options to override, and patches: color_patch.py's local corrections (box xmin,xmax,ymin,ymax,zmin,zmax in the OBJ's axes, y up; facing x,y,z; feather m; ratios G/R,B/R).",
+  "default": { "target": [1, 0.93, 0.78], "strength": 1, "alpha": 1 },
+  "zones": {
+    "zone-3": {
+      "patches": [
+        {
+          "what": "the face of the wall with the three sluice gates, more olive than the side walls (Christian, 2026-10-25); not the gates' inside",
+          "box": [-35.2, -30.3, 0.7, 5.2, -19.7, -13.6],
+          "facing": [1, 0, 0],
+          "feather": 0.4,
+          "ratios": [0.86, 0.75]
+        }
+      ]
+    }
+  }
+}

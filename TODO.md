@@ -18,6 +18,11 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   view (phone 462 of 450 MB with 15 tiles, desktop 1201 of 1200 MB), so turning or moving loads no new detail, during
   a gesture or after it
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
+  - In trial (2026-10-25): `color_zone.py` with `color.json` (whole-texture balance, `color_correct.py`, and local
+    patches, `color_patch.py`), to be called by `tile_zone.ps1` before tiling; every zone corrected in the test root
+    `O:\temp\color-test\tiles` for a before/after comparison. The root cause is upstream: the colour grading at frame
+    extraction in DaVinci Resolve (uneven from one dive to the next); a better grade there, then only the texture
+    rebuilt in Metashape (same photos' names, the alignment and mesh kept), would replace these corrections.
 - [ ] #68 Yellow perch schools in the underwater view
 
 ### Pipeline
