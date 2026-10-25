@@ -27,8 +27,6 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   looking around and the orbit around the pivot: up and down turn the other way).
 - 3D viewer: the dive light's beam as the Light & Motion Sola Dive 1200's: a 12° hotspot in a 60° spill 5 times weaker
   (was 16° and 40°, 3 times weaker).
-- 3D viewer: no wet look underwater (its sky reflections and highlights don't belong under the water); unchanged in
-  the air.
 - 3D viewer, the curious bass: turning the head toward it (to light it) no longer sends it off nor, with ?bass=1,
   makes it vanish; it is gone only once out of sight (out of the view or beyond the visibility), never in plain view.
   Its flight faster: 3.3 m/s once lined up (was 2.2), and 60 % of that while it turns away (was 30 %), so about three
