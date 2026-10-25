@@ -4,7 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- 3D viewer: the dive light's beam 10 % wider (hotspot 17.6°, spill 44° across).
+- 3D viewer: the dive light's beam as the Light & Motion Sola Dive 1200's: a 12° hotspot in a 60° spill 5 times weaker
+  (was 16° and 40°, 3 times weaker).
 - 3D viewer: no wet look underwater (its sky reflections and highlights don't belong under the water); unchanged in
   the air.
 - 3D viewer, the curious bass: turning the head toward it (to light it) no longer sends it off nor, with ?bass=1,
