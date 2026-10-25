@@ -4,7 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- 3D viewer: the wheel's zoom at a fifth (it was far too strong).
+- 3D viewer: the wheel's zoom at a tenth (it was far too strong).
 - 3D viewer, standard view: the left button's vertical axis back as it was (the background follows the pointer up and
   down); diving keeps it inverted.
 - `tools/publish-model/check_model.mjs`: checks a downloadable model before it goes online (one UV set per object, a
