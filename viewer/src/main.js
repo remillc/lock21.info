@@ -569,6 +569,8 @@ const look = {
   tone: ['neutral', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'agx',
   exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.2,
   wet: wetness(params.has('wet') ? params.get('wet') : 0.15),
+  // Fine relief from the photo's brightness (?bump=0..3, see litMaterial)
+  bump: params.has('bump') ? Number(params.get('bump')) : 1,
   // « Ambiance sous-marine » (?underwater=1) and its season (?season=0..3: winter, spring, summer, autumn; default
   // summer, the diving season), see underwater.js
   underwater: params.get('underwater') === '1',
@@ -729,6 +731,9 @@ function addDespill(shader) {
 // darker and more saturated. The photos already hold the lamps' real reflections: keep it subtle.
 // Not underwater (Christian, 2026-10-25): everything there is wet, and the film's sky reflections and highlights
 // don't belong under the water
+// The photo's relief: its height at full contrast (m, ?bump=1: 2.4 cm, chosen on zone 3's wooden floor, 2026-10-25:
+// it brings out the wood's grain; from about twice that, the mussels and the sediment crackle)
+const BUMP = 0.024
 function litMaterial(surface, mesh, normalMap, sky) {
   const wet = surface.zoneId && !underwater.on ? look.wet : 0
   if (!normalMap && !mesh.geometry.attributes.normal) mesh.geometry.computeVertexNormals()
@@ -791,11 +796,30 @@ function litMaterial(surface, mesh, normalMap, sky) {
           '\nif (dot(normal, nonPerturbedNormal) < 0.0) normal = -normal;',
       )
     }
+    // Fine relief from the photo (?bump=0..3, zones only; Christian, 2026-10-25: the wooden floor lacked roughness):
+    // the photogrammetry's mesh, and so the relief baked from it, is smooth where the wood's grain, the planks' seams
+    // and the nail holes are only in the photo. Its brightness taken as a height (darker: lower), BUMP m at full
+    // contrast, the normal tilted by its slope on screen (three.js's bump mapping, from screen derivatives)
+    if (surface.zoneId && look.bump > 0) {
+      // (before the emissive part: the normal map's own replacement above has taken out its include)
+      shader.fragmentShader = shader.fragmentShader.replace('#include <emissivemap_fragment>', `{
+          float bumpHeight = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722)) * ${(BUMP * look.bump).toFixed(5)};
+          vec2 bumpSlope = vec2(dFdx(bumpHeight), dFdy(bumpHeight));
+          vec3 bumpX = dFdx(-vViewPosition);
+          vec3 bumpY = dFdy(-vViewPosition);
+          vec3 bumpR1 = cross(bumpY, normal);
+          vec3 bumpR2 = cross(normal, bumpX);
+          float bumpDet = dot(bumpX, bumpR1);
+          vec3 bumpGrad = sign(bumpDet) * (bumpSlope.x * bumpR1 + bumpSlope.y * bumpR2);
+          normal = normalize(abs(bumpDet) * normal - bumpGrad);
+        }
+        #include <emissivemap_fragment>`)
+    }
     underwater.patchShader(shader)
   }
   // The patches depend on these values (the wetness is written into the shader): one compiled program per
   // combination (three.js would otherwise reuse the first one, its cache key being the function's source)
-  material.customProgramCacheKey = () => `lit-${sky}-${Boolean(normalMap)}-${Boolean(surface.zoneId)}-${wet.toFixed(3)}-${look.saturation.toFixed(3)}-${look.contrast.toFixed(3)}`
+  material.customProgramCacheKey = () => `lit-${sky}-${Boolean(normalMap)}-${Boolean(surface.zoneId)}-${look.bump.toFixed(2)}-${wet.toFixed(3)}-${look.saturation.toFixed(3)}-${look.contrast.toFixed(3)}`
   return withShadowCascades(material)
 }
 
@@ -1257,6 +1281,7 @@ live.exposure = (v) => { look.exposure = Number(v); updateTone() }
 live.saturation = (v) => { look.saturation = saturationOf(v); rebuildMaterials() }
 live.contrast = (v) => { look.contrast = contrastOf(v); rebuildMaterials() }
 live.wet = (v) => { look.wet = wetness(v); rebuildMaterials(); updateEnvironment() }
+live.bump = (v) => { look.bump = Number(v); rebuildMaterials() }
 live.light = (v) => { look.light = v.split(',').map(Number); updateLights() }
 
 // Colour balance between zones. The water tints each zone differently (yellow-green, more or less dark,

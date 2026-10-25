@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: a fine relief drawn from the photo (Christian, 2026-10-25: the wooden floor lacked roughness): the
+  photogrammetry's mesh, and the relief baked from it, are smooth where the wood's grain and the planks' seams are only
+  in the photo; its brightness taken as a height (2.4 cm at full contrast) tilts the zones' normals (bump mapping).
+  Settings « Relief fin » (`?bump=0..3`, 1 by default).
 - 3D viewer: the crayfish dances (Christian, 2026-10-25, after Family Guy's dancing lobster): in its threat posture,
   once the diver has kept still for 8 to 12 s, about one time in 3.5 (one draw each time the diver stops before it),
   it stands up on its rear legs, plays the « Iraq lobster » GIF, then
