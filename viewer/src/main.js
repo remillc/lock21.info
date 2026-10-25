@@ -273,9 +273,9 @@ log('tile-set', {
 })
 
 // The view a visit starts from without ?cam= (same form: x,y,z of the camera, then of the point it looks at; scene
-// metres, y up), chosen by Christian on 2026-10-23 (was 2026-10-22's). To change it, place the camera where wanted and
+// metres, y up), chosen by Christian on 2026-10-25 (was 2026-10-23's). To change it, place the camera where wanted and
 // copy the numbers from the address bar (?cam=).
-const START_VIEW = [-25.48, 2.04, -18.51, -26.34, 1.88, -19.0]
+const START_VIEW = [-15.2, 2.04, -18.24, -19.2, 2.02, -18.26]
 // It was framed on a computer, about START_ASPECT wide for 1 high. A narrower frame (a phone: the /modele page's frame
 // is nearly square, the full screen tall) sees less of it across (the field of view is vertical): the camera steps
 // back along the same line of sight until it sees as much across, at most START_BACK times as far (farther, walls

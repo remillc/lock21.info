@@ -6,6 +6,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 - 3D viewer: a home button (between full screen and the diver's button) jumps straight back to the start view;
   it stops the guided tour if it is on, and in dive mode the swim goes on from there.
+- 3D viewer: a new start view (Christian, 2026-10-25), at `cam=-15.20,2.04,-18.24,-19.20,2.02,-18.26`.
 
 ## 0.14.0 - 2026-10-24
 
