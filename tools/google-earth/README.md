@@ -37,8 +37,8 @@ lock21.info`.
 
 - **GLB:** le champ `asset.copyright` de glTF, et `asset.extras.lock21`: titre, auteur, licence, crédit à citer, source,
   et la **position de l'origine** (le modèle n'est pas géoréférencé: glTF n'a pas de coordonnées terrestres). L'origine
-  (0, 0, 0) est l'ancre du site, à 44,996817° N, 74,89995° O (WGS 84); axes glTF: +Y vers le haut, −Z vers le nord, +X
-  vers l'est; mètres; y = 0 au niveau de référence de l'écluse. Écrit par `glb_metadata.py`, que `make_model.py` appelle
+  (0, 0, 0) est l'ancre du site, à 44,996827° N, 74,899683° O (WGS 84); axes glTF: +Y vers le haut, −Z vers le côté
+  du mur nord (30° à l'ouest du nord vrai), +X à 60°; mètres; y = 0 au niveau de référence de l'écluse. Écrit par `glb_metadata.py`, que `make_model.py` appelle
   après chaque export; seul, il marque un GLB existant (`python glb_metadata.py <fichier.glb>`).
 - **KMZ et KML:** dans la description du KMZ téléchargé, de la liste et de chaque partie, et dans chaque modèle COLLADA
   (`<contributor>`: auteur, copyright, source).
@@ -56,8 +56,8 @@ partent d'abord, la liste ensuite (cache de 5 min), les parties qui n'y sont plu
 fichier voient la zone à la prochaine ouverture. Ni le KMZ du site ni le site ne changent (le KMZ ne contient que
 l'adresse de la liste): pas de déploiement.
 
-**Vue d'arrivée:** réglée dans Google Earth Pro (2026-10-20): 44,996863° N, 74,899940° O, distance 66 m, direction
-−70°, inclinaison 60°. `make_kmz.py --view lat,lon,distance,direction,inclinaison` la change (valeurs des propriétés
+**Vue d'arrivée:** réglée dans Google Earth Pro (2026-10-20): distance 66 m, direction −70°, inclinaison 60°; tournée et
+déplacée avec le modèle depuis (2026-10-25): 44,996873° N, 74,899673° O, direction −100°. `make_kmz.py --view lat,lon,distance,direction,inclinaison` la change (valeurs des propriétés
 de la caméra de Google Earth).
 
 ## Commandes
@@ -142,8 +142,8 @@ Essais sur la zone 12 seule (2026-10-19, Google Earth Pro 7.3.6):
   de septembre 1988 (déclinaison −14,33°, NOAA), elle donnait −44,3°, qui paraissait faux dans Google Earth. La vue
   d'arrivée tourne avec le modèle (−70° → −100°). Le visualiseur 3D a une boussole (nord magnétique d'aujourd'hui,
   déclinaison −12,87°).
-- **Position:** les coordonnées (44°59.809′ N, 74°53.997′ O) épinglent le **centre de l'ensemble des zones**, figé au
-  2026-10-19 comme **ancre du site**: (−29,05; 21,70) dans le repère du `.blend`, en mètres (zones 1, 2, 3, 4, 7, 8,
+- **Position:** les coordonnées (44°59.810′ N, 74°53.981′ O, données par Christian le 2026-10-25; avant: 44°59.809′ N,
+  74°53.997′ O) épinglent le **centre de l'ensemble des zones**, figé au 2026-10-19 comme **ancre du site**: (−29,05; 21,70) dans le repère du `.blend`, en mètres (zones 1, 2, 3, 4, 7, 8,
   10, 11, 12 et 13: 70,6 × 38,0 m). Figé, pour que les zones ajoutées plus tard gardent leur place au lieu de déplacer
   toute l'écluse.
 

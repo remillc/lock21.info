@@ -37,15 +37,15 @@ COPYRIGHT = copyright_line()
 p = argparse.ArgumentParser(prog="make_kmz.py", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 p.add_argument("-d", "--dir", required=True, help="folder of <name>.obj/.mtl/.jpg (make_model.py output)")
 p.add_argument("-n", "--name", default="lock-21", help="base name of the files (default lock-21)")
-p.add_argument("--lat", type=float, default=44.996817, help="latitude (default: Lock 21, 44°59.809' N)")
-p.add_argument("--lon", type=float, default=-74.89995, help="longitude (default: Lock 21, 74°53.997' W)")
+p.add_argument("--lat", type=float, default=44.996827, help="latitude (default: Lock 21, 44°59.810' N)")
+p.add_argument("--lon", type=float, default=-74.899683, help="longitude (default: Lock 21, 74°53.981' W)")
 p.add_argument("-H", "--heading", type=float, default=-30,
                help="model heading, degrees clockwise from true north (default -30: Baets' arrow as true north)")
 # Landing view, set in Google Earth Pro by Christian (2026-10-20) with the model at heading 0: over the lock, looking
-# west-northwest along it; turned with the model since (-70 - 30)
-p.add_argument("--view", default="44.996863,-74.899940,66,-100,60", metavar="LAT,LON,RANGE,HEADING,TILT",
+# west-northwest along it; turned and moved with the model since (-70 - 30; the site anchor moved on 2026-10-25)
+p.add_argument("--view", default="44.996873,-74.899673,66,-100,60", metavar="LAT,LON,RANGE,HEADING,TILT",
                help="view when the file opens: latitude, longitude, distance (m), direction and tilt (degrees), as in "
-                    "Google Earth's camera properties (default 44.996863,-74.899940,66,-100,60)")
+                    "Google Earth's camera properties (default 44.996873,-74.899673,66,-100,60)")
 p.add_argument("--network", metavar="URL", default="https://tiles.lock21.info/downloads/google-earth",
                help="where the list and the parts are served (default https://tiles.lock21.info/downloads/google-earth)")
 a = p.parse_args()
