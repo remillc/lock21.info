@@ -50,8 +50,8 @@ const FIELD_PUSH = 0.15
 // their lee), fading in and out, then is born again elsewhere; in the wake it swirls a little (FLOW_SWIRL cm). Outside the
 // field, and until it has loaded, the even current as before
 const FLOW_URL = `${import.meta.env.BASE_URL}flow/`
-const FLOW_LIFE = 10
-const FLOW_STEPS = 6
+const FLOW_LIFE = 6
+const FLOW_STEPS = 8
 const FLOW_SWIRL = 10
 // The scattered light's strength against the lit surfaces (brighter washed every surface to the water's colour)
 const WATER_BRIGHTNESS = 0.6
