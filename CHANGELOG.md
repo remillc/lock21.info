@@ -6,8 +6,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 - 3D viewer: the crayfish dances (Christian, 2026-10-25, after Family Guy's dancing lobster): in its threat posture,
   once the diver has kept still for 8 to 12 s, for 6 to 10 s: a side-to-side sway on the beat, the claws raised in
-  turn, the pincers snapping, the tail wagging, the legs stepping in place; moving stops it. `?dance=1` (debug): it
-  dances all through its threat posture.
+  turn, the pincers snapping, the tail wagging, the legs stepping in place; moving stops it. `?dance=1` (debug; also in
+  the settings' advanced section, « Écrevisse qui danse »): it dances all through its threat posture.
 - 3D viewer: panning (right button) drags the point pressed with the pointer, at its depth: it crept, the orbit's
   centre often a metre ahead.
 - 3D viewer: the left button's vertical axis inverted, in both views (the orbit around the point pressed, and diving,

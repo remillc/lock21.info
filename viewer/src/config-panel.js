@@ -94,6 +94,8 @@ export function settingsSchema({ mobile }) {
       items: [
         { key: 'profile', label: t('profile'), type: 'select', def: '', options: [['', t('profileAuto')], ['desktop', t('profileDesktop')], ['mobile', t('profileMobile')]] },
         { key: 'stats', label: t('stats'), type: 'toggle', def: '0' },
+        // The crayfish dancing all through its threat posture (crawfish.js; Christian, 2026-10-25: to tune the dance)
+        { key: 'dance', label: t('dance'), hint: t('danceHint'), type: 'toggle', def: '0' },
         { key: 'tone', label: t('tone'), type: 'select', def: 'agx', options: [['agx', 'AgX'], ['neutral', t('toneNeutral')], ['aces', 'ACES'], ['none', t('toneNone')]] },
       ],
     },

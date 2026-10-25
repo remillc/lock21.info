@@ -265,6 +265,14 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
 
   return {
     object: root,
+    /** Debug (?dance=1, the settings): it dances all through its threat posture; off, its dance ends as usual */
+    set alwaysDance(on) {
+      alwaysDance = on
+      if (!on) {
+        dance.still = 0
+        if (dance.t >= 0) dance.length = dance.t + between(DANCE) / 2
+      }
+    },
     /** For tests: its state */
     get debug() {
       return { ready, home: home?.toArray(), floor, walkTo: walkTo?.toArray(), rest, side, dance: { ...dance, at: undefined } }

@@ -556,6 +556,8 @@ const look = {
   relief: ['0', 'debug'].includes(params.get('relief')) ? params.get('relief') : '1',
   // Mesh view (?mesh=1, settings « Maillage »): the zones and the context as their triangles
   mesh: params.get('mesh') === '1',
+  // The crayfish dancing all through its threat posture (?dance=1, settings « Écrevisse qui danse »; crawfish.js)
+  dance: params.get('dance') === '1',
   light: (params.get('light') || '320,65').split(',').map(Number),
   // The sun's shadows (?shadows=0|1; default on computers, off on phones: one more render of the scene per frame)
   shadows: params.has('shadows') ? params.get('shadows') !== '0' : !mobile,
@@ -1599,7 +1601,7 @@ function showMockups(model, manifest) {
       // The river's current as the particles drift in it (underwater.js), or as measured outside the underwater view
       current: () => (underwater.on ? underwater.current : RIVER_CURRENT),
       // Debug (?dance=1): it dances all through its threat posture, without waiting for the diver to keep still
-      alwaysDance: params.get('dance') === '1',
+      alwaysDance: look.dance,
     })
     child.getWorldPosition(crawfish.object.position)
     scene.add(crawfish.object)
@@ -1786,6 +1788,11 @@ live.stats = (v) => {
   }
 }
 live.stats(params.get('stats') ?? '0')
+// The crayfish dancing all through its threat posture (settings « Écrevisse qui danse », ?dance=1; crawfish.js)
+live.dance = (v) => {
+  look.dance = v === '1'
+  for (const crawfish of crawfishes) crawfish.alwaysDance = look.dance
+}
 live.mesh = (v) => {
   look.mesh = v === '1'
   rebuildMaterials()
