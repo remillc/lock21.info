@@ -568,9 +568,9 @@ const look = {
   season: params.has('season') ? Number(params.get('season')) : seasonOfDate(),
   // The dive light while underwater (?lamp=0 turns it off)
   lamp: params.get('lamp') !== '0',
-  // Saturation of the lit surfaces (?saturation=0..2, 1 = the textures' own; default 1.2, Christian's choice: AgX greys the
+  // Saturation of the lit surfaces (?saturation=0..2, 1 = the textures' own; default 1.3, Christian's choice (2026-10-25, was 1.2): AgX greys the
   // colours, 1.5 matched the unlit textures' saturation on zone 3, see tone)
-  saturation: saturationOf(params.has('saturation') ? params.get('saturation') : 1.2),
+  saturation: saturationOf(params.has('saturation') ? params.get('saturation') : 1.3),
   // Contrast of the lit surfaces' colours (?contrast=0.5..2, 1 = the textures' own): their brightness stretched around a
   // mid-grey (0.18 in linear light), the hue kept; above 1, darks darker and lights lighter
   contrast: contrastOf(params.has('contrast') ? params.get('contrast') : 1),
