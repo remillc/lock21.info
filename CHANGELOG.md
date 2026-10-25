@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Google Earth: a new arrival view (Christian): 44.996898, -74.899692, 132 m, heading -89°, tilt 48°.
 - 3D viewer: panning (right button) at half the pointer's pace (too strong).
 - 3D viewer: the wheel's zoom much gentler (0.075 of its former speed: it was far too strong).
 - 3D viewer, standard view: the left button's vertical axis back as it was (the background follows the pointer up and

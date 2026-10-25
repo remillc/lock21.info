@@ -56,8 +56,8 @@ partent d'abord, la liste ensuite (cache de 5 min), les parties qui n'y sont plu
 fichier voient la zone à la prochaine ouverture. Ni le KMZ du site ni le site ne changent (le KMZ ne contient que
 l'adresse de la liste): pas de déploiement.
 
-**Vue d'arrivée:** réglée dans Google Earth Pro par Christian (2026-10-25), de plus loin pour voir le terrain de la carte
-autour de l'écluse: 44,997063° N, 74,899483° O, distance 485 m, direction −15°, inclinaison 28°. `make_kmz.py --view lat,lon,distance,direction,inclinaison` la change (valeurs des propriétés
+**Vue d'arrivée:** réglée dans Google Earth Pro par Christian (2026-10-25): 44,996898° N, 74,899692° O, distance 132 m,
+direction −89°, inclinaison 48°. `make_kmz.py --view lat,lon,distance,direction,inclinaison` la change (valeurs des propriétés
 de la caméra de Google Earth).
 
 ## Commandes
