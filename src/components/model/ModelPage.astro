@@ -274,12 +274,28 @@ const updated = zones.updated
   // Settings: kept when the page reloads (the viewer saves them, config-panel.js); forgotten when the visitor arrives
   // from elsewhere (a link, the router's navigation, the address bar, back and forward): the viewer then starts from
   // its defaults (?reset=1). Christian, 2026-10-23
+  // A drag in the viewer with the right or middle button, released outside its frame (TODO #70): the page's context
+  // menu opened. The viewer says when such a drag starts and ends (lock21:drag); meanwhile, and for DRAG_AFTER ms
+  // after (the menu comes with the release, before the viewer's message), the page's context menu is held back
+  const DRAG_AFTER = 500
   let connectedBefore = false
   class ModelFrame extends HTMLElement {
+    dragging = false
+    dragEnd = 0
+    /** @param {MouseEvent} event */
+    onContextMenu = (event) => {
+      if (this.dragging || performance.now() < this.dragEnd) event.preventDefault()
+    }
+
     /** @param {MessageEvent} event */
     onMessage = (event) => {
       const frame = this.querySelector('iframe')
       if (event.origin !== location.origin || event.source !== frame?.contentWindow) return
+      if (event.data?.type === 'lock21:drag') {
+        this.dragging = Boolean(event.data.on)
+        if (!this.dragging) this.dragEnd = performance.now() + DRAG_AFTER
+        return
+      }
       if (event.data?.type === 'lock21:cam' && typeof event.data.search === 'string') {
         // (and the tour's step, a debugging setting of the viewer: #tour-3, or none)
         history.replaceState(history.state, '', location.pathname + event.data.search + (typeof event.data.hash === 'string' ? event.data.hash : ''))
@@ -299,10 +315,12 @@ const updated = zones.updated
       const search = shared.map(([key, value]) => `${key}=${value}`).join('&')
       history.replaceState(history.state, '', location.pathname + (search ? `?${search}` : ''))
       window.addEventListener('message', this.onMessage)
+      window.addEventListener('contextmenu', this.onContextMenu, true)
     }
 
     disconnectedCallback() {
       window.removeEventListener('message', this.onMessage)
+      window.removeEventListener('contextmenu', this.onContextMenu, true)
     }
   }
   customElements.define('l21-model-frame', ModelFrame)
