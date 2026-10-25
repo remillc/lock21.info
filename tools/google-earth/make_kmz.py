@@ -54,9 +54,9 @@ p.add_argument("-H", "--heading", type=float, default=-30,
                help="model heading, degrees clockwise from true north (default -30: Baets' arrow as true north)")
 # Landing view, set in Google Earth Pro by Christian (2026-10-20) with the model at heading 0: over the lock, looking
 # west-northwest along it; turned and moved with the model since (-70 - 30; the site anchor moved on 2026-10-25)
-p.add_argument("--view", default="44.997063,-74.899483,485,-15,28", metavar="LAT,LON,RANGE,HEADING,TILT",
+p.add_argument("--view", default="44.996898,-74.899692,132,-89,48", metavar="LAT,LON,RANGE,HEADING,TILT",
                help="view when the file opens: latitude, longitude, distance (m), direction and tilt (degrees), as in "
-                    "Google Earth's camera properties (default 44.997063,-74.899483,485,-15,28)")
+                    "Google Earth's camera properties (default 44.996898,-74.899692,132,-89,48)")
 p.add_argument("-m", "--markers", default="O:/temp/google-earth/context/markers.json",
                help="the .blend's marks (export_context.py), pinned on the map (default "
                     "O:/temp/google-earth/context/markers.json; none if missing)")
@@ -67,7 +67,7 @@ view_lat, view_lon, view_range, view_heading, view_tilt = (float(v) for v in a.v
 look_at = (f"<LookAt><longitude>{view_lon}</longitude><latitude>{view_lat}</latitude><altitude>0</altitude>"
            f"<heading>{view_heading}</heading><tilt>{view_tilt}</tilt><range>{view_range}</range></LookAt>")
 
-# The .blend's marks on the map (Lock 21 Scuba Park, Christian, 2026-10-25): from their place in the .blend to latitude
+# The .blend's marks on the map (Île Macdonnel, Christian, 2026-10-25): from their place in the .blend to latitude
 # and longitude, by the site anchor (the model's origin, at --lat/--lon) and the heading (the .blend's +Y turned -H)
 BLEND_ANCHOR = (-29.05, 21.70)
 marks = json.load(open(a.markers, encoding="utf-8")) if a.markers and os.path.exists(a.markers) else []
@@ -279,8 +279,9 @@ def write_network():
                 kmz.write(path, arcname)
         links[mat_name] = f"{base}/parts/{part}"
 
-    # Google Earth shows no progress for models: in « Places », each part's icon spins while it downloads. The list
-    # open and the parts numbered (Christian, 2026-10-25), the visitor sees how far it has got
+    # Google Earth shows no progress for models: in « Places », each part's icon spins while it downloads. The parts
+    # numbered and their folders open (Christian, 2026-10-25), the visitor sees how far it has got once the model's
+    # folder is opened (closed at first: Christian)
     order = {name: k + 1 for k, name in enumerate(zones + context)}
 
     def network_link(mat_name):
@@ -300,7 +301,6 @@ def write_network():
     <Point><coordinates>{a.lon},{a.lat},0</coordinates></Point>
   </Placemark>
 {newline.join(mark_placemark(m) for m in marks)}
-  <open>1</open>
   <Folder>
     <name>Zones</name>
     <open>1</open>

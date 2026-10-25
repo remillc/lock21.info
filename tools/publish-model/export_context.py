@@ -255,7 +255,7 @@ bpy.ops.export_scene.gltf(filepath=glb, export_format='GLB', use_selection=True,
                           export_image_format='JPEG', export_jpeg_quality=88, export_normals=False,
                           export_materials='EXPORT')
 json.dump(fp, open(os.path.join(out_dir, "fingerprint.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=2)
-# The marks of the collection « markers » (Lock 21 Scuba Park, Christian, 2026-10-25): their place in the .blend, for
+# The marks of the collection « markers » (Île Macdonnel, Christian, 2026-10-25): their place in the .blend, for
 # the Google Earth map (make_kmz.py)
 markers = bpy.data.collections.get("markers")
 marks = [{"name": o.name, "location": [round(v, 3) for v in o.matrix_world.translation],

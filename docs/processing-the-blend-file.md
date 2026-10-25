@@ -190,7 +190,14 @@ Copy-Item O:\publishing\downloads\google-earth\glb\lock-21.glb "$online\"
 Copy-Item O:\publishing\downloads\google-earth\ar\lock-21-ar*.glb, O:\publishing\downloads\google-earth\ar\lock-21-ar*.usdz "$online\ar\"
 ```
 
-**6. Envoyer** (un essai d'abord):
+**6. Vérifier** les modèles avant de les envoyer (`check_model.mjs`): une seule carte UV par objet (le terrain de la carte en a déjà eu deux, la première à zéro: sans texture dans Google Earth), une texture lisible sur chaque matériau qui en a une, le nombre de triangles et la taille plausibles, le copyright et la licence. Il affiche « ok », ou chaque problème, et rien ne doit partir tant qu'il en reste:
+
+```powershell
+node tools\publish-model\check_model.mjs O:\publishing\downloads\google-earth\t700k\lock-21.glb -t 700000
+node tools\publish-model\check_model.mjs O:\publishing\downloads\google-earth\glb\lock-21.glb -t 2000000
+```
+
+**7. Envoyer** (un essai d'abord):
 
 ```powershell
 npm run downloads:upload -- --dry-run

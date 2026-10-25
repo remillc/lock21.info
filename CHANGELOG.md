@@ -2,19 +2,29 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
-## Unreleased
+## 0.15.1 - 2026-10-25
 
+- The site's Google Earth file (`public/downloads/lock-21.kmz`) rebuilt: its description with links to the site and the
+  model page.
+- Google Earth: a new arrival view (Christian): 44.996898, -74.899692, 132 m, heading -89°, tilt 48°.
+- 3D viewer: panning (right button) at a quarter of the pointer's pace (too strong).
+- 3D viewer: the wheel's zoom much gentler (0.075 of its former speed: it was far too strong).
+- 3D viewer, standard view: the left button's vertical axis back as it was (the background follows the pointer up and
+  down); diving keeps it inverted.
+- `tools/publish-model/check_model.mjs`: checks a downloadable model before it goes online (one UV set per object, a
+  readable texture on every textured material, triangles and size plausible, copyright and licence); in the
+  downloads' steps (docs/processing-the-blend-file.md, step 6).
 - The context's export (`export_context.py`) applies the objects' modifiers before keeping only the baked UV map: the
   chart terrain's Boolean added its cutter's UV map, and the export carried two, the first all zero (no texture in
   Google Earth, which reads only the first).
 - Google Earth: the model raised just enough for its lowest point to meet the ground (`make_kmz.py -a/--altitude`,
   auto by default): the chart terrain's channel, about 4 m below the lock's floor, went under Google Earth's ground.
 - Google Earth: the KML descriptions in HTML, the site (lock21.info) and the model page (lock21.info/modele) as links.
-- Google Earth: the Lock 21 Scuba Park pinned on the model's terrain (its height in the .blend plus the model's
+- Google Earth: the Macdonnel Island mark (first named « Lock 21 Scuba Park ») pinned on the model's terrain (its height in the .blend plus the model's
   altitude), not on Google Earth's ground under it.
 - Google Earth: a new arrival view (Christian), farther out to show the chart terrain: 44.997063, -74.899483, 485 m,
   heading -15°, tilt 28°.
-- Google Earth: the list of parts open in « Places » and each part numbered (« Zone 3 (3/19) »): Google Earth shows no
+- Google Earth: the folders of parts open in « Places » (the model's own folder closed at first) and each part numbered (« Zone 3 (3/19) »): Google Earth shows no
   progress for models, only each part's spinning icon while it downloads.
 
 ## 0.15.0 - 2026-10-25
