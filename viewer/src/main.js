@@ -1964,27 +1964,48 @@ function keepInFront() {
 }
 
 // Never under the model (underwater, Christian, 2026-10-24; in both views, TODO #71, 2026-10-25): orbiting or panning
-// (no collisions there), a gap between tiles, or finer tiles not loaded yet could take the camera below it. A ray up
-// from the camera that meets a surface facing up (a floor seen from below; a ceiling faces down) within FLOOR_CHECK m
-// (the banks rise about 17 m above the lock's floor) brings it back FLOOR_CLEAR m above that floor (the swimmer's
-// distance from the surfaces), the orbit's point with it
+// (no collisions there), a gap between tiles, or finer tiles not loaded yet could take the camera below it. The floor
+// is a soft one (Christian, 2026-10-25: panning down near the floor went under it, a flash, then a jump up): the camera
+// stops `clear` m above the surface facing up under it, FLOOR_CLEAR m underwater (the swimmer's distance from the
+// surfaces), AIR_CLEAR m outside the water (the start views are lower than the swimmer's), the orbit's point with it.
+// The floor is the highest of: a surface facing up just under the camera; one it crossed since the last frame (a
+// quick move, up to CROSS_MAX m: farther, it was put there, by a link or a button); one above it within FLOOR_CHECK m
+// (the banks rise about 17 m above the lock's floor), facing up, so seen from below: it is already under it
 const FLOOR_CHECK = 20
 const FLOOR_CLEAR = 0.6
+const AIR_CLEAR = 0.2
+const CROSS_MAX = 3
 const UP = new THREE.Vector3(0, 1, 0)
 const floorRay = new THREE.Raycaster()
 floorRay.firstHitOnly = true
 const floorNormal = new THREE.Vector3()
-function keepAboveFloor() {
-  floorRay.set(camera.position, UP)
-  floorRay.far = FLOOR_CHECK
-  const hit = floorRay.intersectObjects(collider.surfacesNear(camera.position, FLOOR_CHECK), false)[0]
-  if (!hit?.face) return false
+const floorStep = new THREE.Vector3()
+const lastCamera = new THREE.Vector3(NaN, NaN, NaN)
+/** The height of a surface facing up met by a ray, or -Infinity */
+function floorHit(from, direction, far, meshes) {
+  floorRay.set(from, direction)
+  floorRay.far = far
+  const hit = floorRay.intersectObjects(meshes, false)[0]
+  if (!hit?.face) return -Infinity
   floorNormal.copy(hit.face.normal).transformDirection(hit.object.matrixWorld)
-  if (floorNormal.y < 0.5) return false
-  const rise = hit.point.y + FLOOR_CLEAR - camera.position.y
-  camera.position.y += rise
-  if (!swim.looking) controls.target.y += rise
-  return true
+  return floorNormal.y < 0.5 ? -Infinity : hit.point.y
+}
+function keepAboveFloor() {
+  const clear = underwater.on ? FLOOR_CLEAR : AIR_CLEAR
+  const meshes = collider.surfacesNear(camera.position, FLOOR_CHECK)
+  let floor = Math.max(floorHit(camera.position, UP, FLOOR_CHECK, meshes), floorHit(camera.position, DOWN, clear, meshes))
+  floorStep.subVectors(camera.position, lastCamera)
+  const step = floorStep.length()
+  if (step > 1e-4 && step < CROSS_MAX && floorStep.y < 0) {
+    floor = Math.max(floor, floorHit(lastCamera, floorStep.divideScalar(step), step, meshes))
+  }
+  const rise = floor + clear - camera.position.y
+  if (rise > 0) {
+    camera.position.y += rise
+    if (!swim.looking) controls.target.y += rise
+  }
+  lastCamera.copy(camera.position)
+  return rise > 0
 }
 
 // Within the model's area (TODO #66, Christian, 2026-10-24), in both views and whatever the navigation: the whole
