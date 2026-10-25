@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- The site's Google Earth file (`public/downloads/lock-21.kmz`) rebuilt: its description with links to the site and the
+  model page.
 - Google Earth: a new arrival view (Christian): 44.996898, -74.899692, 132 m, heading -89°, tilt 48°.
 - 3D viewer: panning (right button) at a quarter of the pointer's pace (too strong).
 - 3D viewer: the wheel's zoom much gentler (0.075 of its former speed: it was far too strong).

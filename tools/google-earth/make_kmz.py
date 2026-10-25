@@ -67,7 +67,7 @@ view_lat, view_lon, view_range, view_heading, view_tilt = (float(v) for v in a.v
 look_at = (f"<LookAt><longitude>{view_lon}</longitude><latitude>{view_lat}</latitude><altitude>0</altitude>"
            f"<heading>{view_heading}</heading><tilt>{view_tilt}</tilt><range>{view_range}</range></LookAt>")
 
-# The .blend's marks on the map (Lock 21 Scuba Park, Christian, 2026-10-25): from their place in the .blend to latitude
+# The .blend's marks on the map (Île Macdonnel, Christian, 2026-10-25): from their place in the .blend to latitude
 # and longitude, by the site anchor (the model's origin, at --lat/--lon) and the heading (the .blend's +Y turned -H)
 BLEND_ANCHOR = (-29.05, 21.70)
 marks = json.load(open(a.markers, encoding="utf-8")) if a.markers and os.path.exists(a.markers) else []
@@ -279,8 +279,9 @@ def write_network():
                 kmz.write(path, arcname)
         links[mat_name] = f"{base}/parts/{part}"
 
-    # Google Earth shows no progress for models: in « Places », each part's icon spins while it downloads. The list
-    # open and the parts numbered (Christian, 2026-10-25), the visitor sees how far it has got
+    # Google Earth shows no progress for models: in « Places », each part's icon spins while it downloads. The parts
+    # numbered and their folders open (Christian, 2026-10-25), the visitor sees how far it has got once the model's
+    # folder is opened (closed at first: Christian)
     order = {name: k + 1 for k, name in enumerate(zones + context)}
 
     def network_link(mat_name):
@@ -300,7 +301,6 @@ def write_network():
     <Point><coordinates>{a.lon},{a.lat},0</coordinates></Point>
   </Placemark>
 {newline.join(mark_placemark(m) for m in marks)}
-  <open>1</open>
   <Folder>
     <name>Zones</name>
     <open>1</open>
