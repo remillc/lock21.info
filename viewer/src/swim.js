@@ -88,14 +88,15 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
   element.addEventListener('pointermove', (event) => {
     if (!active || !looking || !drag || event.pointerId !== drag.id) return
     if (pivot) {
-      // Around the pivot: a pixel turns by the angle a pixel covers (the background moves with the pointer); not over
+      // Around the pivot: a pixel turns by the angle a pixel covers (the background moves with the pointer sideways); not over
       // nor under it (PITCH_LIMIT from level); the walls stop the diver (move)
       const perPixel = THREE.MathUtils.degToRad(camera.fov) / (element.clientHeight || 1)
       facing = null
       offset.subVectors(camera.position, pivot)
       offset.applyAxisAngle(UP, -(event.clientX - drag.x) * perPixel)
       right.crossVectors(UP, offset).normalize()
-      const tilted = offset.clone().applyAxisAngle(right, -(event.clientY - drag.y) * perPixel)
+      // The vertical axis inverted (Christian, 2026-10-25), as in the standard view (pointer-orbit.js)
+      const tilted = offset.clone().applyAxisAngle(right, (event.clientY - drag.y) * perPixel)
       if (Math.abs(Math.asin(THREE.MathUtils.clamp(tilted.y / tilted.length(), -1, 1))) < PITCH_LIMIT) offset.copy(tilted)
       moveBy(camera.position, toward.copy(pivot).add(offset).sub(camera.position))
       camera.lookAt(pivot)
@@ -105,7 +106,8 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
     }
     euler.setFromQuaternion(camera.quaternion)
     euler.y -= (event.clientX - drag.x) * TURN
-    euler.x = THREE.MathUtils.clamp(euler.x - (event.clientY - drag.y) * TURN, -PITCH_LIMIT, PITCH_LIMIT)
+    // The vertical axis inverted (Christian, 2026-10-25), as in the standard view
+    euler.x = THREE.MathUtils.clamp(euler.x + (event.clientY - drag.y) * TURN, -PITCH_LIMIT, PITCH_LIMIT)
     euler.z = 0
     camera.quaternion.setFromEuler(euler)
     drag.x = event.clientX
