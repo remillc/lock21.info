@@ -8,6 +8,8 @@
   à des lignes), la cuisson se fait dans une nouvelle carte UV dépliée (Smart UV Project), la seule exportée; le
   matériau lit toujours ses images par la carte d'origine. Sans cela, ces faces sortaient noires. Ces objets sont cuits
   en couleur seule (le visualiseur les éclaire): sous les lumières de la scène, leurs faces verticales étaient sombres.
+- Un objet cuit n'exporte que la carte UV de sa cuisson (la carte active): le terrain en a aussi une répétée, pour
+  son sable, qui passait avant elle dans le modèle entier (make_model.py, Google Earth: l'image en bandes).
 - Autres matériaux: la première image est branchée directement sur la couleur; sans image, la couleur de base.
 - Images réduites à --max-texture px de côté (multiple de 4).
 - Coordonnées du monde de la scène (mètres), glTF Y vers le haut: même repère que les tuiles.
@@ -106,11 +108,16 @@ def setup_cycles_gpu(scene, samples):
 
 
 baked = {}  # objet -> image cuite
+# objet -> la carte UV de sa cuisson (la carte active, celle où Blender cuit): seule carte exportée. Le terrain en a deux,
+# la carte répétée du sable (UVMap, lue par son matériau) et celle de la cuisson (bake); exportées toutes les deux, le
+# modèle entier (make_model.py) prenait la première, et l'image cuite s'y répétait en bandes dans Google Earth
+bake_layer = {}
 # Images déjà cuites dans Blender (bake_context_in_blender.py, propriété `baked_texture`): utilisées telles quelles
 for ob in objects:
     rel = ob.get("baked_texture")
     if rel and os.path.exists(bpy.path.abspath(rel)):
         baked[ob.name] = bpy.data.images.load(bpy.path.abspath(rel))
+        bake_layer[ob.name] = ob.data.uv_layers.active.name
         print(f"[context] image cuite dans Blender: {ob.name} -> {rel}", flush=True)
 to_bake = [o for o in objects if o.name not in baked and any(procedural(sl.material) for sl in o.material_slots)]
 if to_bake:
@@ -123,6 +130,7 @@ for ob in to_bake:
         own_uv.add(ob.name)
         print(f"[context] {ob.name}: {share * 100:.0f} % de la surface sans place dans la carte UV, cuit dans une carte "
               "dépliée", flush=True)
+    bake_layer[ob.name] = ob.data.uv_layers.active.name
     image = bpy.data.images.new(f"context-bake-{ob.name}", bake_size, bake_size)
     for slot in ob.material_slots:
         if slot.material is None:
@@ -151,10 +159,10 @@ for ob in to_bake:
 clean = {}
 for ob in objects:
     if ob.name in baked:
-        if ob.name in own_uv:
-            for layer in [u for u in ob.data.uv_layers if u.name != "context-bake"]:
-                ob.data.uv_layers.remove(layer)
-            ob.data.uv_layers["context-bake"].active_render = True
+        keep = bake_layer[ob.name]
+        for layer in [u for u in ob.data.uv_layers if u.name != keep]:
+            ob.data.uv_layers.remove(layer)
+        ob.data.uv_layers[keep].active_render = True
         mat = bpy.data.materials.new(f"context-{ob.name}")
         mat.use_nodes = True
         tex = mat.node_tree.nodes.new("ShaderNodeTexImage")
