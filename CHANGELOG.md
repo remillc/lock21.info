@@ -9,6 +9,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   Google Earth, which reads only the first).
 - Google Earth: the model raised just enough for its lowest point to meet the ground (`make_kmz.py -a/--altitude`,
   auto by default): the chart terrain's channel, about 4 m below the lock's floor, went under Google Earth's ground.
+- Google Earth: the KML descriptions in HTML, the site (lock21.info) and the model page (lock21.info/modele) as links.
 
 ## 0.15.0 - 2026-10-25
 

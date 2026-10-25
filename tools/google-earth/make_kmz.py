@@ -37,6 +37,11 @@ from glb_metadata import copyright_line
 # Every public file carries the copyright (Christian Rémillard, CC BY 4.0): the downloaded KMZ, the list, each part and
 # each COLLADA model
 COPYRIGHT = copyright_line()
+# The KML descriptions in HTML (Google Earth shows them in the balloon), the site and the model page as links
+# (Christian, 2026-10-25); in CDATA, so the markup needs no escaping
+SITE = '<a href="https://lock21.info/">lock21.info</a>'
+MODEL_PAGE = '<a href="https://lock21.info/modele">lock21.info/modele</a>'
+COPYRIGHT_HTML = COPYRIGHT.replace("lock21.info", SITE)
 
 p = argparse.ArgumentParser(prog="make_kmz.py", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 p.add_argument("-d", "--dir", required=True, help="folder of <name>.obj/.mtl/.jpg (make_model.py output)")
@@ -80,7 +85,7 @@ def mark_placemark(mark):
     lat, lon = mark_lat_lon(mark["location"])
     return f"""  <Placemark>
     <name>{mark["name"]}</name>
-    <description>{mark.get("what", "")}</description>
+    <description><![CDATA[{mark.get("what", "")}]]></description>
     <Point><coordinates>{lon:.7f},{lat:.7f},0</coordinates></Point>
   </Placemark>"""
 
@@ -212,7 +217,7 @@ def label(mat_name):
 def placemark(mat_name):
     return f"""    <Placemark>
       <name>{label(mat_name)}</name>
-      <description>{COPYRIGHT}</description>
+      <description><![CDATA[{COPYRIGHT_HTML}]]></description>
       <Model>
         <altitudeMode>relativeToGround</altitudeMode>
         <Location><longitude>{a.lon}</longitude><latitude>{a.lat}</latitude><altitude>{altitude:.2f}</altitude></Location>
@@ -282,7 +287,7 @@ def write_network():
 <Document>
   <name>Écluse 21</name>
   {look_at}
-  <description>{COPYRIGHT}. Modèle 3D de l'écluse 21 (Dickinson Landing), photogrammétrie sous-marine de Christian Rémillard, lock21.info, licence CC BY 4.0. {len(zones)} zones, {triangles:,} triangles; les zones s'ajoutent au fil des plongées. Posé au sol (profondeur 0): l'écluse est en réalité à 55 pi (16,8 m) sous l'eau.</description>
+  <description><![CDATA[{COPYRIGHT_HTML}. Modèle 3D de l'écluse 21 (Dickinson Landing), photogrammétrie sous-marine de Christian Rémillard, {SITE}, licence CC BY 4.0. {len(zones)} zones, {triangles:,} triangles; les zones s'ajoutent au fil des plongées. Le modèle en 3D dans le navigateur: {MODEL_PAGE}. Posé sur le sol de Google Earth: l'écluse est en réalité à 55 pi (16,8 m) sous l'eau.]]></description>
   <Placemark>
     <name>Écluse 21</name>
     <Point><coordinates>{a.lon},{a.lat},0</coordinates></Point>
@@ -305,7 +310,7 @@ def write_network():
 <kml xmlns="http://www.opengis.net/kml/2.2">
 <NetworkLink>
   <name>Écluse 21</name>
-  <description>{COPYRIGHT}. Modèle 3D de l'écluse 21 (Dickinson Landing), https://lock21.info/modele</description>
+  <description><![CDATA[{COPYRIGHT_HTML}. Modèle 3D de l'écluse 21 (Dickinson Landing): {MODEL_PAGE}]]></description>
   <open>1</open>
   <flyToView>1</flyToView>
   <Link><href>{base}/{a.name}.kml</href></Link>
