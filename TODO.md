@@ -23,9 +23,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 ### Pipeline
 
 - [ ] #10 `model:post-modified` and others only run on Windows (PowerShell); fine for now
-- [ ] #73 New terrain from a chart of the lock's surroundings (the Boating app,
-  `C:\Users\chris\Downloads\Screenshot_20261025_073716_Boating.jpg`, 2026-10-25; the green cross marks land): rebuild
-  the terrain from the chart's depth contours, at scale, in a new .blend under `O:\modeles\` (not the publishing .blend)
 
 ### Hosting and downloads
 
