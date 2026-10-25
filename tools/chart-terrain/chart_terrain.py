@@ -244,6 +244,35 @@ if a.floor and os.path.exists(a.floor):
         lowered = height > cap
         height = np.where(over, np.minimum(height, cap), np.minimum(height, soft))
         print(f"[chart] model floor: {int(over.sum()):,} points over the model, {int(lowered.sum()):,} lowered", flush=True)
+
+        # Just under the zones, without a gap (Christian, 2026-10-25: the chart terrain lay far below the zones' edges
+        # and showed through their holes as darkness): under a zone, the chart terrain follows the zone's lowest surface,
+        # FLOOR_CLEAR m below it, up or down; the holes inside a zone take the nearest zone floor; past a zone's edge it
+        # goes from that edge's height back to its own over HUG_FALL m (a smooth step). Elsewhere under the model (the
+        # context, the mockups) it stays below it, as above
+        HUG_FALL = 8.0
+        stored = np.load(a.floor)
+        if "floor_zones" in stored.files:
+            raw_all = stored["floor"]
+            raw_zones = stored["floor_zones"]
+            # Only where a zone is the model's lowest surface (nothing of the model under it: the darkness seen through
+            # its holes and under its edges); where the context lies under a zone, it fills that gap itself, and the
+            # chart terrain stays below it
+            lowest = np.isfinite(raw_zones) & (raw_zones <= raw_all + 0.1)
+            holes = ndimage.binary_fill_holes(lowest) & ~lowest & ~np.isfinite(raw_all)
+            on_zone = lowest | holes
+            zones = ndimage.minimum_filter(np.where(lowest, raw_zones, np.inf), size=3)
+            _, (zy, zx) = ndimage.distance_transform_edt(~lowest, return_indices=True)
+            zones = np.where(np.isinf(zones) | holes, raw_zones[zy, zx], zones)
+            away, (ay, ax) = ndimage.distance_transform_edt(~on_zone, return_indices=True)
+            target = zones[ay, ax] - SURFACE - FLOOR_CLEAR
+            t = np.clip(1 - away * a.cell / HUG_FALL, 0, 1)
+            weight = np.where(on_zone, 1.0, t * t * (3 - 2 * t))
+            height = weight * target + (1 - weight) * height
+            others = over & ~on_zone
+            height = np.where(others, np.minimum(height, cap), height)
+            print(f"[chart] zones: {int(on_zone.sum()):,} points under the zones ({int(holes.sum()):,} in their holes), "
+                  f"met over {HUG_FALL:.0f} m past their edges", flush=True)
     else:
         print(f"[chart] model floor: {a.floor} is for another grid, skipped (run model_floor.py again)", flush=True)
 os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)

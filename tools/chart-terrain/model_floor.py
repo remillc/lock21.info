@@ -4,7 +4,9 @@ For each point of the height grid of chart_terrain.py, set in the .blend by the 
 chart terrain's .blend: its place and turn, overrides included), a ray down from above meets the published model: the
 zones (« zone N » objects, the boolean cutters excluded) and the context (blend_state.context_objects: the `terrain`
 collection and the fillers) and the mockups, as rendered (modifiers applied, Show in Render only). The lowest surface
-met is the floor there (the first could be a wall's top); none: NaN. make_chart_terrain.py keeps the chart terrain below it.
+facing up met is the floor there (the first could be a wall's top; a wall's bottom face, facing down, is not a floor);
+none: NaN. The zones' own lowest surface too (floor_zones):
+chart_terrain.py keeps the chart terrain below the model, and just under the zones (no gap between them).
 
 The .blend is never saved.
 
@@ -45,6 +47,7 @@ model = ([o for o in bpy.data.objects if o.type == 'MESH' and re.match(r"^zone \
          + ([o for o in mockups.all_objects if o.type == 'MESH'] if mockups else []))
 model = [o for o in model if not o.hide_render and all(not c.hide_render for c in o.users_collection)]
 trees = []
+is_zone = [bool(re.match(r"^zone \d+", o.name)) for o in model]
 for ob in model:
     evaluated = ob.evaluated_get(depsgraph)
     mesh = evaluated.to_mesh()
@@ -57,23 +60,32 @@ print(f"[floor] {len(model)} objects: {', '.join(o.name for o in model)}", flush
 TOP = 80.0
 down = Vector((0, 0, -1))
 floor = np.full((rows, cols), np.nan, np.float32)
+floor_zones = np.full((rows, cols), np.nan, np.float32)
 for r in range(rows):
     for c in range(cols):
         at = to_world @ Vector(((c - ox) * cell, -(r - oy) * cell, 0))
         origin = Vector((at.x, at.y, TOP))
         # The lowest surface under the point: the ray goes on through every surface (the first one met can be the top
         # of a wall: the terrain then rose beside the walls in teeth, Christian, 2026-10-25)
-        best = None
-        for tree in trees:
+        best = zone_best = None
+        for tree, zone in zip(trees, is_zone):
             start = origin.copy()
             while True:
                 hit = tree.ray_cast(start, down)
                 if hit[0] is None:
                     break
-                if best is None or hit[0].z < best:
-                    best = hit[0].z
+                # Surfaces facing up only: a floor (the bottom faces of walls that go deep under the ground, facing down,
+                # made the floor metres too low and left a gap beside the zones, Christian, 2026-10-25)
+                if hit[1].z > 0.2:
+                    if best is None or hit[0].z < best:
+                        best = hit[0].z
+                    if zone and (zone_best is None or hit[0].z < zone_best):
+                        zone_best = hit[0].z
                 start = hit[0] + down * 1e-3
         if best is not None:
             floor[r, c] = best
-np.savez_compressed(a.out, floor=floor)
-print(f"[floor] {int(np.isfinite(floor).sum()):,} of {rows * cols:,} grid points over the model -> {a.out}", flush=True)
+        if zone_best is not None:
+            floor_zones[r, c] = zone_best
+np.savez_compressed(a.out, floor=floor, floor_zones=floor_zones)
+print(f"[floor] {int(np.isfinite(floor).sum()):,} of {rows * cols:,} grid points over the model, "
+      f"{int(np.isfinite(floor_zones).sum()):,} over the zones -> {a.out}", flush=True)

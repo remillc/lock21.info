@@ -45,9 +45,15 @@ du nombre, profondeur en pieds) et les zones à ignorer (boutons et barres de l'
    sous lui là où est le modèle (zones, contexte publiés et maquettes, tels que rendus). Le plancher est la surface la
    plus basse du modèle sous chaque point (la première rencontrée pouvait être le haut d'un mur: le terrain montait en
    dents le long des murs), et chaque point prend le plus bas de ses 8 voisins (le terrain entre les points de la grille
-   reste dessous aussi). Vérifié tous les 25 cm: aucun point visible au-dessus du modèle (174 sur 299 200 le sont,
-   tous dans le mur nord, cachés); au-delà de son bord, la limite remonte de
-   0,3 m par mètre, floue et rejointe en douceur, pour retrouver les hauteurs de la carte sans falaise. Sous le modèle,
+   reste dessous aussi). Seules les surfaces tournées vers le haut comptent: la face du dessous d'un mur qui s'enfonce
+   sous le sol le plaçait des mètres trop bas, et laissait un vide à côté des zones; au-delà de son bord, la limite remonte de
+   0,3 m par mètre, floue et rejointe en douceur, pour retrouver les hauteurs de la carte sans falaise.
+7. **Contre les zones, sans vide** (Christian, 2026-10-25): là où une zone est le plancher le plus bas (rien du modèle
+   dessous, l'obscurité vue par ses trous et sous ses bords), le terrain suit la zone, 5 cm dessous, en montant ou en
+   descendant, et rejoint ses propres hauteurs sur 8 m au-delà de son bord. Là où le contexte est sous une zone, c'est
+   lui qui comble, et le terrain de la carte reste dessous. Vérifié tous les 25 cm: au bord des zones, l'écart médian
+   est de −0,05 m (les grandes chutes restantes sont la face du mur nord); 9 points sur 299 023 dépassent le modèle
+   visiblement (jusqu'à 1,4 m), là où le terrain enjambe la marche entre une zone et le contexte plus bas. Sous le modèle,
    le terrain de la carte porte l'empreinte des facettes et des murs du modèle: cachée par lui.
 
 Résultat sur la carte du 2026-10-25: 1 112 bandes, intervalle trouvé de 1,48 pi; écart aux sondes médian 0,4 pi,
