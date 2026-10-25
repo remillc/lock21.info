@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Google Earth: the model at 700,000 triangles (was 600,000: it still opens in Google Earth Pro); the downloads rebuilt
+  with the zones republished on 2026-10-25.
 - Home page: hovering a card shades all of it (a light rectangle stayed in its middle).
 - Home page: the « L'histoire » card (no history page planned; it led to the zone map) replaced by « Les problèmes »,
   leading to the problems encountered.
