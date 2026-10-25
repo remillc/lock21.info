@@ -5,7 +5,7 @@ chart, only corrected where it meets the model. Two runs on the publishing .blen
 
   --measure  (read-only) for each vertex of « chart terrain »: its position in the .blend, and under or over it in
              the model, as rendered (modifiers applied, Show in Render only): the zones' lowest surface facing up and
-             their top (« zone N » objects), the solids' top (the context's walls and fillers, the mockups);
+             their top (« zone N » objects), the solids' top (the context's walls, the mockups), the fillers' top apart;
              « terrain - SOS data » left out (the chart terrain replaces it)                -> -d (an .npz)
   --apply    the heights computed by fit_terrain.py (-f), written into the mesh; a copy of the .blend saved (-o), to
              move in place of the .blend with Blender closed (a direct save fails: « Cannot change old file »)
@@ -61,8 +61,11 @@ if a.measure:
     visible = lambda o: o.type == 'MESH' and not o.hide_render and all(not c.hide_render for c in o.users_collection)
     zones = [o for o in bpy.data.objects if re.match(r"^zone \d+", o.name) and visible(o)]
     mockups = bpy.data.collections.get("mockups")
+    # The fillers are sediment, measured apart: the terrain may cover their low parts (capped under them, it fell into
+    # their dips, in pits: Christian, 2026-10-25); the walls and the mockups cap it
     solids = [o for o in context_objects() + (list(mockups.all_objects) if mockups else [])
-              if visible(o) and o.name != "terrain - SOS data"]
+              if visible(o) and o.name != "terrain - SOS data" and "filler" not in o.name.lower()]
+    fillers = [o for o in context_objects() if visible(o) and "filler" in o.name.lower()]
 
     def trees_of(objects):
         trees = []
@@ -74,13 +77,14 @@ if a.measure:
             evaluated.to_mesh_clear()
         return trees
 
-    zone_trees, solid_trees = trees_of(zones), trees_of(solids)
+    zone_trees, solid_trees, filler_trees = trees_of(zones), trees_of(solids), trees_of(fillers)
     down = Vector((0, 0, -1))
     n = len(local)
     pos = np.empty((n, 3), np.float32)
     zone_low = np.full(n, np.nan, np.float32)
     zone_top = np.full(n, np.nan, np.float32)
     solid_top = np.full(n, np.nan, np.float32)
+    filler_top = np.full(n, np.nan, np.float32)
     for k in range(n):
         at = world @ Vector(local[k])
         pos[k] = at
@@ -110,10 +114,17 @@ if a.measure:
                 stop = hit[0].z
         if stop is not None:
             solid_top[k] = stop
+        ftop = None
+        for tree in filler_trees:
+            hit = tree.ray_cast(origin, down)
+            if hit[0] is not None and (ftop is None or hit[0].z > ftop):
+                ftop = hit[0].z
+        if ftop is not None:
+            filler_top[k] = ftop
     cell = float(abs(xs[1] - xs[0]))
     np.savez_compressed(a.data, rows=rows, cols=cols, cell=cell, pos=pos.reshape(rows, cols, 3),
                         zone_low=zone_low.reshape(rows, cols), zone_top=zone_top.reshape(rows, cols),
-                        solid_top=solid_top.reshape(rows, cols))
+                        solid_top=solid_top.reshape(rows, cols), filler_top=filler_top.reshape(rows, cols))
     print(f"[fit] {rows} x {cols} vertices ({cell} m): {int(np.isfinite(zone_low).sum()):,} under the zones, "
           f"{int(np.isfinite(solid_top).sum()):,} under the solids -> {a.data}", flush=True)
 else:

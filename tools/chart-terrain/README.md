@@ -50,11 +50,17 @@ Move-Item -Force O:\temp\lock-21-publishing-chart.blend modeles\lock-21-publishi
   comprises: une surface lisse (un remplissage de Laplace) tendue entre le terrain plus loin, tel que retouché, et les
   bords du sol des zones; murs et solides ne la soutiennent pas (des gradins grimpaient le long d'un mur jusqu'à son
   dessus, une fosse à trous entourait le remplissage: « aussi bas et plat que ses environs », Christian, 2026-10-25);
-  jamais plus haute que le dessus des zones plus 0,25 m par mètre;
-- **dans un mur ou un solide**: jamais au-dessus de son dessus (sous le mur d'une zone, le dessus du mur).
+  le plancher de l'écluse gardé plat dans 10 m du sol des zones (contourné), à son niveau (une surface lisse par le
+  sol des zones à moins d'un mètre de sa hauteur type, 0,55 m: marches, rebords et une pièce profonde laissés de côté),
+  en abaissant seulement le sol à moins de 2,5 à 4 m au-dessus (une berge garde sa hauteur); contre la face extérieure
+  d'un mur, le sol monte à son dessus s'il en est à moins de 3 m (les vides le long du mur); jamais plus haute que le
+  dessus des zones plus 0,25 m par mètre;
+- **dans un mur ou un solide** (murs du contexte, maquettes): jamais au-dessus de son dessus (sous le mur d'une zone, le
+  dessus du mur). Les remplissages (sédiments) sont à part: le sol n'est pas plafonné par eux et ne descend pas sous le
+  niveau du plancher dans leur emprise (plafonné sous eux, il tombait dans leurs creux, en fosse).
 
 Le maillage doit rester la grille d'origine (les retouches déplacent les sommets, sans en ajouter ni en retirer).
-Ajustements du 2026-10-25: 2 018 puis 9 950 sommets sur 166 100 déplacés.
+Ajustements du 2026-10-25: 2 018, 9 950 puis 3 690 sommets sur 166 100 déplacés.
 
 ## Données
 
