@@ -38,7 +38,7 @@ $blender = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe"
 python tools\chart-terrain\fit_terrain.py
 # 3. Les écrire dans le maillage, dans une copie du .blend, puis la copie à la place du .blend
 & $blender -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\fit_mesh.py -- --apply
-Move-Item -Force O:	emp\lock-21-publishing-chart.blend modeles\lock-21-publishing.blend
+Move-Item -Force O:\temp\lock-21-publishing-chart.blend modeles\lock-21-publishing.blend
 ```
 
 `fit_terrain.py` ne touche un sommet que s'il le faut (le reste garde la hauteur retouchée):
