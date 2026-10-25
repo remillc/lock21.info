@@ -12,6 +12,8 @@ body {
   color: #e3e6d8;
   font-family: system-ui, sans-serif;
   overflow: hidden;
+  /* TODO #70: no scroll handed on to the page around the viewer */
+  overscroll-behavior: none;
 }
 
 /* Pointer cursor on every action widget (docs/system-design.md, Spacing and interaction): links, buttons, selects,

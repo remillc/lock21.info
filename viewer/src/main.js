@@ -1676,6 +1676,22 @@ renderer.domElement.addEventListener('wheel', freeMove, { passive: true })
 window.addEventListener('keydown', (event) => {
   if (/^(Key[WASD]|Arrow(Up|Down|Left|Right))$/.test(event.code)) freeMove()
 })
+// Nothing the viewer is given may scroll the page around it (TODO #70): the viewer's page itself never scrolls, so the
+// browser handed on to the /modele page what it didn't use: the wheel while the orbit is off (the tour, swimming,
+// a flight), the middle button's autoscroll (Windows: moving the mouse then scrolled the page), and the scrolling
+// keys. Only the settings panel and the dialogs scroll, inside themselves
+const scrollsInside = (target) => target instanceof Element && target.closest('l21-settings-panel, dialog')
+window.addEventListener('wheel', (event) => {
+  if (!scrollsInside(event.target)) event.preventDefault()
+}, { passive: false })
+window.addEventListener('mousedown', (event) => {
+  if (event.button === 1) event.preventDefault()
+})
+window.addEventListener('keydown', (event) => {
+  if (!/^(Space|PageUp|PageDown|Home|End|Arrow(Up|Down|Left|Right))$/.test(event.code)) return
+  if (scrollsInside(event.target) || (event.target instanceof Element && event.target.closest('input, select, textarea, button'))) return
+  event.preventDefault()
+})
 function updateAddress() {
   keepCamera()
   const hash = tourHash
