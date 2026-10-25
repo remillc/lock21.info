@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer in the site's fonts and colours (TODO #39): Archivo for text and titles, JetBrains Mono for labels and
+  data (self-hosted, @fontsource), the site's dark tokens for its colours.
 - Google Earth: the model at 700,000 triangles (was 600,000: it still opens in Google Earth Pro); the downloads rebuilt
   with the zones republished on 2026-10-25.
 - Home page: hovering a card shades all of it (a light rectangle stayed in its middle).

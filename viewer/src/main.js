@@ -1,4 +1,9 @@
 import * as THREE from 'three'
+// The site's fonts (TODO #39): Archivo for text and titles, JetBrains Mono for labels and data (style.css)
+import '@fontsource/archivo/400.css'
+import '@fontsource/archivo/800.css'
+import '@fontsource/jetbrains-mono/500.css'
+import '@fontsource/jetbrains-mono/700.css'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js'
