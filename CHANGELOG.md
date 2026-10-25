@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- `tools/publish-model/check_model.mjs`: checks a downloadable model before it goes online (one UV set per object, a
+  readable texture on every textured material, triangles and size plausible, copyright and licence); in the
+  downloads' steps (docs/processing-the-blend-file.md, step 6).
 - The context's export (`export_context.py`) applies the objects' modifiers before keeping only the baked UV map: the
   chart terrain's Boolean added its cutter's UV map, and the export carried two, the first all zero (no texture in
   Google Earth, which reads only the first).
