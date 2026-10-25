@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: many more particles in spring (800 per m³, was 300; up to 250,000 drawn, 40 % of that on a
+  phone).
 - 3D viewer, underwater: the particles follow the river's flow around the lock (Christian, 2026-10-25): a field
   computed once (`tools/flow/`: the site voxelized at 60 cm from the downloadable model and the mockups of the zones
   not yet surveyed, an ideal flow from the west solved around it, a turbulence index in the obstacles' wake), in

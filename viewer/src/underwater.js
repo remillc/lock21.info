@@ -33,7 +33,8 @@ const DRIFT_SHARE = 1 / 6
 // as the visibility (PARTICLE_REACH m at most, PARTICLE_MIN at least); SEASONS[].density particles per m³ (the
 // murkier, dramatically more; doubled 2026-10-23), so the drawn count follows the box (at most PARTICLE_COUNT; MOBILE_SHARE of them on a
 // phone). A cube of 14 m around the camera drew mostly particles behind it, out of the view or beyond the visibility
-const PARTICLE_COUNT = 120000
+// (250,000: spring's murky water, Christian, 2026-10-25: « many more particles in spring »)
+const PARTICLE_COUNT = 250000
 const PARTICLE_REACH = 10
 const PARTICLE_MIN = 3
 const MOBILE_SHARE = 0.4
@@ -101,7 +102,7 @@ const UP_HAZE_CLEAR = 30 * 0.3048
 // left no colour a metre away, even in the dive light's beam
 export const SEASONS = [
   { key: 'winter', density: 6, current: 1.5, visibilityFt: 100, absorb: [0.3, 0.05, 0.06], water: [0.05, 0.16, 0.17], surface: [0.35, 0.6, 0.62], deep: [0.01, 0.04, 0.05] },
-  { key: 'spring', density: 300, current: 8, visibilityFt: 14, absorb: [0.35, 0.12, 0.3], water: [0.12, 0.13, 0.07], surface: [0.42, 0.45, 0.3], deep: [0.03, 0.03, 0.015] },
+  { key: 'spring', density: 800, current: 8, visibilityFt: 14, absorb: [0.35, 0.12, 0.3], water: [0.12, 0.13, 0.07], surface: [0.42, 0.45, 0.3], deep: [0.03, 0.03, 0.015] },
   { key: 'summer', density: 60, current: 6, visibilityFt: 20, absorb: [0.35, 0.07, 0.15], water: [0.07, 0.17, 0.12], surface: [0.4, 0.62, 0.5], deep: [0.015, 0.05, 0.035] },
   { key: 'autumn', density: 30, current: 4, visibilityFt: 30, absorb: [0.33, 0.06, 0.12], water: [0.06, 0.16, 0.14], surface: [0.36, 0.58, 0.52], deep: [0.012, 0.045, 0.04] },
 ]
