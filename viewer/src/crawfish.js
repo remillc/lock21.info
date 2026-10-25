@@ -577,9 +577,9 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
         // first joint only (about the body's own axis: on the later joints, already bent, that axis leans and the
         // turn brought the tail forward), the next two following a little
         // (wider: Christian, 2026-10-25, « more amplitude from left to right »)
-        const swing = 0.45 * m.tailSwing + 0.15 * m.hips
+        const swing = 0.75 * m.tailSwing + 0.2 * m.hips
         const back = g * (0.08 + 0.1 * Math.abs(m.tailSwing) + 0.12 * m.tailCurl)
-        pose(name, [X, bend + (i === 0 ? -lift : 0) + back], [Y, i < 3 ? -g * side * swing * [1.6, 0.5, 0.3][i] : 0])
+        pose(name, [X, bend + (i === 0 ? -lift : 0) + back], [Y, i < 3 ? -g * side * swing * [1.6, 0.6, 0.4][i] : 0])
       })
       stride = walking ? stride + dt * 9 : stride
       // Standing: the rear legs turned down as its legs, knees bent in a crouch, one raised now and then; the others
