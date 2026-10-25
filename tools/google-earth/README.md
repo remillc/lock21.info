@@ -68,20 +68,20 @@ de la caméra de Google Earth).
 #    Édition perd ses attributs dans le fichier, et l'export glTF échoue).
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b modeles\lock-21-publishing.blend --factory-startup --python tools\publish-model\export_context.py -- O:\temp\google-earth\context
 
-# 2. Modèle complet (Blender): 600 000 triangles, textures de 2048 px
-& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\t600k -t 600000 -s 2048 --context O:\temp\google-earth\context\context.glb
+# 2. Modèle complet (Blender): 700 000 triangles, textures de 2048 px
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\t700k -t 700000 -s 2048 --context O:\temp\google-earth\context\context.glb
 
-# 3. KMZ en réseau (Python de l'outil): O:\publishing\downloads\google-earth\t600k\network\
-tools\google-earth\.venv\Scripts\python.exe tools\google-earth\make_kmz.py -d O:\publishing\downloads\google-earth\t600k
+# 3. KMZ en réseau (Python de l'outil): O:\publishing\downloads\google-earth\t700k\network\
+tools\google-earth\.venv\Scripts\python.exe tools\google-earth\make_kmz.py -d O:\publishing\downloads\google-earth\t700k
 
-# 4. Assembler O:\publishing\downloads\online\: google-earth\lock-21.kml et google-earth\parts\ (de t600k\network\),
+# 4. Assembler O:\publishing\downloads\online\: google-earth\lock-21.kml et google-earth\parts\ (de t700k\network\),
 #    lock-21.glb (make_model.py -t 2000000 -s 4096, dans google-earth\glb\). Puis, avec accord: mise en ligne sur R2
 npm run downloads:upload
 ```
 
-Le KMZ du site (`t600k\network\lock-21.kmz`, copié dans `public/downloads/`) ne change que si l'adresse de la liste
+Le KMZ du site (`t700k\network\lock-21.kmz`, copié dans `public/downloads/`) ne change que si l'adresse de la liste
 change. Essai local du réseau: `make_kmz.py ... --network http://localhost:8083`, puis
-`serve-tiles.ps1 -TilesRoot O:\publishing\downloads\google-earth\t600k\network -Port 8083`.
+`serve-tiles.ps1 -TilesRoot O:\publishing\downloads\google-earth\t700k\network -Port 8083`.
 
 `make_model.py`: `-t/--triangles` (budget total), `-s/--size` (côté maximal des textures), `--zone-size zone-3=4096`
 (texture d'une zone), `-c/--context-share` (part du budget pour le contexte, 0,1 par défaut), `--zones` (par défaut
@@ -154,7 +154,8 @@ Modèle complet (2026-10-20), textures de 2048 px:
 | un seul modèle COLLADA: 200 000, 400 000, 800 000 triangles | 200 000 et 800 000 plantent, 400 000 s'ouvre sans rien montrer |
 | un modèle par partie, 200 000 | s'ouvre, modèle grossier |
 | un modèle par partie, 400 000 | s'ouvre, zones 3 et 7 grossières (faute de triangles: des textures de 4096 px n'y changent rien) |
-| **un modèle par partie, 600 000** | **s'ouvre, zones 3 et 7 nettes: le choix** |
+| un modèle par partie, 600 000 | s'ouvre, zones 3 et 7 nettes |
+| **un modèle par partie, 700 000** (2026-10-25) | **s'ouvre: le choix** |
 | un modèle par partie, 800 000 | plante |
 
-À vérifier: le KMZ en ligne dans Google Earth Pro; le GLB dans Google Earth Web; 700 000 triangles.
+À vérifier: le GLB dans Google Earth Web; les côtés de la zone 18 (modèles à deux faces).

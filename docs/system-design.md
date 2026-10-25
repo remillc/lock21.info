@@ -73,6 +73,9 @@ Archivo for text and titles, JetBrains Mono for data (numbers, dates, depths, la
 
 Tabular figures in tables and data.
 
+The 3D viewer uses the same fonts (`viewer/src/main.js` imports them) and the dark theme's colour roles
+(`viewer/src/style.css`, `:root`): it is always dark.
+
 ### Shape scale
 
 | MD3 token | Radius | Used for |

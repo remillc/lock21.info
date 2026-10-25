@@ -4,13 +4,29 @@
   display: none !important;
 }
 
+:root {
+  /* The site's dark theme (src/styles/tokens.scss, docs/system-design.md; TODO #39): the viewer is always dark */
+  --md-sys-color-surface: #12140e;
+  --md-sys-color-on-surface: #ebede3;
+  --md-sys-color-on-surface-variant: #c9cdbb;
+  --md-sys-color-secondary: #b8c97a;
+  --md-sys-color-tertiary: #f28c28;
+  --md-sys-color-outline: #3c4232;
+  --lk-on-bar: #f2f3ea;
+  --lk-on-bar-muted: #a3a893;
+  /* The site's fonts (self-hosted, @fontsource, imported by main.js): Archivo for text and titles, JetBrains Mono for
+     labels and data */
+  --lk-font-text: 'Archivo', system-ui, sans-serif;
+  --lk-font-data: 'JetBrains Mono', ui-monospace, monospace;
+}
+
 html,
 body {
   margin: 0;
   height: 100%;
-  background: #12140e;
-  color: #e3e6d8;
-  font-family: system-ui, sans-serif;
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  font-family: var(--lk-font-text);
   overflow: hidden;
   /* TODO #70: no scroll handed on to the page around the viewer */
   overscroll-behavior: none;
@@ -57,7 +73,7 @@ l21-loading {
   padding: 14px 20px 16px;
   border-radius: 12px;
   background: rgb(18 20 14 / 85%);
-  color: #e3e6d8;
+  color: var(--md-sys-color-on-surface);
   box-shadow: 0 4px 16px rgb(0 0 0 / 30%);
 }
 
@@ -80,7 +96,7 @@ l21-loading {
   inset: 0 auto 0 0;
   width: 40%;
   border-radius: 2px;
-  background: #b8c97a;
+  background: var(--md-sys-color-secondary);
   animation: loading-run 1.6s cubic-bezier(0.2, 0, 0, 1) infinite;
 }
 
@@ -122,8 +138,8 @@ l21-loading.refine .refining {
   padding: 2px 8px;
   border-radius: 6px;
   background: rgb(18 20 14 / 70%);
-  color: #c6c9bb;
-  font: 500 11px/16px system-ui, sans-serif;
+  color: var(--md-sys-color-on-surface-variant);
+  font: 500 11px/16px var(--lk-font-data);
   letter-spacing: 0.5px;
 }
 
@@ -174,8 +190,8 @@ l21-loading.error .loading-label {
 .loading-note {
   max-width: min(280px, 70vw);
   margin: 0;
-  color: #c6c9bb;
-  font: 400 13px/18px system-ui, sans-serif;
+  color: var(--md-sys-color-on-surface-variant);
+  font: 400 13px/18px var(--lk-font-text);
   text-align: center;
 }
 .loading-retry {
@@ -187,8 +203,8 @@ l21-loading.error .loading-label {
   border-radius: 999px;
   background: transparent;
   background-clip: padding-box;
-  color: #b8c97a;
-  font: 500 14px/20px system-ui, sans-serif;
+  color: var(--md-sys-color-secondary);
+  font: 500 14px/20px var(--lk-font-data);
   letter-spacing: 0.1px;
   cursor: pointer;
   pointer-events: auto;
@@ -201,7 +217,7 @@ l21-loading.error .loading-label {
   background: rgb(184 201 122 / 10%);
 }
 .loading-retry:focus-visible {
-  outline: 2px solid #b8c97a;
+  outline: 2px solid var(--md-sys-color-secondary);
   outline-offset: 2px;
 }
 
@@ -247,7 +263,7 @@ l21-loading.error .loading-label {
   border: 0;
   border-radius: 999px;
   background: rgb(60 66 50 / 92%);
-  color: #e3e6d8;
+  color: var(--md-sys-color-on-surface);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -275,7 +291,7 @@ l21-loading.error .loading-label {
   opacity: 0.1;
 }
 .icon-button:focus-visible {
-  outline: 2px solid #b8c97a;
+  outline: 2px solid var(--md-sys-color-secondary);
   outline-offset: 2px;
 }
 .icon-button img,
@@ -284,8 +300,8 @@ l21-loading.error .loading-label {
 }
 /* Selected (toggle): the settings button while its panel is open */
 .icon-button[aria-expanded='true'] {
-  background: #b8c97a;
-  color: #12140e;
+  background: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-surface);
 }
 
 /* Positions: 16 dp from the edges (the touch target 12), 8 dp between the touch targets */
@@ -311,8 +327,8 @@ l21-loading.error .loading-label {
   bottom: max(16px, env(safe-area-inset-bottom));
 }
 .icon-button[aria-pressed='true'] {
-  background: #b8c97a;
-  color: #12140e;
+  background: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-surface);
 }
 /* While underwater (main.js), left of the underwater button: one strip with the season slider (a pill like the
    other controls over the 3D view, an MD3 discrete slider with four stops, and its value) and the dive light's icon
@@ -334,14 +350,14 @@ l21-loading.error .loading-label {
   padding: 0 16px;
   border-radius: 999px;
   background: rgb(30 33 25 / 88%);
-  color: #e3e6d8;
-  font: 500 12px/16px system-ui, sans-serif;
+  color: var(--md-sys-color-on-surface);
+  font: 500 12px/16px var(--lk-font-data);
   letter-spacing: 0.5px;
 }
 .season-range {
   width: 112px;
   margin: 0;
-  accent-color: #b8c97a;
+  accent-color: var(--md-sys-color-secondary);
   cursor: pointer;
 }
 .season-value {
@@ -419,7 +435,7 @@ l21-loading.error .loading-label {
   padding: 6px 8px;
   border-radius: 6px;
   background: rgb(18 20 14 / 75%);
-  color: #e3e6d8;
+  color: var(--md-sys-color-on-surface);
   font-size: 11px;
   pointer-events: none;
 }
@@ -444,7 +460,7 @@ l21-loading.error .loading-label {
   height: 56px;
   border-radius: 999px;
   background: rgb(60 66 50 / 92%);
-  color: #e3e6d8;
+  color: var(--md-sys-color-on-surface);
 }
 html:not(.embedded) .compass {
   top: calc(max(12px, env(safe-area-inset-top)) + 40px);
@@ -469,8 +485,8 @@ html:not(.embedded) .compass {
   padding: 10px 14px;
   border-radius: 16px;
   background: rgb(30 33 25 / 92%);
-  color: #e3e6d8;
-  font: 400 13px/18px system-ui, sans-serif;
+  color: var(--md-sys-color-on-surface);
+  font: 400 13px/18px var(--lk-font-text);
   letter-spacing: 0.25px;
   pointer-events: none;
 }
@@ -489,7 +505,7 @@ html:not(.embedded) .compass {
 .touch-hint ul {
   margin: 0;
   padding-left: 18px;
-  color: #c6c9bb;
+  color: var(--md-sys-color-on-surface-variant);
 }
 
 l21-settings-panel {
@@ -505,7 +521,7 @@ l21-settings-panel {
   padding: 0 16px 16px;
   border-radius: 16px;
   background: rgb(27 30 21 / 92%);
-  color: #e3e6d8;
+  color: var(--md-sys-color-on-surface);
   font-size: 14px;
   box-shadow: 0 8px 24px rgb(0 0 0 / 40%);
 }
@@ -539,18 +555,18 @@ l21-settings-panel {
   border-radius: 999px;
   background: transparent;
   background-clip: padding-box;
-  color: #c6c9bb;
+  color: var(--md-sys-color-on-surface-variant);
   cursor: pointer;
 }
 .settings-close:hover {
-  background-color: rgb(198 201 187 / 8%);
+  background-color: rgb(201 205 187 / 8%);
 }
 .settings-close:focus-visible,
 .settings-close:active {
-  background-color: rgb(198 201 187 / 10%);
+  background-color: rgb(201 205 187 / 10%);
 }
 .settings-close:focus-visible {
-  outline: 2px solid #b8c97a;
+  outline: 2px solid var(--md-sys-color-secondary);
   outline-offset: -2px;
 }
 
@@ -567,7 +583,7 @@ l21-settings-panel {
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #b8c97a;
+  color: var(--md-sys-color-secondary);
 }
 
 .settings-section summary {
@@ -591,7 +607,7 @@ l21-settings-panel {
 }
 
 .settings-row output {
-  color: #a3a893;
+  color: var(--lk-on-bar-muted);
   font-variant-numeric: tabular-nums;
 }
 
@@ -600,34 +616,34 @@ l21-settings-panel {
 .settings-row input[type="url"] {
   flex: 1 1 100%;
   min-height: 32px;
-  accent-color: #b8c97a;
+  accent-color: var(--md-sys-color-secondary);
 }
 
 .settings-row select,
 .settings-row input[type="url"] {
   padding: 4px 8px;
-  border: 1px solid #3c4232;
+  border: 1px solid var(--md-sys-color-outline);
   border-radius: 8px;
-  background: #12140e;
+  background: var(--md-sys-color-surface);
   color: inherit;
 }
 
 .settings-toggle input {
   width: 18px;
   height: 18px;
-  accent-color: #b8c97a;
+  accent-color: var(--md-sys-color-secondary);
 }
 
 .settings-hint {
   flex: 1 1 100%;
   margin: 0;
   font-size: 12px;
-  color: #a3a893;
+  color: var(--lk-on-bar-muted);
 }
 /* Telemetry session code (telemetry.js): read out by a tester to find their visit in the logs */
 .settings-session {
   margin-top: 12px;
-  font-family: ui-monospace, monospace;
+  font-family: var(--lk-font-data);
 }
 
 .settings-actions {
@@ -647,8 +663,8 @@ l21-settings-panel {
   border: 1px solid #8f9482;
   border-radius: 999px;
   background: transparent;
-  color: #b8c97a;
-  font: 500 14px/20px system-ui, sans-serif;
+  color: var(--md-sys-color-secondary);
+  font: 500 14px/20px var(--lk-font-data);
   letter-spacing: 0.1px;
   cursor: pointer;
 }
@@ -665,7 +681,7 @@ l21-settings-panel {
   background: rgb(184 201 122 / 10%);
 }
 .settings-actions button:focus-visible {
-  outline: 2px solid #b8c97a;
+  outline: 2px solid var(--md-sys-color-secondary);
   outline-offset: 2px;
 }
 
@@ -680,8 +696,8 @@ l21-settings-panel {
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  color: #f2f3ea;
-  font-family: system-ui, sans-serif;
+  color: var(--lk-on-bar);
+  font-family: var(--lk-font-text);
 }
 /* The controls' frame: the screen, or a quarter turn of it when the phone is held sideways (android-ar.js,
    trackTurn: Chrome keeps the screen's orientation during AR) */
@@ -734,8 +750,8 @@ l21-settings-panel {
   padding: 0;
   border: 0;
   border-radius: 999px;
-  background: #3c4232;
-  color: #f2f3ea;
+  background: var(--md-sys-color-outline);
+  color: var(--lk-on-bar);
   cursor: pointer;
 }
 .xr-overlay-close::before {
@@ -756,7 +772,7 @@ l21-settings-panel {
   opacity: 0.1;
 }
 .xr-overlay-close:focus-visible {
-  outline: 2px solid #b8c97a;
+  outline: 2px solid var(--md-sys-color-secondary);
   outline-offset: 2px;
 }
 .xr-overlay-foot {
@@ -783,7 +799,7 @@ l21-settings-panel {
   cursor: pointer;
 }
 .xr-slider:focus-visible {
-  outline: 2px solid #b8c97a;
+  outline: 2px solid var(--md-sys-color-secondary);
   outline-offset: 2px;
   border-radius: 8px;
 }
@@ -800,7 +816,7 @@ l21-settings-panel {
   inset: 0 auto 0 0;
   width: calc(var(--value, 0) * 100%);
   border-radius: inherit;
-  background: #f28c28;
+  background: var(--md-sys-color-tertiary);
 }
 .xr-slider-thumb {
   position: absolute;
@@ -809,13 +825,13 @@ l21-settings-panel {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #f28c28;
+  background: var(--md-sys-color-tertiary);
   transform: translate(-50%, -50%);
 }
 .xr-overlay-scale output {
   min-width: 3.5em;
   text-align: right;
-  font-family: ui-monospace, monospace;
+  font-family: var(--lk-font-data);
 }
 /* Side insets (notch, rounded corners) in both orientations */
 .xr-overlay-head {
@@ -858,8 +874,8 @@ l21-settings-panel {
   padding: 0 16px;
   border: 0;
   background: transparent;
-  color: #e3e6d8;
-  font: 500 14px/20px system-ui, sans-serif;
+  color: var(--md-sys-color-on-surface);
+  font: 500 14px/20px var(--lk-font-data);
   letter-spacing: 0.1px;
   cursor: pointer;
 }
@@ -870,8 +886,8 @@ l21-settings-panel {
   display: none;
 }
 .compare button[aria-pressed='true'] {
-  background: #b8c97a;
-  color: #12140e;
+  background: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-surface);
 }
 .compare button[aria-pressed='true'] svg {
   display: block;
@@ -893,7 +909,7 @@ l21-settings-panel {
   opacity: 0.1;
 }
 .compare button:focus-visible {
-  outline: 2px solid #b8c97a;
+  outline: 2px solid var(--md-sys-color-secondary);
   outline-offset: -2px;
 }
 
@@ -910,9 +926,9 @@ l21-tooltip {
   min-height: 24px;
   padding: 4px 8px;
   border-radius: 4px;
-  background: #e3e6d8;
+  background: var(--md-sys-color-on-surface);
   color: #2f3227;
-  font: 400 12px/16px system-ui, sans-serif;
+  font: 400 12px/16px var(--lk-font-text);
   letter-spacing: 0.4px;
   white-space: nowrap;
   pointer-events: none;
@@ -943,8 +959,8 @@ l21-tooltip[data-shown='true'] {
   padding: 10px 12px 8px;
   border-radius: 16px;
   background: rgb(30 33 25 / 88%);
-  color: #e3e6d8;
-  font: 500 12px/16px system-ui, sans-serif;
+  color: var(--md-sys-color-on-surface);
+  font: 500 12px/16px var(--lk-font-data);
   letter-spacing: 0.5px;
   pointer-events: none;
 }
@@ -964,19 +980,19 @@ l21-tooltip[data-shown='true'] {
   border-radius: 999px;
   background: transparent;
   background-clip: padding-box;
-  color: #c6c9bb;
+  color: var(--md-sys-color-on-surface-variant);
   cursor: pointer;
   pointer-events: auto;
 }
 .swim-help-button:hover {
-  background: rgb(227 230 216 / 8%);
+  background: rgb(235 237 227 / 8%);
 }
 .swim-help-button:focus-visible,
 .swim-help-button:active {
-  background: rgb(227 230 216 / 10%);
+  background: rgb(235 237 227 / 10%);
 }
 .swim-help-button:focus-visible {
-  outline: 2px solid #b8c97a;
+  outline: 2px solid var(--md-sys-color-secondary);
   outline-offset: 2px;
 }
 .swim-row {
@@ -1008,28 +1024,28 @@ l21-tooltip[data-shown='true'] {
   border: 1px solid #8f9482;
   border-bottom-width: 3px;
   border-radius: 8px;
-  font: 600 14px/1 system-ui, sans-serif;
+  font: 700 14px/1 var(--lk-font-data);
   transition: background 100ms, color 100ms;
 }
 .swim-key:hover kbd {
-  background: rgb(227 230 216 / 8%);
+  background: rgb(235 237 227 / 8%);
 }
 .swim-key:focus-visible kbd {
-  background: rgb(227 230 216 / 10%);
-  outline: 2px solid #b8c97a;
+  background: rgb(235 237 227 / 10%);
+  outline: 2px solid var(--md-sys-color-secondary);
   outline-offset: 2px;
 }
 .swim-key:focus-visible {
   outline: none;
 }
 .swim-key[data-down] kbd {
-  background: #b8c97a;
-  color: #12140e;
-  border-color: #b8c97a;
+  background: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-surface);
+  border-color: var(--md-sys-color-secondary);
 }
 .swim-hint {
   margin: 2px 0 0;
-  color: #c6c9bb;
+  color: var(--md-sys-color-on-surface-variant);
   white-space: nowrap;
 }
 
@@ -1041,8 +1057,8 @@ l21-tooltip[data-shown='true'] {
   border: 0;
   border-radius: 28px;
   background: #23261d;
-  color: #e3e6d8;
-  font: 400 14px/20px system-ui, sans-serif;
+  color: var(--md-sys-color-on-surface);
+  font: 400 14px/20px var(--lk-font-text);
   letter-spacing: 0.25px;
 }
 .swim-help::backdrop {
@@ -1050,12 +1066,12 @@ l21-tooltip[data-shown='true'] {
 }
 .swim-help h2 {
   margin: 0 0 16px;
-  font: 400 24px/32px system-ui, sans-serif;
+  font: 800 24px/32px var(--lk-font-text);
 }
 .swim-help p,
 .swim-help ul {
   margin: 0 0 12px;
-  color: #c6c9bb;
+  color: var(--md-sys-color-on-surface-variant);
 }
 .swim-help ul {
   padding-left: 20px;
@@ -1070,9 +1086,9 @@ l21-tooltip[data-shown='true'] {
   border: 1px solid #8f9482;
   border-bottom-width: 2px;
   border-radius: 4px;
-  font: 600 12px/18px system-ui, sans-serif;
+  font: 700 12px/18px var(--lk-font-data);
   text-align: center;
-  color: #e3e6d8;
+  color: var(--md-sys-color-on-surface);
 }
 /* « Compris »: MD3 text button, 40 dp in a 48 dp touch target (the transparent border, its background inside it); the
    negative margin keeps it where a 40 dp button stands */
@@ -1089,8 +1105,8 @@ l21-tooltip[data-shown='true'] {
   border-radius: 999px;
   background: transparent;
   background-clip: padding-box;
-  color: #b8c97a;
-  font: 500 14px/20px system-ui, sans-serif;
+  color: var(--md-sys-color-secondary);
+  font: 500 14px/20px var(--lk-font-data);
   letter-spacing: 0.1px;
   cursor: pointer;
 }
@@ -1108,8 +1124,8 @@ l21-tooltip[data-shown='true'] {
   width: 24px;
   height: 24px;
   border-radius: 999px;
-  background: #b8c97a;
-  color: #12140e;
+  background: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-surface);
   vertical-align: middle;
 }
 .swim-help-icon svg {
@@ -1135,8 +1151,8 @@ l21-tooltip[data-shown='true'] {
   border-radius: 999px;
   background: rgb(60 66 50 / 92%);
   background-clip: padding-box;
-  color: #e3e6d8;
-  font: 500 14px/20px system-ui, sans-serif;
+  color: var(--md-sys-color-on-surface);
+  font: 500 14px/20px var(--lk-font-data);
   letter-spacing: 0.1px;
   white-space: nowrap;
   cursor: pointer;
@@ -1159,7 +1175,7 @@ l21-tooltip[data-shown='true'] {
   background: rgb(86 93 73 / 95%);
 }
 .tour-button:focus-visible {
-  outline: 2px solid #b8c97a;
+  outline: 2px solid var(--md-sys-color-secondary);
   outline-offset: 0;
 }
 .tour-button svg {
@@ -1179,8 +1195,8 @@ l21-tooltip[data-shown='true'] {
   padding: 12px 16px 12px 20px;
   border-radius: 20px;
   background: rgb(35 38 29 / 94%);
-  color: #e3e6d8;
-  font: 400 14px/20px system-ui, sans-serif;
+  color: var(--md-sys-color-on-surface);
+  font: 400 14px/20px var(--lk-font-text);
   letter-spacing: 0.25px;
   opacity: 0;
   transform: translate(-50%, 16px);
@@ -1210,8 +1226,8 @@ l21-tooltip[data-shown='true'] {
   margin-right: -8px;
 }
 .tour-count {
-  color: #b8c97a;
-  font: 500 12px/16px system-ui, sans-serif;
+  color: var(--md-sys-color-secondary);
+  font: 500 12px/16px var(--lk-font-data);
   letter-spacing: 0.5px;
 }
 /* MD3 standard icon button: 40 dp in a 48 dp touch target */
@@ -1226,28 +1242,28 @@ l21-tooltip[data-shown='true'] {
   border-radius: 999px;
   background: transparent;
   background-clip: padding-box;
-  color: #c6c9bb;
+  color: var(--md-sys-color-on-surface-variant);
   cursor: pointer;
 }
 .tour-close:hover {
-  background-color: rgb(227 230 216 / 8%);
+  background-color: rgb(235 237 227 / 8%);
 }
 .tour-close:focus-visible,
 .tour-close:active {
-  background-color: rgb(227 230 216 / 10%);
+  background-color: rgb(235 237 227 / 10%);
 }
 .tour-close:focus-visible {
-  outline: 2px solid #b8c97a;
+  outline: 2px solid var(--md-sys-color-secondary);
   outline-offset: -2px;
 }
 .tour-title {
   margin: -4px 0 4px;
-  font: 500 16px/24px system-ui, sans-serif;
+  font: 800 16px/24px var(--lk-font-text);
   letter-spacing: 0.15px;
 }
 .tour-text {
   margin: 0;
-  color: #c6c9bb;
+  color: var(--md-sys-color-on-surface-variant);
 }
 .tour-actions {
   display: flex;
@@ -1264,14 +1280,14 @@ l21-tooltip[data-shown='true'] {
   border: 4px solid transparent;
   border-radius: 999px;
   background-clip: padding-box;
-  font: 500 14px/20px system-ui, sans-serif;
+  font: 500 14px/20px var(--lk-font-data);
   letter-spacing: 0.1px;
   cursor: pointer;
 }
 .tour-prev {
   padding: 0 12px;
   background-color: transparent;
-  color: #b8c97a;
+  color: var(--md-sys-color-secondary);
 }
 .tour-prev:hover {
   background-color: rgb(184 201 122 / 8%);
@@ -1282,8 +1298,8 @@ l21-tooltip[data-shown='true'] {
 }
 .tour-next {
   padding: 0 24px;
-  background-color: #b8c97a;
-  color: #12140e;
+  background-color: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-surface);
 }
 .tour-next:hover {
   background-color: #c3d389;
@@ -1294,7 +1310,7 @@ l21-tooltip[data-shown='true'] {
 }
 .tour-prev:focus-visible,
 .tour-next:focus-visible {
-  outline: 2px solid #b8c97a;
+  outline: 2px solid var(--md-sys-color-secondary);
   outline-offset: 0;
 }
 .tour-prev[hidden] {

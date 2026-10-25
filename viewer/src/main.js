@@ -1,4 +1,9 @@
 import * as THREE from 'three'
+// The site's fonts (TODO #39): Archivo for text and titles, JetBrains Mono for labels and data (style.css)
+import '@fontsource/archivo/400.css'
+import '@fontsource/archivo/800.css'
+import '@fontsource/jetbrains-mono/500.css'
+import '@fontsource/jetbrains-mono/700.css'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js'
@@ -326,8 +331,9 @@ controls.enableDamping = true
 // across the view's height
 controls.rotateSpeed = 0.5
 // Looking up (Christian, 2026-10-24: the standard view couldn't): the camera may go below the point it turns around,
-// up to ORBIT_UP from straight above it; it then stays in front of the surfaces between them (keepInFront). It used
-// to stay above that point's height, so as never to look from under the floor
+// up to ORBIT_UP from straight above it; the soft floor (keepAboveFloor) keeps it above the model. It used to stay
+// above that point's height, so as never to look from under the floor; then (2026-10-24) in front of any surface
+// between them, which made it jump forward when a pan lowered that line onto a surface (Christian, 2026-10-25)
 const ORBIT_UP = Math.PI * 0.95
 controls.maxPolarAngle = ORBIT_UP
 // Touch navigation, the double-tap's flight (touch-nav.js): the model's point under the finger (the zones' tiles and
@@ -929,6 +935,7 @@ function labelKeys(swimming) {
 // The diver can't go through the model: each move stops short of the surfaces and slides along them (collide.js)
 const collider = createCollider(() => [...tilesets.map((tiles) => tiles.group), ...contextModels])
 if (import.meta.env.DEV) window.l21.collider = collider
+if (import.meta.env.DEV) window.l21.siteBounds = () => siteBounds()
 // Outside the water, the same keys move the camera and the orbit's centre together (the orbit kept as it was), at
 // the swimming speed times the orbit's distance over SWIM_TARGET (at least once)
 const walked = new THREE.Vector3()
@@ -1087,7 +1094,11 @@ homeButton.addEventListener('click', () => {
   requestRender()
   log('home', {})
 })
-if (params.get('tour') === '1') firstView.then(() => tour.start())
+// A step in the address at load (#tour-3, Christian, 2026-10-25): the tour starts there, the camera straight at that
+// step's view, without a flight; else ?tour=1 starts it at the first
+const startStep = startHash ? Number(startHash.slice(6)) - 1 : -1
+if (startStep >= 0 && startStep < TOUR_STEPS.length) firstView.then(() => tour.start(startStep, { jump: true }))
+else if (params.get('tour') === '1') firstView.then(() => tour.start())
 function showSwimHelp() {
   try {
     if (localStorage.getItem(SWIM_HELP_KEY)) return
@@ -1944,45 +1955,49 @@ function tileFacts() {
 }
 setEndFacts(tileFacts)
 
-// The orbiting camera lower than its point (looking up): a surface between them (the floor, a wall) brings it in
-// front of that surface, IN_FRONT m short, so it never looks from under the floor or inside a wall
-const IN_FRONT = 0.2
-const frontRay = new THREE.Raycaster()
-frontRay.firstHitOnly = true
-const toCamera = new THREE.Vector3()
-function keepInFront() {
-  if (camera.position.y >= controls.target.y) return
-  toCamera.subVectors(camera.position, controls.target)
-  const distance = toCamera.length()
-  if (distance < 1e-3) return
-  toCamera.divideScalar(distance)
-  frontRay.set(controls.target, toCamera)
-  frontRay.far = distance
-  const hit = frontRay.intersectObjects([...tilesets.map((tiles) => tiles.group), ...contextModels], true)[0]
-  if (hit) camera.position.copy(controls.target).addScaledVector(toCamera, Math.max(0.05, hit.distance - IN_FRONT))
-}
-
-// Underwater, the diver never under the floor (Christian, 2026-10-24): orbiting or panning (no collisions there), a gap
-// between tiles, or finer tiles not loaded yet could take the camera below it. A ray up from the camera that meets a
-// surface facing up (a floor seen from below; a ceiling faces down) within FLOOR_CHECK m brings it back FLOOR_CLEAR m
-// above that floor (the swimmer's distance from the surfaces), the orbit's point with it
-const FLOOR_CHECK = 4
+// Never under the model (underwater, Christian, 2026-10-24; in both views, TODO #71, 2026-10-25): orbiting or panning
+// (no collisions there), a gap between tiles, or finer tiles not loaded yet could take the camera below it. The floor
+// is a soft one (Christian, 2026-10-25: panning down near the floor went under it, a flash, then a jump up): the camera
+// stops `clear` m above the surface facing up under it, FLOOR_CLEAR m underwater (the swimmer's distance from the
+// surfaces), AIR_CLEAR m outside the water (the start views are lower than the swimmer's), the orbit's point with it.
+// The floor is the highest of: a surface facing up just under the camera; one it crossed since the last frame (a
+// quick move, up to CROSS_MAX m: farther, it was put there, by a link or a button); one above it within FLOOR_CHECK m
+// (the banks rise about 17 m above the lock's floor), facing up, so seen from below: it is already under it
+const FLOOR_CHECK = 20
 const FLOOR_CLEAR = 0.6
+const AIR_CLEAR = 0.2
+const CROSS_MAX = 3
 const UP = new THREE.Vector3(0, 1, 0)
 const floorRay = new THREE.Raycaster()
 floorRay.firstHitOnly = true
 const floorNormal = new THREE.Vector3()
-function keepAboveFloor() {
-  floorRay.set(camera.position, UP)
-  floorRay.far = FLOOR_CHECK
-  const hit = floorRay.intersectObjects(collider.surfacesNear(camera.position, FLOOR_CHECK), false)[0]
-  if (!hit?.face) return false
+const floorStep = new THREE.Vector3()
+const lastCamera = new THREE.Vector3(NaN, NaN, NaN)
+/** The height of a surface facing up met by a ray, or -Infinity */
+function floorHit(from, direction, far, meshes) {
+  floorRay.set(from, direction)
+  floorRay.far = far
+  const hit = floorRay.intersectObjects(meshes, false)[0]
+  if (!hit?.face) return -Infinity
   floorNormal.copy(hit.face.normal).transformDirection(hit.object.matrixWorld)
-  if (floorNormal.y < 0.5) return false
-  const rise = hit.point.y + FLOOR_CLEAR - camera.position.y
-  camera.position.y += rise
-  if (!swim.looking) controls.target.y += rise
-  return true
+  return floorNormal.y < 0.5 ? -Infinity : hit.point.y
+}
+function keepAboveFloor() {
+  const clear = underwater.on ? FLOOR_CLEAR : AIR_CLEAR
+  const meshes = collider.surfacesNear(camera.position, FLOOR_CHECK)
+  let floor = Math.max(floorHit(camera.position, UP, FLOOR_CHECK, meshes), floorHit(camera.position, DOWN, clear, meshes))
+  floorStep.subVectors(camera.position, lastCamera)
+  const step = floorStep.length()
+  if (step > 1e-4 && step < CROSS_MAX && floorStep.y < 0) {
+    floor = Math.max(floor, floorHit(lastCamera, floorStep.divideScalar(step), step, meshes))
+  }
+  const rise = floor + clear - camera.position.y
+  if (rise > 0) {
+    camera.position.y += rise
+    if (!swim.looking) controls.target.y += rise
+  }
+  lastCamera.copy(camera.position)
+  return rise > 0
 }
 
 // Within the model's area (TODO #66, Christian, 2026-10-24), in both views and whatever the navigation: the whole
@@ -1991,7 +2006,17 @@ function keepAboveFloor() {
 // that leaves them horizontally is brought back to their edge, the orbit's point moved with it (the view keeps its
 // angle). Underwater it also stays below the surface (the render loop)
 const SITE_MARGIN = 10
+// And TERRAIN_MARGIN m past the terrain's edges, horizontally (Christian, 2026-10-25), in both views
+const TERRAIN_MARGIN = 30
+// No higher than this (scene metres, y up; TODO #71, Christian, 2026-10-25: the view from
+// ?cam=79.38,245.00,-69.37,-82.82,-169.03,-17.63, the whole site seen from above): the camera comes back along its
+// line of sight toward the orbit's point (zooming out stops there, the view keeps its angle); the point itself stays
+// below it
+const MAX_HEIGHT = 245
 const site = new THREE.Box3()
+// The model's lowest point (zones and context, without the margin): the camera never goes below it (TODO #71)
+let siteFloor = -Infinity
+const SITE_FLOOR_CLEAR = 0.3
 const zoneBox = new THREE.Box3()
 const terrainBox = new THREE.Box3()
 let siteFor = null
@@ -2006,8 +2031,18 @@ function siteBounds() {
     site.union(zoneBox.applyMatrix4(tiles.group.matrixWorld))
   }
   if (site.isEmpty()) return null
+  siteFloor = site.min.y
   site.expandByScalar(SITE_MARGIN)
-  for (const model of contextModels) site.union(terrainBox.setFromObject(model))
+  for (const model of contextModels) {
+    terrainBox.setFromObject(model)
+    siteFloor = Math.min(siteFloor, terrainBox.min.y)
+    // TERRAIN_MARGIN m past the terrain to the west, north, east and south
+    terrainBox.min.x -= TERRAIN_MARGIN
+    terrainBox.min.z -= TERRAIN_MARGIN
+    terrainBox.max.x += TERRAIN_MARGIN
+    terrainBox.max.z += TERRAIN_MARGIN
+    site.union(terrainBox)
+  }
   siteFor = key
   return site
 }
@@ -2016,13 +2051,28 @@ function keepInSite() {
   if (!bounds) return false
   const x = THREE.MathUtils.clamp(camera.position.x, bounds.min.x, bounds.max.x) - camera.position.x
   const z = THREE.MathUtils.clamp(camera.position.z, bounds.min.z, bounds.max.z) - camera.position.z
-  if (!x && !z) return false
-  camera.position.x += x
-  camera.position.z += z
-  if (!swim.looking) {
-    controls.target.x += x
-    controls.target.z += z
+  if (x || z) {
+    camera.position.x += x
+    camera.position.z += z
+    if (!swim.looking) {
+      controls.target.x += x
+      controls.target.z += z
+    }
   }
+  const low = siteFloor + SITE_FLOOR_CLEAR - camera.position.y
+  if (low > 0) {
+    camera.position.y += low
+    if (!swim.looking) controls.target.y += low
+  }
+  const high = camera.position.y > MAX_HEIGHT
+  if (high) {
+    if (swim.looking) camera.position.y = MAX_HEIGHT
+    else {
+      controls.target.y = Math.min(controls.target.y, MAX_HEIGHT - 1)
+      camera.position.lerpVectors(controls.target, camera.position, (MAX_HEIGHT - controls.target.y) / (camera.position.y - controls.target.y))
+    }
+  }
+  if (!x && !z && !high && low <= 0) return false
   return true
 }
 
@@ -2046,17 +2096,16 @@ function renderLoop() {
     if (touchNav.update()) needsRender = true
     // The left button's turn around the point pressed: its glide after release
     if (pointerOrbit.update()) needsRender = true
-    if (controls.update()) {
-      keepInFront()
-      needsRender = true
-    }
+    if (controls.update()) needsRender = true
   }
   // Within the site, in both views (keepInSite)
   if (keepInSite()) needsRender = true
+  // Never under the model, in both views (Christian, 2026-10-25: the same limits underwater): every frame underwater,
+  // while the camera moves outside the water, but not during the tour's flights there
+  if ((underwater.on || (needsRender && !tour.active)) && keepAboveFloor()) needsRender = true
   // Underwater: the camera stays below the surface, and the caustics and particles move (a frame every time)
   if (underwater.on) {
     if (camera.position.y > SURFACE_Y - 0.5) camera.position.y = SURFACE_Y - 0.5
-    if (keepAboveFloor()) needsRender = true
     // The diver's arm first: the beam follows the light it holds
     diverArm.setVisible(underwater.lampVisible)
     diverArm.update(camera)

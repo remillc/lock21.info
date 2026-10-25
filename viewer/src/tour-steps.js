@@ -101,19 +101,21 @@ export const TOUR_STEPS = [
     },
   },
   {
-    kind: 'move',
-    from: [-27.28, 2.02, -16.28, -61.37, -7.37, -21.45],
-    // From step 3 (Christian, 2026-10-24): at floor level along the piers' ends (about 3.5 m east of them, 1.6 to 2 m
-    // high), looking west toward the structures, then to the passage's start. Clear of every surface (1.2 m at least)
-    approach: [[-21.5, 1.6, 5.0], [-24.5, 1.7, 0], [-25.0, 1.9, -6], [-25.0, 2.0, -11], [-25.6, 2.0, -14.6]],
-    looks: [{ dir: [-1, 0.05, -0.35] }, { dir: [-1, 0.05, -0.3] }, { dir: [-1, 0.05, -0.2] }, { dir: [-1, 0.05, -0.2] }, { dir: [-1, -0.1, -0.15] }],
-    paces: [1.6, 1.8, 1.8, 1.8, 1.4, 1.0],
-    // Through the passage in line with the start (Christian, 2026-10-24: it went through the walls), in its middle: the
-    // passages are 1.1 m wide (z -17.2 to -16.1 for this one) and 1.1 m high (y 1.8 to 2.9), their piers 0.8 m wide
-    // and 3.1 m long (x -32.7 to -35.8); measured with the finest tiles, every surface counted
-    via: [[-31.6, 2.3, -16.6], [-34.2, 2.35, -16.65], [-36.5, 2.3, -16.4]],
-    to: [-37.22, 1.69, -15.24, -75.0, -10.69, -21.69],
-    pace: 1.2,
+    // One flight, no stop before the passage (Christian, 2026-10-25: it stopped at its mouth, then set off again): from
+    // step 3 at floor level along the piers' ends (about 3.5 m east of them, 1.6 to 2 m high), looking west toward the
+    // structures (Christian, 2026-10-24), into the passage at its pace (1.2 m/s) and through it, coming to rest only
+    // on the far side. Clear of every surface (1.2 m at least)
+    kind: 'view',
+    // Through the passage in line with its mouth (Christian, 2026-10-24: it went through the walls), in its middle:
+    // the passages are 1.1 m wide (z -17.2 to -16.1 for this one) and 1.1 m high (y 1.8 to 2.9), their piers 0.8 m
+    // wide and 3.1 m long (x -32.7 to -35.8); measured with the finest tiles, every surface counted. The mouth
+    // (-27.28, 2.02, -16.28) looking at (-61.37, -7.37, -21.45)
+    approach: [[-21.5, 1.6, 5.0], [-24.5, 1.7, 0], [-25.0, 1.9, -6], [-25.0, 2.0, -11], [-25.6, 2.0, -14.6],
+      [-27.28, 2.02, -16.28], [-31.6, 2.3, -16.6], [-34.2, 2.35, -16.65], [-36.5, 2.3, -16.4]],
+    looks: [{ dir: [-1, 0.05, -0.35] }, { dir: [-1, 0.05, -0.3] }, { dir: [-1, 0.05, -0.2] }, { dir: [-1, 0.05, -0.2] }, { dir: [-1, -0.1, -0.15] },
+      [-61.37, -7.37, -21.45], [-61.37, -7.37, -21.45], [-68.0, -9.0, -21.6], [-75.0, -10.69, -21.69]],
+    paces: [1.6, 1.8, 1.8, 1.8, 1.4, 1.2, 1.2, 1.2, 1.2, 1.2],
+    cam: [-37.22, 1.69, -15.24, -75.0, -10.69, -21.69],
     title: { fr: 'Par le passage d’une vanne', en: 'Through a gate passage' },
     text: {
       fr: 'Les vannes ouvertes laissaient passer l’eau sous la voûte. On traverse un des passages, vers l’ouest.',
@@ -123,7 +125,8 @@ export const TOUR_STEPS = [
   {
     // Added by Christian, 2026-10-24
     kind: 'view',
-    cam: [-45.27, 1.67, -26.26, -40.87, 2.8, -28.73],
+    // Christian, 2026-10-25 (was -45.27, 1.67, -26.26, -40.87, 2.8, -28.73)
+    cam: [-48.84, 0.69, -27.52, -33.75, 5.58, -28.62],
     title: { fr: 'Les piliers, côté ouest', en: 'The piers, west side' },
     text: {
       fr: 'Du côté ouest, les piliers sont arrondis, montés en assises de pierre. Derrière, l’enclave est fermée par un mur de madriers.',

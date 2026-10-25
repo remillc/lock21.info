@@ -155,11 +155,11 @@ Les téléchargements de la page `/modele` et les modèles de réalité augment�
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b modeles\lock-21-publishing.blend --factory-startup --python tools\publish-model\export_context.py -- O:\temp\google-earth\context
 ```
 
-**2. Le modèle pour Google Earth** (600 000 triangles), puis son KMZ:
+**2. Le modèle pour Google Earth** (700 000 triangles), puis son KMZ:
 
 ```powershell
-& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\t600k -t 600000 -s 2048 --context O:\temp\google-earth\context\context.glb
-tools\google-earth\.venv\Scripts\python.exe tools\google-earth\make_kmz.py -d O:\publishing\downloads\google-earth\t600k
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\t700k -t 700000 -s 2048 --context O:\temp\google-earth\context\context.glb
+tools\google-earth\.venv\Scripts\python.exe tools\google-earth\make_kmz.py -d O:\publishing\downloads\google-earth\t700k
 ```
 
 **3. Le modèle complet en GLB** (2 millions de triangles):
@@ -184,8 +184,8 @@ Remove-Item -Recurse -Force O:\publishing\downloads\google-earth\ar -ErrorAction
 $online = "O:\publishing\downloads\online"
 Remove-Item -Recurse -Force "$online\google-earth" -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force "$online\google-earth", "$online\ar" | Out-Null
-Copy-Item O:\publishing\downloads\google-earth\t600k\network\lock-21.kml "$online\google-earth\"
-Copy-Item -Recurse O:\publishing\downloads\google-earth\t600k\network\parts "$online\google-earth\"
+Copy-Item O:\publishing\downloads\google-earth\t700k\network\lock-21.kml "$online\google-earth\"
+Copy-Item -Recurse O:\publishing\downloads\google-earth\t700k\network\parts "$online\google-earth\"
 Copy-Item O:\publishing\downloads\google-earth\glb\lock-21.glb "$online\"
 Copy-Item O:\publishing\downloads\google-earth\ar\lock-21-ar*.glb, O:\publishing\downloads\google-earth\ar\lock-21-ar*.usdz "$online\ar\"
 ```
@@ -202,7 +202,7 @@ Ceux qui ont déjà le KMZ voient les changements à la prochaine ouverture dans
 Le petit KMZ téléchargé depuis le site (`public/downloads/lock-21.kmz`) ne change pas d'habitude. Le recopier seulement si son contenu a changé (adresse du serveur, vue d'arrivée, texte du copyright):
 
 ```powershell
-Copy-Item O:\publishing\downloads\google-earth\t600k\network\lock-21.kmz public\downloads\lock-21.kmz
+Copy-Item O:\publishing\downloads\google-earth\t700k\network\lock-21.kmz public\downloads\lock-21.kmz
 ```
 
 ## Étape 7 · Mettre le site à jour

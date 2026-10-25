@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#73**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#74**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -19,17 +19,19 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   a gesture or after it
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
 - [ ] #68 Yellow perch schools in the underwater view
-- [ ] #71 Standard (non-diving) view: keep the camera from going too far away from the model, and from going under it
 
 ### Pipeline
 
 - [ ] #10 `model:post-modified` and others only run on Windows (PowerShell); fine for now
+- [ ] #73 New terrain from a chart of the lock's surroundings (the Boating app,
+  `C:\Users\chris\Downloads\Screenshot_20261025_073716_Boating.jpg`, 2026-10-25; the green cross marks land): rebuild
+  the terrain from the chart's depth contours, at scale, in a new .blend under `O:\modeles\` (not the publishing .blend)
 
 ### Hosting and downloads
 
-- [ ] #13 Google Earth and downloads (`tools/google-earth/README.md`): the online KMZ opens in Google Earth Pro
-  (2026-10-21). To check: zone 18's sides with the double-sided models; the GLB in Google Earth Web; whether 700 000
-  triangles still open (600 000 opens, 800 000 crashes)
+- [ ] #13 Google Earth and downloads (`tools/google-earth/README.md`): 700 000 triangles open in Google Earth Pro, the
+  model placed and turned (2026-10-25); rebuilt with the zones of 2026-10-25, ready in `O:\publishing\downloads\online\`
+  (not uploaded). To check: zone 18's sides with the double-sided models; the GLB in Google Earth Web
 - [ ] #72 Other download formats worth adding? Candidates: the OBJ (+ .mtl, .jpg; already built beside the GLB) as a
   zip, for Blender, MeshLab and CloudCompare; STL for 3D printing (a closed, simplified model at 1:200); the AR USDZ
   as a download; a point cloud (PLY or LAZ) for archaeology and GIS tools; an orthophoto and a height map of the floor
@@ -62,8 +64,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #44 Usability audit of the site: what a first-time visitor (diver, heritage enthusiast, photogrammetrist) finds
   and understands, the paths from the home page to the model and the dive log, the 3D viewer's controls on desktop and
   phone, navigation and search, on both languages
-- [ ] #39 Design: applied (tokens, fonts, header and footer bars, home page, logo, tables); to do: a history page for the "L'histoire" entry (it points to the zone map for now), the 3D viewer in the same
-  palette and fonts, check contrast (WCAG AA) in both themes
+- [ ] #39 Design: applied (tokens, fonts, header and footer bars, home page, logo, tables, the 3D viewer's fonts and
+  colours); to do: check contrast (WCAG AA) in both themes
 - [ ] #48 Guided tour (viewer/src/tour.js, tour-steps.js; 8 steps, Christian's views and moves, 2026-10-24): the texts
   are drafts to review (zone 18 is not described on the zone map page); step 7 (the north wall's steps) is half hidden
   by a context fill in front of the camera. Not placed: the stone passage through the wall (Christian's favourite,

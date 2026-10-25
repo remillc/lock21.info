@@ -4,6 +4,21 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer in the site's fonts and colours (TODO #39): Archivo for text and titles, JetBrains Mono for labels and
+  data (self-hosted, @fontsource), the site's dark tokens for its colours.
+- Google Earth: the model at 700,000 triangles (was 600,000: it still opens in Google Earth Pro); the downloads rebuilt
+  with the zones republished on 2026-10-25.
+- Home page: hovering a card shades all of it (a light rectangle stayed in its middle).
+- Home page: the « L'histoire » card (no history page planned; it led to the zone map) replaced by « Les problèmes »,
+  leading to the problems encountered.
+- 3D viewer: a pan no longer makes the camera jump forward (it used to come in front of any surface between it and the
+  point it turns around; the soft floor now keeps it above the model).
+- 3D viewer, the guided tour: a step in the address at load (`#tour-3`) starts the tour at that step, the camera
+  straight at its view (no flight); step 4 is one flight, without the stop at the gate passage's mouth.
+- 3D viewer, the camera's limits, in both views (TODO #71): up to 30 m past the terrain to the west, north, east and
+  south; no higher than 245 m (zooming out stops there, the view keeps its angle); never under the model: a soft floor,
+  0.2 m above the surface below (0.6 m underwater), that a pan or a quick move can't cross, and never below the
+  model's lowest point.
 - 3D viewer, in the /modele page: nothing done in the viewer scrolls the page any more (TODO #70): the wheel while
   the orbit is off (the guided tour, swimming), the middle button's autoscroll, the scrolling keys (Page Down, Space...),
   and the page's context menu after a right-button drag released outside the viewer.
