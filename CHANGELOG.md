@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, the camera's limits, in both views (TODO #71): up to 30 m past the terrain to the west, north, east and
+  south; no higher than 245 m (zooming out stops there, the view keeps its angle); never under the model (a ray up
+  meeting a floor from below brings it back above, and never below the model's lowest point).
 - 3D viewer, in the /modele page: nothing done in the viewer scrolls the page any more (TODO #70): the wheel while
   the orbit is off (the guided tour, swimming), the middle button's autoscroll, the scrolling keys (Page Down, Space...),
   and the page's context menu after a right-button drag released outside the viewer.

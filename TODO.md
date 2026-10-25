@@ -19,7 +19,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   a gesture or after it
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
 - [ ] #68 Yellow perch schools in the underwater view
-- [ ] #71 Standard (non-diving) view: keep the camera from going too far away from the model, and from going under it
 
 ### Pipeline
 
