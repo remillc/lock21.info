@@ -3,8 +3,8 @@
 For each point of the height grid of chart_terrain.py, set in the .blend by the « chart frame » empty (linked from the
 chart terrain's .blend: its place and turn, overrides included), a ray down from above meets the published model: the
 zones (« zone N » objects, the boolean cutters excluded) and the context (blend_state.context_objects: the `terrain`
-collection and the fillers), as rendered (modifiers applied, Show in Render only). The first surface met is the floor
-there; none: NaN. make_chart_terrain.py keeps the chart terrain below it.
+collection and the fillers) and the mockups, as rendered (modifiers applied, Show in Render only). The lowest surface
+met is the floor there (the first could be a wall's top); none: NaN. make_chart_terrain.py keeps the chart terrain below it.
 
 The .blend is never saved.
 
@@ -40,7 +40,9 @@ frame = bpy.data.objects.get("chart frame")
 to_world = frame.matrix_world.copy() if frame else Matrix.Translation((-29.05, 21.70, 0)) @ Matrix.Rotation(-0.5236, 4, 'Z')
 
 depsgraph = bpy.context.evaluated_depsgraph_get()
-model = [o for o in bpy.data.objects if o.type == 'MESH' and re.match(r"^zone \d+", o.name)] + context_objects()
+mockups = bpy.data.collections.get("mockups")
+model = ([o for o in bpy.data.objects if o.type == 'MESH' and re.match(r"^zone \d+", o.name)] + context_objects()
+         + ([o for o in mockups.all_objects if o.type == 'MESH'] if mockups else []))
 model = [o for o in model if not o.hide_render and all(not c.hide_render for c in o.users_collection)]
 trees = []
 for ob in model:
@@ -59,11 +61,18 @@ for r in range(rows):
     for c in range(cols):
         at = to_world @ Vector(((c - ox) * cell, -(r - oy) * cell, 0))
         origin = Vector((at.x, at.y, TOP))
+        # The lowest surface under the point: the ray goes on through every surface (the first one met can be the top
+        # of a wall: the terrain then rose beside the walls in teeth, Christian, 2026-10-25)
         best = None
         for tree in trees:
-            hit = tree.ray_cast(origin, down)
-            if hit[0] is not None and (best is None or hit[0].z > best):
-                best = hit[0].z
+            start = origin.copy()
+            while True:
+                hit = tree.ray_cast(start, down)
+                if hit[0] is None:
+                    break
+                if best is None or hit[0].z < best:
+                    best = hit[0].z
+                start = hit[0] + down * 1e-3
         if best is not None:
             floor[r, c] = best
 np.savez_compressed(a.out, floor=floor)

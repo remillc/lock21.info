@@ -42,7 +42,11 @@ du nombre, profondeur en pieds) et les zones à ignorer (boutons et barres de l'
 5. **Le rivage, sans marches:** une plage sur le haut-fond (de 0,5 pi au bord de l'eau à 0 sur 6 m), puis la terre
    qui monte à sa hauteur sur 15 m.
 6. **Jamais au-dessus du plancher du modèle** (Christian, 2026-10-25), si `model_floor.py` l'a mesuré (`-f`): 5 cm
-   sous lui là où est le modèle (zones et contexte publiés, tels que rendus); au-delà de son bord, la limite remonte de
+   sous lui là où est le modèle (zones, contexte publiés et maquettes, tels que rendus). Le plancher est la surface la
+   plus basse du modèle sous chaque point (la première rencontrée pouvait être le haut d'un mur: le terrain montait en
+   dents le long des murs), et chaque point prend le plus bas de ses 8 voisins (le terrain entre les points de la grille
+   reste dessous aussi). Vérifié tous les 25 cm: aucun point visible au-dessus du modèle (174 sur 299 200 le sont,
+   tous dans le mur nord, cachés); au-delà de son bord, la limite remonte de
    0,3 m par mètre, floue et rejointe en douceur, pour retrouver les hauteurs de la carte sans falaise. Sous le modèle,
    le terrain de la carte porte l'empreinte des facettes et des murs du modèle: cachée par lui.
 

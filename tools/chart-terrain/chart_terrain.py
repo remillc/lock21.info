@@ -228,6 +228,10 @@ FLOOR_RISE = 0.3
 SURFACE = 55 * FOOT
 if a.floor and os.path.exists(a.floor):
     floor = np.load(a.floor)["floor"]
+    # Each point at the lowest floor around it (its 8 neighbours too): the terrain between the grid's points, a plane
+    # through them, stays below the floor as well
+    floor = ndimage.minimum_filter(np.where(np.isfinite(floor), floor, np.inf), size=3)
+    floor[np.isinf(floor)] = np.nan
     if floor.shape == height.shape:
         over = np.isfinite(floor)
         distance, (fy, fx) = ndimage.distance_transform_edt(~over, return_indices=True)
