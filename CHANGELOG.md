@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: panning (right button) drags the point pressed with the pointer, at its depth: it crept, the orbit's
+  centre often a metre ahead.
 - 3D viewer: the left button's vertical axis inverted, in both views (the orbit around the point pressed, and diving,
   looking around and the orbit around the pivot: up and down turn the other way).
 - 3D viewer: the dive light's beam as the Light & Motion Sola Dive 1200's: a 12° hotspot in a 60° spill 5 times weaker

@@ -28,6 +28,16 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
   controls.mouseButtons.LEFT = null
   surface.addEventListener('pointerdown', (event) => {
     controls.mouseButtons.LEFT = event.ctrlKey || event.shiftKey || event.metaKey ? THREE.MOUSE.ROTATE : null
+    // Panning (right button, or left with a modifier) drags the point pressed with the pointer (Christian, 2026-10-25:
+    // too slow): OrbitControls moves the plane of its centre with the pointer, often a metre ahead (the start view),
+    // so a wall 10 m away crept. Its speed is the depth of the point pressed over the centre's; over the sky, as before
+    const panning = event.button === 2 || (event.button === 0 && controls.mouseButtons.LEFT !== null)
+    if (event.pointerType !== 'mouse' || !panning) return
+    const point = pick(event.clientX, event.clientY)
+    const centre = camera.position.distanceTo(controls.target)
+    camera.getWorldDirection(offset)
+    const depth = point ? point.clone().sub(camera.position).dot(offset) : 0
+    controls.panSpeed = depth > 0 && centre > 0 ? THREE.MathUtils.clamp(depth / centre, 0.2, 100) : 1
   }, { capture: true })
   const pivot = new THREE.Vector3()
   const right = new THREE.Vector3()
