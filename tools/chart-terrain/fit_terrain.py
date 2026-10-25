@@ -211,22 +211,24 @@ near = band
 lift = band & (z > z0 + 0.01)
 
 # Areas Christian asked to make flat, at the lock floor's level (rectangles x0, x1, y0, y1 in the .blend's frame, in
-# metres; on one side of the walls, so as not to reach the ground behind them): the floor's level inside, the zones'
-# ground kept, joined to the ground around over the last FLATTEN_EDGE m
-FLATTEN_EDGE = 1.0
+# metres, on one side of the walls so as not to reach the ground behind them; then the width of the join to the ground
+# around, in metres, and « lower »: only lowered, dips kept): the floor's level inside, the zones' ground kept
 FLATTEN = [
-    (-44.0, -24.0, 22.0, 36.0),  # 2026-10-25: a 9 m mound by the walkway's north end, over the fillers, south of the
-                                 # north wall
+    (-44.0, -24.0, 22.0, 36.0, 1.0, False),  # 2026-10-25: a 9 m mound by the walkway's north end, over the fillers,
+                                             # south of the north wall
+    (-48.0, 98.0, -35.1, -16.8, 1.0, True),  # 2026-10-25: humps in the lock chamber, between « mur sud » and « mur nord »
+    (-7.0, 98.0, -11.7, 17.0, 2.0, True),    # 2026-10-25: humps north of « mur nord », east of the spillway
 ]
-for x0, x1, y0, y1 in FLATTEN:
+for x0, x1, y0, y1, join, lower in FLATTEN:
     px, py = pos[..., 0], pos[..., 1]
     edge_in = np.minimum.reduce([px - x0, x1 - px, py - y0, y1 - py])
     inside = (edge_in >= 0) & ~on_ground
-    e = np.clip(edge_in / FLATTEN_EDGE, 0, 1)
+    e = np.clip(edge_in / join, 0, 1)
     weight = e * e * (3 - 2 * e)
-    z = np.where(inside, weight * floor_level + (1 - weight) * z, z)
-    print(f"[fit] flattened x {x0}..{x1}, y {y0}..{y1}: {int(inside.sum())} vertices at the floor's level "
-          f"({np.median(floor_level[inside]):.2f} m)", flush=True)
+    flat_z = weight * floor_level + (1 - weight) * z
+    z = np.where(inside, np.minimum(z, flat_z) if lower else flat_z, z)
+    print(f"[fit] flattened x {x0}..{x1}, y {y0}..{y1}{' (lowered only)' if lower else ''}: {int(inside.sum())} vertices "
+          f"at the floor's level ({np.median(floor_level[inside]):.2f} m)", flush=True)
 
 # Inside walls and solids: never above their top
 # (where a wall of a zone covers the point, its top: a low filler inside a wall pulled the terrain under the wall's top

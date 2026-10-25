@@ -58,8 +58,10 @@ Move-Item -Force O:\temp\lock-21-publishing-chart.blend modeles\lock-21-publishi
   il monte aussi (caché), sinon des dents le long d'un mur en biais sur la grille; jamais plus haute que le
   dessus des zones plus 0,25 m par mètre;
 - **dans les zones à aplatir** (`FLATTEN` dans `fit_terrain.py`, des rectangles demandés par Christian, d'un seul côté
-  des murs): à plat, au niveau du plancher de l'écluse, raccordé sur 1 m; le sol des zones gardé. Première: x −44 à −24,
-  y 22 à 36, une butte de 9 m près du bout nord de la passerelle (2026-10-25);
+  des murs): à plat, au niveau du plancher de l'écluse (0,5 m environ), raccordé au sol autour sur une largeur donnée,
+  abaissé seulement si demandé (les creux gardés); le sol des zones gardé. Au 2026-10-25: x −44 à −24, y 22 à 36 (une
+  butte de 9 m près du bout nord de la passerelle); le sas, entre « mur sud » et « mur nord » (x −48 à 98, y −35,1 à
+  −16,8, abaissé seulement); au nord de « mur nord », à l'est du déversoir (x −7 à 98, y −11,7 à 17, abaissé seulement);
 - **dans les zones « rejoindre le mur »** (`MEET` dans `fit_terrain.py`, des rectangles demandés par Christian, côté
   extérieur des murs): le sol monte au dessus du mur quelle que soit sa hauteur, sur 6 m. Première: x −66 à 8, y 36,5
   à 42, tout le côté nord du mur nord (2026-10-25);
