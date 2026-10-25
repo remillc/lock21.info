@@ -83,10 +83,13 @@ def mark_lat_lon(location):
 
 def mark_placemark(mark):
     lat, lon = mark_lat_lon(mark["location"])
+    # On the model's terrain, not Google Earth's ground (Christian, 2026-10-25: « pinned onto the terrain »): its
+    # height in the .blend (the terrain's surface there, where the mark was set) plus the model's own altitude
+    height = mark["location"][2] + altitude
     return f"""  <Placemark>
     <name>{mark["name"]}</name>
     <description><![CDATA[{mark.get("what", "")}]]></description>
-    <Point><coordinates>{lon:.7f},{lat:.7f},0</coordinates></Point>
+    <Point><altitudeMode>relativeToGround</altitudeMode><coordinates>{lon:.7f},{lat:.7f},{height:.2f}</coordinates></Point>
   </Placemark>"""
 
 

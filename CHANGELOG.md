@@ -10,6 +10,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - Google Earth: the model raised just enough for its lowest point to meet the ground (`make_kmz.py -a/--altitude`,
   auto by default): the chart terrain's channel, about 4 m below the lock's floor, went under Google Earth's ground.
 - Google Earth: the KML descriptions in HTML, the site (lock21.info) and the model page (lock21.info/modele) as links.
+- Google Earth: the Lock 21 Scuba Park pinned on the model's terrain (its height in the .blend plus the model's
+  altitude), not on Google Earth's ground under it.
 
 ## 0.15.0 - 2026-10-25
 
