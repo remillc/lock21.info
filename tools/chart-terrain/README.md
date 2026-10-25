@@ -47,6 +47,13 @@ Résultat sur la carte du 2026-10-25: 1 112 bandes, intervalle trouvé de 1,48 p
 - Hauteurs dans ce repère: la surface de l'eau à 55 pi (16,764 m) au-dessus du niveau de référence de l'écluse
   (`SURFACE_Y` du visualiseur), un plan « water surface (55 ft) » pour repère (fil de fer, pas rendu).
 
+## Dans le .blend de publication
+
+La collection `chart terrain` y est **liée** (2026-10-25: Fichier > Lier, par chemin absolu, le `.blend` étant sur un
+autre disque): refaire `make_chart_terrain.py` met à jour le `.blend` de publication à sa prochaine ouverture. Elle est
+à la racine de la scène, hors de la collection `terrain`: elle n'est pas publiée (`blend_state.py`, `context_objects`;
+`model:check` le confirme). Pour la caler, ajouter une surcharge de bibliothèque (Library Override) sur « chart frame ».
+
 ## Limites
 
 - La croix verte est prise pour l'ancre du site: à vérifier en calant le terrain sur le modèle.
