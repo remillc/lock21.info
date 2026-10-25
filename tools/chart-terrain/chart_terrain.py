@@ -39,7 +39,7 @@ p.add_argument("-d", "--data", default=os.path.join(HERE, "soundings-2026-10-25.
                help="the chart's data: source image, scale, origin, soundings, masks (default soundings-2026-10-25.json)")
 p.add_argument("-i", "--image", help="the screenshot (default: the data file's source)")
 p.add_argument("-o", "--out", default="O:/temp/chart-terrain/heights.npz", help="the height grid (.npz), and a preview .png beside it")
-p.add_argument("-c", "--cell", type=float, default=1.0, help="grid spacing in metres (default 1)")
+p.add_argument("-c", "--cell", type=float, default=0.5, help="grid spacing in metres (default 0.5: the walls followed closely)")
 p.add_argument("-k", "--dark", type=int, default=620,
                help="a pixel darker than this (R + G + B) is a contour line (default 620: 1,156 bands on the 2026-10-25 chart)")
 p.add_argument("-b", "--band-limit", type=float, default=8.0,
@@ -237,24 +237,63 @@ if a.floor and os.path.exists(a.floor):
         print(f"[chart] model floor: {a.floor} is for another grid or version, skipped (run model_floor.py again)", flush=True)
     else:
         raw = stored["floor_zones"]
-        covered = np.isfinite(raw)
-        holes = ndimage.binary_fill_holes(covered) & ~covered
-        _, (zy, zx) = ndimage.distance_transform_edt(~covered, return_indices=True)
-        zones = ndimage.minimum_filter(np.where(covered, raw, np.inf), size=3)
-        zones = np.where(np.isinf(zones) | holes, raw[zy, zx], zones)
-        on_zone = covered | holes
-        away, (ay, ax) = ndimage.distance_transform_edt(~on_zone, return_indices=True)
-        target = zones[ay, ax] - SURFACE - FLOOR_CLEAR
-        t = np.clip(1 - away * a.cell / HUG_FALL, 0, 1)
-        weight = np.where(on_zone, 1.0, t * t * (3 - 2 * t))
-        height = weight * target + (1 - weight) * height
         top = stored["solid_top"]
-        solid = np.isfinite(top)
-        top = ndimage.minimum_filter(np.where(solid, top, np.inf), size=3)
-        capped = solid & np.isfinite(top) & (height > top - SURFACE - FLOOR_CLEAR)
-        height = np.where(capped, top - SURFACE - FLOOR_CLEAR, height)
-        print(f"[chart] model: {int(on_zone.sum()):,} points under the zones ({int(holes.sum()):,} in their holes), met "
-              f"over {HUG_FALL:.0f} m past their edges; {int(capped.sum()):,} kept under the solids' top", flush=True)
+        inf_raw = np.where(np.isfinite(raw), raw, np.inf)
+        covered = np.isfinite(raw)
+        # Ground or wall: a zone's floor no more than WALL_STEP m above the lowest point within WALL_REACH m is ground (a
+        # floor, a bank); higher, a wall's face or top (taking the lock floor beside a wall, the ground behind the north
+        # wall fell into a trench; a step test between neighbours let it climb the walls' faces, in spikes where their
+        # scans have holes: Christian, 2026-10-25)
+        WALL_STEP = 1.2
+        WALL_REACH = 1.0
+        reach = 2 * int(round(WALL_REACH / a.cell)) + 1
+        ground = covered & (raw - ndimage.minimum_filter(inf_raw, size=reach) <= WALL_STEP)
+        holes = ndimage.binary_fill_holes(covered) & ~covered
+        _, (zy, zx) = ndimage.distance_transform_edt(~ground, return_indices=True)
+        ground_floor = ndimage.minimum_filter(np.where(ground, raw, np.inf), size=3)
+        # A hole takes the lowest ground around it, within HOLE_REACH m (the nearest scanned point could be a wall's
+        # top: a hole where a face is missing filled up to it, in spikes seen through the face, Christian, 2026-10-25)
+        HOLE_REACH = 1.5
+        lowest = ndimage.minimum_filter(np.where(ground, raw, np.inf), size=2 * int(round(HOLE_REACH / a.cell)) + 1)
+        ground_floor = np.where(holes & np.isfinite(lowest), lowest, ground_floor)
+        ground_floor = np.where(np.isinf(ground_floor), raw[zy, zx], ground_floor)
+        ground = ground | holes
+        hidden = (covered & ~ground) | (np.isfinite(top) & ~ground)
+        # The ground meets the zones' floors from below
+        target = ground_floor - SURFACE - FLOOR_CLEAR
+        out = np.where(ground, target, np.nan)
+        # Past their edges, back to the chart's own heights over HUG_FALL m, spreading around walls and solids, never
+        # over them (one cell a step: the mean of the cells already reached)
+        steps = int(round(HUG_FALL / a.cell))
+        reached = ground.copy()
+        value = np.where(ground, target, 0.0)
+        dist = np.where(ground, 0, -1)
+        kernel = np.ones((3, 3))
+        for k in range(1, steps + 1):
+            total = ndimage.convolve(np.where(reached, value, 0.0), kernel, mode="constant")
+            count = ndimage.convolve(reached.astype(float), kernel, mode="constant")
+            new = ~reached & ~hidden & (count > 0)
+            value = np.where(new, total / np.maximum(count, 1), value)
+            dist = np.where(new, k, dist)
+            reached |= new
+        t = np.clip(1 - np.where(dist >= 0, dist, steps) / steps, 0, 1)
+        weight = np.where(ground, 1.0, t * t * (3 - 2 * t))
+        height = np.where(reached, weight * value + (1 - weight) * height, height)
+        # Inside walls and solids: the lowest ground around them, within HIDDEN_REACH m (a smooth fill rose from the lock
+        # floor toward the bank behind the walls, and showed as spikes where a filler is low and patchy: Christian,
+        # 2026-10-25), never above their top
+        HIDDEN_REACH = 3.0
+        size = 2 * int(round(HIDDEN_REACH / a.cell)) + 1
+        lowest_around = ndimage.minimum_filter(np.where(hidden, np.inf, height), size=size)
+        _, (ny, nx) = ndimage.distance_transform_edt(hidden, return_indices=True)
+        lowest_around = np.where(np.isinf(lowest_around), height[ny, nx], lowest_around)
+        height = np.where(hidden, lowest_around, height)
+        cap = np.where(np.isfinite(top), top, np.where(covered & ~ground, raw, np.inf)) - SURFACE - FLOOR_CLEAR
+        cap = ndimage.minimum_filter(cap, size=3)
+        capped = height > cap
+        height = np.minimum(height, cap)
+        print(f"[chart] model: {int(ground.sum()):,} points on the zones' ground ({int(holes.sum()):,} in their holes), "
+              f"{int(hidden.sum()):,} inside walls and solids, {int(capped.sum()):,} kept under their top", flush=True)
 os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
 np.savez_compressed(a.out, height=height.astype(np.float32), cls=gcls.astype(np.int8), cell=a.cell,
                     origin=np.array([ox / cell, (oy - TOP) / cell]), mpp=mpp)

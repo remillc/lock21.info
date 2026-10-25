@@ -24,6 +24,36 @@ Move-Item -Force O:\temp\lock-21-publishing-chart.blend modeles\lock-21-publishi
 L'étape 2 n'est à refaire que si le modèle a changé (zones, murs, remplissages, maquettes). Sorties intermédiaires dans
 `O:\temp\chart-terrain\`: `heights.npz` (la grille), `heights-preview.png` (un aperçu), `floor.npz` (le modèle).
 
+## Retouché à la main: ajuster, ne plus refaire
+
+Depuis le 2026-10-25, Christian retouche le terrain à la main dans le `.blend` de publication. `make_chart_terrain.py`
+le referait depuis la carte et **effacerait ces retouches**: ne plus le lancer. Après une retouche ou un changement du
+modèle, ajuster le terrain là seulement où il rencontre le modèle (Blender fermé):
+
+```powershell
+$blender = "C:\Program Files\Blender Foundation\Blender 5.2lender.exe"
+# 1. Mesurer chaque sommet du terrain et le modèle sous lui et au-dessus (lecture seule), 15 s
+& $blender -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrainit_mesh.py -- --measure
+# 2. Les hauteurs ajustées (Python du système)
+python tools\chart-terrainit_terrain.py
+# 3. Les écrire dans le maillage, dans une copie du .blend, puis la copie à la place du .blend
+& $blender -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrainit_mesh.py -- --apply
+Move-Item -Force O:	emp\lock-21-publishing-chart.blend modeles\lock-21-publishing.blend
+```
+
+`fit_terrain.py` ne touche un sommet que s'il le faut (le reste garde la hauteur retouchée):
+
+- **sous le sol d'une zone** (un plancher ou une berge: au plus 1,2 m au-dessus du plus bas de la zone dans un rayon de
+  3 m; le dessus d'un mur ou d'un pilier n'en est pas): 5 cm dessous, en montant ou en descendant;
+- **dans un trou d'un scan** (pas sous un solide, qui le couvre): 5 cm sous le sol le plus bas autour, dans 1,5 m;
+- **près des zones, dehors** (sur 8 m): jamais plus haut que leur dessus plus 0,25 m par mètre (la berge au-dessus du
+  mur nord, abaissée), jamais plus bas que le bord de leur sol moins 0,5 m par mètre, atteint en contournant les murs
+  (les vides à côté des escaliers, comblés); les deux en douceur;
+- **dans un mur ou un solide**: jamais au-dessus de son dessus (sous le mur d'une zone, le dessus du mur).
+
+Le maillage doit rester la grille d'origine (les retouches déplacent les sommets, sans en ajouter ni en retirer).
+Premier ajustement (2026-10-25): 2 018 sommets sur 166 100 déplacés.
+
 ## Données
 
 `soundings-2026-10-25.json`: la source, l'échelle (la barre de 100 pi fait 111 px: 0,2746 m par pixel), l'origine (la
