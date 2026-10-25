@@ -2,6 +2,12 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased
+
+- The context's export (`export_context.py`) applies the objects' modifiers before keeping only the baked UV map: the
+  chart terrain's Boolean added its cutter's UV map, and the export carried two, the first all zero (no texture in
+  Google Earth, which reads only the first).
+
 ## 0.15.0 - 2026-10-25
 
 - 3D viewer: a fine relief drawn from the photo (Christian, 2026-10-25: the wooden floor lacked roughness): the

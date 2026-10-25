@@ -188,6 +188,16 @@ for ob in to_bake:
     baked[ob.name] = image
     print(f"[context] cuit: {ob.name} ({bake_size}x{bake_size})", flush=True)
 
+# Les modificateurs appliqués d'abord (sur la copie en mémoire: le .blend n'est jamais sauvegardé): un booléen
+# ajoute au terrain la carte UV de son objet découpeur, que le nettoyage ci-dessous ne voyait pas (il ne lit que le
+# maillage d'origine). Exporté, le terrain de la carte avait deux cartes UV, la première à zéro: Google Earth, qui ne
+# lit que la première, le montrait sans texture (2026-10-25)
+depsgraph = bpy.context.evaluated_depsgraph_get()
+for ob in objects:
+    if ob.modifiers:
+        applied = bpy.data.meshes.new_from_object(ob.evaluated_get(depsgraph), preserve_all_data_layers=True, depsgraph=depsgraph)
+        ob.modifiers.clear()
+        ob.data = applied
 # Matériaux glTF simples, sur des copies (le .blend n'est jamais sauvegardé)
 clean = {}
 for ob in objects:
