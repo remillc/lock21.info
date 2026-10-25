@@ -1598,6 +1598,8 @@ function showMockups(model, manifest) {
       ground: (x, y, z) => collider.groundAt(x, y, z),
       // The river's current as the particles drift in it (underwater.js), or as measured outside the underwater view
       current: () => (underwater.on ? underwater.current : RIVER_CURRENT),
+      // Debug (?dance=1): it dances all through its threat posture, without waiting for the diver to keep still
+      alwaysDance: params.get('dance') === '1',
     })
     child.getWorldPosition(crawfish.object.position)
     scene.add(crawfish.object)
