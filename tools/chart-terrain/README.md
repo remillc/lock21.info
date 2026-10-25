@@ -11,7 +11,7 @@ le `.blend` de publication n'est ni ouvert ni modifié.
 # 1. La grille des hauteurs (Python du système: numpy, scipy, scikit-image, Pillow), 35 s
 python tools\chart-terrain\chart_terrain.py
 # 1b. Le plancher du modèle sur cette grille (lecture seule du .blend de publication), 15 s, puis refaire 1
-& "C:\Program Files\Blender Foundation\Blender 5.2lender.exe" -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\model_floor.py
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\model_floor.py
 python tools\chart-terrain\chart_terrain.py
 # 2. Le .blend (Blender, sans interface)
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\chart-terrain\make_chart_terrain.py
