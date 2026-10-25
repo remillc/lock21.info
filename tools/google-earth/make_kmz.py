@@ -54,9 +54,9 @@ p.add_argument("-H", "--heading", type=float, default=-30,
                help="model heading, degrees clockwise from true north (default -30: Baets' arrow as true north)")
 # Landing view, set in Google Earth Pro by Christian (2026-10-20) with the model at heading 0: over the lock, looking
 # west-northwest along it; turned and moved with the model since (-70 - 30; the site anchor moved on 2026-10-25)
-p.add_argument("--view", default="44.996946,-74.899711,66,-100,60", metavar="LAT,LON,RANGE,HEADING,TILT",
+p.add_argument("--view", default="44.997063,-74.899483,485,-15,28", metavar="LAT,LON,RANGE,HEADING,TILT",
                help="view when the file opens: latitude, longitude, distance (m), direction and tilt (degrees), as in "
-                    "Google Earth's camera properties (default 44.996946,-74.899711,66,-100,60)")
+                    "Google Earth's camera properties (default 44.997063,-74.899483,485,-15,28)")
 p.add_argument("-m", "--markers", default="O:/temp/google-earth/context/markers.json",
                help="the .blend's marks (export_context.py), pinned on the map (default "
                     "O:/temp/google-earth/context/markers.json; none if missing)")

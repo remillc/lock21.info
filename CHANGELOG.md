@@ -12,6 +12,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 - Google Earth: the KML descriptions in HTML, the site (lock21.info) and the model page (lock21.info/modele) as links.
 - Google Earth: the Lock 21 Scuba Park pinned on the model's terrain (its height in the .blend plus the model's
   altitude), not on Google Earth's ground under it.
+- Google Earth: a new arrival view (Christian), farther out to show the chart terrain: 44.997063, -74.899483, 485 m,
+  heading -15°, tilt 28°.
 
 ## 0.15.0 - 2026-10-25
 
