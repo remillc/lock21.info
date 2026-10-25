@@ -15,8 +15,8 @@ import json
 import struct
 
 FIRST_YEAR = 2024  # first dive
-LATITUDE = 44.996827  # the site anchor: Lock 21, 44°59.810' N (2026-10-25)
-LONGITUDE = -74.899683  # 74°53.981' W
+LATITUDE = 44.996900  # the site anchor: Lock 21, 44°59.814' N (2026-10-25)
+LONGITUDE = -74.899721  # 74°53.983' W
 
 
 def copyright_line(year=None):
