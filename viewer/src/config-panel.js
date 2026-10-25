@@ -67,14 +67,7 @@ function saveSettings(params, schema) {
 
 export function settingsSchema({ mobile }) {
   return [
-    {
-      title: t('underwaterSection'),
-      items: [
-        { key: 'underwater', label: t('underwater'), hint: t('underwaterHint'), type: 'toggle', def: '0', remember: false },
-        { key: 'season', label: t('season'), hint: t('seasonHint'), type: 'range', min: 0, max: 3, step: 1, def: String(seasonOfDate()), format: (v) => t('seasonValue', { index: Number(v) }), dependsOn: 'underwater' },
-        { key: 'lamp', label: t('lamp'), hint: t('lampHint'), type: 'toggle', def: '1', dependsOn: 'underwater' },
-      ],
-    },
+    // No underwater section (Christian, 2026-10-25): the diver's button and its strip (season, lamp) are the controls
     {
       title: t('lighting'),
       items: [
@@ -83,7 +76,7 @@ export function settingsSchema({ mobile }) {
         { key: 'light', label: t('sun'), hint: t('sunHint'), type: 'angles', def: '320,65', ranges: [[0, 360, 1], [0, 90, 1]], unit: '°' },
         { key: 'exposure', label: t('exposure'), type: 'range', min: 0.25, max: 3, step: 0.05, def: '1.2' },
         { key: 'contrast', label: t('contrast'), hint: t('contrastHint'), type: 'range', min: 0.5, max: 2, step: 0.05, def: '1' },
-        { key: 'saturation', label: t('saturation'), hint: t('saturationHint'), type: 'range', min: 0, max: 2, step: 0.05, def: '1.2' },
+        { key: 'saturation', label: t('saturation'), hint: t('saturationHint'), type: 'range', min: 0, max: 2, step: 0.05, def: '1.3' },
         { key: 'wet', label: t('wet'), hint: t('wetHint'), type: 'range', min: 0, max: 1, step: 0.05, def: '0.15' },
       ],
     },
@@ -91,6 +84,8 @@ export function settingsSchema({ mobile }) {
       title: t('modelSection'),
       items: [
         { key: 'textures', label: t('textures'), hint: t('texturesHint'), type: 'select', def: '', options: [['', t('texturesAuto')], ['light', t('texturesLight')], ['full', t('texturesFull')]] },
+        // Out of the advanced settings (Christian, 2026-10-25)
+        { key: 'mesh', label: t('meshView'), hint: t('meshViewHint'), type: 'toggle', def: '0', remember: false },
       ],
     },
     {
@@ -99,7 +94,6 @@ export function settingsSchema({ mobile }) {
       items: [
         { key: 'profile', label: t('profile'), type: 'select', def: '', options: [['', t('profileAuto')], ['desktop', t('profileDesktop')], ['mobile', t('profileMobile')]] },
         { key: 'stats', label: t('stats'), type: 'toggle', def: '0' },
-        { key: 'mesh', label: t('meshView'), hint: t('meshViewHint'), type: 'toggle', def: '0', remember: false },
         { key: 'tone', label: t('tone'), type: 'select', def: 'agx', options: [['agx', 'AgX'], ['neutral', t('toneNeutral')], ['aces', 'ACES'], ['none', t('toneNone')]] },
       ],
     },
