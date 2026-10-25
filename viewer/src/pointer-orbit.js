@@ -4,7 +4,7 @@
 // around it, so that point stays where it is on the screen and the view keeps its angle (no jump, as moving the centre
 // there would make). Over the sky (no point), the orbit's centre is the pivot. A pixel dragged turns by the angle a
 // pixel covers (the view's height over its angle: Christian, 2026-10-24, the pointer moved faster than the background),
-// so the background moves with the pointer; the same limit looking up (maxPolar), and a short glide after the button is
+// so the background moves with the pointer (sideways: the vertical axis is inverted); the same limit looking up (maxPolar), and a short glide after the button is
 // released, as OrbitControls' damping. Touch is left to OrbitControls and touch-nav.js.
 import * as THREE from 'three'
 
@@ -70,7 +70,9 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
     // The angle a pixel covers
     const perPixel = THREE.MathUtils.degToRad(camera.fov) / (surface.clientHeight || 1)
     const yaw = -(event.clientX - drag.x) * perPixel
-    const pitch = -(event.clientY - drag.y) * perPixel
+    // The vertical axis inverted (Christian, 2026-10-25): up and down turn the other way, the background no longer
+    // following the pointer up and down
+    const pitch = (event.clientY - drag.y) * perPixel
     // Its speed for the glide, per 60th of a second
     const frames = Math.max((event.timeStamp - drag.time) / (1000 / 60), 1)
     speed = { yaw: yaw / frames, pitch: pitch / frames }
