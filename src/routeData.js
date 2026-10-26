@@ -1,6 +1,5 @@
 // Starlight route middleware (astro.config.mjs, routeMiddleware): what the <head> says to search engines and to the
 // sites a link is shared on (SEO audit, docs/audits/seo-2026-10-26.md):
-// - the description of a page without its own, in the page's language (Starlight has one site-wide string, French);
 // - og:locale as a region code (fr_CA, en_CA), with the other language as og:locale:alternate;
 // - a share image (public/images/og-lock21.jpg, 1200 x 630, cropped from the home page's render of zone 12);
 // - structured data (JSON-LD): the site and its author on the two home pages, the 3D model on the model page.
@@ -15,8 +14,6 @@ const AUTHOR = {
 }
 const text = {
   fr: {
-    // The same words as astro.config.mjs's description, which Starlight uses for the French pages
-    description: "Photogrammétrie sous-marine de l'écluse 21 (Dickinson's Landing) : carnet de terrain et modèle 3D",
     imageAlt: "Le rendu d'une zone de l'écluse 21 sous l'eau : un pilier de pierre et les vannes du déversoir",
     siteName: 'Écluse 21',
     otherName: 'Lock 21',
@@ -24,7 +21,6 @@ const text = {
     modelDescription: 'L’écluse 21 de Dickinson’s Landing, submergée depuis 1958 dans le Saint-Laurent, relevée zone par zone en photogrammétrie sous-marine.',
   },
   en: {
-    description: "Underwater photogrammetry of Lock 21 (Dickinson's Landing): field notebook and 3D model",
     imageAlt: 'A render of a zone of Lock 21 underwater: a stone pier and the spillway gates',
     siteName: 'Lock 21',
     otherName: 'Écluse 21',
@@ -42,14 +38,6 @@ export const onRequest = defineRouteMiddleware((context) => {
   const t = text[lang]
   const head = route.head
   const path = context.url.pathname.replace(/\/$/, '') || '/'
-
-  // The site-wide (French) description, on a page without its own: the page's language's
-  if (lang === 'en' && !route.entry.data.description) {
-    for (const [key, value] of [['name', 'description'], ['property', 'og:description']]) {
-      const meta = find(head, key, value)
-      if (meta) meta.attrs.content = t.description
-    }
-  }
 
   const locale = find(head, 'property', 'og:locale')
   if (locale) locale.attrs.content = lang === 'en' ? 'en_CA' : 'fr_CA'
@@ -74,7 +62,7 @@ export const onRequest = defineRouteMiddleware((context) => {
       alternateName: t.otherName,
       url: lang === 'en' ? `${ORIGIN}/en/` : `${ORIGIN}/`,
       inLanguage: lang,
-      description: t.description,
+      description: route.entry.data.description,
       author: AUTHOR,
     }
   } else if (path === '/modele' || path === '/en/modele') {
