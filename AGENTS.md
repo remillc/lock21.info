@@ -41,6 +41,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `src/content.config.js` | Docs collection definition |
 | `src/integrations/home-slash.mjs` | Post-build step: the home pages at `/` and `/en/` (the rest of the site has no final slash) |
 | `src/routeData.js` | Starlight route middleware (`routeMiddleware`): what the `<head>` says to search engines and share previews: `og:locale` (`fr_CA` / `en_CA`), the share image `public/images/og-lock21.jpg` (1200 × 630, cropped from the home render), structured data (JSON-LD: `WebSite` and author on the home pages, `3DModel` on `/modele`), no canonical or hreflang on the 404 pages |
+| `src/integrations/content-images.mjs` | Post-build step: the notebook's images get `sizes` for the content column (48rem) instead of Astro's whole-screen guess, and the first image of each page loads at once with high priority (it is often the page's largest element, the LCP) |
 | `src/integrations/placeholder-marks.mjs` | The « *(à compléter)* » / “*(to be completed)*” placeholders alone in a paragraph get the class `l21-todo` (drawn as a dashed note), a Sätteri hast plugin like the footnotes' |
 | `src/integrations/footnote-labels.mjs` | Footnotes headed « Notes » (back links « Retour à l'appel de note N ») on the French pages; Astro 7's Markdown (Sätteri) has one site-wide setting, so this integration adds a plugin for the French pages only |
 | `src/content/i18n/fr.json` | Starlight's own French texts overridden (search dialog, « Sélectionner le thème / la langue »); the components' texts are in `messages/` |
