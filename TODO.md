@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#88**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#89**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -120,6 +120,10 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #87 Left menu (sidebar), Christian 2026-10-26: as a page loads, its groups show open, then close, a flicker.
   Only the current page's group should be open from the start (Starlight's `<details open>` on every group, or the
   sidebar state restored by Head.astro / client-side routing after the first paint: to find)
+- [ ] #88 Analytics on all actions (Christian, 2026-10-26): an event for every action a visitor takes, on the site (links,
+  search, menu, theme and language, downloads; Google Analytics, `Analytics.astro`, already sends page views) and in the
+  3D viewer (each button, tour steps, dive mode, settings, AR; `viewer/src/telemetry.js`, `/api/log`). To decide: one
+  list of event names, which channel takes which, and the privacy page brought up to date
 
 ## Other
 
