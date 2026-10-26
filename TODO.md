@@ -105,9 +105,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #83 Usability audit: the viewer on phones (V11, V12; V2 fixed 2026-10-26): « Visite guidée » cut off at the
   frame's left edge on a phone held upright (an icon button on narrow frames?); a touch version of the swim help.
   Check on a real phone
-- [ ] #84 Usability audit: content, for Christian. V3 a « Pour plonger » box (walls, floor, current, link to the model);
-  V4 a short history page (the canal, its dates, 1958); V5 a line above « Suivi » (what it tracks, what is online,
-  zones 21–25); V6 the placeholders; V7 Metashape named on its procedure pages; V15 wall top 35 or 40 ft; V16 a « voir
+- [ ] #84 Usability audit: content, for Christian. V4 a short history page (the canal, its dates, 1958); V5 a line above « Suivi » (what it tracks, what is online,
+  zones 21–25); V6 the placeholders; V7 Metashape named on its procedure pages; V16 a « voir
   dans le modèle 3D » link per zone; V30 a caption under the viewer (underwater, violet = not yet scanned); V32 a
   description per page; V33 labels (« Zones de l'écluse »; « Effet de banane » and « Nuage de points dense » done); V34
   About and Thanks last in the sidebar
