@@ -1,5 +1,10 @@
 {
   "pages": {
+    "a-propos-ecluse-21.md": {
+      "source": "3cf6749dbc0495301282b679459737706a3ed461",
+      "commit": "27829dc",
+      "recorded": "2026-10-26"
+    },
     "a-propos.mdx": {
       "source": "08ca969f21560dd4ead76425a179feba5b79d658",
       "commit": "8a61761",
