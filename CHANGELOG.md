@@ -6,8 +6,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 - /modele: the Google Earth Web steps behind an MD3 text button (a Rounded « expand_more » icon that turns over, state
   layers, 48 dp target), unfolding and folding with MD3 motion (400 ms in, 200 ms out; none with reduced motion).
-- /modele: the credits' missing spaces put back (« Crayfish » by ucdavisterc, CC BY 4.0), and English quotation
-  marks on the English page.
+- /modele: the licence's and credits' missing spaces put back (« CC BY 4.0: free… », « Crayfish » by ucdavisterc, CC BY
+  4.0), and English quotation marks on the English page.
 - 3D viewer: the wheel's zoom doubled (0.15 of OrbitControls' default; 0.075 was too slow).
 - /modele: brief steps to place the full model (GLB) in Google Earth Web, which reads no position in a GLB: its
   Placement and Rotation fields as it names them in each language, with the values to type (latitude, longitude,
