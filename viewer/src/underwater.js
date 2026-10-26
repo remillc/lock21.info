@@ -23,11 +23,10 @@ import * as THREE from 'three'
 export const SURFACE_Y = 55 * 0.3048
 const WATER_INDEX = 1.333
 // River current, west to east: 35 ft/min, measured by drifting in the canal (2024-06-08), in m/s; the particles drift
-// SEASONS[].current times faster (Christian, 2026-10-23: the murkier the water, the faster: spring's runoff)
+// SEASONS[].current times faster (Christian, 2026-10-23: the murkier the water, the faster: spring's runoff; slowed to
+// the measured current for a moment on 2026-10-25, too slow: the flow's direction was lost). The 15 % trim on top of
+// that (DRIFT_SHARE 0.85, 2026-10-23) removed on 2026-10-26 (Christian)
 const CURRENT = (35 * 0.3048) / 60
-// The particles' drift against that: 15 % slower (Christian, 2026-10-23; slowed to the measured current for a moment
-// on 2026-10-25, too slow: the flow's direction was lost)
-const DRIFT_SHARE = 0.85
 // Suspended particles, only where they can be seen: in a box ahead of the camera (it covers the view's cone), as deep
 // as the visibility (PARTICLE_REACH m at most, PARTICLE_MIN at least); SEASONS[].density particles per m³ (the
 // murkier, dramatically more; doubled 2026-10-23), so the drawn count follows the box (at most PARTICLE_COUNT; MOBILE_SHARE of them on a
@@ -612,7 +611,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
     particles.material.uniforms.uBox.value = box
     const count = Math.min(PARTICLE_COUNT, season.density * box ** 3) * (mobile ? MOBILE_SHARE : 1)
     particleGeometry.setDrawRange(0, Math.round(count))
-    particles.material.uniforms.uCurrent.value.set(CURRENT * season.current * DRIFT_SHARE, 0, 0)
+    particles.material.uniforms.uCurrent.value.set(CURRENT * season.current, 0, 0)
     // The surfaces: clear up to CLEAR_SHARE of the visibility, gone at the visibility; the water's absorption
     uniforms.uUwGone.value = season.visibilityFt * 0.3048
     uniforms.uUwClear.value = CLEAR_SHARE * uniforms.uUwGone.value
