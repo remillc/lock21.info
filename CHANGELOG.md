@@ -6,6 +6,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 - Underwater view: the water's surface 60 ft above the lock floor, as on the rest of the site (it was 55 ft): the dive
   computer reads about 55.7 ft at eye height on the floor (50.7 before), and the surface, light and depth follow.
+- The lock's depth is one constant, `src/data/site.js` (60 ft; the metres computed from it), read by the pages and by
+  the 3D viewer (its water surface and dive computer).
 - Usability audit (TODO #44, 2026-10-26): three simulated first-time visitors (diver, heritage enthusiast,
   photogrammetrist), a Nielsen heuristics review and an information-architecture audit, by agents in a browser, then a
   verification pass: 38 findings (3 major, 13 minor), in `docs/audits/usability-2026-10-26.md`; the work in TODO
