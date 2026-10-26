@@ -1,9 +1,38 @@
 # Changelog
 
-Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
+Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
+public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+## 1.0.0-beta.1 - 2026-10-26
+
+The first public beta. In short:
+
+- **Audits:** usability (simulated visitors, Nielsen's heuristics, information architecture), accessibility (WCAG 2.2
+  AA) and SEO, their records in `docs/audits/`, and most of their findings fixed.
+- **Pages:** « À propos de l'écluse 21 », « Mise à l'échelle », « Le rig », an index of the problems encountered,
+  « Alignement de chunks » written; every address, title and menu label made to agree (the former addresses
+  redirected).
+- **Design:** the notebook pages' own look (eyebrow, numbered headings, figures with dated captions, data chips), a
+  lightbox with zoom, MD3 menus in the footer, no more flickering menu.
+- **Search engines:** titles, a share image, structured data, a page description only where it says something, Bing
+  Webmaster Tools set up.
+- **3D viewer:** the guided tour on phones, Escape leaves dive mode, the depth from one constant, the analytics of the
+  visitors' actions (unless refused).
+
+Everything, in detail:
+
+- « Le rig »: an assembly of 20 × 20 mm T-slot aluminium profiles (the 2020 series), in its first sentence; the four
+  SecurityIng dive lights (10 white LEDs at 6000 K, 4 red, 4 blue, a 120° beam, 12,000 lumens claimed by the seller)
+  with the seller's side view and its dimensions; what the floor brushes are for (clearing silt and shells off the
+  surfaces before filming them).
+- « La collecte des données »: its pages in a set order (dive log, gear, the rig, scaling).
+- « À propos de l'écluse 21 »: the chip « Ennoyée » (the word for land a dam puts under water) instead of « Noyée ».
+- `npm run bing:submit` (`tools/bing/submit-urls.mjs`): the live sitemap's addresses sent to Bing Webmaster Tools' URL
+  Submission API (key in `.env.local`), cut to the daily quota.
+- Claude Code skills for SEO, `seo-audit` and `schema` (coreyhaines31/marketingskills, MIT), copied after reading
+  every file; the SEO audit of 2026-10-26 (`docs/audits/seo-2026-10-26.md`) made with them.
 - Performance: the first image of a notebook page loads at once and first (it was lazy, and the page's largest
   element), and every content image tells the browser its column's width (`sizes`), so a smaller file is chosen
   (`src/integrations/content-images.mjs`).
