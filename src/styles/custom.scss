@@ -155,6 +155,25 @@
     }
   }
 
+  // A table that scrolls sideways fades out at the edges where it has more to show, outline included, so it reads as
+  // cut off rather than ended (usability audit V36). ScrollTables.astro names those edges (data-more: start, end), on
+  // the table or on the dive log's box. A mask, not a colour: the same in both themes
+  .sl-markdown-content [data-more] {
+    --l21-fade: 3rem;
+    $mask: linear-gradient(to right, transparent 0, black var(--l21-fade-start, 0px),
+      black calc(100% - var(--l21-fade-end, 0px)), transparent 100%);
+    -webkit-mask-image: $mask;
+    mask-image: $mask;
+
+    &[data-more~='start'] {
+      --l21-fade-start: var(--l21-fade);
+    }
+
+    &[data-more~='end'] {
+      --l21-fade-end: var(--l21-fade);
+    }
+  }
+
   // --- Figures: rounded image, caption in the secondary text colour
 
   .sl-markdown-content figure {

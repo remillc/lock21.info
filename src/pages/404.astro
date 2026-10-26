@@ -1,0 +1,10 @@
+---
+// The 404 page, French (unknown addresses; Starlight's own is turned off in astro.config.mjs). Its twin for /en/…:
+// src/pages/en/404.astro.
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro'
+import NotFound from '../components/NotFound.astro'
+---
+
+<StarlightPage frontmatter={{ title: 'Page introuvable', template: 'splash', pagefind: false, editUrl: false }}>
+  <NotFound />
+</StarlightPage>

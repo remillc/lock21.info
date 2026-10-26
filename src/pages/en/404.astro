@@ -1,0 +1,10 @@
+---
+// The 404 page, English: built as en/404.html, which the hosting serves for unknown addresses under /en/ (the nearest
+// 404.html: wrangler.jsonc, not_found_handling). The French one: src/pages/404.astro.
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro'
+import NotFound from '../../components/NotFound.astro'
+---
+
+<StarlightPage frontmatter={{ title: 'Page not found', template: 'splash', pagefind: false, editUrl: false }}>
+  <NotFound />
+</StarlightPage>

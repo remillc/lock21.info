@@ -107,6 +107,13 @@ export default function englishPathsIntegration() {
           await rename(from, to)
           await prune(dirname(from), join(root, 'en'))
         }
+        // The English 404 page (src/pages/en/404.astro): en/404.html, the nearest 404.html that the hosting serves for an
+        // unknown address under /en/ (wrangler.jsonc, not_found_handling). Astro writes the French one as 404.html itself
+        const notFound = join(root, 'en', '404', 'index.html')
+        if (existsSync(notFound)) {
+          await rename(notFound, join(root, 'en', '404.html'))
+          await prune(dirname(notFound), join(root, 'en'))
+        }
         // An English page left at its French path: its line is missing from the table
         const english = new Set(Object.values(englishPaths))
         for await (const path of files(join(root, 'en'))) {

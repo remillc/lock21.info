@@ -53,10 +53,10 @@ export default defineConfig({
           'home-outline-rounded', 'scuba-diving-rounded', 'tour-outline-rounded', 'help-outline-rounded', 'view-in-ar-outline-rounded'],
       },
     }),
-    // The sitemap, as Starlight would add it (same i18n), without the test pages: they are in no menu (usability audit V9)
+    // The sitemap, as Starlight would add it (same i18n), without the test pages (in no menu: usability audit V9) and the 404 pages
     sitemap({
       i18n: { defaultLocale: 'root', locales: { root: 'fr', en: 'en' } },
-      filter: (page) => !/\/tests\//.test(new URL(page).pathname),
+      filter: (page) => !/\/tests\/|\/404$/.test(new URL(page).pathname),
     }),
     starlight({
       // Site name per language (docs/system-design.md): Écluse 21 in French, Lock 21 in English
@@ -65,6 +65,8 @@ export default defineConfig({
       // Logo S4 "21 en écho" (docs/system-design.md); figures drawn as outlines, no font needed
       logo: { light: './src/assets/logo.svg', dark: './src/assets/logo-dark.svg', alt: 'Écluse 21' },
       favicon: '/favicon.svg',
+      // Our own 404 pages, French and English, with links onward (src/pages/404.astro, src/pages/en/404.astro)
+      disable404Route: true,
       defaultLocale: 'root',
       locales: {
         root: { label: 'Français', lang: 'fr' },

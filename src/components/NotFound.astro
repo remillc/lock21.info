@@ -1,0 +1,43 @@
+---
+// The 404 page's content (usability audit V13), in the page's language: src/pages/404.astro (French) and
+// src/pages/en/404.astro (English, served by the hosting for unknown addresses under /en/: wrangler.jsonc). A way onward:
+// the home page, the 3D model and the zone map. The page's full redesign is TODO #86.
+import { localPath, pageLang } from '../lib/i18n'
+import { m } from '../paraglide/messages.js'
+
+const lang = pageLang(Astro.locals)
+const o = { locale: lang }
+const links = [
+  { href: localPath('/', lang), label: m.notfound_home({}, o) },
+  { href: localPath('/modele', lang), label: m.notfound_model({}, o) },
+  { href: localPath('/decoupage-site', lang), label: m.notfound_zones({}, o) },
+]
+---
+
+<div class="not-found">
+  <p class="code">404</p>
+  <h1>{m.notfound_title({}, o)}</h1>
+  <p>{m.notfound_text({}, o)}</p>
+  <ul>
+    {links.map(({ href, label }) => <li><a href={href}>{label}</a></li>)}
+  </ul>
+</div>
+
+<style>
+  @layer l21.components {
+    .not-found {
+      padding-block: 2rem;
+    }
+    .code {
+      margin: 0;
+      font-family: var(--l21-font-data);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--md-sys-color-secondary);
+    }
+    h1 {
+      margin-top: 0.25rem;
+    }
+  }
+</style>
