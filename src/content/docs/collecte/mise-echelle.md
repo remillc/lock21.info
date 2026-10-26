@@ -12,35 +12,25 @@ distance entre deux cibles forme une échelle.
 
 Des cibles de 7,5 cm et de 15 cm, numérotées par paires (cibles 1 et 2).
 
-[À compléter : le modèle des cibles, comment elles sont imprimées et protégées, comment la distance est mesurée sous
-l'eau.]
+[À compléter : une photo des deux types, 7,5 cm et 15 cm.]
 
-## Les fixer
+<figure>
 
-Sur le pilier de la zone 18, j'ai essayé trois types de punaises (plongée 32). Le modèle métallique vert tient bien et
-se repère facilement sur les images. Le marqueur blanc résistait mal à la friction ; je prévoyais de le remplacer par un
-Sharpie permanent blanc ou gris.
+![Une cible codée posée au sol, à côté d'un ruban à mesurer](../problemes/effet-banane/assets/exemple-cible-GX010197.007.webp)
 
-## Les échelles mesurées
+<figcaption>Une cible codée, au sol</figcaption>
+</figure>
 
-D'après le [journal des plongées](/collecte/journal-plongees) :
+Leur dessin a l'air abstrait, mais chacune porte un numéro codé. Ce sont des cibles codées circulaires de Metashape : le
+point noir au centre marque l'endroit exact à mesurer, et les secteurs noirs de l'anneau autour forment le code, chaque
+position de l'anneau valant un chiffre binaire, noir ou blanc. Metashape lit cet anneau sur les photos, reconnaît le
+numéro de chaque cible et retrouve la même cible d'une photo à l'autre.
 
-| Zone | Échelle | Plongée |
-| ---: | --- | ---: |
-| 3 | cibles 1 et 2 au plancher, 35 pi (10,7 m) | 18 |
-| 2 | 32 pi (9,8 m) | 21 |
-| 12 | cibles 1 et 2 au plancher, longueur pas notée | 22 |
-| 8 | 73 pi (22,3 m), sur le haut du mur | 27 |
-| 5 | 31 pi (9,4 m) | 32 |
-| 18 | 16 cibles de 7,5 cm aux coins des quatre faces du pilier, 23 échelles mesurées entre elles | 34, 36 |
-| 7 | 93 pi (28,3 m), sur le dessus du mur | 37 |
-| 13 | cibles 1 et 2 de 15 cm, 24 pi (7,3 m) entre les deux piliers | 44 |
-
-En zone 12, j'ai oublié de noter la longueur (plongée 22) : cette échelle ne peut pas servir.
+[À compléter : comment les cibles sont imprimées et protégées, comment la distance est mesurée sous l'eau.]
 
 ## Ensuite
 
-Dans Metashape, les cibles sont détectées sur les photos et les échelles définies avec ces longueurs : c'est la colonne
+Dans Metashape, les cibles sont détectées sur les photos et les échelles définies avec les longueurs mesurées : c'est la colonne
 « Cibles détectées / Échelle(s) définie(s) » du [suivi par zone](/traitement/suivi).
 
 [À compléter : les étapes dans Metashape.]
