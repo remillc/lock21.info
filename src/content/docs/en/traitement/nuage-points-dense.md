@@ -3,6 +3,8 @@ title: Dense point cloud
 sidebar:
   order: 3
 ---
+This step is done in Agisoft Metashape.
+
 1. Select the chunk to process
 2. Menu `Workflow` > `Batch Process...`
 3. Load...

@@ -3,6 +3,8 @@ title: Nuage de points dense
 sidebar:
   order: 3
 ---
+Cette étape se fait dans Agisoft Metashape.
+
 Le nuage de points ne fait pas partie des extrants du projet, mais nous allons tout de même le généré pour utilisation futur.
 
 1. Sélectionner le chunk à traiter

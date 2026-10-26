@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- The four processing pages (alignment, dense point cloud, models, texture) open with a line naming Agisoft
+  Metashape, so the site search finds them (usability audit V7).
 - « À propos de l'écluse 21 »: the 1904 photo as wide as Nick Baets' plan (`figure-wide`).
 - « Suivi du travail par zone »: a line at the top, the table is a working tool that may not be up to date, with a link
   to the 3D model for what is online (usability audit V5).

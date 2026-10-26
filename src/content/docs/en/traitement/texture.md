@@ -3,6 +3,8 @@ title: Texture
 sidebar:
   order: 5
 ---
+The texture is computed in Agisoft Metashape, on each zone's model.
+
 ## Colour calibration
 
 This step evens out the whites and the brightness across the photos.

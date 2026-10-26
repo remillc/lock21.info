@@ -3,6 +3,7 @@ title: Photo alignment
 sidebar:
   order: 2
 ---
+The alignment is done in Agisoft Metashape, one project per zone.
 
 Create a new project file for the zone. Name the file after the zone, for example: zone-4.psx.
 
