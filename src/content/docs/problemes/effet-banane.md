@@ -3,6 +3,23 @@ title: Effet de banane
 ---
 Le test effectué sur une surface plane de 100 pieds de long montre que le modèle résultant de l'alignement des caméras dans le logiciel de photogrammétrie est déformé. Au lieu d'obtenir une surface plate, celle-ci est courbée en forme de banane.
 
+Sur un segment plus long, l'effet est flagrant : les 300 pieds du dessus du mur sud du canal, filmés le 26 juillet
+2024 entre les cibles 1 et 2 (plongée 27), s'enroulent presque en cercle.
+
+<figure>
+
+![Le segment de 300 pieds aligné dans Metashape, enroulé en arc entre les cibles 1 et 2](./effet-banane/assets/exemple-effet-banane.webp)
+
+<figcaption>Le segment de 300 pieds, déformé : il s'enroule entre les cibles 1 et 2</figcaption>
+</figure>
+
+<figure>
+
+![Le même segment corrigé, presque droit, avec l'échelle de 300 pieds entre les cibles 1 et 2](./effet-banane/assets/exemple-effet-banane-corrige.webp)
+
+<figcaption>Le même segment, corrigé : presque droit, avec l'échelle de 300 pieds entre les cibles 1 et 2</figcaption>
+</figure>
+
 - D'où vient cette déformation ?
 - Comment la corriger ?
 

@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- « Effet de banane »: Christian's two views of the 300-foot test on the canal's south wall (dive 27), curled up, then
+  corrected.
 - Addresses rule (docs/system-design.md): lowercase whole words, hyphens, no articles or small linking words
   (`a-propos` kept as a fixed expression). Renamed: `journal-plongees` (dive log and its test page), `mise-echelle`,
   `decoupage-site` (and its map images), `alignement-photos`, `extraction-photos`, `generation-modeles`,
