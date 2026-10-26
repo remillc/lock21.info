@@ -121,7 +121,8 @@
         <svg data-icon="tour-outline-rounded" aria-hidden="true" width="18" height="18"></svg>
         <span class="tour-button-label"></span>
       </button>
-      <!-- The tour's card (tour.js): the step's number, title and text, back and next; a close button. Bottom centre -->
+      <!-- The tour's card (tour.js): the step's number, title and text, back and next; a close button; after looking
+           around, « Revenir à la vue ». Bottom centre -->
       <section class="tour-card" hidden>
         <div class="tour-head">
           <span class="tour-count"></span>
@@ -132,6 +133,7 @@
         <h2 class="tour-title"></h2>
         <p class="tour-text" aria-live="polite"></p>
         <div class="tour-actions">
+          <button class="tour-return" type="button" hidden></button>
           <button class="tour-prev" type="button"></button>
           <button class="tour-next" type="button"></button>
         </div>

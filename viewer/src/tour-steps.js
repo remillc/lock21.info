@@ -189,8 +189,8 @@ export const TOUR_STEPS = [
     accel: 1.9,
     title: { fr: 'La zone 18', en: 'Zone 18' },
     text: {
-      fr: 'Dernier arrêt : le bloc de la zone 18, à l’ouest, et l’écluse au loin. Le relevé continue : les volumes violets sont les zones pas encore numérisées.',
-      en: 'Last stop: the block of zone 18, to the west, and the lock in the distance. The survey goes on: the purple shapes are the zones not scanned yet.',
+      fr: 'Dernier arrêt : le bloc de la zone 18, à l’ouest, et l’écluse au loin. Le relevé continue : les volumes violets sont les zones pas encore numérisées. Le bouton ⌂ ramène à la vue de départ.',
+      en: 'Last stop: the block of zone 18, to the west, and the lock in the distance. The survey goes on: the purple shapes are the zones not scanned yet. The ⌂ button brings back the start view.',
     },
   },
 ]

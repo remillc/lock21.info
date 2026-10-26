@@ -1105,6 +1105,13 @@ homeButton.addEventListener('click', () => {
   requestRender()
   log('home', {})
 })
+// Escape leaves the dive (usability audit V25, 2026-10-26), when nothing else takes it: a dialog open (the help), the
+// settings panel, the tour. Read in the capture phase, before those close themselves on the same key
+window.addEventListener('keydown', (event) => {
+  if (event.key !== 'Escape' || !underwater.on || tour.active) return
+  if (document.querySelector('dialog[open], l21-settings-panel:not([hidden])')) return
+  setUnderwater(false)
+}, { capture: true })
 // A step in the address at load (#tour-3, Christian, 2026-10-25): the tour starts there, the camera straight at that
 // step's view, without a flight; else ?tour=1 starts it at the first
 const startStep = startHash ? Number(startHash.slice(6)) - 1 : -1
