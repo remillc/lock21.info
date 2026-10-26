@@ -189,6 +189,10 @@ The 3D viewer is a separate app with no theme to fight; its own stack, planned (
 - **Footer**: previous / next page, then the dark olive bar: `ÉCLUSE/21 · carnet de terrain`, `© 2024–<year> Christian
   Rémillard · Licence CC BY 4.0` (link to the licence). At the bottom of the window on short pages (flex columns in
   `custom.scss`), right after the content on long ones. The Baets drawings are credited in their figure captions.
+- **Selects** (the footer's theme and language): the list they open is an MD3 menu (surface container, 4 dp corners,
+  elevation 2, 48 dp items in label-large, state layers, the chosen item tinted and checked, MD3 motion), drawn with
+  `appearance: base-select` where the browser allows it (Chrome and Edge 135+); other browsers show their own list.
+  Styles in `Footer.astro`.
 - Existing pages (docs) keep Starlight's layout, restyled with these tokens.
 - **Custom Elements** are named with the `l21-` prefix (rule in `docs/guidelines.md`): `<l21-image-zoom>` (figures, full
   size on click), `<l21-dev-breakpoints>` (dev server only), `<l21-settings-panel>` (the 3D viewer's settings, ⚙),

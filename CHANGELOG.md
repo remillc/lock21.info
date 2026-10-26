@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Footer: the theme and language lists open as MD3 menus (`appearance: base-select`, Chrome and Edge; the system's
+  list elsewhere).
 - New page « Le rig » / “The rig” in « La collecte des données »: the rig on the Seacraft Future 1000 scooter, with
   Christian's photos (2024), Sylvain Marcotte's 3D model of it, the lights' positions, the scooter's speed; the
   construction, the lights' model and the brushes still to complete. Linked from « Matériel utilisé » and the thanks.

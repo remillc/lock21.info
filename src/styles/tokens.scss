@@ -43,12 +43,16 @@
     --md-sys-color-scrim: #000;
     --md-sys-elevation-level1: 0 1px 2px color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent),
       0 1px 3px 1px color-mix(in srgb, var(--md-sys-color-shadow) 15%, transparent);
+    // Level 2 (a menu)
+    --md-sys-elevation-level2: 0 1px 2px color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent),
+      0 2px 6px 2px color-mix(in srgb, var(--md-sys-color-shadow) 15%, transparent);
     // The bars' icons (the menu button, the magnifier), the bars staying dark in both themes
     --l21-bar-icon: #c9cdbb;
     // A QR code's light modules: white in both themes, as scanners expect
     --l21-qr-light: #ffffff;
 
     // MD3 shape scale
+    --md-sys-shape-extra-small: 4px;
     --md-sys-shape-small: 8px;
     --md-sys-shape-medium: 12px;
     --md-sys-shape-large: 16px;
