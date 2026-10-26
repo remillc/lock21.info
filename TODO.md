@@ -123,8 +123,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 ## Other
 
 - [ ] #89 SEO audit (2026-10-26, `docs/audits/seo-2026-10-26.md`): the code fixes left. S11 after the next deploy, check that `lock21-info.lock21.workers.dev` no longer answers and that a branch
-  preview still works (`workers_dev: false` in `wrangler.jsonc`; else back to true); S15 meshopt for `context.glb` and `mockups.glb` in the publishing pipeline, and a Cloudflare compression
-  rule for `model/gltf-binary` and `.hdr` (the zone tiles are already compressed inside: gzip saves 1.8 %)
+  preview still works (`workers_dev: false` in `wrangler.jsonc`; else back to true); S15 maybe meshopt for `context.glb` and `mockups.glb` in the publishing pipeline (the Cloudflare compression
+  rule, 2026-10-26, already brings them from 3.0 to 1.8 MB and 1.1 to 0.9 MB)
 - [ ] #90 SEO audit: content, for Christian. S1 a real `description` for the pages that answer a question (dive log, zones, current, gear first), in its
   language, or none (also usability V32)
 - [ ] #91 SEO audit: outside the site, for Christian. S3 deploy `main` (27 renamed addresses, 301s ready); S5 Google
