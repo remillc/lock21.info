@@ -239,8 +239,9 @@ const PROFILES = {
   // model was complete) and less fine detail (errorTarget 16, was 12)
   mobile: { errorTarget: 16, maxBytes: 300e6, pixelRatio: Math.min(window.devicePixelRatio, 1.5) },
   // Computers (Christian, 2026-10-24): 1 GB (was 1.2: most visitors' graphics cards have far less memory than a
-  // high-end one), lean loading (setDetail)
-  desktop: { errorTarget: 6, maxBytes: 1000e6, pixelRatio: Math.min(window.devicePixelRatio, 2), lean: true },
+  // high-end one), lean loading (setDetail); errorTarget 8 (2026-10-26, was 6: the start view alone took 960 MB of the
+  // 1 GB on a 1600 x 1000 canvas, 600 MB at 8, no difference to the eye there)
+  desktop: { errorTarget: 8, maxBytes: 1000e6, pixelRatio: Math.min(window.devicePixelRatio, 2), lean: true },
 }
 const isMobile = (forced) => (forced ? forced === 'mobile' : window.matchMedia('(pointer: coarse)').matches)
 let mobile = isMobile(params.get('profile'))
@@ -450,9 +451,16 @@ function releaseAfterUpload(surface) {
 // connection) instead of coarse: phones, slower, keep the fallback
 const DETAIL_FALLOFF = 2 / 3
 const DETAIL_DENSITY = 0.05
+// Detail by the screen's size (2026-10-26): the library measures a tile's error in the canvas's own pixels, so a large
+// or high-density screen asked for finer tiles at the same view. Christian's (a 2394 x 1344 canvas) filled the 1 GB at
+// the start view alone, and parts of the walls stayed empty (lean loading, no coarser tile to fall back on). Past
+// DETAIL_HEIGHT pixels of canvas height the error target grows with it: the same tiles as on a 1600 x 1000 canvas
+const DETAIL_HEIGHT = 1000
+// The safety net (adaptDetail): while the memory budget is full, coarser detail rather than holes
+let detailBoost = 1
 /** The profile's detail on a tile set: its error target, the falloff with distance, lean loading */
 function setDetail(tiles) {
-  tiles.errorTarget = profile.errorTarget
+  tiles.errorTarget = profile.errorTarget * Math.max(1, renderer.domElement.height / DETAIL_HEIGHT) * detailBoost
   if (!tiles.userData?.falloff) {
     const viewError = tiles.calculateTileViewError.bind(tiles)
     tiles.calculateTileViewError = (tile, target) => {
@@ -1708,6 +1716,7 @@ function resize() {
   composer?.setSize(container.clientWidth, container.clientHeight)
   syncTilesCamera()
   tilesets.forEach((tiles) => tiles.setResolutionFromRenderer(tilesCamera, renderer))
+  tilesets.forEach(setDetail)
   requestRender()
 }
 window.addEventListener('resize', resize)
@@ -2007,6 +2016,7 @@ function tileFacts() {
     tileErrors,
     cacheMB: Math.round((cache?.cachedBytes || 0) / 1e6),
     maxMB: Math.round(profile.maxBytes / 1e6),
+    detail: Math.round(detailBoost * 100) / 100,
     zones: tilesets.length,
   }
 }
@@ -2078,8 +2088,10 @@ const zoneBox = new THREE.Box3()
 const terrainBox = new THREE.Box3()
 let siteFor = null
 function siteBounds() {
-  // Computed again when the tile sets or the context models change (the context arrives after the zones)
-  const key = `${tilesets.length}:${contextModels.length}`
+  // Computed again when the tile sets, their roots loaded or the context models change. The roots count too
+  // (2026-10-26): with the context in before every zone's root, the bounds stayed those of the zones loaded so far, and
+  // the start view was pushed 7 m forward into them (one load in three)
+  const key = `${tilesets.length}:${tilesets.filter((tiles) => tiles.root).length}:${contextModels.length}`
   if (siteFor === key && !site.isEmpty()) return site
   site.makeEmpty()
   for (const tiles of tilesets) {
@@ -2131,6 +2143,41 @@ function keepInSite() {
   }
   if (!x && !z && !high && low <= 0) return false
   return true
+}
+
+// The safety net on the memory budget (2026-10-26): once it is full the library loads nothing more, and with lean
+// loading a part of the view newly turned to stays empty. While tiles are refused for a full budget (the library's
+// stats.refused) the error target grows a step (detailBoost, up to BOOST_MAX): the tiles too fine for it are no longer
+// used, the library unloads them, the coarser ones load. It comes back a step once the tiles in use take under half the
+// budget (at the start view a step finer took 1.6 times the memory); the cache's own total is no measure there, it
+// keeps unused tiles down to 60 % of the budget. A step every BOOST_WAIT ms at most: unloading takes a few seconds,
+// and a step a second went straight to the coarsest
+const BOOST_STEP = 1.25
+const BOOST_MAX = 4
+const BOOST_WAIT = 2500
+let boostChanged = 0
+let boostLogged = false
+function adaptDetail() {
+  const cache = tilesets[0]?.lruCache
+  const now = performance.now()
+  if (!cache || now - boostChanged < BOOST_WAIT) return
+  let boost = detailBoost
+  if (cache.isFull() && tilesets.some((tiles) => tiles.stats.refused > 0)) boost = Math.min(BOOST_MAX, boost * BOOST_STEP)
+  else if (boost > 1) {
+    let used = 0
+    for (const tile of cache.usedSet) used += cache.bytesMap.get(tile) || 0
+    if (used < cache.maxBytesSize / 2) boost = Math.max(1, boost / BOOST_STEP)
+  }
+  if (boost === detailBoost) return
+  detailBoost = boost
+  boostChanged = now
+  tilesets.forEach(setDetail)
+  // Telemetry: the first time in the visit (tileFacts carries the boost at the end)
+  if (!boostLogged && boost > 1) {
+    boostLogged = true
+    log('detail-reduced', tileFacts())
+  }
+  requestRender()
 }
 
 // Paused while AR runs (android-ar.js has its own renderer)
@@ -2186,6 +2233,7 @@ function renderLoop() {
   if (underwater.on) diveComputer.update(camera, dt)
   const loading = tilesets.some((t) => t.stats.queued + t.stats.downloading + t.stats.parsing > 0)
   updateLoading()
+  adaptDetail()
   if (!needsRender && !loading) return
   needsRender = false
   camera.updateMatrixWorld()

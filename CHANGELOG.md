@@ -5,6 +5,14 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- 3D viewer: no more missing pieces of the walls on large screens. The start view alone filled the 1 GB tile budget on
+  a 1600 x 1000 canvas (960 MB) and overflowed it on Christian's (2394 x 1344): with lean loading the parts not loaded
+  stayed empty. The detail now follows the screen's size (the error target grows past 1000 px of canvas height), the
+  computers' error target is 8 (was 6: 600 MB at the start view, no difference to the eye, at 2 m from a wall none at
+  all), and while the budget is full and tiles are refused the detail drops a step at a time (up to 4 times coarser),
+  coming back once the tiles in use take under half the budget (telemetry: `detail-reduced`, `detail` in the facts).
+- 3D viewer: the start view no longer jumps about 7 m forward (one load in three): the site's bounds, which keep the
+  camera in, were computed once the context arrived even if some zones' roots were still loading, and stayed too small.
 - Page descriptions (SEO audit S1, TODO #90) for the nine pages that answer a question: the dive log, the gear, the
   zones, and the problems encountered (current, banana effect, sharpness, colour chart, colour calibration, rig
   dimensions), in French and English; the processing steps and the tests still have none, on purpose.
