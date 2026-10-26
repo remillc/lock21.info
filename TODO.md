@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#93**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#94**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -115,6 +115,12 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #87 Left menu (sidebar), Christian 2026-10-26: as a page loads, its groups show open, then close, a flicker.
   Only the current page's group should be open from the start (Starlight's `<details open>` on every group, or the
   sidebar state restored by Head.astro / client-side routing after the first paint: to find)
+- [ ] #93 Document the gear (Christian, 2026-10-26), with his photos and facts: a photo of the GoPro Hero6 Black in its
+  housing (a figure in « Matériel utilisé », Caméra); a new page « Le rig » in « La collecte des données »: the rig's
+  construction on the Seacraft Future 1000 scooter (Sylvain Marcotte's design, the RAMB238 drawing, the 60 × 40 and
+  80 × 80 cm versions in `rig/modele/`), the dive lights mounted on it (models, positions: « Angle des lampes » in
+  « Dimensions du rig de caméra », the configurations of the ISO test), the floor brushes; links from « Matériel
+  utilisé » and « Dimensions du rig de caméra »
 - [ ] #92 Google Analytics, for Christian: register the custom definitions of the actions sent since TODO #88
   (Admin › Custom definitions). Metrics (unit: seconds): `standard_seconds`, `underwater_seconds` (viewer_end),
   `seconds` (dive_end). Dimensions (event scope): `button`, `step`, `move`, `setting`, `season`, `lamp`, `theme`,
