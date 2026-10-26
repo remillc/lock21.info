@@ -67,7 +67,7 @@
   "tourNext": "Suivant",
   "tourEnd": "Terminer",
   "tourClose": "Quitter la visite",
-  "keysHelpText": "<p>Les touches déplacent la caméra dans la direction où elle regarde.</p><ul><li><kbd>{w}</kbd> avancer, <kbd>{s}</kbd> reculer</li><li><kbd>{a}</kbd> à gauche, <kbd>{d}</kbd> à droite</li><li><kbd>Maj</kbd> maintenue : plus vite</li></ul><p>Les flèches du clavier <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> peuvent aussi servir.</p>",
+  "keysHelpText": "<p>À la souris :</p><ul><li>bouton gauche, glisser : tourner autour du point pressé</li><li>bouton droit, glisser : déplacer</li><li>molette : zoomer</li><li>double-clic : s’approcher de ce point</li></ul><p>Les touches déplacent la caméra dans la direction où elle regarde.</p><ul><li><kbd>{w}</kbd> avancer, <kbd>{s}</kbd> reculer</li><li><kbd>{a}</kbd> à gauche, <kbd>{d}</kbd> à droite</li><li><kbd>Maj</kbd> maintenue : plus vite</li></ul><p>Les flèches du clavier <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> peuvent aussi servir.</p>",
   "touchHelpTitle": "Naviguer du bout des doigts",
   "touchHelp": "<ul><li>un doigt : tourner</li><li>deux doigts : déplacer, et pincer pour zoomer vers les doigts</li><li>toucher deux fois : s’approcher de ce point</li></ul>",
   "lampOn": "Allumer la lampe",
