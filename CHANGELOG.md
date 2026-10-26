@@ -5,6 +5,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- 3D viewer: panning with the right button (standard view) twice as fast: the point pressed follows the pointer at
+  half its pace (was a quarter).
 - 3D viewer: no more missing pieces of the walls on large screens. The start view alone filled the 1 GB tile budget on
   a 1600 x 1000 canvas (960 MB) and overflowed it on Christian's (2394 x 1344): with lean loading the parts not loaded
   stayed empty. The detail now follows the screen's size (the error target grows past 1000 px of canvas height), the
