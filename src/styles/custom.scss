@@ -247,11 +247,7 @@
     // and so do the content (via --sl-content-inline-start) and the header's contents. The bar stays full width.
     // On the left, the header's contents start further out, above the depth gauge's labels (Sidebar.astro), so the logo
     // lines up with the gauge.
-    :root[data-has-sidebar][data-has-toc] {
-      --lock21-layout-width: calc(var(--sl-sidebar-width) + var(--lock21-content-width) + var(--lock21-toc-width));
-      --lock21-margin: max(0px, (100vw - var(--lock21-layout-width)) / 2);
-      --sl-content-inline-start: calc(var(--sl-sidebar-width) + var(--lock21-margin));
-    }
+    // (--lock21-layout-width, --lock21-margin and --sl-content-inline-start: at the end of this file, outside the layers)
 
     // The navigation's left edge carries the depth gauge (Sidebar.astro) instead of a border
     [data-has-toc] .sidebar-pane {
@@ -516,4 +512,15 @@
 // (html:not([data-has-sidebar]) { --sl-content-width: 67.5rem }): in a layer, ours would lose to it
 :root:not([data-has-sidebar]) {
   --sl-content-width: 75rem;
+}
+
+// Notebook pages on wide screens: the three columns centred (the layout section above). Starlight sets the content's
+// start in an unlayered rule (@media (min-width: 50em) { [data-has-sidebar] { --sl-content-inline-start: … } }, its
+// Page.astro): in a layer, ours lost to it, and the content slid under the centred navigation (2026-10-26)
+@media (min-width: 72rem) {
+  :root[data-has-sidebar][data-has-toc] {
+    --lock21-layout-width: calc(var(--sl-sidebar-width) + var(--lock21-content-width) + var(--lock21-toc-width));
+    --lock21-margin: max(0px, (100vw - var(--lock21-layout-width)) / 2);
+    --sl-content-inline-start: calc(var(--sl-sidebar-width) + var(--lock21-margin));
+  }
 }

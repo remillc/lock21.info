@@ -161,7 +161,8 @@ specificity raised to beat the theme). The order is declared once, at the top of
 | `l21.utilities` | small helpers that must win: `.figure-wide`, `.sr-only`, print | `custom.scss`, `print` |
 
 Unlayered CSS beats every layer: the only unlayered rules are overrides of third-party stylesheets that are themselves
-unlayered (Starlight's splash-page content width, `--sl-content-width`; the search, Pagefind; the code blocks,
+unlayered (Starlight's splash-page content width, `--sl-content-width`; the notebook pages' centred columns,
+`--sl-content-inline-start`, from Starlight's `Page.astro`; the search, Pagefind; the code blocks,
 Expressive Code), each with a comment saying why.
 
 The 3D viewer is a separate app with no theme to fight; its own stack, planned (not yet in `viewer/src/style.css`):
@@ -193,6 +194,22 @@ The 3D viewer is a separate app with no theme to fight; its own stack, planned (
   size on click), `<l21-dev-breakpoints>` (dev server only), `<l21-settings-panel>` (the 3D viewer's settings, ⚙),
   `<l21-model-frame>` (the viewer's frame on `/modele`), `<l21-viewer-warmup>` (prefetches the viewer's files when a
   `/modele` link is hovered).
+
+## Page names
+
+A page has one name, used everywhere it appears (Christian, 2026-10-26):
+
+- its **address** (the slug: file and folder names for French pages, `src/data/englishPaths.js` for English ones),
+- its **title** (the `title` of its frontmatter, which Starlight shows as the page's `<h1>` and in the browser's
+  `<title>`),
+- its **label in the left menu** (the sidebar: the title itself for pages in a group, the `label` in
+  `astro.config.mjs` for the others and for the groups),
+
+say the same thing in the same words, in the page's language. The slug is the title's key words, lowercase, without
+accents or articles (« Le fort courant dans le canal » → `fort-courant-canal`); a group's folder is its label's key
+word (« Problèmes rencontrés » → `problemes/`). A menu label may be a shorter form of the title, never other words.
+Renaming a page changes all three, and the old address redirects to the new one (`public/_redirects`, the English
+paths' table).
 
 ## Not wanted
 
