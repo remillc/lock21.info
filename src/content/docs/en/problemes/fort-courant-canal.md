@@ -10,7 +10,7 @@ I ran a test (2024-06-08) by drifting through the canal between the 2 gates, kno
 
 <figure>
 
-![Sketch (detail) showing the length of the lock canal.](../../questions/canal/assets/longueur-du-canal.webp)
+![Sketch (detail) showing the length of the lock canal.](../../problemes/fort-courant-canal/assets/longueur-du-canal.webp)
 
 <figcaption>Sketch (detail) showing the length of the lock canal. Original drawing by Nick Baets (1988) Source: <cite><a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks - Ottawa chapter</a></cite></figcaption>
 </figure>

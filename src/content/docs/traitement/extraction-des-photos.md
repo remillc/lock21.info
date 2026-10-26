@@ -21,7 +21,7 @@ Le chevauchement latéral est contrôlé au moment de la collecte des données. 
 
 ![Deux passages parallèles de la caméra, décalés de 25 cm, qui ont 80 % de leur largeur en commun](./extraction-des-photos/assets/chevauchement-lateral.svg)
 
-<figcaption>Deux passages recoupés à 80 % : à 70 cm du sujet, chaque passage couvre une bande de 1,25 m ; on décale le suivant de 25 cm (voir <a href="/questions/dimensions-rig">Dimensions du rig de caméra</a>).</figcaption>
+<figcaption>Deux passages recoupés à 80 % : à 70 cm du sujet, chaque passage couvre une bande de 1,25 m ; on décale le suivant de 25 cm (voir <a href="/problemes/dimensions-rig">Dimensions du rig de caméra</a>).</figcaption>
 </figure>
 
 ### Chevauchement frontal

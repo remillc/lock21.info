@@ -1,5 +1,5 @@
 ---
-title: Génération du dense point cloud
+title: Nuage de points dense
 sidebar:
   order: 3
 ---

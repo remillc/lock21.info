@@ -9,7 +9,7 @@ I didn't do this survey alone. Thank you:
   Jean-Sébastien Fournier, Josianne Demers, Nicolas Pinsonneault, Julie Cardinal, Thierry Amar, Véronique Lisi,
   Michel Giroux and Dan Foster;
 - to [DECOSTOP Outdoor Centre](https://www.decostop.ca/) and its owner, Dan Foster, for the sponsorship and the support;
-- to Sylvain Marcotte, who designed the [rig](/en/questions/dimensions-rig) that carries the cameras;
+- to Sylvain Marcotte, who designed the [rig](/en/problemes/dimensions-rig) that carries the cameras;
 - to Nick Baets and [Save Ontario Shipwrecks](https://saveontarioshipwrecks.ca/chapter-ottawa/) (Ottawa chapter), for
   the 1988 drawings of the lock that the [site's zones](/en/decoupage-du-site) are based on.
 

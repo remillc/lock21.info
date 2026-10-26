@@ -35,37 +35,37 @@
       "commit": "9d608a8",
       "recorded": "2026-10-21"
     },
-    "questions/alignement-chunks.md": {
+    "problemes/alignement-chunks.md": {
       "source": "af902550337db2ef625b44db2a57c9fd62f99e70",
       "commit": "9d608a8",
       "recorded": "2026-10-21"
     },
-    "questions/calibration-couleurs.md": {
+    "problemes/calibration-couleurs.md": {
       "source": "b713e954cf17fb86b895fa3d8602eb464d7dcb30",
       "commit": "9d608a8",
       "recorded": "2026-10-21"
     },
-    "questions/canal.md": {
+    "problemes/fort-courant-canal.md": {
       "source": "26d8f463b00f8746bf5d9fb5688e96d940cfa092",
       "commit": "9d608a8",
       "recorded": "2026-10-21"
     },
-    "questions/charte-couleurs-surexposee.md": {
+    "problemes/charte-couleurs-surexposee.md": {
       "source": "d5deaad4a48f7a0db1a17975a1a24f2d6bd03b3e",
       "commit": "9d608a8",
       "recorded": "2026-10-21"
     },
-    "questions/dimensions-rig.md": {
+    "problemes/dimensions-rig.md": {
       "source": "a0e217f51bee5cecfd5fc16228cb684e2d4c1ebc",
       "commit": "9d608a8",
       "recorded": "2026-10-21"
     },
-    "questions/effet-bananne.md": {
+    "problemes/effet-banane.md": {
       "source": "9d0e0e2f802c5d4a1dc3df58b64c1b62b0a092a9",
       "commit": "4b5da93",
       "recorded": "2026-10-26"
     },
-    "questions/nettete-images.md": {
+    "problemes/nettete-images.md": {
       "source": "40590ce0ff6a223844b9b2c3578f7465ced953bc",
       "commit": "5576b4b",
       "recorded": "2026-10-21"
@@ -90,37 +90,37 @@
       "commit": "9d608a8",
       "recorded": "2026-10-21"
     },
-    "tests/lumiere-ambiante.md": {
+    "tests/couleurs-reference-profondeur.md": {
       "source": "04c72d7af7f8b00cba0acd0aae606b0c4ee1ea90",
       "commit": "4b5da93",
       "recorded": "2026-10-26"
     },
-    "workflow/alignement-des-photos.md": {
+    "traitement/alignement-des-photos.md": {
       "source": "b73c59af5859b51e4141fc82fd1c79e65fc6ea1a",
       "commit": "9d608a8",
       "recorded": "2026-10-21"
     },
-    "workflow/extraction-des-photos.md": {
+    "traitement/extraction-des-photos.md": {
       "source": "c1fdc9c4e95c9933a8ab656c2ca2158768ca76a9",
       "commit": "5576b4b",
       "recorded": "2026-10-21"
     },
-    "workflow/generation-du-dense-cloud.md": {
+    "traitement/nuage-de-points-dense.md": {
       "source": "8e3a148f902c17087462722af2ef6cfef4302a26",
       "commit": "9d608a8",
       "recorded": "2026-10-21"
     },
-    "workflow/modele.md": {
+    "traitement/generation-des-modeles.md": {
       "source": "2ac7d0eebfdd2a0a326ec8d4b1cd5008eed1225e",
       "commit": "5576b4b",
       "recorded": "2026-10-21"
     },
-    "workflow/suivi.md": {
+    "traitement/suivi.md": {
       "source": "57802f11fc2777e0a828114685ad55d442a51a40",
       "commit": "9d608a8",
       "recorded": "2026-10-21"
     },
-    "workflow/texture.md": {
+    "traitement/texture.md": {
       "source": "0bbad6b4356f4cc2d7d93b3b4e9029e1e23242e3",
       "commit": "9d608a8",
       "recorded": "2026-10-21"

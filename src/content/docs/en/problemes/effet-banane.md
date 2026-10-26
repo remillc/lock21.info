@@ -39,7 +39,7 @@ To make sure the data collection goes well, and to keep the images from being to
 
 <figure>
 
-![Image used to compute the lens calibration](../../questions/effet-bananne/assets/exemple-damier-GX010187.001.webp)
+![Image used to compute the lens calibration](../../problemes/effet-banane/assets/exemple-damier-GX010187.001.webp)
 
 <figcaption>Image used to compute the lens calibration</figcaption>
 </figure>
@@ -50,7 +50,7 @@ To make sure the data collection goes well, and to keep the images from being to
 
 <figure>
 
-![Target used to mark the 100-foot position](../../questions/effet-bananne/assets/exemple-cible-GX010197.007.webp)
+![Target used to mark the 100-foot position](../../problemes/effet-banane/assets/exemple-cible-GX010197.007.webp)
 
 <figcaption>Target used to mark the 100-foot position</figcaption>
 </figure>

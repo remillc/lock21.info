@@ -1,5 +1,5 @@
 ---
-title: Matériel utilisé pour la collecte des données
+title: Matériel utilisé
 ---
 ## Caméra
 
