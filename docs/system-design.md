@@ -121,6 +121,12 @@ The 3D viewer uses the same fonts (`viewer/src/main.js` imports them) and the da
   first 35 %, then the new one fades in while growing from 92 %, without overlap. The header and the sidebar change
   without moving. Tokens in `tokens.scss`, styles in `custom.scss`.
 
+**Icons by name, never pasted** (2026-10-26): Material Symbols Rounded from Iconify's set (`@iconify-json/material-symbols`,
+a dev dependency in the site and the viewer: `npm update` follows Google's drawings). The site: `<Icon name="material-symbols:home-outline-rounded" />`
+(astro-icon; a name built at run time must be listed in `astro.config.mjs`, `icon({ include })`). The viewer: `viewer/src/icons.js`
+imports each icon it uses (unplugin-icons, `vite.config.js`); `index.html` holds placeholders, `<svg data-icon="…">`,
+filled at start, and scripts call `icon(name, size)`. Outline icons take `-outline-rounded`, filled ones `-rounded`.
+
 ## Components
 
 - **Header**: dark olive bar, `LOCK/21`, place line, navigation (Site, Méthode, Histoire, Journal), "Modèle 3D" pill.

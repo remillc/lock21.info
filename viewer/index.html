@@ -32,7 +32,7 @@
          Material Symbols Rounded icons (24 dp), state layers, focus ring (docs/system-design.md, Buttons) -->
     <!-- Settings (config-panel.js, <l21-settings-panel>): one control per query parameter -->
     <button class="settings-button icon-button" type="button" aria-label="Réglages" data-tooltip="Réglages" aria-expanded="false" hidden>
-      <svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M433-80q-27 0-46.5-18T363-142l-9-66q-13-5-24.5-12T307-235l-62 26q-25 11-50 2t-39-32l-47-82q-14-23-8-49t27-43l53-40q-1-7-1-13.5v-27q0-6.5 1-13.5l-53-40q-21-17-27-43t8-49l47-82q14-23 39-32t50 2l62 26q11-8 23-15t24-12l9-66q4-26 23.5-44t46.5-18h94q27 0 46.5 18t23.5 44l9 66q13 5 24.5 12t22.5 15l62-26q25-11 50-2t39 32l47 82q14 23 8 49t-27 43l-53 40q1 7 1 13.5v27q0 6.5-2 13.5l53 40q21 17 27 43t-8 49l-48 82q-14 23-39 32t-50-2l-60-26q-11 8-23 15t-24 12l-9 66q-4 26-23.5 44T527-80h-94Zm7-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"/></svg>
+      <svg data-icon="settings-outline-rounded" aria-hidden="true" width="24" height="24"></svg>
     </button>
     <!-- Compass (main.js, updateCompass), top left (below the way back to the site when standalone): the card turns
          with the view, its red N toward magnetic north (Christian, 2026-10-25). Shown only: not a button. West's
@@ -50,9 +50,9 @@
         </g>
       </svg>
     </div>
-    <!-- Touch screens: the gestures' card again (touch-nav.js; Material Symbols Rounded « help »), left of the settings -->
+    <!-- Touch screens: the gestures' card again (touch-nav.js; Material Symbols Rounded (src/icons.js) « help »), left of the settings -->
     <button class="touch-help-button icon-button" type="button" hidden>
-      <svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M513.5-254.5Q528-269 528-290t-14.5-35.5Q499-340 478-340t-35.5 14.5Q428-311 428-290t14.5 35.5Q457-240 478-240t35.5-14.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Zm4-172q25 0 43.5 16t18.5 40q0 22-13.5 39T502-525q-23 20-40.5 44T444-427q0 14 10.5 23.5T479-394q15 0 25.5-10t13.5-25q4-21 18-37.5t30-31.5q23-22 39.5-48t16.5-58q0-51-41.5-83.5T484-720q-38 0-72.5 16T359-655q-7 12-4.5 25.5T368-609q14 8 29 5t25-17q11-15 27.5-23t34.5-8Z"/></svg>
+      <svg data-icon="help-outline-rounded" aria-hidden="true" width="24" height="24"></svg>
     </button>
     <!-- Touch screens (touch-nav.js): the gestures' card at the first touch, or a short line (two fingers, in the
          /modele page's frame); it never takes a touch -->
@@ -61,19 +61,19 @@
          iPad (AR Quick Look, rel="ar", which requires an image as the link's first child: hence an <img>) and Android
          (WebXR in Chrome, android-ar.js; Scene Viewer otherwise) -->
     <a class="ar-button icon-button" rel="ar" aria-label="Voir en réalité augmentée" data-tooltip="Voir en réalité augmentée" hidden>
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 -960 960 960' fill='%23ebede3'%3E%3Cpath d='M440-181 240-296q-19-11-29.5-29T200-365v-230q0-22 10.5-40t29.5-29l200-115q19-11 40-11t40 11l200 115q19 11 29.5 29t10.5 40v230q0 22-10.5 40T720-296L520-181q-19 11-40 11t-40-11Zm0-92v-184l-160-93v185l160 92Zm80 0 160-92v-185l-160 93v184ZM120-640q-17 0-28.5-11.5T80-680v-120q0-33 23.5-56.5T160-880h120q17 0 28.5 11.5T320-840q0 17-11.5 28.5T280-800H160v120q0 17-11.5 28.5T120-640Zm40 560q-33 0-56.5-23.5T80-160v-120q0-17 11.5-28.5T120-320q17 0 28.5 11.5T160-280v120h120q17 0 28.5 11.5T320-120q0 17-11.5 28.5T280-80H160Zm640 0H680q-17 0-28.5-11.5T640-120q0-17 11.5-28.5T680-160h120v-120q0-17 11.5-28.5T840-320q17 0 28.5 11.5T880-280v120q0 33-23.5 56.5T800-80Zm0-600v-120H680q-17 0-28.5-11.5T640-840q0-17 11.5-28.5T680-880h120q33 0 56.5 23.5T880-800v120q0 17-11.5 28.5T840-640q-17 0-28.5-11.5T800-680ZM480-526l158-93-158-91-158 91 158 93Zm0 45Zm0-45Zm40 69Zm-80 0Z'/%3E%3C/svg%3E" width="24" height="24" alt="" />
+      <img data-icon="view-in-ar-outline-rounded" data-color="#ebede3" width="24" height="24" alt="" width="24" height="24" alt="" />
     </a>
     <!-- Full screen (the site's /modele/ page embeds the viewer in an iframe with allow="fullscreen"); main.js sets
          data-full while full screen, which shows the exit icon -->
     <!-- Home (main.js): back to the start view, by a quick flight; between the full-screen and the underwater buttons
-         (Christian, 2026-10-25). Material Symbols Rounded « home » -->
+         (Christian, 2026-10-25). Material Symbols Rounded (src/icons.js) « home » -->
     <button class="home-button icon-button" type="button" aria-label="Vue de départ" data-tooltip="Vue de départ" hidden>
-      <svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M240-200h120v-200q0-17 11.5-28.5T400-440h160q17 0 28.5 11.5T600-400v200h120v-360L480-740 240-560v360Zm-80 0v-360q0-19 8.5-36t23.5-28l240-180q21-16 48-16t48 16l240 180q15 11 23.5 28t8.5 36v360q0 33-23.5 56.5T720-120H560q-17 0-28.5-11.5T520-160v-200h-80v200q0 17-11.5 28.5T400-120H240q-33 0-56.5-23.5T160-200Zm320-270Z"/></svg>
+      <svg data-icon="home-outline-rounded" aria-hidden="true" width="24" height="24"></svg>
     </button>
     <!-- « Ambiance sous-marine » (main.js, underwater.js): left of the home button; selected (aria-pressed) while
-         on. Material Symbols Rounded « scuba_diving » -->
+         on. Material Symbols Rounded (src/icons.js) « scuba_diving » -->
     <button class="underwater-button icon-button" type="button" aria-label="Ambiance sous-marine" data-tooltip="Ambiance sous-marine" aria-pressed="false" hidden>
-      <svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="m210-240 31-178q3-24 19-42.5t41-24.5l379-115 77-154q1-2 8-11l95-95q8-8 19.5-8.5T901-859q8 8 9 19.5t-7 19.5l-83 96-56 171q-2 6-6 11.5t-9 9.5L560-400l-234 74-44 120q-1 3-2.5 6t-3.5 5L184-72q-10 14-26 16t-30-8q-14-10-16-26t8-30l90-120Zm-90-120q-33 0-56.5-23.5T40-440q0-33 23.5-56.5T120-520q33 0 56.5 23.5T200-440q0 33-23.5 56.5T120-360Zm236-196q-24 7-45.5-5.5T282-598q-7-24 5.5-46t36.5-28l143-38q16-5 30 4t19 25l11 38q5 16-4 30t-25 19l-142 38Z"/></svg>
+      <svg data-icon="scuba-diving-rounded" aria-hidden="true" width="24" height="24"></svg>
     </button>
     <!-- While underwater, left of its button: the season slider and the dive light, one strip that unrolls out of the
          button (main.js, showSeasonControl) -->
@@ -86,8 +86,8 @@
       <!-- The dive light on and off, between the season slider and the underwater button while underwater (Material
            Symbols « flashlight_on » / « flashlight_off »); also in the settings -->
       <button class="lamp-button icon-button" type="button" aria-pressed="true">
-        <svg class="icon-on" aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M320-160v-360l-67-100q-7-10-10-21t-3-23v-136q0-33 23.5-56.5T320-880h320q33 0 56.5 23.5T720-800v136q0 12-3 23t-10 21l-67 100v360q0 33-23.5 56.5T560-80H400q-33 0-56.5-23.5T320-160Zm117.5-197.5Q420-375 420-400t17.5-42.5Q455-460 480-460t42.5 17.5Q540-425 540-400t-17.5 42.5Q505-340 480-340t-42.5-17.5ZM320-760h320v-40H320v40Zm320 80H320v16l80 120v384h160v-384l80-120v-16ZM480-480Z"/></svg>
-        <svg class="icon-off" aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M764-84 640-208v48q0 33-23.5 56.5T560-80H400q-33 0-56.5-23.5T320-160v-368L84-764q-11-11-11-28t11-28q11-11 28-11t28 11l680 680q11 11 11 28t-11 28q-11 11-28 11t-28-11Zm-364-76h160v-128L400-448v288Zm320-640v136q0 12-3 23t-10 21l-74 113q-11 17-26.5 18t-28.5-7q-6-4-10.5-10t-6.5-13.5q-2-7.5-.5-15.5t6.5-16l73-113v-16H410q-17 0-28-11.5T371-720q0-17 11.5-28.5T411-760h229v-40H289q-17 0-28-11.5T250-840q0-17 11.5-28.5T290-880h350q33 0 56.5 23.5T720-800ZM480-368Zm-70-312Z"/></svg>
+        <svg data-icon="flashlight-on-outline-rounded" class="icon-on" aria-hidden="true" width="24" height="24"></svg>
+        <svg data-icon="flashlight-off-outline-rounded" class="icon-off" aria-hidden="true" width="24" height="24"></svg>
       </button>
     </div>
     <!-- The movement keys (main.js, swim.js), bottom left, on a computer (swimming underwater, moving outside); a key lights up
@@ -97,9 +97,9 @@
       <div class="swim-row"><button class="swim-key" type="button" data-code="KeyW"><kbd>W</kbd></button></div>
       <div class="swim-row"><button class="swim-key" type="button" data-code="KeyA"><kbd>A</kbd></button><button class="swim-key" type="button" data-code="KeyS"><kbd>S</kbd></button><button class="swim-key" type="button" data-code="KeyD"><kbd>D</kbd></button></div>
       <p class="swim-hint"></p>
-      <!-- Opens the swim mode's help again (Material Symbols Rounded « help ») -->
+      <!-- Opens the swim mode's help again (Material Symbols Rounded (src/icons.js) « help ») -->
       <button class="swim-help-button" type="button">
-        <svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M513.5-254.5Q528-269 528-290t-14.5-35.5Q499-340 478-340t-35.5 14.5Q428-311 428-290t14.5 35.5Q457-240 478-240t35.5-14.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Zm4-172q25 0 43.5 16t18.5 40q0 22-13.5 39T502-525q-23 20-40.5 44T444-427q0 14 10.5 23.5T479-394q15 0 25.5-10t13.5-25q4-21 18-37.5t30-31.5q23-22 39.5-48t16.5-58q0-51-41.5-83.5T484-720q-38 0-72.5 16T359-655q-7 12-4.5 25.5T368-609q14 8 29 5t25-17q11-15 27.5-23t34.5-8Z"/></svg>
+        <svg data-icon="help-outline-rounded" aria-hidden="true" width="24" height="24"></svg>
       </button>
     </div>
     <!-- The swim mode's help (main.js, showSwimHelp): an MD3 basic dialog; texts set by main.js -->
@@ -109,14 +109,14 @@
       <div class="swim-help-actions"><button class="swim-help-ok" type="button"></button></div>
     </dialog>
     <button class="fullscreen icon-button" type="button" aria-label="Plein écran" data-tooltip="Plein écran (Échap pour sortir)" hidden>
-      <svg class="icon-enter" aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M200-200h80q17 0 28.5 11.5T320-160q0 17-11.5 28.5T280-120H160q-17 0-28.5-11.5T120-160v-120q0-17 11.5-28.5T160-320q17 0 28.5 11.5T200-280v80Zm560 0v-80q0-17 11.5-28.5T800-320q17 0 28.5 11.5T840-280v120q0 17-11.5 28.5T800-120H680q-17 0-28.5-11.5T640-160q0-17 11.5-28.5T680-200h80ZM200-760v80q0 17-11.5 28.5T160-640q-17 0-28.5-11.5T120-680v-120q0-17 11.5-28.5T160-840h120q17 0 28.5 11.5T320-800q0 17-11.5 28.5T280-760h-80Zm560 0h-80q-17 0-28.5-11.5T640-800q0-17 11.5-28.5T680-840h120q17 0 28.5 11.5T840-800v120q0 17-11.5 28.5T800-640q-17 0-28.5-11.5T760-680v-80Z"/></svg>
-      <svg class="icon-exit" aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M240-240h-80q-17 0-28.5-11.5T120-280q0-17 11.5-28.5T160-320h120q17 0 28.5 11.5T320-280v120q0 17-11.5 28.5T280-120q-17 0-28.5-11.5T240-160v-80Zm480 0v80q0 17-11.5 28.5T680-120q-17 0-28.5-11.5T640-160v-120q0-17 11.5-28.5T680-320h120q17 0 28.5 11.5T840-280q0 17-11.5 28.5T800-240h-80ZM240-720v-80q0-17 11.5-28.5T280-840q17 0 28.5 11.5T320-800v120q0 17-11.5 28.5T280-640H160q-17 0-28.5-11.5T120-680q0-17 11.5-28.5T160-720h80Zm480 0h80q17 0 28.5 11.5T840-680q0 17-11.5 28.5T800-640H680q-17 0-28.5-11.5T640-680v-120q0-17 11.5-28.5T680-840q17 0 28.5 11.5T720-800v80Z"/></svg>
+      <svg data-icon="fullscreen-rounded" class="icon-enter" aria-hidden="true" width="24" height="24"></svg>
+      <svg data-icon="fullscreen-exit-rounded" class="icon-exit" aria-hidden="true" width="24" height="24"></svg>
     </button>
     <!-- « Visite guidée » (tour.js, TODO #48): first in the bottom-right row, left of the other buttons; an MD3 filled
-         tonal button with its label and the Material Symbols Rounded « tour » icon. Underwater, above the row (the season and
+         tonal button with its label and the Material Symbols Rounded (src/icons.js) « tour » icon. Underwater, above the row (the season and
          the lamp take its place); hidden while the tour plays (its card takes over) -->
     <button class="tour-button" type="button" hidden>
-      <svg aria-hidden="true" width="18" height="18" viewBox="0 -960 960 960" fill="currentColor"><path d="M280-400v280q0 17-11.5 28.5T240-80q-17 0-28.5-11.5T200-120v-720q0-17 11.5-28.5T240-880q17 0 28.5 11.5T280-840v40h501q21 0 33 17.5t4 37.5l-58 145 58 145q8 20-4 37.5T781-400H280Zm0-320v240-240Zm276.5 176.5Q580-567 580-600t-23.5-56.5Q533-680 500-680t-56.5 23.5Q420-633 420-600t23.5 56.5Q467-520 500-520t56.5-23.5ZM280-480h442l-48-120 48-120H280v240Z"/></svg>
+      <svg data-icon="tour-outline-rounded" aria-hidden="true" width="18" height="18"></svg>
       <span class="tour-button-label"></span>
     </button>
     <!-- The tour's card (tour.js): the step's number, title and text, back and next; a close button. Bottom centre -->
@@ -124,7 +124,7 @@
       <div class="tour-head">
         <span class="tour-count"></span>
         <button class="tour-close" type="button">
-          <svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M480-424 284-228q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536-480l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480-424Z"/></svg>
+          <svg data-icon="close-rounded" aria-hidden="true" width="24" height="24"></svg>
         </button>
       </div>
       <h2 class="tour-title"></h2>

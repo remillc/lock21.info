@@ -1,4 +1,5 @@
 ---
+import { Icon } from 'astro-icon/components'
 // The /modele page, in the spirit of a Sketchfab page: the 3D viewer embedded in a large frame (its own button
 // goes full screen), then the model's information, how to navigate, the licence and the downloads. The viewer is a
 // separate app (viewer/), published at /modele/viewer; the page doesn't link to that address, visitors only see /modele.
@@ -13,13 +14,14 @@ const lang = pageLang(Astro.locals)
 const en = lang === 'en'
 /** A number with the page language's decimal mark (Google Earth Web in French shows a comma) @param {string} n */
 const decimal = (n) => (en ? n : n.replace('.', ','))
-// The viewer's buttons, by their own icons (viewer/index.html: Material Symbols Rounded paths, 960 units)
+// The viewer's buttons, by their own icons: Material Symbols Rounded names (astro-icon, astro.config.mjs; the viewer
+// uses the same names, viewer/src/icons.js)
 const ICONS = {
-  home: 'M240-200h120v-200q0-17 11.5-28.5T400-440h160q17 0 28.5 11.5T600-400v200h120v-360L480-740 240-560v360Zm-80 0v-360q0-19 8.5-36t23.5-28l240-180q21-16 48-16t48 16l240 180q15 11 23.5 28t8.5 36v360q0 33-23.5 56.5T720-120H560q-17 0-28.5-11.5T520-160v-200h-80v200q0 17-11.5 28.5T400-120H240q-33 0-56.5-23.5T160-200Zm320-270Z',
-  underwater: 'm210-240 31-178q3-24 19-42.5t41-24.5l379-115 77-154q1-2 8-11l95-95q8-8 19.5-8.5T901-859q8 8 9 19.5t-7 19.5l-83 96-56 171q-2 6-6 11.5t-9 9.5L560-400l-234 74-44 120q-1 3-2.5 6t-3.5 5L184-72q-10 14-26 16t-30-8q-14-10-16-26t8-30l90-120Zm-90-120q-33 0-56.5-23.5T40-440q0-33 23.5-56.5T120-520q33 0 56.5 23.5T200-440q0 33-23.5 56.5T120-360Zm236-196q-24 7-45.5-5.5T282-598q-7-24 5.5-46t36.5-28l143-38q16-5 30 4t19 25l11 38q5 16-4 30t-25 19l-142 38Z',
-  tour: 'M280-400v280q0 17-11.5 28.5T240-80q-17 0-28.5-11.5T200-120v-720q0-17 11.5-28.5T240-880q17 0 28.5 11.5T280-840v40h501q21 0 33 17.5t4 37.5l-58 145 58 145q8 20-4 37.5T781-400H280Zm0-320v240-240Zm276.5 176.5Q580-567 580-600t-23.5-56.5Q533-680 500-680t-56.5 23.5Q420-633 420-600t23.5 56.5Q467-520 500-520t56.5-23.5ZM280-480h442l-48-120 48-120H280v240Z',
-  help: 'M513.5-254.5Q528-269 528-290t-14.5-35.5Q499-340 478-340t-35.5 14.5Q428-311 428-290t14.5 35.5Q457-240 478-240t35.5-14.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Zm4-172q25 0 43.5 16t18.5 40q0 22-13.5 39T502-525q-23 20-40.5 44T444-427q0 14 10.5 23.5T479-394q15 0 25.5-10t13.5-25q4-21 18-37.5t30-31.5q23-22 39.5-48t16.5-58q0-51-41.5-83.5T484-720q-38 0-72.5 16T359-655q-7 12-4.5 25.5T368-609q14 8 29 5t25-17q11-15 27.5-23t34.5-8Z',
-  ar: 'M440-181 240-296q-19-11-29.5-29T200-365v-230q0-22 10.5-40t29.5-29l200-115q19-11 40-11t40 11l200 115q19 11 29.5 29t10.5 40v230q0 22-10.5 40T720-296L520-181q-19 11-40 11t-40-11Zm0-92v-184l-160-93v185l160 92Zm80 0 160-92v-185l-160 93v184ZM120-640q-17 0-28.5-11.5T80-680v-120q0-33 23.5-56.5T160-880h120q17 0 28.5 11.5T320-840q0 17-11.5 28.5T280-800H160v120q0 17-11.5 28.5T120-640Zm40 560q-33 0-56.5-23.5T80-160v-120q0-17 11.5-28.5T120-320q17 0 28.5 11.5T160-280v120h120q17 0 28.5 11.5T320-120q0 17-11.5 28.5T280-80H160Zm640 0H680q-17 0-28.5-11.5T640-120q0-17 11.5-28.5T680-160h120v-120q0-17 11.5-28.5T840-320q17 0 28.5 11.5T880-280v120q0 33-23.5 56.5T800-80Zm0-600v-120H680q-17 0-28.5-11.5T640-840q0-17 11.5-28.5T680-880h120q33 0 56.5 23.5T880-800v120q0 17-11.5 28.5T840-640q-17 0-28.5-11.5T800-680ZM480-526l158-93-158-91-158 91 158 93Zm0 45Zm0-45Zm40 69Zm-80 0Z',
+  home: 'home-outline-rounded',
+  underwater: 'scuba-diving-rounded',
+  tour: 'tour-outline-rounded',
+  help: 'help-outline-rounded',
+  ar: 'view-in-ar-outline-rounded',
 }
 // Quotation marks in the page's language: “…” in English, « … » in French
 const [open, close] = en ? ['“', '”'] : ['« ', ' »']
@@ -294,7 +296,7 @@ const updated = zones.updated
       <ul class="buttons">
         {t.buttons.map(([icon, label, only]) => (
           <li class={only}>
-            <span class="icon"><svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d={ICONS[icon]} /></svg></span>
+            <span class="icon"><Icon name={`material-symbols:${ICONS[icon]}`} aria-hidden="true" width="24" height="24" /></span>
             {label}
           </li>
         ))}
@@ -309,7 +311,7 @@ const updated = zones.updated
             <!-- download: Astro's router (ClientRouter) leaves the link to the browser instead of loading it as a page -->
             <a class="download" href={site.downloads.kmz} download data-astro-prefetch="false" data-track-download>
               <!-- Material Symbols Rounded « public » -->
-              <svg aria-hidden="true" width="18" height="18" viewBox="0 -960 960 960" fill="currentColor"><path d="M324-111.5Q251-143 197-197t-85.5-127Q80-397 80-480t31.5-156Q143-709 197-763t127-85.5Q397-880 480-880t156 31.5Q709-817 763-763t85.5 127Q880-563 880-480t-31.5 156Q817-251 763-197t-127 85.5Q563-80 480-80t-156-31.5ZM440-162v-78q-33 0-56.5-23.5T360-320v-40L168-552q-3 18-5.5 36t-2.5 36q0 121 79.5 212T440-162Zm276-102q41-45 62.5-100.5T800-480q0-98-54.5-179T600-776v16q0 33-23.5 56.5T520-680h-80v80q0 17-11.5 28.5T400-560h-80v80h240q17 0 28.5 11.5T600-440v120h40q26 0 47 15.5t29 40.5Z"/></svg>
+              <Icon name="material-symbols:public-outline-rounded" aria-hidden="true" width="18" height="18" />
               Google Earth Pro <span>KMZ</span>
             </a>
             <p>
@@ -319,7 +321,7 @@ const updated = zones.updated
           <li>
             <a class="download" href={site.downloads.glb} download data-track-download>
               <!-- Material Symbols Rounded « download » -->
-              <svg aria-hidden="true" width="18" height="18" viewBox="0 -960 960 960" fill="currentColor"><path d="M465-339.5q-7-2.5-13-8.5L308-492q-12-12-11.5-28t11.5-28q12-12 28.5-12.5T365-549l75 75v-286q0-17 11.5-28.5T480-800q17 0 28.5 11.5T520-760v286l75-75q12-12 28.5-11.5T652-548q11 12 11.5 28T652-492L508-348q-6 6-13 8.5t-15 2.5q-8 0-15-2.5ZM240-160q-33 0-56.5-23.5T160-240v-80q0-17 11.5-28.5T200-360q17 0 28.5 11.5T240-320v80h480v-80q0-17 11.5-28.5T760-360q17 0 28.5 11.5T800-320v80q0 33-23.5 56.5T720-160H240Z"/></svg>
+              <Icon name="material-symbols:download-rounded" aria-hidden="true" width="18" height="18" />
               {t.glbName} <span>GLB · {site.downloads.glbSize}</span>
             </a>
             <p>
@@ -334,7 +336,7 @@ const updated = zones.updated
               <summary>
                 {t.gewTitle}
                 <!-- Material Symbols Rounded « expand_more », 24 dp: turns over as it opens -->
-                <svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M465-364.5q-7-2.5-13-8.5L268-557q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-373q-6 6-13 8.5t-15 2.5q-8 0-15-2.5Z"/></svg>
+                <Icon name="material-symbols:expand-more-rounded" aria-hidden="true" width="24" height="24" />
               </summary>
               <ol>
                 <li>{t.gewImport}</li>

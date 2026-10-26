@@ -8,6 +8,7 @@
 // distance. Back and next during a flight or a move start from where the camera is.
 import * as THREE from 'three'
 import { lang, t } from './i18n.js'
+import { icon } from './icons.js'
 
 // The flight: its length (s) at least, at most, and per metre; above FLY_HIGH m of way, it rises by FLY_RISE of the
 // way, at most FLY_RISE_MAX m; it arrives along the step's line of sight over FLY_BACK of the way, at most FLY_BACK_MAX m
@@ -109,13 +110,9 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   card.setAttribute('aria-label', t('tourButton'))
   // Back and next as icon buttons (Christian, 2026-10-26: nav icons rather than words): Material Symbols Rounded
   // « arrow_back », « arrow_forward », and « check » on the last step; their names as label and tooltip
-  const ICON = {
-    back: 'm313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z',
-    next: 'M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z',
-    end: 'm382-354 339-339q12-12 28-12t28 12q12 12 12 28.5T777-636L410-268q-12 12-28 12t-28-12L182-440q-12-12-11.5-28.5T183-497q12-12 28.5-12t28.5 12l142 143Z',
-  }
-  const iconButton = (element, icon, label) => {
-    element.innerHTML = `<svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="${ICON[icon]}"/></svg>`
+  const ICON = { back: 'arrow-back-rounded', next: 'arrow-forward-rounded', end: 'check-rounded' }
+  const iconButton = (element, name, label) => {
+    element.innerHTML = icon(ICON[name])
     element.setAttribute('aria-label', label)
     element.dataset.tooltip = label
   }

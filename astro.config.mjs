@@ -3,6 +3,7 @@
 // public/modele/viewer/ and served as is at /modele/viewer (in development, forwarded to the viewer's dev server).
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
+import icon from 'astro-icon'
 import homeSlash from './src/integrations/home-slash.mjs'
 import englishPaths from './src/integrations/english-paths.mjs'
 
@@ -25,6 +26,15 @@ export default defineConfig({
   // instead of the build (astro preview must show what the hosting serves)
   vite: { server: { proxy: { '/modele/viewer': viewerDev } }, preview: { proxy: {} } },
   integrations: [
+    // Icons by name (src/components: <Icon name="material-symbols:…-rounded" />), from Iconify's Material Symbols set
+    // (@iconify-json/material-symbols, a dev dependency: npm update to follow Google's drawings); only the ones listed
+    // here are bundled, the names a component builds at run time included (TODO #74, 2026-10-26)
+    icon({
+      include: {
+        'material-symbols': ['deployed-code-outline-rounded', 'public-outline-rounded', 'download-rounded', 'expand-more-rounded',
+          'home-outline-rounded', 'scuba-diving-rounded', 'tour-outline-rounded', 'help-outline-rounded', 'view-in-ar-outline-rounded'],
+      },
+    }),
     starlight({
       // Site name per language (docs/system-design.md): Écluse 21 in French, Lock 21 in English
       title: { fr: 'Écluse 21', en: 'Lock 21' },

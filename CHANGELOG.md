@@ -4,9 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- Every icon of the site and the 3D viewer in Material Symbols' Rounded style (TODO #74): the 26 inline drawings named
-  by matching Google's Outlined drawings (24 px), then replaced by the Rounded ones of the same name; the « 3D model »
-  pill's own cube replaced by « deployed_code ».
+- Every icon of the site and the 3D viewer in Material Symbols' Rounded style (TODO #74), now referenced by name from
+  the library instead of drawings pasted in (Christian: « what if the library is updated? »): Iconify's Material
+  Symbols set (`@iconify-json/material-symbols`), through astro-icon in the site and unplugin-icons in the viewer
+  (`viewer/src/icons.js`, `index.html`'s `<svg data-icon>` placeholders); an update is `npm update` and a rebuild. The
+  « 3D model » pill's own cube replaced by « deployed_code ».
 - 3D viewer, underwater: the dive light twice as strong on the surfaces and creatures it lights (its beam in the
   water unchanged).
 - TODO #55 removed (light shards on the floor in the start view): checked on 2026-10-26, the start view uses 722 of
