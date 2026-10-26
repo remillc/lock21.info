@@ -405,23 +405,10 @@
     border: 0;
     background: transparent;
     color: #f2f3ea;
-    opacity: 0;
-    transition:
-      opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-emphasized-accelerate),
-      display var(--md-sys-motion-duration-short4) allow-discrete,
-      overlay var(--md-sys-motion-duration-short4) allow-discrete;
 
+    // The motion (opening, closing, changing figure) is in image-zoom.js (Web Animations)
     &[open] {
       display: grid;
-      opacity: 1;
-      transition-duration: var(--md-sys-motion-duration-medium4);
-      transition-timing-function: var(--md-sys-motion-easing-emphasized-decelerate);
-    }
-
-    @starting-style {
-      &[open] {
-        opacity: 0;
-      }
     }
 
     &::backdrop {
@@ -446,14 +433,6 @@
       min-height: 0;
       object-fit: contain;
       border-radius: var(--md-sys-shape-medium);
-      transform: scale(1);
-      transition: transform var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-emphasized-decelerate);
-    }
-
-    @starting-style {
-      &[open] img {
-        transform: scale(0.96);
-      }
     }
 
     figcaption {
@@ -562,12 +541,6 @@
       }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      &,
-      img {
-        transition: none;
-      }
-    }
   }
 }
 
