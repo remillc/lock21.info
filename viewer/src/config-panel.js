@@ -17,7 +17,7 @@
 // through reloads of the /modele page; forgotten when a visitor arrives there from another page (?reset=1,
 // forgetSettings). Saved at every change, cleared by "Réinitialiser"; unavailable storage (private browsing,
 // blocked site data) only means nothing is kept.
-import { t } from './i18n.js'
+import { m } from './i18n.js'
 import { icon } from './icons.js'
 
 const STORAGE_KEY = 'l21-viewer-settings'
@@ -70,35 +70,35 @@ export function settingsSchema({ mobile }) {
   return [
     // No underwater section (Christian, 2026-10-25): the diver's button and its strip (season, lamp) are the controls
     {
-      title: t('lighting'),
+      title: m.lighting(),
       items: [
-        { key: 'hdriIntensity', label: t('skyStrength'), hint: t('skyStrengthHint'), type: 'range', min: 0, max: 2, step: 0.05, def: '0.35' },
-        { key: 'sunIntensity', label: t('sunStrength'), hint: t('sunStrengthHint'), type: 'range', min: 0, max: 3, step: 0.05, def: '1' },
-        { key: 'light', label: t('sun'), hint: t('sunHint'), type: 'angles', def: '320,65', ranges: [[0, 360, 1], [0, 90, 1]], unit: '°' },
-        { key: 'exposure', label: t('exposure'), type: 'range', min: 0.25, max: 3, step: 0.05, def: '1.2' },
-        { key: 'contrast', label: t('contrast'), hint: t('contrastHint'), type: 'range', min: 0.5, max: 2, step: 0.05, def: '1' },
-        { key: 'saturation', label: t('saturation'), hint: t('saturationHint'), type: 'range', min: 0, max: 2, step: 0.05, def: '1.3' },
+        { key: 'hdriIntensity', label: m.skyStrength(), hint: m.skyStrengthHint(), type: 'range', min: 0, max: 2, step: 0.05, def: '0.35' },
+        { key: 'sunIntensity', label: m.sunStrength(), hint: m.sunStrengthHint(), type: 'range', min: 0, max: 3, step: 0.05, def: '1' },
+        { key: 'light', label: m.sun(), hint: m.sunHint(), type: 'angles', def: '320,65', ranges: [[0, 360, 1], [0, 90, 1]], unit: '°' },
+        { key: 'exposure', label: m.exposure(), type: 'range', min: 0.25, max: 3, step: 0.05, def: '1.2' },
+        { key: 'contrast', label: m.contrast(), hint: m.contrastHint(), type: 'range', min: 0.5, max: 2, step: 0.05, def: '1' },
+        { key: 'saturation', label: m.saturation(), hint: m.saturationHint(), type: 'range', min: 0, max: 2, step: 0.05, def: '1.3' },
         // Bump map from the photo (Christian, 2026-10-25: to try strengths), 0 to 5 times its default 2.4 cm
-        { key: 'bump', label: t('bump'), hint: t('bumpHint'), type: 'range', min: 0, max: 5, step: 0.05, def: '0.45' },
+        { key: 'bump', label: m.bump(), hint: m.bumpHint(), type: 'range', min: 0, max: 5, step: 0.05, def: '0.45' },
       ],
     },
     {
-      title: t('modelSection'),
+      title: m.modelSection(),
       items: [
-        { key: 'textures', label: t('textures'), hint: t('texturesHint'), type: 'select', def: '', options: [['', t('texturesAuto')], ['light', t('texturesLight')], ['full', t('texturesFull')]] },
+        { key: 'textures', label: m.textures(), hint: m.texturesHint(), type: 'select', def: '', options: [['', m.texturesAuto()], ['light', m.texturesLight()], ['full', m.texturesFull()]] },
         // Out of the advanced settings (Christian, 2026-10-25)
-        { key: 'mesh', label: t('meshView'), hint: t('meshViewHint'), type: 'toggle', def: '0', remember: false },
+        { key: 'mesh', label: m.meshView(), hint: m.meshViewHint(), type: 'toggle', def: '0', remember: false },
       ],
     },
     {
-      title: t('advanced'),
+      title: m.advanced(),
       advanced: true,
       items: [
-        { key: 'profile', label: t('profile'), type: 'select', def: '', options: [['', t('profileAuto')], ['desktop', t('profileDesktop')], ['mobile', t('profileMobile')]] },
-        { key: 'stats', label: t('stats'), type: 'toggle', def: '0' },
+        { key: 'profile', label: m.profile(), type: 'select', def: '', options: [['', m.profileAuto()], ['desktop', m.profileDesktop()], ['mobile', m.profileMobile()]] },
+        { key: 'stats', label: m.stats(), type: 'toggle', def: '0' },
         // The crayfish dancing all through its threat posture (crawfish.js; Christian, 2026-10-25: to tune the dance)
-        { key: 'dance', label: t('dance'), hint: t('danceHint'), type: 'toggle', def: '0' },
-        { key: 'tone', label: t('tone'), type: 'select', def: 'agx', options: [['agx', 'AgX'], ['neutral', t('toneNeutral')], ['aces', 'ACES'], ['none', t('toneNone')]] },
+        { key: 'dance', label: m.dance(), hint: m.danceHint(), type: 'toggle', def: '0' },
+        { key: 'tone', label: m.tone(), type: 'select', def: 'agx', options: [['agx', 'AgX'], ['neutral', m.toneNeutral()], ['aces', 'ACES'], ['none', m.toneNone()]] },
       ],
     },
   ]
@@ -118,7 +118,7 @@ class SettingsPanel extends HTMLElement {
   connectedCallback() {
     this.hidden = true
     this.setAttribute('role', 'dialog')
-    this.setAttribute('aria-label', t('settingsDialog'))
+    this.setAttribute('aria-label', m.settingsDialog())
     this.render()
     this.button.hidden = false
     this.button.addEventListener('click', () => this.toggle(this.hidden))
@@ -192,11 +192,11 @@ class SettingsPanel extends HTMLElement {
     const head = document.createElement('div')
     head.className = 'settings-head'
     const title = document.createElement('h2')
-    title.textContent = t('settings')
+    title.textContent = m.settings()
     const close = document.createElement('button')
     close.type = 'button'
     close.className = 'settings-close'
-    close.setAttribute('aria-label', t('settingsClose'))
+    close.setAttribute('aria-label', m.settingsClose())
     // Material Symbols Rounded « close »
     close.innerHTML = icon('close-rounded')
     close.addEventListener('click', () => this.toggle(false))
@@ -219,7 +219,7 @@ class SettingsPanel extends HTMLElement {
 
     const actions = document.createElement('div')
     actions.className = 'settings-actions'
-    const reset = button(t('reset'), () => {
+    const reset = button(m.reset(), () => {
       // Back to the defaults, keeping the view; the controls are drawn again with their default values
       for (const item of this.schema.flatMap((section) => section.items)) {
         if (!this.params.has(item.key)) continue
@@ -235,7 +235,7 @@ class SettingsPanel extends HTMLElement {
     if (this.session) {
       const code = document.createElement('p')
       code.className = 'settings-hint settings-session'
-      code.textContent = t('session', { code: this.session })
+      code.textContent = m.session({ code: this.session })
       this.append(code)
     }
     this.showDependents(false)

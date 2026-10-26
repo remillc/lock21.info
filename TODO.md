@@ -74,20 +74,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   are drafts to review (zone 18 is not described on the zone map page); step 7 (the north wall's steps) is half hidden
   by a context fill in front of the camera. Not placed: the stone passage through the wall (Christian's favourite,
   `images/views/2026-10-23-view-1.webp`): `?cam=-37.01,2.56,-14.66,-33.02,2.48,-14.40`
-- [ ] #77 Use a translation system for the interface texts, instead of the hand-made dictionaries of
-  `src/lib/i18n.js` (and the strings in the components) and `viewer/src/i18n.js`: one choice for the site and the
-  viewer (message files per language, plurals, numbers and dates), the docs' pages staying as they are
-  - Candidates (2026-10-26): **Paraglide JS 2** (inlang; a compiler: one message file per language, each message a
-    plain JS function, only the used ones bundled, plurals by `Intl.PluralRules`; works without a framework and in a
-    static build; JS output, its TypeScript declarations optional) used as a compiler only, without its routing or
-    middleware (Starlight and `english-paths.mjs` keep the addresses), shared by the site and the viewer: the
-    recommendation. **Starlight's own UI strings** (i18next, already installed: `src/content/i18n/fr.json`, `en.json`,
-    `Astro.locals.t()`): nothing to add, but the site's server side only, not the viewer nor the browser scripts.
-    **intl-messageformat** (FormatJS, ICU syntax): parses at run time, the loader ours to write. Native
-    `Intl.MessageFormat` (MessageFormat 2): still a TC39 stage 1 proposal. Dropped: Lit Localize (Lit templates only),
-    rosetta (unmaintained since 2022)
-  - To check in a trial: a message called with an explicit language (`m.key(params, { locale })`) rather than a global
-    one, the compile step in both Vite builds, the size added to the viewer
 
 ## Other
 

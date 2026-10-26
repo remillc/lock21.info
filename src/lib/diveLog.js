@@ -2,6 +2,8 @@
 // time: the Markdown table `No | Date | Activité | Zones | Durée (minutes) | Participants | Notes`. The home page shows
 // its totals and its latest entries, so they never need to be typed by hand.
 
+import { m } from '../paraglide/messages.js'
+
 /** @typedef {import('./i18n.js').Lang} Lang */
 
 const files = /** @type {Record<string, string>} */ (
@@ -75,7 +77,7 @@ export function formatDuration(minutes, withMinutes = false, lang = 'fr') {
   const days = Math.floor(minutes / 1440)
   const hours = Math.floor((minutes % 1440) / 60)
   const rest = Math.round(minutes % 60)
-  return `${days} ${lang === 'en' ? 'd' : 'j'} ${hours} h` + (withMinutes ? ` ${rest} min` : '')
+  return `${days} ${m.site_days({}, { locale: lang })} ${hours} h` + (withMinutes ? ` ${rest} min` : '')
 }
 
 /**

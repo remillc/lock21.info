@@ -1,5 +1,6 @@
 // The two languages of the site: French at the root, English under /en/ (Starlight locales, astro.config.mjs).
-// Components that carry their own text (home page, model page, header, footer) pick it with these helpers.
+// Components that carry their own text (home page, model page, header, footer) take the page's language here, and their
+// texts from Paraglide JS messages (messages/site/; m.home_lead({}, { locale: pageLang(Astro.locals) })).
 
 /** @typedef {'fr' | 'en'} Lang */
 

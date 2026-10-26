@@ -7,7 +7,7 @@
 // the camera, as one walks up to a view); the point looked at glides from one to the other. Its length follows the
 // distance. Back and next during a flight or a move start from where the camera is.
 import * as THREE from 'three'
-import { lang, t } from './i18n.js'
+import { lang, m } from './i18n.js'
 import { icon } from './icons.js'
 
 // The flight: its length (s) at least, at most, and per metre; above FLY_HIGH m of way, it rises by FLY_RISE of the
@@ -106,8 +106,8 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   const prev = /** @type {HTMLButtonElement} */ (card.querySelector('.tour-prev'))
   const next = /** @type {HTMLButtonElement} */ (card.querySelector('.tour-next'))
   const close = /** @type {HTMLButtonElement} */ (card.querySelector('.tour-close'))
-  button.querySelector('.tour-button-label').textContent = t('tourButton')
-  card.setAttribute('aria-label', t('tourButton'))
+  button.querySelector('.tour-button-label').textContent = m.tourButton()
+  card.setAttribute('aria-label', m.tourButton())
   // Back and next as icon buttons (Christian, 2026-10-26: nav icons rather than words): Material Symbols Rounded
   // « arrow_back », « arrow_forward », and « check » on the last step; their names as label and tooltip
   const ICON = { back: 'arrow-back-rounded', next: 'arrow-forward-rounded', end: 'check-rounded' }
@@ -116,9 +116,9 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     element.setAttribute('aria-label', label)
     element.dataset.tooltip = label
   }
-  iconButton(prev, 'back', t('tourPrev'))
-  close.setAttribute('aria-label', t('tourClose'))
-  close.dataset.tooltip = t('tourClose')
+  iconButton(prev, 'back', m.tourPrev())
+  close.setAttribute('aria-label', m.tourClose())
+  close.dataset.tooltip = m.tourClose()
 
   let index = -1
   // The line of sight the camera actually has, its turning velocity (rad/s, as an axis times a speed), and when it was
@@ -379,12 +379,12 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     const step = steps[i]
     quick = back
     onStep?.(i)
-    count.textContent = t('tourCount', { n: i + 1, total: steps.length })
+    count.textContent = m.tourCount({ n: i + 1, total: steps.length })
     title.textContent = step.title[lang] ?? step.title.fr
     text.textContent = step.text[lang] ?? step.text.fr
     prev.hidden = i === 0
-    if (i === steps.length - 1) iconButton(next, 'end', t('tourEnd'))
-    else iconButton(next, 'next', t('tourNext'))
+    if (i === steps.length - 1) iconButton(next, 'end', m.tourEnd())
+    else iconButton(next, 'next', m.tourNext())
     if (jump) {
       // Straight there, no flight (a step restored from the address): the step's view, a move's end
       const view = camOf(step.kind === 'move' ? step.to : step.cam)

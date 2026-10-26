@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Interface texts in Paraglide JS (TODO #77): the components' and the 3D viewer's French and English texts moved from
+  hand-made dictionaries to message files (`messages/site/`, `messages/viewer/`, one JSON per language), compiled at
+  build time into one plain JS function per message. The site renders them into its pages (no JavaScript added); the
+  viewer bundles only the messages it uses (about 3 KB more). The opt-out button now gets its texts from the page.
 - /modele: under the downloads, a short line linking to the model already placed in Google Earth Web (a project
   shared by Christian), nothing to download.
 - CSS cascade layers on the site (docs/system-design.md, CSS layers): `starlight`, then `l21.tokens`, `l21.base`,

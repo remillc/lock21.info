@@ -5,6 +5,7 @@
 import changelog from '../../CHANGELOG.md?raw'
 import pkg from '../../package.json'
 import { locale, pageLang } from '../lib/i18n.js'
+import { m } from '../paraglide/messages.js'
 
 const lang = pageLang(Astro.locals)
 const { version } = pkg
@@ -14,5 +15,5 @@ const notes = 'https://github.com/remillc/lock21.info/blob/main/CHANGELOG.md'
 ---
 
 <p>
-  Version {version}{date && ` · ${date}`} · <a href={notes}>{lang === 'en' ? 'release notes' : 'notes de version (en anglais)'}</a>
+  Version {version}{date && ` · ${date}`} · <a href={notes}>{m.version_notes({}, { locale: lang })}</a>
 </p>

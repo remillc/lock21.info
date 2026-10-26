@@ -6,10 +6,12 @@
 import Default from '@astrojs/starlight/components/Sidebar.astro'
 import { site } from '../data/site'
 import ModelPill from './ModelPill.astro'
+import { pageLang } from '../lib/i18n'
+import { m } from '../paraglide/messages.js'
 
 // Depth marks, placed in proportion to the depth from the surface (top) to the bottom
 const marks = [0, 15, 30, 45, site.bottomDepthFt]
-const unit = Astro.locals.starlightRoute.lang?.startsWith('en') ? 'ft' : 'pi'
+const unit = m.site_feet({}, { locale: pageLang(Astro.locals) })
 ---
 
 <div class="mobile-model md:sl-hidden">

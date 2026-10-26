@@ -25,6 +25,7 @@ to any UI added to the 3D viewer. Decided with Christian on 2026-10-19.
 | Interactive components | **Web Components** | **Lit** when a component has reactive state (re-renders when its data changes, e.g. a filterable dive log); **native Custom Elements** otherwise. Responsive layout is done in CSS either way |
 | 3D viewer | Separate app (`viewer/`, Vite + three.js) | Built into the site's `public/modele/`, served at `/modele`; not an Astro page |
 | Search | Pagefind (built into Starlight) | Static index generated at build |
+| Interface texts | **Paraglide JS** (inlang) | The components' and the viewer's texts as messages (`messages/site/`, `messages/viewer/`, one JSON file per language), compiled by a Vite plugin into one plain JS function per message (`src/paraglide/`, `viewer/src/paraglide/`, gitignored). The site renders them at build time, each call naming the page's language (`m.home_lead({}, { locale })`); the viewer bundles only the ones it uses. The doc pages themselves are Starlight content, not messages |
 
 ## Content and structure
 
