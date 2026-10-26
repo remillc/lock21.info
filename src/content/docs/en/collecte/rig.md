@@ -59,7 +59,9 @@ Marcotte designed it.
 
 </div>
 
-*(to be completed: the materials, the fittings, how the rig attaches to the scooter.)*
+The rig is an assembly of 20 × 20 mm T-slot aluminium extrusions (the 2020 series).
+
+*(to be completed: the fittings, how the rig attaches to the scooter.)*
 
 ## The lights
 
