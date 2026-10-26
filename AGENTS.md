@@ -6,7 +6,7 @@ Guidance for AI coding agents working in this repository.
 
 **lock21.info** documents an underwater photogrammetry project. The goal is a 3D model of the submerged **Lock 21** site (an old canal lock with spillways/sluice gates, cut into numbered zones). The site is an [Astro](https://astro.build/) + [Starlight](https://starlight.astro.build/) site hosted on Cloudflare (Workers static assets, `wrangler.jsonc`) at <https://lock21.info> (GitHub Pages until 2026-10-21; it was Docusaurus until 2026-10; see `docs/guidelines.md` for the front-end rules).
 
-The site is the site of a **project**, digitizing the lock, not a general, complete information site about the dive site or its history (Christian, 2026-10-26): no pages on how divers get in, safety or tourism; the facts the project measured or used (depths, the current measured, the 1988 drawings) are on it, and links lead elsewhere for the rest.
+The site is the site of a **« projet de numérisation de l'écluse 21 »** (Christian's words), not a general, complete information site about the dive site or its history (Christian, 2026-10-26): no pages on how divers get in, safety or tourism; the facts the project measured or used (depths, the current measured, the 1988 drawings) are on it, and links lead elsewhere for the rest.
 
 The content is a field notebook and "making of" for the project:
 
