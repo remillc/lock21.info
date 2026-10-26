@@ -69,7 +69,8 @@ netteté](/problemes/nettete-images) ; ses vitesses sont programmables.
 
 ## Les brosses
 
-*(à compléter : à quoi servent les brosses à plancher, et comment elles sont fixées.)*
+Les brosses à plancher servent à préparer les surfaces avant de les filmer, le bois surtout : elles dégagent le limon
+et les coquilles qui les recouvrent par endroits.
 
 ## Le matériel d'une plongée
 

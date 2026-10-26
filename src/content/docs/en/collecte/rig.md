@@ -68,7 +68,8 @@ test](/en/problemes/nettete-images); its speeds are programmable.
 
 ## The brushes
 
-*(to be completed: what the floor brushes are for, and how they are fitted.)*
+The floor brushes prepare the surfaces before filming them, the wood above all: they clear the silt and the shells
+that cover them in places.
 
 ## The gear of a dive
 
