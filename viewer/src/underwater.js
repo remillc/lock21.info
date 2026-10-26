@@ -64,7 +64,8 @@ const CLEAR_SHARE = 0.15
 // 25 % less on 2026-10-23), beam half-angle, reach in visibilities
 const LAMP_OFFSET = [0.35, -0.3, 0]
 const LAMP_AIM = 6
-const LAMP_INTENSITY = 61
+// (twice as strong: Christian, 2026-10-26; was 61)
+const LAMP_INTENSITY = 122
 // The share of the daylight's colour shift at depth that is shown (the rest: the eye's adaptation)
 const DAYLIGHT_SHIFT = 0.5
 // The daylight's strength underwater, against above water: dimmer at depth, so that the dive light dominates in its

@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, underwater: the dive light twice as strong on the surfaces and creatures it lights (its beam in the
+  water unchanged).
 - TODO #55 removed (light shards on the floor in the start view): checked on 2026-10-26, the start view uses 722 of
   the desktop's 1000 MB and its floor shows no shards (the lighter tiles of 2026-10-23 and 24).
 - 3D viewer: the bump map's default at 0.45 (1.1 cm at full contrast; was 0.55).
