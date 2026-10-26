@@ -111,8 +111,8 @@
       "recorded": "2026-10-21"
     },
     "traitement/alignement-photos.md": {
-      "source": "ee510d4050aeaec5108c7f570bad2d3cc85dc779",
-      "commit": "14f96b1",
+      "source": "f2875bb8b23e55ac539928907b6fcf1282a1c596",
+      "commit": "1f6c484",
       "recorded": "2026-10-26"
     },
     "traitement/extraction-photos.md": {
@@ -121,14 +121,14 @@
       "recorded": "2026-10-26"
     },
     "traitement/generation-modeles.md": {
-      "source": "e1b825fd6aa3290a74275530d3965dc09856ddc0",
-      "commit": "14f96b1",
+      "source": "1bc64c3901c26a5b10ee209d91dedd8e653d9ab0",
+      "commit": "1f6c484",
       "recorded": "2026-10-26"
     },
     "traitement/nuage-points-dense.md": {
-      "source": "8e3a148f902c17087462722af2ef6cfef4302a26",
-      "commit": "9d608a8",
-      "recorded": "2026-10-21"
+      "source": "d900b1fb1230e54d5e1482888f9b67855e25c54b",
+      "commit": "1f6c484",
+      "recorded": "2026-10-26"
     },
     "traitement/suivi.md": {
       "source": "f52d59df06317c468f1efe509e4805a2147f2c79",
@@ -136,8 +136,8 @@
       "recorded": "2026-10-26"
     },
     "traitement/texture.md": {
-      "source": "1c0253c75945af34f7af4d388e4df30d2a686a38",
-      "commit": "14f96b1",
+      "source": "225abfbef3b00c5a49214be206e3aef1a07752a6",
+      "commit": "1f6c484",
       "recorded": "2026-10-26"
     }
   }
