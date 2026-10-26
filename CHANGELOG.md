@@ -10,8 +10,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   tour's card on the left.
 - 3D viewer, phones: the season slider shows the season's name only, without its visibility, to save room.
 - 3D viewer: no tooltips on phones and tablets (no hover pointer), not even on focus.
-- 3D viewer, guided tour: back and next as MD3 icon buttons (arrows, a check mark on the last step; their names as
-  label and tooltip).
+- 3D viewer, guided tour: back and next as MD3 icon buttons, both round (back filled tonal, next filled; arrows, a
+  check mark on the last step; their names as label and tooltip).
 - 3D viewer, guided tour on a phone held sideways: a wider, shorter card in two columns (the text on the left, close,
   back and next on the right), squeezed to the left of the buttons at the bottom right (their row measured, diving
   included) rather than above them.

@@ -1310,16 +1310,18 @@ l21-tooltip[data-shown='true'] {
   background-clip: padding-box;
   cursor: pointer;
 }
+/* Back: a filled tonal icon button (Christian, 2026-10-26: circled too, as next), the viewer's buttons' tone, its
+   state layers on top of it */
 .tour-prev {
-  background-color: transparent;
-  color: var(--md-sys-color-secondary);
+  background-color: rgb(60 66 50 / 92%);
+  color: var(--md-sys-color-on-surface);
 }
 .tour-prev:hover {
-  background-color: rgb(184 201 122 / 8%);
+  background-color: rgb(73 79 63);
 }
 .tour-prev:focus-visible,
 .tour-prev:active {
-  background-color: rgb(184 201 122 / 10%);
+  background-color: rgb(76 82 66);
 }
 .tour-next {
   background-color: var(--md-sys-color-secondary);
