@@ -1357,6 +1357,27 @@ l21-tooltip {
     transition: opacity 150ms linear;
   }
 }
+/* A touch screen (tour.js): the card hidden while the camera flies to the next step (MD3 exit, 200 ms accelerate), back
+   when it has arrived (the .open rule's enter, 400 ms decelerate); no taps on it meanwhile. While the tour runs outside
+   full screen, the buttons at the bottom go away and the card takes their place (Christian, 2026-10-26) */
+@media (pointer: coarse) {
+  .tour-card.open.moving {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
+  }
+  html.l21-touring:not(:fullscreen) :is(.ar-button, .underwater-button, .home-button, .fullscreen, .underwater-tools, .swim-keys) {
+    display: none;
+  }
+  html.l21-touring:not(:fullscreen) .tour-card {
+    --l21-tour-bottom: 16px;
+    bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}
+/* While the tour runs, the buttons at the top right (settings, the gestures' help) go away too (Christian, 2026-10-26) */
+html.l21-touring :is(.settings-button, .touch-help-button) {
+  display: none;
+}
 .tour-head {
   display: flex;
   align-items: center;

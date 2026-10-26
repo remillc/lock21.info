@@ -374,17 +374,54 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
    * @param {number} i
    * @param {boolean} [back] - back from the next step: straight and quick to the step's view (a move's end)
    */
-  function show(i, back = false, jump = false) {
-    index = i
+  // The card's texts and buttons for a step
+  function fill(i) {
     const step = steps[i]
-    quick = back
-    onStep?.(i)
     count.textContent = m.tourCount({ n: i + 1, total: steps.length })
     title.textContent = step.title[lang] ?? step.title.fr
     text.textContent = step.text[lang] ?? step.text.fr
     prev.hidden = i === 0
     if (i === steps.length - 1) iconButton(next, 'end', m.tourEnd())
     else iconButton(next, 'next', m.tourNext())
+  }
+
+  // On a touch screen the card hides while the camera flies to the next step and comes back when it has arrived
+  // (Christian, 2026-10-26: it covers much of a phone's view). MD3 motion: out 200 ms, in 400 ms (style.css); the new
+  // step's texts are put in while it is hidden
+  const touch = window.matchMedia('(pointer: coarse)')
+  // Arrived, the card waits this long before coming back (Christian, 2026-10-26: the view first)
+  const REVEAL_DELAY = 1500
+  let revealTimer = 0
+  let fillTimer = 0
+  let pendingFill = -1
+  function hideWhileMoving(i) {
+    clearTimeout(revealTimer)
+    card.classList.add('moving')
+    pendingFill = i
+    clearTimeout(fillTimer)
+    fillTimer = setTimeout(() => {
+      if (pendingFill >= 0) fill(pendingFill)
+      pendingFill = -1
+    }, 200)
+  }
+  function reveal() {
+    clearTimeout(revealTimer)
+    clearTimeout(fillTimer)
+    if (pendingFill >= 0) fill(pendingFill)
+    pendingFill = -1
+    card.classList.remove('moving')
+  }
+
+  function show(i, back = false, jump = false) {
+    index = i
+    const step = steps[i]
+    quick = back
+    onStep?.(i)
+    if (touch.matches && !jump) hideWhileMoving(i)
+    else {
+      reveal()
+      fill(i)
+    }
     if (jump) {
       // Straight there, no flight (a step restored from the address): the step's view, a move's end
       const view = camOf(step.kind === 'move' ? step.to : step.cam)
@@ -448,6 +485,8 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     clearTimeout(hideTimer)
     onStart?.()
     button.hidden = true
+    // The buttons at the bottom out of the way while the tour runs, on a touch screen outside full screen (style.css)
+    document.documentElement.classList.add('l21-touring')
     fitBesideControls()
     card.hidden = false
     // The next frame: from hidden, the transition needs a first style
@@ -467,6 +506,8 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     spin.set(0, 0, 0)
     velocity.set(0, 0, 0)
     controls.enabled = true
+    document.documentElement.classList.remove('l21-touring')
+    reveal()
     card.classList.remove('open')
     hideTimer = setTimeout(() => {
       card.hidden = true
@@ -551,6 +592,11 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
         spin.set(0, 0, 0)
         velocity.set(0, 0, 0)
         controls.enabled = true
+        // Arrived: the card back, after a moment to see the view
+        if (index >= 0 && card.classList.contains('moving')) {
+          clearTimeout(revealTimer)
+          revealTimer = setTimeout(reveal, REVEAL_DELAY)
+        }
       }
       return true
     },
