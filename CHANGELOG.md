@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, phones: the season slider shows the season's name only, without its visibility, to save room.
 - 3D viewer: no tooltips on phones and tablets (no hover pointer), not even on focus.
 - 3D viewer, guided tour: back and next as MD3 icon buttons (arrows, a check mark on the last step; their names as
   label and tooltip).

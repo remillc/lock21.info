@@ -1201,7 +1201,8 @@ seasonRange.setAttribute('aria-label', t('season'))
 // while the slider moves (Christian, 2026-10-23)
 const seasonLabels = [0, 1, 2, 3].map((index) => {
   const label = document.createElement('span')
-  label.textContent = t('seasonValue', { index })
+  // On a phone, the season's name only (Christian, 2026-10-26: its visibility left out, to save room)
+  label.textContent = mobile ? t('seasonValue', { index }).split(' · ')[0] : t('seasonValue', { index })
   return label
 })
 seasonValue.replaceChildren(...seasonLabels)
