@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- The menu button (☰) in the dark theme as in the light one: no disc behind it, the icon in the bar's light text colour.
 - /modele: « Navigating » shorter (Christian, 2026-10-26: too much text, too little space): a table of the visitor's own
   gestures (the mouse and keys on a computer, the fingers on a phone or tablet; each mouse gesture with a small mouse
   showing the part used in orange), one row per move key with its letter

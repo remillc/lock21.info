@@ -453,11 +453,12 @@ site-search button[data-open-modal] {
   }
 }
 
-// The menu button (☰) in the light theme (Christian, 2026-10-23): no disc and no shadow, the icon in the bar's text
-// colour as the magnifier (#c9cdbb: the bar's --sl-color-gray-2 above; the button sits outside header.header), the bar
-// staying dark in both themes; open or closed
-:root[data-theme='light'] .sl-menu-button,
-:root[data-theme='light'] .sl-menu-button:has(~ :popover-open) {
+// The menu button (☰), in both themes (Christian, 2026-10-23 for the light one, 2026-10-26 for the dark one: its
+// colours inverted, no background): no disc and no shadow, the icon in the bar's text colour as the magnifier
+// (#c9cdbb: the bar's --sl-color-gray-2 above; the button sits outside header.header), the bar staying dark in both
+// themes; open or closed
+.sl-menu-button,
+.sl-menu-button:has(~ :popover-open) {
   background-color: transparent;
   box-shadow: none;
   color: #c9cdbb;
