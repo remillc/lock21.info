@@ -4,7 +4,7 @@ sidebar:
   order: 2
 ---
 
-Créer un nouveau fichier de projet pour la zone concernée. Nommez le fichier du nom de la zone, par exemple: zone-4.psx.
+Créer un nouveau fichier de projet pour la zone concernée. Nommez le fichier du nom de la zone, par exemple : zone-4.psx.
 
 Ajouter un `chunk`, puis le renommer `raw sparse cloud`.
 
@@ -13,7 +13,7 @@ Ce dossier contiendra uniquement les données brut du projet.
 ## Système de référence
 
 1. Sélectionner le `chunk` > right-click > `Reference settings`
-2. Coordinate System: `Local Coordinates (ft)`
+2. Coordinate System : `Local Coordinates (ft)`
 
 ## Ajouter les images
 
@@ -21,7 +21,7 @@ Ajouter toutes les images concernant de la zone.
 
 ## Alignement
 
-L'étape d'alignement des images est définie en partie dans un fichier de batch workflow `1. Align cameras.xml`. Ce dernier s'occupe des étapes suivantes:
+L'étape d'alignement des images est définie en partie dans un fichier de batch workflow `1. Align cameras.xml`. Ce dernier s'occupe des étapes suivantes :
 
 1. Exécute un script python qui analyse la qualité des images et désactive celles dont le score est inférieur à 0.1
 2. Exécuter la tâche d'alignement des images avec le paramètre `Accuracy` à `Highest`.
@@ -45,7 +45,7 @@ Ajuster l'orientation de la région en fonction de celle de l'objet. Redimension
 
 ### Aberrations
 
-Scruter le modèle à la recherche de parties mal alignées. Ces parties peuvent être réalignées de la façon suivante:
+Scruter le modèle à la recherche de parties mal alignées. Ces parties peuvent être réalignées de la façon suivante :
 
 1. Sélectionner les points de la partie mal alignée
 2. Right click > `Filter photos by Tie points`
@@ -61,10 +61,10 @@ On peut aussi désactiver les caméras si l'alignement ne corrige pas le problè
 
 ## Optimisation
 
-Faire une copie de backup du chunk avant les étapes d'optimisation:
+Faire une copie de backup du chunk avant les étapes d'optimisation :
 
-- Premier chunk: `[Nom du­ chunk] - RAW SPARSE`
-- Deuxième chunk: `[Nom du­ chunk]`
+- Premier chunk : `[Nom du­ chunk] - RAW SPARSE`
+- Deuxième chunk : `[Nom du­ chunk]`
 
 Tie Points optimisation
 
@@ -72,9 +72,9 @@ Après chacune des étapes, exécuter une optimisation des données (menu `Tools
 
 `Model` > `Gradual Selection`
 
-1. `Reconstruction Uncertainty`: &lt;= 15 (recommandé: 10, max 25% points supprimés à la fois)
+1. `Reconstruction Uncertainty` : &lt;= 15 (recommandé : 10, max 25% points supprimés à la fois)
 2. `Tools` > `Optimize cameras...`, puis `Ok`
-3. `Projection Accuracy`: 5 (recommandé: 2 ou 3, max 50% points supprimés à la fois)
-4. `Reprojection Error`: 0.4 (10% of total points)
+3. `Projection Accuracy` : 5 (recommandé : 2 ou 3, max 50% points supprimés à la fois)
+4. `Reprojection Error` : 0.4 (10% of total points)
 
-`Tie Point Accuracy`: 0.1 (max 1)
+`Tie Point Accuracy` : 0.1 (max 1)

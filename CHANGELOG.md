@@ -4,6 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- French typography (Christian, 2026-10-26): the standard non-breaking spaces in every French text (pages, interface
+  messages, the tour): before « : », inside « », a narrow one before « ; ? ! », between a number and its unit and in
+  thousands. Applied and checked by `tools/text-check/french-spaces.mjs` (`--fix`); the rule, the OQLF reference and
+  the agreed terms in the `natural-writing` skill (`.claude/skills/`), adapted from blader/humanizer with French
+  examples. The sidebar's « Workflow » is now « Le traitement » (English “Processing”).
 - Inner padding (Christian, 2026-10-26): a rule in `docs/system-design.md` (a drawn box keeps 8 px between its edge
   and its content at the sides, 4 px above and below; inline boxes 3 px) and its check,
   `tools/design-check/inner-padding.mjs` (every page, both themes, desktop and phone). Fixed: the /modele navigation

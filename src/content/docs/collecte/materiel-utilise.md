@@ -5,13 +5,13 @@ title: Matériel utilisé pour la collecte des données
 
 Caméra GoPro Hero6 Black avec boîtier étanche d'origine.
 
-Mode de capture: **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution a été choisie en fonction d'une capture plein capteur.
+Mode de capture : **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution a été choisie en fonction d'une capture plein capteur.
 
 <figure>
 
 ![Comparaison des résolutions offertes en mode vidéo par la caméra GoPro Hero 6](./assets/gopro-hero6-video-resolutions.webp)
 
-<figcaption>Comparaison des résolutions offertes en mode vidéo par la caméra GoPro Hero 6. Source: <cite><a href="https://gopro.com/content/dam/help/hero6-black/manuals/HERO6Black_UM_ENG_REVB.pdf">Hero 6 Black User Manual</a></cite></figcaption>
+<figcaption>Comparaison des résolutions offertes en mode vidéo par la caméra GoPro Hero 6. Source : <cite><a href="https://gopro.com/content/dam/help/hero6-black/manuals/HERO6Black_UM_ENG_REVB.pdf">Hero 6 Black User Manual</a></cite></figcaption>
 </figure>
 
 ### Paramètres de capture vidéo
@@ -41,12 +41,12 @@ Mode de capture: **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution a
 
 [Blender v4.2](https://www.blender.org/)
 
-[Navionics Boating](https://www.navionics.com/) (Garmin): carte des profondeurs des abords de l'écluse, d'où vient le
+[Navionics Boating](https://www.navionics.com/) (Garmin) : carte des profondeurs des abords de l'écluse, d'où vient le
 terrain qui entoure le modèle 3D
 
 Scripts PowerShell
 
-[Claude Code](https://claude.com/claude-code) (Anthropic, modèle Claude Opus): assistant de programmation, pour le site, le
+[Claude Code](https://claude.com/claude-code) (Anthropic, modèle Claude Opus) : assistant de programmation, pour le site, le
 visualiseur 3D et la chaîne de publication du modèle
 
 [^1]: Disponible lorsque le paramètre Protune est activé

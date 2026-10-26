@@ -31,4 +31,4 @@ Le nuage de points ne fait pas partie des extrants du projet, mais nous allons t
 ## Filter Dense Cloud
 
 1. `Tools` > `Dense Cloud` > `Filter Dense Cloud...`
-2. `Point spacing (m)`: .004 (4mm)
+2. `Point spacing (m)` : .004 (4mm)
