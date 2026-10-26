@@ -126,7 +126,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   previews broke, back to true)
 - [ ] #90 SEO audit: content, for Christian. S1 a real `description` for the pages that answer a question (dive log, zones, current, gear first), in its
   language, or none (also usability V32)
-- [ ] #91 SEO audit: outside the site, for Christian. S5 the GitHub README (« not indexed yet »; Google Search
-  Console and Bing set up, their sitemaps submitted again and the 50 addresses sent to Bing after 1.0.0-beta.1); S9 links: the Sketchfab profile, DECOSTOP, the Wikipedia « Lost
+- [ ] #91 SEO audit: outside the site, for Christian.  S9 links: the Sketchfab profile, DECOSTOP, the Wikipedia « Lost
   Villages » talk page (dead source for Lock 21), Lost Villages Historical Society, Save Ontario Shipwrecks
 - [ ] #35 lock21.ca: owner contacted on 2026-10-18 through CIRA; reminder in Google Calendar on 2027-03-14 (expiry)
