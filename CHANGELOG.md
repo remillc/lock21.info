@@ -4,7 +4,6 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-
 ## 0.16.0 - 2026-10-25
 
 - 3D viewer, underwater: many more particles in spring (800 per m³, was 300; up to 250,000 drawn, 40 % of that on a
