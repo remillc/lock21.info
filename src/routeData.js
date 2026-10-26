@@ -2,7 +2,8 @@
 // sites a link is shared on (SEO audit, docs/audits/seo-2026-10-26.md):
 // - og:locale as a region code (fr_CA, en_CA), with the other language as og:locale:alternate;
 // - a share image (public/images/og-lock21.jpg, 1200 x 630, cropped from the home page's render of zone 12);
-// - structured data (JSON-LD): the site and its author on the two home pages, the 3D model on the model page.
+// - structured data (JSON-LD): the site and its author on the two home pages, the 3D model on the model page;
+// - no canonical address nor language versions on the 404 pages (an error page has no address of its own).
 import { defineRouteMiddleware } from '@astrojs/starlight/route-data'
 import { site } from './data/site.js'
 
@@ -38,6 +39,13 @@ export const onRequest = defineRouteMiddleware((context) => {
   const t = text[lang]
   const head = route.head
   const path = context.url.pathname.replace(/\/$/, '') || '/'
+
+  if (path === '/404' || path === '/en/404') {
+    for (let i = head.length - 1; i >= 0; i--) {
+      const rel = head[i].tag === 'link' ? head[i].attrs?.rel : null
+      if (rel === 'canonical' || rel === 'alternate') head.splice(i, 1)
+    }
+  }
 
   const locale = find(head, 'property', 'og:locale')
   if (locale) locale.attrs.content = lang === 'en' ? 'en_CA' : 'fr_CA'
