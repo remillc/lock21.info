@@ -330,8 +330,8 @@ controls.enableDamping = true
 // Turning with the left button (Christian, 2026-10-24: too fast): half OrbitControls' speed, half a turn for a drag
 // across the view's height
 controls.rotateSpeed = 0.5
-// The wheel (Christian, 2026-10-25: far too strong): 0.075 of OrbitControls' zoom per notch (tried down to 0.05, a little too slow)
-controls.zoomSpeed = 0.075
+// The wheel (Christian, 2026-10-25: far too strong): 0.15 of OrbitControls' zoom per notch (0.075 on 2026-10-25, then doubled on 2026-10-26)
+controls.zoomSpeed = 0.15
 // Looking up (Christian, 2026-10-24: the standard view couldn't): the camera may go below the point it turns around,
 // up to ORBIT_UP from straight above it; the soft floor (keepAboveFloor) keeps it above the model. It used to stay
 // above that point's height, so as never to look from under the floor; then (2026-10-24) in front of any surface

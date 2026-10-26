@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: the wheel's zoom doubled (0.15 of OrbitControls' default; 0.075 was too slow).
 - /modele: brief steps to place the full model (GLB) in Google Earth Web, which reads no position in a GLB: its
   Placement and Rotation fields as it names them in each language, with the values to type (latitude, longitude,
   altitude 4 m relative to ground, heading 150: the KMZ's -30 turned half round, Google Earth Web taking the GLB's
