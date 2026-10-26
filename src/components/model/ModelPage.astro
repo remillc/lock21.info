@@ -17,6 +17,11 @@ const o = { locale: lang }
 const en = lang === 'en'
 /** A number with the page language's decimal mark (Google Earth Web in French shows a comma) @param {string} n */
 const decimal = (n) => (en ? n : n.replace('.', ','))
+/** A count in the page's language: 700 000 / 700,000, and whole millions in words, 2 millions / 2 million @param {number} n */
+const count = (n) =>
+  n >= 1e6 && n % 1e5 === 0
+    ? new Intl.NumberFormat(locale(lang), { notation: 'compact', compactDisplay: 'long' }).format(n)
+    : n.toLocaleString(locale(lang))
 // The viewer's buttons, by their own icons: Material Symbols Rounded names (astro-icon, astro.config.mjs; the viewer
 // uses the same names, viewer/src/icons.js)
 const ICONS = {
@@ -192,17 +197,21 @@ const updated = zones.updated
               Google Earth Pro <span>KMZ</span>
             </a>
             <p>
-              {m.model_kmzText({ n: site.downloads.kmzTriangles }, o)}
+              {m.model_kmzText({ n: count(site.downloads.kmzTriangles) }, o)}
             </p>
           </li>
           <li>
             <a class="download" href={site.downloads.glb} download data-track-download>
               <!-- Material Symbols Rounded « download » -->
               <Icon name="material-symbols:download-rounded" aria-hidden="true" width="18" height="18" />
-              {m.model_glbName({}, o)} <span>GLB · {site.downloads.glbSize}</span>
+              {m.model_glbName({}, o)} <span>GLB · {m.model_glbSize({ n: site.downloads.glbMegabytes }, o)}</span>
             </a>
             <p>
-              {m.model_glbText({ n: site.downloads.glbTriangles }, o)} {m.model_glbFresh({}, o)}
+              {m.model_glbText({ n: count(site.downloads.glbTriangles) }, o)} {m.model_glbFresh({}, o)}
+            </p>
+            {/* The model already in place first, with nothing to download, then how to place the GLB (usability audit V27) */}
+            <p>
+              {m.model_gewView({}, o)}{' '}<a href={site.downloads.googleEarthWeb} target="_blank" rel="noopener">Google Earth Web</a>.
             </p>
             <!-- Google Earth Web reads no position in a GLB (Christian, 2026-10-26): it is placed by hand. Its panel's labels as
                  Christian saw them, in each language; its numbers with the language's decimal mark (French: a comma).
@@ -229,16 +238,13 @@ const updated = zones.updated
                 <li>
                   {m.model_gewTurn({}, o)}
                   <dl>
-                    <dt>{m.model_gewHeading({}, o)}</dt><dd><code>150</code></dd>
+                    <dt>{m.model_gewHeading({}, o)}</dt><dd><code>150</code>°</dd>
                   </dl>
                 </li>
               </ol>
             </details>
           </li>
         </ul>
-        <p class="gew-view">
-          {m.model_gewView({}, o)} <a href={site.downloads.googleEarthWeb} target="_blank" rel="noopener">Google Earth Web</a>.
-        </p>
       </section>
 
       <section>
@@ -259,9 +265,9 @@ const updated = zones.updated
         </div>
         <!-- Phones: the viewer's button; ?ar=full reaches the viewer through the page's address (full reload) -->
         <p class="ar-on-phone">
-          {m.model_arPhone({}, o)}
-          <a href={pagePath} data-astro-reload>{m.model_arTable({}, o)}</a> ·
-          <a href={`${pagePath}?ar=full`} data-astro-reload>{m.model_arFull({}, o)}</a>.
+          {/* {' '}: the spaces around the links, which the line breaks alone lost (usability audit V28) */}
+          {m.model_arPhone({}, o)}{' '}<a href={pagePath} data-astro-reload>{m.model_arTable({}, o)}</a>{' · '}<a
+            href={`${pagePath}?ar=full`} data-astro-reload>{m.model_arFull({}, o)}</a>.
         </p>
       </section>
     </div>
@@ -599,11 +605,6 @@ const updated = zones.updated
     .download span {
       font-size: 0.75rem;
       font-weight: 500;
-    }
-    .gew-view {
-      margin: 0 0 0.75rem;
-      font-size: 0.875rem;
-      color: var(--md-sys-color-on-surface-variant);
     }
     .downloads p {
       margin: 0.5rem 0 0;

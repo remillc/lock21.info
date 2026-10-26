@@ -6,7 +6,8 @@
 // - sidebar: its scroll position is kept (Starlight saves it only when the page unloads), and the current page
 //   shown (its group unfolded, the others closed at page load, scrolled to when out of view);
 // - search: kept across pages (Search.astro); the new page's copy is emptied before the swap, and the dialog is
-//   closed after a navigation from a result.
+//   closed after a navigation from a result; a link to the other language loads the page in full (the search
+//   starts again in that language).
 // Page transition: docs/system-design.md (Motion), styles in custom.scss.
 import Default from '@astrojs/starlight/components/Head.astro'
 import { ClientRouter } from 'astro:transitions'
@@ -30,6 +31,12 @@ const fonts = [archivo400, archivo800, mono700, mono800]
   if (!window.lock21Router) {
     window.lock21Router = true
     let sidebarScroll = 0
+    // A link to the other language: a full page load, not a swap. The kept search would otherwise stay in the first
+    // page's language (Pagefind reads <html lang> once, when it starts; usability audit V8)
+    const isEnglish = (path) => path === '/en' || path.startsWith('/en/')
+    document.addEventListener('astro:before-preparation', (event) => {
+      if (isEnglish(event.to.pathname) !== isEnglish(event.from.pathname)) event.preventDefault()
+    })
     document.addEventListener('astro:before-swap', (event) => {
       event.newDocument.documentElement.dataset.theme = document.documentElement.dataset.theme
       // The kept search replaces the new page's: emptied first, so that its element is never built (its constructor

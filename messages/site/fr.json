@@ -76,6 +76,7 @@
   "model_downloads": "Téléchargements",
   "model_kmzText": "Ouvre l'écluse à sa place sur la carte ({n} triangles). Le fichier ne contient qu'un lien : les zones sont chargées depuis le site, et celles qui s'ajoutent apparaissent à la prochaine ouverture.",
   "model_glbName": "Modèle complet",
+  "model_glbSize": "{n} Mo",
   "model_glbText": "Zones et maquette du site, {n} de triangles : pour Blender, Sketchfab, la visionneuse 3D de Windows ou l'import de Google Earth Web.",
   "model_glbFresh": "Le modèle s'enrichit à chaque nouvelle zone : revenez chercher la dernière version.",
   "model_gewTitle": "Le placer dans Google Earth Web",

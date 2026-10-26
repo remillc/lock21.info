@@ -54,7 +54,7 @@ const entries = [
         </div>
       </div>
 
-      <section class="panel" aria-label={m.home_survey({}, o)}>
+      <section class="panel" aria-label={m.home_survey({}, o)} data-pagefind-ignore>
         <div class="panel-head">
           <span>{m.home_surveyTitle({}, o)}</span>
           <span class="status"><span class="dot"></span>{m.home_status({}, o)}</span>
@@ -85,7 +85,10 @@ const entries = [
     <section class="block">
       <h2>{m.home_start({}, o)}</h2>
       <p class="sub">{m.home_startSub({}, o)}</p>
-      <div class="cards">
+      {/* data-pagefind-ignore: the cards, the panel and the excerpts' dates and numbers stay out of the search index.
+           Their texts sit in spans with no space between them, and ran together in the search's excerpts (« courant du
+           canal.plongeurs →02La méthode… », usability audit V28); the pages they lead to are indexed */}
+      <div class="cards" data-pagefind-ignore>
         {entries.map((e) => (
           <a class="card" href={e.href} data-astro-prefetch="viewport">
             <span class="card-no">{e.no}</span>
@@ -105,7 +108,7 @@ const entries = [
       <ol class="timeline">
         {excerpts.map((d) => (
           <li>
-            <div class="meta">
+            <div class="meta" data-pagefind-ignore>
               <span class="no">No {d.no}</span>
               <span>{d.date}</span>
               {d.zones && <span>zone {d.zones}</span>}

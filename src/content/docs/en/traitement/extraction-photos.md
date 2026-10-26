@@ -5,6 +5,8 @@ sidebar:
 ---
 This step pulls still photos out of the videos I shot. I do it in DaVinci Resolve Studio.
 
+The videos were shot with a GoPro Hero6 Black; the camera, its housing and its settings are described in [Gear used](/en/collecte/materiel-utilise).
+
 ## White balance
 
 *(to be completed)*

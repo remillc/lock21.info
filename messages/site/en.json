@@ -76,6 +76,7 @@
   "model_downloads": "Downloads",
   "model_kmzText": "Opens the lock in its place on the map ({n} triangles). The file only holds a link: the zones load from the site, and the ones added later show up the next time it is opened.",
   "model_glbName": "Full model",
+  "model_glbSize": "{n} MB",
   "model_glbText": "Zones and the site's model, {n} triangles: for Blender, Sketchfab, Windows' 3D Viewer or Google Earth Web's import.",
   "model_glbFresh": "The model grows with each new zone: come back for the latest version.",
   "model_gewTitle": "Placing it in Google Earth Web",
