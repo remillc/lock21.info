@@ -128,6 +128,13 @@ export const TOUR_STEPS = [
     // Christian, 2026-10-25 (was -45.27, 1.67, -26.26, -40.87, 2.8, -28.73); 0.9 m higher (2026-10-26: under the chart
     // terrain, its ground there at 0.72 m)
     cam: [-48.84, 1.6, -27.52, -33.75, 5.58, -28.62],
+    // The flight from step 4 level, at about 1.7 m, never up then down (Christian, 2026-10-26: the usual flight rose
+    // over its way, then came down): south-west out of the passage along the piers' west ends, looking the way it goes,
+    // turning to the piers on the way in. Clear of every surface (0.9 m at least)
+    approach: [[-40.5, 1.8, -18.6], [-44.5, 1.8, -23.2]],
+    looks: [{ dir: [-0.65, 0, -0.76] }, [-33.75, 5.58, -28.62]],
+    paces: [1.2, 1.5, 1.2],
+    accel: 1,
     title: { fr: 'Les piliers, côté ouest', en: 'The piers, west side' },
     text: {
       fr: 'Du côté ouest, les piliers sont arrondis, montés en assises de pierre. Derrière, l’enclave est fermée par un mur de madriers.',
@@ -143,7 +150,8 @@ export const TOUR_STEPS = [
     looks: [[-41.79, 3.96, -16.02]],
     paces: [1.6, 0.8],
     accel: 1,
-    cam: [-38.7, 3.99, -16.38, -37.72, 3.77, -16.35],
+    // Christian, 2026-10-26: low, looking up at the gates (was -38.7, 3.99, -16.38, -37.72, 3.77, -16.35)
+    cam: [-39.7, 0.95, -16.46, -37.17, 3.36, -16.43],
     title: { fr: 'Les vannes, de près', en: 'The gates, up close' },
     text: {
       fr: 'De l’autre côté, les trois vannes pendent encore à leurs tiges, au-dessus des passages. On s’approche.',
