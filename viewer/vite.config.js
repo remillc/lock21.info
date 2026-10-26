@@ -25,7 +25,8 @@ export default defineConfig({
   // with or without the trailing slash (relative paths broke: assets resolved against the parent folder). Same path on
   // the dev server (http://localhost:3100/modele/viewer), so the site's dev server can forward that path to it.
   base: '/modele/viewer/',
-  server: { host: true },
+  // The site's facts (../src/data/site.js: the lock's depth) are read from outside the viewer's folder
+  server: { host: true, fs: { allow: ['.', '../src/data'] } },
   // The stylesheet's native CSS nesting flattened for browsers before 2023 (an old iPad would drop the nested rules)
   build: { cssTarget: ['chrome100', 'safari15', 'firefox100', 'edge100'] },
   // Icons by name (src/icons.js: ~icons/material-symbols/…?raw), compiled into SVG strings, only those imported

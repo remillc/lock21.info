@@ -1,8 +1,14 @@
 // Facts about the site used across the pages (docs/system-design.md). Values that change with the work (dives, zones online)
 // are computed at build time instead: see src/lib/diveLog.js and src/lib/manifest.js.
+// The lock's depth: its floor below the water's surface, in feet (SOS Ottawa, 1989: lock floor and base of the approach
+// cribs; docs/sos-ottawa-files.md). The one place it is written: the site's pages and the 3D viewer (its water surface,
+// its dive computer: viewer/src/underwater.js) read it from here
+const BOTTOM_DEPTH_FT = 60
+
 export const site = {
-  bottomDepthFt: 60, // canal floor: 60 ft (SOS Ottawa, 1989: lock floor and base of the approach cribs; docs/sos-ottawa-files.md)
-  bottomDepthM: 18.3,
+  bottomDepthFt: BOTTOM_DEPTH_FT,
+  // In metres, to a tenth (18.3)
+  bottomDepthM: Math.round(BOTTOM_DEPTH_FT * 0.3048 * 10) / 10,
   zonesTotal: 25,
   // Lock 21: 44°59.814' N, 74°53.983' W (degrees and decimal minutes; Christian, 2026-10-25, was 44°59.809', 74°53.997')
   coordinates: {

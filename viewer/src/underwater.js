@@ -18,10 +18,11 @@
 //    observations) and the water's colour (spring's runoff murkier and browner).
 // Distances in metres, y up; the lock floor near y = 0.
 import * as THREE from 'three'
+import { site } from '../../src/data/site.js'
 
-// The lock floor (y = 0) lies 60 ft below the surface, as on the site (src/data/site.js, bottomDepthFt; SOS Ottawa
-// 1989); it was 55 ft until 2026-10-26, and the dive computer read 50.7 ft on the floor (the eye 1.3 m above it)
-export const SURFACE_Y = 60 * 0.3048
+// The water's surface: the lock's depth above its floor (y = 0), the site's own constant (src/data/site.js,
+// bottomDepthFt), so the dive computer and the pages agree (the viewer had its own 55 ft until 2026-10-26)
+export const SURFACE_Y = site.bottomDepthFt * 0.3048
 const WATER_INDEX = 1.333
 // River current, west to east: 35 ft/min, measured by drifting in the canal (2024-06-08), in m/s; the particles drift
 // SEASONS[].current times faster (Christian, 2026-10-23: the murkier the water, the faster: spring's runoff; slowed to
