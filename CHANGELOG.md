@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, guided tour on a touch screen (Christian, 2026-10-26): the card hides while the camera flies to the next
+  step and comes back 1.5 s after it has arrived (MD3 motion: out 200 ms, in 400 ms), the new step's texts put in
+  while hidden; outside full screen the buttons at the bottom go away while the tour runs, and the card takes their
+  place. On every screen, the buttons at the top right (settings, the gestures' help) hide during the tour.
 - 3D viewer, guided tour on a phone held upright (usability audit V2): the /modele frame there (358 × 316) counted as
   « landscape » and got the sideways phones' layout, the card squeezed to 100 px with its arrows over the AR and dive
   buttons. The sideways layout now needs a wide window (600 px); in a short, narrow frame the card sits above the
