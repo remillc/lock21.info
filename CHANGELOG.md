@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Notebook pages on wide screens (over about 1,580 px): the content slid under the navigation since the cascade
+  layers; the centring rule now sits outside the layers, as Starlight's own rule does.
+- Design brief: « Page names », one name per page for its address, its title (`<h1>` and `<title>`) and its menu label.
 - Underwater view: the water's surface 60 ft above the lock floor, as on the rest of the site (it was 55 ft): the dive
   computer reads about 55.7 ft at eye height on the floor (50.7 before), and the surface, light and depth follow.
 - The lock's depth is one constant, `src/data/site.js` (60 ft; the metres computed from it), read by the pages and by
