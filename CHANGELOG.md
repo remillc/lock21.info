@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Left menu: its labels drawn bold from the first frame (Archivo 700 preloaded with the other fonts; they first showed
+  in a lighter weight, then bold).
 - Left menu: no more groups opening then closing as a page loads (TODO #87): the groups are closed in the page's HTML
   except the current page's (`collapsed: true`), and Starlight's memory of the open groups is forgotten between pages
   (`Head.astro`; the menu's scroll position kept).

@@ -12,15 +12,17 @@
 import Default from '@astrojs/starlight/components/Head.astro'
 import { ClientRouter } from 'astro:transitions'
 import Analytics from './Analytics.astro'
-// Fonts seen at the top of every page, fetched with the HTML instead of after the stylesheet: Archivo 400 (text) and
-// 800 (titles: the home page's title is its largest element), JetBrains Mono 700 (the "Modèle 3D" pill, the home
+// Fonts seen at the top of every page, fetched with the HTML instead of after the stylesheet: Archivo 400 (text), 700
+// (the left menu's labels, weight 600: drawn first in a lighter weight, then bold, a flicker; TODO #87) and 800 (titles:
+// the home page's title is its largest element), JetBrains Mono 700 (the "Modèle 3D" pill, the home
 // panel's numbers) and 800 (the ÉCLUSE/21 wordmark). Same files as the @fontsource stylesheets (astro.config.mjs).
 import archivo400 from '@fontsource/archivo/files/archivo-latin-400-normal.woff2?url'
+import archivo700 from '@fontsource/archivo/files/archivo-latin-700-normal.woff2?url'
 import archivo800 from '@fontsource/archivo/files/archivo-latin-800-normal.woff2?url'
 import mono700 from '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-700-normal.woff2?url'
 import mono800 from '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-800-normal.woff2?url'
 
-const fonts = [archivo400, archivo800, mono700, mono800]
+const fonts = [archivo400, archivo700, archivo800, mono700, mono800]
 ---
 
 <Default />
