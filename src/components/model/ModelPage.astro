@@ -11,6 +11,8 @@ import { zonesOnline } from '../../lib/manifest'
 
 const lang = pageLang(Astro.locals)
 const en = lang === 'en'
+/** A number with the page language's decimal mark (Google Earth Web in French shows a comma) @param {string} n */
+const decimal = (n) => (en ? n : n.replace('.', ','))
 const pagePath = localPath(site.viewer, lang)
 const t = en
   ? {
@@ -122,15 +124,15 @@ const t = en
       /** @param {string} n */
       glbText: (n) => `Zones et maquette du site, ${n} de triangles: pour Blender, Sketchfab, la visionneuse 3D de Windows ou l'import de Google Earth Web.`,
       gewTitle: 'Le placer dans Google Earth Web',
-      gewImport: 'Dans un projet, importez le GLB (« File », « Import »).',
-      gewPlace: 'Dans « Placement », entrez ces valeurs telles quelles (avec le point):',
-      gewTurn: 'Sous « Transform », « Rotation »:',
-      gewLat: '« Latitude »',
-      gewLon: '« Longitude »',
-      gewAltitude: '« Altitude »',
-      gewGrounding: '« Grounding » (ancrage)',
-      gewRelative: '« Relative to ground » (par rapport au sol)',
-      gewHeading: '« Heading » (cap)',
+      gewImport: 'Dans un projet, importez le GLB (Fichier, Importer).',
+      gewPlace: 'Dans Emplacement, entrez ces valeurs (avec un point plutôt que la virgule si Google Earth est en anglais):',
+      gewTurn: 'Sous Transformation, Rotation:',
+      gewLat: 'Latitude',
+      gewLon: 'Longitude',
+      gewAltitude: 'Altitude',
+      gewGrounding: 'Surface de référence',
+      gewRelative: 'Par rapport au sol',
+      gewHeading: 'Orientation',
       arTitle: 'Réalité augmentée',
       arText: "Posez l'écluse devant vous avec un téléphone ou une tablette: sur une table, au 1:100 (70 cm), ou à sa taille réelle (70 m), dans un grand espace dégagé.",
       table: 'Sur une table',
@@ -253,9 +255,9 @@ const updated = zones.updated
               {t.glbText(site.downloads.glbTriangles)}
             </p>
             <!-- Google Earth Web reads no position in a GLB (Christian, 2026-10-26): it is placed by hand. Its panel's labels as
-                 Christian saw them (English; in French, quoted with a translation: its French labels unchecked). The
-                 values with a decimal point, as Google Earth Web takes them (not the French comma); the model's origin
-                 is the site anchor, its heading and height those of the KMZ (make_kmz.py: -30, about 4 m) -->
+                 Christian saw them, in each language; its numbers with the language's decimal mark (French: a comma).
+                 The model's origin is the site anchor, its heading and height those of the KMZ (make_kmz.py: -30,
+                 about 4 m) -->
             <details class="gew">
               <summary>{t.gewTitle}</summary>
               <ol>
@@ -263,8 +265,8 @@ const updated = zones.updated
                 <li>
                   {t.gewPlace}
                   <dl>
-                    <dt>{t.gewLat}</dt><dd><code>{site.coordinates.lat.toFixed(6)}</code></dd>
-                    <dt>{t.gewLon}</dt><dd><code>{site.coordinates.lon.toFixed(6)}</code></dd>
+                    <dt>{t.gewLat}</dt><dd><code>{decimal(site.coordinates.lat.toFixed(6))}</code></dd>
+                    <dt>{t.gewLon}</dt><dd><code>{decimal(site.coordinates.lon.toFixed(6))}</code></dd>
                     <dt>{t.gewAltitude}</dt><dd><code>4</code> m</dd>
                     <dt>{t.gewGrounding}</dt><dd>{t.gewRelative}</dd>
                   </dl>
