@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#81**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#82**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -92,6 +92,12 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   navigation table and button list only take their own width (tables are `width: max-content`, custom.scss), so
   the rest of the middle third stays empty. Options: columns sized to their content (e.g. `auto auto 1fr`), the table
   at the column's full width, or the downloads moved under the navigation
+- [ ] #81 Make the site (a multi-page Astro site) a progressive web app (Christian, 2026-10-26): a web app manifest
+  (name, icons from the logo, theme colours, start at `/` or `/en/`), installable on a phone; a service worker
+  (e.g. `@vite-pwa/astro`, Workbox) caching the pages and their assets so the notebook reads offline (at the dive site,
+  no network), with an offline page. To decide: what the 3D model keeps offline (its tiles are hundreds of MB on
+  `tiles.lock21.info`: none, the start view's, or a chosen zone), how updates reach visitors (the new version on the
+  next visit), and how it fits client-side routing and Cloudflare's cache headers (`public/_headers`)
 
 ## Other
 
