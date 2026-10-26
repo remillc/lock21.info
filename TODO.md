@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#89**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#92**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -122,4 +122,16 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ## Other
 
+- [ ] #89 SEO audit (2026-10-26, `docs/audits/seo-2026-10-26.md`): the code fixes. S6 a share image (`og:image`,
+  1200 × 630, the home render); S8 « Dickinson's Landing » in the home, model and config texts; S3 301s for the
+  Docusaurus addresses (`/blog*`, `/docs/*`); S13 the H1 → H3 jump on « Netteté des images »; S16 `og:locale`
+  `fr_CA` / `en_CA`; S7 structured data (`WebSite`, `Person`, `3DModel` on `/modele`); S11 workers.dev off; S15 the
+  tiles' `.glb` compressed
+- [ ] #90 SEO audit: content, for Christian. S1 a `description` per page in its language (also usability V32); S2 the
+  home and `/modele` titles (place and topic words: Long Sault, plongée / dive, Lock 21); S4 « À propos de l'écluse
+  21 » opening with where, how deep and the current (and whether to add the entry from Macdonell Island)
+- [ ] #91 SEO audit: outside the site, for Christian. S3 deploy `main` (27 renamed addresses, 301s ready); S5 Google
+  Search Console and Bing Webmaster Tools (domain property, the sitemap), the GitHub README (« not indexed yet ») and
+  its About link in `https` (S10); S9 links: the Sketchfab profile, DECOSTOP, Scubarama, the Wikipedia « Lost
+  Villages » talk page (dead source for Lock 21), Lost Villages Historical Society, Save Ontario Shipwrecks
 - [ ] #35 lock21.ca: owner contacted on 2026-10-18 through CIRA; reminder in Google Calendar on 2027-03-14 (expiry)
