@@ -2,8 +2,9 @@
 // (docs/system-design.md). One element for the page; any element with data-tooltip gets it: shown after a short hover
 // delay (HOVER_DELAY), at once on keyboard focus; hidden when the pointer leaves, on blur, on a click and on Escape.
 // The text is read at that moment (data-tooltip), so it follows the language and the button's state (full screen).
-// Placed above the button, or below when there is no room, kept inside the window. Touch screens: no hover, the
-// buttons keep their aria-label.
+// Placed above the button, or below when there is no room, kept inside the window. Touch screens (no hover pointer):
+// no tooltip at all, not even on focus (Christian, 2026-10-26: none on a phone; the tour's buttons, focused as they
+// change, showed one); the buttons keep their aria-label.
 // MD3: inverse surface container, body-small text (12/16), 24 dp high, 8 dp padding, 4 dp corners (extra-small),
 // 4 dp from the button; fades in over 150 ms (decelerate) and out over 75 ms (accelerate), MD3's tooltip durations.
 const HOVER_DELAY = 500
@@ -28,6 +29,7 @@ class Tooltip extends HTMLElement {
       if (target && !target.contains(e.relatedTarget)) this.hide()
     })
     document.addEventListener('focusin', (e) => {
+      if (!hoverable.matches) return
       const target = e.target.closest?.('[data-tooltip]')
       if (target?.matches(':focus-visible')) this.show(target)
     })
@@ -41,6 +43,7 @@ class Tooltip extends HTMLElement {
   /** @param {HTMLElement} anchor */
   show(anchor) {
     clearTimeout(this.timer)
+    if (!window.matchMedia('(hover: hover)').matches) return
     const text = anchor.dataset.tooltip
     if (!text || anchor.hidden) return
     this.anchor = anchor

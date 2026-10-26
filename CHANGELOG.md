@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: no tooltips on phones and tablets (no hover pointer), not even on focus.
 - 3D viewer, guided tour: back and next as MD3 icon buttons (arrows, a check mark on the last step; their names as
   label and tooltip).
 - 3D viewer, guided tour on a phone held sideways: a wider, shorter card in two columns (the text on the left, close,
