@@ -429,7 +429,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
    */
   // A phone held sideways (style.css): the card squeezed to the left of the buttons at the bottom right (Christian,
   // 2026-10-26), however many there are (diving adds the season's strip and the lamp): their row's left edge measured,
-  // as --lk-tour-right, whenever the card shows, the window turns or the row changes
+  // as --l21-tour-right, whenever the card shows, the window turns or the row changes
   const BOTTOM_CONTROLS = '.underwater-tools > *, .underwater-button, .ar-button, .home-button, .fullscreen'
   function fitBesideControls() {
     let left = window.innerWidth
@@ -439,7 +439,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
       // (the bottom row only: the season's slider sits above it on a phone held sideways)
       if (box.width && box.bottom > window.innerHeight - 72) left = Math.min(left, box.left)
     }
-    card.style.setProperty('--lk-tour-right', `${Math.round(window.innerWidth - left + 12)}px`)
+    card.style.setProperty('--l21-tour-right', `${Math.round(window.innerWidth - left + 12)}px`)
   }
   window.addEventListener('resize', fitBesideControls)
   new MutationObserver(fitBesideControls).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['hidden'] })

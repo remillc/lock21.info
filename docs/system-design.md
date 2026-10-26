@@ -51,7 +51,7 @@ Starlight's (`--sl-color-…`) in `src/styles/`.
 | `surface-container` | `#e7e8dc` | `#1f231a` | chips (light); cards, timeline items (dark) |
 | `outline` | `#2e3322` | `#3c4232` | 2 px outlines |
 | `outline-variant` | `#e1e2d6` | `#2a2f22` | dividers, table rows |
-| bars and panel (`--lk-bar`, `--lk-panel`) | `#2e3322` | `#1b1e15` | header, footer, instrument panel: dark olive in both themes (MD3 inverse surface in light) |
+| bars and panel (`--l21-bar`, `--l21-panel`) | `#2e3322` | `#1b1e15` | header, footer, instrument panel: dark olive in both themes (MD3 inverse surface in light) |
 | text / muted / links on bars | `#f2f3ea` / `#b6bca3` / `#c5d48a` | `#f2f3ea` / `#a3a893` / `#b8c97a` | text, labels and links in bars and panel |
 
 Contrast: WCAG AA (4.5:1 for text) in both themes; checked again when the tokens are applied.
@@ -165,8 +165,8 @@ The 3D viewer is a separate app with no theme to fight; its own stack, at the to
 ```
 
 `controls`: the buttons, the compass, the season's strip; `panels`: the settings, the tour's card, the swim keys;
-`overlays`: tooltips, the loading screen, dialogs. The prefix is the project's, `l21` (as the custom elements,
-`<l21-…>`, and the browser's storage keys); the older CSS variables still say `--lk-`.
+`overlays`: tooltips, the loading screen, dialogs. The prefix is the project's, `l21`: the custom elements
+(`<l21-…>`), the CSS variables (`--l21-…`, `--lk-` until 2026-10-26), the layers and the browser's storage keys.
 
 ## Components
 

@@ -12,8 +12,8 @@
   --md-sys-color-secondary: #b8c97a;
   --md-sys-color-tertiary: #f28c28;
   --md-sys-color-outline: #3c4232;
-  --lk-on-bar: #f2f3ea;
-  --lk-on-bar-muted: #a3a893;
+  --l21-on-bar: #f2f3ea;
+  --l21-on-bar-muted: #a3a893;
   /* The other roles the viewer uses (no colour written in a rule: docs/system-design.md): the containers its controls
      and panels sit on, from darkest to lightest, the outlines, the tooltip's text, shadows and scrims */
   --md-sys-color-on-secondary: #12140e;
@@ -36,8 +36,8 @@
   --l21-control: color-mix(in srgb, var(--md-sys-color-surface-container-highest) 92%, transparent);
   /* The site's fonts (self-hosted, @fontsource, imported by main.js): Archivo for text and titles, JetBrains Mono for
      labels and data */
-  --lk-font-text: 'Archivo', system-ui, sans-serif;
-  --lk-font-data: 'JetBrains Mono', ui-monospace, monospace;
+  --l21-font-text: 'Archivo', system-ui, sans-serif;
+  --l21-font-data: 'JetBrains Mono', ui-monospace, monospace;
 }
 
 html,
@@ -46,7 +46,7 @@ body {
   height: 100%;
   background: var(--md-sys-color-surface);
   color: var(--md-sys-color-on-surface);
-  font-family: var(--lk-font-text);
+  font-family: var(--l21-font-text);
   overflow: hidden;
   /* TODO #70: no scroll handed on to the page around the viewer */
   overscroll-behavior: none;
@@ -161,7 +161,7 @@ l21-loading.refine {
   border-radius: 6px;
   background: color-mix(in srgb, var(--md-sys-color-surface) 70%, transparent);
   color: var(--md-sys-color-on-surface-variant);
-  font: 500 11px/16px var(--lk-font-data);
+  font: 500 11px/16px var(--l21-font-data);
   letter-spacing: 0.5px;
 }
 
@@ -216,7 +216,7 @@ l21-loading.error .loading-label {
   max-width: min(280px, 70vw);
   margin: 0;
   color: var(--md-sys-color-on-surface-variant);
-  font: 400 13px/18px var(--lk-font-text);
+  font: 400 13px/18px var(--l21-font-text);
   text-align: center;
 }
 .loading-retry {
@@ -229,7 +229,7 @@ l21-loading.error .loading-label {
   background: transparent;
   background-clip: padding-box;
   color: var(--md-sys-color-secondary);
-  font: 500 14px/20px var(--lk-font-data);
+  font: 500 14px/20px var(--l21-font-data);
   letter-spacing: 0.1px;
   cursor: pointer;
   pointer-events: auto;
@@ -388,7 +388,7 @@ l21-loading.error .loading-label {
   border-radius: 999px;
   background: color-mix(in srgb, var(--md-sys-color-surface-container) 88%, transparent);
   color: var(--md-sys-color-on-surface);
-  font: 500 12px/16px var(--lk-font-data);
+  font: 500 12px/16px var(--l21-font-data);
   letter-spacing: 0.5px;
 }
 .season-range {
@@ -550,7 +550,7 @@ html:not(.embedded) .compass {
   border-radius: 16px;
   background: color-mix(in srgb, var(--md-sys-color-surface-container) 92%, transparent);
   color: var(--md-sys-color-on-surface);
-  font: 400 13px/18px var(--lk-font-text);
+  font: 400 13px/18px var(--l21-font-text);
   letter-spacing: 0.25px;
   pointer-events: none;
 }
@@ -678,7 +678,7 @@ l21-settings-panel {
 
   
   output {
-    color: var(--lk-on-bar-muted);
+    color: var(--l21-on-bar-muted);
     font-variant-numeric: tabular-nums;
   }
 
@@ -712,12 +712,12 @@ l21-settings-panel {
   flex: 1 1 100%;
   margin: 0;
   font-size: 12px;
-  color: var(--lk-on-bar-muted);
+  color: var(--l21-on-bar-muted);
 }
 /* Telemetry session code (telemetry.js): read out by a tester to find their visit in the logs */
 .settings-session {
   margin-top: 12px;
-  font-family: var(--lk-font-data);
+  font-family: var(--l21-font-data);
 }
 
 .settings-actions {
@@ -738,7 +738,7 @@ l21-settings-panel {
     border-radius: 999px;
     background: transparent;
     color: var(--md-sys-color-secondary);
-    font: 500 14px/20px var(--lk-font-data);
+    font: 500 14px/20px var(--l21-font-data);
     letter-spacing: 0.1px;
     cursor: pointer;
 
@@ -779,8 +779,8 @@ l21-settings-panel {
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  color: var(--lk-on-bar);
-  font-family: var(--lk-font-text);
+  color: var(--l21-on-bar);
+  font-family: var(--l21-font-text);
 }
 /* The controls' frame: the screen, or a quarter turn of it when the phone is held sideways (android-ar.js,
    trackTurn: Chrome keeps the screen's orientation during AR) */
@@ -834,7 +834,7 @@ l21-settings-panel {
   border: 0;
   border-radius: 999px;
   background: var(--md-sys-color-outline);
-  color: var(--lk-on-bar);
+  color: var(--l21-on-bar);
   cursor: pointer;
 
   &::before {
@@ -897,7 +897,7 @@ l21-settings-panel {
   height: 4px;
   margin: 0 10px;
   border-radius: 2px;
-  background: color-mix(in srgb, var(--lk-on-bar) 35%, transparent);
+  background: color-mix(in srgb, var(--l21-on-bar) 35%, transparent);
 }
 .xr-slider-fill {
   position: absolute;
@@ -919,7 +919,7 @@ l21-settings-panel {
 .xr-overlay-scale output {
   min-width: 3.5em;
   text-align: right;
-  font-family: var(--lk-font-data);
+  font-family: var(--l21-font-data);
 }
 /* Side insets (notch, rounded corners) in both orientations */
 .xr-overlay-head {
@@ -963,7 +963,7 @@ l21-settings-panel {
     border: 0;
     background: transparent;
     color: var(--md-sys-color-on-surface);
-    font: 500 14px/20px var(--lk-font-data);
+    font: 500 14px/20px var(--l21-font-data);
     letter-spacing: 0.1px;
     cursor: pointer;
 
@@ -1033,7 +1033,7 @@ l21-tooltip {
   border-radius: 4px;
   background: var(--md-sys-color-on-surface);
   color: var(--md-sys-color-inverse-on-surface);
-  font: 400 12px/16px var(--lk-font-text);
+  font: 400 12px/16px var(--l21-font-text);
   letter-spacing: 0.4px;
   white-space: nowrap;
   pointer-events: none;
@@ -1066,7 +1066,7 @@ l21-tooltip {
   border-radius: 16px;
   background: color-mix(in srgb, var(--md-sys-color-surface-container) 88%, transparent);
   color: var(--md-sys-color-on-surface);
-  font: 500 12px/16px var(--lk-font-data);
+  font: 500 12px/16px var(--l21-font-data);
   letter-spacing: 0.5px;
   pointer-events: none;
 }
@@ -1133,7 +1133,7 @@ l21-tooltip {
     border: 1px solid var(--l21-outline-strong);
     border-bottom-width: 3px;
     border-radius: 8px;
-    font: 700 14px/1 var(--lk-font-data);
+    font: 700 14px/1 var(--l21-font-data);
     transition: background 100ms, color 100ms;
   }
 
@@ -1172,7 +1172,7 @@ l21-tooltip {
   border-radius: 28px;
   background: var(--md-sys-color-surface-container-high);
   color: var(--md-sys-color-on-surface);
-  font: 400 14px/20px var(--lk-font-text);
+  font: 400 14px/20px var(--l21-font-text);
   letter-spacing: 0.25px;
 
   &::backdrop {
@@ -1181,7 +1181,7 @@ l21-tooltip {
 
   h2 {
     margin: 0 0 16px;
-    font: 800 24px/32px var(--lk-font-text);
+    font: 800 24px/32px var(--l21-font-text);
   }
 
   p,
@@ -1205,7 +1205,7 @@ l21-tooltip {
     border: 1px solid var(--l21-outline-strong);
     border-bottom-width: 2px;
     border-radius: 4px;
-    font: 700 12px/18px var(--lk-font-data);
+    font: 700 12px/18px var(--l21-font-data);
     text-align: center;
     color: var(--md-sys-color-on-surface);
   }
@@ -1226,7 +1226,7 @@ l21-tooltip {
   background: transparent;
   background-clip: padding-box;
   color: var(--md-sys-color-secondary);
-  font: 500 14px/20px var(--lk-font-data);
+  font: 500 14px/20px var(--l21-font-data);
   letter-spacing: 0.1px;
   cursor: pointer;
 
@@ -1275,7 +1275,7 @@ l21-tooltip {
   background: var(--l21-control);
   background-clip: padding-box;
   color: var(--md-sys-color-on-surface);
-  font: 500 14px/20px var(--lk-font-data);
+  font: 500 14px/20px var(--l21-font-data);
   letter-spacing: 0.1px;
   white-space: nowrap;
   cursor: pointer;
@@ -1319,7 +1319,7 @@ l21-tooltip {
   border-radius: 20px;
   background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 94%, transparent);
   color: var(--md-sys-color-on-surface);
-  font: 400 14px/20px var(--lk-font-text);
+  font: 400 14px/20px var(--l21-font-text);
   letter-spacing: 0.25px;
   opacity: 0;
   transform: translate(-50%, 16px);
@@ -1351,7 +1351,7 @@ l21-tooltip {
 }
 .tour-count {
   color: var(--md-sys-color-secondary);
-  font: 500 12px/16px var(--lk-font-data);
+  font: 500 12px/16px var(--l21-font-data);
   letter-spacing: 0.5px;
 }
 /* MD3 standard icon button: 40 dp in a 48 dp touch target */
@@ -1385,7 +1385,7 @@ l21-tooltip {
 }
 .tour-title {
   margin: -4px 0 4px;
-  font: 800 16px/24px var(--lk-font-text);
+  font: 800 16px/24px var(--l21-font-text);
   letter-spacing: 0.15px;
 }
 .tour-text {
@@ -1470,7 +1470,7 @@ l21-tooltip {
        band on a phone) */
     left: 12px;
     bottom: max(12px, env(safe-area-inset-bottom));
-    width: min(860px, calc(100vw - 12px - var(--lk-tour-right, 232px)));
+    width: min(860px, calc(100vw - 12px - var(--l21-tour-right, 232px)));
     padding: 8px 8px 10px 16px;
     border-radius: 16px;
     transform: translate(0, 16px);

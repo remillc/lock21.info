@@ -18,14 +18,14 @@
   --md-sys-color-outline: #3c4232;
   --md-sys-color-outline-variant: #2a2f22;
   // Bars (header, footer) and the instrument panel: dark olive
-  --lk-bar: #1b1e15;
-  --lk-bar-text: #f2f3ea;
-  --lk-bar-muted: #a3a893;
-  --lk-bar-outline: #30352a;
+  --l21-bar: #1b1e15;
+  --l21-bar-text: #f2f3ea;
+  --l21-bar-muted: #a3a893;
+  --l21-bar-outline: #30352a;
   // Links and the status dot on the bars and the panel
-  --lk-bar-link: #b8c97a;
-  --lk-panel: #1b1e15;
-  --lk-panel-outline: #3c4232;
+  --l21-bar-link: #b8c97a;
+  --l21-panel: #1b1e15;
+  --l21-panel-outline: #3c4232;
 
   // MD3 state layers (both themes): the content colour at these opacities over its container
   --md-sys-state-hover: 8%;
@@ -38,7 +38,7 @@
   --md-sys-elevation-level1: 0 1px 2px color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent),
     0 1px 3px 1px color-mix(in srgb, var(--md-sys-color-shadow) 15%, transparent);
   // The bars' icons (the menu button, the magnifier), the bars staying dark in both themes
-  --lk-bar-icon: #c9cdbb;
+  --l21-bar-icon: #c9cdbb;
   // A QR code's light modules: white in both themes, as scanners expect
   --l21-qr-light: #ffffff;
 
@@ -59,12 +59,12 @@
   --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
 
   // Fonts (self-hosted, @fontsource)
-  --lk-font-text: 'Archivo', 'Archivo Fallback', system-ui, sans-serif;
-  --lk-font-data: 'JetBrains Mono', ui-monospace, monospace;
+  --l21-font-text: 'Archivo', 'Archivo Fallback', system-ui, sans-serif;
+  --l21-font-data: 'JetBrains Mono', ui-monospace, monospace;
 
   // Starlight, dark
-  --sl-font: var(--lk-font-text);
-  --sl-font-mono: var(--lk-font-data);
+  --sl-font: var(--l21-font-text);
+  --sl-font-mono: var(--l21-font-data);
   --sl-color-white: #ebede3;
   --sl-color-gray-1: #d6d9cb;
   --sl-color-gray-2: #c9cdbb;
@@ -76,7 +76,7 @@
   --sl-color-accent-low: #2c3320;
   --sl-color-accent: #b8c97a;
   --sl-color-accent-high: #d6e3a6;
-  --sl-color-bg-nav: var(--lk-bar);
+  --sl-color-bg-nav: var(--l21-bar);
   --sl-color-bg-sidebar: #12140e;
   --sl-color-hairline-light: #252820;
   --sl-color-hairline: #252820;
@@ -100,13 +100,13 @@
   --md-sys-color-outline: #2e3322;
   --md-sys-color-outline-variant: #e1e2d6;
   // Bars and panel: MD3 inverse surface, so they stay dark olive in light
-  --lk-bar: #2e3322;
-  --lk-bar-text: #f2f3ea;
-  --lk-bar-muted: #b6bca3;
-  --lk-bar-outline: #2e3322;
-  --lk-bar-link: #c5d48a;
-  --lk-panel: #2e3322;
-  --lk-panel-outline: #2e3322;
+  --l21-bar: #2e3322;
+  --l21-bar-text: #f2f3ea;
+  --l21-bar-muted: #b6bca3;
+  --l21-bar-outline: #2e3322;
+  --l21-bar-link: #c5d48a;
+  --l21-panel: #2e3322;
+  --l21-panel-outline: #2e3322;
 
   // Starlight, light (its scale runs from white = strongest text to black = background)
   --sl-color-white: #22251b;
@@ -121,7 +121,7 @@
   --sl-color-accent-low: #e3e8cf;
   --sl-color-accent: #5b6b1f;
   --sl-color-accent-high: #45531c;
-  --sl-color-bg-nav: var(--lk-bar);
+  --sl-color-bg-nav: var(--l21-bar);
   --sl-color-bg-sidebar: #f4f4ee;
   --sl-color-hairline-light: #e7e8dc;
   --sl-color-hairline: #e1e2d6;

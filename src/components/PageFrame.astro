@@ -34,17 +34,17 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
               // Remove the popover attribute on desktop viewports. It's only needed for the mobile menu; on /modele the
               // menu stays a popover at every width (a panel over the page)
               const drawer = Boolean(this.closest('.drawer-menu'))
-              // The bar 6rem wider than the viewer's frame on each side (--lk-frame-left: the frame's left edge, measured)
+              // The bar 6rem wider than the viewer's frame on each side (--l21-frame-left: the frame's left edge, measured)
               if (drawer) {
                 // No room for the menu left of the frame (its 18.75rem, 2rem from the frame, 4rem for the gauge's labels:
-                // 24.75rem): it opens from the window's left edge over the frame instead (lk-menu-overlay)
+                // 24.75rem): it opens from the window's left edge over the frame instead (l21-menu-overlay)
                 const align = () => {
                   const frame = document.querySelector('l21-model-frame')
                   if (!frame) return
                   const left = frame.getBoundingClientRect().left
                   const root = document.documentElement
-                  root.style.setProperty('--lk-frame-left', `${left}px`)
-                  root.classList.toggle('lk-menu-overlay', left < 24.75 * parseFloat(getComputedStyle(root).fontSize))
+                  root.style.setProperty('--l21-frame-left', `${left}px`)
+                  root.classList.toggle('l21-menu-overlay', left < 24.75 * parseFloat(getComputedStyle(root).fontSize))
                 }
                 requestAnimationFrame(align)
                 addEventListener('resize', align)
@@ -176,11 +176,11 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
         display: none;
       }
       /* Against the viewer's frame, 2rem from its left edge (Christian, 2026-10-23), the depth gauge along its left
-         edge as on the other pages (--lk-menu-left, below); no shadow; its text as usual. MD3 motion: unrolled from
+         edge as on the other pages (--l21-menu-left, below); no shadow; its text as usual. MD3 motion: unrolled from
          the frame leftward on opening (400 ms, emphasized decelerate), rolled back toward it on closing (200 ms,
          emphasized accelerate); the clip leaves room on the left for the depth gauge's labels */
       .drawer-menu .sidebar-pane {
-        inset-inline-start: var(--lk-menu-left);
+        inset-inline-start: var(--l21-menu-left);
         clip-path: inset(-100vh -100vw -100vh 100%);
         transition:
           clip-path 200ms cubic-bezier(0.3, 0, 0.8, 0.15),
@@ -198,9 +198,9 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
           clip-path: inset(-100vh -100vw -100vh 100%);
         }
       }
-      /* No room left of the frame (lk-menu-overlay, set by the script above): from the window's left edge, over the
+      /* No room left of the frame (l21-menu-overlay, set by the script above): from the window's left edge, over the
          frame, unrolled left to right, with MD3's standard elevation for a modal drawer (level 1); no depth gauge */
-      :global(.lk-menu-overlay) .drawer-menu .sidebar-pane {
+      :global(.l21-menu-overlay) .drawer-menu .sidebar-pane {
         inset-inline-start: 0;
         clip-path: inset(-100vh 100% -100vh -100vw);
         box-shadow: var(--md-sys-elevation-level1);
@@ -210,7 +210,7 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
         }
       }
       @starting-style {
-        :global(.lk-menu-overlay) .drawer-menu .sidebar-pane:popover-open {
+        :global(.l21-menu-overlay) .drawer-menu .sidebar-pane:popover-open {
           clip-path: inset(-100vh 100% -100vh -100vw);
         }
       }
@@ -220,14 +220,14 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
         }
       }
       /* The bar's content 6rem wider than the viewer's frame on each side (Christian, 2026-10-23): wider than the
-         content, not edge to edge. Its button left of the logo: room for it at the start. --lk-bar-inset: from the
+         content, not edge to edge. Its button left of the logo: room for it at the start. --l21-bar-inset: from the
          window's edge (%: of the viewport, without its scrollbar), never less than the usual padding */
       .drawer-menu {
-        --lk-bar-inset: max(var(--sl-nav-pad-x), var(--lk-frame-left, 0px) - 6rem);
+        --l21-bar-inset: max(var(--sl-nav-pad-x), var(--l21-frame-left, 0px) - 6rem);
       }
       .drawer-menu .header {
-        padding-inline-start: calc(var(--lk-bar-inset) + var(--sl-menu-button-size) + var(--sl-nav-gap));
-        padding-inline-end: var(--lk-bar-inset);
+        padding-inline-start: calc(var(--l21-bar-inset) + var(--sl-menu-button-size) + var(--sl-nav-gap));
+        padding-inline-end: var(--l21-bar-inset);
       }
     }
   }
@@ -239,7 +239,7 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
   @media (min-width: 50rem) {
     .drawer-menu .sl-menu-button {
       display: flex;
-      inset-inline-start: max(var(--sl-nav-pad-x), var(--lk-frame-left, 0px) - 6rem);
+      inset-inline-start: max(var(--sl-nav-pad-x), var(--l21-frame-left, 0px) - 6rem);
       inset-inline-end: auto;
     }
   }
@@ -305,13 +305,13 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
   }
 
   /* /modele, menu open on wide screens: the other pages' depth gauge (Sidebar.astro) along the menu's left edge, its
-     labels to its left, as on the other pages. --lk-menu-left: the menu 2rem from the frame, and at least 4rem from the
+     labels to its left, as on the other pages. --l21-menu-left: the menu 2rem from the frame, and at least 4rem from the
      window's edge (room for the labels) */
   .drawer-menu {
-    --lk-menu-left: max(4rem, var(--lk-frame-left, 0px) - 2rem - var(--sl-sidebar-width));
+    --l21-menu-left: max(4rem, var(--l21-frame-left, 0px) - 2rem - var(--sl-sidebar-width));
   }
   @media (min-width: 50rem) {
-    .lk-menu-overlay .drawer-menu .sidebar-pane .depth-ruler {
+    .l21-menu-overlay .drawer-menu .sidebar-pane .depth-ruler {
       display: none !important;
     }
     .drawer-menu .sidebar-pane .depth-ruler {
@@ -320,7 +320,7 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
       position: fixed;
       top: calc(var(--sl-nav-height) + 1.5rem);
       bottom: 2rem;
-      left: calc(var(--lk-menu-left) - 1px);
+      left: calc(var(--l21-menu-left) - 1px);
       width: 0;
       border-left: 2px solid var(--ruler-line);
     }
@@ -328,7 +328,7 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
       position: absolute;
       right: 0.625rem;
       transform: translateY(-50%);
-      font-family: var(--lk-font-data);
+      font-family: var(--l21-font-data);
       font-size: 0.75rem;
       color: var(--md-sys-color-on-surface-variant);
       white-space: nowrap;
