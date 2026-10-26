@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- The 404 pages declare no canonical address nor language versions (SEO audit S16). The 3D model's mockups (zones
+  not yet surveyed) are compressed with meshopt, in the publishing pipeline too (step 6b; online 2026-10-26).
 - Hosting: an address with a final slash (`/modele/`) redirects to the page with a 301 instead of Cloudflare's 307
   (SEO audit S12; `/` and `/en/` keep their slash).
 - Hosting: the Worker's `lock21-info.lock21.workers.dev` address is off, the site is only at lock21.info (SEO audit
