@@ -1,22 +1,6 @@
 ---
 title: Site zones
 ---
-import { Aside } from '@astrojs/starlight/components'
-import { site } from '../../../data/site.js'
-
-export const map = `https://www.google.com/maps/search/?api=1&query=${site.coordinates.lat},${site.coordinates.lon}`
-
-<Aside type="tip" title="Diving it">
-
-- **Depth:** the bottom at {site.bottomDepthFt} ft ({site.bottomDepthM} m), the tops of the walls at
-  {site.wallTopDepthFt} ft ({site.wallTopDepthM} m).
-- **Current:** 35 feet a minute (10.7 m/min), measured by drifting down the canal between the two gates on June 8, 2024
-  (see [The strong current in the canal](/en/problemes/fort-courant-canal)).
-- **Position:** {site.coordinates.label.en} (<a href={map}>see on a map</a>).
-- **Before the dive:** find the zones in the [3D model](/en/modele).
-
-</Aside>
-
 Here's how the lock site is split into zones.
 
 <figure className="figure-wide">

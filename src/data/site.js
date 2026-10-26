@@ -5,13 +5,8 @@
 // its dive computer: viewer/src/underwater.js) read it from here
 const BOTTOM_DEPTH_FT = 60
 
-// The tops of the walls below the surface, in feet (Christian, 2026-10-26: 35 ft; the zone map's zones 7 and 8)
-const WALL_TOP_DEPTH_FT = 35
-
 export const site = {
   bottomDepthFt: BOTTOM_DEPTH_FT,
-  wallTopDepthFt: WALL_TOP_DEPTH_FT,
-  wallTopDepthM: Math.round(WALL_TOP_DEPTH_FT * 0.3048 * 10) / 10,
   // In metres, to a tenth (18.3)
   bottomDepthM: Math.round(BOTTOM_DEPTH_FT * 0.3048 * 10) / 10,
   zonesTotal: 25,
