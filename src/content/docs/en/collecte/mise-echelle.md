@@ -12,13 +12,12 @@ distance between two targets makes a scale.
 
 Targets of 7.5 cm and 15 cm, numbered in pairs (targets 1 and 2).
 
-[To complete: a photo of both types, 7.5 cm and 15 cm.]
-
 <figure>
 
-![A coded target on the ground, next to a measuring tape](../../problemes/effet-banane/assets/exemple-cible-GX010197.007.webp)
+![Two coded targets on zone 5's wooden floor, one of 7.5 cm and one of 15 cm](../../collecte/mise-echelle/assets/cibles-7-5-cm-15-cm-GX046201.0366.webp)
 
-<figcaption>A coded target, on the ground</figcaption>
+<figcaption>Both kinds of targets on zone 5's floor, August 2, 2024: a 7.5 cm one (top) and a 15 cm one (bottom
+left)</figcaption>
 </figure>
 
 Their pattern looks abstract, but each one carries a coded number. They are Metashape's circular coded targets: the
