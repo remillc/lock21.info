@@ -102,8 +102,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   mode, the no-download Google Earth link first, « 150° »); V28 two missing spaces; V29 settings intro and session code;
   V35 card 02's target; V36 a scroll cue on wide tables; V38 ⌂ named on the tour's last card; V14 coordinates as a map
   link on phones; V18 the dive log's total row and sticky header
-- [ ] #83 Usability audit: the viewer on phones (V11, V12; V2 fixed 2026-10-26): « Visite guidée » cut off at the
-  frame's left edge on a phone held upright (an icon button on narrow frames?); a touch version of the swim help.
+- [ ] #83 Usability audit: the viewer on phones (V12; V2 and V11 fixed 2026-10-26): a touch version of the swim help.
   Check on a real phone
 - [ ] #84 Usability audit: content, for Christian. V16 a « voir
   dans le modèle 3D » link per zone; V30 a caption under the viewer (underwater, violet = not yet scanned); V32 a
