@@ -5,8 +5,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - SEO (audit `docs/audits/seo-2026-10-26.md`, S3, S6, S7, S8, S13, S16): a share image for every page
-  (`public/images/og-lock21.jpg`), `og:locale` `fr_CA` / `en_CA`, the English pages without a description of their
-  own get an English one, structured data (the site and its author on the home pages, the 3D model on `/modele`),
+  (`public/images/og-lock21.jpg`), `og:locale` `fr_CA` / `en_CA`, no site-wide description any more (a page has its
+  own or none, and the search engine quotes its text), structured data (the site and its author on the home pages, the 3D model on `/modele`),
   all through `src/routeData.js`; « Dickinson's Landing » everywhere; 301s for the Docusaurus addresses (`/blog`,
   its feeds, `/docs/…`); no heading level skipped on « Netteté des images ».
 - Site texts (usability audit V8, V19, V20, V27, V28, V35): the search dialog in French on French pages (a link to the
