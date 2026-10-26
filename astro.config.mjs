@@ -116,9 +116,11 @@ export default defineConfig({
         { label: 'Remerciements', translations: { en: 'Thanks' }, link: '/remerciements' },
         { label: "À propos de l'écluse 21", translations: { en: 'About Lock 21' }, link: '/a-propos-ecluse-21' },
         { label: 'Découpage du site', translations: { en: 'Site zones' }, link: '/decoupage-site' },
-        { label: 'La collecte des données', translations: { en: 'Data collection' }, items: [{ autogenerate: { directory: 'collecte' } }] },
-        { label: 'Le traitement', translations: { en: 'Processing' }, items: [{ autogenerate: { directory: 'traitement' } }] },
-        { label: 'Problèmes rencontrés', translations: { en: 'Problems encountered' }, items: [{ autogenerate: { directory: 'problemes' } }] },
+        // collapsed: each group closed in the page's HTML, except the current page's (Starlight opens that one), so that
+        // nothing opens then closes as the page loads (TODO #87; the memory of the open groups: Head.astro)
+        { label: 'La collecte des données', translations: { en: 'Data collection' }, collapsed: true, items: [{ autogenerate: { directory: 'collecte' } }] },
+        { label: 'Le traitement', translations: { en: 'Processing' }, collapsed: true, items: [{ autogenerate: { directory: 'traitement' } }] },
+        { label: 'Problèmes rencontrés', translations: { en: 'Problems encountered' }, collapsed: true, items: [{ autogenerate: { directory: 'problemes' } }] },
         // tests/ stays out of the sidebar, as before
       ],
     }),

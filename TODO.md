@@ -112,9 +112,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #86 The 404 page (Christian, 2026-10-26): its design and its message. Since audit V13 (2026-10-26) it is ours
   (`src/pages/404.astro`, `src/pages/en/404.astro`, `NotFound.astro`), in the page's language, with links to the home
   page, the 3D model and the zone map; its wording is a first draft to review, and its look is plain
-- [ ] #87 Left menu (sidebar), Christian 2026-10-26: as a page loads, its groups show open, then close, a flicker.
-  Only the current page's group should be open from the start (Starlight's `<details open>` on every group, or the
-  sidebar state restored by Head.astro / client-side routing after the first paint: to find)
 - [ ] #93 Document the gear (Christian, 2026-10-26): his own photo of the GoPro Hero6 Black in its housing, to replace
   GoPro's product photo (« Matériel utilisé », Caméra); « Le rig » (`collecte/rig.md`, since 2026-10-26: photos of
   2024-05-16 and 2024-06-14, Sylvain Marcotte's 3D model) still has two « à compléter »: the rig's construction

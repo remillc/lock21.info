@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Left menu: no more groups opening then closing as a page loads (TODO #87): the groups are closed in the page's HTML
+  except the current page's (`collapsed: true`), and Starlight's memory of the open groups is forgotten between pages
+  (`Head.astro`; the menu's scroll position kept).
 - Changing the language from the footer opens the other language's page at its bottom, where the select is, not at its
   top (`Head.astro`).
 - Footer: the theme and language lists open as MD3 menus (`appearance: base-select`, Chrome and Edge; the system's

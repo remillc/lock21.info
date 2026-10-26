@@ -31,6 +31,20 @@ const fonts = [archivo400, archivo800, mono700, mono800]
   if (!window.lock21Router) {
     window.lock21Router = true
     let sidebarScroll = 0
+    // The groups of the menu: only the current page's open (Christian, 2026-10-23). Starlight keeps in the tab which
+    // groups were open and opens them again before the page shows (its SidebarPersister, wide screens), then the
+    // others closed (revealCurrent, below) after the first paint: a flicker (TODO #87). That memory of the groups is
+    // forgotten before each page (its scroll position kept), so the HTML's groups stay as Starlight drew them
+    const forgetGroups = () => {
+      try {
+        const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0')
+        if (state && Array.isArray(state.open)) {
+          state.open = state.open.map(() => null)
+          sessionStorage.setItem('sl-sidebar-state', JSON.stringify(state))
+        }
+      } catch {}
+    }
+    forgetGroups()
     // A link to the other language: a full page load, not a swap. The kept search would otherwise stay in the first
     // page's language (Pagefind reads <html lang> once, when it starts; usability audit V8)
     const isEnglish = (path) => path === '/en' || path.startsWith('/en/')
@@ -38,6 +52,7 @@ const fonts = [archivo400, archivo800, mono700, mono800]
       if (isEnglish(event.to.pathname) !== isEnglish(event.from.pathname)) event.preventDefault()
     })
     document.addEventListener('astro:before-swap', (event) => {
+      forgetGroups()
       event.newDocument.documentElement.dataset.theme = document.documentElement.dataset.theme
       // The kept search replaces the new page's: emptied first, so that its element is never built (its constructor
       // would add a Ctrl+K listener bound to a dialog that leaves the page)
