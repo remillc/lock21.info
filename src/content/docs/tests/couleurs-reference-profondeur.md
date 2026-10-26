@@ -1,4 +1,5 @@
 ---
+pagefind: false
 title: Couleurs de référence en fonction de la profondeur
 ---
 Est-ce que la lumière ambiante affecte la charte de couleurs ?

@@ -32,6 +32,5 @@ export const englishPaths = {
   'problemes/nettete-images': 'problems/image-sharpness',
   'tests/calibration-couleurs': 'tests/colour-calibration',
   'tests/iso-minimum': 'tests/minimum-iso',
-  'tests/journal-plongees': 'tests/dive-log',
   'tests/couleurs-reference-profondeur': 'tests/reference-colours-depth',
 }

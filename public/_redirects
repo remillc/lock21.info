@@ -38,8 +38,11 @@
 /en/questions/effet-bananne /en/problems/banana-effect 301
 /questions/nettete-images /problemes/nettete-images 301
 /en/questions/nettete-images /en/problems/image-sharpness 301
-/tests/journal-des-plongees /tests/journal-plongees 301
-/en/tests/journal-des-plongees /en/tests/dive-log 301
+/tests/journal-des-plongees /collecte/journal-plongees 301
+/en/tests/journal-des-plongees /en/data-collection/dive-log 301
+/tests/journal-plongees /collecte/journal-plongees 301
+/en/tests/dive-log /en/data-collection/dive-log 301
+/en/tests/journal-plongees /en/data-collection/dive-log 301
 /tests/lumiere-ambiante /tests/couleurs-reference-profondeur 301
 /en/tests/reference-colours-by-depth /en/tests/reference-colours-depth 301
 /en/tests/lumiere-ambiante /en/tests/reference-colours-depth 301

@@ -1,4 +1,5 @@
 ---
+pagefind: false
 title: Reference colours by depth
 ---
 Does ambient light affect the colour chart?

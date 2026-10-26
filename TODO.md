@@ -96,7 +96,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   `tiles.lock21.info`: none, the start view's, or a chosen zone), how updates reach visitors (the new version on the
   next visit), and how it fits client-side routing and Cloudflare's cache headers (`public/_headers`)
 
-- [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): the small code fixes. V10 « glisser (bouton gauche / droit) » and the mouse in the in-frame help; V13 the 404 (#86); V8 Pagefind's French strings; V9 `/tests/` out of search and the sitemap;
+- [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): the small code fixes. V10 « glisser (bouton gauche / droit) » and the mouse in the in-frame help; V13 the 404 (#86); V8 Pagefind's French strings;
   V19 « Footnotes », « Back to reference », « Selectionner »; V20 English number formats on `/en/model`; V21 the footer
   selects' width; V23 the ☰ on the desktop home; V24–V27 (tour after a drag, Escape leaves diving, one name for the dive
   mode, the no-download Google Earth link first, « 150° »); V28 two missing spaces; V29 settings intro and session code;
