@@ -11,6 +11,13 @@ C'était une écluse de garde : pas de différence de niveau entre l'amont et l
 de l'agrandissement du canal, reconstruite de 1883 à 1886 : un sas de 270 pieds sur 45 (82 m sur 14 m), et un
 déversoir à son bout amont.
 
+<figure>
+
+![L'écluse 21 vers 1904 : le canal, son talus à gauche et les ouvrages de l'écluse au loin](./a-propos-ecluse-21/assets/ecluse-21-vers-1904.webp)
+
+<figcaption>L'écluse 21 vers 1904. Source : <cite><a href="https://stlawrencepiks.com/seawayhistory/beforeseaway/cornwall/">Seaway History</a></cite></figcaption>
+</figure>
+
 Le 1er juillet 1958, le barrage Robert H. Saunders, construit pour la Voie maritime du Saint-Laurent, a noyé l'écluse,
 Dickinson's Landing et d'autres villages de la rive : les villages engloutis. Leurs habitants avaient été déplacés à
 Long Sault et à Ingleside.
