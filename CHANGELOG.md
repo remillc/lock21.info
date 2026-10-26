@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Site (usability audit V13, V18, V21, V36): the 404 page links onward (home, 3D model, zone map) and is in English
+  under `/en/`; the dive log's total row reads « Total : N plongées » and its header stays in view on wide screens; the
+  footer's theme and language selects show their whole text; a table wider than the column fades at the edge it
+  scrolls toward.
 - 3D viewer (usability audit V24, V25, V26, V29, V38): Escape leaves dive mode when nothing else is open; the tour's
   previous button is « Étape précédente » / “Previous step”; after a manual move during the tour, « Revenir à la vue »
   on the card replays the step; the settings panel opens with a line on what it keeps, and the session code says what

@@ -96,12 +96,12 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   `tiles.lock21.info`: none, the start view's, or a chosen zone), how updates reach visitors (the new version on the
   next visit), and how it fits client-side routing and Cloudflare's cache headers (`public/_headers`)
 
-- [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): the small code fixes. V13 the 404 (#86); V8 Pagefind's French strings;
-  V19 « Footnotes », « Back to reference », « Selectionner »; V20 English number formats on `/en/model`; V21 the footer
-  selects' width; V23 the ☰ on the desktop home; V26 one name for the dive mode; V27 the no-download
+- [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): the small code fixes. V8 Pagefind's French strings;
+  V19 « Footnotes », « Back to reference », « Selectionner »; V20 English number formats on `/en/model`;
+  V23 the ☰ on the desktop home; V26 one name for the dive mode; V27 the no-download
   Google Earth link first, « 150° »; V28 two missing spaces;
-  V35 card 02's target; V36 a scroll cue on wide tables; V14 coordinates as a map
-  link on phones; V18 the dive log's total row and sticky header
+  V35 card 02's target; V14 coordinates as a map
+  link on phones
 - [ ] #83 Usability audit: the viewer on phones (V12; V2 and V11 fixed 2026-10-26): a touch version of the swim help.
   Check on a real phone
 - [ ] #84 Usability audit: content, for Christian. V16 a « voir
@@ -112,11 +112,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   20-minute test with three to five people, in French and English (the eight tasks in the report's « A test with real
   people »)
 
-- [ ] #86 The 404 page (Christian, 2026-10-26): its design and its message. Today Starlight's bare « 404 · Page non
-  trouvée. Vérifiez l'URL ou essayez d'utiliser la barre de recherche. », in French under `/en/` too, with no way
-  onward (audit V13). In the site's look, in the page's language (an English one for `/en/*`), with links to the home
-  page, the 3D model and the zone map, and the search
-
+- [ ] #86 The 404 page (Christian, 2026-10-26): its design and its message. Since audit V13 (2026-10-26) it is ours
+  (`src/pages/404.astro`, `src/pages/en/404.astro`, `NotFound.astro`), in the page's language, with links to the home
+  page, the 3D model and the zone map; its wording is a first draft to review, and its look is plain
 - [ ] #87 Left menu (sidebar), Christian 2026-10-26: as a page loads, its groups show open, then close, a flicker.
   Only the current page's group should be open from the start (Starlight's `<details open>` on every group, or the
   sidebar state restored by Head.astro / client-side routing after the first paint: to find)
