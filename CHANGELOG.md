@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- The lightbox (a figure opened on click): the image as large as the screen allows over a near-black scrim, never
+  larger than its own pixels, its caption with its figure number, a counter, ✕ to close and ‹ › (or the arrow keys,
+  or a swipe) to the page's other figures; the open figure in the address (`#fig-03`), so a link opens it.
 - Notebook pages laid out as in « Le rig »'s mock-up: the text column set in, the wide photos across the whole column,
   the title tight above the lead, smaller section headings, 1.5rem between blocks, captions on two lines, paired
   photos the same shape.

@@ -211,8 +211,9 @@ The 3D viewer is a separate app with no theme to fight; its own stack, planned (
   `appearance: base-select` where the browser allows it (Chrome and Edge 135+); other browsers show their own list.
   Styles in `Footer.astro`.
 - Existing pages (docs) keep Starlight's layout, restyled with these tokens.
-- **Custom Elements** are named with the `l21-` prefix (rule in `docs/guidelines.md`): `<l21-image-zoom>` (figures, full
-  size on click), `<l21-dev-breakpoints>` (dev server only), `<l21-settings-panel>` (the 3D viewer's settings, ⚙),
+- **Custom Elements** are named with the `l21-` prefix (rule in `docs/guidelines.md`): `<l21-image-zoom>` (the lightbox: a figure
+  as large as the screen allows over a near-black scrim, its caption, ‹ › and the arrow keys or a swipe to the page's
+  other figures, ✕ or Escape to close, `#fig-NN` in the address; never larger than the image's own pixels), `<l21-dev-breakpoints>` (dev server only), `<l21-settings-panel>` (the 3D viewer's settings, ⚙),
   `<l21-model-frame>` (the viewer's frame on `/modele`), `<l21-viewer-warmup>` (prefetches the viewer's files when a
   `/modele` link is hovered).
 

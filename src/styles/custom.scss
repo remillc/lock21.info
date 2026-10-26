@@ -392,26 +392,181 @@
 }
 
 @layer l21.components {
-  // Full-size view opened by public/scripts/image-zoom.js
-  dialog.image-zoom {
-    margin: auto;
-    max-width: 95vw;
-    max-height: 95vh;
-    padding: 0;
-    border: none;
+  // The lightbox (public/scripts/image-zoom.js): the image as large as the screen allows over a near-black scrim, its
+  // caption below in the figures' mono, a counter, MD3 icon buttons (✕ top right, ‹ › on the sides: 40 dp in a 48 dp
+  // target, white on the scrim, state layers), MD3 motion (enter 400 ms decelerate, exit 200 ms accelerate)
+  dialog.lightbox {
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 4.5rem 4.5rem 1.5rem;
+    border: 0;
     background: transparent;
-    cursor: zoom-out;
+    color: #f2f3ea;
+    opacity: 0;
+    transition:
+      opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-emphasized-accelerate),
+      display var(--md-sys-motion-duration-short4) allow-discrete,
+      overlay var(--md-sys-motion-duration-short4) allow-discrete;
+
+    &[open] {
+      display: grid;
+      opacity: 1;
+      transition-duration: var(--md-sys-motion-duration-medium4);
+      transition-timing-function: var(--md-sys-motion-easing-emphasized-decelerate);
+    }
+
+    @starting-style {
+      &[open] {
+        opacity: 0;
+      }
+    }
 
     &::backdrop {
-      background: color-mix(in srgb, var(--md-sys-color-scrim) 85%, transparent);
+      background: color-mix(in srgb, #000 97%, transparent);
+    }
+
+    // The image and its caption together, in the middle of the screen
+    .lightbox-figure {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      min-height: 0;
+      margin: 0;
     }
 
     img {
       display: block;
-      max-width: 95vw;
-      max-height: 95vh;
+      max-width: 100%;
+      max-height: calc(100dvh - 10rem);
+      min-height: 0;
       object-fit: contain;
-      border-radius: var(--md-sys-shape-large);
+      border-radius: var(--md-sys-shape-medium);
+      transform: scale(1);
+      transition: transform var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-emphasized-decelerate);
+    }
+
+    @starting-style {
+      &[open] img {
+        transform: scale(0.96);
+      }
+    }
+
+    figcaption {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.2rem 0.6rem;
+      max-width: 46rem;
+      font: 400 0.8rem/1.5 var(--l21-font-data);
+      text-align: center;
+      color: #c9cdbb;
+
+      .lightbox-fig {
+        font-weight: 700;
+        color: #f2f3ea;
+      }
+
+      time {
+        color: #f28c28;
+      }
+
+      a {
+        color: #b8c97a;
+      }
+    }
+
+    .lightbox-count {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      margin: 0;
+      font: 500 0.8rem/48px var(--l21-font-data);
+      font-variant-numeric: tabular-nums;
+      color: #c9cdbb;
+    }
+
+    .lightbox-button {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: #f2f3ea;
+      cursor: pointer;
+
+      // The 40 dp container and its state layer, inside the 48 dp target
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 4px;
+        border-radius: 50%;
+        background: color-mix(in srgb, #fff 12%, transparent);
+        transition: background-color var(--md-sys-motion-duration-short4);
+      }
+
+      &:hover::before {
+        background: color-mix(in srgb, #fff 20%, transparent);
+      }
+
+      &:active::before {
+        background: color-mix(in srgb, #fff 24%, transparent);
+      }
+
+      svg {
+        position: relative;
+      }
+    }
+
+    .lightbox-close {
+      top: 1.5rem;
+      right: 1.5rem;
+    }
+
+    .lightbox-prev,
+    .lightbox-next {
+      top: 50%;
+      translate: 0 -50%;
+    }
+
+    .lightbox-prev {
+      left: 1rem;
+    }
+
+    .lightbox-next {
+      right: 1rem;
+    }
+
+    &.single :is(.lightbox-prev, .lightbox-next) {
+      display: none;
+    }
+
+    // Phones: the image across the screen, the arrows over it (a swipe also changes the image)
+    @media (max-width: 40rem) {
+      padding: 4.5rem 0.5rem 1rem;
+
+      .lightbox-prev {
+        left: 0.25rem;
+      }
+
+      .lightbox-next {
+        right: 0.25rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &,
+      img {
+        transition: none;
+      }
     }
   }
 }
