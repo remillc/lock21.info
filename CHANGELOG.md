@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- « À propos de l'écluse 21 »: Nick Baets' plan of the lock, the bilingual version displayed at the divers' pavilion on
+  Macdonell Island (photo from David Gibbins' « Diving Lock 21 », 2016; the drawing from the SOS field guide n° 2, 1989,
+  `docs/sos-files/Lock 21 - No. 2/img383.jpg`), wide, after the SOS paragraph.
 - Figures: a `figure-center` class (usual size, image and caption centred), used for the 1904 photo.
 - « À propos de l'écluse 21 »: a photo of the lock around 1904 (Seaway History; a Canadian photo from before 1949, in
   the public domain).
