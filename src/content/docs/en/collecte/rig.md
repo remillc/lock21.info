@@ -31,6 +31,20 @@ Marcotte designed it.
 <figcaption>A light on its mount, the thumbscrews and the guides. Model: Sylvain Marcotte</figcaption>
 </figure>
 
+<figure>
+
+![The rig assembled on the scooter, at night, on a blue tarp, the tools around](../../collecte/rig/assets/assemblage-rig-2024-06-08.webp)
+
+<figcaption>Assembling the rig on the scooter (June 8, 2024)</figcaption>
+</figure>
+
+<figure>
+
+![The scooter standing in a bucket, the rig fitted, under a tent](../../collecte/rig/assets/assemblage-rig-debout-2024-06-08.webp)
+
+<figcaption>The rig fitted, the scooter standing in a bucket (June 8, 2024)</figcaption>
+</figure>
+
 *(to be completed: the materials, the fittings, how the rig attaches to the scooter.)*
 
 ## The lights
