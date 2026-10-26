@@ -45,7 +45,7 @@ Le script enchaîne les étapes 5 et 6 pour chaque zone (le recalage de l'étape
 | 5b | Relief | `bake_relief.py` (Blender), enchaîné avec l'étape 6 par `relief_zones.ps1` | sortie de 5 + export détaillé (la source, ou `--high`) | carte des normales + copie de la zone préparée |
 | 5c | Atténuation des lampes (mise de côté, voir plus bas) | `delight_texture.py` (Blender) + `apply_shade.mjs` | sortie de 5 ou 5b | texture corrigée + copie de la zone préparée |
 | 6 | Tuilage + manifeste | `tile_zone.ps1` (+ `merge_normal_maps.mjs`, `texture_stats.mjs`, `update_manifest.py`) | sortie de 5 (ou 5b, 5c) | `O:\publishing\tiles\<zone>\<version>\` + `manifest.json` |
-| 6b | Maquettes des zones pas encore relevées (opaques dans le visualiseur, avec leur aspect du `.blend`: le plan de 1988 ou sa version sans texte à travers les rampes de couleurs de chacune, calculé par le script; zones 5, 6, 14 et 15 en papier violet uniforme; adresse et téléphones de l'auteur masqués dans les deux plans; cachées dès que la zone est en ligne) | `export_mockups.py` (Blender) + `update_manifest.py <tuiles> mockups mockups/<version>/mockups.glb model` | collection `mockups` du `.blend` (objets « mockup zone N ») | `O:\publishing\tiles\mockups\<version>\mockups.glb` + `manifest.json` |
+| 6b | Maquettes des zones pas encore relevées (opaques dans le visualiseur, avec leur aspect du `.blend`: le plan de 1988 ou sa version sans texte à travers les rampes de couleurs de chacune, calculé par le script; zones 5, 6, 14 et 15 en papier violet uniforme; adresse et téléphones de l'auteur masqués dans les deux plans; cachées dès que la zone est en ligne) | `export_mockups.py` (Blender) + `compress_tiles.mjs <tuiles>\mockups\<version>` (meshopt, comme le contexte et les tuiles; depuis le 2026-10-26) + `update_manifest.py <tuiles> mockups mockups/<version>/mockups.glb model` | collection `mockups` du `.blend` (objets « mockup zone N ») | `O:\publishing\tiles\mockups\<version>\mockups.glb` + `manifest.json` |
 | 7 | Aperçu local | `serve-tiles.ps1` + `viewer/`: `npm run dev` | `O:\publishing\tiles\` | `http://localhost:3100/modele/viewer` |
 | 8 | Mise en ligne | `upload_r2.mjs` (`npm run model:upload`) | `O:\publishing\tiles\` + `.env.local` | bucket R2 `lock21-tiles` |
 
@@ -104,8 +104,10 @@ Ensuite, `compress_tiles.mjs` (glTF-Transform) compresse la géométrie de chaqu
 
 Le transport, lui, est compressé par Cloudflare: une règle de compression du domaine lock21.info (Rules › Compression
 Rules, 2026-10-26) couvre `model/gltf-binary` et les `.hdr` (Zstandard, sinon Brotli ou gzip), sur `tiles.lock21.info`
-comme sur le site. Les tuiles des zones n'y gagnent presque rien (KTX2 et meshopt: environ 2 %), mais le contexte et les
-maquettes, sans meshopt, passent de 3,0 à 1,8 Mo et de 1,1 à 0,9 Mo.
+comme sur le site. Les tuiles des zones n'y gagnent presque rien (KTX2 et meshopt: environ 2 %); le contexte, en meshopt mais fait surtout
+de géométrie, passe de 3,0 à 1,8 Mo (le codage meshopt est prévu pour être recompressé ainsi). Les maquettes passent
+aussi en meshopt depuis le 2026-10-26 (1,08 → 0,88 Mo sur le disque, 0,87 → 0,83 Mo transmis: leurs textures WebP font
+l'essentiel).
 
 **Nombre de niveaux selon la taille de la zone:** 3 par défaut, **4 pour les zones longues** (plus grand côté horizontal > 25 m, ex. zones 7 et 8). Test sur la zone 12 (10 × 10 m): le 4e niveau ne réduit le téléchargement de près que de 9 % (38,9 Mo au lieu de 42,7), pour 4 fois plus de requêtes (253 au lieu de 57) et 33 % de stockage en plus. Sur une zone longue, le visiteur n'en regarde qu'une partie de près: des tuiles plus petites évitent de charger le reste. `tile_zone.ps1 -Lods N` impose un nombre de niveaux.
 
