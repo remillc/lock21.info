@@ -15,7 +15,8 @@
     // Addresses without a final slash (astro.config.mjs, trailingSlash): <path>/index.html is served at <path>, and
     // <path>/ redirects there
     "html_handling": "drop-trailing-slash",
-    // unknown addresses get Starlight's 404 page, with a 404 status
+    // unknown addresses get the nearest 404.html, with a 404 status: en/404.html under /en/, 404.html elsewhere
+    // (src/pages/404.astro, src/pages/en/404.astro)
     "not_found_handling": "404-page"
   },
   // Preview deployments of branches (manual runs on a branch other than main) get their own address

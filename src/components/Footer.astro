@@ -68,5 +68,10 @@ const licence = `https://creativecommons.org/licenses/by/4.0/deed.${lang}`
       flex-wrap: wrap;
       gap: 0.5rem 1rem;
     }
+    /* Starlight gives each select a fixed width, made for the header, which cut « Sombre » and « Français » short in
+       this bar's font (usability audit V21): sized to their longest option instead */
+    .preferences :global(select) {
+      width: auto;
+    }
   }
 </style>
