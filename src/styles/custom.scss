@@ -435,6 +435,35 @@
       border-radius: var(--md-sys-shape-medium);
     }
 
+    // Zoom (image-zoom.js): a magnifier where the image has more pixels than shown; zoomed, the image at its own size
+    // in the figure, which scrolls; the caption hidden meanwhile
+    &.zoomable img {
+      cursor: zoom-in;
+    }
+
+    &.zoomed {
+      .lightbox-figure {
+        display: block;
+        height: 100%;
+        overflow: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+      }
+
+      img {
+        max-width: none;
+        max-height: none;
+        border-radius: 0;
+        cursor: zoom-out;
+        user-select: none;
+        -webkit-user-drag: none;
+      }
+
+      figcaption {
+        display: none;
+      }
+    }
+
     figcaption {
       display: flex;
       flex-wrap: wrap;

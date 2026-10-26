@@ -45,6 +45,12 @@ export default defineConfig({
       }),
     ],
   },
+  // Images in several widths (srcset): the page loads the one its column needs, the lightbox (public/scripts/image-zoom.js)
+  // the widest; no extra styles from Astro (custom.scss sizes the figures)
+  image: {
+    layout: 'constrained',
+    responsiveStyles: false,
+  },
   integrations: [
     // Icons by name (src/components: <Icon name="material-symbols:…-rounded" />), from Iconify's Material Symbols set
     // (@iconify-json/material-symbols, a dev dependency: npm update to follow Google's drawings); only the ones listed
