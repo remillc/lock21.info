@@ -125,8 +125,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #89 SEO audit (2026-10-26, `docs/audits/seo-2026-10-26.md`): the code fixes left. S11 workers.dev off (unless
   the previews need it); S15 the tiles' `.glb` compressed (a Cloudflare compression rule for `model/gltf-binary`)
 - [ ] #90 SEO audit: content, for Christian. S1 a real `description` for the pages that answer a question (dive log, zones, current, gear first), in its
-  language, or none (also usability V32); S4 whether to say how divers
-  get in (Macdonell Island, the buoy, the rope; « À propos de l'écluse 21 » now opens with depth and current)
+  language, or none (also usability V32)
 - [ ] #91 SEO audit: outside the site, for Christian. S3 deploy `main` (27 renamed addresses, 301s ready); S5 Google
   Search Console (domain property, the sitemap; Bing Webmaster Tools done 2026-10-26, its sitemap submitted, and
   `npm run bing:submit` after the deploy), the GitHub README (« not indexed yet ») and
