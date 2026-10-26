@@ -54,10 +54,10 @@ const t = en
       mouse: 'Mouse',
       fingers: 'Fingers',
       gestures: [
-        ['Turn', 'drag, left button', '1 finger'],
-        ['Pan', 'drag, right button', '2 fingers'],
-        ['Zoom', 'wheel', 'pinch'],
-        ['Fly to a point', 'double-click', 'double-tap'],
+        ['Turn', 'left', 'drag', '1 finger'],
+        ['Pan', 'right', 'drag', '2 fingers'],
+        ['Zoom', 'wheel', 'turn the wheel', 'pinch'],
+        ['Fly to a point', 'left', 'double-click', 'double-tap'],
       ],
       moveKeys: [
         ['Forward', ['W', '↑']],
@@ -71,7 +71,6 @@ const t = en
         ['home', 'Start view'],
         ['underwater', 'Dive and swim (help opens the first time)'],
         ['tour', 'Guided tour, eight steps'],
-        ['settings', 'Settings: light, colours'],
         ['ar', 'Augmented reality: the lock on a table', 'coarse'],
         ['help', 'Help with the gestures', 'coarse'],
       ],
@@ -128,10 +127,10 @@ const t = en
       mouse: 'Souris',
       fingers: 'Doigts',
       gestures: [
-        ['Tourner', 'glisser, bouton gauche', '1 doigt'],
-        ['Déplacer', 'glisser, bouton droit', '2 doigts'],
-        ['Zoomer', 'molette', 'pincer'],
-        ["S'approcher d'un point", 'double-clic', 'double-toucher'],
+        ['Tourner', 'left', 'glisser', '1 doigt'],
+        ['Déplacer', 'right', 'glisser', '2 doigts'],
+        ['Zoomer', 'wheel', 'tourner la molette', 'pincer'],
+        ["S'approcher d'un point", 'left', 'double-clic', 'double-toucher'],
       ],
       moveKeys: [
         ['Avancer', ['W', '↑']],
@@ -145,7 +144,6 @@ const t = en
         ['home', 'Vue de départ'],
         ['underwater', "Plonger et nager (l'aide s'ouvre la première fois)"],
         ['tour', 'Visite guidée, huit étapes'],
-        ['settings', 'Réglages: lumière, couleurs'],
         ['ar', "Réalité augmentée: l'écluse sur une table", 'coarse'],
         ['help', 'Aide sur les gestes', 'coarse'],
       ],
@@ -266,8 +264,23 @@ const updated = zones.updated
           <tr><th></th><th scope="col" class="fine">{t.mouse}</th><th scope="col" class="coarse">{t.fingers}</th></tr>
         </thead>
         <tbody>
-          {t.gestures.map(([action, mouse, fingers]) => (
-            <tr><th scope="row">{action}</th><td class="fine">{mouse}</td><td class="coarse">{fingers}</td></tr>
+          {t.gestures.map(([action, part, mouse, fingers]) => (
+            <tr>
+              <th scope="row">{action}</th>
+              <td class="fine">
+                <!-- A small mouse, the part used in the signal colour (Christian, 2026-10-26: draft B) -->
+                <span class="mouse-how">
+                  <svg class="mouse" aria-hidden="true" width="28" height="40" viewBox="0 0 28 40">
+                    <path class="mouse-body" d="M2 10 Q2 2 14 2 Q26 2 26 10 L26 28 Q26 38 14 38 Q2 38 2 28 Z" />
+                    <path class={part === 'left' ? 'mouse-used' : 'mouse-idle'} d="M2 10 Q2 2 13 2 L13 18 L2 18 Z" />
+                    <path class={part === 'right' ? 'mouse-used' : 'mouse-idle'} d="M15 2 Q26 2 26 10 L26 18 L15 18 Z" />
+                    <rect class={part === 'wheel' ? 'mouse-used' : 'mouse-body'} x="11" y="5" width="6" height="10" rx="3" />
+                  </svg>
+                  {mouse}
+                </span>
+              </td>
+              <td class="coarse">{fingers}</td>
+            </tr>
           ))}
           <!-- The keys, in the table, one move a row, its letter and its arrow (Christian, 2026-10-26): the mouse's
                column, a computer only -->
@@ -553,7 +566,7 @@ const updated = zones.updated
     border: 0;
     background: none;
     text-align: left;
-    vertical-align: baseline;
+    vertical-align: middle;
   }
   .gestures thead th {
     font-family: var(--lk-font-data);
@@ -567,6 +580,35 @@ const updated = zones.updated
   }
   .gestures tbody td {
     color: var(--md-sys-color-on-surface-variant);
+  }
+  /* (more specific than the site's table cells, custom.scss) */
+  table.gestures th,
+  table.gestures td {
+    vertical-align: middle;
+  }
+  .mouse-how {
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .mouse {
+    flex: none;
+  }
+  .mouse-body {
+    fill: var(--md-sys-color-surface-container);
+    stroke: var(--md-sys-color-on-surface-variant);
+    stroke-width: 1.5;
+  }
+  .mouse-idle {
+    fill: var(--md-sys-color-surface-container-lowest);
+    stroke: var(--md-sys-color-on-surface-variant);
+    stroke-width: 1.5;
+  }
+  .mouse-used {
+    fill: var(--md-sys-color-tertiary);
+    stroke: var(--md-sys-color-tertiary);
+    stroke-width: 1.5;
   }
   .gestures kbd {
     display: inline-block;
