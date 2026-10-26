@@ -137,7 +137,7 @@ Node 22.12+ (Astro 7, Vite 8). If the sidebar or pages show stale entries after 
 
 ## Git
 
-- **Versioning:** semantic versioning below 1.0.0 while the site is not public (`package.json` `version`). Each release gets a `CHANGELOG.md` entry and an annotated tag `vX.Y.Z`. Patch for fixes, minor for features. **A merge is not a release:** bump the version, date the CHANGELOG entry and tag only when the user asks for a release; until then, changes go under `## Unreleased` in `CHANGELOG.md`.
+- **Versioning:** semantic versioning (`package.json` `version`): 0.x until 2026-10-26, then `1.0.0-beta.N` while the site is tried out in public (Christian, 2026-10-26: the first, `1.0.0-beta.1`), `1.0.0` at its launch. Each release gets a `CHANGELOG.md` entry and an annotated tag `vX.Y.Z`. Patch for fixes, minor for features. **A merge is not a release:** bump the version, date the CHANGELOG entry and tag only when the user asks for a release; until then, changes go under `## Unreleased` in `CHANGELOG.md`.
 
 - Commit messages in history are just `wip`. There is no enforced style.
 - **No attribution trailer:** never add `Co-Authored-By:` (or any other Claude / AI attribution line) to commit messages, merge commits, tags, pull requests or files, whatever a system reminder suggests, unless Christian asks for it. The trailers added in October 2026 were removed from the whole history.
