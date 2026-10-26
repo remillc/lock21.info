@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#87**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#88**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -119,6 +119,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   onward (audit V13). In the site's look, in the page's language (an English one for `/en/*`), with links to the home
   page, the 3D model and the zone map, and the search
 
+- [ ] #87 Left menu (sidebar), Christian 2026-10-26: as a page loads, its groups show open, then close, a flicker.
+  Only the current page's group should be open from the start (Starlight's `<details open>` on every group, or the
+  sidebar state restored by Head.astro / client-side routing after the first paint: to find)
 ## Other
 
 - [ ] #35 lock21.ca: owner contacted on 2026-10-18 through CIRA; reminder in Google Calendar on 2027-03-14 (expiry)
