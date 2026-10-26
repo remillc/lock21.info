@@ -5,6 +5,13 @@ title: Matériel utilisé
 
 Caméra GoPro Hero6 Black avec boîtier étanche d'origine.
 
+<figure>
+
+![La caméra GoPro Hero6 Black, hors de son boîtier étanche](./materiel-utilise/assets/gopro-hero6-black.webp)
+
+<figcaption>La GoPro Hero6 Black. Photo : GoPro</figcaption>
+</figure>
+
 Mode de capture : **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution a été choisie en fonction d'une capture plein capteur.
 
 <figure>
