@@ -76,6 +76,13 @@ between the two right-hand ones. The measurements are in [Camera rig dimensions]
 Four SecurityIng dive lights, one at each corner of the frame: 10 white LEDs (6000 K), 4 red and 4 blue, a 120° beam,
 four 18650 batteries. Intensity: 12,000 lumens, as claimed by the seller.
 
+<figure>
+
+![A SecurityIng light in profile, with its dimensions: 123 mm long, a 65 mm head, a 53 mm body, a 105 × 50 mm handle](../../collecte/rig/assets/lampe-securitying-dimensions.webp)
+
+<figcaption>One of the lights, in profile, with its dimensions. Image: SecurityIng</figcaption>
+</figure>
+
 ## The scooter
 
 A Seacraft Future 1000. At speed 1 it moves at 1.2 feet per second (0.37 m/s), measured in the videos of the [sharpness
