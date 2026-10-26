@@ -25,117 +25,120 @@
     <link rel="stylesheet" href="./src/style.css" />
   </head>
   <body>
-    <div id="viewer"></div>
-    <!-- Root of the site serving this page: lock21.info in production, the Astro dev server (localhost:4321) locally -->
-    <a class="home" href="/">← Écluse 21</a>
-    <!-- The viewer's buttons are MD3 icon buttons (filled tonal, style.css .icon-button): 40 dp in a 48 dp touch target,
-         Material Symbols Rounded icons (24 dp), state layers, focus ring (docs/system-design.md, Buttons) -->
-    <!-- Settings (config-panel.js, <l21-settings-panel>): one control per query parameter -->
-    <button class="settings-button icon-button" type="button" aria-label="Réglages" data-tooltip="Réglages" aria-expanded="false" hidden>
-      <svg data-icon="settings-outline-rounded" aria-hidden="true" width="24" height="24"></svg>
-    </button>
-    <!-- Compass (main.js, updateCompass), top left (below the way back to the site when standalone): the card turns
-         with the view, its red N toward magnetic north (Christian, 2026-10-25). Shown only: not a button. West's
-         letter set by main.js from the language (W, or O in French) -->
-    <div class="compass" role="img" aria-label="Boussole" data-tooltip="Boussole">
-      <svg aria-hidden="true" width="56" height="56" viewBox="-28 -28 56 56">
-        <g class="compass-rose" font-family="system-ui, sans-serif" font-size="8.5" font-weight="700" text-anchor="middle" dominant-baseline="central">
-          <text x="0" y="-20" fill="#ffb4a8">N</text>
-          <text x="20" y="0" fill="currentColor">E</text>
-          <text x="0" y="20" fill="currentColor">S</text>
-          <text class="compass-w" x="-20" y="0" fill="currentColor">W</text>
-          <path d="M0 -13 L3.5 0 L-3.5 0 Z" fill="#ffb4a8" />
-          <path d="M0 13 L3.5 0 L-3.5 0 Z" fill="currentColor" opacity="0.55" />
-          <circle r="1.4" fill="#12140e" />
-        </g>
-      </svg>
-    </div>
-    <!-- Touch screens: the gestures' card again (touch-nav.js; Material Symbols Rounded (src/icons.js) « help »), left of the settings -->
-    <button class="touch-help-button icon-button" type="button" hidden>
-      <svg data-icon="help-outline-rounded" aria-hidden="true" width="24" height="24"></svg>
-    </button>
-    <!-- Touch screens (touch-nav.js): the gestures' card at the first touch, or a short line (two fingers, in the
-         /modele page's frame); it never takes a touch -->
-    <div class="touch-hint" role="status" hidden></div>
-    <!-- Augmented reality (main.js): the lock on a table at 1:100. Shown only where a phone can display it: iPhone and
-         iPad (AR Quick Look, rel="ar", which requires an image as the link's first child: hence an <img>) and Android
-         (WebXR in Chrome, android-ar.js; Scene Viewer otherwise) -->
-    <a class="ar-button icon-button" rel="ar" aria-label="Voir en réalité augmentée" data-tooltip="Voir en réalité augmentée" hidden>
-      <img data-icon="view-in-ar-outline-rounded" data-color="#ebede3" width="24" height="24" alt="" width="24" height="24" alt="" />
-    </a>
-    <!-- Full screen (the site's /modele/ page embeds the viewer in an iframe with allow="fullscreen"); main.js sets
-         data-full while full screen, which shows the exit icon -->
-    <!-- Home (main.js): back to the start view, by a quick flight; between the full-screen and the underwater buttons
-         (Christian, 2026-10-25). Material Symbols Rounded (src/icons.js) « home » -->
-    <button class="home-button icon-button" type="button" aria-label="Vue de départ" data-tooltip="Vue de départ" hidden>
-      <svg data-icon="home-outline-rounded" aria-hidden="true" width="24" height="24"></svg>
-    </button>
-    <!-- « Ambiance sous-marine » (main.js, underwater.js): left of the home button; selected (aria-pressed) while
-         on. Material Symbols Rounded (src/icons.js) « scuba_diving » -->
-    <button class="underwater-button icon-button" type="button" aria-label="Ambiance sous-marine" data-tooltip="Ambiance sous-marine" aria-pressed="false" hidden>
-      <svg data-icon="scuba-diving-rounded" aria-hidden="true" width="24" height="24"></svg>
-    </button>
-    <!-- While underwater, left of its button: the season slider and the dive light, one strip that unrolls out of the
-         button (main.js, showSeasonControl) -->
-    <div class="underwater-tools" hidden>
-      <!-- The season (visibility) while underwater, beside its button (main.js); also in the settings -->
-      <div class="season-control">
-        <input class="season-range" type="range" min="0" max="3" step="1" />
-        <output class="season-value"></output>
-      </div>
-      <!-- The dive light on and off, between the season slider and the underwater button while underwater (Material
-           Symbols « flashlight_on » / « flashlight_off »); also in the settings -->
-      <button class="lamp-button icon-button" type="button" aria-pressed="true">
-        <svg data-icon="flashlight-on-outline-rounded" class="icon-on" aria-hidden="true" width="24" height="24"></svg>
-        <svg data-icon="flashlight-off-outline-rounded" class="icon-off" aria-hidden="true" width="24" height="24"></svg>
+    <!-- The page's content in one landmark (accessibility audit, 2026-10-26); display: contents, the layout unchanged -->
+    <main>
+      <div id="viewer"></div>
+      <!-- Root of the site serving this page: lock21.info in production, the Astro dev server (localhost:4321) locally -->
+      <a class="home" href="/">← Écluse 21</a>
+      <!-- The viewer's buttons are MD3 icon buttons (filled tonal, style.css .icon-button): 40 dp in a 48 dp touch target,
+           Material Symbols Rounded icons (24 dp), state layers, focus ring (docs/system-design.md, Buttons) -->
+      <!-- Settings (config-panel.js, <l21-settings-panel>): one control per query parameter -->
+      <button class="settings-button icon-button" type="button" aria-label="Réglages" data-tooltip="Réglages" aria-expanded="false" hidden>
+        <svg data-icon="settings-outline-rounded" aria-hidden="true" width="24" height="24"></svg>
       </button>
-    </div>
-    <!-- The movement keys (main.js, swim.js), bottom left, on a computer (swimming underwater, moving outside); a key lights up
-         while held. Letters set from the keyboard's layout where the browser tells it. Each is a button too (TODO #61):
-         held with the mouse or a finger, it moves the camera as the key does -->
-    <div class="swim-keys" hidden>
-      <div class="swim-row"><button class="swim-key" type="button" data-code="KeyW"><kbd>W</kbd></button></div>
-      <div class="swim-row"><button class="swim-key" type="button" data-code="KeyA"><kbd>A</kbd></button><button class="swim-key" type="button" data-code="KeyS"><kbd>S</kbd></button><button class="swim-key" type="button" data-code="KeyD"><kbd>D</kbd></button></div>
-      <p class="swim-hint"></p>
-      <!-- Opens the swim mode's help again (Material Symbols Rounded (src/icons.js) « help ») -->
-      <button class="swim-help-button" type="button">
+      <!-- Compass (main.js, updateCompass), top left (below the way back to the site when standalone): the card turns
+           with the view, its red N toward magnetic north (Christian, 2026-10-25). Shown only: not a button. West's
+           letter set by main.js from the language (W, or O in French) -->
+      <div class="compass" role="img" aria-label="Boussole" data-tooltip="Boussole">
+        <svg aria-hidden="true" width="56" height="56" viewBox="-28 -28 56 56">
+          <g class="compass-rose" font-family="system-ui, sans-serif" font-size="8.5" font-weight="700" text-anchor="middle" dominant-baseline="central">
+            <text x="0" y="-20" fill="#ffb4a8">N</text>
+            <text x="20" y="0" fill="currentColor">E</text>
+            <text x="0" y="20" fill="currentColor">S</text>
+            <text class="compass-w" x="-20" y="0" fill="currentColor">W</text>
+            <path d="M0 -13 L3.5 0 L-3.5 0 Z" fill="#ffb4a8" />
+            <path d="M0 13 L3.5 0 L-3.5 0 Z" fill="currentColor" opacity="0.55" />
+            <circle r="1.4" fill="#12140e" />
+          </g>
+        </svg>
+      </div>
+      <!-- Touch screens: the gestures' card again (touch-nav.js; Material Symbols Rounded (src/icons.js) « help »), left of the settings -->
+      <button class="touch-help-button icon-button" type="button" hidden>
         <svg data-icon="help-outline-rounded" aria-hidden="true" width="24" height="24"></svg>
       </button>
-    </div>
-    <!-- The swim mode's help (main.js, showSwimHelp): an MD3 basic dialog; texts set by main.js -->
-    <dialog class="swim-help">
-      <h2></h2>
-      <div class="swim-help-text"></div>
-      <div class="swim-help-actions"><button class="swim-help-ok" type="button"></button></div>
-    </dialog>
-    <button class="fullscreen icon-button" type="button" aria-label="Plein écran" data-tooltip="Plein écran (Échap pour sortir)" hidden>
-      <svg data-icon="fullscreen-rounded" class="icon-enter" aria-hidden="true" width="24" height="24"></svg>
-      <svg data-icon="fullscreen-exit-rounded" class="icon-exit" aria-hidden="true" width="24" height="24"></svg>
-    </button>
-    <!-- « Visite guidée » (tour.js, TODO #48): first in the bottom-right row, left of the other buttons; an MD3 filled
-         tonal button with its label and the Material Symbols Rounded (src/icons.js) « tour » icon. Underwater, above the row (the season and
-         the lamp take its place); hidden while the tour plays (its card takes over) -->
-    <button class="tour-button" type="button" hidden>
-      <svg data-icon="tour-outline-rounded" aria-hidden="true" width="18" height="18"></svg>
-      <span class="tour-button-label"></span>
-    </button>
-    <!-- The tour's card (tour.js): the step's number, title and text, back and next; a close button. Bottom centre -->
-    <section class="tour-card" hidden>
-      <div class="tour-head">
-        <span class="tour-count"></span>
-        <button class="tour-close" type="button">
-          <svg data-icon="close-rounded" aria-hidden="true" width="24" height="24"></svg>
+      <!-- Touch screens (touch-nav.js): the gestures' card at the first touch, or a short line (two fingers, in the
+           /modele page's frame); it never takes a touch -->
+      <div class="touch-hint" role="status" hidden></div>
+      <!-- Augmented reality (main.js): the lock on a table at 1:100. Shown only where a phone can display it: iPhone and
+           iPad (AR Quick Look, rel="ar", which requires an image as the link's first child: hence an <img>) and Android
+           (WebXR in Chrome, android-ar.js; Scene Viewer otherwise) -->
+      <a class="ar-button icon-button" rel="ar" aria-label="Voir en réalité augmentée" data-tooltip="Voir en réalité augmentée" hidden>
+        <img data-icon="view-in-ar-outline-rounded" data-color="#ebede3" width="24" height="24" alt="" width="24" height="24" alt="" />
+      </a>
+      <!-- Full screen (the site's /modele/ page embeds the viewer in an iframe with allow="fullscreen"); main.js sets
+           data-full while full screen, which shows the exit icon -->
+      <!-- Home (main.js): back to the start view, by a quick flight; between the full-screen and the underwater buttons
+           (Christian, 2026-10-25). Material Symbols Rounded (src/icons.js) « home » -->
+      <button class="home-button icon-button" type="button" aria-label="Vue de départ" data-tooltip="Vue de départ" hidden>
+        <svg data-icon="home-outline-rounded" aria-hidden="true" width="24" height="24"></svg>
+      </button>
+      <!-- « Ambiance sous-marine » (main.js, underwater.js): left of the home button; selected (aria-pressed) while
+           on. Material Symbols Rounded (src/icons.js) « scuba_diving » -->
+      <button class="underwater-button icon-button" type="button" aria-label="Ambiance sous-marine" data-tooltip="Ambiance sous-marine" aria-pressed="false" hidden>
+        <svg data-icon="scuba-diving-rounded" aria-hidden="true" width="24" height="24"></svg>
+      </button>
+      <!-- While underwater, left of its button: the season slider and the dive light, one strip that unrolls out of the
+           button (main.js, showSeasonControl) -->
+      <div class="underwater-tools" hidden>
+        <!-- The season (visibility) while underwater, beside its button (main.js); also in the settings -->
+        <div class="season-control">
+          <input class="season-range" type="range" min="0" max="3" step="1" />
+          <output class="season-value"></output>
+        </div>
+        <!-- The dive light on and off, between the season slider and the underwater button while underwater (Material
+             Symbols « flashlight_on » / « flashlight_off »); also in the settings -->
+        <button class="lamp-button icon-button" type="button" aria-pressed="true">
+          <svg data-icon="flashlight-on-outline-rounded" class="icon-on" aria-hidden="true" width="24" height="24"></svg>
+          <svg data-icon="flashlight-off-outline-rounded" class="icon-off" aria-hidden="true" width="24" height="24"></svg>
         </button>
       </div>
-      <h2 class="tour-title"></h2>
-      <p class="tour-text" aria-live="polite"></p>
-      <div class="tour-actions">
-        <button class="tour-prev" type="button"></button>
-        <button class="tour-next" type="button"></button>
+      <!-- The movement keys (main.js, swim.js), bottom left, on a computer (swimming underwater, moving outside); a key lights up
+           while held. Letters set from the keyboard's layout where the browser tells it. Each is a button too (TODO #61):
+           held with the mouse or a finger, it moves the camera as the key does -->
+      <div class="swim-keys" hidden>
+        <div class="swim-row"><button class="swim-key" type="button" data-code="KeyW"><kbd>W</kbd></button></div>
+        <div class="swim-row"><button class="swim-key" type="button" data-code="KeyA"><kbd>A</kbd></button><button class="swim-key" type="button" data-code="KeyS"><kbd>S</kbd></button><button class="swim-key" type="button" data-code="KeyD"><kbd>D</kbd></button></div>
+        <p class="swim-hint"></p>
+        <!-- Opens the swim mode's help again (Material Symbols Rounded (src/icons.js) « help ») -->
+        <button class="swim-help-button" type="button">
+          <svg data-icon="help-outline-rounded" aria-hidden="true" width="24" height="24"></svg>
+        </button>
       </div>
-    </section>
-    <!-- Loading indicator and errors (src/loading.js) -->
-    <l21-loading id="status">Chargement…</l21-loading>
+      <!-- The swim mode's help (main.js, showSwimHelp): an MD3 basic dialog; texts set by main.js -->
+      <dialog class="swim-help">
+        <h2></h2>
+        <div class="swim-help-text"></div>
+        <div class="swim-help-actions"><button class="swim-help-ok" type="button"></button></div>
+      </dialog>
+      <button class="fullscreen icon-button" type="button" aria-label="Plein écran" data-tooltip="Plein écran (Échap pour sortir)" hidden>
+        <svg data-icon="fullscreen-rounded" class="icon-enter" aria-hidden="true" width="24" height="24"></svg>
+        <svg data-icon="fullscreen-exit-rounded" class="icon-exit" aria-hidden="true" width="24" height="24"></svg>
+      </button>
+      <!-- « Visite guidée » (tour.js, TODO #48): first in the bottom-right row, left of the other buttons; an MD3 filled
+           tonal button with its label and the Material Symbols Rounded (src/icons.js) « tour » icon. Underwater, above the row (the season and
+           the lamp take its place); hidden while the tour plays (its card takes over) -->
+      <button class="tour-button" type="button" hidden>
+        <svg data-icon="tour-outline-rounded" aria-hidden="true" width="18" height="18"></svg>
+        <span class="tour-button-label"></span>
+      </button>
+      <!-- The tour's card (tour.js): the step's number, title and text, back and next; a close button. Bottom centre -->
+      <section class="tour-card" hidden>
+        <div class="tour-head">
+          <span class="tour-count"></span>
+          <button class="tour-close" type="button">
+            <svg data-icon="close-rounded" aria-hidden="true" width="24" height="24"></svg>
+          </button>
+        </div>
+        <h2 class="tour-title"></h2>
+        <p class="tour-text" aria-live="polite"></p>
+        <div class="tour-actions">
+          <button class="tour-prev" type="button"></button>
+          <button class="tour-next" type="button"></button>
+        </div>
+      </section>
+      <!-- Loading indicator and errors (src/loading.js) -->
+      <l21-loading id="status">Chargement…</l21-loading>
+    </main>
     <script type="module" src="./src/main.js"></script>
   </body>
 </html>

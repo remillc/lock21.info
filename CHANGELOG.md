@@ -4,6 +4,13 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Accessibility audit (TODO #43; axe-core, WCAG 2.2 AA, every page in both themes on desktop and phone, plus keyboard,
+  reflow and text spacing) and its fixes: the /modele navigation table's headings readable in the light theme, and its
+  first column named for screen readers; the download buttons' format at full contrast; the phone's « Sur cette page »
+  bar readable in the light theme; tables that scroll sideways reachable with the keyboard (`ScrollTables.astro`); the
+  opt-out button's text in the page before its script runs; heading levels of the banana-effect and ambient-light
+  pages. The viewer: its content in a `<main>` landmark, the tooltip's role only while shown, the settings panel
+  taking the focus as it opens and giving it back as it closes.
 - Interface texts in Paraglide JS (TODO #77): the components' and the 3D viewer's French and English texts moved from
   hand-made dictionaries to message files (`messages/site/`, `messages/viewer/`, one JSON per language), compiled at
   build time into one plain JS function per message. The site renders them into its pages (no JavaScript added); the

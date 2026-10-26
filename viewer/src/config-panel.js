@@ -134,9 +134,14 @@ class SettingsPanel extends HTMLElement {
     })
   }
 
+  // Keyboard focus follows the panel (accessibility audit, 2026-10-26): into its first control when it opens, back to
+  // the ⚙ button when it closes with the focus inside it
   toggle(open) {
+    const focusInside = this.contains(document.activeElement)
     this.hidden = !open
     this.button.setAttribute('aria-expanded', String(open))
+    if (open) this.querySelector('input, select, button:not(.settings-close)')?.focus()
+    else if (focusInside) this.button.focus()
   }
 
   // Keeps the value (forgotten when it equals the default), then applies it

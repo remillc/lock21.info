@@ -12,7 +12,6 @@ const GAP = 4
 
 class Tooltip extends HTMLElement {
   connectedCallback() {
-    this.setAttribute('role', 'tooltip')
     this.id = 'l21-tooltip'
     this.anchor = null
     this.timer = 0
@@ -48,6 +47,8 @@ class Tooltip extends HTMLElement {
     if (!text || anchor.hidden) return
     this.anchor = anchor
     this.textContent = text
+    // The tooltip role only while shown: empty, it would have no name (accessibility audit, 2026-10-26)
+    this.setAttribute('role', 'tooltip')
     anchor.setAttribute('aria-describedby', this.id)
     this.dataset.shown = 'true'
     const box = anchor.getBoundingClientRect()
@@ -62,9 +63,10 @@ class Tooltip extends HTMLElement {
     clearTimeout(this.timer)
     this.anchor?.removeAttribute('aria-describedby')
     this.anchor = null
+    this.removeAttribute('role')
     delete this.dataset.shown
   }
 }
 
 customElements.define('l21-tooltip', Tooltip)
-document.body.append(document.createElement('l21-tooltip'))
+document.querySelector('main').append(document.createElement('l21-tooltip'))

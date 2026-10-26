@@ -8,6 +8,7 @@ import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro'
 import ThemeSelect from '@astrojs/starlight/components/ThemeSelect.astro'
 import { pageLang } from '../lib/i18n'
 import { m } from '../paraglide/messages.js'
+import ScrollTables from './ScrollTables.astro'
 
 const lang = pageLang(Astro.locals)
 // Every message in the page's language (messages/site/)
@@ -20,6 +21,7 @@ const licence = `https://creativecommons.org/licenses/by/4.0/deed.${lang}`
 
 <div class="page-end">
 <Default />
+<ScrollTables />
 <script is:inline>
   // Previous / next page (Starlight's links): prefetched as soon as they are on screen (Astro prefetch, "viewport"),
   // the likely next step. Inline: runs while the page is parsed and again after each client-side navigation, before

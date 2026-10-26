@@ -19,8 +19,9 @@ const o = { locale: pageLang(Astro.locals) }
       data-accept={m.optout_accept({}, o)}
       data-refuse={m.optout_refuse({}, o)}
     >
-      <p class="status" aria-live="polite" />
-      <button type="button" />
+      <!-- Measured unless refused (the default): the texts in the page, the script updates them from the visitor's choice -->
+      <p class="status" aria-live="polite">{m.optout_on({}, o)}</p>
+      <button type="button">{m.optout_refuse({}, o)}</button>
     </l21-analytics-optout>
   ) : (
     <p>

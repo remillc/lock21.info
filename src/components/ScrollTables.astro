@@ -1,0 +1,33 @@
+---
+// <l21-scroll-tables>, in the footer of every page: a Markdown table wider than the column scrolls sideways
+// (custom.scss), and a keyboard must reach it to scroll it (WCAG 2.1.1, axe scrollable-region-focusable). The tables
+// that overflow get tabindex="0" (and the focus ring); the others stay out of the tab order. Kept up to date as the
+// window changes size. A Custom Element: set up again on every page under client-side routing (docs/guidelines.md).
+---
+
+<l21-scroll-tables hidden></l21-scroll-tables>
+
+<script>
+  class ScrollTables extends HTMLElement {
+    /** @type {ResizeObserver | null} */
+    observer = null
+
+    connectedCallback() {
+      const tables = document.querySelectorAll('.sl-markdown-content table')
+      if (!tables.length) return
+      this.observer = new ResizeObserver((entries) => {
+        for (const { target } of entries) {
+          if (target.scrollWidth > target.clientWidth + 1) target.setAttribute('tabindex', '0')
+          else target.removeAttribute('tabindex')
+        }
+      })
+      for (const table of tables) this.observer.observe(table)
+    }
+
+    disconnectedCallback() {
+      this.observer?.disconnect()
+      this.observer = null
+    }
+  }
+  if (!customElements.get('l21-scroll-tables')) customElements.define('l21-scroll-tables', ScrollTables)
+</script>

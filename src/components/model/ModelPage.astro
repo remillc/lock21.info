@@ -139,7 +139,7 @@ const updated = zones.updated
            viewer's buttons by their icons. The swimming's details are in the viewer's swim help -->
       <table class="gestures">
         <thead>
-          <tr><th></th><th scope="col" class="fine">{m.model_mouse({}, o)}</th><th scope="col" class="coarse">{m.model_fingers({}, o)}</th></tr>
+          <tr><th scope="col"><span class="sr-only">{m.model_action({}, o)}</span></th><th scope="col" class="fine">{m.model_mouse({}, o)}</th><th scope="col" class="coarse">{m.model_fingers({}, o)}</th></tr>
         </thead>
         <tbody>
           {gestures.map(([action, part, mouse, fingers]) => (
@@ -446,6 +446,8 @@ const updated = zones.updated
       padding: 0.375rem 1.5rem 0.375rem 0;
       border: 0;
       background: none;
+      /* The site's table headers are light text on the dark bar (custom.scss): here, no bar, the page's text */
+      color: var(--md-sys-color-on-surface);
       text-align: left;
       vertical-align: middle;
     }
@@ -588,10 +590,11 @@ const updated = zones.updated
         outline-offset: -2px;
       }
     }
+    /* The format and size: smaller and lighter, at the button's full text colour (at 75 % opacity it fell below 4.5:1,
+       accessibility audit, 2026-10-26) */
     .download span {
       font-size: 0.75rem;
       font-weight: 500;
-      opacity: 0.75;
     }
     .gew-view {
       margin: 0 0 0.75rem;
