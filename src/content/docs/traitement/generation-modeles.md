@@ -3,6 +3,8 @@ title: Génération des modèles
 sidebar:
   order: 4
 ---
+Les modèles de chaque zone sont générés dans Agisoft Metashape, puis exportés pour la publication.
+
 ## Densités pour haute résolution
 
 La taille d'une face pour les modèles haute résolution a été définie 2mm `<sup>`2 `</sup>, soit:`

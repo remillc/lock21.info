@@ -3,6 +3,8 @@ title: Texture
 sidebar:
   order: 5
 ---
+La texture se calcule dans Agisoft Metashape, sur le modèle de chaque zone.
+
 ## Calibration des couleurs
 
 Cette étape permet de normaliser les blancs et la luminosité à travers les photos.

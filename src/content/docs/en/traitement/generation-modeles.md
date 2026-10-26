@@ -3,6 +3,8 @@ title: Building the models
 sidebar:
   order: 4
 ---
+Each zone's models are generated in Agisoft Metashape, then exported for publishing.
+
 ## Densities for high resolution
 
 The face size for the high-resolution models was set to 2mm `<sup>`2 `</sup>, that is:`
