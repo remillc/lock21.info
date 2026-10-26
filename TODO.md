@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#77**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#78**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -73,6 +73,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   are drafts to review (zone 18 is not described on the zone map page); step 7 (the north wall's steps) is half hidden
   by a context fill in front of the camera. Not placed: the stone passage through the wall (Christian's favourite,
   `images/views/2026-10-23-view-1.webp`): `?cam=-37.01,2.56,-14.66,-33.02,2.48,-14.40`
+- [ ] #77 Use a translation system for the interface texts, instead of the hand-made dictionaries of
+  `src/lib/i18n.js` (and the strings in the components) and `viewer/src/i18n.js`: one choice for the site and the
+  viewer (message files per language, plurals, numbers and dates), the docs' pages staying as they are
 
 ## Other
 
