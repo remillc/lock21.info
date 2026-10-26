@@ -1,5 +1,6 @@
 // The guided tour (TODO #48, Christian, 2026-10-24): its steps (tour-steps.js) one after the other, each with its card
-// (bottom centre: the step's number, title and text, back and next, a close button). A view: the camera flies there,
+// (bottom centre: the step's number, title and text, back and next, a close button; after looking around, a way back
+// to the step's view). A view: the camera flies there,
 // then the visitor may look around (the usual navigation). A move: the camera flies to its start, then travels along
 // its points at its pace, the navigation off until it arrives.
 // The flight between steps: a curve from where the camera is to the step's camera, rising above the site when the way
@@ -117,6 +118,24 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     element.dataset.tooltip = label
   }
   iconButton(prev, 'back', m.tourPrev())
+  // Back to the step's view after looking around (usability audit V24, 2026-10-26: a drag cleared the step from the
+  // address, the card still showed it): an MD3 text button with a leading icon, Material Symbols Rounded « replay »,
+  // shown once the camera has left the step's view by more than AWAY m or AWAY_ANGLE rad; it plays the step again
+  // from where the camera is (its flight, a move's way too)
+  const again = /** @type {HTMLButtonElement} */ (card.querySelector('.tour-return'))
+  again.innerHTML = `${icon('replay-rounded', 18)}<span>${m.tourReturn()}</span>`
+  // (its name kept where the label is hidden: a short frame, style.css)
+  again.setAttribute('aria-label', m.tourReturn())
+  const AWAY = 0.2
+  const AWAY_ANGLE = 0.03
+  // Shown with the MD3 enter motion (400 ms, emphasized decelerate); hidden at once, as the card's texts change
+  function showAgain(on) {
+    if (again.hidden !== on) return
+    again.hidden = !on
+    if (on && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      again.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, easing: 'cubic-bezier(0.05, 0.7, 0.1, 1)' })
+    }
+  }
   close.setAttribute('aria-label', m.tourClose())
   close.dataset.tooltip = m.tourClose()
   // While the card is hidden for a flight, a close button at the top right (Christian, 2026-10-26)
@@ -396,6 +415,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     title.textContent = step.title[lang] ?? step.title.fr
     text.textContent = step.text[lang] ?? step.text.fr
     prev.hidden = i === 0
+    showAgain(false)
     if (i === steps.length - 1) iconButton(next, 'end', m.tourEnd())
     else iconButton(next, 'next', m.tourNext())
   }
@@ -538,6 +558,23 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   close.addEventListener('click', stop)
   stopButton.addEventListener('click', stop)
   prev.addEventListener('click', () => index > 0 && show(index - 1, true))
+  again.addEventListener('click', () => {
+    if (index < 0) return
+    // (the focus, on the button about to hide, to next)
+    if (document.activeElement === again) next.focus({ preventScroll: true })
+    log?.('tour', { action: 'again', step: index + 1 })
+    show(index)
+  })
+  // The camera moved by the visitor (the orbit, the keys, a double-click: every one ends in the orbit's change event)
+  // while no motion of the tour runs: away from the step's view, the button to come back
+  controls.addEventListener('change', () => {
+    if (index < 0 || motions.length || sightTime || !again.hidden) return
+    const step = steps[index]
+    const view = camOf(step.kind === 'move' ? step.to : step.cam)
+    const away = camera.position.distanceTo(view.position) > AWAY ||
+      controls.target.clone().sub(camera.position).angleTo(view.target.sub(view.position)) > AWAY_ANGLE
+    if (away) showAgain(true)
+  })
   next.addEventListener('click', () => (index < steps.length - 1 ? show(index + 1) : stop()))
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && index >= 0) stop()

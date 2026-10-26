@@ -206,7 +206,11 @@ class SettingsPanel extends HTMLElement {
     close.innerHTML = icon('close-rounded')
     close.addEventListener('click', () => this.toggle(false))
     head.append(title, close)
-    this.append(head)
+    // What these settings are (usability audit V29, 2026-10-26): the display, kept by the browser (saveSettings)
+    const intro = document.createElement('p')
+    intro.className = 'settings-hint settings-intro'
+    intro.textContent = m.settingsIntro()
+    this.append(head, intro)
 
     for (const section of this.schema) {
       const box = document.createElement(section.advanced ? 'details' : 'section')
@@ -240,7 +244,11 @@ class SettingsPanel extends HTMLElement {
     if (this.session) {
       const code = document.createElement('p')
       code.className = 'settings-hint settings-session'
-      code.textContent = m.session({ code: this.session })
+      // and what it is for (usability audit V29)
+      const value = document.createElement('span')
+      value.className = 'settings-session-code'
+      value.textContent = m.session({ code: this.session })
+      code.append(value, ` · ${m.sessionHint()}`)
       this.append(code)
     }
     this.showDependents(false)

@@ -724,7 +724,13 @@ l21-settings-panel {
 /* Telemetry session code (telemetry.js): read out by a tester to find their visit in the logs */
 .settings-session {
   margin-top: 12px;
+}
+.settings-session-code {
   font-family: var(--l21-font-data);
+}
+/* What the settings are, under the panel's title (usability audit V29) */
+.settings-intro {
+  margin: 0 0 4px;
 }
 
 .settings-actions {
@@ -1508,6 +1514,69 @@ html.l21-touring :is(.settings-button, .touch-help-button) {
 .tour-prev[hidden] {
   display: none;
 }
+/* « Revenir à la vue » (tour.js, usability audit V24): an MD3 text button with a leading icon, 40 dp in a 48 dp touch
+   target (the transparent border), 12 dp before the 18 dp icon, 8 dp to the label, 16 dp after; label-large in the
+   secondary colour, state layers; at the left of the row */
+.tour-return {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  height: 48px;
+  margin-right: auto;
+  padding: 0 12px 0 8px;
+  border: 4px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  background-clip: padding-box;
+  color: var(--md-sys-color-secondary);
+  font: 500 14px/20px var(--l21-font-data);
+  letter-spacing: 0.1px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--md-sys-color-secondary) var(--md-sys-state-hover), transparent);
+  }
+
+  &:focus-visible,
+  &:active {
+    background-color: color-mix(in srgb, var(--md-sys-color-secondary) var(--md-sys-state-pressed), transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: -2px;
+  }
+
+  &[hidden] {
+    display: none;
+  }
+
+  svg {
+    flex: none;
+  }
+}
+/* Where the arrows sit beside the text or the step's number (a short frame, a phone held sideways): its icon only, an
+   MD3 standard icon button (40 dp in 48 dp) */
+@media (max-height: 420px) and (max-width: 599px),
+  (orientation: landscape) and (max-height: 540px) and (min-width: 600px),
+  (orientation: landscape) and (hover: none) and (min-width: 600px) {
+  .tour-return {
+    justify-content: center;
+    width: 48px;
+    margin-right: 0;
+    padding: 0;
+
+    span {
+      display: none;
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
 /* A short, narrow frame (/modele on a phone held upright: 358 × 316): the arrows on the top row, beside the step's
    number and the close button, so the text has four lines before it scrolls (usability audit V2, 2026-10-26) */
 @media (max-height: 420px) and (max-width: 599px) {
@@ -1528,6 +1597,8 @@ html.l21-touring :is(.settings-button, .touch-help-button) {
   .tour-count {
     grid-area: count;
     align-self: center;
+    /* (on one line beside the four buttons, « Revenir à la vue » shown) */
+    white-space: nowrap;
   }
   .tour-close {
     grid-area: close;

@@ -16,6 +16,7 @@ import fullscreen from '~icons/material-symbols/fullscreen-rounded?raw'
 import fullscreenExit from '~icons/material-symbols/fullscreen-exit-rounded?raw'
 import help from '~icons/material-symbols/help-outline-rounded?raw'
 import home from '~icons/material-symbols/home-outline-rounded?raw'
+import replay from '~icons/material-symbols/replay-rounded?raw'
 import scubaDiving from '~icons/material-symbols/scuba-diving-rounded?raw'
 import settings from '~icons/material-symbols/settings-outline-rounded?raw'
 import tour from '~icons/material-symbols/tour-outline-rounded?raw'
@@ -32,6 +33,7 @@ const ICONS = {
   'fullscreen-exit-rounded': fullscreenExit,
   'help-outline-rounded': help,
   'home-outline-rounded': home,
+  'replay-rounded': replay,
   'scuba-diving-rounded': scubaDiving,
   'settings-outline-rounded': settings,
   'tour-outline-rounded': tour,
