@@ -12,13 +12,12 @@ distance entre deux cibles forme une échelle.
 
 Des cibles de 7,5 cm et de 15 cm, numérotées par paires (cibles 1 et 2).
 
-[À compléter : une photo des deux types, 7,5 cm et 15 cm.]
-
 <figure>
 
-![Une cible codée posée au sol, à côté d'un ruban à mesurer](../problemes/effet-banane/assets/exemple-cible-GX010197.007.webp)
+![Deux cibles codées posées au plancher de bois de la zone 5, une de 7,5 cm et une de 15 cm](./mise-echelle/assets/cibles-7-5-cm-15-cm-GX046201.0366.webp)
 
-<figcaption>Une cible codée, au sol</figcaption>
+<figcaption>Les deux types de cibles au plancher de la zone 5, le 2 août 2024 : une de 7,5 cm (en haut) et une de
+15 cm (en bas à gauche)</figcaption>
 </figure>
 
 Leur dessin a l'air abstrait, mais chacune porte un numéro codé. Ce sont des cibles codées circulaires de Metashape : le

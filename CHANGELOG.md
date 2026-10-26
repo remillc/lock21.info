@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- « Mise à l'échelle »: a photo of both target types side by side (zone 5's floor, 2024-08-02, frame GX046201.0366,
+  found from the targets Metashape detected in zone 5's project).
 - « Effet de banane »: Christian's two views of the 300-foot test on the canal's south wall (dive 27), curled up, then
   corrected.
 - Addresses rule (docs/system-design.md): lowercase whole words, hyphens, no articles or small linking words
