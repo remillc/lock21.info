@@ -8,6 +8,7 @@ import sitemap from '@astrojs/sitemap'
 import icon from 'astro-icon'
 import homeSlash from './src/integrations/home-slash.mjs'
 import englishPaths from './src/integrations/english-paths.mjs'
+import footnoteLabels from './src/integrations/footnote-labels.mjs'
 
 // Dev server only: /modele/viewer (embedded by the /modele page) is forwarded to the viewer's own dev server
 // (npm run viewer:dev, port 3100, same path), so the page shows the viewer's source and reloads with it, websocket
@@ -53,6 +54,8 @@ export default defineConfig({
           'home-outline-rounded', 'scuba-diving-rounded', 'tour-outline-rounded', 'help-outline-rounded', 'view-in-ar-outline-rounded'],
       },
     }),
+    // Footnotes headed « Notes » on the French pages, « Footnotes » on the English ones (usability audit V19)
+    footnoteLabels(),
     // The sitemap, as Starlight would add it (same i18n), without the test pages: they are in no menu (usability audit V9)
     sitemap({
       i18n: { defaultLocale: 'root', locales: { root: 'fr', en: 'en' } },

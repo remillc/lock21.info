@@ -65,7 +65,8 @@ content. Scripts must survive that:
   the sidebar alone would fetch about 600 kB per page. The 3D viewer's own files (about 3 MB) are warmed up on
   intent only, by `<l21-viewer-warmup>` (`src/components/ViewerWarmup.astro`).
 - Starlight doesn't support the router officially: `Head.astro` (theme, sidebar scroll) and `Search.astro` (search
-  kept across pages) fill the gaps. Check them after a Starlight upgrade.
+  kept across pages) fill the gaps. Check them after a Starlight upgrade. A link to the other language (French ↔
+  `/en/`) loads the page in full, so that the search starts again in that language.
 
 ## Rules kept from today
 

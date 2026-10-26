@@ -5,6 +5,8 @@ sidebar:
 ---
 Cette opération consiste à extraire des fichiers photos des vidéos tournés. L'opération s'effectue à l'aide du logiciel DaVinci Resolve Studio.
 
+Les vidéos ont été tournées avec une GoPro Hero6 Black ; la caméra, son boîtier et ses réglages sont décrits dans [Matériel utilisé](/collecte/materiel-utilise).
+
 ## Balance des blancs
 
 *(à compléter)*

@@ -28,10 +28,11 @@ export const site = {
   },
   downloads: {
     kmz: '/downloads/lock-21.kmz',
-    kmzTriangles: '700 000',
+    // Numbers, written in the page's language by ModelPage.astro (700 000 / 700,000; 2 millions / 2 million; Mo / MB)
+    kmzTriangles: 700_000,
     glb: 'https://tiles.lock21.info/downloads/lock-21.glb',
-    glbSize: '122 Mo',
-    glbTriangles: '2 millions',
+    glbMegabytes: 122,
+    glbTriangles: 2_000_000,
     // The model already placed, shared from Google Earth Web (Christian, 2026-10-26)
     googleEarthWeb: 'https://earth.google.com/earth/d/1_xcmUIJH5utm0h7MogaaU-aLEXdErmpp?usp=sharing',
   },
