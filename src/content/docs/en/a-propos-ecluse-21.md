@@ -10,6 +10,13 @@ It was a guard lock: no difference in level between upstream and downstream. The
 canal's enlargement, rebuilt from 1883 to 1886: a chamber 270 feet by 45 (82 m by 14 m), and a spillway at its upstream
 end.
 
+<figure>
+
+![Lock 21 around 1904: the canal, its bank on the left and the lock's works in the distance](../a-propos-ecluse-21/assets/ecluse-21-vers-1904.webp)
+
+<figcaption>Lock 21 around 1904. Source: <cite><a href="https://stlawrencepiks.com/seawayhistory/beforeseaway/cornwall/">Seaway History</a></cite></figcaption>
+</figure>
+
 On July 1, 1958, the Robert H. Saunders dam, built for the St. Lawrence Seaway, flooded the lock, Dickinson's Landing
 and other villages along the shore: the Lost Villages. Their people had been moved to Long Sault and Ingleside.
 

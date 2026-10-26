@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- « À propos de l'écluse 21 »: a photo of the lock around 1904 (Seaway History; a Canadian photo from before 1949, in
+  the public domain).
 - « À propos de l'écluse 21 » / “About Lock 21” (`/a-propos-ecluse-21`, before « Découpage du site » in the menu): the
   lock's main points (the Cornwall Canal, the guard lock rebuilt in 1883-1886, the flooding of July 1, 1958, the SOS
   survey of 1988-1989) and links to the Lost Villages Historical Society, the Ontario Heritage Trust, Wikipedia and
