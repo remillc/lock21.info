@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-Le rig (support de caméras) est un assemblage de profilés d'aluminium à rainure en T de 20 × 20 mm
+Le rig (support de caméras) est un assemblage de profilés d'aluminium à rainure en T (ou T-slot) de 20 × 20 mm
 (série 2020). Il porte la GoPro et les lampes devant le scooter Seacraft Future 1000 ; Sylvain Marcotte l'a conçu.
 
 <div class="facts">
