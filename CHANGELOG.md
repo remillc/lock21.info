@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Usability audit (TODO #44, 2026-10-26): three simulated first-time visitors (diver, heritage enthusiast,
+  photogrammetrist), a Nielsen heuristics review and an information-architecture audit, by agents in a browser, then a
+  verification pass: 38 findings (3 major, 13 minor), in `docs/audits/usability-2026-10-26.md`; the work in TODO
+  #82–#85. Three skills for such audits in `.claude/skills/` (mastepanoski/claude-skills, MIT).
 - Underwater view: dragging with the left button no longer inverts the vertical axis (Christian, 2026-10-26), as in
   the standard view.
 - Underwater view: the particles' 15 % trim on the current removed (Christian, 2026-10-26): they drift at the season's

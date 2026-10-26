@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#81**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#86**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -78,9 +78,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   keyboard, 320 px reflow, text spacing) and the code issues fixed. Left: the Markdown tables' empty header cells
   (14 pages: name the column, or no header row), the heading levels of `questions/nettete-images` (and its English
   page), a check with a real screen reader (NVDA, VoiceOver) and Windows' high contrast mode
-- [ ] #44 Usability audit of the site: what a first-time visitor (diver, heritage enthusiast, photogrammetrist) finds
-  and understands, the paths from the home page to the model and the dive log, the 3D viewer's controls on desktop and
-  phone, navigation and search, on both languages
 - [ ] #39 Design: applied (tokens, fonts, header and footer bars, home page, logo, tables, the 3D viewer's fonts and
   colours); to do: check contrast (WCAG AA) in both themes
 - [ ] #48 Guided tour (viewer/src/tour.js, tour-steps.js; 8 steps, Christian's views and moves, 2026-10-24): the texts
@@ -92,6 +89,33 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   navigation table and button list only take their own width (tables are `width: max-content`, custom.scss), so
   the rest of the middle third stays empty. Options: columns sized to their content (e.g. `auto auto 1fr`), the table
   at the column's full width, or the downloads moved under the navigation
+- [ ] #81 Make the site (a multi-page Astro site) a progressive web app (Christian, 2026-10-26): a web app manifest
+  (name, icons from the logo, theme colours, start at `/` or `/en/`), installable on a phone; a service worker
+  (e.g. `@vite-pwa/astro`, Workbox) caching the pages and their assets so the notebook reads offline (at the dive site,
+  no network), with an offline page. To decide: what the 3D model keeps offline (its tiles are hundreds of MB on
+  `tiles.lock21.info`: none, the start view's, or a chosen zone), how updates reach visitors (the new version on the
+  next visit), and how it fits client-side routing and Cloudflare's cache headers (`public/_headers`)
+
+- [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): the small code fixes. V1 card « 03 Les
+  problèmes » to a written page; V10 « glisser (bouton gauche / droit) » and the mouse in the in-frame help; V13 a 404
+  with links onward, English under `/en/`; V8 Pagefind's French strings; V9 `/tests/` out of search and the sitemap;
+  V19 « Footnotes », « Back to reference », « Selectionner »; V20 English number formats on `/en/model`; V21 the footer
+  selects' width; V23 the ☰ on the desktop home; V24–V27 (tour after a drag, Escape leaves diving, one name for the dive
+  mode, the no-download Google Earth link first, « 150° »); V28 two missing spaces; V29 settings intro and session code;
+  V35 card 02's target; V36 a scroll cue on wide tables; V38 ⌂ named on the tour's last card; V14 coordinates as a map
+  link on phones; V18 the dive log's total row and sticky header
+- [ ] #83 Usability audit: the viewer on phones (V2, V11, V12): the tour's card as a bottom sheet sized from the frame,
+  → always in the same place, AR and dive buttons hidden during the tour; « Visite guidée » as an icon button on narrow
+  frames; a touch version of the swim help. Check first on a real phone (emulation misreports the frame's height)
+- [ ] #84 Usability audit: content, for Christian. V3 a « Pour plonger » box (walls, floor, current, link to the model);
+  V4 a short history page (the canal, its dates, 1958); V5 a line above « Suivi » (what it tracks, what is online,
+  zones 21–25); V6 the placeholders; V7 Metashape named on its procedure pages; V15 wall top 35 or 40 ft; V16 a « voir
+  dans le modèle 3D » link per zone; V30 a caption under the viewer (underwater, violet = not yet scanned); V32 a
+  description per page; V33 labels (« Effet de banane », « Zones de l'écluse », « Nuage de points dense »); V34
+  About and Thanks last in the sidebar
+- [ ] #85 Usability audit: what agents can't settle. V31 wheel zoom from the start view on a desktop with a GPU; a
+  20-minute test with three to five people, in French and English (the eight tasks in the report's « A test with real
+  people »)
 
 ## Other
 
