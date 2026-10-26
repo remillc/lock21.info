@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#79**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#80**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -80,6 +80,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   navigation table and button list only take their own width (tables are `width: max-content`, custom.scss), so
   the rest of the middle third stays empty. Options: columns sized to their content (e.g. `auto auto 1fr`), the table
   at the column's full width, or the downloads moved under the navigation
+- [ ] #79 /modele: padding inside the navigation table (« Naviguer »): its cells touch the table's outline (the
+  gestures' rows have no padding on the left, `.gestures th, td { padding: 0.375rem 1.5rem 0.375rem 0 }`)
 
 ## Other
 
