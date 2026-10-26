@@ -14,7 +14,7 @@ the GoPro and the lights in front of the Seacraft Future 1000 scooter; Sylvain M
 <p class="fact"><span>Camera</span><b>GoPro Hero6 Black</b></p>
 </div>
 
-<figure class="figure-wide">
+<figure id="rig" class="figure-wide">
 
 ![The rig standing in a bucket before a dive: the GoPro in the middle, the lights and the foam floats on the frame](../../collecte/rig/assets/rig-scooter-2024-06-14.webp)
 
@@ -25,14 +25,14 @@ the GoPro and the lights in front of the Seacraft Future 1000 scooter; Sylvain M
 
 <div class="figure-grid">
 
-<figure>
+<figure id="modele-3d">
 
 ![The rig modelled in 3D around the scooter: a frame of aluminium extrusions, a ball mount at each corner for the lights, the GoPro in the middle](../../collecte/rig/assets/rig-modele-3d-sylvain-marcotte.webp)
 
 <figcaption>The rig on the scooter, modelled in 3D. Model: Sylvain Marcotte</figcaption>
 </figure>
 
-<figure>
+<figure id="detail-lampe">
 
 ![Detail of the 3D model: a light on its mount, the two thumbscrews that lock everything and the two guides](../../collecte/rig/assets/rig-detail-lampe-sylvain-marcotte.webp)
 
@@ -43,14 +43,14 @@ the GoPro and the lights in front of the Seacraft Future 1000 scooter; Sylvain M
 
 <div class="figure-grid">
 
-<figure>
+<figure id="assemblage">
 
 ![Sylvain Marcotte assembling the rig on the scooter, at night, on a blue tarp, the tools around](../../collecte/rig/assets/assemblage-rig-2024-06-08.webp)
 
 <figcaption><time datetime="2024-06-08">2024-06-08</time>Sylvain Marcotte assembling the rig on the scooter</figcaption>
 </figure>
 
-<figure>
+<figure id="rig-monte">
 
 ![Sylvain Marcotte beside the scooter standing in a bucket, the rig fitted, under a tent](../../collecte/rig/assets/assemblage-rig-debout-2024-06-08.webp)
 
@@ -66,7 +66,7 @@ the GoPro and the lights in front of the Seacraft Future 1000 scooter; Sylvain M
 The lights are placed to light a plane about 70 cm from the lens evenly: 60 cm between the two top lights, 40 cm
 between the two right-hand ones. The measurements are in [Camera rig dimensions](/en/problemes/dimensions-rig).
 
-<figure>
+<figure id="lampes">
 
 ![The lights, the foam floats and the GoPro in its waterproof housing, laid on a table](../../collecte/rig/assets/lampes-boitier-2024-05-16.webp)
 
@@ -76,7 +76,7 @@ between the two right-hand ones. The measurements are in [Camera rig dimensions]
 Four SecurityIng dive lights, one at each corner of the frame: 10 white LEDs (6000 K), 4 red and 4 blue, a 120° beam,
 four 18650 batteries. Intensity: 12,000 lumens, as claimed by the seller.
 
-<figure>
+<figure id="dimensions-lampe">
 
 ![A SecurityIng light in profile, with its dimensions: 123 mm long, a 65 mm head, a 53 mm body, a 105 × 50 mm handle](../../collecte/rig/assets/lampe-securitying-dimensions.webp)
 
@@ -95,7 +95,7 @@ that cover them in places.
 
 ## The gear of a dive
 
-<figure class="figure-wide">
+<figure id="materiel" class="figure-wide">
 
 ![The scooter and its rig on a picnic table, with the coded targets, the colour chart and the brushes](../../collecte/rig/assets/materiel-plongee-2024-06-14.webp)
 

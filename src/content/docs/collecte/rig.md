@@ -14,7 +14,7 @@ Le rig (support de caméras) est un assemblage de profilés d'aluminium à rainu
 <p class="fact"><span>Caméra</span><b>GoPro Hero6 Black</b></p>
 </div>
 
-<figure class="figure-wide">
+<figure id="rig" class="figure-wide">
 
 ![Le rig debout dans un seau, avant une plongée : la GoPro au centre, les lampes et les flotteurs en mousse sur le cadre](./rig/assets/rig-scooter-2024-06-14.webp)
 
@@ -25,14 +25,14 @@ Le rig (support de caméras) est un assemblage de profilés d'aluminium à rainu
 
 <div class="figure-grid">
 
-<figure>
+<figure id="modele-3d">
 
 ![Le rig modélisé en 3D autour du scooter : un cadre en profilés d'aluminium, une rotule à chaque coin pour les lampes, la GoPro au centre](./rig/assets/rig-modele-3d-sylvain-marcotte.webp)
 
 <figcaption>Le rig sur le scooter, modélisé en 3D. Modèle : Sylvain Marcotte</figcaption>
 </figure>
 
-<figure>
+<figure id="detail-lampe">
 
 ![Détail du modèle 3D : une lampe sur son support, les deux vis à main qui bloquent le tout et les deux guides](./rig/assets/rig-detail-lampe-sylvain-marcotte.webp)
 
@@ -43,14 +43,14 @@ Le rig (support de caméras) est un assemblage de profilés d'aluminium à rainu
 
 <div class="figure-grid">
 
-<figure>
+<figure id="assemblage">
 
 ![Sylvain Marcotte assemble le rig sur le scooter, de nuit, sur une bâche bleue, les outils autour](./rig/assets/assemblage-rig-2024-06-08.webp)
 
 <figcaption><time datetime="2024-06-08">2024-06-08</time>Sylvain Marcotte assemble le rig sur le scooter</figcaption>
 </figure>
 
-<figure>
+<figure id="rig-monte">
 
 ![Sylvain Marcotte devant le scooter debout dans un seau, le rig monté, sous une tente](./rig/assets/assemblage-rig-debout-2024-06-08.webp)
 
@@ -67,7 +67,7 @@ Les lampes sont placées pour éclairer également un plan à environ 70 cm de 
 du haut, 40 cm entre les deux lampes de droite. Les mesures sont dans [Dimensions du rig de
 caméra](/problemes/dimensions-rig).
 
-<figure>
+<figure id="lampes">
 
 ![Les lampes, les flotteurs en mousse et la GoPro dans son boîtier étanche, posés sur une table](./rig/assets/lampes-boitier-2024-05-16.webp)
 
@@ -77,7 +77,7 @@ caméra](/problemes/dimensions-rig).
 Quatre lampes de plongée SecurityIng, une à chaque coin du cadre : 10 DEL blanches (6000 K), 4 rouges et 4 bleues, un
 faisceau de 120°, quatre piles 18650. Intensité : 12 000 lumens annoncés par le vendeur.
 
-<figure>
+<figure id="dimensions-lampe">
 
 ![Une lampe SecurityIng de profil, avec ses dimensions : 123 mm de long, tête de 65 mm, corps de 53 mm, poignée de 105 × 50 mm](./rig/assets/lampe-securitying-dimensions.webp)
 
@@ -96,7 +96,7 @@ et les coquilles qui les recouvrent par endroits.
 
 ## Le matériel d'une plongée
 
-<figure class="figure-wide">
+<figure id="materiel" class="figure-wide">
 
 ![Le scooter et son rig sur une table de pique-nique, avec les cibles codées, la charte de couleurs et les brosses](./rig/assets/materiel-plongee-2024-06-14.webp)
 

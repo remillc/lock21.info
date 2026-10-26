@@ -2,7 +2,8 @@
 // near-black scrim, with its caption (FIG. NN, as in the page) and a counter; ‹ › (or the arrow keys, or a swipe on a
 // touch screen) go to the page's other figures; ✕, Escape or a click beside the image closes it. MD3 icon buttons and
 // motion (docs/system-design.md): the image grows from its thumbnail and shrinks back to it, the figures slide along
-// a shared axis. The open figure is in the address (#fig-03, the page's FIG. 03): a link with it opens
+// a shared axis. The widest of the image's sizes is shown, and a click zooms to its own pixels when it has more than
+// the screen shows. The open figure is in the address (#fig-03, the page's FIG. 03): a link with it opens
 // the lightbox on that figure. Native Custom Element (see docs/guidelines.md), added once to the page.
 const FIGURES = '.sl-markdown-content figure img'
 
@@ -50,17 +51,83 @@ class ImageZoom extends HTMLElement {
     const fill = (i) => {
       index = (i + images.length) % images.length
       const img = images[index]
-      big.src = img.currentSrc || img.src
+      unzoom()
+      big.src = widest(img)
       big.alt = img.alt
       // The page's caption, after its figure number (the same FIG. NN as the CSS counter: figures in document order)
       const own = img.closest('figure')?.querySelector('figcaption')
       caption.innerHTML = `<span class="lightbox-fig">FIG. ${String(index + 1).padStart(2, '0')}</span>${own ? own.innerHTML : ''}`
       count.textContent = images.length > 1 ? `${index + 1} / ${images.length}` : ''
       dialog.classList.toggle('single', images.length < 2)
-      // The figure in the address, replacing the last one (no new history entry); the router's state kept
-      history.replaceState(history.state, '', `${location.pathname}${location.search}#fig-${String(index + 1).padStart(2, '0')}`)
+      // The figure in the address: its id if it has one (<figure id="lampes">), else #fig-03; replacing the last one
+      // (no new history entry), the router's state kept
+      const id = img.closest('figure')?.id || `fig-${String(index + 1).padStart(2, '0')}`
+      history.replaceState(history.state, '', `${location.pathname}${location.search}#${id}`)
     }
-    const ready = () => big.decode().catch(() => {})
+    const ready = () => big.decode().catch(() => {}).then(() => dialog.classList.toggle('zoomable', zoomable()))
+    /** The widest of the image's sizes (srcset, Astro's responsive images): the lightbox shows as many pixels as it has */
+    const widest = (img) => {
+      let best = img.currentSrc || img.src
+      let bestWidth = 0
+      for (const candidate of (img.getAttribute('srcset') ?? '').split(',')) {
+        const [url, size] = candidate.trim().split(/\s+/)
+        const width = Number.parseInt(size ?? '', 10)
+        if (url && width > bestWidth) [best, bestWidth] = [url, width]
+      }
+      return best
+    }
+
+    // Zoom: when the image has more pixels than the screen shows, a click shows it at its own size (1:1) around the
+    // point clicked, the figure scrolls (a drag with the mouse, a finger on a touch screen), a click without dragging
+    // shows it whole again. Never larger than its own pixels
+    const zoomable = () => big.naturalWidth > big.clientWidth * 1.15 || big.naturalHeight > big.clientHeight * 1.15
+    // The change of size animated on the spot (MD3: an element that stays on screen and changes size, the emphasized
+    // curve, 400 ms): the image starts from where and how big it was, and grows or shrinks to its new place
+    const EMPHASIZED = 'cubic-bezier(0.2, 0, 0, 1)'
+    const resize = (before) => {
+      if (reduce.matches) return
+      const after = big.getBoundingClientRect()
+      if (!after.width) return
+      const from = `translate(${before.left - after.left}px, ${before.top - after.top}px) scale(${before.width / after.width})`
+      big.animate([{ transform: from, transformOrigin: '0 0' }, { transform: 'none', transformOrigin: '0 0' }], { duration: 400, easing: EMPHASIZED })
+    }
+    /** The whole image again; animate: true when the visitor asks for it (a click), at once otherwise */
+    const unzoom = (animate = false) => {
+      if (!dialog.classList.contains('zoomed')) return
+      const before = big.getBoundingClientRect()
+      dialog.classList.remove('zoomed')
+      if (animate) resize(before)
+    }
+    const zoomAt = (event) => {
+      const before = big.getBoundingClientRect()
+      const fx = (event.clientX - before.left) / before.width
+      const fy = (event.clientY - before.top) / before.height
+      dialog.classList.add('zoomed')
+      figure.scrollLeft = fx * big.naturalWidth - figure.clientWidth / 2
+      figure.scrollTop = fy * big.naturalHeight - figure.clientHeight / 2
+      resize(before)
+    }
+    let drag = null
+    big.addEventListener('pointerdown', (event) => {
+      drag = { x: event.clientX, y: event.clientY, left: figure.scrollLeft, top: figure.scrollTop, moved: false, mouse: event.pointerType === 'mouse' }
+    })
+    big.addEventListener('pointermove', (event) => {
+      if (!drag || !dialog.classList.contains('zoomed')) return
+      const dx = event.clientX - drag.x
+      const dy = event.clientY - drag.y
+      if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true
+      if (drag.mouse) {
+        figure.scrollLeft = drag.left - dx
+        figure.scrollTop = drag.top - dy
+      }
+    })
+    big.addEventListener('click', (event) => {
+      const moved = drag?.moved
+      drag = null
+      if (moved) return
+      if (dialog.classList.contains('zoomed')) unzoom(true)
+      else if (dialog.classList.contains('zoomable')) zoomAt(event)
+    })
     /** The transform that puts the large image over its thumbnail in the page (MD3 container transform) */
     const overThumbnail = () => {
       const a = images[index]?.getBoundingClientRect()
@@ -94,6 +161,7 @@ class ImageZoom extends HTMLElement {
     }
     const close = async () => {
       if (!dialog.open || busy) return
+      unzoom()
       if (!reduce.matches) {
         busy = true
         const timing = { duration: 200, easing: ACCELERATE, fill: 'forwards' }
@@ -104,6 +172,7 @@ class ImageZoom extends HTMLElement {
         ]
         await Promise.all(motions.map((motion) => motion.finished.catch(() => {})))
         dialog.close()
+        unzoom()
         motions.forEach((motion) => motion.cancel())
         busy = false
       } else dialog.close()
@@ -125,12 +194,20 @@ class ImageZoom extends HTMLElement {
     }
     // Closed: the figure's hash leaves the address
     dialog.addEventListener('close', () => {
-      if (/^#fig-\d+$/.test(location.hash)) history.replaceState(history.state, '', location.pathname + location.search)
+      if (figureAt(location.hash) >= 0) history.replaceState(history.state, '', location.pathname + location.search)
     })
-    // A page opened with #fig-03 (a bookmark, a shared link): the lightbox on that figure
+    /** The figure a hash names, as an index among the page's figure images (-1: none): #fig-03, or a figure's id */
+    const figureAt = (hash) => {
+      const all = [...document.querySelectorAll(FIGURES)]
+      const number = /^#fig-(\d+)$/.exec(hash)
+      if (number) return Number(number[1]) <= all.length ? Number(number[1]) - 1 : -1
+      if (!/^#[\w-]+$/.test(hash)) return -1
+      return all.findIndex((img) => img.closest('figure')?.id === hash.slice(1))
+    }
+    // A page opened with #fig-03 or a figure's id (a bookmark, a shared link): the lightbox on that figure
     const fromHash = () => {
-      const match = /^#fig-(\d+)$/.exec(location.hash)
-      if (match && !dialog.open) open(Number(match[1]) - 1)
+      const i = figureAt(location.hash)
+      if (i >= 0 && !dialog.open) open(i)
     }
     if (document.readyState === 'complete') fromHash()
     else window.addEventListener('load', fromHash, { once: true })
@@ -167,7 +244,7 @@ class ImageZoom extends HTMLElement {
       startX = event.pointerType === 'touch' ? event.clientX : null
     })
     dialog.addEventListener('pointerup', (event) => {
-      if (startX === null || images.length < 2) return
+      if (startX === null || images.length < 2 || dialog.classList.contains('zoomed')) return
       const dx = event.clientX - startX
       startX = null
       if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1)
