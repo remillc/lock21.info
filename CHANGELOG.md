@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- « Suivi du travail par zone »: a line at the top, the table is a working tool that may not be up to date, with a link
+  to the 3D model for what is online (usability audit V5).
 - « À propos de l'écluse 21 »: Nick Baets' plan of the lock, the bilingual version displayed at the divers' pavilion on
   Macdonell Island (photo from David Gibbins' « Diving Lock 21 », 2016; the drawing from the SOS field guide n° 2, 1989,
   `docs/sos-files/Lock 21 - No. 2/img383.jpg`), wide, after the SOS paragraph.
