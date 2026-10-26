@@ -1,5 +1,8 @@
-// Cloudflare Worker in front of the static site (wrangler.jsonc), run only for /en, /en/ and /api/* (run_worker_first);
-// every other address is a static file.
+// Cloudflare Worker in front of the static site (wrangler.jsonc), run only for /en, /en/, /api/* and the addresses that
+// end with a slash (run_worker_first); every other address is a static file.
+// - <path>/: a permanent redirect (301) to <path>, the page's address (the static assets' own redirect, html_handling:
+//   drop-trailing-slash, is a 307, which search engines take as temporary: SEO audit S12, docs/audits/seo-2026-10-26.md).
+//   The two home pages keep their slash: / and /en/.
 // - /en/: the English home page is a collection, at /en/ like the French one at /. Every other page has no final slash,
 //   which the static assets enforce (html_handling: drop-trailing-slash) and would apply to /en/ too.
 // - /api/log: the 3D viewer's telemetry (viewer/src/telemetry.js), written to Workers Logs (observability in
@@ -13,6 +16,10 @@ export default {
     const url = new URL(request.url)
     if (url.pathname === '/api/log') return log(request, url)
     if (url.pathname.startsWith('/api/')) return new Response('Not found', { status: 404 })
+    if (url.pathname.endsWith('/') && url.pathname !== '/' && url.pathname !== '/en/') {
+      url.pathname = url.pathname.replace(/\/+$/, '') || '/'
+      return Response.redirect(url.href, 301)
+    }
     if (url.pathname === '/en') {
       url.pathname = '/en/'
       return Response.redirect(url.href, 301)
