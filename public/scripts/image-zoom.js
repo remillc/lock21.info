@@ -77,16 +77,19 @@ class ImageZoom extends HTMLElement {
       fill(i)
       busy = true
       big.style.visibility = 'hidden'
+      const timing = { duration: 400, easing: DECELERATE }
       dialog.showModal()
+      // The scrim fades in from the first frame (started before the image is decoded: otherwise a frame of full black,
+      // a flash), the caption and the buttons a little after
+      if (!reduce.matches) {
+        // A steady fade for the scrim (MD3's decelerate curve rises too fast at first: 40 % black in one frame)
+        dialog.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, easing: 'linear', pseudoElement: '::backdrop' })
+        for (const el of [caption, ...chrome()]) el.animate([{ opacity: 0 }, { opacity: 1 }], { ...timing, delay: 100, fill: 'backwards' })
+      }
       dialog.querySelector('.lightbox-close').focus({ preventScroll: true })
       await ready()
       big.style.visibility = ''
-      if (!reduce.matches) {
-        const timing = { duration: 400, easing: DECELERATE }
-        big.animate([{ transform: overThumbnail() }, { transform: 'none' }], timing)
-        dialog.animate([{ opacity: 0 }, { opacity: 1 }], { ...timing, pseudoElement: '::backdrop' })
-        for (const el of [caption, ...chrome()]) el.animate([{ opacity: 0 }, { opacity: 1 }], { ...timing, delay: 100, fill: 'backwards' })
-      }
+      if (!reduce.matches) big.animate([{ transform: overThumbnail(), opacity: 0.6 }, { transform: 'none', opacity: 1 }], timing)
       busy = false
     }
     const close = async () => {

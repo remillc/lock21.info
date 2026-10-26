@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Lightbox: no more black flash as it opens (the scrim fades in steadily from the first frame).
 - The lightbox (a figure opened on click): the image as large as the screen allows over a near-black scrim, never
   larger than its own pixels, its caption with its figure number, a counter, ✕ to close and ‹ › (or the arrow keys,
   or a swipe) to the page's other figures; the open figure in the address (`#fig-03`), so a link opens it.
