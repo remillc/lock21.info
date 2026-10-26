@@ -91,6 +91,11 @@ The 3D viewer uses the same fonts (`viewer/src/main.js` imports them) and the da
 
 - 4 px grid (8, 12, 16, 24, 32, 48, 64).
 - Touch targets at least 48 px (links in the header, buttons, cards).
+- **Content never touches an edge** (Christian, 2026-10-26): a box drawn on the page (a border, or a background of its
+  own: tables, cards, chips, panels, bars, buttons) keeps at least **8 px** between its edge (inside the border) and
+  its content, text or icon, at the sides, and **4 px** above and below; an inline box (a key cap, inline code) at
+  least **3 px** at the sides. A table's cells carry it (the first and last columns too). Checked on every page, both
+  themes, desktop and phone, by `node tools/design-check/inner-padding.mjs` (the dev server running).
 - **Pointer cursor on every action widget** (Christian, 2026-10-22): buttons, links, selects, toggles, sliders, cards,
   tabs, everything that acts on a click shows `cursor: pointer` (the hand); text fields keep the text cursor, disabled
   controls `not-allowed`. On the site and in the 3D viewer alike.

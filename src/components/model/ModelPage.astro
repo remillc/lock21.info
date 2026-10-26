@@ -202,7 +202,7 @@ const updated = zones.updated
               {m.model_glbName({}, o)} <span>GLB · {site.downloads.glbSize}</span>
             </a>
             <p>
-              {m.model_glbText({ n: site.downloads.glbTriangles }, o)}
+              {m.model_glbText({ n: site.downloads.glbTriangles }, o)} {m.model_glbFresh({}, o)}
             </p>
             <!-- Google Earth Web reads no position in a GLB (Christian, 2026-10-26): it is placed by hand. Its panel's labels as
                  Christian saw them, in each language; its numbers with the language's decimal mark (French: a comma).
@@ -457,6 +457,10 @@ const updated = zones.updated
       font-weight: 500;
       letter-spacing: 0.03rem;
       text-transform: uppercase;
+    }
+    /* The first column away from the table's outline, as every column of the site's tables (docs/system-design.md) */
+    .gestures tr > :first-child {
+      padding-left: 1rem;
     }
     .gestures tbody th {
       font-weight: 600;
@@ -730,9 +734,10 @@ const updated = zones.updated
       margin: 0;
       text-align: center;
     }
+    /* The QR code in its white frame, 8 px from the frame's edge (docs/system-design.md: content never touches an edge) */
     .qr {
-      width: 112px;
-      padding: 6px;
+      width: 116px;
+      padding: 8px;
       border: 2px solid var(--md-sys-color-outline);
       border-radius: var(--md-sys-shape-medium);
       background: var(--l21-qr-light);
