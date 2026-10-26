@@ -59,7 +59,9 @@ conçu.
 
 </div>
 
-*(à compléter : les matériaux, les fixations, comment le rig s'attache au scooter.)*
+Le rig est un assemblage de profilés d'aluminium à rainure en T de 20 × 20 mm (série 2020).
+
+*(à compléter : les fixations, comment le rig s'attache au scooter.)*
 
 ## Les lampes
 
