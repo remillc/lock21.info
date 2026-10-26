@@ -7,6 +7,14 @@ Lock 21 lies under 60 feet (18.3 m) of water in the St. Lawrence, near Long Saul
 at 40 feet (12 m). The current is strong: in the lock I [measured](/en/problemes/fort-courant-canal) about 35 feet
 per minute (10.7 m/min) in June 2024; it is stronger over the spillway.
 
+<div class="facts">
+<p class="fact"><span>Depth</span><b>60 ft (18.3 m)</b></p>
+<p class="fact"><span>Tops of the piers</span><b>40 ft (12 m)</b></p>
+<p class="fact"><span>Chamber</span><b>270 × 45 ft</b></p>
+<p class="fact"><span>Rebuilt</span><b>1883–1886</b></p>
+<p class="fact"><span>Flooded</span><b>July 1, 1958</b></p>
+</div>
+
 Lock 21 was the last lock of the Cornwall Canal, at its upstream head, at the village of Dickinson's Landing. The canal,
 opened in the early 1840s, bypassed the Long Sault rapids from Cornwall to Dickinson's Landing, over about 11 miles.
 

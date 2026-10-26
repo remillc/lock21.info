@@ -10,6 +10,12 @@ Pour que chaque modèle ait sa taille réelle et que les zones s'alignent entre 
 cibles posées au fond, la distance entre elles mesurée, et les deux cibles filmées avec le reste de la zone. La
 distance entre deux cibles forme une échelle.
 
+<div class="facts">
+<p class="fact"><span>Cibles</span><b>7,5 et 15 cm</b></p>
+<p class="fact"><span>Type</span><b>codées, Metashape</b></p>
+<p class="fact"><span>Par paires</span><b>cibles 1 et 2</b></p>
+</div>
+
 ## Les cibles
 
 Des cibles de 7,5 cm et de 15 cm, numérotées par paires (cibles 1 et 2).
@@ -18,7 +24,7 @@ Des cibles de 7,5 cm et de 15 cm, numérotées par paires (cibles 1 et 2).
 
 ![Deux cibles codées posées au plancher de bois de la zone 5, une de 7,5 cm et une de 15 cm](./mise-echelle/assets/cibles-7-5-cm-15-cm-GX046201.0366.webp)
 
-<figcaption>Les deux types de cibles au plancher de la zone 5, le 2 août 2024 : une de 7,5 cm (en haut) et une de
+<figcaption><time datetime="2024-08-02">2024-08-02</time>Les deux types de cibles au plancher de la zone 5 : une de 7,5 cm (en haut) et une de
 15 cm (en bas à gauche)</figcaption>
 </figure>
 

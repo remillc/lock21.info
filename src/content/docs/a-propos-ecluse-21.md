@@ -8,6 +8,14 @@ piliers est à 40 pieds (12 m). Le courant y est soutenu : dans le canal de l
 [mesuré](/problemes/fort-courant-canal) à environ 35 pieds par minute (10,7 m/min) en juin 2024 ; il est plus fort
 au-dessus du déversoir.
 
+<div class="facts">
+<p class="fact"><span>Profondeur</span><b>60 pi (18,3 m)</b></p>
+<p class="fact"><span>Dessus des piliers</span><b>40 pi (12 m)</b></p>
+<p class="fact"><span>Sas</span><b>270 × 45 pi</b></p>
+<p class="fact"><span>Reconstruite</span><b>1883–1886</b></p>
+<p class="fact"><span>Noyée</span><b>1er juillet 1958</b></p>
+</div>
+
 L'écluse 21 était la dernière écluse du canal de Cornwall, à sa tête amont, au village de Dickinson's Landing. Le canal,
 ouvert au début des années 1840, contournait les rapides du Long Sault, de Cornwall à Dickinson's Landing, sur environ
 11 milles.
