@@ -1,0 +1,2 @@
+Adapted from https://github.com/blader/humanizer (SKILL.md 3.1.0), commit 8c307f367c91bd974002f10f2be2965d642c13df (2026-10-16), MIT licence (LICENSE.txt), itself based on Wikipedia's "Signs of AI writing" (WikiProject AI Cleanup).
+Cherry-picked (2026-10-26) after reading every file: the structural patterns kept, with French examples and this project's conventions (French typography, the design brief's arrows, short texts); the Wikipedia-biography and code-review patterns left out. Not a copy: update by hand.
