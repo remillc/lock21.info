@@ -26,5 +26,7 @@ export const site = {
     glb: 'https://tiles.lock21.info/downloads/lock-21.glb',
     glbSize: '122 Mo',
     glbTriangles: '2 millions',
+    // The model already placed, shared from Google Earth Web (Christian, 2026-10-26)
+    googleEarthWeb: 'https://earth.google.com/earth/d/1_xcmUIJH5utm0h7MogaaU-aLEXdErmpp?usp=sharing',
   },
 }

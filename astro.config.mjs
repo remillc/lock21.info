@@ -1,6 +1,7 @@
 // Site lock21.info: Astro + Starlight (see docs/guidelines.md). French is the root locale; the structure is ready for
 // English (/en/), which ships when pages are translated. The 3D viewer is a separate app (viewer/), built into
 // public/modele/viewer/ and served as is at /modele/viewer (in development, forwarded to the viewer's dev server).
+import { paraglideVitePlugin } from '@inlang/paraglide-js'
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 import icon from 'astro-icon'
@@ -30,6 +31,16 @@ export default defineConfig({
     server: { proxy: { '/modele/viewer': viewerDev } },
     preview: { proxy: {} },
     build: { cssTarget: ['chrome100', 'safari15', 'firefox100', 'edge100'] },
+    // The components' texts: Paraglide JS messages (messages/site.inlang), compiled into src/paraglide (gitignored).
+    // Each call names the page's language (m.home_lead({}, { locale })): rendered at build time, no runtime shipped
+    plugins: [
+      paraglideVitePlugin({
+        project: './messages/site.inlang',
+        outdir: './src/paraglide',
+        strategy: ['globalVariable', 'baseLocale'],
+        emitReadme: false,
+      }),
+    ],
   },
   integrations: [
     // Icons by name (src/components: <Icon name="material-symbols:…-rounded" />), from Iconify's Material Symbols set

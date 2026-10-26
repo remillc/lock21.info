@@ -6,12 +6,16 @@
 import Default from '@astrojs/starlight/components/Footer.astro'
 import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro'
 import ThemeSelect from '@astrojs/starlight/components/ThemeSelect.astro'
+import { pageLang } from '../lib/i18n'
+import { m } from '../paraglide/messages.js'
 
-const english = Astro.locals.starlightRoute.lang?.startsWith('en')
-const privacy = english ? '/en/confidentialite' : '/confidentialite'
+const lang = pageLang(Astro.locals)
+// Every message in the page's language (messages/site/)
+const o = { locale: lang }
+const privacy = lang === 'en' ? '/en/confidentialite' : '/confidentialite'
 // From the first dive (2024) to the year of the build
 const years = `2024–${new Date().getFullYear()}`
-const licence = `https://creativecommons.org/licenses/by/4.0/deed.${english ? 'en' : 'fr'}`
+const licence = `https://creativecommons.org/licenses/by/4.0/deed.${lang}`
 ---
 
 <div class="page-end">
@@ -23,13 +27,13 @@ const licence = `https://creativecommons.org/licenses/by/4.0/deed.${english ? 'e
   for (const link of document.querySelectorAll('.pagination-links a')) link.dataset.astroPrefetch = 'viewport'
 </script>
 <div class="site-footer">
-  <span translate="no">{english ? 'LOCK/21' : 'ÉCLUSE/21'} · {english ? 'field notebook' : 'carnet de terrain'}</span>
+  <span translate="no">{m.site_wordmark({}, o)} · {m.footer_notebook({}, o)}</span>
   <div class="preferences print:hidden">
     <ThemeSelect />
     <LanguageSelect />
   </div>
-  <span>© {years} Christian Rémillard · {english ? 'License' : 'Licence'} <a href={licence} rel="license">CC BY 4.0</a>
-    · <a href={privacy}>{english ? 'Privacy' : 'Confidentialité'}</a></span>
+  <span>© {years} Christian Rémillard · {m.footer_licence({}, o)} <a href={licence} rel="license">CC BY 4.0</a>
+    · <a href={privacy}>{m.footer_privacy({}, o)}</a></span>
 </div>
 </div>
 

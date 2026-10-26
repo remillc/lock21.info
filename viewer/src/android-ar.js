@@ -10,7 +10,7 @@
 // Telemetry: 'ar-status' messages (session-started, model-loaded, placed, ended, failed).
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import { t } from './i18n.js'
+import { m } from './i18n.js'
 import { icon } from './icons.js'
 
 /** Whether Chrome can open a WebXR AR session here (checked once, before any tap) */
@@ -97,13 +97,13 @@ function createOverlay(title, scale) {
     <div class="xr-frame">
       <div class="xr-overlay-head">
         <span class="xr-overlay-title"></span>
-        <button type="button" class="xr-overlay-close" aria-label="${t('arClose')}">${icon('close-rounded')}</button>
+        <button type="button" class="xr-overlay-close" aria-label="${m.arClose()}">${icon('close-rounded')}</button>
       </div>
       <div class="xr-overlay-foot">
-        <p class="xr-overlay-status" role="status">${t('arOpening')}</p>
+        <p class="xr-overlay-status" role="status">${m.arOpening()}</p>
         <div class="xr-overlay-scale">
-          <span>${t('arSize')}</span>
-          <div class="xr-slider" role="slider" tabindex="0" aria-label="${t('arSizeLabel')}" aria-valuemin="0" aria-valuemax="100">
+          <span>${m.arSize()}</span>
+          <div class="xr-slider" role="slider" tabindex="0" aria-label="${m.arSizeLabel()}" aria-valuemin="0" aria-valuemax="100">
             <div class="xr-slider-track"><div class="xr-slider-fill"></div><div class="xr-slider-thumb"></div></div>
           </div>
           <output></output>
@@ -232,7 +232,7 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
 
   // The model, downloaded while the camera is already on
   let model = null
-  say(t('arLoading'))
+  say(m.arLoading())
   // The model: downloaded in the background since the 3D view finished loading (preloadArModel, main.js), or now if
   // not yet; the download in progress is shown, then the preparation (parsing, decoding the textures). Timing logged.
   const started = performance.now()
@@ -241,8 +241,8 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
   const progress = () => {
     const mb = (download.loaded / 1e6).toFixed(1)
     say(download.total
-      ? t('arLoadingPercent', { n: Math.round((download.loaded / download.total) * 100), mb })
-      : t('arLoadingMb', { mb }))
+      ? m.arLoadingPercent({ n: Math.round((download.loaded / download.total) * 100), mb })
+      : m.arLoadingMb({ mb }))
   }
   if (!wasReady) {
     progress()
@@ -252,7 +252,7 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
     (buffer) => {
       download.listeners.delete(progress)
       const downloaded = performance.now()
-      say(t('arPreparing'))
+      say(m.arPreparing())
       new GLTFLoader().parse(buffer, '', (gltf) => {
         model = gltf.scene
         model.traverse((child) => {
@@ -280,19 +280,19 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
           net: connection?.effectiveType ?? null, downlinkMbps: connection?.downlink ?? null,
         })
         say(wasReady
-          ? t('arReady', { prepare: prepareS.toFixed(1) })
-          : t('arLoaded', { wait: downloadS.toFixed(1), prepare: prepareS.toFixed(1) }))
+          ? m.arReady({ prepare: prepareS.toFixed(1) })
+          : m.arLoaded({ wait: downloadS.toFixed(1), prepare: prepareS.toFixed(1) }))
         setTimeout(() => {
-          if (!placed) say(t('arPoint'))
+          if (!placed) say(m.arPoint())
         }, 3000)
       }, (error) => {
-        say(t('arPrepareFailed'))
+        say(m.arPrepareFailed())
         log('ar-status', { status: 'failed', step: 'parse', msg: String(error?.message ?? error).slice(0, 300) })
       })
     },
     (error) => {
       download.listeners.delete(progress)
-      say(t('arLoadFailed'))
+      say(m.arLoadFailed())
       log('ar-status', { status: 'failed', step: 'model', msg: String(error?.message ?? error).slice(0, 300) })
     },
   )
@@ -315,7 +315,7 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
     model.visible = true
     if (!placed) {
       placed = true
-      say(t('arMove'))
+      say(m.arMove())
       log('ar-status', { status: 'placed' })
     }
   })

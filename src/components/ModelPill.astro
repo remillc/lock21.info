@@ -5,16 +5,16 @@ import { Icon } from 'astro-icon/components'
 // screen (Astro prefetch, "viewport").
 import { site } from '../data/site'
 import { localPath, pageLang } from '../lib/i18n'
+import { m } from '../paraglide/messages.js'
 
 const lang = pageLang(Astro.locals)
-const english = lang === 'en'
 ---
 
 <a href={localPath(site.viewer, lang)} class="model-pill" data-astro-prefetch="viewport">
   <!-- The navigation's « Modèle 3D » cube (custom.scss), in the pill's text colour: Material Symbols Rounded by name
        (astro-icon, astro.config.mjs) -->
   <Icon name="material-symbols:deployed-code-outline-rounded" aria-hidden="true" width="18" height="18" />
-  {english ? '3D model' : 'Modèle 3D'}
+  {m.pill_model({}, { locale: lang })}
 </a>
 
 <style>

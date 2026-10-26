@@ -5,15 +5,17 @@ import { Image } from 'astro:assets'
 import logo from '../assets/logo-dark.svg'
 import { site } from '../data/site'
 import DevBreakpoints from './DevBreakpoints.astro'
+import { pageLang } from '../lib/i18n'
+import { m } from '../paraglide/messages.js'
 
-const { siteTitleHref, lang } = Astro.locals.starlightRoute
-const english = lang?.startsWith('en')
+const { siteTitleHref } = Astro.locals.starlightRoute
+const lang = pageLang(Astro.locals)
 ---
 
 <a href={siteTitleHref} class="site-title">
   <Image src={logo} alt="" width={36} height={36} class="logo" />
-  <span class="wordmark" translate="no">{english ? 'LOCK/21' : 'ÉCLUSE/21'}</span>
-  <span class="coordinates">{english ? site.coordinates.label.en : site.coordinates.label.fr}</span>
+  <span class="wordmark" translate="no">{m.site_wordmark({}, { locale: lang })}</span>
+  <span class="coordinates">{site.coordinates.label[lang]}</span>
 </a>
 {
   /* Dev server only. Mounted in the header: in the page content, the header (a higher layer) would cover it */

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import Icons from 'unplugin-icons/vite'
+import { paraglideVitePlugin } from '@inlang/paraglide-js'
 
 // Dev and preview servers: the viewer's address is /modele/viewer (no final slash), as on the hosting. Vite only
 // serves its index.html at the base (/modele/viewer/): the address is passed on as that, without a redirect. The
@@ -28,5 +29,16 @@ export default defineConfig({
   // The stylesheet's native CSS nesting flattened for browsers before 2023 (an old iPad would drop the nested rules)
   build: { cssTarget: ['chrome100', 'safari15', 'firefox100', 'edge100'] },
   // Icons by name (src/icons.js: ~icons/material-symbols/…?raw), compiled into SVG strings, only those imported
-  plugins: [viewerAddress, Icons({ compiler: 'raw' })],
+  // Texts: Paraglide JS messages (messages/viewer.inlang), compiled into src/paraglide (src/i18n.js). The language is the
+  // viewer's own (i18n.js sets it), so only the plain strategies; one module per message, only those used bundled
+  plugins: [
+    viewerAddress,
+    Icons({ compiler: 'raw' }),
+    paraglideVitePlugin({
+      project: '../messages/viewer.inlang',
+      outdir: './src/paraglide',
+      strategy: ['globalVariable', 'baseLocale'],
+      emitReadme: false,
+    }),
+  ],
 })
