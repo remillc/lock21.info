@@ -68,8 +68,6 @@ The rig is an assembly of 20 × 20 mm T-slot aluminium extrusions (the 2020 seri
 The lights are placed to light a plane about 70 cm from the lens evenly: 60 cm between the two top lights, 40 cm
 between the two right-hand ones. The measurements are in [Camera rig dimensions](/en/problemes/dimensions-rig).
 
-Each light sits on a RAM Mounts RAM B-238 ball base (a one-inch ball), fixed to the frame.
-
 <figure>
 
 ![The lights, the foam floats and the GoPro in its waterproof housing, laid on a table](../../collecte/rig/assets/lampes-boitier-2024-05-16.webp)
