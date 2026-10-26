@@ -1,5 +1,6 @@
 ---
 title: Le fort courant dans le canal
+description: "Le courant dans le canal de l'écluse 21, mesuré en dérivant entre ses deux portes : environ 35 pieds par minute (10,7 m/min) le 8 juin 2024."
 ---
 Tester la collecte de données en conditions de fort courant avec la caméra montée sur le scooter
 

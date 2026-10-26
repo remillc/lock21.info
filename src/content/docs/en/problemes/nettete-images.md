@@ -1,5 +1,6 @@
 ---
 title: Image sharpness
+description: "Why the first images filmed on the move were blurred: the camera, the water, the lighting and the settings, shutter speed and ISO among them."
 ---
 The first footage shot with the GoPro Hero 6 Black camera shows that images captured while moving are blurry and lack detail.
 

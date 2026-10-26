@@ -1,5 +1,6 @@
 ---
 title: Gear used
+description: "The GoPro Hero6 Black and its settings for filming Lock 21 underwater (4K 4:3 video, Protune, 6500 K white balance), and the processing software."
 sidebar:
   order: 2
 ---

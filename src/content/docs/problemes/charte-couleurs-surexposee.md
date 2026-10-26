@@ -1,5 +1,6 @@
 ---
 title: La charte de couleurs est surexposée
+description: "Filmée à 60 cm, la charte de couleurs sortait surexposée, le fond clair faussant l'exposition : la solution, la photographier sous-exposée d'un stop."
 ---
 Lors de la prise de vue de la charte de couleurs, à une distance équivalente à celle des collectes des données, soit environ 60cm, la charte occupe un très petit espace dans le champ de la lentille. Comme la luminosité du sol autour de la charte est de beaucoup moindre que la charte elle-même, la caméra surexpose la charte.
 

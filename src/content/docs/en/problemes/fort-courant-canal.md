@@ -1,5 +1,6 @@
 ---
 title: The strong current in the canal
+description: "The current in Lock 21's canal, measured by drifting between its two gates: about 35 feet per minute (10.7 m/min) on June 8, 2024."
 ---
 Test data collection in a strong current with the camera mounted on the scooter
 

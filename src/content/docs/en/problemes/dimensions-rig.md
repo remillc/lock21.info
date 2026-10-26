@@ -1,5 +1,6 @@
 ---
 title: Camera rig dimensions
+description: "The GoPro's field of view measured on the ground at 70 cm and its lens's angles of view, to size the rig and place its lights."
 ---
 ## Lens field of view
 

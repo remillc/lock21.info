@@ -1,5 +1,6 @@
 ---
 title: Matériel utilisé
+description: "La GoPro Hero6 Black et ses réglages pour filmer l'écluse 21 sous l'eau (vidéo 4K 4:3, Protune, blancs à 6500 K), et les logiciels du traitement."
 sidebar:
   order: 2
 ---

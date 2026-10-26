@@ -1,5 +1,6 @@
 ---
 title: Effet de banane
+description: "Pourquoi un plancher plat de 100 pieds sortait courbé en banane de Metashape : la lentille grand angle de la GoPro, et les pistes pour corriger."
 ---
 Le test effectué sur une surface plane de 100 pieds de long montre que le modèle résultant de l'alignement des caméras dans le logiciel de photogrammétrie est déformé. Au lieu d'obtenir une surface plate, celle-ci est courbée en forme de banane.
 

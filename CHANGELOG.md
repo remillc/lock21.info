@@ -5,6 +5,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Page descriptions (SEO audit S1, TODO #90) for the nine pages that answer a question: the dive log, the gear, the
+  zones, and the problems encountered (current, banana effect, sharpness, colour chart, colour calibration, rig
+  dimensions), in French and English; the processing steps and the tests still have none, on purpose.
 - 3D model: the context (chart terrain, fillers, north and south walls) republished from the `.blend` of
   2026-10-26, its textures baked again (online on R2, `context/2026-10-26-1606`).
 
