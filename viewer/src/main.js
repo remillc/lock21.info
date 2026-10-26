@@ -331,7 +331,17 @@ controls.enableDamping = true
 // across the view's height
 controls.rotateSpeed = 0.5
 // The wheel (Christian, 2026-10-25: far too strong): 0.15 of OrbitControls' zoom per notch (0.075 on 2026-10-25, then doubled on 2026-10-26)
-controls.zoomSpeed = 0.15
+const WHEEL_ZOOM = 0.15
+// Pinching keeps OrbitControls' own speed (Christian, 2026-10-26: on a phone, it had become too weak: the wheel's
+// setting slowed it too, both being zoomSpeed): set for each gesture, as it starts
+const PINCH_ZOOM = 1
+controls.zoomSpeed = WHEEL_ZOOM
+renderer.domElement.addEventListener('pointerdown', (event) => {
+  controls.zoomSpeed = event.pointerType === 'touch' ? PINCH_ZOOM : WHEEL_ZOOM
+}, { capture: true })
+renderer.domElement.addEventListener('wheel', () => {
+  controls.zoomSpeed = WHEEL_ZOOM
+}, { capture: true, passive: true })
 // Looking up (Christian, 2026-10-24: the standard view couldn't): the camera may go below the point it turns around,
 // up to ORBIT_UP from straight above it; the soft floor (keepAboveFloor) keeps it above the model. It used to stay
 // above that point's height, so as never to look from under the floor; then (2026-10-24) in front of any surface
