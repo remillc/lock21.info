@@ -394,6 +394,20 @@ const updated = zones.updated
       overflow: hidden;
       background: var(--l21-panel);
     }
+    /* Its entrance as the page loads (Christian, 2026-10-26): from a little lower up to its place, growing from 92 % and
+       fading in, all at once; MD3 entering motion (medium4, 400 ms, emphasized decelerate). Reduced motion: none */
+    @media (prefers-reduced-motion: no-preference) {
+      .frame {
+        animation: l21-frame-enter var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-emphasized-decelerate)
+          both;
+      }
+    }
+    @keyframes l21-frame-enter {
+      from {
+        opacity: 0;
+        transform: translateY(3rem) scale(0.92);
+      }
+    }
     iframe {
       display: block;
       width: 100%;
