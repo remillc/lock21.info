@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- The home page's description and the « À propos » page say what the site is: « le site du projet de numérisation de
+  l'écluse 21 » / “the site of the project to digitize Lock 21”.
 - « À propos de l'écluse 21 » opens with what divers look for: 60 feet (18.3 m) at the bottom, the piers' tops at 40
   feet (12 m), the current measured in the lock in June 2024 (SEO audit S4). « Canal » / “the lock” for the lock's
   chamber, the local words, added to the writing skill's terms.
