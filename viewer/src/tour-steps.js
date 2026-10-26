@@ -143,15 +143,15 @@ export const TOUR_STEPS = [
   },
   {
     // One flight from step 5, no stop (Christian, 2026-10-26; it was a move, flown to its start, a 3 s look at the gates,
-    // then on): up to the gates' level west of them, looking at them, then in toward them at 0.8 m/s. Clear of every
-    // surface (0.9 m at least)
+    // then on), level, low: north along the piers' west ends, then east toward the gates, looking at them, slowing to
+    // 0.8 m/s. Clear of every surface (0.8 m at least)
     kind: 'view',
-    approach: [[-46.34, 4.98, -16.15]],
-    looks: [[-41.79, 3.96, -16.02]],
-    paces: [1.6, 0.8],
+    approach: [[-47.6, 1.7, -22.5], [-45.2, 1.6, -17.6]],
+    looks: [{ dir: [0.1, 0, 1] }, [-37.12, 3.49, -16.44]],
+    paces: [1.2, 1.4, 0.8],
     accel: 1,
     // Christian, 2026-10-26: low, looking up at the gates (was -38.7, 3.99, -16.38, -37.72, 3.77, -16.35)
-    cam: [-39.7, 0.95, -16.46, -37.17, 3.36, -16.43],
+    cam: [-41.16, 1.34, -16.53, -37.12, 3.49, -16.44],
     title: { fr: 'Les vannes, de près', en: 'The gates, up close' },
     text: {
       fr: 'De l’autre côté, les trois vannes pendent encore à leurs tiges, au-dessus des passages. On s’approche.',
