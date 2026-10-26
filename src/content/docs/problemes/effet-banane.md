@@ -77,3 +77,5 @@ Afin de s'assurer une bonne collecte de données, et éviter que les images obte
 Vidéo effectuée à la palme en utilisant le format 4K 16:9.
 
 ## Conclusions
+
+*(à compléter)*

@@ -3,7 +3,7 @@ title: Image sharpness
 ---
 The first footage shot with the GoPro Hero 6 Black camera shows that images captured while moving are blurry and lack detail.
 
-awef
+*(to be completed)*
 
 The dense cloud and mesh generated don't have the precision you'd expect from 400px x 300px images taken at about 60cm, i.e. 0,33 mm2 per pixel. How can I improve that?
 
@@ -28,7 +28,11 @@ See the [full list of settings used](/en/collecte/materiel-utilise#camera).
 
 ### Lighting
 
+*(to be completed)*
+
 ### Capture settings
+
+*(to be completed)*
 
 ## Solutions to explore
 
@@ -80,6 +84,8 @@ Scan a horizontal strip 100 feet long in 4 passes, varying the shutter speed:
 Extract the same number of frames for each pass and run the following tests in Metashape:
 
 ### Conclusions
+
+*(to be completed)*
 
 ## Raising the minimum ISO sensitivity
 

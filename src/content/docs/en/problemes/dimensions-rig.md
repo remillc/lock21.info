@@ -73,7 +73,7 @@ From the measurements above:
 | Horizontal | 122.6         | 84       | 0,685 |
 | Vertical   | 94.4          | 72       | 0,763 |
 
-[TODO: revisit this section: the lens distortion makes the angle of view wider at the edges. For the project, I chose the useful angle of view, the one measured at the centre of the image.]
+*(to be completed: revisit this section; the lens distortion makes the angle of view wider at the edges. For the project, I chose the useful angle of view, the one measured at the centre of the image.)*
 
 The most reliable measurement is the **horizontal** one, since the targets were best placed when the shot was taken, and the measurement was made at the centre (unlike the vertical measurement, which was made at the edge of the camera's field of view, where the lens distortion is strongest).
 

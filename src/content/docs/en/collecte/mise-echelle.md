@@ -25,11 +25,11 @@ black dot in the centre marks the exact point to measure, and the black sectors 
 each position on the ring a binary digit, black or white. Metashape reads that ring in the photos, recognises each
 target's number and finds the same target from one photo to the next.
 
-[To complete: how the targets are printed and protected, how the distance is measured underwater.]
+*(to be completed: how the targets are printed and protected, how the distance is measured underwater.)*
 
 ## Next
 
 In Metashape, the targets are detected in the photos and the scales defined with the measured lengths: the column “Targets
 detected / Scale(s) defined” of the [progress by zone](/en/traitement/suivi).
 
-[To complete: the steps in Metashape.]
+*(to be completed: the steps in Metashape.)*

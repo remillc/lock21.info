@@ -7,7 +7,7 @@ Cette opération consiste à extraire des fichiers photos des vidéos tournés. 
 
 ## Balance des blancs
 
-awef
+*(à compléter)*
 
 ## Le chevauchement des images
 

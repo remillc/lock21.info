@@ -8,6 +8,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
   gone, its addresses redirected to the dive log (usability audit V9).
 - The four processing pages (alignment, dense point cloud, models, texture) open with a line naming Agisoft
   Metashape, so the site search finds them (usability audit V7).
+- Unfinished sections now show one mark, « *(à compléter)* » in French and “*(to be completed)*” in English, in place
+  of `awef`, `???`, `[TODO …]` and empty headings; zones 18 to 25 at the same heading level as the others (usability
+  audit V6).
 - « À propos de l'écluse 21 »: the 1904 photo as wide as Nick Baets' plan (`figure-wide`).
 - « Suivi du travail par zone »: a line at the top, the table is a working tool that may not be up to date, with a link
   to the 3D model for what is online (usability audit V5).

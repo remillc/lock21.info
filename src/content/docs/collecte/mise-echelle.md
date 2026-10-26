@@ -25,11 +25,11 @@ point noir au centre marque l'endroit exact à mesurer, et les secteurs noirs de
 position de l'anneau valant un chiffre binaire, noir ou blanc. Metashape lit cet anneau sur les photos, reconnaît le
 numéro de chaque cible et retrouve la même cible d'une photo à l'autre.
 
-[À compléter : comment les cibles sont imprimées et protégées, comment la distance est mesurée sous l'eau.]
+*(à compléter : comment les cibles sont imprimées et protégées, comment la distance est mesurée sous l'eau.)*
 
 ## Ensuite
 
 Dans Metashape, les cibles sont détectées sur les photos et les échelles définies avec les longueurs mesurées : c'est la colonne
 « Cibles détectées / Échelle(s) définie(s) » du [suivi par zone](/traitement/suivi).
 
-[À compléter : les étapes dans Metashape.]
+*(à compléter : les étapes dans Metashape.)*

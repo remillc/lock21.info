@@ -21,8 +21,8 @@
       "recorded": "2026-10-23"
     },
     "collecte/mise-echelle.md": {
-      "source": "14a546bfceac0369170cea40097d940d11899388",
-      "commit": "c7749fb",
+      "source": "eb9c1bc7f1edc077d2a011b8275323a20fe9301b",
+      "commit": "fdcbece",
       "recorded": "2026-10-26"
     },
     "confidentialite.mdx": {
@@ -31,8 +31,8 @@
       "recorded": "2026-10-26"
     },
     "decoupage-site.mdx": {
-      "source": "e68d0004fdb621aef054f1e0abf70c7987e1abe1",
-      "commit": "8a61761",
+      "source": "8ff2d6d49cb8b1fd3d85867cbcefd4d66a03e9fd",
+      "commit": "fdcbece",
       "recorded": "2026-10-26"
     },
     "index.mdx": {
@@ -56,18 +56,18 @@
       "recorded": "2026-10-21"
     },
     "problemes/charte-couleurs-surexposee.md": {
-      "source": "b367a6cf3bed8d6da2b19f49aca7fc50bd2a824b",
-      "commit": "14f96b1",
+      "source": "9cee57ff84b473a0af8c202560077c81c20d5535",
+      "commit": "fdcbece",
       "recorded": "2026-10-26"
     },
     "problemes/dimensions-rig.md": {
-      "source": "d1763a621f7eba06aff555d97d2f81871c2413cf",
-      "commit": "14f96b1",
+      "source": "2051a3c361e0bfa559d9cce0c409442f6b18a7c8",
+      "commit": "fdcbece",
       "recorded": "2026-10-26"
     },
     "problemes/effet-banane.md": {
-      "source": "3247e43954e9076cf83c8b422ab9162e7ebaa816",
-      "commit": "c26484e",
+      "source": "17bc363f07e93db1057b1f0227f466335f9cf393",
+      "commit": "fdcbece",
       "recorded": "2026-10-26"
     },
     "problemes/fort-courant-canal.md": {
@@ -81,8 +81,8 @@
       "recorded": "2026-10-26"
     },
     "problemes/nettete-images.md": {
-      "source": "6a608b381a7fa4a755125720561ca0093463dc58",
-      "commit": "14f96b1",
+      "source": "00c1a6d1e48896a06bade96b0371433a1d0fb02f",
+      "commit": "fdcbece",
       "recorded": "2026-10-26"
     },
     "remerciements.md": {
@@ -111,8 +111,8 @@
       "recorded": "2026-10-26"
     },
     "traitement/extraction-photos.md": {
-      "source": "446241521b726e4b663451e4b290ea3737fc8fe6",
-      "commit": "8161d7e",
+      "source": "8108f010fafc5d11e5f5a215235d2cd4be63123b",
+      "commit": "fdcbece",
       "recorded": "2026-10-26"
     },
     "traitement/generation-modeles.md": {
@@ -121,9 +121,9 @@
       "recorded": "2026-10-26"
     },
     "traitement/nuage-points-dense.md": {
-      "source": "d900b1fb1230e54d5e1482888f9b67855e25c54b",
-      "commit": "1f6c484",
-      "recorded": "2026-10-26"
+      "source": "8e3a148f902c17087462722af2ef6cfef4302a26",
+      "commit": "9d608a8",
+      "recorded": "2026-10-21"
     },
     "traitement/suivi.md": {
       "source": "f52d59df06317c468f1efe509e4805a2147f2c79",

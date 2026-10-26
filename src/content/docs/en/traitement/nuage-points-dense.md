@@ -26,6 +26,8 @@ Remove the excess green colours with the menu `Tools` > `Dense Cloud` > `Select 
 
 ## Export raw dense cloud
 
+*(to be completed)*
+
 ## Filter Dense Cloud
 
 1. Tools > Dense Cloud > Filter Dense Cloud...

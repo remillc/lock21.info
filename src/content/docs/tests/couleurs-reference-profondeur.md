@@ -49,4 +49,8 @@ Est-ce que la lumière ambiante affecte la charte de couleurs ?
 
 ## Discussion
 
+*(à compléter)*
+
 ## Conclusions
+
+*(à compléter)*

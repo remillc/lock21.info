@@ -49,4 +49,8 @@ Does ambient light affect the colour chart?
 
 ## Discussion
 
+*(to be completed)*
+
 ## Conclusions
+
+*(to be completed)*

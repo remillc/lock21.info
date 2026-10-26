@@ -7,7 +7,7 @@ This step pulls still photos out of the videos I shot. I do it in DaVinci Resolv
 
 ## White balance
 
-awef
+*(to be completed)*
 
 ## Image overlap
 

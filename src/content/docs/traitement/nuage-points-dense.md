@@ -30,6 +30,8 @@ Le nuage de points ne fait pas partie des extrants du projet, mais nous allons t
 
 ## Export raw dense cloud
 
+*(à compléter)*
+
 ## Filter Dense Cloud
 
 1. `Tools` > `Dense Cloud` > `Filter Dense Cloud...`
