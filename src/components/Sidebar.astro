@@ -27,57 +27,60 @@ const unit = Astro.locals.starlightRoute.lang?.startsWith('en') ? 'ft' : 'pi'
 </div>
 
 <style>
-  .mobile-model {
-    display: flex;
-    justify-content: flex-end; /* on the right, under the menu button */
-    padding-block: 0.5rem 1rem;
-  }
-  /* Wide screens: the pill is in the header (this rule outranks Starlight's md:sl-hidden) */
-  @media (min-width: 50rem) {
+  @layer l21.layout {
     .mobile-model {
+      display: flex;
+      justify-content: flex-end; /* on the right, under the menu button */
+      padding-block: 0.5rem 1rem;
+    }
+    /* Wide screens: the pill is in the header (this rule outranks Starlight's md:sl-hidden) */
+    @media (min-width: 50rem) {
+      .mobile-model {
+        display: none;
+      }
+    }
+    .depth-ruler {
       display: none;
     }
-  }
-  .depth-ruler {
-    display: none;
-  }
 
-  /* Wide enough for the labels: navigation 18.75rem + content 60rem + "Sur cette page" 20rem (custom.scss), plus
-     4rem of margin on each side */
-  @media (min-width: 106.75rem) {
-    .depth-ruler {
-      /* Paler than the home page's gauge: here it frames the navigation, it doesn't lead the page */
-      --ruler-line: color-mix(in srgb, var(--md-sys-color-secondary) 40%, transparent);
-      display: block;
-      position: fixed;
-      top: calc(var(--sl-nav-height) + 1.5rem);
-      bottom: 2rem;
-      /* The line sits on the navigation column's left edge; the labels hang in the margin to its left */
-      left: calc(var(--lock21-margin, 0px) - 1px);
-      width: 0;
-      border-left: 2px solid var(--ruler-line);
-    }
-    .mark {
-      position: absolute;
-      right: 0.625rem;
-      transform: translateY(-50%);
-      font-family: var(--lk-font-data);
-      font-size: 0.75rem;
-      color: var(--md-sys-color-on-surface-variant);
-      white-space: nowrap;
-    }
-    .mark::after {
-      /* tick on the line */
-      content: '';
-      position: absolute;
-      top: 50%;
-      right: -0.625rem;
-      width: 0.375rem;
-      border-top: 2px solid var(--ruler-line);
-    }
-    .bottom {
-      color: var(--md-sys-color-tertiary-text);
-      font-weight: 700;
+    /* Wide enough for the labels: navigation 18.75rem + content 60rem + "Sur cette page" 20rem (custom.scss), plus
+       4rem of margin on each side */
+    @media (min-width: 106.75rem) {
+      .depth-ruler {
+        /* Paler than the home page's gauge: here it frames the navigation, it doesn't lead the page */
+        --ruler-line: color-mix(in srgb, var(--md-sys-color-secondary) 40%, transparent);
+        display: block;
+        position: fixed;
+        top: calc(var(--sl-nav-height) + 1.5rem);
+        bottom: 2rem;
+        /* The line sits on the navigation column's left edge; the labels hang in the margin to its left */
+        left: calc(var(--lock21-margin, 0px) - 1px);
+        width: 0;
+        border-left: 2px solid var(--ruler-line);
+      }
+      .mark {
+        position: absolute;
+        right: 0.625rem;
+        transform: translateY(-50%);
+        font-family: var(--l21-font-data);
+        font-size: 0.75rem;
+        color: var(--md-sys-color-on-surface-variant);
+        white-space: nowrap;
+
+        &::after {
+          /* tick on the line */
+          content: '';
+          position: absolute;
+          top: 50%;
+          right: -0.625rem;
+          width: 0.375rem;
+          border-top: 2px solid var(--ruler-line);
+        }
+      }
+      .bottom {
+        color: var(--md-sys-color-tertiary-text);
+        font-weight: 700;
+      }
     }
   }
 </style>

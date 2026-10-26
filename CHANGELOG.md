@@ -4,6 +4,22 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- CSS cascade layers on the site (docs/system-design.md, CSS layers): `starlight`, then `l21.tokens`, `l21.base`,
+  `l21.layout`, `l21.components`, `l21.utilities`, declared first in `tokens.scss`; every component's `<style>` in its
+  layer. Starlight's few unlayered rules are overridden outside the layers (the splash pages' content width). Two
+  pages changed by it, as intended: the dive log's Notes column takes the remaining width, and the /modele tables'
+  columns are equal (the component's rules now win over the global table rule).
+- The project's CSS variables renamed `--lk-…` → `--l21-…` (and the class `lk-menu-overlay`), one prefix for everything
+  of ours (custom elements, layers, storage keys); the built CSS the same apart from the prefix.
+- No colour written in a rule (docs/system-design.md): the site and the viewer's colours as MD3 roles and tokens
+  (state-layer opacities, shadow and scrim, elevation level 1, the viewer's container roles), state layers as the
+  content colour at the state's opacity; the « 3D model » pill's stray blue state layer now its own content colour; the
+  viewer's filled buttons' hover darker (their content colour over them, as MD3) instead of lighter.
+- Styles nested (Christian, 2026-10-26): plain CSS with native nesting in the components and the viewer (SCSS only
+  where Sass is needed), rewritten by a tool that checked the compiled CSS unchanged; in `.astro` files only the same
+  element's states (Astro leaves a nested descendant unscoped). Both builds flatten the nesting for browsers before
+  2023 (`build.cssTarget`); the site's and the viewer's built CSS identical before and after. The rules, and the
+  planned `l21.*` cascade layers, in `docs/system-design.md`.
 - Every icon of the site and the 3D viewer in Material Symbols' Rounded style (TODO #74), now referenced by name from
   the library instead of drawings pasted in (Christian: « what if the library is updated? »): Iconify's Material
   Symbols set (`@iconify-json/material-symbols`), through astro-icon in the site and unplugin-icons in the viewer

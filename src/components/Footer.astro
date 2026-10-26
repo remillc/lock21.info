@@ -34,31 +34,33 @@ const licence = `https://creativecommons.org/licenses/by/4.0/deed.${english ? 'e
 </div>
 
 <style>
-  .page-end {
-    margin-top: auto;
-  }
+  @layer l21.layout {
+    .page-end {
+      margin-top: auto;
+    }
 
-  .site-footer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.75rem 1.5rem;
-    margin-top: 2rem;
-    padding: 1.25rem 1.5rem;
-    border-radius: var(--md-sys-shape-large);
-    background: var(--lk-bar);
-    color: var(--lk-bar-muted);
-    font-family: var(--lk-font-data);
-    font-size: 0.8125rem;
-    line-height: 1.5;
-  }
-  .site-footer a {
-    color: var(--lk-bar-link);
-  }
-  .preferences {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1rem;
+    .site-footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem 1.5rem;
+      margin-top: 2rem;
+      padding: 1.25rem 1.5rem;
+      border-radius: var(--md-sys-shape-large);
+      background: var(--l21-bar);
+      color: var(--l21-bar-muted);
+      font-family: var(--l21-font-data);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+    }
+    .site-footer a {
+      color: var(--l21-bar-link);
+    }
+    .preferences {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+    }
   }
 </style>

@@ -1,21 +1,25 @@
 // Global styles on top of Starlight (docs/system-design.md, docs/guidelines.md). Colours, fonts and radii come from tokens.scss.
 
-// The hidden attribute always hides (Christian, 2026-10-24): a rule that sets display on an element would otherwise
-// show it anyway; no element needs its own [hidden] rule
-[hidden] {
-  display: none !important;
+@layer l21.utilities {
+  // The hidden attribute always hides (Christian, 2026-10-24): a rule that sets display on an element would otherwise
+  // show it anyway; no element needs its own [hidden] rule
+  [hidden] {
+    display: none !important;
+  }
 }
 
-// --- Type: Archivo for text and titles (800 for headings), JetBrains Mono for data
+@layer l21.base {
+  // --- Type: Archivo for text and titles (800 for headings), JetBrains Mono for data
 
-.sl-markdown-content :is(h1, h2, h3, h4) ,
-h1#_top {
-  font-weight: 800;
-  letter-spacing: -0.01em;
-}
+  .sl-markdown-content :is(h1, h2, h3, h4) ,
+  h1#_top {
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
 
-.sl-markdown-content :is(table, code, kbd) {
-  font-variant-numeric: tabular-nums;
+  .sl-markdown-content :is(table, code, kbd) {
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 // --- Fallback font: Arial sized and spaced like Archivo, used until Archivo arrives, so that the swap moves nothing
@@ -43,435 +47,461 @@ h1#_top {
   line-gap-override: 0%;
 }
 
-// Pointer cursor on every action widget (docs/system-design.md, Spacing and interaction): links, buttons, selects,
-// toggles, sliders, and the elements given an action role; not-allowed when disabled. In :where(), so without
-// specificity: a widget that sets its own cursor (text fields, image zoom) keeps it
-:where(a[href], button, select, summary, label[for], label:has(input[type='checkbox'], input[type='radio']),
-  input[type='checkbox'], input[type='radio'], input[type='range'], input[type='button'], input[type='submit'],
-  input[type='reset'], input[type='color'], input[type='file'], [role='button'], [role='slider'], [role='tab'],
-  [role='switch'], [role='menuitem'], [role='option'], [role='checkbox'], [role='radio']) {
-  cursor: pointer;
-}
-:where(button, select, input, [role='button'], [role='slider'], [role='tab'], [role='switch']):is(:disabled, [aria-disabled='true']) {
-  cursor: not-allowed;
-}
-
-// --- Header bar and footer bar: dark olive in both themes (MD3 inverse surface in light). Starlight's components in them
-// (search, theme and language selects) read the grey scale, so it is redefined inside the bars.
-
-header.header {
-  background: var(--lk-bar);
-  border-bottom: 1px solid var(--lk-bar-outline);
-}
-// The divider Starlight draws after the social-icons slot (the "Modèle 3D" pill) separated it from the theme and
-// language selects, now in the footer
-header.header .social-icons::after {
-  display: none;
-}
-
-header.header,
-.site-footer {
-  --sl-color-white: var(--lk-bar-text);
-  --sl-color-gray-1: #e3e6d8;
-  --sl-color-gray-2: #c9cdbb;
-  --sl-color-gray-3: var(--lk-bar-muted);
-  --sl-color-gray-4: #7d846b;
-  --sl-color-gray-5: #3c4232;
-  --sl-color-gray-6: #262a1e;
-  --sl-color-black: #12140e;
-  --sl-color-text: var(--lk-bar-text);
-  --sl-color-text-accent: var(--lk-bar-link);
-  // The selects' dropdown lists
-  --sl-color-bg-nav: var(--lk-bar);
-}
-
-// --- Links: secondary (teal), underlined on hover
-
-.sl-markdown-content a:not(:where(.not-content *)) {
-  color: var(--md-sys-color-secondary);
-  text-underline-offset: 0.2em;
-}
-
-// --- Tables: 2 px outline, rounded, dark olive header row
-
-.sl-markdown-content table {
-  display: block;
-  overflow-x: auto;
-  width: max-content; // the outline hugs the table instead of the whole column
-  max-width: 100%;
-  border: 2px solid var(--md-sys-color-outline);
-  border-radius: var(--md-sys-shape-large);
-  border-collapse: separate;
-  border-spacing: 0;
-  background: var(--md-sys-color-surface-container-lowest);
-
-  th {
-    background: var(--lk-bar);
-    color: var(--lk-bar-text);
-    font-family: var(--lk-font-data);
-    font-size: 0.8125rem;
-    font-weight: 500;
-    border-bottom: none;
+@layer l21.base {
+  // Pointer cursor on every action widget (docs/system-design.md, Spacing and interaction): links, buttons, selects,
+  // toggles, sliders, and the elements given an action role; not-allowed when disabled. In :where(), so without
+  // specificity: a widget that sets its own cursor (text fields, image zoom) keeps it
+  :where(a[href], button, select, summary, label[for], label:has(input[type='checkbox'], input[type='radio']),
+    input[type='checkbox'], input[type='radio'], input[type='range'], input[type='button'], input[type='submit'],
+    input[type='reset'], input[type='color'], input[type='file'], [role='button'], [role='slider'], [role='tab'],
+    [role='switch'], [role='menuitem'], [role='option'], [role='checkbox'], [role='radio']) {
+    cursor: pointer;
   }
-
-  th,
-  td {
-    padding: 0.5rem 1rem;
-  }
-
-  td {
-    border-bottom: 1px solid var(--md-sys-color-outline-variant);
-  }
-
-  // Tables written without a header row (only empty cells) don't show an empty dark band
-  thead:not(:has(th:not(:empty))) {
-    display: none;
-  }
-
-  tr:last-child td {
-    border-bottom: none;
+  :where(button, select, input, [role='button'], [role='slider'], [role='tab'], [role='switch']):is(:disabled, [aria-disabled='true']) {
+    cursor: not-allowed;
   }
 }
 
-// --- Figures: rounded image, caption in the secondary text colour
+@layer l21.layout {
+  // --- Header bar and footer bar: dark olive in both themes (MD3 inverse surface in light). Starlight's components in them
+  // (search, theme and language selects) read the grey scale, so it is redefined inside the bars.
 
-.sl-markdown-content figure {
-  margin-inline: 0;
+  header.header {
+    background: var(--l21-bar);
+    border-bottom: 1px solid var(--l21-bar-outline);
 
-  img {
-    max-width: min(100%, 25rem);
-    height: auto;
-    border-radius: var(--md-sys-shape-large);
-    cursor: zoom-in;
+    // The divider Starlight draws after the social-icons slot (the "Modèle 3D" pill) separated it from the theme and
+    // language selects, now in the footer
+    .social-icons::after {
+      display: none;
+    }
   }
 
-  figcaption {
-    font-size: var(--sl-text-sm);
-    color: var(--md-sys-color-on-surface-variant);
+  header.header,
+  .site-footer {
+    --sl-color-white: var(--l21-bar-text);
+    --sl-color-gray-1: #e3e6d8;
+    --sl-color-gray-2: #c9cdbb;
+    --sl-color-gray-3: var(--l21-bar-muted);
+    --sl-color-gray-4: #7d846b;
+    --sl-color-gray-5: #3c4232;
+    --sl-color-gray-6: #262a1e;
+    --sl-color-black: #12140e;
+    --sl-color-text: var(--l21-bar-text);
+    --sl-color-text-accent: var(--l21-bar-link);
+    // The selects' dropdown lists
+    --sl-color-bg-nav: var(--l21-bar);
   }
 }
 
-// Wide figure (e.g. the zone map): 80 % of the content column, height in proportion, centred
-.sl-markdown-content figure.figure-wide img {
-  display: block;
-  width: 80%;
-  max-width: 80%;
-  height: auto;
-  margin-inline: auto;
-}
+@layer l21.base {
+  // --- Links: secondary (teal), underlined on hover
 
-// Full-size view opened by public/scripts/image-zoom.js
-dialog.image-zoom {
-  margin: auto;
-  max-width: 95vw;
-  max-height: 95vh;
-  padding: 0;
-  border: none;
-  background: transparent;
-  cursor: zoom-out;
-
-  &::backdrop {
-    background: rgb(0 0 0 / 0.85);
+  .sl-markdown-content a:not(:where(.not-content *)) {
+    color: var(--md-sys-color-secondary);
+    text-underline-offset: 0.2em;
   }
 
-  img {
+  // --- Tables: 2 px outline, rounded, dark olive header row
+
+  .sl-markdown-content table {
     display: block;
+    overflow-x: auto;
+    width: max-content; // the outline hugs the table instead of the whole column
+    max-width: 100%;
+    border: 2px solid var(--md-sys-color-outline);
+    border-radius: var(--md-sys-shape-large);
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--md-sys-color-surface-container-lowest);
+
+    th {
+      background: var(--l21-bar);
+      color: var(--l21-bar-text);
+      font-family: var(--l21-font-data);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      border-bottom: none;
+    }
+
+    th,
+    td {
+      padding: 0.5rem 1rem;
+    }
+
+    td {
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    }
+
+    // Tables written without a header row (only empty cells) don't show an empty dark band
+    thead:not(:has(th:not(:empty))) {
+      display: none;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  // --- Figures: rounded image, caption in the secondary text colour
+
+  .sl-markdown-content figure {
+    margin-inline: 0;
+
+    img {
+      max-width: min(100%, 25rem);
+      height: auto;
+      border-radius: var(--md-sys-shape-large);
+      cursor: zoom-in;
+    }
+
+    figcaption {
+      font-size: var(--sl-text-sm);
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+  
+    // Wide figure (e.g. the zone map): 80 % of the content column, height in proportion, centred
+    &.figure-wide img {
+      display: block;
+      width: 80%;
+      max-width: 80%;
+      height: auto;
+      margin-inline: auto;
+    }
+  }
+}
+
+@layer l21.components {
+  // Full-size view opened by public/scripts/image-zoom.js
+  dialog.image-zoom {
+    margin: auto;
     max-width: 95vw;
     max-height: 95vh;
-    object-fit: contain;
-    border-radius: var(--md-sys-shape-large);
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: zoom-out;
+
+    &::backdrop {
+      background: color-mix(in srgb, var(--md-sys-color-scrim) 85%, transparent);
+    }
+
+    img {
+      display: block;
+      max-width: 95vw;
+      max-height: 95vh;
+      object-fit: contain;
+      border-radius: var(--md-sys-shape-large);
+    }
   }
 }
 
-// --- Focus: visible ring in the secondary colour (MD3 focus state)
+@layer l21.base {
+  // --- Focus: visible ring in the secondary colour (MD3 focus state)
 
-:focus-visible {
-  outline: 2px solid var(--md-sys-color-secondary);
-  outline-offset: 2px;
-}
-
-// --- Layout
-
-// Notebook pages, three columns: navigation, content at a fixed width, and "Sur cette page" right next to it. On wide
-// screens the spare space goes to the right of the page (Starlight spreads it between the columns instead).
-:root {
-  --lock21-content-width: 60rem;
-  --lock21-toc-width: 20rem;
-}
-
-@media (min-width: 72rem) {
-  [data-has-sidebar][data-has-toc] .main-pane {
-    flex: 0 0 auto;
-    // Fixed width, but never so wide that "Sur cette page" is pushed off narrower screens
-    width: min(var(--lock21-content-width), 100% - var(--lock21-toc-width));
-    --sl-content-width: 100%;
-    --sl-content-margin-inline: 0;
-  }
-
-  .right-sidebar-container {
-    flex: 0 0 auto;
-    width: var(--lock21-toc-width);
-  }
-
-  // The three columns centred in the viewport: the same margin on both sides once the screen is wider than
-  // navigation + content + "Sur cette page". Starlight pins the navigation to the left edge; it moves by that margin,
-  // and so do the content (via --sl-content-inline-start) and the header's contents. The bar stays full width.
-  // On the left, the header's contents start further out, above the depth gauge's labels (Sidebar.astro), so the logo
-  // lines up with the gauge.
-  :root[data-has-sidebar][data-has-toc] {
-    --lock21-layout-width: calc(var(--sl-sidebar-width) + var(--lock21-content-width) + var(--lock21-toc-width));
-    --lock21-margin: max(0px, (100vw - var(--lock21-layout-width)) / 2);
-    --sl-content-inline-start: calc(var(--sl-sidebar-width) + var(--lock21-margin));
-  }
-
-  // The navigation's left edge carries the depth gauge (Sidebar.astro) instead of a border
-  [data-has-toc] .sidebar-pane {
-    inset-inline-start: var(--lock21-margin);
-  }
-
-  [data-has-toc] header.header {
-    padding-inline: calc(var(--sl-nav-pad-x) + var(--lock21-margin));
-    // The logo's left edge on the labels' left edge (4rem left of the navigation), never closer to the window's edge
-    // than Starlight's padding
-    padding-inline-start: max(var(--sl-nav-pad-x), var(--lock21-margin) - 4rem);
+  :focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: 2px;
   }
 }
 
-// Splash pages (home page) carry their own <h1>: Starlight's title panel stays empty, hide it and its divider
-.content-panel:has(> .sl-container:empty) {
-  display: none;
+@layer l21.layout {
+  // --- Layout
 
-  & + .content-panel {
-    border-top: 0;
+  // Notebook pages, three columns: navigation, content at a fixed width, and "Sur cette page" right next to it. On wide
+  // screens the spare space goes to the right of the page (Starlight spreads it between the columns instead).
+  :root {
+    --lock21-content-width: 60rem;
+    --lock21-toc-width: 20rem;
   }
-}
 
-// Footer at the bottom of the window on short pages (Footer.astro: previous / next and the dark bar, pushed down by
-// margin-top: auto); right after the content on long pages, as before. Starlight's .page fills the window's height:
-// that height is passed down to the last content panel through flex columns.
-.main-frame {
-  display: flex;
-  flex-direction: column;
-  flex: 1 0 auto;
+  @media (min-width: 72rem) {
+    [data-has-sidebar][data-has-toc] .main-pane {
+      flex: 0 0 auto;
+      // Fixed width, but never so wide that "Sur cette page" is pushed off narrower screens
+      width: min(var(--lock21-content-width), 100% - var(--lock21-toc-width));
+      --sl-content-width: 100%;
+      --sl-content-margin-inline: 0;
+    }
 
-  // The row "content + Sur cette page" on wide screens (Starlight: .lg:sl-flex), stacked below
-  > div {
+    .right-sidebar-container {
+      flex: 0 0 auto;
+      width: var(--lock21-toc-width);
+    }
+
+    // The three columns centred in the viewport: the same margin on both sides once the screen is wider than
+    // navigation + content + "Sur cette page". Starlight pins the navigation to the left edge; it moves by that margin,
+    // and so do the content (via --sl-content-inline-start) and the header's contents. The bar stays full width.
+    // On the left, the header's contents start further out, above the depth gauge's labels (Sidebar.astro), so the logo
+    // lines up with the gauge.
+    :root[data-has-sidebar][data-has-toc] {
+      --lock21-layout-width: calc(var(--sl-sidebar-width) + var(--lock21-content-width) + var(--lock21-toc-width));
+      --lock21-margin: max(0px, (100vw - var(--lock21-layout-width)) / 2);
+      --sl-content-inline-start: calc(var(--sl-sidebar-width) + var(--lock21-margin));
+    }
+
+    // The navigation's left edge carries the depth gauge (Sidebar.astro) instead of a border
+    [data-has-toc] .sidebar-pane {
+      inset-inline-start: var(--lock21-margin);
+    }
+
+    [data-has-toc] header.header {
+      padding-inline: calc(var(--sl-nav-pad-x) + var(--lock21-margin));
+      // The logo's left edge on the labels' left edge (4rem left of the navigation), never closer to the window's edge
+      // than Starlight's padding
+      padding-inline-start: max(var(--sl-nav-pad-x), var(--lock21-margin) - 4rem);
+    }
+  }
+
+  // Splash pages (home page) carry their own <h1>: Starlight's title panel stays empty, hide it and its divider
+  .content-panel:has(> .sl-container:empty) {
+    display: none;
+
+    & + .content-panel {
+      border-top: 0;
+    }
+  }
+
+  // Footer at the bottom of the window on short pages (Footer.astro: previous / next and the dark bar, pushed down by
+  // margin-top: auto); right after the content on long pages, as before. Starlight's .page fills the window's height:
+  // that height is passed down to the last content panel through flex columns.
+  .main-frame {
     display: flex;
     flex-direction: column;
     flex: 1 0 auto;
 
-    @media (min-width: 72rem) {
-      flex-direction: row;
+    // The row "content + Sur cette page" on wide screens (Starlight: .lg:sl-flex), stacked below
+    > div {
+      display: flex;
+      flex-direction: column;
+      flex: 1 0 auto;
+
+      @media (min-width: 72rem) {
+        flex-direction: row;
+      }
     }
   }
-}
 
-.main-pane,
-.main-pane > main,
-main > .content-panel:last-child,
-main > .content-panel:last-child > .sl-container {
-  display: flex;
-  flex-direction: column;
-}
+  .main-pane,
+  .main-pane > main,
+  main > .content-panel:last-child,
+  main > .content-panel:last-child > .sl-container {
+    display: flex;
+    flex-direction: column;
+  }
 
-.main-pane > main,
-main > .content-panel:last-child,
-main > .content-panel:last-child > .sl-container {
-  flex: 1 0 auto;
-}
-
-// Stacked (narrow screens), the content column grows too; side by side, the row already stretches it to full height
-@media not (min-width: 72rem) {
-  .main-pane {
+  .main-pane > main,
+  main > .content-panel:last-child,
+  main > .content-panel:last-child > .sl-container {
     flex: 1 0 auto;
   }
-}
 
-// A flex item with auto side margins would shrink to its content: the container keeps its full width (max-width and
-// centring unchanged)
-main > .content-panel:last-child > .sl-container {
-  width: 100%;
-}
-
-// Pages without sidebar (home page): the 1200 px column of the design
-:root:not([data-has-sidebar]) {
-  --sl-content-width: 75rem;
-}
-
-// Page transitions (client-side routing, src/components/Head.astro): MD3 "fade through" on the content (article and
-// table of contents); the header and the sidebar change without moving. Over duration.long1 (450 ms), emphasized: the
-// old content fades out over the first 35 %, then the new one fades in while growing from 92 %, with no overlap
-// (material-components-android, MaterialFadeThrough). Astro turns every view transition off with reduced motion.
-::view-transition-old(root),
-::view-transition-new(root),
-::view-transition-group(lock21-content) {
-  animation: none;
-}
-
-.main-frame {
-  view-transition-name: lock21-content;
-}
-
-::view-transition-old(lock21-content) {
-  animation: lock21-fade-out calc(var(--md-sys-motion-duration-long1) * 0.35) var(--md-sys-motion-easing-emphasized) both;
-}
-
-::view-transition-new(lock21-content) {
-  animation: lock21-fade-through-in calc(var(--md-sys-motion-duration-long1) * 0.65)
-    var(--md-sys-motion-easing-emphasized) calc(var(--md-sys-motion-duration-long1) * 0.35) both;
-}
-
-@keyframes lock21-fade-out {
-  to {
-    opacity: 0;
+  // Stacked (narrow screens), the content column grows too; side by side, the row already stretches it to full height
+  @media not (min-width: 72rem) {
+    .main-pane {
+      flex: 1 0 auto;
+    }
   }
-}
 
-@keyframes lock21-fade-through-in {
-  from {
-    opacity: 0;
-    transform: scale(0.92);
+  // A flex item with auto side margins would shrink to its content: the container keeps its full width (max-width and
+  // centring unchanged)
+  main > .content-panel:last-child > .sl-container {
+    width: 100%;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
-    animation: none !important;
+
+  // Page transitions (client-side routing, src/components/Head.astro): MD3 "fade through" on the content (article and
+  // table of contents); the header and the sidebar change without moving. Over duration.long1 (450 ms), emphasized: the
+  // old content fades out over the first 35 %, then the new one fades in while growing from 92 %, with no overlap
+  // (material-components-android, MaterialFadeThrough). Astro turns every view transition off with reduced motion.
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-group(lock21-content) {
+    animation: none;
   }
-}
 
-/* A logo for each theme (the sponsor's, on the thanks page): its light-background version in the light theme, its
-   dark-background version in the dark theme (dark is the default, :root) */
-.theme-light-only {
-  display: none;
-}
-[data-theme='light'] .theme-light-only {
-  display: inline;
-}
-[data-theme='light'] .theme-dark-only {
-  display: none;
-}
-/* The sponsor's logo: medium size (168 px wide), under the thanks */
-.sponsor-logo img {
-  width: 168px;
-  height: auto;
-}
-
-// « Modèle 3D » in the navigation (sidebar and mobile menu), on every page: an orange 3D icon before its label (the
-// signal colour, as the header's « Modèle 3D » pill; Christian, 2026-10-23), so it always stands out
-.sidebar-content a[href='/modele']::before,
-.sidebar-content a[href='/en/modele']::before {
-  content: '';
-  display: inline-block;
-  flex: none;
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-inline-end: 0.5rem;
-  vertical-align: -0.25em;
-  background: var(--md-sys-color-tertiary);
-  // A cube in perspective (not the augmented reality button's cube)
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3 6.6 3.7L12 11.7 5.4 8 12 4.3ZM5 9.7l6 3.4v6.6l-6-3.4V9.7Zm8 10v-6.6l6-3.4v6.6l-6 3.4Z'/%3E%3C/svg%3E") center / contain no-repeat;
-}
-
-// Hover on the navigation's items (Christian, 2026-10-23): MD3's state layer, 8 % of the text's colour over the item
-// (on the current page's highlight too); its groups' titles as well
-.sidebar-content a,
-.sidebar-content summary {
-  border-radius: var(--md-sys-shape-small, 0.25rem);
-  transition: box-shadow 150ms cubic-bezier(0.2, 0, 0, 1);
-
-  &:hover {
-    box-shadow: inset 0 0 0 100px color-mix(in srgb, currentColor 8%, transparent);
+  .main-frame {
+    view-transition-name: lock21-content;
   }
-}
 
-// The search, on every page, wide screens: Starlight's one search component as a 24 px magnifier at the bar's right,
-// before « Modèle 3D », as first done on /modele (Christian, 2026-10-23): no box, label or shortcut shown (Ctrl+K
-// still opens it)
-@media (min-width: 50rem) {
-  header.header .header > :nth-child(2) {
-    justify-content: flex-end;
+  ::view-transition-old(lock21-content) {
+    animation: lock21-fade-out calc(var(--md-sys-motion-duration-long1) * 0.35) var(--md-sys-motion-easing-emphasized) both;
   }
-  site-search button[data-open-modal] {
-    max-width: none;
 
-    > span,
-    > kbd {
-      display: none;
+  ::view-transition-new(lock21-content) {
+    animation: lock21-fade-through-in calc(var(--md-sys-motion-duration-long1) * 0.65)
+      var(--md-sys-motion-easing-emphasized) calc(var(--md-sys-motion-duration-long1) * 0.35) both;
+  }
+
+  @keyframes lock21-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes lock21-fade-through-in {
+    from {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+      animation: none !important;
     }
   }
 }
 
-// The magnifier, every screen: an MD3 standard icon button (TODO #59, 2026-10-24: 32 or 40 px, square corners): a 40 px
-// round in a 48 px touch target (the transparent border, the state layers inside it), its icon 24 px
-site-search button[data-open-modal] {
-  justify-content: center;
-  box-sizing: border-box;
-  width: 3rem;
-  height: 3rem;
-  padding: 0;
-  border: 4px solid transparent;
-  border-radius: 50%;
-  background-color: transparent;
-  background-clip: padding-box;
-
-  > svg {
-    width: 1.5rem;
-    height: 1.5rem;
+@layer l21.utilities {
+  /* A logo for each theme (the sponsor's, on the thanks page): its light-background version in the light theme, its
+     dark-background version in the dark theme (dark is the default, :root) */
+  .theme-light-only {
+    display: none;
   }
-
-  &:hover {
-    border-color: transparent;
-    background-color: color-mix(in srgb, currentColor 8%, transparent); // MD3 hover state layer
+  [data-theme='light'] .theme-light-only {
+    display: inline;
   }
-
-  &:focus-visible,
-  &:active {
-    background-color: color-mix(in srgb, currentColor 10%, transparent); // MD3 focus and pressed state layers
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--md-sys-color-secondary);
-    outline-offset: -2px;
+  [data-theme='light'] .theme-dark-only {
+    display: none;
   }
 }
 
-// The menu button (☰): the same 40 px round in a 48 px touch target (Starlight's is 32 px); its size also sets the
-// space the bar keeps for it (PageFrame.astro)
-:root {
-  --sl-menu-button-size: 3rem;
-}
-.sl-menu-button {
-  box-sizing: border-box;
-  border: 4px solid transparent !important;
-  background-clip: padding-box;
-
-  &:focus-visible {
-    outline: 2px solid var(--md-sys-color-secondary);
-    outline-offset: -2px;
+@layer l21.components {
+  /* The sponsor's logo: medium size (168 px wide), under the thanks */
+  .sponsor-logo img {
+    width: 168px;
+    height: auto;
   }
 }
 
-// The menu button (☰), in both themes (Christian, 2026-10-23 for the light one, 2026-10-26 for the dark one: its
-// colours inverted, no background): no disc and no shadow, the icon in the bar's text colour as the magnifier
-// (#c9cdbb: the bar's --sl-color-gray-2 above; the button sits outside header.header), the bar staying dark in both
-// themes; open or closed
-.sl-menu-button,
-.sl-menu-button:has(~ :popover-open) {
-  background-color: transparent;
-  box-shadow: none;
-  color: #c9cdbb;
+@layer l21.layout {
+  // « Modèle 3D » in the navigation (sidebar and mobile menu), on every page: an orange 3D icon before its label (the
+  // signal colour, as the header's « Modèle 3D » pill; Christian, 2026-10-23), so it always stands out
+  .sidebar-content a[href='/modele']::before,
+  .sidebar-content a[href='/en/modele']::before {
+    content: '';
+    display: inline-block;
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-inline-end: 0.5rem;
+    vertical-align: -0.25em;
+    background: var(--md-sys-color-tertiary);
+    // A cube in perspective (not the augmented reality button's cube)
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3 6.6 3.7L12 11.7 5.4 8 12 4.3ZM5 9.7l6 3.4v6.6l-6-3.4V9.7Zm8 10v-6.6l6-3.4v6.6l-6 3.4Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
 
-  &:hover {
-    background-color: color-mix(in srgb, currentColor 8%, transparent); // MD3 hover state layer
+  // Hover on the navigation's items (Christian, 2026-10-23): MD3's state layer, 8 % of the text's colour over the item
+  // (on the current page's highlight too); its groups' titles as well
+  .sidebar-content a,
+  .sidebar-content summary {
+    border-radius: var(--md-sys-shape-small, 0.25rem);
+    transition: box-shadow 150ms cubic-bezier(0.2, 0, 0, 1);
+
+    &:hover {
+      box-shadow: inset 0 0 0 100px color-mix(in srgb, currentColor 8%, transparent);
+    }
+  }
+
+  // The search, on every page, wide screens: Starlight's one search component as a 24 px magnifier at the bar's right,
+  // before « Modèle 3D », as first done on /modele (Christian, 2026-10-23): no box, label or shortcut shown (Ctrl+K
+  // still opens it)
+  @media (min-width: 50rem) {
+    header.header .header > :nth-child(2) {
+      justify-content: flex-end;
+    }
+    site-search button[data-open-modal] {
+      max-width: none;
+
+      > span,
+      > kbd {
+        display: none;
+      }
+    }
+  }
+
+  // The magnifier, every screen: an MD3 standard icon button (TODO #59, 2026-10-24: 32 or 40 px, square corners): a 40 px
+  // round in a 48 px touch target (the transparent border, the state layers inside it), its icon 24 px
+  site-search button[data-open-modal] {
+    justify-content: center;
+    box-sizing: border-box;
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    border: 4px solid transparent;
+    border-radius: 50%;
+    background-color: transparent;
+    background-clip: padding-box;
+
+    > svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+
+    &:hover {
+      border-color: transparent;
+      background-color: color-mix(in srgb, currentColor 8%, transparent); // MD3 hover state layer
+    }
+
+    &:focus-visible,
+    &:active {
+      background-color: color-mix(in srgb, currentColor 10%, transparent); // MD3 focus and pressed state layers
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--md-sys-color-secondary);
+      outline-offset: -2px;
+    }
+  }
+
+  // The menu button (☰): the same 40 px round in a 48 px touch target (Starlight's is 32 px); its size also sets the
+  // space the bar keeps for it (PageFrame.astro)
+  :root {
+    --sl-menu-button-size: 3rem;
+  }
+  .sl-menu-button {
+    box-sizing: border-box;
+    border: 4px solid transparent !important;
+    background-clip: padding-box;
+
+    &:focus-visible {
+      outline: 2px solid var(--md-sys-color-secondary);
+      outline-offset: -2px;
+    }
+  }
+
+  // The menu button (☰), in both themes (Christian, 2026-10-23 for the light one, 2026-10-26 for the dark one: its
+  // colours inverted, no background): no disc and no shadow, the icon in the bar's text colour as the magnifier
+  // (#c9cdbb: the bar's --sl-color-gray-2 above; the button sits outside header.header), the bar staying dark in both
+  // themes; open or closed
+  .sl-menu-button,
+  .sl-menu-button:has(~ :popover-open) {
+    background-color: transparent;
+    box-shadow: none;
+    color: var(--l21-bar-icon);
+
+    &:hover {
+      background-color: color-mix(in srgb, currentColor 8%, transparent); // MD3 hover state layer
+    }
+  }
+
+  // The magnifier bolder, as the menu button's bars (Christian, 2026-10-23): Starlight's filled icon outlined in its own
+  // colour, every page and screen
+  site-search button[data-open-modal] > svg {
+    stroke: currentColor;
+    stroke-width: 1.2px;
+    stroke-linejoin: round;
   }
 }
 
-// The magnifier bolder, as the menu button's bars (Christian, 2026-10-23): Starlight's filled icon outlined in its own
-// colour, every page and screen
-site-search button[data-open-modal] > svg {
-  stroke: currentColor;
-  stroke-width: 1.2px;
-  stroke-linejoin: round;
+// --- Unlayered: overrides of third-party rules that are themselves outside any layer (unlayered CSS beats every
+// layer, docs/system-design.md, CSS layers)
+
+// Pages without sidebar (home page): the 1200 px column of the design. Starlight sets this width in an unlayered rule
+// (html:not([data-has-sidebar]) { --sl-content-width: 67.5rem }): in a layer, ours would lose to it
+:root:not([data-has-sidebar]) {
+  --sl-content-width: 75rem;
 }

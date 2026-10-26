@@ -40,24 +40,26 @@ ${min} - ${max}`
 </script>
 
 <style>
-  /* Same look and place as in OpenCaves. Fixed rather than absolute: here it is mounted in the header, not at the root
-     of the page. MUI's default font stack (OpenCaves loads Roboto; here the fallback applies). */
-  .dev-breakpoints {
-    position: fixed;
-    left: 0.5em;
-    top: 0.5em;
-    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 400;
-    letter-spacing: normal;
-    color: #fff;
-    background-color: red;
-    line-height: 1;
-    white-space: pre; /* the interval on its own line */
-    text-align: center; /* the code centred over its interval */
-    padding: 0.2em;
-    opacity: 0.75;
-    z-index: 1000000;
-    pointer-events: none;
+  @layer l21.components {
+    /* Same look and place as in OpenCaves. Fixed rather than absolute: here it is mounted in the header, not at the root
+       of the page. MUI's default font stack (OpenCaves loads Roboto; here the fallback applies). */
+    .dev-breakpoints {
+      position: fixed;
+      left: 0.5em;
+      top: 0.5em;
+      font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: normal;
+      color: #fff;
+      background-color: red;
+      line-height: 1;
+      white-space: pre; /* the interval on its own line */
+      text-align: center; /* the code centred over its interval */
+      padding: 0.2em;
+      opacity: 0.75;
+      z-index: 1000000;
+      pointer-events: none;
+    }
   }
 </style>

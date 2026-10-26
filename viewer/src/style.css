@@ -12,12 +12,32 @@
   --md-sys-color-secondary: #b8c97a;
   --md-sys-color-tertiary: #f28c28;
   --md-sys-color-outline: #3c4232;
-  --lk-on-bar: #f2f3ea;
-  --lk-on-bar-muted: #a3a893;
+  --l21-on-bar: #f2f3ea;
+  --l21-on-bar-muted: #a3a893;
+  /* The other roles the viewer uses (no colour written in a rule: docs/system-design.md): the containers its controls
+     and panels sit on, from darkest to lightest, the outlines, the tooltip's text, shadows and scrims */
+  --md-sys-color-on-secondary: #12140e;
+  --md-sys-color-surface-container-low: #1b1e15;
+  --md-sys-color-surface-container: #1e2119;
+  --md-sys-color-surface-container-high: #23261d;
+  --md-sys-color-surface-container-highest: #3c4232;
+  --md-sys-color-outline-variant: #2a2f22;
+  --md-sys-color-inverse-on-surface: #2f3227;
+  --md-sys-color-shadow: #000;
+  --md-sys-color-scrim: #000;
+  /* The keys' and outlined buttons' edge, lighter than the outline */
+  --l21-outline-strong: #8f9482;
+  /* MD3 state layers: the content colour at these opacities over its container */
+  --md-sys-state-hover: 8%;
+  --md-sys-state-focus: 10%;
+  --md-sys-state-pressed: 10%;
+  --md-sys-state-dragged: 16%;
+  /* The round controls' container over the model (icon buttons, the compass, the tour's button) */
+  --l21-control: color-mix(in srgb, var(--md-sys-color-surface-container-highest) 92%, transparent);
   /* The site's fonts (self-hosted, @fontsource, imported by main.js): Archivo for text and titles, JetBrains Mono for
      labels and data */
-  --lk-font-text: 'Archivo', system-ui, sans-serif;
-  --lk-font-data: 'JetBrains Mono', ui-monospace, monospace;
+  --l21-font-text: 'Archivo', system-ui, sans-serif;
+  --l21-font-data: 'JetBrains Mono', ui-monospace, monospace;
 }
 
 html,
@@ -26,7 +46,7 @@ body {
   height: 100%;
   background: var(--md-sys-color-surface);
   color: var(--md-sys-color-on-surface);
-  font-family: var(--lk-font-text);
+  font-family: var(--l21-font-text);
   overflow: hidden;
   /* TODO #70: no scroll handed on to the page around the viewer */
   overscroll-behavior: none;
@@ -72,9 +92,9 @@ l21-loading {
   gap: 10px;
   padding: 14px 20px 16px;
   border-radius: 12px;
-  background: rgb(18 20 14 / 85%);
+  background: color-mix(in srgb, var(--md-sys-color-surface) 85%, transparent);
   color: var(--md-sys-color-on-surface);
-  box-shadow: 0 4px 16px rgb(0 0 0 / 30%);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent);
 }
 
 .loading-bar {
@@ -82,7 +102,7 @@ l21-loading {
   height: 4px;
   border-radius: 2px;
   overflow: hidden;
-  background: rgb(184 201 122 / 25%);
+  background: color-mix(in srgb, var(--md-sys-color-secondary) 25%, transparent);
 }
 
 .loading-bar,
@@ -114,22 +134,24 @@ l21-loading {
 l21-loading.refine {
   align-items: flex-start;
   justify-content: stretch;
-}
 
-l21-loading.refine .loading-card {
-  display: none;
-}
+  
+  .loading-card {
+    display: none;
+  }
 
-l21-loading.refine .refining {
-  display: block;
-  width: 100%;
-  text-align: center;
+  
+  .refining {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
 }
 
 .refining-bar {
   height: 3px;
   overflow: hidden;
-  background: rgb(184 201 122 / 20%);
+  background: color-mix(in srgb, var(--md-sys-color-secondary) 20%, transparent);
 }
 
 .refining-label {
@@ -137,9 +159,9 @@ l21-loading.refine .refining {
   margin-top: 8px;
   padding: 2px 8px;
   border-radius: 6px;
-  background: rgb(18 20 14 / 70%);
+  background: color-mix(in srgb, var(--md-sys-color-surface) 70%, transparent);
   color: var(--md-sys-color-on-surface-variant);
-  font: 500 11px/16px var(--lk-font-data);
+  font: 500 11px/16px var(--l21-font-data);
   letter-spacing: 0.5px;
 }
 
@@ -147,18 +169,21 @@ l21-loading.refine .refining {
 .loading-dots i {
   font-style: normal;
   animation: 1.6s step-end infinite;
-}
 
-.loading-dots i:nth-child(1) {
-  animation-name: loading-dot-1;
-}
+  
+  &:nth-child(1) {
+    animation-name: loading-dot-1;
+  }
 
-.loading-dots i:nth-child(2) {
-  animation-name: loading-dot-2;
-}
+  
+  &:nth-child(2) {
+    animation-name: loading-dot-2;
+  }
 
-.loading-dots i:nth-child(3) {
-  animation-name: loading-dot-3;
+  
+  &:nth-child(3) {
+    animation-name: loading-dot-3;
+  }
 }
 
 @keyframes loading-dot-1 {
@@ -191,7 +216,7 @@ l21-loading.error .loading-label {
   max-width: min(280px, 70vw);
   margin: 0;
   color: var(--md-sys-color-on-surface-variant);
-  font: 400 13px/18px var(--lk-font-text);
+  font: 400 13px/18px var(--l21-font-text);
   text-align: center;
 }
 .loading-retry {
@@ -204,21 +229,24 @@ l21-loading.error .loading-label {
   background: transparent;
   background-clip: padding-box;
   color: var(--md-sys-color-secondary);
-  font: 500 14px/20px var(--lk-font-data);
+  font: 500 14px/20px var(--l21-font-data);
   letter-spacing: 0.1px;
   cursor: pointer;
   pointer-events: auto;
-}
-.loading-retry:hover {
-  background: rgb(184 201 122 / 8%);
-}
-.loading-retry:focus-visible,
-.loading-retry:active {
-  background: rgb(184 201 122 / 10%);
-}
-.loading-retry:focus-visible {
-  outline: 2px solid var(--md-sys-color-secondary);
-  outline-offset: 2px;
+
+  &:hover {
+    background: color-mix(in srgb, var(--md-sys-color-secondary) var(--md-sys-state-hover), transparent);
+  }
+
+  &:focus-visible,
+  &:active {
+    background: color-mix(in srgb, var(--md-sys-color-secondary) var(--md-sys-state-pressed), transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: 2px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -239,7 +267,7 @@ l21-loading.error .loading-label {
   left: max(12px, env(safe-area-inset-left));
   padding: 6px 10px;
   border-radius: 6px;
-  background: rgb(18 20 14 / 70%);
+  background: color-mix(in srgb, var(--md-sys-color-surface) 70%, transparent);
   color: inherit;
   font-size: 0.85rem;
   text-decoration: none;
@@ -262,59 +290,68 @@ l21-loading.error .loading-label {
   padding: 0;
   border: 0;
   border-radius: 999px;
-  background: rgb(60 66 50 / 92%);
+  background: var(--l21-control);
   color: var(--md-sys-color-on-surface);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-}
-/* 48 dp touch target */
-.icon-button::before {
-  content: '';
-  position: absolute;
-  inset: -4px;
-}
-/* State layer */
-.icon-button::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: currentColor;
-  opacity: 0;
-  transition: opacity 200ms;
-}
-.icon-button:hover::after {
-  opacity: 0.08;
-}
-.icon-button:focus-visible::after,
-.icon-button:active::after {
-  opacity: 0.1;
-}
-.icon-button:focus-visible {
-  outline: 2px solid var(--md-sys-color-secondary);
-  outline-offset: 2px;
-}
-.icon-button img,
-.icon-button svg {
-  display: block;
-}
-/* Selected (toggle): the settings button while its panel is open */
-.icon-button[aria-expanded='true'] {
-  background: var(--md-sys-color-secondary);
-  color: var(--md-sys-color-surface);
+
+  /* 48 dp touch target */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+  }
+
+  /* State layer */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity 200ms;
+  }
+
+  &:hover::after {
+    opacity: 0.08;
+  }
+
+  &:focus-visible::after,
+  &:active::after {
+    opacity: 0.1;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: 2px;
+  }
+
+  img,
+  svg {
+    display: block;
+  }
+
+  /* Selected (toggle): the settings button while its panel is open */
+  &[aria-expanded='true'] {
+    background: var(--md-sys-color-secondary);
+    color: var(--md-sys-color-surface);
+  }
 }
 
 /* Positions: 16 dp from the edges (the touch target 12), 8 dp between the touch targets */
 .fullscreen {
   right: max(16px, env(safe-area-inset-right));
   bottom: max(16px, env(safe-area-inset-bottom));
-}
-.fullscreen .icon-exit,
-.fullscreen[data-full='true'] .icon-enter {
-  display: none;
-}
-.fullscreen[data-full='true'] .icon-exit {
-  display: block;
+
+  .icon-exit,
+  &[data-full='true'] .icon-enter {
+    display: none;
+  }
+
+  &[data-full='true'] .icon-exit {
+    display: block;
+  }
 }
 /* Home (main.js): left of the full-screen button */
 .home-button {
@@ -349,9 +386,9 @@ l21-loading.error .loading-label {
   height: 40px;
   padding: 0 16px;
   border-radius: 999px;
-  background: rgb(30 33 25 / 88%);
+  background: color-mix(in srgb, var(--md-sys-color-surface-container) 88%, transparent);
   color: var(--md-sys-color-on-surface);
-  font: 500 12px/16px var(--lk-font-data);
+  font: 500 12px/16px var(--l21-font-data);
   letter-spacing: 0.5px;
 }
 .season-range {
@@ -363,14 +400,17 @@ l21-loading.error .loading-label {
 .season-value {
   display: grid;
   white-space: nowrap;
-}
-/* The four values stacked in one cell (main.js): sized by the longest, only the current one visible */
-.season-value > span {
-  grid-area: 1 / 1;
-  visibility: hidden;
-}
-.season-value > span.current {
-  visibility: visible;
+
+  /* The four values stacked in one cell (main.js): sized by the longest, only the current one visible */
+  > span {
+    grid-area: 1 / 1;
+    visibility: hidden;
+
+  
+    &.current {
+      visibility: visible;
+    }
+  }
 }
 .underwater-tools .lamp-button {
   position: relative;
@@ -458,7 +498,7 @@ l21-loading.error .loading-label {
   margin: 0;
   padding: 6px 8px;
   border-radius: 6px;
-  background: rgb(18 20 14 / 75%);
+  background: color-mix(in srgb, var(--md-sys-color-surface) 75%, transparent);
   color: var(--md-sys-color-on-surface);
   font-size: 11px;
   pointer-events: none;
@@ -483,7 +523,7 @@ l21-loading.error .loading-label {
   width: 56px;
   height: 56px;
   border-radius: 999px;
-  background: rgb(60 66 50 / 92%);
+  background: var(--l21-control);
   color: var(--md-sys-color-on-surface);
 }
 html:not(.embedded) .compass {
@@ -508,9 +548,9 @@ html:not(.embedded) .compass {
   max-width: min(360px, calc(100% - 32px));
   padding: 10px 14px;
   border-radius: 16px;
-  background: rgb(30 33 25 / 92%);
+  background: color-mix(in srgb, var(--md-sys-color-surface-container) 92%, transparent);
   color: var(--md-sys-color-on-surface);
-  font: 400 13px/18px var(--lk-font-text);
+  font: 400 13px/18px var(--l21-font-text);
   letter-spacing: 0.25px;
   pointer-events: none;
 }
@@ -544,10 +584,10 @@ l21-settings-panel {
   overscroll-behavior: contain;
   padding: 0 16px 16px;
   border-radius: 16px;
-  background: rgb(27 30 21 / 92%);
+  background: color-mix(in srgb, var(--md-sys-color-surface-container-low) 92%, transparent);
   color: var(--md-sys-color-on-surface);
   font-size: 14px;
-  box-shadow: 0 8px 24px rgb(0 0 0 / 40%);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--md-sys-color-shadow) 40%, transparent);
 }
 
 .settings-head {
@@ -557,12 +597,13 @@ l21-settings-panel {
   justify-content: space-between;
   align-items: center;
   padding: 10px 0 6px;
-  background: rgb(27 30 21 / 96%);
-}
+  background: color-mix(in srgb, var(--md-sys-color-surface-container-low) 96%, transparent);
 
-.settings-head h2 {
-  margin: 0;
-  font-size: 16px;
+  
+  h2 {
+    margin: 0;
+    font-size: 16px;
+  }
 }
 
 /* Closes the panel: MD3 standard icon button, 40 dp in a 48 dp touch target (the transparent border), Material Symbols
@@ -581,37 +622,42 @@ l21-settings-panel {
   background-clip: padding-box;
   color: var(--md-sys-color-on-surface-variant);
   cursor: pointer;
-}
-.settings-close:hover {
-  background-color: rgb(201 205 187 / 8%);
-}
-.settings-close:focus-visible,
-.settings-close:active {
-  background-color: rgb(201 205 187 / 10%);
-}
-.settings-close:focus-visible {
-  outline: 2px solid var(--md-sys-color-secondary);
-  outline-offset: -2px;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-surface-variant) var(--md-sys-state-hover), transparent);
+  }
+
+  &:focus-visible,
+  &:active {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-surface-variant) var(--md-sys-state-pressed), transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: -2px;
+  }
 }
 
 .settings-section {
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 1px solid #2a2f22;
-}
+  border-top: 1px solid var(--md-sys-color-outline-variant);
 
-.settings-section h3,
-.settings-section summary {
-  margin: 0 0 6px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--md-sys-color-secondary);
-}
+  
+  h3,
+  summary {
+    margin: 0 0 6px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--md-sys-color-secondary);
+  }
 
-.settings-section summary {
-  cursor: pointer;
+  
+  summary {
+    cursor: pointer;
+  }
 }
 
 .settings-row {
@@ -621,35 +667,39 @@ l21-settings-panel {
   align-items: center;
   gap: 4px 8px;
   padding: 6px 0;
-}
 
-.settings-row label {
-  flex: 1 1 auto;
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-}
+  
+  label {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
 
-.settings-row output {
-  color: var(--lk-on-bar-muted);
-  font-variant-numeric: tabular-nums;
-}
+  
+  output {
+    color: var(--l21-on-bar-muted);
+    font-variant-numeric: tabular-nums;
+  }
 
-.settings-row input[type="range"],
-.settings-row select,
-.settings-row input[type="url"] {
-  flex: 1 1 100%;
-  min-height: 32px;
-  accent-color: var(--md-sys-color-secondary);
-}
+  
+  input[type="range"],
+  select,
+  input[type="url"] {
+    flex: 1 1 100%;
+    min-height: 32px;
+    accent-color: var(--md-sys-color-secondary);
+  }
 
-.settings-row select,
-.settings-row input[type="url"] {
-  padding: 4px 8px;
-  border: 1px solid var(--md-sys-color-outline);
-  border-radius: 8px;
-  background: var(--md-sys-color-surface);
-  color: inherit;
+  
+  select,
+  input[type="url"] {
+    padding: 4px 8px;
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: 8px;
+    background: var(--md-sys-color-surface);
+    color: inherit;
+  }
 }
 
 .settings-toggle input {
@@ -662,12 +712,12 @@ l21-settings-panel {
   flex: 1 1 100%;
   margin: 0;
   font-size: 12px;
-  color: var(--lk-on-bar-muted);
+  color: var(--l21-on-bar-muted);
 }
 /* Telemetry session code (telemetry.js): read out by a tester to find their visit in the logs */
 .settings-session {
   margin-top: 12px;
-  font-family: var(--lk-font-data);
+  font-family: var(--l21-font-data);
 }
 
 .settings-actions {
@@ -675,38 +725,47 @@ l21-settings-panel {
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 16px;
-}
 
-/* « Réinitialiser »: MD3 outlined button (40 dp high, full corners, outline, label-large in the primary colour), its
-   width that of its label; a 48 dp touch target (::before), state layers and focus ring */
-.settings-actions button {
-  position: relative;
-  flex: 0 0 auto;
-  min-height: 40px;
-  padding: 0 24px;
-  border: 1px solid #8f9482;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--md-sys-color-secondary);
-  font: 500 14px/20px var(--lk-font-data);
-  letter-spacing: 0.1px;
-  cursor: pointer;
-}
-.settings-actions button::before {
-  content: '';
-  position: absolute;
-  inset: -5px -1px;
-}
-.settings-actions button:hover {
-  background: rgb(184 201 122 / 8%);
-}
-.settings-actions button:focus-visible,
-.settings-actions button:active {
-  background: rgb(184 201 122 / 10%);
-}
-.settings-actions button:focus-visible {
-  outline: 2px solid var(--md-sys-color-secondary);
-  outline-offset: 2px;
+  
+  /* « Réinitialiser »: MD3 outlined button (40 dp high, full corners, outline, label-large in the primary colour), its
+     width that of its label; a 48 dp touch target (::before), state layers and focus ring */
+  button {
+    position: relative;
+    flex: 0 0 auto;
+    min-height: 40px;
+    padding: 0 24px;
+    border: 1px solid var(--l21-outline-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--md-sys-color-secondary);
+    font: 500 14px/20px var(--l21-font-data);
+    letter-spacing: 0.1px;
+    cursor: pointer;
+
+  
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -5px -1px;
+    }
+
+  
+    &:hover {
+      background: color-mix(in srgb, var(--md-sys-color-secondary) var(--md-sys-state-hover), transparent);
+    }
+
+  
+    &:focus-visible,
+    &:active {
+      background: color-mix(in srgb, var(--md-sys-color-secondary) var(--md-sys-state-pressed), transparent);
+    }
+
+  
+    &:focus-visible {
+      outline: 2px solid var(--md-sys-color-secondary);
+      outline-offset: 2px;
+    }
+  }
 }
 
 /* Augmented reality on Android (android-ar.js, WebXR): the AR canvas, and the overlay Chrome shows over the camera
@@ -720,8 +779,8 @@ l21-settings-panel {
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  color: var(--lk-on-bar);
-  font-family: var(--lk-font-text);
+  color: var(--l21-on-bar);
+  font-family: var(--l21-font-text);
 }
 /* The controls' frame: the screen, or a quarter turn of it when the phone is held sideways (android-ar.js,
    trackTurn: Chrome keeps the screen's orientation during AR) */
@@ -751,7 +810,7 @@ l21-settings-panel {
 .xr-overlay-head,
 .xr-overlay-foot {
   pointer-events: auto;
-  background: rgb(18 20 14 / 72%);
+  background: color-mix(in srgb, var(--md-sys-color-surface) 72%, transparent);
 }
 .xr-overlay-head {
   display: flex;
@@ -775,29 +834,33 @@ l21-settings-panel {
   border: 0;
   border-radius: 999px;
   background: var(--md-sys-color-outline);
-  color: var(--lk-on-bar);
+  color: var(--l21-on-bar);
   cursor: pointer;
-}
-.xr-overlay-close::before {
-  content: '';
-  position: absolute;
-  inset: -4px;
-}
-.xr-overlay-close::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: currentColor;
-  opacity: 0;
-  transition: opacity 200ms;
-}
-.xr-overlay-close:active::after {
-  opacity: 0.1;
-}
-.xr-overlay-close:focus-visible {
-  outline: 2px solid var(--md-sys-color-secondary);
-  outline-offset: 2px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity 200ms;
+  }
+
+  &:active::after {
+    opacity: 0.1;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: 2px;
+  }
 }
 .xr-overlay-foot {
   padding: 12px 16px calc(16px + env(safe-area-inset-bottom));
@@ -821,11 +884,12 @@ l21-settings-panel {
   min-height: 48px;
   touch-action: none;
   cursor: pointer;
-}
-.xr-slider:focus-visible {
-  outline: 2px solid var(--md-sys-color-secondary);
-  outline-offset: 2px;
-  border-radius: 8px;
+
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
 }
 .xr-slider-track {
   position: relative;
@@ -833,7 +897,7 @@ l21-settings-panel {
   height: 4px;
   margin: 0 10px;
   border-radius: 2px;
-  background: rgb(242 243 234 / 35%);
+  background: color-mix(in srgb, var(--l21-on-bar) 35%, transparent);
 }
 .xr-slider-fill {
   position: absolute;
@@ -855,7 +919,7 @@ l21-settings-panel {
 .xr-overlay-scale output {
   min-width: 3.5em;
   text-align: right;
-  font-family: var(--lk-font-data);
+  font-family: var(--l21-font-data);
 }
 /* Side insets (notch, rounded corners) in both orientations */
 .xr-overlay-head {
@@ -884,57 +948,74 @@ l21-settings-panel {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  border: 1px solid #8f9482;
+  border: 1px solid var(--l21-outline-strong);
   border-radius: 999px;
   overflow: hidden;
-  background: rgb(30 33 25 / 88%);
-}
-.compare button {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 40px;
-  padding: 0 16px;
-  border: 0;
-  background: transparent;
-  color: var(--md-sys-color-on-surface);
-  font: 500 14px/20px var(--lk-font-data);
-  letter-spacing: 0.1px;
-  cursor: pointer;
-}
-.compare button + button {
-  border-left: 1px solid #8f9482;
-}
-.compare button svg {
-  display: none;
-}
-.compare button[aria-pressed='true'] {
-  background: var(--md-sys-color-secondary);
-  color: var(--md-sys-color-surface);
-}
-.compare button[aria-pressed='true'] svg {
-  display: block;
-}
-/* State layer */
-.compare button::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: currentColor;
-  opacity: 0;
-  transition: opacity 200ms;
-}
-.compare button:hover::after {
-  opacity: 0.08;
-}
-.compare button:focus-visible::after,
-.compare button:active::after {
-  opacity: 0.1;
-}
-.compare button:focus-visible {
-  outline: 2px solid var(--md-sys-color-secondary);
-  outline-offset: -2px;
+  background: color-mix(in srgb, var(--md-sys-color-surface-container) 88%, transparent);
+
+  button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 16px;
+    border: 0;
+    background: transparent;
+    color: var(--md-sys-color-on-surface);
+    font: 500 14px/20px var(--l21-font-data);
+    letter-spacing: 0.1px;
+    cursor: pointer;
+
+  
+    + button {
+      border-left: 1px solid var(--l21-outline-strong);
+    }
+
+  
+    svg {
+      display: none;
+    }
+
+  
+    &[aria-pressed='true'] {
+      background: var(--md-sys-color-secondary);
+      color: var(--md-sys-color-surface);
+    }
+
+  
+    &[aria-pressed='true'] svg {
+      display: block;
+    }
+
+  
+    /* State layer */
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: currentColor;
+      opacity: 0;
+      transition: opacity 200ms;
+    }
+
+  
+    &:hover::after {
+      opacity: 0.08;
+    }
+
+  
+    &:focus-visible::after,
+    &:active::after {
+      opacity: 0.1;
+    }
+
+  
+    &:focus-visible {
+      outline: 2px solid var(--md-sys-color-secondary);
+      outline-offset: -2px;
+    }
+  }
 }
 
 /* <l21-tooltip> (tooltip.js): MD3 plain tooltip. Inverse surface, body-small, 24 dp high, 4 dp corners; fades in
@@ -951,17 +1032,18 @@ l21-tooltip {
   padding: 4px 8px;
   border-radius: 4px;
   background: var(--md-sys-color-on-surface);
-  color: #2f3227;
-  font: 400 12px/16px var(--lk-font-text);
+  color: var(--md-sys-color-inverse-on-surface);
+  font: 400 12px/16px var(--l21-font-text);
   letter-spacing: 0.4px;
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
   transition: opacity 75ms cubic-bezier(0.3, 0, 1, 1);
-}
-l21-tooltip[data-shown='true'] {
-  opacity: 1;
-  transition: opacity 150ms cubic-bezier(0, 0, 0, 1);
+
+  &[data-shown='true'] {
+    opacity: 1;
+    transition: opacity 150ms cubic-bezier(0, 0, 0, 1);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   l21-tooltip,
@@ -982,9 +1064,9 @@ l21-tooltip[data-shown='true'] {
   gap: 6px;
   padding: 10px 12px 8px;
   border-radius: 16px;
-  background: rgb(30 33 25 / 88%);
+  background: color-mix(in srgb, var(--md-sys-color-surface-container) 88%, transparent);
   color: var(--md-sys-color-on-surface);
-  font: 500 12px/16px var(--lk-font-data);
+  font: 500 12px/16px var(--l21-font-data);
   letter-spacing: 0.5px;
   pointer-events: none;
 }
@@ -1007,17 +1089,20 @@ l21-tooltip[data-shown='true'] {
   color: var(--md-sys-color-on-surface-variant);
   cursor: pointer;
   pointer-events: auto;
-}
-.swim-help-button:hover {
-  background: rgb(235 237 227 / 8%);
-}
-.swim-help-button:focus-visible,
-.swim-help-button:active {
-  background: rgb(235 237 227 / 10%);
-}
-.swim-help-button:focus-visible {
-  outline: 2px solid var(--md-sys-color-secondary);
-  outline-offset: 2px;
+
+  &:hover {
+    background: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-hover), transparent);
+  }
+
+  &:focus-visible,
+  &:active {
+    background: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-pressed), transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: 2px;
+  }
 }
 .swim-row {
   display: flex;
@@ -1038,34 +1123,39 @@ l21-tooltip[data-shown='true'] {
   touch-action: none;
   -webkit-user-select: none;
   user-select: none;
-}
-.swim-key kbd {
-  display: grid;
-  place-items: center;
-  box-sizing: border-box;
-  width: 40px;
-  height: 40px;
-  border: 1px solid #8f9482;
-  border-bottom-width: 3px;
-  border-radius: 8px;
-  font: 700 14px/1 var(--lk-font-data);
-  transition: background 100ms, color 100ms;
-}
-.swim-key:hover kbd {
-  background: rgb(235 237 227 / 8%);
-}
-.swim-key:focus-visible kbd {
-  background: rgb(235 237 227 / 10%);
-  outline: 2px solid var(--md-sys-color-secondary);
-  outline-offset: 2px;
-}
-.swim-key:focus-visible {
-  outline: none;
-}
-.swim-key[data-down] kbd {
-  background: var(--md-sys-color-secondary);
-  color: var(--md-sys-color-surface);
-  border-color: var(--md-sys-color-secondary);
+
+  kbd {
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--l21-outline-strong);
+    border-bottom-width: 3px;
+    border-radius: 8px;
+    font: 700 14px/1 var(--l21-font-data);
+    transition: background 100ms, color 100ms;
+  }
+
+  &:hover kbd {
+    background: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-hover), transparent);
+  }
+
+  &:focus-visible kbd {
+    background: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-pressed), transparent);
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: 2px;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &[data-down] kbd {
+    background: var(--md-sys-color-secondary);
+    color: var(--md-sys-color-surface);
+    border-color: var(--md-sys-color-secondary);
+  }
 }
 .swim-hint {
   margin: 2px 0 0;
@@ -1080,39 +1170,45 @@ l21-tooltip[data-shown='true'] {
   padding: 24px;
   border: 0;
   border-radius: 28px;
-  background: #23261d;
+  background: var(--md-sys-color-surface-container-high);
   color: var(--md-sys-color-on-surface);
-  font: 400 14px/20px var(--lk-font-text);
+  font: 400 14px/20px var(--l21-font-text);
   letter-spacing: 0.25px;
-}
-.swim-help::backdrop {
-  background: rgb(0 0 0 / 32%);
-}
-.swim-help h2 {
-  margin: 0 0 16px;
-  font: 800 24px/32px var(--lk-font-text);
-}
-.swim-help p,
-.swim-help ul {
-  margin: 0 0 12px;
-  color: var(--md-sys-color-on-surface-variant);
-}
-.swim-help ul {
-  padding-left: 20px;
-}
-.swim-help li {
-  margin-bottom: 4px;
-}
-.swim-help kbd {
-  display: inline-block;
-  min-width: 22px;
-  padding: 0 6px;
-  border: 1px solid #8f9482;
-  border-bottom-width: 2px;
-  border-radius: 4px;
-  font: 700 12px/18px var(--lk-font-data);
-  text-align: center;
-  color: var(--md-sys-color-on-surface);
+
+  &::backdrop {
+    background: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent);
+  }
+
+  h2 {
+    margin: 0 0 16px;
+    font: 800 24px/32px var(--l21-font-text);
+  }
+
+  p,
+  ul {
+    margin: 0 0 12px;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  ul {
+    padding-left: 20px;
+  }
+
+  li {
+    margin-bottom: 4px;
+  }
+
+  kbd {
+    display: inline-block;
+    min-width: 22px;
+    padding: 0 6px;
+    border: 1px solid var(--l21-outline-strong);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    font: 700 12px/18px var(--l21-font-data);
+    text-align: center;
+    color: var(--md-sys-color-on-surface);
+  }
 }
 /* « Compris »: MD3 text button, 40 dp in a 48 dp touch target (the transparent border, its background inside it); the
    negative margin keeps it where a 40 dp button stands */
@@ -1130,16 +1226,18 @@ l21-tooltip[data-shown='true'] {
   background: transparent;
   background-clip: padding-box;
   color: var(--md-sys-color-secondary);
-  font: 500 14px/20px var(--lk-font-data);
+  font: 500 14px/20px var(--l21-font-data);
   letter-spacing: 0.1px;
   cursor: pointer;
-}
-.swim-help-ok:hover {
-  background: rgb(184 201 122 / 8%);
-}
-.swim-help-ok:focus-visible,
-.swim-help-ok:active {
-  background: rgb(184 201 122 / 10%);
+
+  &:hover {
+    background: color-mix(in srgb, var(--md-sys-color-secondary) var(--md-sys-state-hover), transparent);
+  }
+
+  &:focus-visible,
+  &:active {
+    background: color-mix(in srgb, var(--md-sys-color-secondary) var(--md-sys-state-pressed), transparent);
+  }
 }
 /* The underwater button's icon in the help's text: a small filled round, as the button while on */
 .swim-help-icon {
@@ -1151,10 +1249,11 @@ l21-tooltip[data-shown='true'] {
   background: var(--md-sys-color-secondary);
   color: var(--md-sys-color-surface);
   vertical-align: middle;
-}
-.swim-help-icon svg {
-  width: 16px;
-  height: 16px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 /* « Visite guidée » (tour.js, TODO #48): first in the bottom-right row, left of the other buttons (the AR button
@@ -1173,10 +1272,10 @@ l21-tooltip[data-shown='true'] {
   padding: 0 24px 0 16px;
   border: 4px solid transparent;
   border-radius: 999px;
-  background: rgb(60 66 50 / 92%);
+  background: var(--l21-control);
   background-clip: padding-box;
   color: var(--md-sys-color-on-surface);
-  font: 500 14px/20px var(--lk-font-data);
+  font: 500 14px/20px var(--l21-font-data);
   letter-spacing: 0.1px;
   white-space: nowrap;
   cursor: pointer;
@@ -1192,11 +1291,11 @@ l21-tooltip[data-shown='true'] {
   bottom: calc(max(16px, env(safe-area-inset-bottom)) + 52px);
 }
 .tour-button:hover {
-  background: rgb(80 87 68 / 94%);
+  background: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-hover), var(--l21-control));
 }
 .tour-button:focus-visible,
 .tour-button:active {
-  background: rgb(86 93 73 / 95%);
+  background: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-pressed), var(--l21-control));
 }
 .tour-button:focus-visible {
   outline: 2px solid var(--md-sys-color-secondary);
@@ -1218,18 +1317,19 @@ l21-tooltip[data-shown='true'] {
   width: min(440px, calc(100vw - 32px));
   padding: 12px 16px 12px 20px;
   border-radius: 20px;
-  background: rgb(35 38 29 / 94%);
+  background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 94%, transparent);
   color: var(--md-sys-color-on-surface);
-  font: 400 14px/20px var(--lk-font-text);
+  font: 400 14px/20px var(--l21-font-text);
   letter-spacing: 0.25px;
   opacity: 0;
   transform: translate(-50%, 16px);
   transition: opacity 200ms cubic-bezier(0.3, 0, 0.8, 0.15), transform 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
-}
-.tour-card.open {
-  opacity: 1;
-  transform: translate(-50%, 0);
-  transition: opacity 400ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
+
+  &.open {
+    opacity: 1;
+    transform: translate(-50%, 0);
+    transition: opacity 400ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
+  }
 }
 @media (max-width: 960px) {
   .tour-card {
@@ -1251,7 +1351,7 @@ l21-tooltip[data-shown='true'] {
 }
 .tour-count {
   color: var(--md-sys-color-secondary);
-  font: 500 12px/16px var(--lk-font-data);
+  font: 500 12px/16px var(--l21-font-data);
   letter-spacing: 0.5px;
 }
 /* MD3 standard icon button: 40 dp in a 48 dp touch target */
@@ -1268,21 +1368,24 @@ l21-tooltip[data-shown='true'] {
   background-clip: padding-box;
   color: var(--md-sys-color-on-surface-variant);
   cursor: pointer;
-}
-.tour-close:hover {
-  background-color: rgb(235 237 227 / 8%);
-}
-.tour-close:focus-visible,
-.tour-close:active {
-  background-color: rgb(235 237 227 / 10%);
-}
-.tour-close:focus-visible {
-  outline: 2px solid var(--md-sys-color-secondary);
-  outline-offset: -2px;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-hover), transparent);
+  }
+
+  &:focus-visible,
+  &:active {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-pressed), transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: -2px;
+  }
 }
 .tour-title {
   margin: -4px 0 4px;
-  font: 800 16px/24px var(--lk-font-text);
+  font: 800 16px/24px var(--l21-font-text);
   letter-spacing: 0.15px;
 }
 .tour-text {
@@ -1313,26 +1416,30 @@ l21-tooltip[data-shown='true'] {
 /* Back: a filled tonal icon button (Christian, 2026-10-26: circled too, as next), the viewer's buttons' tone, its
    state layers on top of it */
 .tour-prev {
-  background-color: rgb(60 66 50 / 92%);
+  background-color: var(--l21-control);
   color: var(--md-sys-color-on-surface);
-}
-.tour-prev:hover {
-  background-color: rgb(73 79 63);
-}
-.tour-prev:focus-visible,
-.tour-prev:active {
-  background-color: rgb(76 82 66);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-hover), var(--l21-control));
+  }
+
+  &:focus-visible,
+  &:active {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-pressed), var(--l21-control));
+  }
 }
 .tour-next {
   background-color: var(--md-sys-color-secondary);
   color: var(--md-sys-color-surface);
-}
-.tour-next:hover {
-  background-color: #c3d389;
-}
-.tour-next:focus-visible,
-.tour-next:active {
-  background-color: #c8d790;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-secondary) var(--md-sys-state-hover), var(--md-sys-color-secondary));
+  }
+
+  &:focus-visible,
+  &:active {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-secondary) var(--md-sys-state-pressed), var(--md-sys-color-secondary));
+  }
 }
 .tour-prev:focus-visible,
 .tour-next:focus-visible {
@@ -1363,13 +1470,14 @@ l21-tooltip[data-shown='true'] {
        band on a phone) */
     left: 12px;
     bottom: max(12px, env(safe-area-inset-bottom));
-    width: min(860px, calc(100vw - 12px - var(--lk-tour-right, 232px)));
+    width: min(860px, calc(100vw - 12px - var(--l21-tour-right, 232px)));
     padding: 8px 8px 10px 16px;
     border-radius: 16px;
     transform: translate(0, 16px);
-  }
-  .tour-card.open {
-    transform: translate(0, 0);
+
+    &.open {
+      transform: translate(0, 0);
+    }
   }
   .tour-head {
     display: contents;

@@ -18,34 +18,40 @@ const english = lang === 'en'
 </a>
 
 <style>
-  /* MD3 filled button: 40 px high in a 48 px touch target (the transparent border, its colour inside it; TODO #59) */
-  .model-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    box-sizing: border-box;
-    min-height: 48px;
-    padding: 0 1rem;
-    border: 4px solid transparent;
-    border-radius: var(--md-sys-shape-full);
-    background: var(--md-sys-color-tertiary);
-    background-clip: padding-box;
-    color: var(--md-sys-color-on-tertiary);
-    font-family: var(--lk-font-data);
-    font-size: 0.875rem;
-    font-weight: 700;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-  .model-pill:hover {
-    box-shadow: inset 0 0 0 100px rgb(14 36 48 / 0.08); /* MD3 hover state layer */
-  }
-  .model-pill:focus-visible,
-  .model-pill:active {
-    box-shadow: inset 0 0 0 100px rgb(14 36 48 / 0.1); /* MD3 focus and pressed state layers */
-  }
-  .model-pill:focus-visible {
-    outline: 2px solid var(--md-sys-color-secondary);
-    outline-offset: -2px;
+  @layer l21.components {
+    /* MD3 filled button: 40 px high in a 48 px touch target (the transparent border, its colour inside it; TODO #59).
+       Plain CSS, nested (Christian, 2026-10-26) */
+    .model-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-sizing: border-box;
+      min-height: 48px;
+      padding: 0 1rem;
+      border: 4px solid transparent;
+      border-radius: var(--md-sys-shape-full);
+      background: var(--md-sys-color-tertiary);
+      background-clip: padding-box;
+      color: var(--md-sys-color-on-tertiary);
+      font-family: var(--l21-font-data);
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+
+      &:hover {
+        box-shadow: inset 0 0 0 100px color-mix(in srgb, var(--md-sys-color-on-tertiary) var(--md-sys-state-hover), transparent);
+      }
+
+      &:focus-visible,
+      &:active {
+        box-shadow: inset 0 0 0 100px color-mix(in srgb, var(--md-sys-color-on-tertiary) var(--md-sys-state-pressed), transparent);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--md-sys-color-secondary);
+        outline-offset: -2px;
+      }
+    }
   }
 </style>

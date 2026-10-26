@@ -24,7 +24,13 @@ export default defineConfig({
   redirects: { '/about': '/a-propos' },
   // preview.proxy: {} because Vite's preview server would otherwise inherit the forwarding and serve the dev viewer
   // instead of the build (astro preview must show what the hosting serves)
-  vite: { server: { proxy: { '/modele/viewer': viewerDev } }, preview: { proxy: {} } },
+  // build.cssTarget: the components' native CSS nesting (docs/system-design.md) flattened for browsers before 2023
+  // (Safari 16.5 and Chrome 112 read it; older ones, an old iPad included, would drop the nested rules)
+  vite: {
+    server: { proxy: { '/modele/viewer': viewerDev } },
+    preview: { proxy: {} },
+    build: { cssTarget: ['chrome100', 'safari15', 'firefox100', 'edge100'] },
+  },
   integrations: [
     // Icons by name (src/components: <Icon name="material-symbols:…-rounded" />), from Iconify's Material Symbols set
     // (@iconify-json/material-symbols, a dev dependency: npm update to follow Google's drawings); only the ones listed
