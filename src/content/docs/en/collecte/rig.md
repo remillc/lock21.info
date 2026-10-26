@@ -8,14 +8,22 @@ sidebar:
 The rig (the camera frame) carries the GoPro and the lights in front of the Seacraft Future 1000 scooter. Sylvain
 Marcotte designed it.
 
-<figure>
+<div class="facts">
+<p class="fact"><span>Scooter</span><b>Seacraft Future 1000</b></p>
+<p class="fact"><span>Filmed plane</span><b>at 70 cm</b></p>
+<p class="fact"><span>Camera</span><b>GoPro Hero6 Black</b></p>
+</div>
+
+<figure class="figure-wide">
 
 ![The rig standing in a bucket before a dive: the GoPro in the middle, the lights and the foam floats on the frame](../../collecte/rig/assets/rig-scooter-2024-06-14.webp)
 
-<figcaption>The rig on the scooter, before a dive (June 14, 2024)</figcaption>
+<figcaption><time datetime="2024-06-14">2024-06-14</time>The rig on the scooter, before a dive</figcaption>
 </figure>
 
 ## Construction
+
+<div class="figure-grid">
 
 <figure>
 
@@ -31,19 +39,25 @@ Marcotte designed it.
 <figcaption>A light on its mount, the thumbscrews and the guides. Model: Sylvain Marcotte</figcaption>
 </figure>
 
+</div>
+
+<div class="figure-grid">
+
 <figure>
 
 ![Sylvain Marcotte assembling the rig on the scooter, at night, on a blue tarp, the tools around](../../collecte/rig/assets/assemblage-rig-2024-06-08.webp)
 
-<figcaption>Sylvain Marcotte assembling the rig on the scooter (June 8, 2024)</figcaption>
+<figcaption><time datetime="2024-06-08">2024-06-08</time>Sylvain Marcotte assembling the rig on the scooter</figcaption>
 </figure>
 
 <figure>
 
 ![Sylvain Marcotte beside the scooter standing in a bucket, the rig fitted, under a tent](../../collecte/rig/assets/assemblage-rig-debout-2024-06-08.webp)
 
-<figcaption>The rig fitted, the scooter standing in a bucket, with Sylvain Marcotte (June 8, 2024)</figcaption>
+<figcaption><time datetime="2024-06-08">2024-06-08</time>The rig fitted, the scooter standing in a bucket, with Sylvain Marcotte</figcaption>
 </figure>
+
+</div>
 
 *(to be completed: the materials, the fittings, how the rig attaches to the scooter.)*
 
@@ -56,7 +70,7 @@ between the two right-hand ones. The measurements are in [Camera rig dimensions]
 
 ![The lights, the foam floats and the GoPro in its waterproof housing, laid on a table](../../collecte/rig/assets/lampes-boitier-2024-05-16.webp)
 
-<figcaption>The lights, the floats and the GoPro in its housing (May 16, 2024)</figcaption>
+<figcaption><time datetime="2024-05-16">2024-05-16</time>The lights, the floats and the GoPro in its housing</figcaption>
 </figure>
 
 *(to be completed: the lights' model, how many, and their power.)*
@@ -73,9 +87,9 @@ that cover them in places.
 
 ## The gear of a dive
 
-<figure>
+<figure class="figure-wide">
 
 ![The scooter and its rig on a picnic table, with the coded targets, the colour chart and the brushes](../../collecte/rig/assets/materiel-plongee-2024-06-14.webp)
 
-<figcaption>The gear of a dive: the scooter, the [coded targets](/en/collecte/mise-echelle) and the colour chart (June 14, 2024)</figcaption>
+<figcaption><time datetime="2024-06-14">2024-06-14</time>The gear of a dive: the scooter, the <a href="/en/collecte/mise-echelle">coded targets</a> and the colour chart</figcaption>
 </figure>

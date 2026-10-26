@@ -174,42 +174,151 @@
     }
   }
 
-  // --- Figures: rounded image, caption in the secondary text colour
+  // --- Notebook content (Christian, 2026-10-26: « Le rig »'s mock-up; docs/system-design.md, Notebook pages)
+  // Figures: the column's width (a tall image capped in height, its proportions kept), a thin outline, 16 dp corners;
+  // the caption in the instrument panel's mono, numbered FIG. 01, 02… down the page, its <time> in the signal colour
+
+  .sl-markdown-content {
+    counter-reset: l21-fig l21-section;
+  }
 
   .sl-markdown-content figure {
     margin-inline: 0;
+    display: grid;
+    gap: 0.6rem;
+    counter-increment: l21-fig;
 
     img {
-      max-width: min(100%, 25rem);
+      display: block;
+      width: auto;
+      max-width: 100%;
+      max-height: 36rem;
       height: auto;
+      border: 1px solid var(--md-sys-color-outline-variant);
       border-radius: var(--md-sys-shape-large);
+      background: var(--md-sys-color-surface-container);
       cursor: zoom-in;
     }
 
     figcaption {
-      font-size: var(--sl-text-sm);
+      font: 400 0.8rem/1.5 var(--l21-font-data);
       color: var(--md-sys-color-on-surface-variant);
-    }
 
-  
-    // Centred figure (Christian, 2026-10-26: the 1904 photo of « À propos de l'écluse 21 »): its usual size, the
-    // image and its caption in the middle of the column
-    &.figure-center {
-      text-align: center;
+      &::before {
+        content: 'FIG. ' counter(l21-fig, decimal-leading-zero);
+        margin-inline-end: 0.6rem;
+        font-weight: 700;
+        color: var(--md-sys-color-on-surface);
+      }
 
-      img {
-        display: block;
-        margin-inline: auto;
+      time {
+        margin-inline-end: 0.6rem;
+        color: var(--md-sys-color-tertiary-text);
+        font-variant-numeric: tabular-nums;
       }
     }
 
-    // Wide figure (e.g. the zone map): 80 % of the content column, height in proportion, centred
+    // Centred figure (Christian, 2026-10-26: the 1904 photo of « À propos de l'écluse 21 »): the image and its caption
+    // in the middle of the column
+    &.figure-center {
+      justify-items: center;
+      text-align: center;
+    }
+
+    // Wide figure (the zone map, a page's opening photo): the whole column, whatever the image's own width
     &.figure-wide img {
-      display: block;
-      width: 80%;
-      max-width: 80%;
-      height: auto;
-      margin-inline: auto;
+      width: 100%;
+      max-height: none;
+    }
+  }
+
+  // Figures that go together, side by side (two per row on a wide column, one under the other on a phone)
+  .sl-markdown-content .figure-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: 1rem;
+    align-items: start;
+
+    figure {
+      margin: 0;
+    }
+  }
+
+  // The page's facts as data chips, like the home page's instrument panel: a label over a value
+  .sl-markdown-content .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block: 1.5rem;
+  }
+
+  .sl-markdown-content .fact {
+    display: grid;
+    gap: 0.2rem;
+    margin: 0;
+    padding: 0.55rem 0.85rem;
+    border-radius: var(--md-sys-shape-medium);
+    background: var(--l21-panel);
+    color: var(--l21-bar-text);
+
+    span {
+      font: 500 0.65rem/1 var(--l21-font-data);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--l21-bar-muted);
+    }
+
+    b {
+      font: 700 0.95rem/1.2 var(--l21-font-data);
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  // An unfinished section's placeholder (placeholder-marks.mjs): a dashed note
+  .sl-markdown-content .l21-todo {
+    width: fit-content;
+    padding: 0.35rem 0.9rem;
+    border: 1px dashed var(--md-sys-color-outline);
+    border-radius: var(--md-sys-shape-medium);
+    font: 500 0.75rem/1.4 var(--l21-font-data);
+    letter-spacing: 0.02em;
+    color: var(--md-sys-color-on-surface-variant);
+
+    em {
+      font-style: normal;
+    }
+  }
+
+  // The notebook's pages (PageTitle.astro writes the group's eyebrow on them): the group's name above the title, the
+  // first paragraph as a lead, the section headings numbered 01, 02…
+  .l21-eyebrow {
+    margin: 0 0 0.6rem;
+    font: 700 0.75rem/1 var(--l21-font-data);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--md-sys-color-tertiary-text);
+  }
+
+  main:has(.l21-eyebrow) .sl-markdown-content {
+    > p:first-child {
+      font-size: 1.15rem;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    // The number in front, the heading staying inline (Starlight puts its anchor link in the line's end padding)
+    h2:not(#footnote-label) {
+      &::before {
+        display: inline-block;
+        margin-inline-end: 0.8rem;
+        vertical-align: 0.3em;
+        counter-increment: l21-section;
+        content: counter(l21-section, decimal-leading-zero);
+        padding-top: 0.35rem;
+        border-top: 2px solid var(--md-sys-color-tertiary-text);
+        font: 700 0.8rem/1 var(--l21-font-data);
+        letter-spacing: 0.08em;
+        color: var(--md-sys-color-tertiary-text);
+      }
     }
   }
 }
