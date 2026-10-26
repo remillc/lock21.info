@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Underwater view: dragging with the left button no longer inverts the vertical axis (Christian, 2026-10-26), as in
+  the standard view.
 - Underwater view: the particles' 15 % trim on the current removed (Christian, 2026-10-26): they drift at the season's
   factor times the measured current (35 ft/min): × 1.5 in winter, × 8 in spring, × 6 in summer, × 4 in autumn.
 - French typography (Christian, 2026-10-26): the standard non-breaking spaces in every French text (pages, interface
