@@ -15,6 +15,11 @@
       "commit": "2ff5c1b",
       "recorded": "2026-10-23"
     },
+    "collecte/mise-a-l-echelle.md": {
+      "source": "8ac1b86851c4b3fee20088261a8c09b083e4303b",
+      "commit": "2a591b2",
+      "recorded": "2026-10-26"
+    },
     "confidentialite.mdx": {
       "source": "1a288b15f2835c5ffd32a0b11a2ab712716fe7d8",
       "commit": "14f96b1",
@@ -36,8 +41,8 @@
       "recorded": "2026-10-21"
     },
     "problemes/alignement-chunks.md": {
-      "source": "df811f8c325a7c73b2d234fee3e8fd0ad9578118",
-      "commit": "5cdc775",
+      "source": "f31ea95a88e74dc031ecd69a570ed61b7b7fd414",
+      "commit": "2a591b2",
       "recorded": "2026-10-26"
     },
     "problemes/calibration-couleurs.md": {

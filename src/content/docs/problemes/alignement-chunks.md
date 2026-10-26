@@ -13,9 +13,11 @@ réelles exactes.
 
 <figure>
 
-![Une cible posée au plancher, vue par la caméra](./effet-banane/assets/exemple-cible-GX010197.007.webp)
+![Une cible posée au sol, vue par la caméra](./effet-banane/assets/exemple-cible-GX010197.007.webp)
 
-<figcaption>Une des cibles, au plancher</figcaption>
+<figcaption>Une des cibles, au sol</figcaption>
 </figure>
 
 La déformation, elle, n'est pas encore entièrement réglée : voir [Effet de banane](/problemes/effet-banane).
+
+Voir aussi : [Mise à l'échelle](/collecte/mise-a-l-echelle), les cibles et les échelles mesurées en plongée.

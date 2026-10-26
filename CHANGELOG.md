@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- « Mise à l'échelle » / “Scaling” (`/collecte/mise-a-l-echelle`): the targets, how they're fixed, the scales measured
+  in each zone (from the dive log), the link to « Suivi »; the target model and the Metashape steps « à compléter »
+  by Christian. « Alignement de chunks » links to it.
 - « Alignement de chunks » written (it was empty), French and English: each zone's model comes out slightly
   distorted, targets set each one's scale, the distortion not yet solved (link to « Effet de banane »).
 - Page names (docs/system-design.md, « Page names »): addresses, titles and menu labels made to agree. Folders

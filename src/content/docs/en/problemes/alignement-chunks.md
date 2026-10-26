@@ -12,9 +12,11 @@ to set measuring scales on each model and bring it to its exact real dimensions.
 
 <figure>
 
-![A target on the floor, seen by the camera](../../problemes/effet-banane/assets/exemple-cible-GX010197.007.webp)
+![A target on the ground, seen by the camera](../../problemes/effet-banane/assets/exemple-cible-GX010197.007.webp)
 
-<figcaption>One of the targets, on the floor</figcaption>
+<figcaption>One of the targets, on the ground</figcaption>
 </figure>
 
 The distortion itself isn't fully solved yet: see [Banana effect](/en/problemes/effet-banane).
+
+See also: [Scaling](/en/collecte/mise-a-l-echelle), the targets and the scales measured while diving.
