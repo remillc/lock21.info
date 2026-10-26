@@ -1,8 +1,8 @@
 {
   "pages": {
     "a-propos.mdx": {
-      "source": "86318170489a1965c254ee7883623ee107c0ccc0",
-      "commit": "8161d7e",
+      "source": "08ca969f21560dd4ead76425a179feba5b79d658",
+      "commit": "8a61761",
       "recorded": "2026-10-26"
     },
     "collecte/journal-plongees.mdx": {
@@ -26,8 +26,8 @@
       "recorded": "2026-10-26"
     },
     "decoupage-site.mdx": {
-      "source": "87d6ebdea7b0656a4b93cd46580a6874fb9f9d26",
-      "commit": "8161d7e",
+      "source": "e68d0004fdb621aef054f1e0abf70c7987e1abe1",
+      "commit": "8a61761",
       "recorded": "2026-10-26"
     },
     "index.mdx": {
