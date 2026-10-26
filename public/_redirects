@@ -56,3 +56,10 @@
 /en/traitement/nuage-de-points-dense /en/processing/dense-point-cloud 301
 /traitement/generation-des-modeles /traitement/generation-modeles 301
 /en/traitement/generation-des-modeles /en/processing/building-models 301
+# The Docusaurus site's addresses (2024-2025, on GitHub Pages; SEO audit S3, docs/audits/seo-2026-10-26.md): the blog
+# and its feeds to the home page, /docs/… to the same path without /docs (then, for a renamed page, its line above)
+/blog / 301
+/blog/* / 301
+/docs / 301
+/docs/* /:splat 301
+/en/docs/* /en/:splat 301

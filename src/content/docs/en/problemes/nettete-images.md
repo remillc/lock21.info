@@ -14,11 +14,11 @@ The quality of the data collected (pixels) depends on several factors:
 3. The lighting
 4. The capture settings
 
-### The camera's characteristics (the _hardware_)
+## The camera's characteristics (the _hardware_)
 
 The lens, the image sensor and the encoding format are all characteristics that affect the quality of the pixels collected. It's a huge subject and goes well beyond the scope of this documentation.
 
-#### Settings
+### Settings
 
 The camera was set up to keep post-capture processing to a minimum, the idea being to disable or reduce as much as possible the processing done by the camera's software, so as to get data from the sensor that is as raw as possible.
 
@@ -26,11 +26,11 @@ There is, however, one point
 
 See the [full list of settings used](/en/collecte/materiel-utilise#camera).
 
-### Lighting
+## Lighting
 
 *(to be completed)*
 
-### Capture settings
+## Capture settings
 
 *(to be completed)*
 

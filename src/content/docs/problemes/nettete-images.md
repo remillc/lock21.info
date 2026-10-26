@@ -14,11 +14,11 @@ La qualité des données collectés (pixels) dépend de plusieurs facteurs :
 3. L'éclairage
 4. Les paramètres de la prise d'images
 
-### Les caractéristiques de la caméra (le _hardware_)
+## Les caractéristiques de la caméra (le _hardware_)
 
 La lentille, le capteur photosensible et le format d'encodage sont autant de caractéristiques qui influencent la qualité des pixels récoltés. Le sujet est vaste et dépasse nettement le cadre de cette documentation.
 
-#### Réglages
+### Réglages
 
 La caméra a été réglée de façon à limiter le plus possible les traitements post-capture, l'idée étant de désactiver/réduire le plus possible les traitements effectués par le logiciel de la caméra afin d'obtenir des données captées par le capteur le plus brut possible.
 
@@ -26,11 +26,11 @@ Il y a cependant un point
 
 Consultez la [liste complète des paramètres utilisés](/collecte/materiel-utilise#caméra).
 
-### Éclairage
+## Éclairage
 
 *(à compléter)*
 
-### Paramètres de la prise d'images
+## Paramètres de la prise d'images
 
 *(à compléter)*
 

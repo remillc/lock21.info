@@ -64,7 +64,10 @@ export default defineConfig({
     starlight({
       // Site name per language (docs/system-design.md): Écluse 21 in French, Lock 21 in English
       title: { fr: 'Écluse 21', en: 'Lock 21' },
-      description: "Photogrammétrie sous-marine de l'écluse 21 (Dickinson Landing): carnet de terrain et modèle 3D",
+      // The French pages' description when they have none of their own; the English pages get theirs, the share image,
+      // og:locale and the structured data from src/routeData.js (SEO audit, docs/audits/seo-2026-10-26.md)
+      description: "Photogrammétrie sous-marine de l'écluse 21 (Dickinson's Landing) : carnet de terrain et modèle 3D",
+      routeMiddleware: './src/routeData.js',
       // Logo S4 "21 en écho" (docs/system-design.md); figures drawn as outlines, no font needed
       logo: { light: './src/assets/logo.svg', dark: './src/assets/logo-dark.svg', alt: 'Écluse 21' },
       favicon: '/favicon.svg',

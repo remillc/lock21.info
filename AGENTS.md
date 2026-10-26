@@ -38,6 +38,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `messages/` | The interface texts (Paraglide JS, inlang message format): `site/` (the components) and `viewer/` (the 3D viewer), `fr.json` and `en.json` each; `site.inlang/`, `viewer.inlang/` their settings (the message-format plugin loaded from `node_modules`, no CDN) |
 | `src/content.config.js` | Docs collection definition |
 | `src/integrations/home-slash.mjs` | Post-build step: the home pages at `/` and `/en/` (the rest of the site has no final slash) |
+| `src/routeData.js` | Starlight route middleware (`routeMiddleware`): what the `<head>` says to search engines and share previews: the English pages' default description, `og:locale` (`fr_CA` / `en_CA`), the share image `public/images/og-lock21.jpg` (1200 × 630, cropped from the home render), structured data (JSON-LD: `WebSite` and author on the home pages, `3DModel` on `/modele`) |
 | `src/integrations/footnote-labels.mjs` | Footnotes headed « Notes » (back links « Retour à l'appel de note N ») on the French pages; Astro 7's Markdown (Sätteri) has one site-wide setting, so this integration adds a plugin for the French pages only |
 | `src/content/i18n/fr.json` | Starlight's own French texts overridden (search dialog, « Sélectionner le thème / la langue »); the components' texts are in `messages/` |
 | `src/integrations/english-paths.mjs`, `src/data/englishPaths.js` | Post-build step: the English pages at their English addresses (see Language) |
