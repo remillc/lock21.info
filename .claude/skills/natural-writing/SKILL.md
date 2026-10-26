@@ -32,10 +32,45 @@ the ones marked *weak alone* need company).
   constaté »); English pages are translations in the same plain voice. Docs and code comments are plain and neutral.
 - **Concrete over general.** Depths in feet with metres in parentheses, dates, zone numbers, the gear's names, what
   went wrong. Specific, even odd details are the voice: keep them.
-- **Keep the site's typography as it is**: « guillemets » with spaces in French, “curly quotes” in English pages, the
-  apostrophe the page already uses, `→` on links that lead on (design brief), a colon without a space before it where
-  the site already writes it so (« Erreur: … »). Don't straighten quotes or remove these arrows.
+- **Keep the site's marks**: “curly quotes” in English pages, the apostrophe the page already uses, `→` on links that
+  lead on (design brief). Don't straighten quotes or remove these arrows. French typography: below.
 - Short is better: Christian often asks for shorter texts. Cut before you add.
+
+## French: typography and terms
+
+The reference is the Office québécois de la langue française's
+[Banque de dépannage linguistique](https://vitrinelinguistique.oqlf.gouv.qc.ca/banque-de-depannage-linguistique)
+(the site is Canadian: numbers and dates in `fr-CA`). Look a question up there rather than guessing.
+
+**Spaces (Christian, 2026-10-26: the standard non-breaking spaces).** In French text, never a line break between a
+mark and the word it belongs to:
+
+| Where | Space | Character | Example |
+| --- | --- | --- | --- |
+| before « : » | non-breaking space | U+00A0 | `Erreur : la connexion…` |
+| inside « » | non-breaking spaces | U+00A0 | `« Modèle 3D »` |
+| before « ; », « ? », « ! » | narrow non-breaking space | U+202F | `Et la visibilité ?` |
+| between a number and its unit, in thousands | non-breaking space | U+00A0 | `60 pi`, `18,3 m`, `16 384` |
+| after « : », « ; », « ? », « ! », « » » | an ordinary space | | |
+
+Not in code, paths, addresses, times (`10:30`), ratios (`4:3`, `1:100`) or key names. In Markdown and JSON, type the
+characters themselves, not `&nbsp;`. English text keeps no space before these marks.
+
+**Numbers.** Decimal comma (`18,3 m`), thousands with a non-breaking space (`16 384`), the unit after a non-breaking
+space (`35 pi/min`); feet first with metres in parentheses where the page already does so.
+
+**Terms.** One word per thing, the same on every page and in the interface. Decisions so far, and proposals
+(**to confirm** by Christian before using them in new labels):
+
+| Thing | Use | Notes |
+| --- | --- | --- |
+| the processing steps (sidebar « Workflow ») | « le traitement » (to confirm) | « workflow » only for Metashape's own *Batch Process* workflows (`config/workflows/*.xml`) |
+| dense cloud | « nuage de points dense » | Metashape's French interface; « dense cloud » in parentheses on first use if useful |
+| chunk | *chunk*, in italics (to confirm) | Metashape's own term; explained on first use (« un *chunk*, un bloc de photos traité à part ») |
+| rig | « rig » (to confirm) | the camera frame; « le rig (support de caméras) » on first use |
+| frames extracted from the video | « images » | « frames » only in file names |
+| zone | « zone », with its number (« la zone 12 ») | as on the zone map |
+| depth | « profondeur », in feet (« 60 pi ») with metres | « pi » not « ft » in French |
 
 ## How to work
 
