@@ -5,6 +5,11 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+## 1.0.0-beta.2 - 2026-10-26
+
+Fixes to the 3D viewer: no more holes in the walls on large screens, a steady start view, faster panning and zoom;
+and page descriptions for the search engines.
+
 - 3D viewer: panning with the right button (standard view) twice as fast: the point pressed follows the pointer at
   half its pace (was a quarter).
 - 3D viewer: the mouse wheel's zoom twice as fast (0.5 of OrbitControls' speed per notch, was 0.25).
