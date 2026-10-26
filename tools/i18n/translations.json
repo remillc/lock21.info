@@ -1,8 +1,8 @@
 {
   "pages": {
     "a-propos-ecluse-21.md": {
-      "source": "d8832b3e0f251620c1396b8e16f6550fc2715ba3",
-      "commit": "971e049",
+      "source": "a839601a83e5ff876042999e7e9c22500ae226f4",
+      "commit": "a69e518",
       "recorded": "2026-10-26"
     },
     "a-propos.mdx": {
@@ -21,8 +21,8 @@
       "recorded": "2026-10-23"
     },
     "collecte/mise-echelle.md": {
-      "source": "081be25435cc759a8fd296b020d91de2595235f3",
-      "commit": "b8a85d0",
+      "source": "2a7dd53f664acd91bb6f408c72f1610b4e855b9f",
+      "commit": "a69e518",
       "recorded": "2026-10-26"
     },
     "collecte/rig.md": {
@@ -71,8 +71,8 @@
       "recorded": "2026-10-26"
     },
     "problemes/effet-banane.md": {
-      "source": "17bc363f07e93db1057b1f0227f466335f9cf393",
-      "commit": "fdcbece",
+      "source": "b62b6cae7d84acee5c70cb8da2663bc913742341",
+      "commit": "a69e518",
       "recorded": "2026-10-26"
     },
     "problemes/fort-courant-canal.md": {
