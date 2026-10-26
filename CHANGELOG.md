@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Lightbox: as it opens, the image, its caption and its buttons end with the scrim, at 300 ms.
 - Lightbox: the page behind no longer scrolls while it is open.
 - Images in several sizes (Astro's responsive images): the page loads what its column needs, the lightbox the widest;
   « Le rig »'s photos regenerated from the originals up to 2400 px. In the lightbox, a click zooms to the image's own

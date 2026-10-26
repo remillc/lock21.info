@@ -144,14 +144,15 @@ class ImageZoom extends HTMLElement {
       fill(i)
       busy = true
       big.style.visibility = 'hidden'
-      const timing = { duration: 400, easing: DECELERATE }
+      // Everything ends with the scrim, at 300 ms (Christian, 2026-10-26: nothing still moving once the scrim is done)
+      const timing = { duration: 300, easing: DECELERATE }
       dialog.showModal()
       // The scrim fades in from the first frame (started before the image is decoded: otherwise a frame of full black,
-      // a flash), the caption and the buttons a little after
+      // a flash), the caption and the buttons with it
       if (!reduce.matches) {
         // A steady fade for the scrim (MD3's decelerate curve rises too fast at first: 40 % black in one frame)
         dialog.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, easing: 'linear', pseudoElement: '::backdrop' })
-        for (const el of [caption, ...chrome()]) el.animate([{ opacity: 0 }, { opacity: 1 }], { ...timing, delay: 100, fill: 'backwards' })
+        for (const el of [caption, ...chrome()]) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, easing: 'linear' })
       }
       dialog.querySelector('.lightbox-close').focus({ preventScroll: true })
       await ready()
