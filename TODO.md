@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#92**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#93**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -115,13 +115,11 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #87 Left menu (sidebar), Christian 2026-10-26: as a page loads, its groups show open, then close, a flicker.
   Only the current page's group should be open from the start (Starlight's `<details open>` on every group, or the
   sidebar state restored by Head.astro / client-side routing after the first paint: to find)
-- [ ] #88 Analytics on all actions (Christian, 2026-10-26): an event for every action a visitor takes, on the site (links,
-  search, menu, theme and language, downloads; Google Analytics, `Analytics.astro`, already sends page views) and in the
-  3D viewer (each button, tour steps, dive mode, settings, AR; `viewer/src/telemetry.js`, `/api/log`). To decide: one
-  list of event names, which channel takes which, and the privacy page brought up to date
-
-## Other
-
+- [ ] #92 Google Analytics, for Christian: register the custom definitions of the actions sent since TODO #88
+  (Admin › Custom definitions). Metrics (unit: seconds): `standard_seconds`, `underwater_seconds` (viewer_end),
+  `seconds` (dive_end). Dimensions (event scope): `button`, `step`, `move`, `setting`, `season`, `lamp`, `theme`,
+  `language`, `ar_size`. Then, in Explore: sessions with viewer_end, those with underwater_seconds > 0, the sums per
+  session
 - [ ] #89 SEO audit (2026-10-26, `docs/audits/seo-2026-10-26.md`): the code fixes left. S11 after the next deploy, check that `lock21-info.lock21.workers.dev` no longer answers and that a branch
   preview still works (`workers_dev: false` in `wrangler.jsonc`; else back to true)
 - [ ] #90 SEO audit: content, for Christian. S1 a real `description` for the pages that answer a question (dive log, zones, current, gear first), in its

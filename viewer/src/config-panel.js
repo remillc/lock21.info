@@ -17,6 +17,7 @@
 // through reloads of the /modele page; forgotten when a visitor arrives there from another page (?reset=1,
 // forgetSettings). Saved at every change, cleared by "Réinitialiser"; unavailable storage (private browsing,
 // blocked site data) only means nothing is kept.
+import { track } from './analytics.js'
 import { m } from './i18n.js'
 import { icon } from './icons.js'
 
@@ -105,6 +106,9 @@ export function settingsSchema({ mobile }) {
 }
 
 class SettingsPanel extends HTMLElement {
+  /** @type {Map<string, number>} The pending setting_change of each setting (set) */
+  trackTimers = new Map()
+
   configure({ schema, values, live, button, session }) {
     this.schema = schema
     // Telemetry session code (telemetry.js), shown at the bottom so that a tester can read it out
@@ -121,7 +125,10 @@ class SettingsPanel extends HTMLElement {
     this.setAttribute('aria-label', m.settingsDialog())
     this.render()
     this.button.hidden = false
-    this.button.addEventListener('click', () => this.toggle(this.hidden))
+    this.button.addEventListener('click', () => {
+      if (this.hidden) track('viewer_button', { button: 'settings' })
+      this.toggle(this.hidden)
+    })
     // The wheel stays in the panel: at the end of its list (or when it has nothing to scroll), the page around the
     // viewer (the /modele page) would scroll instead. style.css: overscroll-behavior does the same for touch
     this.addEventListener('wheel', (e) => {
@@ -150,6 +157,9 @@ class SettingsPanel extends HTMLElement {
     else this.params.set(item.key, value)
     this.live[item.key]?.(value)
     saveSettings(this.params, this.schema)
+    // Analytics (analytics.js): the setting changed, once it settles (a slider sends many values while dragged)
+    clearTimeout(this.trackTimers.get(item.key))
+    this.trackTimers.set(item.key, setTimeout(() => track('setting_change', { setting: item.key, value }), 1000))
     this.showDependents()
   }
 
