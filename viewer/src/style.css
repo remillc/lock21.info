@@ -429,8 +429,10 @@ l21-loading.error .loading-label {
   display: block;
 }
 /* A phone held sideways (Christian, 2026-10-26): the season's slider above the buttons on the right, its right edge
-   on theirs; the row below keeps the lamp and the buttons, so the tour's card has room on its left */
-@media (orientation: landscape) and (hover: none) {
+   on theirs; the row below keeps the lamp and the buttons, so the tour's card has room on its left. Only when wide
+   (600 px): the /modele frame on a phone held upright is « landscape » too, and keeps the narrow screens' layout below
+   (usability audit V2, V11) */
+@media (orientation: landscape) and (hover: none) and (min-width: 600px) {
   /* The compass on the same left edge as the tour's card (Christian, 2026-10-26), not the notch's inset: the notch
      sits at the middle of that edge, the compass at the top. (html: before .compass's own rule in this file, the same
      specificity lost to it) */
@@ -1329,6 +1331,12 @@ l21-tooltip {
   opacity: 0;
   transform: translate(-50%, 16px);
   transition: opacity 200ms cubic-bezier(0.3, 0, 0.8, 0.15), transform 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
+  /* Never taller than the room under the top buttons (compass, help, settings: 76 px): in a short frame (/modele on a
+     phone held upright, 316 px high) the text scrolls inside the card, its number, close button and arrows stay in
+     view (usability audit V2, 2026-10-26) */
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100% - 76px - var(--l21-tour-bottom, 16px));
 
   &.open {
     opacity: 1;
@@ -1338,6 +1346,7 @@ l21-tooltip {
 }
 @media (max-width: 960px) {
   .tour-card {
+    --l21-tour-bottom: 72px;
     bottom: calc(max(16px, env(safe-area-inset-bottom)) + 56px);
   }
 }
@@ -1395,6 +1404,8 @@ l21-tooltip {
 }
 .tour-text {
   margin: 0;
+  min-height: 0;
+  overflow-y: auto;
   color: var(--md-sys-color-on-surface-variant);
 }
 .tour-actions {
@@ -1454,11 +1465,52 @@ l21-tooltip {
 .tour-prev[hidden] {
   display: none;
 }
+/* A short, narrow frame (/modele on a phone held upright: 358 × 316): the arrows on the top row, beside the step's
+   number and the close button, so the text has four lines before it scrolls (usability audit V2, 2026-10-26) */
+@media (max-height: 420px) and (max-width: 599px) {
+  .tour-card {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    grid-template-areas:
+      'count actions close'
+      'title title title'
+      'text text text';
+    column-gap: 4px;
+    padding: 4px 8px 12px 16px;
+  }
+  .tour-head {
+    display: contents;
+  }
+  .tour-count {
+    grid-area: count;
+    align-self: center;
+  }
+  .tour-close {
+    grid-area: close;
+  }
+  .tour-actions {
+    grid-area: actions;
+    align-self: center;
+    margin: 0;
+  }
+  .tour-title {
+    grid-area: title;
+    margin: 0 0 2px;
+  }
+  .tour-text {
+    grid-area: text;
+  }
+}
 /* A phone held sideways (Christian, 2026-10-26: the card took too much of the short screen): wider and shorter, in two
    columns; the step's number, title and text on the left, the close button above back and next on the right */
 /* (every touch screen held sideways, whatever its height: Christian's phone is taller than 540 px that way, and kept
    the centred card; and any short window in landscape) */
-@media (orientation: landscape) and (max-height: 540px), (orientation: landscape) and (hover: none) {
+/* Only when the window is wide too (600 px): the frame on /modele, on a phone held upright, is 358 × 316, « landscape »
+   for the viewer, and the card was squeezed to 100 px between the edge and the buttons, its arrows over the AR and
+   dive buttons (usability audit V2, 2026-10-26); there it takes the standard card above the buttons */
+@media (orientation: landscape) and (max-height: 540px) and (min-width: 600px),
+  (orientation: landscape) and (hover: none) and (min-width: 600px) {
   .tour-card {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -1511,8 +1563,8 @@ l21-tooltip {
     margin: 0;
   }
 }
-@media (orientation: landscape) and (max-height: 540px) and (prefers-reduced-motion: reduce),
-  (orientation: landscape) and (hover: none) and (prefers-reduced-motion: reduce) {
+@media (orientation: landscape) and (max-height: 540px) and (min-width: 600px) and (prefers-reduced-motion: reduce),
+  (orientation: landscape) and (hover: none) and (min-width: 600px) and (prefers-reduced-motion: reduce) {
   .tour-card,
   .tour-card.open {
     transform: none;

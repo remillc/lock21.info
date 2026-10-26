@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, guided tour on a phone held upright (usability audit V2): the /modele frame there (358 × 316) counted as
+  « landscape » and got the sideways phones' layout, the card squeezed to 100 px with its arrows over the AR and dive
+  buttons. The sideways layout now needs a wide window (600 px); in a short, narrow frame the card sits above the
+  buttons, its arrows on the top row beside the step's number and the close button, the text scrolling inside if long.
 - « Mise à l'échelle »: a photo of both target types side by side (zone 5's floor, 2024-08-02, frame GX046201.0366,
   found from the targets Metashape detected in zone 5's project).
 - « Effet de banane »: Christian's two views of the 300-foot test on the canal's south wall (dive 27), curled up, then
