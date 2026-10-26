@@ -4,6 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- CSS cascade layers on the site (docs/system-design.md, CSS layers): `starlight`, then `l21.tokens`, `l21.base`,
+  `l21.layout`, `l21.components`, `l21.utilities`, declared first in `tokens.scss`; every component's `<style>` in its
+  layer. Starlight's few unlayered rules are overridden outside the layers (the splash pages' content width). Two
+  pages changed by it, as intended: the dive log's Notes column takes the remaining width, and the /modele tables'
+  columns are equal (the component's rules now win over the global table rule).
 - The project's CSS variables renamed `--lk-…` → `--l21-…` (and the class `lk-menu-overlay`), one prefix for everything
   of ours (custom elements, layers, storage keys); the built CSS the same apart from the prefix.
 - No colour written in a rule (docs/system-design.md): the site and the viewer's colours as MD3 roles and tokens

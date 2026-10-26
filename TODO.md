@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#76**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#77**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -23,6 +23,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
     saturation) into the downloadable model. `color_patch.py` (a part of a zone brought to its neighbours' colour) stays
     for local cases. The real fix is upstream: #75.
 - [ ] #68 Yellow perch schools in the underwater view
+- [ ] #76 Bass: a more natural turn (`viewer/src/bass.js`); the body bends into the turn instead of pivoting
 
 ### Pipeline
 

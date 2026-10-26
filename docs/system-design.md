@@ -156,9 +156,10 @@ specificity raised to beat the theme). The order is declared once, at the top of
 | `l21.utilities` | small helpers that must win: `.figure-wide`, `.sr-only`, print | `custom.scss`, `print` |
 
 Unlayered CSS beats every layer: the only unlayered rules are overrides of third-party stylesheets that are themselves
-unlayered (the search, Pagefind; the code blocks, Expressive Code), each with a comment saying why.
+unlayered (Starlight's splash-page content width, `--sl-content-width`; the search, Pagefind; the code blocks,
+Expressive Code), each with a comment saying why.
 
-The 3D viewer is a separate app with no theme to fight; its own stack, at the top of `viewer/src/style.css`:
+The 3D viewer is a separate app with no theme to fight; its own stack, planned (not yet in `viewer/src/style.css`):
 
 ```css
 @layer tokens, base, controls, panels, overlays, utilities;

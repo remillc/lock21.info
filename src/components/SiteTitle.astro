@@ -21,38 +21,40 @@ const english = lang?.startsWith('en')
 }
 
 <style>
-  .site-title {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    min-height: 48px;
-    text-decoration: none;
-    color: var(--l21-bar-text);
-    white-space: nowrap;
-    min-width: 0;
-  }
-  .logo {
-    width: 36px;
-    height: 36px;
-    flex: none;
-  }
-  .wordmark {
-    font-family: var(--l21-font-data);
-    font-weight: 800;
-    font-size: 1.125rem;
-    letter-spacing: 0.04em;
-  }
-  .coordinates {
-    font-family: var(--l21-font-data);
-    font-size: 0.75rem;
-    letter-spacing: 0.03em;
-    color: var(--l21-bar-muted);
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  @media (max-width: 72rem) {
+  @layer l21.layout {
+    .site-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-height: 48px;
+      text-decoration: none;
+      color: var(--l21-bar-text);
+      white-space: nowrap;
+      min-width: 0;
+    }
+    .logo {
+      width: 36px;
+      height: 36px;
+      flex: none;
+    }
+    .wordmark {
+      font-family: var(--l21-font-data);
+      font-weight: 800;
+      font-size: 1.125rem;
+      letter-spacing: 0.04em;
+    }
     .coordinates {
-      display: none;
+      font-family: var(--l21-font-data);
+      font-size: 0.75rem;
+      letter-spacing: 0.03em;
+      color: var(--l21-bar-muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    @media (max-width: 72rem) {
+      .coordinates {
+        display: none;
+      }
     }
   }
 </style>
