@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#94**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#95**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -40,6 +40,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 ### Pipeline
 
 - [ ] #10 `model:post-modified` and others only run on Windows (PowerShell); fine for now
+- [ ] #94 Zone 3's wooden floor lacks detail in the viewer (Christian, 2026-10-26): find whether it is the texture
+  (texels on the floor, `tools/model-analysis/`), the mesh, or the tile level the viewer picks, and fix it
 
 ### Hosting and downloads
 
