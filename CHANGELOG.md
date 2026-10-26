@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, phone held sideways: the compass on the screen's left edge with the tour's card; the season slider's touch
+  target 48 dp high, 8 dp clear of the buttons' targets (MD3).
 - 3D viewer, phone held sideways, diving: the season's slider above the buttons on the right, leaving room for the
   tour's card on the left.
 - 3D viewer, phones: the season slider shows the season's name only, without its visibility, to save room.
