@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- The notebook's pages get a look of their own (from « Le rig »'s mock-up): the menu group's name above the title, a
+  lead, numbered section headings, figures the column's width with mono captions numbered FIG. 01…, and the
+  « (à compléter) » placeholders as dashed notes; « Le rig » also gets data chips, an opening photo and photos side by
+  side. The link in its last caption fixed (Markdown is not read inside a figcaption).
 - Left menu: its labels drawn bold from the first frame (Archivo 700 preloaded with the other fonts; they first showed
   in a lighter weight, then bold).
 - Left menu: no more groups opening then closing as a page loads (TODO #87): the groups are closed in the page's HTML

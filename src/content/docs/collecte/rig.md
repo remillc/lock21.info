@@ -8,14 +8,22 @@ sidebar:
 Le rig (support de caméras) porte la GoPro et les lampes devant le scooter Seacraft Future 1000. Sylvain Marcotte l'a
 conçu.
 
-<figure>
+<div class="facts">
+<p class="fact"><span>Scooter</span><b>Seacraft Future 1000</b></p>
+<p class="fact"><span>Plan filmé</span><b>à 70 cm</b></p>
+<p class="fact"><span>Caméra</span><b>GoPro Hero6 Black</b></p>
+</div>
+
+<figure class="figure-wide">
 
 ![Le rig debout dans un seau, avant une plongée : la GoPro au centre, les lampes et les flotteurs en mousse sur le cadre](./rig/assets/rig-scooter-2024-06-14.webp)
 
-<figcaption>Le rig sur le scooter, avant une plongée (14 juin 2024)</figcaption>
+<figcaption><time datetime="2024-06-14">2024-06-14</time>Le rig sur le scooter, avant une plongée</figcaption>
 </figure>
 
 ## Construction
+
+<div class="figure-grid">
 
 <figure>
 
@@ -31,19 +39,25 @@ conçu.
 <figcaption>Une lampe sur son support, les vis à main et les guides. Modèle : Sylvain Marcotte</figcaption>
 </figure>
 
+</div>
+
+<div class="figure-grid">
+
 <figure>
 
 ![Sylvain Marcotte assemble le rig sur le scooter, de nuit, sur une bâche bleue, les outils autour](./rig/assets/assemblage-rig-2024-06-08.webp)
 
-<figcaption>Sylvain Marcotte assemble le rig sur le scooter (8 juin 2024)</figcaption>
+<figcaption><time datetime="2024-06-08">2024-06-08</time>Sylvain Marcotte assemble le rig sur le scooter</figcaption>
 </figure>
 
 <figure>
 
 ![Sylvain Marcotte devant le scooter debout dans un seau, le rig monté, sous une tente](./rig/assets/assemblage-rig-debout-2024-06-08.webp)
 
-<figcaption>Le rig monté, le scooter debout dans un seau, avec Sylvain Marcotte (8 juin 2024)</figcaption>
+<figcaption><time datetime="2024-06-08">2024-06-08</time>Le rig monté, le scooter debout dans un seau, avec Sylvain Marcotte</figcaption>
 </figure>
+
+</div>
 
 *(à compléter : les matériaux, les fixations, comment le rig s'attache au scooter.)*
 
@@ -57,7 +71,7 @@ caméra](/problemes/dimensions-rig).
 
 ![Les lampes, les flotteurs en mousse et la GoPro dans son boîtier étanche, posés sur une table](./rig/assets/lampes-boitier-2024-05-16.webp)
 
-<figcaption>Les lampes, les flotteurs et la GoPro dans son boîtier (16 mai 2024)</figcaption>
+<figcaption><time datetime="2024-05-16">2024-05-16</time>Les lampes, les flotteurs et la GoPro dans son boîtier</figcaption>
 </figure>
 
 *(à compléter : le modèle des lampes, leur nombre et leur puissance.)*
@@ -74,9 +88,9 @@ et les coquilles qui les recouvrent par endroits.
 
 ## Le matériel d'une plongée
 
-<figure>
+<figure class="figure-wide">
 
 ![Le scooter et son rig sur une table de pique-nique, avec les cibles codées, la charte de couleurs et les brosses](./rig/assets/materiel-plongee-2024-06-14.webp)
 
-<figcaption>Le matériel d'une plongée : le scooter, les [cibles codées](/collecte/mise-echelle) et la charte de couleurs (14 juin 2024)</figcaption>
+<figcaption><time datetime="2024-06-14">2024-06-14</time>Le matériel d'une plongée : le scooter, les <a href="/collecte/mise-echelle">cibles codées</a> et la charte de couleurs</figcaption>
 </figure>

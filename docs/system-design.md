@@ -189,6 +189,16 @@ The 3D viewer is a separate app with no theme to fight; its own stack, planned (
 - **Footer**: previous / next page, then the dark olive bar: `ÉCLUSE/21 · carnet de terrain`, `© 2024–<year> Christian
   Rémillard · Licence CC BY 4.0` (link to the licence). At the bottom of the window on short pages (flex columns in
   `custom.scss`), right after the content on long ones. The Baets drawings are credited in their figure captions.
+- **Notebook pages** (Christian, 2026-10-26, from « Le rig »'s mock-up; the pages in a group of the left menu):
+  - the system, on every one: the group's name as an eyebrow above the title (`PageTitle.astro`, mono, signal colour);
+    the first paragraph as a lead; the section headings numbered 01, 02… (mono, signal colour, a short rule above);
+    figures the column's width (tall images capped at 36rem high), a thin outline and 16 dp corners, captions in the
+    mono, numbered `FIG. 01`… down the page, a date in `<time>` in the signal colour; the « (à compléter) »
+    placeholders as a dashed note (`placeholder-marks.mjs`). All automatic, in `custom.scss`.
+  - the accents, only where a page has them to give, so that they keep their weight: data chips for its key facts
+    (`<div class="facts">`, a few, real measured or named facts, once per page), an opening photo the column's width
+    (`figure-wide`), photos that go together side by side (`<div class="figure-grid">`). Not on text-only procedure
+    pages.
 - **Selects** (the footer's theme and language): the list they open is an MD3 menu (surface container, 4 dp corners,
   elevation 2, 48 dp items in label-large, state layers, the chosen item tinted and checked, MD3 motion), drawn with
   `appearance: base-select` where the browser allows it (Chrome and Edge 135+); other browsers show their own list.

@@ -1,8 +1,27 @@
 ---
 // Page title: Starlight's own, except on splash pages (the home page), whose layout carries its own <h1>.
+// Above it, on the notebook's pages (those in a group of the left menu), the group's name as an eyebrow (docs/system-
+// design.md, Notebook pages); custom.scss numbers the section headings and enlarges the lead on those pages only.
 import Default from '@astrojs/starlight/components/PageTitle.astro'
 
-const splash = Astro.locals.starlightRoute.entry.data.template === 'splash'
+const route = Astro.locals.starlightRoute
+const splash = route.entry.data.template === 'splash'
+
+/**
+ * The label of the left menu's group that holds the current page, if any
+ * @param {any[]} entries
+ * @returns {string | undefined}
+ */
+function groupOf(entries) {
+  for (const entry of entries) {
+    if (entry.type !== 'group') continue
+    const inside = (/** @type {any[]} */ list) => list.some((e) => (e.type === 'group' ? inside(e.entries) : e.isCurrent))
+    if (inside(entry.entries)) return entry.label
+  }
+  return undefined
+}
+const group = splash ? undefined : groupOf(route.sidebar)
 ---
 
+{group && <p class="l21-eyebrow">{group}</p>}
 {!splash && <Default />}
