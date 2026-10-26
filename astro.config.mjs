@@ -100,6 +100,7 @@ export default defineConfig({
         { label: 'Modèle 3D', translations: { en: '3D model' }, link: '/modele' },
         { label: 'À propos', translations: { en: 'About' }, link: '/a-propos' },
         { label: 'Remerciements', translations: { en: 'Thanks' }, link: '/remerciements' },
+        { label: "À propos de l'écluse 21", translations: { en: 'About Lock 21' }, link: '/a-propos-ecluse-21' },
         { label: 'Découpage du site', translations: { en: 'Site zones' }, link: '/decoupage-site' },
         { label: 'La collecte des données', translations: { en: 'Data collection' }, items: [{ autogenerate: { directory: 'collecte' } }] },
         { label: 'Le traitement', translations: { en: 'Processing' }, items: [{ autogenerate: { directory: 'traitement' } }] },

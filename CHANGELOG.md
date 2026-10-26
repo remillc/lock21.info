@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- « À propos de l'écluse 21 » / “About Lock 21” (`/a-propos-ecluse-21`, before « Découpage du site » in the menu): the
+  lock's main points (the Cornwall Canal, the guard lock rebuilt in 1883-1886, the flooding of July 1, 1958, the SOS
+  survey of 1988-1989) and links to the Lost Villages Historical Society, the Ontario Heritage Trust, Wikipedia and
+  SOS (usability audit V4). The guided tour's step 2: the piers' tops at 40 ft (12 m).
 - The tops of the lock's walls at 35 ft (10,7 m) everywhere (Christian, 2026-10-26; « À propos » and the tour's step 2
   said 40 ft): usability audit V15.
 - 3D viewer, guided tour on a touch screen (Christian, 2026-10-26): the card hides while the camera flies to the next
