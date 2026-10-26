@@ -77,6 +77,13 @@ caméra](/problemes/dimensions-rig).
 Quatre lampes de plongée SecurityIng, une à chaque coin du cadre : 10 DEL blanches (6000 K), 4 rouges et 4 bleues, un
 faisceau de 120°, quatre piles 18650. Intensité : 12 000 lumens annoncés par le vendeur.
 
+<figure>
+
+![Une lampe SecurityIng de profil, avec ses dimensions : 123 mm de long, tête de 65 mm, corps de 53 mm, poignée de 105 × 50 mm](./rig/assets/lampe-securitying-dimensions.webp)
+
+<figcaption>Une des lampes, de profil, avec ses dimensions. Image : SecurityIng</figcaption>
+</figure>
+
 ## Le scooter
 
 Un Seacraft Future 1000. À la vitesse 1, il avance à 1,2 pied par seconde (0,37 m/s), mesuré dans les vidéos du [test de
