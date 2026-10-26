@@ -33,16 +33,16 @@ conçu.
 
 <figure>
 
-![Le rig assemblé sur le scooter, de nuit, sur une bâche bleue, les outils autour](./rig/assets/assemblage-rig-2024-06-08.webp)
+![Sylvain Marcotte assemble le rig sur le scooter, de nuit, sur une bâche bleue, les outils autour](./rig/assets/assemblage-rig-2024-06-08.webp)
 
-<figcaption>L'assemblage du rig sur le scooter (8 juin 2024)</figcaption>
+<figcaption>Sylvain Marcotte assemble le rig sur le scooter (8 juin 2024)</figcaption>
 </figure>
 
 <figure>
 
-![Le scooter debout dans un seau, le rig monté, sous une tente](./rig/assets/assemblage-rig-debout-2024-06-08.webp)
+![Sylvain Marcotte devant le scooter debout dans un seau, le rig monté, sous une tente](./rig/assets/assemblage-rig-debout-2024-06-08.webp)
 
-<figcaption>Le rig monté, le scooter debout dans un seau (8 juin 2024)</figcaption>
+<figcaption>Le rig monté, le scooter debout dans un seau, avec Sylvain Marcotte (8 juin 2024)</figcaption>
 </figure>
 
 *(à compléter : les matériaux, les fixations, comment le rig s'attache au scooter.)*
