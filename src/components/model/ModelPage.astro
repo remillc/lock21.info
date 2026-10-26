@@ -13,6 +13,8 @@ const lang = pageLang(Astro.locals)
 const en = lang === 'en'
 /** A number with the page language's decimal mark (Google Earth Web in French shows a comma) @param {string} n */
 const decimal = (n) => (en ? n : n.replace('.', ','))
+// Quotation marks in the page's language: “…” in English, « … » in French
+const [open, close] = en ? ['“', '”'] : ['« ', ' »']
 const pagePath = localPath(site.viewer, lang)
 const t = en
   ? {
@@ -200,20 +202,20 @@ const updated = zones.updated
         <p class="credit">{t.credit}</p>
         <!-- The crayfish model (viewer/src/crawfish.js): CC BY 4.0, its author credited -->
         <p class="note">
-          {t.crayfish} « <a href="https://sketchfab.com/3d-models/crayfish-cdc4cfc6203443a490f6b5103e7eac18">Crayfish</a> »
-          {t.crayfishBy} <a href="https://sketchfab.com/ucdavisterc">ucdavisterc</a>,
+          {t.crayfish} {open}<a href="https://sketchfab.com/3d-models/crayfish-cdc4cfc6203443a490f6b5103e7eac18">Crayfish</a>{close}{' '}
+          {t.crayfishBy} <a href="https://sketchfab.com/ucdavisterc">ucdavisterc</a>,{' '}
           <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
         </p>
         <!-- The bass (viewer/src/bass.js): CC BY 4.0, its author credited -->
         <p class="note">
-          {t.bass} « <a href="https://sketchfab.com/3d-models/smallmouth-bass-015389aed3414793b3e9e4a0c25169d1">Smallmouth bass</a> »
-          {t.crayfishBy} <a href="https://sketchfab.com/faerbogdan99">faerbogdan99</a>,
+          {t.bass} {open}<a href="https://sketchfab.com/3d-models/smallmouth-bass-015389aed3414793b3e9e4a0c25169d1">Smallmouth bass</a>{close}{' '}
+          {t.crayfishBy} <a href="https://sketchfab.com/faerbogdan99">faerbogdan99</a>,{' '}
           <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
         </p>
         <!-- The diver's arm (viewer/src/diver-arm.js): its shape from a CC BY 4.0 model, its author credited -->
         <p class="note">
-          {t.arm} « <a href="https://sketchfab.com/3d-models/first-person-hands-rigged-547a45535f0c4fe787948f7a7a6a88db">First Person hands rigged</a> »
-          {t.crayfishBy} <a href="https://sketchfab.com/davidfischer">DavidFischer</a>,
+          {t.arm} {open}<a href="https://sketchfab.com/3d-models/first-person-hands-rigged-547a45535f0c4fe787948f7a7a6a88db">First Person hands rigged</a>{close}{' '}
+          {t.crayfishBy} <a href="https://sketchfab.com/davidfischer">DavidFischer</a>,{' '}
           <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
         </p>
         <p class="note">
@@ -260,7 +262,11 @@ const updated = zones.updated
                  the KMZ's -30 turned 180° about the vertical, 150 (Christian, 2026-10-26: Google Earth Web takes the
                  GLB's other forward axis) -->
             <details class="gew">
-              <summary>{t.gewTitle}</summary>
+              <summary>
+                {t.gewTitle}
+                <!-- Material Symbols Rounded « expand_more », 24 dp: turns over as it opens -->
+                <svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z"/></svg>
+              </summary>
               <ol>
                 <li>{t.gewImport}</li>
                 <li>
@@ -572,13 +578,54 @@ const updated = zones.updated
   }
   @media (prefers-reduced-motion: reduce) {
     .gew::details-content,
-    .gew[open]::details-content {
+    .gew[open]::details-content,
+    .gew summary svg {
       transition: none;
     }
   }
+  /* Its summary as an MD3 text button (Christian, 2026-10-26: « comply with MD3 »): label-large, the primary colour,
+     40 dp high in a 48 dp touch target, full corners, a trailing Material Symbols Rounded icon (24 dp) that turns over
+     with the same motion as the content, hover / focus / pressed state layers (8 / 10 / 10 %) */
   .gew summary {
-    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-sizing: border-box;
+    min-height: 48px;
+    margin-left: -0.75rem;
+    padding: 0 0.5rem 0 0.75rem;
+    border: 4px solid transparent;
+    border-radius: var(--md-sys-shape-full);
+    background-clip: padding-box;
     color: var(--md-sys-color-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.00625rem;
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+  }
+  .gew summary::-webkit-details-marker {
+    display: none;
+  }
+  .gew summary:hover {
+    background-color: color-mix(in srgb, currentColor 8%, transparent);
+  }
+  .gew summary:focus-visible,
+  .gew summary:active {
+    background-color: color-mix(in srgb, currentColor 10%, transparent);
+  }
+  .gew summary:focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: -2px;
+  }
+  .gew summary svg {
+    flex: none;
+    transition: transform 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
+  }
+  .gew[open] summary svg {
+    transform: rotate(180deg);
+    transition: transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
   }
   .gew ol {
     margin: 0.5rem 0 0;
