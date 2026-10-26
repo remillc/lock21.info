@@ -5,7 +5,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - 3D viewer: the bump map's default at 0.45 (1.1 cm at full contrast; was 0.55).
-- 3D viewer: the flight to a double-clicked or double-tapped point slower (2 s, was 0.7 s).
+- 3D viewer: the flight to a double-clicked or double-tapped point slower (2 s, was 0.7 s), stopping 3.5 m from it (was
+  2.5 m).
 - 3D viewer, guided tour: step 5's camera above the chart terrain (it was under it), its flight in level (no rise and
   fall); step 6's view lower, looking up at the gates (Christian), its flight level too; steps 5 to 6 in one flight, no stop
   (step 6 a view reached through its old start); steps 7 to 8 about 1 m over the ground all the way, looking at zone 18's centre (not its top), 25 % faster.
