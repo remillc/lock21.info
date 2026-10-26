@@ -4,6 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Site texts (usability audit V8, V19, V20, V27, V28, V35): the search dialog in French on French pages (a link to the
+  other language now loads the page in full, so Pagefind takes its language); footnotes headed « Notes » on French
+  pages; « Sélectionner »; English number formats on `/en/model`; the no-download Google Earth Web link before the
+  import steps, « 150° »; the spaces in the phone AR line; the home's cards and panel out of the search; the extraction
+  page links to the gear page.
 - Site (usability audit V13, V18, V21, V36): the 404 page links onward (home, 3D model, zone map) and is in English
   under `/en/`; the dive log's total row reads « Total : N plongées » and its header stays in view on wide screens; the
   footer's theme and language selects show their whole text; a table wider than the column fades at the edge it

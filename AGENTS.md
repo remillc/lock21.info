@@ -38,6 +38,8 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `messages/` | The interface texts (Paraglide JS, inlang message format): `site/` (the components) and `viewer/` (the 3D viewer), `fr.json` and `en.json` each; `site.inlang/`, `viewer.inlang/` their settings (the message-format plugin loaded from `node_modules`, no CDN) |
 | `src/content.config.js` | Docs collection definition |
 | `src/integrations/home-slash.mjs` | Post-build step: the home pages at `/` and `/en/` (the rest of the site has no final slash) |
+| `src/integrations/footnote-labels.mjs` | Footnotes headed « Notes » (back links « Retour à l'appel de note N ») on the French pages; Astro 7's Markdown (Sätteri) has one site-wide setting, so this integration adds a plugin for the French pages only |
+| `src/content/i18n/fr.json` | Starlight's own French texts overridden (search dialog, « Sélectionner le thème / la langue »); the components' texts are in `messages/` |
 | `src/integrations/english-paths.mjs`, `src/data/englishPaths.js` | Post-build step: the English pages at their English addresses (see Language) |
 | `wrangler.jsonc`, `worker/index.js` | Cloudflare hosting: static assets, plus a Worker script only for `/en`, `/en/` and `/api/log` (the viewer's telemetry, written to Workers Logs: `npx wrangler tail lock21-info`) |
 | `src/components/home/Home.astro` | Home page (docs/system-design.md): depth gauge, instrument panel, render, entry cards, journal excerpts. Numbers come from `src/lib/diveLog.js` (dive log parsed at build) and `src/lib/manifest.js` (3D manifest fetched at build, fallback if offline); site facts in `src/data/site.js` |

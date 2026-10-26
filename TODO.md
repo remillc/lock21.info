@@ -96,12 +96,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   `tiles.lock21.info`: none, the start view's, or a chosen zone), how updates reach visitors (the new version on the
   next visit), and how it fits client-side routing and Cloudflare's cache headers (`public/_headers`)
 
-- [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): the small code fixes. V8 Pagefind's French strings;
-  V19 « Footnotes », « Back to reference », « Selectionner »; V20 English number formats on `/en/model`;
-  V23 the ☰ on the desktop home; V26 one name for the dive mode; V27 the no-download
-  Google Earth link first, « 150° »; V28 two missing spaces;
-  V35 card 02's target; V14 coordinates as a map
-  link on phones
+- [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): what is left of the small
+  fixes, each needing Christian's call. V23 the ☰ on the desktop home; V26 one name for the dive mode; V14
+  coordinates as a map link on phones
 - [ ] #83 Usability audit: the viewer on phones (V12; V2 and V11 fixed 2026-10-26): a touch version of the swim help.
   Check on a real phone
 - [ ] #84 Usability audit: content, for Christian. V16 a « voir
