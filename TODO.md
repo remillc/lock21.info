@@ -122,6 +122,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #87 Left menu (sidebar), Christian 2026-10-26: as a page loads, its groups show open, then close, a flicker.
   Only the current page's group should be open from the start (Starlight's `<details open>` on every group, or the
   sidebar state restored by Head.astro / client-side routing after the first paint: to find)
+
 ## Other
 
 - [ ] #35 lock21.ca: owner contacted on 2026-10-18 through CIRA; reminder in Google Calendar on 2027-03-14 (expiry)
