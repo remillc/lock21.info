@@ -199,6 +199,9 @@ The 3D viewer is a separate app with no theme to fight; its own stack, planned (
     (`<div class="facts">`, a few, real measured or named facts, once per page), an opening photo the column's width
     (`figure-wide`), photos that go together side by side (`<div class="figure-grid">`). Not on text-only procedure
     pages.
+- **No breadcrumb** (Christian, 2026-10-26) while the site has two levels (a menu group, then its pages): the
+  eyebrow above the title already names the group, and the left menu shows where the page is. With a third level, a
+  breadcrumb would help, the eyebrow becoming its first link.
 - **Selects** (the footer's theme and language): the list they open is an MD3 menu (surface container, 4 dp corners,
   elevation 2, 48 dp items in label-large, state layers, the chosen item tinted and checked, MD3 motion), drawn with
   `appearance: base-select` where the browser allows it (Chrome and Edge 135+); other browsers show their own list.
