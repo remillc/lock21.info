@@ -127,6 +127,11 @@ a dev dependency in the site and the viewer: `npm update` follows Google's drawi
 imports each icon it uses (unplugin-icons, `vite.config.js`); `index.html` holds placeholders, `<svg data-icon="…">`,
 filled at start, and scripts call `icon(name, size)`. Outline icons take `-outline-rounded`, filled ones `-rounded`.
 
+**Component styles in nested SCSS** (2026-10-26), as `custom.scss`: `<style lang="scss">` in `.astro` files, a
+component's states and parts nested in its rule (`&:hover`, `&:focus-visible`, `.title { … }`) rather than repeated
+selectors; scoped by default, `is:global` or `:global(…)` only to reach outside the component (Starlight's elements).
+Example: `src/components/ModelPill.astro`. The components still in plain CSS move over as they are touched.
+
 ## Components
 
 - **Header**: dark olive bar, `LOCK/21`, place line, navigation (Site, Méthode, Histoire, Journal), "Modèle 3D" pill.

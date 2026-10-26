@@ -20,7 +20,7 @@ to any UI added to the 3D viewer. Decided with Christian on 2026-10-19.
 | --- | --- | --- |
 | Site framework | **Astro** | Static build (`output: 'static'`) |
 | Docs (field notebook) | **Starlight** (Astro's docs theme) | Sidebar, search (Pagefind), table of contents, previous/next, i18n, dark mode |
-| Styles | **SCSS** (`sass` package) | Overrides of Starlight's CSS custom properties; component styles scoped in `.astro` files |
+| Styles | **SCSS** (`sass` package) | Overrides of Starlight's CSS custom properties; component styles scoped in `.astro` files, `<style lang="scss">`, nested (`docs/system-design.md`) |
 | Components | **Astro components** first | Rendered at build time, no JavaScript shipped |
 | Interactive components | **Web Components** | **Lit** when a component has reactive state (re-renders when its data changes, e.g. a filterable dive log); **native Custom Elements** otherwise. Responsive layout is done in CSS either way |
 | 3D viewer | Separate app (`viewer/`, Vite + three.js) | Built into the site's `public/modele/`, served at `/modele`; not an Astro page |

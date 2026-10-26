@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Component styles in nested SCSS (`<style lang="scss">`, as `custom.scss`), the rule in `docs/system-design.md`;
+  `ModelPill.astro` first, the others as they are touched.
 - Every icon of the site and the 3D viewer in Material Symbols' Rounded style (TODO #74), now referenced by name from
   the library instead of drawings pasted in (Christian: « what if the library is updated? »): Iconify's Material
   Symbols set (`@iconify-json/material-symbols`), through astro-icon in the site and unplugin-icons in the viewer
