@@ -67,7 +67,7 @@
   "tourNext": "Next",
   "tourEnd": "Finish",
   "tourClose": "Leave the tour",
-  "keysHelpText": "<p>The keys move the camera in the direction it looks.</p><ul><li><kbd>{w}</kbd> forward, <kbd>{s}</kbd> back</li><li><kbd>{a}</kbd> left, <kbd>{d}</kbd> right</li><li>hold <kbd>Shift</kbd>: faster</li></ul><p>The arrow keys <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> can be used too.</p>",
+  "keysHelpText": "<p>With the mouse:</p><ul><li>left button, drag: turn around the point pressed</li><li>right button, drag: pan</li><li>wheel: zoom</li><li>double-click: fly to that point</li></ul><p>The keys move the camera in the direction it looks.</p><ul><li><kbd>{w}</kbd> forward, <kbd>{s}</kbd> back</li><li><kbd>{a}</kbd> left, <kbd>{d}</kbd> right</li><li>hold <kbd>Shift</kbd>: faster</li></ul><p>The arrow keys <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> can be used too.</p>",
   "touchHelpTitle": "Navigating with your fingers",
   "touchHelp": "<ul><li>one finger: turn</li><li>two fingers: move around, and pinch to zoom toward your fingers</li><li>double-tap: move closer to that point</li></ul>",
   "lampOn": "Turn the light on",

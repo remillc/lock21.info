@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D model: the navigation help names the mouse button (« glisser (bouton gauche) » to turn, « (bouton droit) » to
+  pan), and the viewer's « ? » card lists the mouse actions (turn, pan, wheel, double-click) before the keys (usability
+  audit V10).
 - The test pages (`/tests/…`, in no menu) are out of the site search and the sitemap; the empty test dive log is
   gone, its addresses redirected to the dive log (usability audit V9).
 - The four processing pages (alignment, dense point cloud, models, texture) open with a line naming Agisoft
