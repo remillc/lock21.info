@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- /modele: brief steps to place the full model (GLB) in Google Earth Web, which reads no position in a GLB: its
+  Placement and Rotation fields with the values to type, with a decimal point (latitude, longitude, altitude 4 m relative
+  to ground, heading -30).
 - Augmented reality: the models rebuilt with zone 7 as now published (both at 1:100 and full size; `AR_VERSION`
   2026-10-26, so phones fetch them again).
 - `check_model.mjs` checks a model's size on the site's scale (the 1:100 augmented reality model was « too small »).

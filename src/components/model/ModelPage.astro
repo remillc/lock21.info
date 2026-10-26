@@ -58,6 +58,16 @@ const t = en
       glbName: 'Full model',
       /** @param {string} n */
       glbText: (n) => `Zones and the site's model, ${n} triangles: for Blender, Sketchfab, Windows' 3D Viewer or Google Earth Web's import.`,
+      gewTitle: 'Placing it in Google Earth Web',
+      gewImport: 'In a project, import the GLB (File, Import).',
+      gewPlace: 'In its Placement, type these values as they are (with the point):',
+      gewTurn: 'Under Transform, Rotation:',
+      gewLat: 'Latitude',
+      gewLon: 'Longitude',
+      gewAltitude: 'Altitude',
+      gewGrounding: 'Grounding',
+      gewRelative: 'Relative to ground',
+      gewHeading: 'Heading',
       arTitle: 'Augmented reality',
       arText: 'Place the lock in front of you with a phone or a tablet: on a table, at 1:100 (70 cm), or at its real size (70 m), in a large open space.',
       table: 'On a table',
@@ -111,6 +121,16 @@ const t = en
       glbName: 'Modèle complet',
       /** @param {string} n */
       glbText: (n) => `Zones et maquette du site, ${n} de triangles: pour Blender, Sketchfab, la visionneuse 3D de Windows ou l'import de Google Earth Web.`,
+      gewTitle: 'Le placer dans Google Earth Web',
+      gewImport: 'Dans un projet, importez le GLB (« File », « Import »).',
+      gewPlace: 'Dans « Placement », entrez ces valeurs telles quelles (avec le point):',
+      gewTurn: 'Sous « Transform », « Rotation »:',
+      gewLat: '« Latitude »',
+      gewLon: '« Longitude »',
+      gewAltitude: '« Altitude »',
+      gewGrounding: '« Grounding » (ancrage)',
+      gewRelative: '« Relative to ground » (par rapport au sol)',
+      gewHeading: '« Heading » (cap)',
       arTitle: 'Réalité augmentée',
       arText: "Posez l'écluse devant vous avec un téléphone ou une tablette: sur une table, au 1:100 (70 cm), ou à sa taille réelle (70 m), dans un grand espace dégagé.",
       table: 'Sur une table',
@@ -232,6 +252,31 @@ const updated = zones.updated
             <p>
               {t.glbText(site.downloads.glbTriangles)}
             </p>
+            <!-- Google Earth Web reads no position in a GLB (Christian, 2026-10-26): it is placed by hand. Its panel's labels as
+                 Christian saw them (English; in French, quoted with a translation: its French labels unchecked). The
+                 values with a decimal point, as Google Earth Web takes them (not the French comma); the model's origin
+                 is the site anchor, its heading and height those of the KMZ (make_kmz.py: -30, about 4 m) -->
+            <details class="gew">
+              <summary>{t.gewTitle}</summary>
+              <ol>
+                <li>{t.gewImport}</li>
+                <li>
+                  {t.gewPlace}
+                  <dl>
+                    <dt>{t.gewLat}</dt><dd><code>{site.coordinates.lat.toFixed(6)}</code></dd>
+                    <dt>{t.gewLon}</dt><dd><code>{site.coordinates.lon.toFixed(6)}</code></dd>
+                    <dt>{t.gewAltitude}</dt><dd><code>4</code> m</dd>
+                    <dt>{t.gewGrounding}</dt><dd>{t.gewRelative}</dd>
+                  </dl>
+                </li>
+                <li>
+                  {t.gewTurn}
+                  <dl>
+                    <dt>{t.gewHeading}</dt><dd><code>-30</code></dd>
+                  </dl>
+                </li>
+              </ol>
+            </details>
           </li>
         </ul>
     
@@ -496,6 +541,35 @@ const updated = zones.updated
   .downloads p {
     margin: 0.5rem 0 0;
     font-size: 0.9375rem;
+  }
+  /* Google Earth Web: brief steps, folded */
+  .gew {
+    margin: 0.5rem 0 0;
+    font-size: 0.9375rem;
+  }
+  .gew summary {
+    cursor: pointer;
+    color: var(--md-sys-color-primary);
+  }
+  .gew ol {
+    margin: 0.5rem 0 0;
+    padding-left: 1.25rem;
+  }
+  .gew dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.125rem 0.75rem;
+    margin: 0.375rem 0 0;
+  }
+  .gew dt {
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  .gew dd {
+    margin: 0;
+  }
+  .gew code {
+    font-family: var(--lk-font-data);
+    user-select: all;
   }
   /* Secondary credit: body-medium (14 / 20) */
   .note {
