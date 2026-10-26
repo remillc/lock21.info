@@ -1,5 +1,7 @@
 ---
 title: Gear used
+sidebar:
+  order: 2
 ---
 ## Camera
 
@@ -11,6 +13,8 @@ GoPro Hero6 Black camera in its original waterproof housing.
 
 <figcaption>The GoPro Hero6 Black. Photo: GoPro</figcaption>
 </figure>
+
+The frame that carries it in front of the scooter, with the lights: [The rig](/en/collecte/rig).
 
 Capture mode: **4k 4:3 video** (4000 pixels x 3000 pixels). I picked this resolution because it captures with the full sensor.
 

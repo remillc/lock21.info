@@ -1,5 +1,7 @@
 ---
 title: Mise à l'échelle
+sidebar:
+  order: 4
 description: Les cibles posées au fond et les distances mesurées entre elles, qui donnent aux modèles leur taille réelle.
 ---
 

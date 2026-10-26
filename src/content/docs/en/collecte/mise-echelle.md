@@ -1,5 +1,7 @@
 ---
 title: Scaling
+sidebar:
+  order: 4
 description: The targets placed on the bottom and the distances measured between them, which give the models their real size.
 ---
 
