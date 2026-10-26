@@ -136,6 +136,11 @@
           <button class="tour-next" type="button"></button>
         </div>
       </section>
+      <!-- Stopping the tour while its card is hidden for a flight (tour.js, touch screens): top right, where the settings
+           button is when the tour isn't running. Material Symbols Rounded « close » -->
+      <button class="tour-stop icon-button" type="button" hidden>
+        <svg data-icon="close-rounded" aria-hidden="true" width="24" height="24"></svg>
+      </button>
       <!-- Loading indicator and errors (src/loading.js) -->
       <l21-loading id="status">Chargement…</l21-loading>
     </main>

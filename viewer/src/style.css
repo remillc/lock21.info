@@ -1374,6 +1374,19 @@ l21-tooltip {
     bottom: max(16px, env(safe-area-inset-bottom));
   }
 }
+/* The tour's close button while its card is hidden for a flight (tour.js): where the settings button is, which the
+   tour hides; MD3 motion, in 400 ms decelerate, out 200 ms accelerate */
+.tour-stop {
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+  opacity: 0;
+  transition: opacity 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
+
+  &.shown {
+    opacity: 1;
+    transition: opacity 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
+  }
+}
 /* While the tour runs, the buttons at the top right (settings, the gestures' help) go away too (Christian, 2026-10-26) */
 html.l21-touring :is(.settings-button, .touch-help-button) {
   display: none;

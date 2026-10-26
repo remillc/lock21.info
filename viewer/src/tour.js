@@ -119,6 +119,21 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   iconButton(prev, 'back', m.tourPrev())
   close.setAttribute('aria-label', m.tourClose())
   close.dataset.tooltip = m.tourClose()
+  // While the card is hidden for a flight, a close button at the top right (Christian, 2026-10-26)
+  const stopButton = /** @type {HTMLButtonElement} */ (document.querySelector('.tour-stop'))
+  stopButton.setAttribute('aria-label', m.tourClose())
+  stopButton.dataset.tooltip = m.tourClose()
+  let stopTimer = 0
+  const showStop = (on) => {
+    clearTimeout(stopTimer)
+    if (on) {
+      stopButton.hidden = false
+      requestAnimationFrame(() => stopButton.classList.add('shown'))
+    } else {
+      stopButton.classList.remove('shown')
+      stopTimer = setTimeout(() => (stopButton.hidden = true), 200)
+    }
+  }
 
   let index = -1
   // The line of sight the camera actually has, its turning velocity (rad/s, as an axis times a speed), and when it was
@@ -397,6 +412,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   function hideWhileMoving(i) {
     clearTimeout(revealTimer)
     card.classList.add('moving')
+    showStop(true)
     pendingFill = i
     clearTimeout(fillTimer)
     fillTimer = setTimeout(() => {
@@ -410,6 +426,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     if (pendingFill >= 0) fill(pendingFill)
     pendingFill = -1
     card.classList.remove('moving')
+    showStop(false)
   }
 
   function show(i, back = false, jump = false) {
@@ -519,6 +536,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
 
   button.addEventListener('click', () => start())
   close.addEventListener('click', stop)
+  stopButton.addEventListener('click', stop)
   prev.addEventListener('click', () => index > 0 && show(index - 1, true))
   next.addEventListener('click', () => (index < steps.length - 1 ? show(index + 1) : stop()))
   document.addEventListener('keydown', (event) => {
