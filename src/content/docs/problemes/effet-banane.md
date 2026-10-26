@@ -8,14 +8,14 @@ Sur un segment plus long, l'effet est flagrant : les 300 pieds du dessus du mu
 
 <figure>
 
-![Le segment de 300 pieds aligné dans Metashape, enroulé en arc entre les cibles 1 et 2](./effet-banane/assets/exemple-effet-banane.webp)
+![Le segment de 300 pieds aligné dans Metashape, enroulé en arc entre les cibles 1 et 2](./effet-banane/assets/exemple-effet-banane.webp)
 
 <figcaption>Le segment de 300 pieds, déformé : il s'enroule entre les cibles 1 et 2</figcaption>
 </figure>
 
 <figure>
 
-![Le même segment corrigé, presque droit, avec l'échelle de 300 pieds entre les cibles 1 et 2](./effet-banane/assets/exemple-effet-banane-corrige.webp)
+![Le même segment corrigé, presque droit, avec l'échelle de 300 pieds entre les cibles 1 et 2](./effet-banane/assets/exemple-effet-banane-corrige.webp)
 
 <figcaption>Le même segment, corrigé : presque droit, avec l'échelle de 300 pieds entre les cibles 1 et 2</figcaption>
 </figure>
