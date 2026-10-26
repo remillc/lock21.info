@@ -31,6 +31,20 @@ conçu.
 <figcaption>Une lampe sur son support, les vis à main et les guides. Modèle : Sylvain Marcotte</figcaption>
 </figure>
 
+<figure>
+
+![Le rig assemblé sur le scooter, de nuit, sur une bâche bleue, les outils autour](./rig/assets/assemblage-rig-2024-06-08.webp)
+
+<figcaption>L'assemblage du rig sur le scooter (8 juin 2024)</figcaption>
+</figure>
+
+<figure>
+
+![Le scooter debout dans un seau, le rig monté, sous une tente](./rig/assets/assemblage-rig-debout-2024-06-08.webp)
+
+<figcaption>Le rig monté, le scooter debout dans un seau (8 juin 2024)</figcaption>
+</figure>
+
 *(à compléter : les matériaux, les fixations, comment le rig s'attache au scooter.)*
 
 ## Les lampes
