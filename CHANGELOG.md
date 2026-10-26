@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- TODO #55 removed (light shards on the floor in the start view): checked on 2026-10-26, the start view uses 722 of
+  the desktop's 1000 MB and its floor shows no shards (the lighter tiles of 2026-10-23 and 24).
 - 3D viewer: the bump map's default at 0.45 (1.1 cm at full contrast; was 0.55).
 - 3D viewer: the flight to a double-clicked or double-tapped point slower (2 s, was 0.7 s), stopping 3.5 m from it (was
   2.5 m).
