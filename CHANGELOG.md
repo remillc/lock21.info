@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- New page « Le rig » / “The rig” in « La collecte des données »: the rig on the Seacraft Future 1000 scooter, with
+  Christian's photos (2024), Sylvain Marcotte's 3D model of it, the lights' positions, the scooter's speed; the
+  construction, the lights' model and the brushes still to complete. Linked from « Matériel utilisé » and the thanks.
 - « Matériel utilisé »: a photo of the GoPro Hero6 Black (GoPro's product photo, credited, until Christian's own).
 - Analytics (TODO #88): the visitors' actions go to Google Analytics (unless refused on the privacy page): on the site,
   a search, the menu, the theme and language, the home cards, an image enlarged (links out and scrolls: GA4's own

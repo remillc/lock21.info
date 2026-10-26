@@ -11,8 +11,8 @@
       "recorded": "2026-10-26"
     },
     "collecte/journal-plongees.mdx": {
-      "source": "ff75ddcd4974877bdf38c4b63dcfc2dacae45dec",
-      "commit": "14f96b1",
+      "source": "f9675275fa140e3e5f1184f885eb54e600fdf4ff",
+      "commit": "b8a85d0",
       "recorded": "2026-10-26"
     },
     "collecte/materiel-utilise.md": {
@@ -21,8 +21,13 @@
       "recorded": "2026-10-23"
     },
     "collecte/mise-echelle.md": {
-      "source": "eb9c1bc7f1edc077d2a011b8275323a20fe9301b",
-      "commit": "fdcbece",
+      "source": "081be25435cc759a8fd296b020d91de2595235f3",
+      "commit": "b8a85d0",
+      "recorded": "2026-10-26"
+    },
+    "collecte/rig.md": {
+      "source": "d1f98032fe23757bb506ea91f432e3168552ba7d",
+      "commit": "b8a85d0",
       "recorded": "2026-10-26"
     },
     "confidentialite.mdx": {
@@ -86,8 +91,8 @@
       "recorded": "2026-10-26"
     },
     "remerciements.md": {
-      "source": "2b4b0fe2fd9b3848017d1abd354685df948d1dda",
-      "commit": "8161d7e",
+      "source": "43a2d2f845b952d8be169094c903db985b554baa",
+      "commit": "b8a85d0",
       "recorded": "2026-10-26"
     },
     "tests/calibration-couleurs.md": {

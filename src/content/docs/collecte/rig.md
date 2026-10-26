@@ -1,0 +1,67 @@
+---
+title: Le rig
+description: "Le rig qui porte la caméra et les lampes devant le scooter Seacraft Future 1000 : sa construction, ses lampes et le matériel d'une plongée."
+sidebar:
+  order: 3
+---
+
+Le rig (support de caméras) porte la GoPro et les lampes devant le scooter Seacraft Future 1000. Sylvain Marcotte l'a
+conçu.
+
+<figure>
+
+![Le rig debout dans un seau, avant une plongée : la GoPro au centre, les lampes et les flotteurs en mousse sur le cadre](./rig/assets/rig-scooter-2024-06-14.webp)
+
+<figcaption>Le rig sur le scooter, avant une plongée (14 juin 2024)</figcaption>
+</figure>
+
+## Construction
+
+<figure>
+
+![Le rig modélisé en 3D autour du scooter : un cadre en profilés d'aluminium, une rotule à chaque coin pour les lampes, la GoPro au centre](./rig/assets/rig-modele-3d-sylvain-marcotte.webp)
+
+<figcaption>Le rig sur le scooter, modélisé en 3D. Modèle : Sylvain Marcotte</figcaption>
+</figure>
+
+<figure>
+
+![Détail du modèle 3D : une lampe sur son support, les deux vis à main qui bloquent le tout et les deux guides](./rig/assets/rig-detail-lampe-sylvain-marcotte.webp)
+
+<figcaption>Une lampe sur son support, les vis à main et les guides. Modèle : Sylvain Marcotte</figcaption>
+</figure>
+
+*(à compléter : les matériaux, les fixations, comment le rig s'attache au scooter.)*
+
+## Les lampes
+
+Les lampes sont placées pour éclairer également un plan à environ 70 cm de la lentille : 60 cm entre les deux lampes
+du haut, 40 cm entre les deux lampes de droite. Les mesures sont dans [Dimensions du rig de
+caméra](/problemes/dimensions-rig).
+
+<figure>
+
+![Les lampes, les flotteurs en mousse et la GoPro dans son boîtier étanche, posés sur une table](./rig/assets/lampes-boitier-2024-05-16.webp)
+
+<figcaption>Les lampes, les flotteurs et la GoPro dans son boîtier (16 mai 2024)</figcaption>
+</figure>
+
+*(à compléter : le modèle des lampes, leur nombre et leur puissance.)*
+
+## Le scooter
+
+Un Seacraft Future 1000. À la vitesse 1, il avance à 1,2 pied par seconde (0,37 m/s), mesuré dans les vidéos du [test de
+netteté](/problemes/nettete-images) ; ses vitesses sont programmables.
+
+## Les brosses
+
+*(à compléter : à quoi servent les brosses à plancher, et comment elles sont fixées.)*
+
+## Le matériel d'une plongée
+
+<figure>
+
+![Le scooter et son rig sur une table de pique-nique, avec les cibles codées, la charte de couleurs et les brosses](./rig/assets/materiel-plongee-2024-06-14.webp)
+
+<figcaption>Le matériel d'une plongée : le scooter, les [cibles codées](/collecte/mise-echelle) et la charte de couleurs (14 juin 2024)</figcaption>
+</figure>

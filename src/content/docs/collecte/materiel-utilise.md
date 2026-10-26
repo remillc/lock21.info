@@ -1,5 +1,7 @@
 ---
 title: Matériel utilisé
+sidebar:
+  order: 2
 ---
 ## Caméra
 
@@ -11,6 +13,8 @@ Caméra GoPro Hero6 Black avec boîtier étanche d'origine.
 
 <figcaption>La GoPro Hero6 Black. Photo : GoPro</figcaption>
 </figure>
+
+Le support qui la porte devant le scooter, avec les lampes : [Le rig](/collecte/rig).
 
 Mode de capture : **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution a été choisie en fonction d'une capture plein capteur.
 
