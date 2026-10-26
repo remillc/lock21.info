@@ -34,8 +34,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   To solve on the way: the viewer's global CSS (`html, body { overflow: hidden }`, `main`) scoped to the element
   (shadow DOM or a layer), its window-wide listeners (keys, pointer) and WebGL released on `disconnectedCallback`
   (client-side routing), full screen on the element instead of the document, the postMessage link to the page
-  (camera address, drag) replaced by direct calls, its texts merged into the site's messages, and the bare
-  `/modele/viewer` address kept or redirected (AR links, telemetry)
+  (camera address, drag) replaced by direct calls, and its texts merged into the site's messages. The bare
+  `/modele/viewer` address can go away (Christian, 2026-10-26: no need to keep or redirect it)
 
 ### Pipeline
 
