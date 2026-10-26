@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- The tops of the lock's walls at 35 ft (10,7 m) everywhere (Christian, 2026-10-26; « À propos » and the tour's step 2
+  said 40 ft): usability audit V15.
 - 3D viewer, guided tour on a touch screen (Christian, 2026-10-26): the card hides while the camera flies to the next
   step and comes back 1.5 s after it has arrived (MD3 motion: out 200 ms, in 400 ms), the new step's texts put in
   while hidden; outside full screen the buttons at the bottom go away while the tour runs, and the card takes their

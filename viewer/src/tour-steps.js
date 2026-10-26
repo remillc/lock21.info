@@ -73,8 +73,8 @@ export const TOUR_STEPS = [
     turnFirst: 2,
     title: { fr: 'Au-dessus des piliers', en: 'Above the piers' },
     text: {
-      fr: 'Le dessus du déversoir : les piliers, la passerelle qui les relie et les mécanismes qui levaient les vannes. Le haut des murs est à 40 pieds (12 m) sous la surface.',
-      en: 'The top of the spillway: the piers, the footbridge that joins them and the gear that raised the gates. The tops of the walls are 40 feet (12 m) below the surface.',
+      fr: 'Le dessus du déversoir : les piliers, la passerelle qui les relie et les mécanismes qui levaient les vannes. Le haut des murs est à 35 pieds (11 m) sous la surface.',
+      en: 'The top of the spillway: the piers, the footbridge that joins them and the gear that raised the gates. The tops of the walls are 35 feet (11 m) below the surface.',
     },
   },
   {
