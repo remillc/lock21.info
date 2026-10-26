@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- « Alignement de chunks » written (it was empty), French and English: each zone's model comes out slightly
+  distorted, targets set each one's scale, the distortion not yet solved (link to « Effet de banane »).
 - Page names (docs/system-design.md, « Page names »): addresses, titles and menu labels made to agree. Folders
   `questions/` → `problemes/`, `workflow/` → `traitement/` (English `processing/`); « Le fort courant dans le canal »
   → `fort-courant-canal` (`strong-current-canal`), « Effet de banane » (was « bananne », address too), « Nuage de

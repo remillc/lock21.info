@@ -36,9 +36,9 @@
       "recorded": "2026-10-21"
     },
     "problemes/alignement-chunks.md": {
-      "source": "af902550337db2ef625b44db2a57c9fd62f99e70",
-      "commit": "9d608a8",
-      "recorded": "2026-10-21"
+      "source": "df811f8c325a7c73b2d234fee3e8fd0ad9578118",
+      "commit": "5cdc775",
+      "recorded": "2026-10-26"
     },
     "problemes/calibration-couleurs.md": {
       "source": "b713e954cf17fb86b895fa3d8602eb464d7dcb30",
@@ -66,8 +66,8 @@
       "recorded": "2026-10-26"
     },
     "problemes/index.md": {
-      "source": "ba2da978df15f101fcb7c26611a487637407314a",
-      "commit": "14f96b1",
+      "source": "d076a33e16c59e3dbef66d0865f66b0106e7bd22",
+      "commit": "5cdc775",
       "recorded": "2026-10-26"
     },
     "problemes/nettete-images.md": {
