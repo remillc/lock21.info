@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Hosting: the Worker's `lock21-info.lock21.workers.dev` address is off, the site is only at lock21.info (SEO audit
+  S11; branch previews keep their own addresses).
 - The home page's description and the « À propos » page say what the site is: « le site du projet de numérisation de
   l'écluse 21 » / “the site of the project to digitize Lock 21”.
 - « À propos de l'écluse 21 » opens with what divers look for: 60 feet (18.3 m) at the bottom, the piers' tops at 40
