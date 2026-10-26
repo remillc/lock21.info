@@ -19,7 +19,7 @@ Side overlap is controlled during data collection. So while filming an object, i
 
 <figure>
 
-![Two parallel camera passes, offset by 25 cm, sharing 80 % of their width](../../traitement/extraction-des-photos/assets/chevauchement-lateral.svg)
+![Two parallel camera passes, offset by 25 cm, sharing 80 % of their width](../../traitement/extraction-photos/assets/chevauchement-lateral.svg)
 
 <figcaption>Two passes with 80 % overlap: at 70 cm from the subject, each pass covers a 1.25 m strip; the next one is shifted by 25 cm (see <a href="/en/problemes/dimensions-rig">Camera rig dimensions</a>).</figcaption>
 </figure>
@@ -32,7 +32,7 @@ Frontal overlap, on the other hand, is set when extracting the frames from the v
 
 <figure>
 
-![A film strip where frame 1 and frame 9 are kept; the areas filmed by these two frames share 85 %](../../traitement/extraction-des-photos/assets/chevauchement-frontal.svg)
+![A film strip where frame 1 and frame 9 are kept; the areas filmed by these two frames share 85 %](../../traitement/extraction-photos/assets/chevauchement-frontal.svg)
 
 <figcaption>Two frames of a video overlapping by 85 %: between the frames kept (here 8 frames apart, n8), the camera has moved only 15 % of the filmed area.</figcaption>
 </figure>

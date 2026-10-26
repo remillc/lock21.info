@@ -23,7 +23,7 @@ Sharpie permanent blanc ou gris.
 
 ## Les échelles mesurées
 
-D'après le [journal des plongées](/collecte/journal-des-plongees) :
+D'après le [journal des plongées](/collecte/journal-plongees) :
 
 | Zone | Échelle | Plongée |
 | ---: | --- | ---: |

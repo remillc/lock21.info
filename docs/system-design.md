@@ -205,9 +205,14 @@ A page has one name, used everywhere it appears (Christian, 2026-10-26):
 - its **label in the left menu** (the sidebar: the title itself for pages in a group, the `label` in
   `astro.config.mjs` for the others and for the groups),
 
-say the same thing in the same words, in the page's language. The slug is the title's key words, lowercase, without
-accents or articles (« Le fort courant dans le canal » → `fort-courant-canal`); a group's folder is its label's key
-word (« Problèmes rencontrés » → `problemes/`). A menu label may be a shorter form of the title, never other words.
+say the same thing in the same words, in the page's language.
+
+**Addresses** (Christian, 2026-10-26): lowercase, whole words (no abbreviations), separated by hyphens, without accents,
+without articles or small linking words (French « le, la, les, l', un, une, des, du, de, d', à, au, aux, en »; English
+"the, a, an, of, by, in, on, to, for"): « Le fort courant dans le canal » → `fort-courant-canal`, « Mise à l'échelle »
+→ `mise-echelle`, « Journal des plongées » → `journal-plongees`. One exception: a fixed expression whose words don't
+stand apart, `a-propos` (« à propos »). A group's folder is its label's key word (« Problèmes rencontrés » →
+`problemes/`). A menu label may be a shorter form of the title, never other words.
 Renaming a page changes all three, and the old address redirects to the new one (`public/_redirects`, the English
 paths' table).
 

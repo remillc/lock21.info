@@ -1,16 +1,20 @@
-# Former addresses of pages renamed on 2026-10-26 (docs/system-design.md, « Page names »: one name per page for its
-# address, its title and its menu label), redirected for good (301). The build appends the English pages' redirects
-# (src/integrations/english-paths.mjs). Read by the hosting (Cloudflare).
-/workflow/extraction-des-photos /traitement/extraction-des-photos 301
+# Former addresses of renamed pages (2026-10-26: docs/system-design.md, « Page names »), redirected for good (301),
+# each straight to the current address. The build appends the English pages' redirects from their French paths
+# (src/integrations/english-paths.mjs). Read by the hosting (Cloudflare); localhost ignores it (test with npx wrangler dev).
+/decoupage-du-site /decoupage-site 301
+/en/decoupage-du-site /en/site-zones 301
+/collecte/journal-des-plongees /collecte/journal-plongees 301
+/en/collecte/journal-des-plongees /en/data-collection/dive-log 301
+/workflow/extraction-des-photos /traitement/extraction-photos 301
 /en/workflow/photo-extraction /en/processing/photo-extraction 301
 /en/workflow/extraction-des-photos /en/processing/photo-extraction 301
-/workflow/alignement-des-photos /traitement/alignement-des-photos 301
+/workflow/alignement-des-photos /traitement/alignement-photos 301
 /en/workflow/photo-alignment /en/processing/photo-alignment 301
 /en/workflow/alignement-des-photos /en/processing/photo-alignment 301
-/workflow/generation-du-dense-cloud /traitement/nuage-de-points-dense 301
+/workflow/generation-du-dense-cloud /traitement/nuage-points-dense 301
 /en/workflow/dense-cloud /en/processing/dense-point-cloud 301
 /en/workflow/generation-du-dense-cloud /en/processing/dense-point-cloud 301
-/workflow/modele /traitement/generation-des-modeles 301
+/workflow/modele /traitement/generation-modeles 301
 /en/workflow/models /en/processing/building-models 301
 /en/workflow/modele /en/processing/building-models 301
 /workflow/texture /traitement/texture 301
@@ -34,5 +38,18 @@
 /en/questions/effet-bananne /en/problems/banana-effect 301
 /questions/nettete-images /problemes/nettete-images 301
 /en/questions/nettete-images /en/problems/image-sharpness 301
+/tests/journal-des-plongees /tests/journal-plongees 301
+/en/tests/journal-des-plongees /en/tests/dive-log 301
 /tests/lumiere-ambiante /tests/couleurs-reference-profondeur 301
-/en/tests/lumiere-ambiante /en/tests/reference-colours-by-depth 301
+/en/tests/reference-colours-by-depth /en/tests/reference-colours-depth 301
+/en/tests/lumiere-ambiante /en/tests/reference-colours-depth 301
+/collecte/mise-a-l-echelle /collecte/mise-echelle 301
+/en/collecte/mise-a-l-echelle /en/data-collection/scaling 301
+/traitement/extraction-des-photos /traitement/extraction-photos 301
+/en/traitement/extraction-des-photos /en/processing/photo-extraction 301
+/traitement/alignement-des-photos /traitement/alignement-photos 301
+/en/traitement/alignement-des-photos /en/processing/photo-alignment 301
+/traitement/nuage-de-points-dense /traitement/nuage-points-dense 301
+/en/traitement/nuage-de-points-dense /en/processing/dense-point-cloud 301
+/traitement/generation-des-modeles /traitement/generation-modeles 301
+/en/traitement/generation-des-modeles /en/processing/building-models 301

@@ -19,4 +19,4 @@ to set measuring scales on each model and bring it to its exact real dimensions.
 
 The distortion itself isn't fully solved yet: see [Banana effect](/en/problemes/effet-banane).
 
-See also: [Scaling](/en/collecte/mise-a-l-echelle), the targets and the scales measured while diving.
+See also: [Scaling](/en/collecte/mise-echelle), the targets and the scales measured while diving.

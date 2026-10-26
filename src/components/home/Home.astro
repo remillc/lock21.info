@@ -16,7 +16,7 @@ const lang = pageLang(Astro.locals)
 const o = { locale: lang }
 const zones = await zonesOnline()
 const excerpts = latestWithNotes(3, lang)
-const journal = localPath('/collecte/journal-des-plongees', lang)
+const journal = localPath('/collecte/journal-plongees', lang)
 const about = localPath('/a-propos', lang)
 const viewer = localPath(site.viewer, lang)
 // The render's point of view in the viewer (?cam=x,y,z,tx,ty,tz: metres, y up; Blender's x, z, -y): zone 12 from the
@@ -26,8 +26,8 @@ const ft = m.site_feet({}, o)
 
 // The three entry cards: their texts are messages (home_entry1Title…)
 const entries = [
-  { no: '01', title: m.home_entry1Title({}, o), text: m.home_entry1Text({}, o), label: m.home_entry1Label({}, o), href: '/decoupage-du-site' },
-  { no: '02', title: m.home_entry2Title({}, o), text: m.home_entry2Text({}, o), label: m.home_entry2Label({}, o), href: '/traitement/extraction-des-photos' },
+  { no: '01', title: m.home_entry1Title({}, o), text: m.home_entry1Text({}, o), label: m.home_entry1Label({}, o), href: '/decoupage-site' },
+  { no: '02', title: m.home_entry2Title({}, o), text: m.home_entry2Text({}, o), label: m.home_entry2Label({}, o), href: '/traitement/extraction-photos' },
   // The problems section's index page (Christian, 2026-10-26; it was the empty « Alignement de chunks »)
   { no: '03', title: m.home_entry3Title({}, o), text: m.home_entry3Text({}, o), label: m.home_entry3Label({}, o), href: '/problemes' },
 ].map((e) => ({ ...e, href: localPath(e.href, lang) }))

@@ -20,4 +20,4 @@ réelles exactes.
 
 La déformation, elle, n'est pas encore entièrement réglée : voir [Effet de banane](/problemes/effet-banane).
 
-Voir aussi : [Mise à l'échelle](/collecte/mise-a-l-echelle), les cibles et les échelles mesurées en plongée.
+Voir aussi : [Mise à l'échelle](/collecte/mise-echelle), les cibles et les échelles mesurées en plongée.

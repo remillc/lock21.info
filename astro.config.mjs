@@ -100,7 +100,7 @@ export default defineConfig({
         { label: 'Modèle 3D', translations: { en: '3D model' }, link: '/modele' },
         { label: 'À propos', translations: { en: 'About' }, link: '/a-propos' },
         { label: 'Remerciements', translations: { en: 'Thanks' }, link: '/remerciements' },
-        { label: 'Découpage du site', translations: { en: 'Site zones' }, link: '/decoupage-du-site' },
+        { label: 'Découpage du site', translations: { en: 'Site zones' }, link: '/decoupage-site' },
         { label: 'La collecte des données', translations: { en: 'Data collection' }, items: [{ autogenerate: { directory: 'collecte' } }] },
         { label: 'Le traitement', translations: { en: 'Processing' }, items: [{ autogenerate: { directory: 'traitement' } }] },
         { label: 'Problèmes rencontrés', translations: { en: 'Problems encountered' }, items: [{ autogenerate: { directory: 'problemes' } }] },

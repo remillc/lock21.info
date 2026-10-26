@@ -11,7 +11,7 @@
 // French pages modified but not committed yet are flagged too (they are compared once committed).
 //
 // After translating or updating English pages, record them as up to date with --record:
-//   node tools/i18n/status.mjs --record collecte/journal-des-plongees.mdx [other paths...]
+//   node tools/i18n/status.mjs --record collecte/journal-plongees.mdx [other paths...]
 //   node tools/i18n/status.mjs --record-all        (every English page whose French page exists)
 // Paths are relative to src/content/docs/, French side (the English page has the same path under en/).
 //

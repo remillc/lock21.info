@@ -21,7 +21,7 @@ images. The white marker didn't stand up to friction; I planned to replace it wi
 
 ## The scales measured
 
-From the [dive log](/en/collecte/journal-des-plongees):
+From the [dive log](/en/collecte/journal-plongees):
 
 | Zone | Scale | Dive |
 | ---: | --- | ---: |

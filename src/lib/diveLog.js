@@ -1,4 +1,4 @@
-// Reads the dive log (src/content/docs/collecte/journal-des-plongees.mdx, and its English version under en/) at build
+// Reads the dive log (src/content/docs/collecte/journal-plongees.mdx, and its English version under en/) at build
 // time: the Markdown table `No | Date | Activité | Zones | Durée (minutes) | Participants | Notes`. The home page shows
 // its totals and its latest entries, so they never need to be typed by hand.
 
@@ -8,14 +8,14 @@ import { m } from '../paraglide/messages.js'
 
 const files = /** @type {Record<string, string>} */ (
   import.meta.glob(
-    ['/src/content/docs/collecte/journal-des-plongees.mdx', '/src/content/docs/en/collecte/journal-des-plongees.mdx'],
+    ['/src/content/docs/collecte/journal-plongees.mdx', '/src/content/docs/en/collecte/journal-plongees.mdx'],
     { query: '?raw', import: 'default', eager: true },
   )
 )
 /** @param {Lang} lang */
 const source = (lang) =>
-  files[`/src/content/docs/${lang === 'en' ? 'en/' : ''}collecte/journal-des-plongees.mdx`] ??
-  files['/src/content/docs/collecte/journal-des-plongees.mdx'] ??
+  files[`/src/content/docs/${lang === 'en' ? 'en/' : ''}collecte/journal-plongees.mdx`] ??
+  files['/src/content/docs/collecte/journal-plongees.mdx'] ??
   ''
 
 /**
