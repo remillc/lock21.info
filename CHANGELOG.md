@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Changing the language from the footer opens the other language's page at its bottom, where the select is, not at its
+  top (`Head.astro`).
 - Footer: the theme and language lists open as MD3 menus (`appearance: base-select`, Chrome and Edge; the system's
   list elsewhere).
 - New page « Le rig » / “The rig” in « La collecte des données »: the rig on the Seacraft Future 1000 scooter, with
