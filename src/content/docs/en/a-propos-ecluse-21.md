@@ -23,6 +23,13 @@ and other villages along the shore: the Lost Villages. Their people had been mov
 In 1988 and 1989, Nick Baets and the Ottawa chapter of Save Ontario Shipwrecks dived the lock and drew it. His 1988
 drawing is the basis of the [site zones](/en/decoupage-site).
 
+<figure class="figure-wide">
+
+![Lock 21 drawn by Nick Baets: the lock, the weir and its sluice gates, the divers' entry from Macdonell Island, the ropes and the current](../a-propos-ecluse-21/assets/ecluse-21-n-baets.webp)
+
+<figcaption>Nick Baets' plan of Lock 21, displayed at the divers' pavilion on Macdonell Island (after Save Ontario Shipwrecks' field guide, 1989). Source: <cite><a href="http://davidgibbins.com/journal/2016/4/8/diving-lock-21-a-submerged-victorian-canal-lock-on-the-st-lawrence-river-canada">David Gibbins, <em>Diving Lock 21</em></a></cite></figcaption>
+</figure>
+
 ## To learn more
 
 - [Dickinson's Landing](https://lostvillages.ca/history/the-lost-villages/dickinsons-landing/), Lost Villages

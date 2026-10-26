@@ -25,6 +25,13 @@ Long Sault et à Ingleside.
 En 1988 et 1989, Nick Baets et la section d'Ottawa de Save Ontario Shipwrecks ont plongé l'écluse et l'ont dessinée.
 Son dessin de 1988 sert de base au [découpage du site](/decoupage-site).
 
+<figure class="figure-wide">
+
+![Vue de l'écluse 21 dessinée par Nick Baets : l'écluse, le déversoir et ses vannes, l'entrée des plongeurs depuis l'île Macdonell, les câbles et le courant](./a-propos-ecluse-21/assets/ecluse-21-n-baets.webp)
+
+<figcaption>Le plan de l'écluse 21 par Nick Baets, affiché au pavillon des plongeurs de l'île Macdonell (d'après le guide de terrain de Save Ontario Shipwrecks, 1989). Source : <cite><a href="http://davidgibbins.com/journal/2016/4/8/diving-lock-21-a-submerged-victorian-canal-lock-on-the-st-lawrence-river-canada">David Gibbins, <em>Diving Lock 21</em></a></cite></figcaption>
+</figure>
+
 ## Pour en savoir plus
 
 - [Dickinson's Landing](https://lostvillages.ca/history/the-lost-villages/dickinsons-landing/), Lost Villages
