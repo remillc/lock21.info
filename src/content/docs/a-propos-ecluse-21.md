@@ -11,7 +11,7 @@ C'était une écluse de garde : pas de différence de niveau entre l'amont et l
 de l'agrandissement du canal, reconstruite de 1883 à 1886 : un sas de 270 pieds sur 45 (82 m sur 14 m), et un
 déversoir à son bout amont.
 
-<figure>
+<figure class="figure-center">
 
 ![L'écluse 21 vers 1904 : le canal, son talus à gauche et les ouvrages de l'écluse au loin](./a-propos-ecluse-21/assets/ecluse-21-vers-1904.webp)
 

@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Figures: a `figure-center` class (usual size, image and caption centred), used for the 1904 photo.
 - « À propos de l'écluse 21 »: a photo of the lock around 1904 (Seaway History; a Canadian photo from before 1949, in
   the public domain).
 - « À propos de l'écluse 21 » / “About Lock 21” (`/a-propos-ecluse-21`, before « Découpage du site » in the menu): the
