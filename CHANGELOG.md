@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Hosting: an address with a final slash (`/modele/`) redirects to the page with a 301 instead of Cloudflare's 307
+  (SEO audit S12; `/` and `/en/` keep their slash).
 - Hosting: the Worker's `lock21-info.lock21.workers.dev` address is off, the site is only at lock21.info (SEO audit
   S11; branch previews keep their own addresses).
 - The home page's description and the « À propos » page say what the site is: « le site du projet de numérisation de
