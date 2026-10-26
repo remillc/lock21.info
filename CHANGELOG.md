@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- « À propos de l'écluse 21 »: the 1904 photo as wide as Nick Baets' plan (`figure-wide`).
 - « Suivi du travail par zone »: a line at the top, the table is a working tool that may not be up to date, with a link
   to the 3D model for what is online (usability audit V5).
 - « À propos de l'écluse 21 »: Nick Baets' plan of the lock, the bilingual version displayed at the divers' pavilion on
