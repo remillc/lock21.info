@@ -3,6 +3,23 @@ title: Banana effect
 ---
 A test on a flat surface 100 feet long shows that the model produced by aligning the cameras in the photogrammetry software is distorted. Instead of a flat surface, it comes out bent like a banana.
 
+On a longer segment the effect is plain to see: the 300 feet of the top of the canal's south wall, filmed on July 26,
+2024 between targets 1 and 2 (dive 27), curl up almost into a circle.
+
+<figure>
+
+![The 300-foot segment aligned in Metashape, curled into an arc between targets 1 and 2](../../problemes/effet-banane/assets/exemple-effet-banane.webp)
+
+<figcaption>The 300-foot segment, distorted: it curls up between targets 1 and 2</figcaption>
+</figure>
+
+<figure>
+
+![The same segment corrected, almost straight, with the 300-foot scale between targets 1 and 2](../../problemes/effet-banane/assets/exemple-effet-banane-corrige.webp)
+
+<figcaption>The same segment, corrected: almost straight, with the 300-foot scale between targets 1 and 2</figcaption>
+</figure>
+
 - Where does this distortion come from?
 - How do I fix it?
 
