@@ -1,6 +1,23 @@
 ---
 title: Découpage du site
 ---
+import { Aside } from '@astrojs/starlight/components'
+import { site } from '../../data/site.js'
+
+export const metres = (m) => m.toLocaleString('fr-CA')
+export const map = `https://www.google.com/maps/search/?api=1&query=${site.coordinates.lat},${site.coordinates.lon}`
+
+<Aside type="tip" title="Pour plonger">
+
+- **Profondeur :** le fond à {site.bottomDepthFt} pi ({metres(site.bottomDepthM)} m), le dessus des murs à
+  {site.wallTopDepthFt} pi ({metres(site.wallTopDepthM)} m).
+- **Courant :** 35 pieds par minute (10,7 m/min), mesuré en dérivant dans le canal, entre les deux portes, le
+  8 juin 2024 (voir [Le fort courant dans le canal](/problemes/fort-courant-canal)).
+- **Position :** {site.coordinates.label.fr} (<a href={map}>voir sur une carte</a>).
+- **Avant de plonger :** repérer les zones dans le [modèle 3D](/modele).
+
+</Aside>
+
 Voici le découpage du site de l'écluse en zones.
 
 <figure className="figure-wide">
@@ -70,7 +87,7 @@ Exclue le mur adjacent au sud.
 
 Mur nord comprenant :
 
-- Le dessus situé à - 35 pieds de profondeur
+- Le dessus situé à -35 pieds de profondeur
 - La structure en escaliers tout à l'est
 
 ### Zone 8
