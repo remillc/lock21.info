@@ -13,6 +13,7 @@
     "viewer:build": "npm --prefix viewer run build",
     "model:upload": "node tools/publish-model/upload_r2.mjs",
     "downloads:upload": "node tools/publish-model/upload_downloads.mjs",
+    "bing:submit": "node tools/bing/submit-urls.mjs",
     "build:viewer": "npm --prefix viewer run build -- --outDir ../public/modele/viewer --emptyOutDir",
     "preview": "astro preview",
     "i18n:status": "node tools/i18n/status.mjs"

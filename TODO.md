@@ -128,7 +128,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   language, or none (also usability V32); S4 « À propos de l'écluse
   21 » opening with where, how deep and the current (and whether to add the entry from Macdonell Island)
 - [ ] #91 SEO audit: outside the site, for Christian. S3 deploy `main` (27 renamed addresses, 301s ready); S5 Google
-  Search Console and Bing Webmaster Tools (domain property, the sitemap), the GitHub README (« not indexed yet ») and
+  Search Console (domain property, the sitemap; Bing Webmaster Tools done 2026-10-26, its sitemap submitted, and
+  `npm run bing:submit` after the deploy), the GitHub README (« not indexed yet ») and
   its About link in `https` (S10); S9 links: the Sketchfab profile, DECOSTOP, the Wikipedia « Lost
   Villages » talk page (dead source for Lock 21), Lost Villages Historical Society, Save Ontario Shipwrecks
 - [ ] #35 lock21.ca: owner contacted on 2026-10-18 through CIRA; reminder in Google Calendar on 2027-03-14 (expiry)
