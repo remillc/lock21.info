@@ -1,11 +1,11 @@
 {
   "pages": {
     "a-propos.mdx": {
-      "source": "4a3e9a1ba6b0626898f1c876ee50076b9832bec3",
-      "commit": "14f96b1",
+      "source": "86318170489a1965c254ee7883623ee107c0ccc0",
+      "commit": "8161d7e",
       "recorded": "2026-10-26"
     },
-    "collecte/journal-des-plongees.mdx": {
+    "collecte/journal-plongees.mdx": {
       "source": "ff75ddcd4974877bdf38c4b63dcfc2dacae45dec",
       "commit": "14f96b1",
       "recorded": "2026-10-26"
@@ -15,9 +15,9 @@
       "commit": "2ff5c1b",
       "recorded": "2026-10-23"
     },
-    "collecte/mise-a-l-echelle.md": {
-      "source": "8ac1b86851c4b3fee20088261a8c09b083e4303b",
-      "commit": "2a591b2",
+    "collecte/mise-echelle.md": {
+      "source": "ecfae4ca60bcf2855ba6b9eaa02d48a9144199ca",
+      "commit": "8161d7e",
       "recorded": "2026-10-26"
     },
     "confidentialite.mdx": {
@@ -25,9 +25,9 @@
       "commit": "14f96b1",
       "recorded": "2026-10-26"
     },
-    "decoupage-du-site.mdx": {
-      "source": "a26d4dbd5dbad61502950be8dbc6642c068e30a7",
-      "commit": "14f96b1",
+    "decoupage-site.mdx": {
+      "source": "87d6ebdea7b0656a4b93cd46580a6874fb9f9d26",
+      "commit": "8161d7e",
       "recorded": "2026-10-26"
     },
     "index.mdx": {
@@ -41,8 +41,8 @@
       "recorded": "2026-10-21"
     },
     "problemes/alignement-chunks.md": {
-      "source": "f31ea95a88e74dc031ecd69a570ed61b7b7fd414",
-      "commit": "2a591b2",
+      "source": "bdebd4393989f4a9a96ad44b573593e4cc32fefa",
+      "commit": "8161d7e",
       "recorded": "2026-10-26"
     },
     "problemes/calibration-couleurs.md": {
@@ -81,8 +81,8 @@
       "recorded": "2026-10-26"
     },
     "remerciements.md": {
-      "source": "673c5dfe1447b2d808229f218b0615cb8c7caa49",
-      "commit": "14f96b1",
+      "source": "2b4b0fe2fd9b3848017d1abd354685df948d1dda",
+      "commit": "8161d7e",
       "recorded": "2026-10-26"
     },
     "tests/calibration-couleurs.md": {
@@ -100,27 +100,27 @@
       "commit": "14f96b1",
       "recorded": "2026-10-26"
     },
-    "tests/journal-des-plongees.md": {
+    "tests/journal-plongees.md": {
       "source": "613b924aeeea5b9fcfbbd05bc597dd50b46c47f2",
       "commit": "9d608a8",
       "recorded": "2026-10-21"
     },
-    "traitement/alignement-des-photos.md": {
+    "traitement/alignement-photos.md": {
       "source": "ee510d4050aeaec5108c7f570bad2d3cc85dc779",
       "commit": "14f96b1",
       "recorded": "2026-10-26"
     },
-    "traitement/extraction-des-photos.md": {
-      "source": "b842c31effa3f3b24a89013a59da6cc75e20e922",
-      "commit": "14f96b1",
+    "traitement/extraction-photos.md": {
+      "source": "446241521b726e4b663451e4b290ea3737fc8fe6",
+      "commit": "8161d7e",
       "recorded": "2026-10-26"
     },
-    "traitement/generation-des-modeles.md": {
+    "traitement/generation-modeles.md": {
       "source": "e1b825fd6aa3290a74275530d3965dc09856ddc0",
       "commit": "14f96b1",
       "recorded": "2026-10-26"
     },
-    "traitement/nuage-de-points-dense.md": {
+    "traitement/nuage-points-dense.md": {
       "source": "8e3a148f902c17087462722af2ef6cfef4302a26",
       "commit": "9d608a8",
       "recorded": "2026-10-21"

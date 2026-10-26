@@ -4,6 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Addresses rule (docs/system-design.md): lowercase whole words, hyphens, no articles or small linking words
+  (`a-propos` kept as a fixed expression). Renamed: `journal-plongees` (dive log and its test page), `mise-echelle`,
+  `decoupage-site` (and its map images), `alignement-photos`, `extraction-photos`, `generation-modeles`,
+  `nuage-points-dense`, English `tests/reference-colours-depth`. `public/_redirects` rebuilt: every former address
+  straight to the current one (78 redirects with the English ones; checked under Wrangler).
 - « Mise à l'échelle » / “Scaling” (`/collecte/mise-a-l-echelle`): the targets, how they're fixed, the scales measured
   in each zone (from the dive log), the link to « Suivi »; the target model and the Metashape steps « à compléter »
   by Christian. « Alignement de chunks » links to it.

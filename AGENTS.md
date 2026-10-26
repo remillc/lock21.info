@@ -28,9 +28,9 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `src/content/docs/` | **The docs** (Starlight content collection), served at the site root. `index.mdx` is the home page (splash). |
 | `  a-propos.mdx` | What the site is for (also summed up on the home page, `Home.astro`); at the bottom, the site's version and its date (`SiteVersion.astro`: package.json and CHANGELOG.md, at build) |
 | `  remerciements.md` | Thanks: dive buddies, the sponsor (DECOSTOP Outdoor Centre, its logo in `public/images/`, one per theme), the rig's designer, the 1988 drawings |
-| `  decoupage-du-site.mdx` | Zone map and description of zones 1–25 |
-| `  collecte/` | Dive log (`journal-des-plongees.mdx`, a large table wrapped in `<DiveLog>`) and gear (`materiel-utilise.md`) |
-| `  traitement/` | Processing steps (`extraction-des-photos.md` … `texture.md`, ordered by `sidebar.order` in their frontmatter) and per-zone progress tracking (`suivi.md`) |
+| `  decoupage-site.mdx` | Zone map and description of zones 1–25 |
+| `  collecte/` | Dive log (`journal-plongees.mdx`, a large table wrapped in `<DiveLog>`) and gear (`materiel-utilise.md`) |
+| `  traitement/` | Processing steps (`extraction-photos.md` … `texture.md`, ordered by `sidebar.order` in their frontmatter) and per-zone progress tracking (`suivi.md`) |
 | `  problemes/` | One page per problem (`<name>.md`), its images in `<name>/assets/`, and `index.md`, the group's page (each problem in a line, with its link; add a new problem there too); shown as « Problèmes rencontrés » |
 | `  tests/` | Test write-ups, same layout. **Not in the sidebar** (see `astro.config.mjs`). |
 | `  rig/modele/` | Rig Blender files and drawings |

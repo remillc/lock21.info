@@ -1,5 +1,5 @@
 // English addresses of the English pages (TODO #63, 2026-10-24): /en/data-collection/dive-log rather than
-// /en/collecte/journal-des-plongees. The files keep the French page's path (src/content/docs/en/<French path>): that is
+// /en/collecte/journal-plongees. The files keep the French page's path (src/content/docs/en/<French path>): that is
 // how Starlight pairs a page with its translation (language menu, hreflang, sidebar) and how tools/i18n tracks it. The
 // English address is given at build by src/integrations/english-paths.mjs, from this table: French path → English
 // path, both without /en/. In the source, links to an English page keep its French path (/en/collecte/...); the build
@@ -10,15 +10,15 @@ export const englishPaths = {
   'a-propos': 'about',
   remerciements: 'thanks',
   confidentialite: 'privacy',
-  'decoupage-du-site': 'site-zones',
+  'decoupage-site': 'site-zones',
   modele: 'model',
-  'collecte/journal-des-plongees': 'data-collection/dive-log',
+  'collecte/journal-plongees': 'data-collection/dive-log',
   'collecte/materiel-utilise': 'data-collection/gear',
-  'collecte/mise-a-l-echelle': 'data-collection/scaling',
-  'traitement/extraction-des-photos': 'processing/photo-extraction',
-  'traitement/alignement-des-photos': 'processing/photo-alignment',
-  'traitement/nuage-de-points-dense': 'processing/dense-point-cloud',
-  'traitement/generation-des-modeles': 'processing/building-models',
+  'collecte/mise-echelle': 'data-collection/scaling',
+  'traitement/extraction-photos': 'processing/photo-extraction',
+  'traitement/alignement-photos': 'processing/photo-alignment',
+  'traitement/nuage-points-dense': 'processing/dense-point-cloud',
+  'traitement/generation-modeles': 'processing/building-models',
   'traitement/texture': 'processing/texture',
   'traitement/suivi': 'processing/progress',
   problemes: 'problems',
@@ -31,6 +31,6 @@ export const englishPaths = {
   'problemes/nettete-images': 'problems/image-sharpness',
   'tests/calibration-couleurs': 'tests/colour-calibration',
   'tests/iso-minimum': 'tests/minimum-iso',
-  'tests/journal-des-plongees': 'tests/dive-log',
-  'tests/couleurs-reference-profondeur': 'tests/reference-colours-by-depth',
+  'tests/journal-plongees': 'tests/dive-log',
+  'tests/couleurs-reference-profondeur': 'tests/reference-colours-depth',
 }
