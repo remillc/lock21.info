@@ -48,3 +48,4 @@ __pycache__/
 
 # Wrangler's local state and temporary files (wrangler dev)
 .wrangler/
+.claude/worktrees/
