@@ -47,8 +47,17 @@ traitement). Le détail: le guide **Installation**, section 5.
 
 - **`main`**: la version de référence du code et des pages. La pousser ne publie rien.
 - **Une branche par travail** (`feature/…`, `docs/…`), fusionnée dans `main` une fois terminée, puis supprimée.
-- **Les versions**: `0.x.y` tant que le site n'est pas public. Une version (« release ») a sa section datée dans
-  `CHANGELOG.md` et une étiquette Git `vX.Y.Z`; l'étiquette déclenche la publication du site.
+- **Les versions** : `0.x.y` jusqu'au 26 octobre 2026, puis `1.0.0-beta.N` pendant l'essai public (la première,
+  `1.0.0-beta.1`), et `1.0.0` au lancement. Une version (« release ») a sa section datée dans `CHANGELOG.md` et une
+  étiquette Git `vX.Y.Z` ; l'étiquette déclenche la publication du site.
+- **Avant une release** :
+  1. `npm run model:check` : les zones et le contexte changés dans le `.blend` depuis leur publication (le `.blend`
+     enregistré). Le modèle se publie à part (`npm run model:upload`), sans release.
+  2. `npm run i18n:status` : les pages anglaises en retard.
+  3. `CHANGELOG.md` : tout ce qui a changé sous la version et sa date, un court résumé en tête ; `package.json`.
+  4. `npm run build:viewer` puis `npm run build` : sans erreur.
+- **Après la publication** : les anciennes adresses redirigent, `/modele`, la lightbox et la page 404 en ligne, la
+  version affichée dans À propos, puis `npm run bing:submit` pour signaler les adresses à Bing.
 - **Publier sans version**: sur GitHub, onglet **Actions**, **Deploy**, **Run workflow** sur `main`.
 - **Essayer une branche en ligne**: même chose, en choisissant la branche. Cloudflare la met à une adresse d'essai
   (`<branche>-lock21-info.<compte>.workers.dev`, affichée dans le journal de l'action); `lock21.info` ne change pas.

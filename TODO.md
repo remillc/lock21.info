@@ -121,12 +121,12 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   `seconds` (dive_end). Dimensions (event scope): `button`, `step`, `move`, `setting`, `season`, `lamp`, `theme`,
   `language`, `ar_size`. Then, in Explore: sessions with viewer_end, those with underwater_seconds > 0, the sums per
   session
-- [ ] #89 SEO audit (2026-10-26, `docs/audits/seo-2026-10-26.md`): the code fixes left. S11 after the next deploy, check that `lock21-info.lock21.workers.dev` no longer answers and that a branch
-  preview still works (`workers_dev: false` in `wrangler.jsonc`; else back to true)
+- [ ] #89 SEO audit (2026-10-26, `docs/audits/seo-2026-10-26.md`): the code fixes left. S11 check that a branch preview still works, the next time one is made
+  (`workers_dev: false` in `wrangler.jsonc`, off since 1.0.0-beta.1: the workers.dev address answers 404; if the
+  previews broke, back to true)
 - [ ] #90 SEO audit: content, for Christian. S1 a real `description` for the pages that answer a question (dive log, zones, current, gear first), in its
   language, or none (also usability V32)
-- [ ] #91 SEO audit: outside the site, for Christian. S3 deploy `main` (27 renamed addresses, 301s ready); S5 Google
-  Search Console (domain property, the sitemap; Bing Webmaster Tools done 2026-10-26, its sitemap submitted, and
-  `npm run bing:submit` after the deploy), the GitHub README (« not indexed yet »); S9 links: the Sketchfab profile, DECOSTOP, the Wikipedia « Lost
+- [ ] #91 SEO audit: outside the site, for Christian. S5 Google Search Console (domain property, the sitemap;
+  Bing done 2026-10-26: its sitemap, and the 50 addresses sent after the 1.0.0-beta.1 deploy), the GitHub README (« not indexed yet »); S9 links: the Sketchfab profile, DECOSTOP, the Wikipedia « Lost
   Villages » talk page (dead source for Lock 21), Lost Villages Historical Society, Save Ontario Shipwrecks
 - [ ] #35 lock21.ca: owner contacted on 2026-10-18 through CIRA; reminder in Google Calendar on 2027-03-14 (expiry)
