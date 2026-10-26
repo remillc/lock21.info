@@ -125,8 +125,9 @@ export const TOUR_STEPS = [
   {
     // Added by Christian, 2026-10-24
     kind: 'view',
-    // Christian, 2026-10-25 (was -45.27, 1.67, -26.26, -40.87, 2.8, -28.73)
-    cam: [-48.84, 0.69, -27.52, -33.75, 5.58, -28.62],
+    // Christian, 2026-10-25 (was -45.27, 1.67, -26.26, -40.87, 2.8, -28.73); 0.9 m higher (2026-10-26: under the chart
+    // terrain, its ground there at 0.72 m)
+    cam: [-48.84, 1.6, -27.52, -33.75, 5.58, -28.62],
     title: { fr: 'Les piliers, côté ouest', en: 'The piers, west side' },
     text: {
       fr: 'Du côté ouest, les piliers sont arrondis, montés en assises de pierre. Derrière, l’enclave est fermée par un mur de madriers.',
@@ -134,12 +135,15 @@ export const TOUR_STEPS = [
     },
   },
   {
-    kind: 'move',
-    from: [-46.34, 4.98, -16.15, -41.79, 3.96, -16.02],
-    to: [-38.7, 3.99, -16.38, -37.72, 3.77, -16.35],
-    pace: 0.8,
-    // A look at the gates before moving in (Christian, 2026-10-24)
-    wait: 3,
+    // One flight from step 5, no stop (Christian, 2026-10-26; it was a move, flown to its start, a 3 s look at the gates,
+    // then on): up to the gates' level west of them, looking at them, then in toward them at 0.8 m/s. Clear of every
+    // surface (0.9 m at least)
+    kind: 'view',
+    approach: [[-46.34, 4.98, -16.15]],
+    looks: [[-41.79, 3.96, -16.02]],
+    paces: [1.6, 0.8],
+    accel: 1,
+    cam: [-38.7, 3.99, -16.38, -37.72, 3.77, -16.35],
     title: { fr: 'Les vannes, de près', en: 'The gates, up close' },
     text: {
       fr: 'De l’autre côté, les trois vannes pendent encore à leurs tiges, au-dessus des passages. On s’approche.',
@@ -161,13 +165,16 @@ export const TOUR_STEPS = [
     // turning toward it as soon as the flight starts, the same point all the way); his view looked at
     // -36.26, -20.92, 11.83, a little lower and further north
     cam: [-106.95, 7.59, -10.04, -93.75, 6.42, -4.0],
-    // From step 7 (Christian, 2026-10-24: at floor level, faster): down to about 2 m over the floor, west low north of
-    // the block, rising to the view only at the end; looking at the block's top all the way, turning to it first.
-    // Clear of every surface (1.4 m at least)
-    approach: [[-60, 2.4, -18.5], [-72, 2.2, -16], [-86, 2.2, -14.5], [-99, 2.4, -13.5], [-104.5, 5.0, -11.5]],
-    looks: [[-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0]],
+    // From step 7 (Christian, 2026-10-24: at floor level, faster): down to the floor, west low north of the block,
+    // rising to the view only at the end; looking at the block's top all the way, turning to it first. About 1 m over
+    // the ground all along (Christian, 2026-10-26: closer to the ground; the chart terrain's ground measured under each
+    // point), clear of every surface (0.8 m at least)
+    approach: [[-60, 1.8, -18.5], [-66, 1.85, -17.2], [-72, 1.95, -16], [-79, 1.9, -15.2], [-86, 1.9, -14.5], [-92, 1.6, -14],
+      [-99, 1.2, -13.5], [-104.5, 5.0, -11.5]],
+    looks: [[-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0],
+      [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0]],
     turnFirst: 1.5,
-    paces: [2.5, 5, 5, 4, 2, 1.2],
+    paces: [2.5, 5, 5, 5, 5, 5, 4, 2, 1.2],
     accel: 1.5,
     title: { fr: 'La zone 18', en: 'Zone 18' },
     text: {
