@@ -91,24 +91,19 @@
       "recorded": "2026-10-26"
     },
     "tests/calibration-couleurs.md": {
-      "source": "2021ca5b97ba9c00467c4efbb443e35ab2e9d9e3",
-      "commit": "14f96b1",
+      "source": "7d21d623ee0f8fb73c45e758a3e00f552fc396fc",
+      "commit": "f9d4c45",
       "recorded": "2026-10-26"
     },
     "tests/couleurs-reference-profondeur.md": {
-      "source": "3f1358e4d778d54dcb99048782b441caaefda2c4",
-      "commit": "14f96b1",
+      "source": "c03b8962168218b3403b02f18b386980faf7918a",
+      "commit": "f9d4c45",
       "recorded": "2026-10-26"
     },
     "tests/iso-minimum.md": {
-      "source": "4ef247bde2995b5828ad6c0e86f2c03a7c3f67aa",
-      "commit": "14f96b1",
+      "source": "449c589a4f5e0a88af1bd0a11d8a5a2b723b7a78",
+      "commit": "f9d4c45",
       "recorded": "2026-10-26"
-    },
-    "tests/journal-plongees.md": {
-      "source": "613b924aeeea5b9fcfbbd05bc597dd50b46c47f2",
-      "commit": "9d608a8",
-      "recorded": "2026-10-21"
     },
     "traitement/alignement-photos.md": {
       "source": "f2875bb8b23e55ac539928907b6fcf1282a1c596",

@@ -32,7 +32,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `  collecte/` | Dive log (`journal-plongees.mdx`, a large table wrapped in `<DiveLog>`) and gear (`materiel-utilise.md`) |
 | `  traitement/` | Processing steps (`extraction-photos.md` … `texture.md`, ordered by `sidebar.order` in their frontmatter) and per-zone progress tracking (`suivi.md`) |
 | `  problemes/` | One page per problem (`<name>.md`), its images in `<name>/assets/`, and `index.md`, the group's page (each problem in a line, with its link; add a new problem there too); shown as « Problèmes rencontrés » |
-| `  tests/` | Test write-ups, same layout. **Not in the sidebar** (see `astro.config.mjs`). |
+| `  tests/` | Test write-ups, same layout. **Not in the sidebar**, nor in the search (`pagefind: false` in each page's frontmatter: give a new test page that line too) nor the sitemap (the `sitemap` filter in `astro.config.mjs`). |
 | `  rig/modele/` | Rig Blender files and drawings |
 | `astro.config.mjs` | Site config: Starlight, locales, sidebar, image-zoom script, Paraglide's Vite plugin |
 | `messages/` | The interface texts (Paraglide JS, inlang message format): `site/` (the components) and `viewer/` (the 3D viewer), `fr.json` and `en.json` each; `site.inlang/`, `viewer.inlang/` their settings (the message-format plugin loaded from `node_modules`, no CDN) |

@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- The test pages (`/tests/…`, in no menu) are out of the site search and the sitemap; the empty test dive log is
+  gone, its addresses redirected to the dive log (usability audit V9).
 - The four processing pages (alignment, dense point cloud, models, texture) open with a line naming Agisoft
   Metashape, so the site search finds them (usability audit V7).
 - « À propos de l'écluse 21 »: the 1904 photo as wide as Nick Baets' plan (`figure-wide`).

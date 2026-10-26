@@ -4,6 +4,7 @@
 import { paraglideVitePlugin } from '@inlang/paraglide-js'
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
+import sitemap from '@astrojs/sitemap'
 import icon from 'astro-icon'
 import homeSlash from './src/integrations/home-slash.mjs'
 import englishPaths from './src/integrations/english-paths.mjs'
@@ -51,6 +52,11 @@ export default defineConfig({
         'material-symbols': ['deployed-code-outline-rounded', 'public-outline-rounded', 'download-rounded', 'expand-more-rounded',
           'home-outline-rounded', 'scuba-diving-rounded', 'tour-outline-rounded', 'help-outline-rounded', 'view-in-ar-outline-rounded'],
       },
+    }),
+    // The sitemap, as Starlight would add it (same i18n), without the test pages: they are in no menu (usability audit V9)
+    sitemap({
+      i18n: { defaultLocale: 'root', locales: { root: 'fr', en: 'en' } },
+      filter: (page) => !/\/tests\//.test(new URL(page).pathname),
     }),
     starlight({
       // Site name per language (docs/system-design.md): Écluse 21 in French, Lock 21 in English

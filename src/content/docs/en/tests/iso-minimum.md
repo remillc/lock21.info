@@ -1,4 +1,5 @@
 ---
+pagefind: false
 title: Varying the minimum ISO setting
 ---
 Scans of a 50-foot-long horizontal strip, varying the minimum ISO setting and using a concentrated and a distributed lamp configuration.

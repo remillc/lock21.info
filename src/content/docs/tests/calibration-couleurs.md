@@ -1,4 +1,5 @@
 ---
+pagefind: false
 title: Calibration des couleurs
 ---
 ## Liste des fichiers
