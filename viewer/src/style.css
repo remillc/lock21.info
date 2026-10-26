@@ -1332,11 +1332,12 @@ l21-tooltip[data-shown='true'] {
     /* Beside the buttons at the bottom right, not over them nor above them (Christian, 2026-10-26: « don't hide other
        buttons »): from the left edge to the buttons' row (up to four buttons: diving, augmented reality, home, full
        screen) */
-    /* (the same left edge as the viewer's other elements: the larger of 16 px and the notch's inset; Christian,
-       2026-10-26: the two added together set it apart on a phone with a notch) */
-    left: max(16px, env(safe-area-inset-left));
+    /* Against the screen's left edge (Christian, 2026-10-26: « to the left of the screen »), its text too: the notch
+       sits at the middle of that edge, above the card at the bottom (padding it by the notch's inset left an empty
+       band on a phone) */
+    left: 12px;
     bottom: max(12px, env(safe-area-inset-bottom));
-    width: min(820px, calc(100vw - max(16px, env(safe-area-inset-left)) - max(16px, env(safe-area-inset-right)) - 216px));
+    width: min(860px, calc(100vw - 12px - max(16px, env(safe-area-inset-right)) - 216px));
     padding: 8px 8px 10px 16px;
     border-radius: 16px;
     transform: translate(0, 16px);
@@ -1369,6 +1370,11 @@ l21-tooltip[data-shown='true'] {
     grid-area: actions;
     align-self: end;
     margin: 0;
+  }
+  /* Diving, the bottom row is much wider (the season's strip, the lamp): the card goes above it, the whole width */
+  .underwater-tools:not([hidden]) ~ .tour-card {
+    bottom: calc(max(12px, env(safe-area-inset-bottom)) + 60px);
+    width: min(860px, calc(100vw - 12px - max(16px, env(safe-area-inset-right))));
   }
 }
 @media (orientation: landscape) and (max-height: 540px) and (prefers-reduced-motion: reduce),
