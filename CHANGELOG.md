@@ -2,6 +2,11 @@
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), below 1.0.0 while the site is not public.
 
+## Unreleased
+
+- 3D viewer, diving: the left button's vertical axis back as it was too (looking around and turning around the
+  pivot), as in the standard view.
+
 ## 0.16.0 - 2026-10-25
 
 - 3D viewer, underwater: many more particles in spring (800 per m³, was 300; up to 250,000 drawn, 40 % of that on a
