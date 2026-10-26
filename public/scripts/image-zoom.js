@@ -1,7 +1,8 @@
 // The lightbox: a click on a figure image of the notebook opens it as large as the screen allows, in a <dialog>, over a
 // near-black scrim, with its caption (FIG. NN, as in the page) and a counter; ‹ › (or the arrow keys, or a swipe on a
 // touch screen) go to the page's other figures; ✕, Escape or a click beside the image closes it. MD3 icon buttons and
-// motion (docs/system-design.md). The open figure is in the address (#fig-03, the page's FIG. 03): a link with it opens
+// motion (docs/system-design.md): the image grows from its thumbnail and shrinks back to it, the figures slide along
+// a shared axis. The open figure is in the address (#fig-03, the page's FIG. 03): a link with it opens
 // the lightbox on that figure. Native Custom Element (see docs/guidelines.md), added once to the page.
 const FIGURES = '.sl-markdown-content figure img'
 
@@ -36,7 +37,17 @@ class ImageZoom extends HTMLElement {
     let images = []
     let index = 0
 
-    const show = (i) => {
+    const figure = dialog.querySelector('.lightbox-figure')
+    const chrome = () => dialog.querySelectorAll('.lightbox-button, .lightbox-count')
+    // MD3 motion (docs/system-design.md): enter 400 ms emphasized decelerate, exit 200 ms emphasized accelerate; the
+    // change of figure as a shared axis X (out 90 ms, in 210 ms); nothing moves when the system asks for less motion
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const DECELERATE = 'cubic-bezier(0.05, 0.7, 0.1, 1)'
+    const ACCELERATE = 'cubic-bezier(0.3, 0, 0.8, 0.15)'
+    let busy = false
+
+    /** The figure's content, at once */
+    const fill = (i) => {
       index = (i + images.length) % images.length
       const img = images[index]
       big.src = img.currentSrc || img.src
@@ -49,12 +60,65 @@ class ImageZoom extends HTMLElement {
       // The figure in the address, replacing the last one (no new history entry); the router's state kept
       history.replaceState(history.state, '', `${location.pathname}${location.search}#fig-${String(index + 1).padStart(2, '0')}`)
     }
-    const open = (i) => {
+    const ready = () => big.decode().catch(() => {})
+    /** The transform that puts the large image over its thumbnail in the page (MD3 container transform) */
+    const overThumbnail = () => {
+      const a = images[index]?.getBoundingClientRect()
+      const b = big.getBoundingClientRect()
+      if (!a || !a.width || !b.width) return 'scale(0.92)'
+      const dx = a.left + a.width / 2 - (b.left + b.width / 2)
+      const dy = a.top + a.height / 2 - (b.top + b.height / 2)
+      return `translate(${dx}px, ${dy}px) scale(${a.width / b.width})`
+    }
+
+    const open = async (i) => {
       images = [...document.querySelectorAll(FIGURES)]
-      if (!images.length) return
-      show(i)
-      if (!dialog.open) dialog.showModal()
+      if (!images.length || dialog.open) return
+      fill(i)
+      busy = true
+      big.style.visibility = 'hidden'
+      dialog.showModal()
       dialog.querySelector('.lightbox-close').focus({ preventScroll: true })
+      await ready()
+      big.style.visibility = ''
+      if (!reduce.matches) {
+        const timing = { duration: 400, easing: DECELERATE }
+        big.animate([{ transform: overThumbnail() }, { transform: 'none' }], timing)
+        dialog.animate([{ opacity: 0 }, { opacity: 1 }], { ...timing, pseudoElement: '::backdrop' })
+        for (const el of [caption, ...chrome()]) el.animate([{ opacity: 0 }, { opacity: 1 }], { ...timing, delay: 100, fill: 'backwards' })
+      }
+      busy = false
+    }
+    const close = async () => {
+      if (!dialog.open || busy) return
+      if (!reduce.matches) {
+        busy = true
+        const timing = { duration: 200, easing: ACCELERATE, fill: 'forwards' }
+        const motions = [
+          big.animate([{ transform: 'none' }, { transform: overThumbnail() }], timing),
+          dialog.animate([{ opacity: 1 }, { opacity: 0 }], { ...timing, pseudoElement: '::backdrop' }),
+          ...[caption, ...chrome()].map((el) => el.animate([{ opacity: 1 }, { opacity: 0 }], { ...timing, duration: 100 })),
+        ]
+        await Promise.all(motions.map((motion) => motion.finished.catch(() => {})))
+        dialog.close()
+        motions.forEach((motion) => motion.cancel())
+        busy = false
+      } else dialog.close()
+    }
+    /** The next (+1) or previous (-1) figure: out to one side, in from the other */
+    const go = async (step) => {
+      if (busy || images.length < 2) return
+      if (reduce.matches) return fill(index + step)
+      busy = true
+      const shift = 30 * step
+      const out = figure.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translateX(${-shift}px)` }],
+        { duration: 90, easing: ACCELERATE, fill: 'forwards' })
+      await out.finished.catch(() => {})
+      fill(index + step)
+      await ready()
+      figure.animate([{ opacity: 0, transform: `translateX(${shift}px)` }, { opacity: 1, transform: 'none' }], { duration: 210, easing: DECELERATE })
+      out.cancel()
+      busy = false
     }
     // Closed: the figure's hash leaves the address
     dialog.addEventListener('close', () => {
@@ -75,17 +139,22 @@ class ImageZoom extends HTMLElement {
       if (!img) return
       open([...document.querySelectorAll(FIGURES)].indexOf(img))
     })
-    dialog.querySelector('.lightbox-close').addEventListener('click', () => dialog.close())
-    dialog.querySelector('.lightbox-prev').addEventListener('click', () => show(index - 1))
-    dialog.querySelector('.lightbox-next').addEventListener('click', () => show(index + 1))
+    dialog.querySelector('.lightbox-close').addEventListener('click', close)
+    dialog.querySelector('.lightbox-prev').addEventListener('click', () => go(-1))
+    dialog.querySelector('.lightbox-next').addEventListener('click', () => go(1))
+    // Escape: the same closing motion as ✕
+    dialog.addEventListener('cancel', (event) => {
+      event.preventDefault()
+      close()
+    })
     // A click beside the image (on the scrim) closes it
     dialog.addEventListener('click', (event) => {
-      if (event.target === dialog) dialog.close()
+      if (event.target === dialog) close()
     })
     dialog.addEventListener('keydown', (event) => {
       if (images.length < 2) return
-      if (event.key === 'ArrowLeft') show(index - 1)
-      else if (event.key === 'ArrowRight') show(index + 1)
+      if (event.key === 'ArrowLeft') go(-1)
+      else if (event.key === 'ArrowRight') go(1)
       else return
       event.preventDefault()
     })
@@ -98,7 +167,7 @@ class ImageZoom extends HTMLElement {
       if (startX === null || images.length < 2) return
       const dx = event.clientX - startX
       startX = null
-      if (Math.abs(dx) > 50) show(index + (dx < 0 ? 1 : -1))
+      if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1)
     })
   }
 }
