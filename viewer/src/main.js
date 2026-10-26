@@ -339,8 +339,8 @@ controls.enableDamping = true
 // across the view's height
 controls.rotateSpeed = 0.5
 // The wheel (Christian, 2026-10-25: far too strong): 0.15 of OrbitControls' zoom per notch (0.075 on 2026-10-25, then doubled on 2026-10-26)
-// (0.25: Christian, 2026-10-26, stronger than 0.15)
-const WHEEL_ZOOM = 0.25
+// (0.25: Christian, 2026-10-26, stronger than 0.15; 0.5 the same day: not fast enough, as the right button's pan)
+const WHEEL_ZOOM = 0.5
 // Pinching keeps OrbitControls' own speed (Christian, 2026-10-26: on a phone, it had become too weak: the wheel's
 // setting slowed it too, both being zoomSpeed): set for each gesture, as it starts
 const PINCH_ZOOM = 1
