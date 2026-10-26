@@ -14,6 +14,7 @@ export const englishPaths = {
   modele: 'model',
   'collecte/journal-des-plongees': 'data-collection/dive-log',
   'collecte/materiel-utilise': 'data-collection/gear',
+  'collecte/mise-a-l-echelle': 'data-collection/scaling',
   'traitement/extraction-des-photos': 'processing/photo-extraction',
   'traitement/alignement-des-photos': 'processing/photo-alignment',
   'traitement/nuage-de-points-dense': 'processing/dense-point-cloud',
