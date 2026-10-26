@@ -13,28 +13,28 @@ Measuring the dimensions of the GoPro lens's field of view turned out to be hard
 
 <figure>
 
-![Dive plan drawn in a waterproof notebook](../../questions/dimensions-rig/assets/plan-plongee-champs-vision.webp)
+![Dive plan drawn in a waterproof notebook](../../problemes/dimensions-rig/assets/plan-plongee-champs-vision.webp)
 
 <figcaption>Dive plan drawn in a waterproof notebook</figcaption>
 </figure>
 
 <figure>
 
-![Image used to measure the horizontal field of view](../../questions/dimensions-rig/assets/mesurage-champ-vision-GoPro-horizontal.webp)
+![Image used to measure the horizontal field of view](../../problemes/dimensions-rig/assets/mesurage-champ-vision-GoPro-horizontal.webp)
 
 <figcaption>Image used to measure the horizontal field of view</figcaption>
 </figure>
 
 <figure>
 
-![Image used to measure the vertical field of view](../../questions/dimensions-rig/assets/mesurage-champ-vision-GoPro-vertical.webp)
+![Image used to measure the vertical field of view](../../problemes/dimensions-rig/assets/mesurage-champ-vision-GoPro-vertical.webp)
 
 <figcaption>Image used to measure the vertical field of view</figcaption>
 </figure>
 
 <figure>
 
-![Image used to measure the diagonal field of view](../../questions/dimensions-rig/assets/mesurage-champ-vision-GoPro-diagonal.webp)
+![Image used to measure the diagonal field of view](../../problemes/dimensions-rig/assets/mesurage-champ-vision-GoPro-diagonal.webp)
 
 <figcaption>Image used to measure the diagonal field of view</figcaption>
 </figure>

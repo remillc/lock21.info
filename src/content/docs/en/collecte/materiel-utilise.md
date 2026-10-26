@@ -1,5 +1,5 @@
 ---
-title: Gear used for data collection
+title: Gear used
 ---
 ## Camera
 

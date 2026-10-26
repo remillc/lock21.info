@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#86**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#87**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -76,7 +76,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 - [ ] #43 Accessibility (WCAG 2.2 AA): audited on 2026-10-26 (axe-core on every page, both themes, desktop and phone;
   keyboard, 320 px reflow, text spacing) and the code issues fixed. Left: the Markdown tables' empty header cells
-  (14 pages: name the column, or no header row), the heading levels of `questions/nettete-images` (and its English
+  (14 pages: name the column, or no header row), the heading levels of `problemes/nettete-images` (and its English
   page), a check with a real screen reader (NVDA, VoiceOver) and Windows' high contrast mode
 - [ ] #39 Design: applied (tokens, fonts, header and footer bars, home page, logo, tables, the 3D viewer's fonts and
   colours); to do: check contrast (WCAG AA) in both themes
@@ -96,9 +96,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   `tiles.lock21.info`: none, the start view's, or a chosen zone), how updates reach visitors (the new version on the
   next visit), and how it fits client-side routing and Cloudflare's cache headers (`public/_headers`)
 
-- [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): the small code fixes. V1 card « 03 Les
-  problèmes » to a written page; V10 « glisser (bouton gauche / droit) » and the mouse in the in-frame help; V13 a 404
-  with links onward, English under `/en/`; V8 Pagefind's French strings; V9 `/tests/` out of search and the sitemap;
+- [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): the small code fixes. V10 « glisser (bouton gauche / droit) » and the mouse in the in-frame help; V13 the 404 (#86); V8 Pagefind's French strings; V9 `/tests/` out of search and the sitemap;
   V19 « Footnotes », « Back to reference », « Selectionner »; V20 English number formats on `/en/model`; V21 the footer
   selects' width; V23 the ☰ on the desktop home; V24–V27 (tour after a drag, Escape leaves diving, one name for the dive
   mode, the no-download Google Earth link first, « 150° »); V28 two missing spaces; V29 settings intro and session code;
@@ -111,11 +109,16 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   V4 a short history page (the canal, its dates, 1958); V5 a line above « Suivi » (what it tracks, what is online,
   zones 21–25); V6 the placeholders; V7 Metashape named on its procedure pages; V15 wall top 35 or 40 ft; V16 a « voir
   dans le modèle 3D » link per zone; V30 a caption under the viewer (underwater, violet = not yet scanned); V32 a
-  description per page; V33 labels (« Effet de banane », « Zones de l'écluse », « Nuage de points dense »); V34
+  description per page; V33 labels (« Zones de l'écluse »; « Effet de banane » and « Nuage de points dense » done); V34
   About and Thanks last in the sidebar
 - [ ] #85 Usability audit: what agents can't settle. V31 wheel zoom from the start view on a desktop with a GPU; a
   20-minute test with three to five people, in French and English (the eight tasks in the report's « A test with real
   people »)
+
+- [ ] #86 The 404 page (Christian, 2026-10-26): its design and its message. Today Starlight's bare « 404 · Page non
+  trouvée. Vérifiez l'URL ou essayez d'utiliser la barre de recherche. », in French under `/en/` too, with no way
+  onward (audit V13). In the site's look, in the page's language (an English one for `/en/*`), with links to the home
+  page, the 3D model and the zone map, and the search
 
 ## Other
 

@@ -1,16 +1,16 @@
 ---
-title: Effet de bananne
+title: Effet de banane
 ---
-Le test effectué sur une surface plane de 100 pieds de long montre que le modèle résultant de l'alignement des caméras dans le logiciel de photogrammétrie est déformé. Au lieu d'obtenir une surface plate, celle-ci est courbée en forme de bananne.
+Le test effectué sur une surface plane de 100 pieds de long montre que le modèle résultant de l'alignement des caméras dans le logiciel de photogrammétrie est déformé. Au lieu d'obtenir une surface plate, celle-ci est courbée en forme de banane.
 
 - D'où vient cette déformation ?
 - Comment la corriger ?
 
 ## Hypothèse
 
-On présume que l'effet bananne vient de la déformation des images par la lentille de la caméra GoPro Hero 6 Black.
+On présume que l'effet banane vient de la déformation des images par la lentille de la caméra GoPro Hero 6 Black.
 
-Des tests effectuées sur un même jeu d'images - les fichiers `data/2024-05-18/raw-frames-n8/échelle-1` - en utilisant 2 fichiers de calibration de caméra différents, soit celui obtenu à partir du rendu par Metashape du jeu `data/2024-05-18/raw-frames-n8/pilier-3`, `configs/camera-calibration/camera-calibration from 2024-05-18 pillier 3.xml` et le fichier utilisé pour le projet Robert Gaskin `configs/camera-calibration/GoPro HERO6 4k wide frame camera calibration.xml` donnent des courbures différentes : le rendu fait avec la calibration provenant du projet Robert Gaskin a une courbure plus atténuée. On peut donc jouer avec la calibration de la caméra pour corriger l'effet bananne.
+Des tests effectuées sur un même jeu d'images - les fichiers `data/2024-05-18/raw-frames-n8/échelle-1` - en utilisant 2 fichiers de calibration de caméra différents, soit celui obtenu à partir du rendu par Metashape du jeu `data/2024-05-18/raw-frames-n8/pilier-3`, `configs/camera-calibration/camera-calibration from 2024-05-18 pillier 3.xml` et le fichier utilisé pour le projet Robert Gaskin `configs/camera-calibration/GoPro HERO6 4k wide frame camera calibration.xml` donnent des courbures différentes : le rendu fait avec la calibration provenant du projet Robert Gaskin a une courbure plus atténuée. On peut donc jouer avec la calibration de la caméra pour corriger l'effet banane.
 
 ## Solutions envisagées
 
@@ -39,7 +39,7 @@ Afin de s'assurer une bonne collecte de données, et éviter que les images obte
 
 <figure>
 
-![Image utilisée pour calculer la calibration de la lentille](./effet-bananne/assets/exemple-damier-GX010187.001.webp)
+![Image utilisée pour calculer la calibration de la lentille](./effet-banane/assets/exemple-damier-GX010187.001.webp)
 
 <figcaption>Image utilisée pour calculer la calibration de la lentille</figcaption>
 </figure>
@@ -50,7 +50,7 @@ Afin de s'assurer une bonne collecte de données, et éviter que les images obte
 
 <figure>
 
-![Cible utilisée pour identifier la position à 100 pieds](./effet-bananne/assets/exemple-cible-GX010197.007.webp)
+![Cible utilisée pour identifier la position à 100 pieds](./effet-banane/assets/exemple-cible-GX010197.007.webp)
 
 <figcaption>Cible utilisée pour identifier la position à 100 pieds</figcaption>
 </figure>

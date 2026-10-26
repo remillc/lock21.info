@@ -4,6 +4,14 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Page names (docs/system-design.md, « Page names »): addresses, titles and menu labels made to agree. Folders
+  `questions/` → `problemes/`, `workflow/` → `traitement/` (English `processing/`); « Le fort courant dans le canal »
+  → `fort-courant-canal` (`strong-current-canal`), « Effet de banane » (was « bananne », address too), « Nuage de
+  points dense » (`dense-point-cloud`), « Génération des modèles » (`building-models`), « Matériel utilisé » / “Gear
+  used”, `aligning-chunks`, `tests/couleurs-reference-profondeur`. Every former address redirects for good (301,
+  `public/_redirects`; checked under Wrangler).
+- « Problèmes rencontrés » has an index page (`/problemes`, English `/en/problems`): each problem in a line with its
+  link; the home page's third card leads there (it opened the empty « Alignement de chunks »).
 - Notebook pages on wide screens (over about 1,580 px): the content slid under the navigation since the cascade
   layers; the centring rule now sits outside the layers, as Starlight's own rule does.
 - Design brief: « Page names », one name per page for its address, its title (`<h1>` and `<title>`) and its menu label.

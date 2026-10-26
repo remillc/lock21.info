@@ -27,9 +27,9 @@ const ft = m.site_feet({}, o)
 // The three entry cards: their texts are messages (home_entry1Title…)
 const entries = [
   { no: '01', title: m.home_entry1Title({}, o), text: m.home_entry1Text({}, o), label: m.home_entry1Label({}, o), href: '/decoupage-du-site' },
-  { no: '02', title: m.home_entry2Title({}, o), text: m.home_entry2Text({}, o), label: m.home_entry2Label({}, o), href: '/workflow/extraction-des-photos' },
-  // The problems section's first page (it has no index), Christian, 2026-10-25
-  { no: '03', title: m.home_entry3Title({}, o), text: m.home_entry3Text({}, o), label: m.home_entry3Label({}, o), href: '/questions/alignement-chunks' },
+  { no: '02', title: m.home_entry2Title({}, o), text: m.home_entry2Text({}, o), label: m.home_entry2Label({}, o), href: '/traitement/extraction-des-photos' },
+  // The problems section's index page (Christian, 2026-10-26; it was the empty « Alignement de chunks »)
+  { no: '03', title: m.home_entry3Title({}, o), text: m.home_entry3Text({}, o), label: m.home_entry3Label({}, o), href: '/problemes' },
 ].map((e) => ({ ...e, href: localPath(e.href, lang) }))
 ---
 

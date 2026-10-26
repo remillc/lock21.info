@@ -1,0 +1,38 @@
+# Former addresses of pages renamed on 2026-10-26 (docs/system-design.md, « Page names »: one name per page for its
+# address, its title and its menu label), redirected for good (301). The build appends the English pages' redirects
+# (src/integrations/english-paths.mjs). Read by the hosting (Cloudflare).
+/workflow/extraction-des-photos /traitement/extraction-des-photos 301
+/en/workflow/photo-extraction /en/processing/photo-extraction 301
+/en/workflow/extraction-des-photos /en/processing/photo-extraction 301
+/workflow/alignement-des-photos /traitement/alignement-des-photos 301
+/en/workflow/photo-alignment /en/processing/photo-alignment 301
+/en/workflow/alignement-des-photos /en/processing/photo-alignment 301
+/workflow/generation-du-dense-cloud /traitement/nuage-de-points-dense 301
+/en/workflow/dense-cloud /en/processing/dense-point-cloud 301
+/en/workflow/generation-du-dense-cloud /en/processing/dense-point-cloud 301
+/workflow/modele /traitement/generation-des-modeles 301
+/en/workflow/models /en/processing/building-models 301
+/en/workflow/modele /en/processing/building-models 301
+/workflow/texture /traitement/texture 301
+/en/workflow/texture /en/processing/texture 301
+/workflow/suivi /traitement/suivi 301
+/en/workflow/progress /en/processing/progress 301
+/en/workflow/suivi /en/processing/progress 301
+/questions/alignement-chunks /problemes/alignement-chunks 301
+/en/problems/chunk-alignment /en/problems/aligning-chunks 301
+/en/questions/alignement-chunks /en/problems/aligning-chunks 301
+/questions/calibration-couleurs /problemes/calibration-couleurs 301
+/en/questions/calibration-couleurs /en/problems/colour-calibration 301
+/questions/canal /problemes/fort-courant-canal 301
+/en/problems/canal-current /en/problems/strong-current-canal 301
+/en/questions/canal /en/problems/strong-current-canal 301
+/questions/charte-couleurs-surexposee /problemes/charte-couleurs-surexposee 301
+/en/questions/charte-couleurs-surexposee /en/problems/overexposed-colour-chart 301
+/questions/dimensions-rig /problemes/dimensions-rig 301
+/en/questions/dimensions-rig /en/problems/rig-dimensions 301
+/questions/effet-bananne /problemes/effet-banane 301
+/en/questions/effet-bananne /en/problems/banana-effect 301
+/questions/nettete-images /problemes/nettete-images 301
+/en/questions/nettete-images /en/problems/image-sharpness 301
+/tests/lumiere-ambiante /tests/couleurs-reference-profondeur 301
+/en/tests/lumiere-ambiante /en/tests/reference-colours-by-depth 301

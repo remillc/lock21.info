@@ -30,8 +30,8 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `  remerciements.md` | Thanks: dive buddies, the sponsor (DECOSTOP Outdoor Centre, its logo in `public/images/`, one per theme), the rig's designer, the 1988 drawings |
 | `  decoupage-du-site.mdx` | Zone map and description of zones 1–25 |
 | `  collecte/` | Dive log (`journal-des-plongees.mdx`, a large table wrapped in `<DiveLog>`) and gear (`materiel-utilise.md`) |
-| `  workflow/` | Processing steps (`extraction-des-photos.md` … `texture.md`, ordered by `sidebar.order` in their frontmatter) and per-zone progress tracking (`suivi.md`) |
-| `  questions/` | One page per problem (`<name>.md`), its images in `<name>/assets/`; shown as "Problèmes rencontrés" |
+| `  traitement/` | Processing steps (`extraction-des-photos.md` … `texture.md`, ordered by `sidebar.order` in their frontmatter) and per-zone progress tracking (`suivi.md`) |
+| `  problemes/` | One page per problem (`<name>.md`), its images in `<name>/assets/`, and `index.md`, the group's page (each problem in a line, with its link; add a new problem there too); shown as « Problèmes rencontrés » |
 | `  tests/` | Test write-ups, same layout. **Not in the sidebar** (see `astro.config.mjs`). |
 | `  rig/modele/` | Rig Blender files and drawings |
 | `astro.config.mjs` | Site config: Starlight, locales, sidebar, image-zoom script, Paraglide's Vite plugin |

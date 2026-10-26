@@ -5,7 +5,7 @@ When shooting the colour chart from the same distance as during data collection,
 
 <figure>
 
-![Example of the colour chart being overexposed](../../questions/charte-couleurs-surexposee/assets/GX010140-00081.webp)
+![Example of the colour chart being overexposed](../../problemes/charte-couleurs-surexposee/assets/GX010140-00081.webp)
 
 <figcaption>Example of the colour chart being overexposed</figcaption>
 </figure>
@@ -14,21 +14,21 @@ awef
 
 <figure>
 
-![Normal exposure](../../questions/charte-couleurs-surexposee/assets/charte-couleur.webp)
+![Normal exposure](../../problemes/charte-couleurs-surexposee/assets/charte-couleur.webp)
 
 <figcaption>Normal exposure</figcaption>
 </figure>
 
 <figure>
 
-![Exposure at -1 stop](../../questions/charte-couleurs-surexposee/assets/charte-couleur--1-stop.webp)
+![Exposure at -1 stop](../../problemes/charte-couleurs-surexposee/assets/charte-couleur--1-stop.webp)
 
 <figcaption>Exposure at -1 stop</figcaption>
 </figure>
 
 <figure>
 
-![Exposure at -2 stop](../../questions/charte-couleurs-surexposee/assets/charte-couleur--2-stop.webp)
+![Exposure at -2 stop](../../problemes/charte-couleurs-surexposee/assets/charte-couleur--2-stop.webp)
 
 <figcaption>Exposure at -2 stop</figcaption>
 </figure>

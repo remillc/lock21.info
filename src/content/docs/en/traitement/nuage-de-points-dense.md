@@ -1,5 +1,5 @@
 ---
-title: Building the dense point cloud
+title: Dense point cloud
 sidebar:
   order: 3
 ---
