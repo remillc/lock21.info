@@ -102,7 +102,7 @@ export default defineConfig({
         { label: 'Remerciements', translations: { en: 'Thanks' }, link: '/remerciements' },
         { label: 'Découpage du site', translations: { en: 'Site zones' }, link: '/decoupage-du-site' },
         { label: 'La collecte des données', translations: { en: 'Data collection' }, items: [{ autogenerate: { directory: 'collecte' } }] },
-        { label: 'Workflow', translations: { en: 'Workflow' }, items: [{ autogenerate: { directory: 'workflow' } }] },
+        { label: 'Le traitement', translations: { en: 'Processing' }, items: [{ autogenerate: { directory: 'workflow' } }] },
         { label: 'Problèmes rencontrés', translations: { en: 'Problems encountered' }, items: [{ autogenerate: { directory: 'questions' } }] },
         // tests/ stays out of the sidebar, as before
       ],

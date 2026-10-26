@@ -35,10 +35,10 @@ awef
 
 ## Tests à faire
 
-Pour la première prise de vue de la charte de couleurs, en effectuer deux autres en modifiant le paramètre de la caméra pour sous-exposer respectivement de 1 stop et de 2 stops:
+Pour la première prise de vue de la charte de couleurs, en effectuer deux autres en modifiant le paramètre de la caméra pour sous-exposer respectivement de 1 stop et de 2 stops :
 
-1. Ev comp: -1
-2. Ev comp: -2
+1. Ev comp : -1
+2. Ev comp : -2
 
 ## Conclusion
 

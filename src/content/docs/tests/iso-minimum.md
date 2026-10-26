@@ -1,7 +1,7 @@
 ---
 title: Variation du paramètre ISO minimum
 ---
-Scans d'une bande horizontale de 50 pieds de long en variant le paramètre ISO minimum, et en utilisant une configuration des lampes concentrée et distribuée.
+Scans d'une bande horizontale de 50 pieds de long en variant le paramètre ISO minimum, et en utilisant une configuration des lampes concentrée et distribuée.
 
 |         | ISO minimum | Configuration des lampes |
 | :-----: | :---------: | :---------------------: |

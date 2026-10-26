@@ -39,7 +39,7 @@ export const TOUR_STEPS = [
     cam: [-18.6, 3.08, -27.91, -45.68, -28.73, -39.76],
     title: { fr: 'L’écluse 21', en: 'Lock 21' },
     text: {
-      fr: 'Dickinson Landing, un des villages engloutis du Saint-Laurent: l’écluse est sous l’eau depuis 1958. On commence au fond, sur le plancher de madriers d’une des enclaves du déversoir, à 60 pieds (18 m) sous la surface.',
+      fr: 'Dickinson Landing, un des villages engloutis du Saint-Laurent : l’écluse est sous l’eau depuis 1958. On commence au fond, sur le plancher de madriers d’une des enclaves du déversoir, à 60 pieds (18 m) sous la surface.',
       en: 'Dickinson Landing, one of the St. Lawrence’s Lost Villages: the lock has been under water since 1958. We start at the bottom, on the plank floor of one of the spillway’s bays, 60 feet (18 m) below the surface.',
     },
   },
@@ -73,7 +73,7 @@ export const TOUR_STEPS = [
     turnFirst: 2,
     title: { fr: 'Au-dessus des piliers', en: 'Above the piers' },
     text: {
-      fr: 'Le dessus du déversoir: les piliers, la passerelle qui les relie et les mécanismes qui levaient les vannes. Le haut des murs est à 40 pieds (12 m) sous la surface.',
+      fr: 'Le dessus du déversoir : les piliers, la passerelle qui les relie et les mécanismes qui levaient les vannes. Le haut des murs est à 40 pieds (12 m) sous la surface.',
       en: 'The top of the spillway: the piers, the footbridge that joins them and the gear that raised the gates. The tops of the walls are 40 feet (12 m) below the surface.',
     },
   },
@@ -189,7 +189,7 @@ export const TOUR_STEPS = [
     accel: 1.9,
     title: { fr: 'La zone 18', en: 'Zone 18' },
     text: {
-      fr: 'Dernier arrêt: le bloc de la zone 18, à l’ouest, et l’écluse au loin. Le relevé continue: les volumes violets sont les zones pas encore numérisées.',
+      fr: 'Dernier arrêt : le bloc de la zone 18, à l’ouest, et l’écluse au loin. Le relevé continue : les volumes violets sont les zones pas encore numérisées.',
       en: 'Last stop: the block of zone 18, to the west, and the lock in the distance. The survey goes on: the purple shapes are the zones not scanned yet.',
     },
   },

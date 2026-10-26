@@ -59,15 +59,14 @@ characters themselves, not `&nbsp;`. English text keeps no space before these ma
 **Numbers.** Decimal comma (`18,3 m`), thousands with a non-breaking space (`16 384`), the unit after a non-breaking
 space (`35 pi/min`); feet first with metres in parentheses where the page already does so.
 
-**Terms.** One word per thing, the same on every page and in the interface. Decisions so far, and proposals
-(**to confirm** by Christian before using them in new labels):
+**Terms.** One word per thing, the same on every page and in the interface (Christian, 2026-10-26):
 
 | Thing | Use | Notes |
 | --- | --- | --- |
-| the processing steps (sidebar « Workflow ») | « le traitement » (to confirm) | « workflow » only for Metashape's own *Batch Process* workflows (`config/workflows/*.xml`) |
+| the processing steps (sidebar « Workflow ») | « le traitement » (English: “Processing”) | « workflow » only for Metashape's own *Batch Process* workflows (`config/workflows/*.xml`) |
 | dense cloud | « nuage de points dense » | Metashape's French interface; « dense cloud » in parentheses on first use if useful |
-| chunk | *chunk*, in italics (to confirm) | Metashape's own term; explained on first use (« un *chunk*, un bloc de photos traité à part ») |
-| rig | « rig » (to confirm) | the camera frame; « le rig (support de caméras) » on first use |
+| chunk | *chunk*, in italics | Metashape's own term; explained on first use (« un *chunk*, un bloc de photos traité à part ») |
+| rig | « rig » | the camera frame; « le rig (support de caméras) » on first use |
 | frames extracted from the video | « images » | « frames » only in file names |
 | zone | « zone », with its number (« la zone 12 ») | as on the zone map |
 | depth | « profondeur », in feet (« 60 pi ») with metres | « pi » not « ft » in French |
