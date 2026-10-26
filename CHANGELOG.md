@@ -5,6 +5,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- 3D model: the context (chart terrain, fillers, north and south walls) republished from the `.blend` of
+  2026-10-26, its textures baked again (online on R2, `context/2026-10-26-1606`).
+
 ## 1.0.0-beta.1 - 2026-10-26
 
 The first public beta. In short:
