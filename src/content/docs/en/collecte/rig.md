@@ -5,8 +5,8 @@ sidebar:
   order: 3
 ---
 
-The rig (the camera frame) carries the GoPro and the lights in front of the Seacraft Future 1000 scooter. Sylvain
-Marcotte designed it.
+The rig (the camera frame) is an assembly of 20 × 20 mm T-slot aluminium extrusions (the 2020 series). It carries
+the GoPro and the lights in front of the Seacraft Future 1000 scooter; Sylvain Marcotte designed it.
 
 <div class="facts">
 <p class="fact"><span>Scooter</span><b>Seacraft Future 1000</b></p>
@@ -58,8 +58,6 @@ Marcotte designed it.
 </figure>
 
 </div>
-
-The rig is an assembly of 20 × 20 mm T-slot aluminium extrusions (the 2020 series).
 
 *(to be completed: the fittings, how the rig attaches to the scooter.)*
 

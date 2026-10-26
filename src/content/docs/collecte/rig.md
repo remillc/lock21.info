@@ -5,8 +5,8 @@ sidebar:
   order: 3
 ---
 
-Le rig (support de caméras) porte la GoPro et les lampes devant le scooter Seacraft Future 1000. Sylvain Marcotte l'a
-conçu.
+Le rig (support de caméras) est un assemblage de profilés d'aluminium à rainure en T de 20 × 20 mm
+(série 2020). Il porte la GoPro et les lampes devant le scooter Seacraft Future 1000 ; Sylvain Marcotte l'a conçu.
 
 <div class="facts">
 <p class="fact"><span>Scooter</span><b>Seacraft Future 1000</b></p>
@@ -58,8 +58,6 @@ conçu.
 </figure>
 
 </div>
-
-Le rig est un assemblage de profilés d'aluminium à rainure en T de 20 × 20 mm (série 2020).
 
 *(à compléter : les fixations, comment le rig s'attache au scooter.)*
 
