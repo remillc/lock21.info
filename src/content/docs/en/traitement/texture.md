@@ -29,4 +29,5 @@ No more need for a low-resolution version: the export's texture is published as 
 Menu `Workflow` > `Build texture...`
 
 1. Texture type
-2.
+
+*(to be completed)*

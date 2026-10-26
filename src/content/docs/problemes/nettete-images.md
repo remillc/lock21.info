@@ -3,7 +3,7 @@ title: Netteté des images
 ---
 Les premières prises de vues avec la caméra GoPro Hero 6 Black montrent des images capturées en mouvement qui sont floues et manquent de détails.
 
-awef
+*(à compléter)*
 
 Le dense cloud et le mesh générés n'ont pas la précision qu'on peut s'attendre avec des images 400px x 300px prises à environ 60cm de distance soit une taille de 0,33 mm2 par pixel. Comment améliorer ?
 
@@ -28,7 +28,11 @@ Consultez la [liste complète des paramètres utilisés](/collecte/materiel-util
 
 ### Éclairage
 
+*(à compléter)*
+
 ### Paramètres de la prise d'images
+
+*(à compléter)*
 
 ## Solutions à explorer
 
@@ -80,6 +84,8 @@ Réaliser un scan d'une bande horizontale de 100 pieds de long à raison de 4 p
 Extraire un nombre égal de frames pour chaque passage et lancer les tests suivants dans Metashape :
 
 ### Conclusions
+
+*(à compléter)*
 
 ## Augmenter la sensibilité ISO minimum
 

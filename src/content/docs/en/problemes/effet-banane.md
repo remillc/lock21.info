@@ -77,3 +77,5 @@ To make sure the data collection goes well, and to keep the images from being to
 Video shot finning, in 4K 16:9.
 
 ## Conclusions
+
+*(to be completed)*

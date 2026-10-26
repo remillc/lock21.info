@@ -29,4 +29,5 @@ Plus besoin d'une version basse résolution : la texture de l'export est publi�
 Menu `Workflow` > `Build texture...`
 
 1. Texture type
-2.
+
+*(à compléter)*

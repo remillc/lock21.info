@@ -10,7 +10,7 @@ Lors de la prise de vue de la charte de couleurs, à une distance équivalente �
 <figcaption>Exemple du phénomène de surexposition de la charte de couleurs</figcaption>
 </figure>
 
-awef
+*(à compléter)*
 
 <figure>
 

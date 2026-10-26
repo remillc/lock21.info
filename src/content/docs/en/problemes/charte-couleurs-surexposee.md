@@ -10,7 +10,7 @@ When shooting the colour chart from the same distance as during data collection,
 <figcaption>Example of the colour chart being overexposed</figcaption>
 </figure>
 
-awef
+*(to be completed)*
 
 <figure>
 

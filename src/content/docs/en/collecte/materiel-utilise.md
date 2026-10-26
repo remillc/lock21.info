@@ -25,7 +25,7 @@ Capture mode: **4k 4:3 video** (4000 pixels x 3000 pixels). I picked this resolu
 | _Protune_                                  | on                    |
 | Color (color profile)[^1]                  | _GoPro Color_         |
 | White balance[^1]                          | 6500K[^2]             |
-| ISO Min[^1]                                | ???                   |
+| ISO Min[^1]                                | *(to be completed)*   |
 | ISO Max[^1]                                | 1600 (default value)  |
 | Shutter speed[^1]                          | auto (default value)  |
 | Exposure value compensation (EV Comp)[^1]  | 0 (default value)     |

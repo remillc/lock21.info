@@ -28,3 +28,5 @@ Scans of a 50-foot-long horizontal strip, varying the minimum ISO setting and us
 </figure>
 
 ## Concentrated vs distributed
+
+*(to be completed)*

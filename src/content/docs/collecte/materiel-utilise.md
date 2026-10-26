@@ -25,7 +25,7 @@ Mode de capture : **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution
 | _Protune_                                              | activé                          |
 | Couleur (profil colorimétrique)[^1]                    | _Couleur GoPro_                 |
 | Équilibre des blancs[^1]                               | 6500K[^2]                       |
-| ISO Minimum[^1]                                        | ???                             |
+| ISO Minimum[^1]                                        | *(à compléter)*                 |
 | ISO Maximum[^1]                                        | 1600 (valeur par défaut)        |
 | Vitesse d'obturateur[^1]                               | automatique (valeur par défaut) |
 | Compensation de la valeur d’exposition (Comp V.E.)[^1] | 0 (valeur par défaut)           |

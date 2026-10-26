@@ -28,3 +28,5 @@ Scans d'une bande horizontale de 50 pieds de long en variant le paramètre ISO 
 </figure>
 
 ## Concentré vs distribué
+
+*(à compléter)*
