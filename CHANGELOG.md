@@ -6,7 +6,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 - 3D viewer, guided tour: step 5's camera above the chart terrain (it was under it), its flight in level (no rise and
   fall); step 6's view lower, looking up at the gates (Christian), its flight level too; steps 5 to 6 in one flight, no stop
-  (step 6 a view reached through its old start); steps 7 to 8 about 1 m over the ground all the way.
+  (step 6 a view reached through its old start); steps 7 to 8 about 1 m over the ground all the way, looking at zone 18's centre (not its top).
 - 3D viewer, phone held sideways: the compass on the screen's left edge with the tour's card; the season slider's touch
   target 48 dp high, 8 dp clear of the buttons' targets (MD3).
 - 3D viewer, phone held sideways, diving: the season's slider above the buttons on the right, leaving room for the

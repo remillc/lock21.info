@@ -172,15 +172,17 @@ export const TOUR_STEPS = [
     // It looks at the top of the block, at its centre, from the start of the flight to the end (Christian, 2026-10-24:
     // turning toward it as soon as the flight starts, the same point all the way); his view looked at
     // -36.26, -20.92, 11.83, a little lower and further north
-    cam: [-106.95, 7.59, -10.04, -93.75, 6.42, -4.0],
+    // Looking at the zone's centre, its bounding box's (Christian, 2026-10-26: the centre, not the top; was -93.75, 6.42,
+    // -4.0), from the start of the flight to the view
+    cam: [-106.95, 7.59, -10.04, -93.88, 3.22, -3.55],
     // From step 7 (Christian, 2026-10-24: at floor level, faster): down to the floor, west low north of the block,
     // rising to the view only at the end; looking at the block's top all the way, turning to it first. About 1 m over
     // the ground all along (Christian, 2026-10-26: closer to the ground; the chart terrain's ground measured under each
     // point), clear of every surface (0.8 m at least)
     approach: [[-60, 1.8, -18.5], [-66, 1.85, -17.2], [-72, 1.95, -16], [-79, 1.9, -15.2], [-86, 1.9, -14.5], [-92, 1.6, -14],
       [-99, 1.2, -13.5], [-104.5, 5.0, -11.5]],
-    looks: [[-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0],
-      [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0], [-93.75, 6.42, -4.0]],
+    looks: [[-93.88, 3.22, -3.55], [-93.88, 3.22, -3.55], [-93.88, 3.22, -3.55], [-93.88, 3.22, -3.55], [-93.88, 3.22, -3.55],
+      [-93.88, 3.22, -3.55], [-93.88, 3.22, -3.55], [-93.88, 3.22, -3.55]],
     turnFirst: 1.5,
     paces: [2.5, 5, 5, 5, 5, 5, 4, 2, 1.2],
     accel: 1.5,
