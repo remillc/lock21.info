@@ -125,6 +125,10 @@ The 3D viewer uses the same fonts (`viewer/src/main.js` imports them) and the da
   over `duration.long1` (450 ms), `easing.emphasized` `cubic-bezier(0.2, 0, 0, 1)`: the old content fades out over the
   first 35 %, then the new one fades in while growing from 92 %, without overlap. The header and the sidebar change
   without moving. Tokens in `tokens.scss`, styles in `custom.scss`.
+- **The 3D viewer's entrance** (Christian, 2026-10-26), the one exception to « no animation on first display »: on
+  `/modele`, as the page loads, the viewer's frame rises from 5rem lower to its place while growing from 88 % and
+  fading in, all at once, over `duration.long1` (450 ms), `easing.emphasized-decelerate`; none with reduced motion
+  (`ModelPage.astro`, `l21-frame-enter`).
 
 **Icons by name, never pasted** (2026-10-26): Material Symbols Rounded from Iconify's set (`@iconify-json/material-symbols`,
 a dev dependency in the site and the viewer: `npm update` follows Google's drawings). The site: `<Icon name="material-symbols:home-outline-rounded" />`
