@@ -173,6 +173,17 @@
     }
 
   
+    // Centred figure (Christian, 2026-10-26: the 1904 photo of « À propos de l'écluse 21 »): its usual size, the
+    // image and its caption in the middle of the column
+    &.figure-center {
+      text-align: center;
+
+      img {
+        display: block;
+        margin-inline: auto;
+      }
+    }
+
     // Wide figure (e.g. the zone map): 80 % of the content column, height in proportion, centred
     &.figure-wide img {
       display: block;
