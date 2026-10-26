@@ -1318,7 +1318,9 @@ l21-tooltip[data-shown='true'] {
 }
 /* A phone held sideways (Christian, 2026-10-26: the card took too much of the short screen): wider and shorter, in two
    columns; the step's number, title and text on the left, the close button above back and next on the right */
-@media (orientation: landscape) and (max-height: 540px) {
+/* (every touch screen held sideways, whatever its height: Christian's phone is taller than 540 px that way, and kept
+   the centred card; and any short window in landscape) */
+@media (orientation: landscape) and (max-height: 540px), (orientation: landscape) and (hover: none) {
   .tour-card {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -1369,7 +1371,8 @@ l21-tooltip[data-shown='true'] {
     margin: 0;
   }
 }
-@media (orientation: landscape) and (max-height: 540px) and (prefers-reduced-motion: reduce) {
+@media (orientation: landscape) and (max-height: 540px) and (prefers-reduced-motion: reduce),
+  (orientation: landscape) and (hover: none) and (prefers-reduced-motion: reduce) {
   .tour-card,
   .tour-card.open {
     transform: none;
