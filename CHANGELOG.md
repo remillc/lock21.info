@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- The project's CSS variables renamed `--lk-…` → `--l21-…` (and the class `lk-menu-overlay`), one prefix for everything
+  of ours (custom elements, layers, storage keys); the built CSS the same apart from the prefix.
 - No colour written in a rule (docs/system-design.md): the site and the viewer's colours as MD3 roles and tokens
   (state-layer opacities, shadow and scrim, elevation level 1, the viewer's container roles), state layers as the
   content colour at the state's opacity; the « 3D model » pill's stray blue state layer now its own content colour; the
