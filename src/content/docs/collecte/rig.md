@@ -69,6 +69,8 @@ Les lampes sont placées pour éclairer également un plan à environ 70 cm de 
 du haut, 40 cm entre les deux lampes de droite. Les mesures sont dans [Dimensions du rig de
 caméra](/problemes/dimensions-rig).
 
+Chaque lampe est montée sur une base à rotule RAM B-238 de RAM Mounts (rotule d'un pouce), fixée au cadre.
+
 <figure>
 
 ![Les lampes, les flotteurs en mousse et la GoPro dans son boîtier étanche, posés sur une table](./rig/assets/lampes-boitier-2024-05-16.webp)
