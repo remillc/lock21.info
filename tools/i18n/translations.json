@@ -1,8 +1,8 @@
 {
   "pages": {
     "a-propos-ecluse-21.md": {
-      "source": "a839601a83e5ff876042999e7e9c22500ae226f4",
-      "commit": "a69e518",
+      "source": "82207001258189a560dd054497866ea89ae29638",
+      "commit": "ba3b567",
       "recorded": "2026-10-26"
     },
     "a-propos.mdx": {
@@ -16,9 +16,9 @@
       "recorded": "2026-10-26"
     },
     "collecte/materiel-utilise.md": {
-      "source": "cfcacd57e075fa095323ddeeadc69487ec5220fd",
-      "commit": "2ff5c1b",
-      "recorded": "2026-10-23"
+      "source": "e9e218f303dad0c30e380d938a158f3ed3f8fd8c",
+      "commit": "ba3b567",
+      "recorded": "2026-10-26"
     },
     "collecte/mise-echelle.md": {
       "source": "2a7dd53f664acd91bb6f408c72f1610b4e855b9f",
@@ -126,9 +126,9 @@
       "recorded": "2026-10-26"
     },
     "traitement/nuage-points-dense.md": {
-      "source": "8e3a148f902c17087462722af2ef6cfef4302a26",
-      "commit": "9d608a8",
-      "recorded": "2026-10-21"
+      "source": "591f6ac9f8a636d26344bd7c84611b31547d252c",
+      "commit": "ba3b567",
+      "recorded": "2026-10-26"
     },
     "traitement/suivi.md": {
       "source": "f52d59df06317c468f1efe509e4805a2147f2c79",

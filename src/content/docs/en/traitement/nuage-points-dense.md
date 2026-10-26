@@ -5,6 +5,8 @@ sidebar:
 ---
 This step is done in Agisoft Metashape.
 
+The point cloud is not one of the project's outputs, but we generate it anyway for later use.
+
 1. Select the chunk to process
 2. Menu `Workflow` > `Batch Process...`
 3. Load...
@@ -13,6 +15,8 @@ This step is done in Agisoft Metashape.
 ## Filtering the dense point cloud
 
 ### Filter by confidence
+
+*The workflow runs this step automatically.*
 
 1. `Tools > Dense cloud > Filter by Confidence...`
 2. Min: 0, `Max: 2`
