@@ -17,9 +17,9 @@ const english = lang === 'en'
   {english ? '3D model' : 'Modèle 3D'}
 </a>
 
-<style lang="scss">
+<style>
   /* MD3 filled button: 40 px high in a 48 px touch target (the transparent border, its colour inside it; TODO #59).
-     SCSS, nested, as custom.scss (Christian, 2026-10-26) */
+     Plain CSS, nested (Christian, 2026-10-26) */
   .model-pill {
     display: inline-flex;
     align-items: center;
@@ -39,12 +39,12 @@ const english = lang === 'en'
     white-space: nowrap;
 
     &:hover {
-      box-shadow: inset 0 0 0 100px rgb(14 36 48 / 0.08); // MD3 hover state layer
+      box-shadow: inset 0 0 0 100px rgb(14 36 48 / 0.08); /* MD3 hover state layer */
     }
 
     &:focus-visible,
     &:active {
-      box-shadow: inset 0 0 0 100px rgb(14 36 48 / 0.1); // MD3 focus and pressed state layers
+      box-shadow: inset 0 0 0 100px rgb(14 36 48 / 0.1); /* MD3 focus and pressed state layers */
     }
 
     &:focus-visible {

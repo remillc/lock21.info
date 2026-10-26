@@ -186,11 +186,12 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
           clip-path 200ms cubic-bezier(0.3, 0, 0.8, 0.15),
           display 200ms allow-discrete,
           overlay 200ms allow-discrete;
-      }
-      .drawer-menu .sidebar-pane:popover-open {
-        clip-path: inset(-100vh -100vw -100vh -6rem);
-        transition-duration: 400ms;
-        transition-timing-function: cubic-bezier(0.05, 0.7, 0.1, 1);
+
+        &:popover-open {
+          clip-path: inset(-100vh -100vw -100vh -6rem);
+          transition-duration: 400ms;
+          transition-timing-function: cubic-bezier(0.05, 0.7, 0.1, 1);
+        }
       }
       @starting-style {
         .drawer-menu .sidebar-pane:popover-open {
@@ -205,9 +206,10 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
         box-shadow:
           0 1px 2px rgb(0 0 0 / 30%),
           0 1px 3px 1px rgb(0 0 0 / 15%);
-      }
-      :global(.lk-menu-overlay) .drawer-menu .sidebar-pane:popover-open {
-        clip-path: inset(-100vh -1rem -100vh -100vw);
+
+        &:popover-open {
+          clip-path: inset(-100vh -1rem -100vh -100vw);
+        }
       }
       @starting-style {
         :global(.lk-menu-overlay) .drawer-menu .sidebar-pane:popover-open {
@@ -255,37 +257,43 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
     background-repeat: no-repeat;
     /* MD3: the X forms in 400 ms (emphasized decelerate), the bars come back in 200 ms (emphasized accelerate) */
     transition: background-size 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
-  }
-  nav .sl-menu-button::before,
-  nav .sl-menu-button::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 1.125rem;
-    height: 3px;
-    margin: -1.5px 0 0 -0.5625rem;
-    border-radius: 1.5px;
-    background: currentColor;
-    transition: transform 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
-  }
-  nav .sl-menu-button::before {
-    transform: translateY(-6px);
-  }
-  nav .sl-menu-button::after {
-    transform: translateY(6px);
-  }
-  nav .sl-menu-button:has(~ :popover-open) {
-    background-size: 0 3px;
-    transition: background-size 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
-  }
-  nav .sl-menu-button:has(~ :popover-open)::before {
-    transform: rotate(45deg);
-    transition: transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
-  }
-  nav .sl-menu-button:has(~ :popover-open)::after {
-    transform: rotate(-45deg);
-    transition: transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1.125rem;
+      height: 3px;
+      margin: -1.5px 0 0 -0.5625rem;
+      border-radius: 1.5px;
+      background: currentColor;
+      transition: transform 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
+    }
+
+    &::before {
+      transform: translateY(-6px);
+    }
+
+    &::after {
+      transform: translateY(6px);
+    }
+
+    &:has(~ :popover-open) {
+      background-size: 0 3px;
+      transition: background-size 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
+    }
+
+    &:has(~ :popover-open)::before {
+      transform: rotate(45deg);
+      transition: transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
+    }
+
+    &:has(~ :popover-open)::after {
+      transform: rotate(-45deg);
+      transition: transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     nav .sl-menu-button,
@@ -326,14 +334,15 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
       font-size: 0.75rem;
       color: var(--md-sys-color-on-surface-variant);
       white-space: nowrap;
-    }
-    .drawer-menu .sidebar-pane .depth-ruler .mark::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      right: -0.625rem;
-      width: 0.375rem;
-      border-top: 2px solid var(--ruler-line);
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: -0.625rem;
+        width: 0.375rem;
+        border-top: 2px solid var(--ruler-line);
+      }
     }
     .drawer-menu .sidebar-pane .depth-ruler .bottom {
       color: var(--md-sys-color-tertiary-text);

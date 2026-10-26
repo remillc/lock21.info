@@ -62,11 +62,12 @@ h1#_top {
 header.header {
   background: var(--lk-bar);
   border-bottom: 1px solid var(--lk-bar-outline);
-}
-// The divider Starlight draws after the social-icons slot (the "Modèle 3D" pill) separated it from the theme and
-// language selects, now in the footer
-header.header .social-icons::after {
-  display: none;
+
+  // The divider Starlight draws after the social-icons slot (the "Modèle 3D" pill) separated it from the theme and
+  // language selects, now in the footer
+  .social-icons::after {
+    display: none;
+  }
 }
 
 header.header,
@@ -149,15 +150,16 @@ header.header,
     font-size: var(--sl-text-sm);
     color: var(--md-sys-color-on-surface-variant);
   }
-}
 
-// Wide figure (e.g. the zone map): 80 % of the content column, height in proportion, centred
-.sl-markdown-content figure.figure-wide img {
-  display: block;
-  width: 80%;
-  max-width: 80%;
-  height: auto;
-  margin-inline: auto;
+  
+  // Wide figure (e.g. the zone map): 80 % of the content column, height in proportion, centred
+  &.figure-wide img {
+    display: block;
+    width: 80%;
+    max-width: 80%;
+    height: auto;
+    margin-inline: auto;
+  }
 }
 
 // Full-size view opened by public/scripts/image-zoom.js

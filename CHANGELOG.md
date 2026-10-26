@@ -4,8 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- Component styles in nested SCSS (`<style lang="scss">`, as `custom.scss`), the rule in `docs/system-design.md`;
-  `ModelPill.astro` first, the others as they are touched.
+- Styles nested (Christian, 2026-10-26): plain CSS with native nesting in the components and the viewer (SCSS only
+  where Sass is needed), rewritten by a tool that checked the compiled CSS unchanged; in `.astro` files only the same
+  element's states (Astro leaves a nested descendant unscoped). Both builds flatten the nesting for browsers before
+  2023 (`build.cssTarget`); the site's and the viewer's built CSS identical before and after. The rules, and the
+  planned `l21.*` cascade layers, in `docs/system-design.md`.
 - Every icon of the site and the 3D viewer in Material Symbols' Rounded style (TODO #74), now referenced by name from
   the library instead of drawings pasted in (Christian: « what if the library is updated? »): Iconify's Material
   Symbols set (`@iconify-json/material-symbols`), through astro-icon in the site and unplugin-icons in the viewer

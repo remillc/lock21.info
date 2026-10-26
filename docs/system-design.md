@@ -127,10 +127,46 @@ a dev dependency in the site and the viewer: `npm update` follows Google's drawi
 imports each icon it uses (unplugin-icons, `vite.config.js`); `index.html` holds placeholders, `<svg data-icon="…">`,
 filled at start, and scripts call `icon(name, size)`. Outline icons take `-outline-rounded`, filled ones `-rounded`.
 
-**Component styles in nested SCSS** (2026-10-26), as `custom.scss`: `<style lang="scss">` in `.astro` files, a
-component's states and parts nested in its rule (`&:hover`, `&:focus-visible`, `.title { … }`) rather than repeated
-selectors; scoped by default, `is:global` or `:global(…)` only to reach outside the component (Starlight's elements).
-Example: `src/components/ModelPill.astro`. The components still in plain CSS move over as they are touched.
+**Styles: plain CSS, nested** (2026-10-26). `<style>` in `.astro` files and `viewer/src/style.css` are plain CSS with
+native nesting; SCSS (`lang="scss"`, `.scss` files) only where Sass is needed (a loop, a mixin: `DiveLog.astro`;
+`tokens.scss`, `custom.scss`). Rules are nested by default: a rule's states and parts inside it (`&:hover`,
+`&::before`, `&[open]`, `.child`). One exception, in `.astro` files: only the same element's states are nested, never a
+descendant, because Astro's scoping leaves a nested descendant unscoped (`.a { .b {} }` becomes `.a:where(.astro-x) .b`,
+which could reach into another component). Both builds flatten the nesting for browsers before 2023 (`build.cssTarget`
+in `astro.config.mjs` and `viewer/vite.config.js`: an old iPad would otherwise drop the nested rules). No colour or
+opacity written in a rule: MD3 roles and tokens (`tokens.scss`), state layers as the content colour at the state's
+opacity (hover 8 %, focus and pressed 10 %, dragged 16 %).
+
+### CSS layers
+
+The site's styles sit in cascade layers, so a later layer wins over an earlier one whatever the selectors' weight (no
+specificity raised to beat the theme). The order is declared once, at the top of `custom.scss`:
+
+```css
+@layer starlight, l21.tokens, l21.base, l21.layout, l21.components, l21.utilities;
+```
+
+| Layer | What it holds | Where |
+| --- | --- | --- |
+| `starlight` | the theme, untouched (its own sub-layers: `starlight.base`, `.reset`, `.core`, `.content`, `.components`, `.utils`) | Starlight |
+| `l21.tokens` | MD3 colour roles, shape, motion, state-layer opacities, mapped onto Starlight's variables | `tokens.scss` |
+| `l21.base` | the elements: body, links, headings, tables, figures, `kbd` | `custom.scss` |
+| `l21.layout` | the frame: header bar, sidebar, footer bar, page frame, page transitions | `custom.scss`, `PageFrame.astro`, `Footer.astro`, `Sidebar.astro`, `SiteTitle.astro` |
+| `l21.components` | each component's own styles (scoped) | `ModelPill.astro`, `ModelPage.astro`, `Home.astro`, `DiveLog.astro`, … |
+| `l21.utilities` | small helpers that must win: `.figure-wide`, `.sr-only`, print | `custom.scss`, `print` |
+
+Unlayered CSS beats every layer: the only unlayered rules are overrides of third-party stylesheets that are themselves
+unlayered (the search, Pagefind; the code blocks, Expressive Code), each with a comment saying why.
+
+The 3D viewer is a separate app with no theme to fight; its own stack, at the top of `viewer/src/style.css`:
+
+```css
+@layer tokens, base, controls, panels, overlays, utilities;
+```
+
+`controls`: the buttons, the compass, the season's strip; `panels`: the settings, the tour's card, the swim keys;
+`overlays`: tooltips, the loading screen, dialogs. The prefix is the project's, `l21` (as the custom elements,
+`<l21-…>`, and the browser's storage keys); the older CSS variables still say `--lk-`.
 
 ## Components
 
