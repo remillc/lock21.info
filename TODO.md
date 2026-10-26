@@ -114,8 +114,8 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   page, the 3D model and the zone map; its wording is a first draft to review, and its look is plain
 - [ ] #93 Document the gear (Christian, 2026-10-26): his own photo of the GoPro Hero6 Black in its housing, to replace
   GoPro's product photo (« Matériel utilisé », Caméra); « Le rig » (`collecte/rig.md`, since 2026-10-26: photos of
-  2024-05-16 and 2024-06-14, Sylvain Marcotte's 3D model) still has two « à compléter »: the rig's construction
-  (fittings, how it attaches to the scooter; the 2020 aluminium profiles written), the lights (model, number, power)
+  2024-05-16 and 2024-06-14, Sylvain Marcotte's 3D model) still has one « à compléter »: the rig's construction
+  (fittings, how it attaches to the scooter; the 2020 aluminium profiles and the lights written)
 - [ ] #92 Google Analytics, for Christian: register the custom definitions of the actions sent since TODO #88
   (Admin › Custom definitions). Metrics (unit: seconds): `standard_seconds`, `underwater_seconds` (viewer_end),
   `seconds` (dive_end). Dimensions (event scope): `button`, `step`, `move`, `setting`, `season`, `lamp`, `theme`,

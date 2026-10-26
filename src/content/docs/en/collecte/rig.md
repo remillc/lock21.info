@@ -73,7 +73,8 @@ between the two right-hand ones. The measurements are in [Camera rig dimensions]
 <figcaption><time datetime="2024-05-16">2024-05-16</time>The lights, the floats and the GoPro in its housing</figcaption>
 </figure>
 
-*(to be completed: the lights' model, how many, and their power.)*
+Four SecurityIng dive lights, one at each corner of the frame: 10 white LEDs (6000 K), 4 red and 4 blue, a 120° beam,
+four 18650 batteries. Intensity: 12,000 lumens, as claimed by the seller.
 
 ## The scooter
 
