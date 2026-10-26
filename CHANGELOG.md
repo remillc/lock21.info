@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- « À propos de l'écluse 21 » opens with what divers look for: 60 feet (18.3 m) at the bottom, the piers' tops at 40
+  feet (12 m), the current measured in the lock in June 2024 (SEO audit S4). « Canal » / “the lock” for the lock's
+  chamber, the local words, added to the writing skill's terms.
 - SEO (audit S2): the home page's title names the place and the topic, « Écluse 21 (Lock 21) : plongée et modèle 3D,
   Long Sault » / “Lock 21, Long Sault: dive site and 3D model”, and the model page's matches its heading, « Modèle 3D de
   l'écluse 21 » / “3D model of Lock 21” (`head` in their frontmatter; the menu and the headings unchanged).

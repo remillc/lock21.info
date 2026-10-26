@@ -3,6 +3,10 @@ title: About Lock 21
 description: Lock 21 of the Cornwall Canal in a few points, from its building to its flooding in 1958, and links to learn more.
 ---
 
+Lock 21 lies under 60 feet (18.3 m) of water in the St. Lawrence, near Long Sault, Ontario. The tops of the piers are
+at 40 feet (12 m). The current is strong: in the lock I [measured](/en/problemes/fort-courant-canal) about 35 feet
+per minute (10.7 m/min) in June 2024; it is stronger over the spillway.
+
 Lock 21 was the last lock of the Cornwall Canal, at its upstream head, at the village of Dickinson's Landing. The canal,
 opened in the early 1840s, bypassed the Long Sault rapids from Cornwall to Dickinson's Landing, over about 11 miles.
 

@@ -69,6 +69,7 @@ space (`35 pi/min`); feet first with metres in parentheses where the page alrea
 | rig | « rig » | the camera frame; « le rig (support de caméras) » on first use |
 | frames extracted from the video | « images » | « frames » only in file names |
 | zone | « zone », with its number (« la zone 12 ») | as on the zone map |
+| the lock's chamber | « le canal » (« le canal de l'écluse » the first time on a page that also names the canal de Cornwall); English “the lock” (Christian: the local word, not “chamber”) | the word used locally, in French and English (Christian, 2026-10-26); « sas » not used; « canal de Cornwall » for the whole canal |
 | depth | « profondeur », in feet (« 60 pi ») with metres | « pi » not « ft » in French |
 
 ## How to work

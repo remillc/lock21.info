@@ -3,6 +3,11 @@ title: À propos de l'écluse 21
 description: L'écluse 21 du canal de Cornwall en quelques points, de sa construction à son ennoiement en 1958, et des liens pour en savoir plus.
 ---
 
+L'écluse 21 est sous 60 pieds (18,3 m) d'eau dans le Saint-Laurent, près de Long Sault (Ontario). Le dessus des
+piliers est à 40 pieds (12 m). Le courant y est soutenu : dans le canal de l'écluse, je l'ai
+[mesuré](/problemes/fort-courant-canal) à environ 35 pieds par minute (10,7 m/min) en juin 2024 ; il est plus fort
+au-dessus du déversoir.
+
 L'écluse 21 était la dernière écluse du canal de Cornwall, à sa tête amont, au village de Dickinson's Landing. Le canal,
 ouvert au début des années 1840, contournait les rapides du Long Sault, de Cornwall à Dickinson's Landing, sur environ
 11 milles.
