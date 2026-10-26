@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Every icon of the site and the 3D viewer in Material Symbols' Rounded style (TODO #74): the 26 inline drawings named
+  by matching Google's Outlined drawings (24 px), then replaced by the Rounded ones of the same name; the « 3D model »
+  pill's own cube replaced by « deployed_code ».
 - 3D viewer, underwater: the dive light twice as strong on the surfaces and creatures it lights (its beam in the
   water unchanged).
 - TODO #55 removed (light shards on the floor in the start view): checked on 2026-10-26, the start view uses 722 of

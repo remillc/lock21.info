@@ -96,7 +96,7 @@ The 3D viewer uses the same fonts (`viewer/src/main.js` imports them) and the da
   controls `not-allowed`. On the site and in the 3D viewer alike.
 - **Buttons are always MD3-compliant** (Christian, 2026-10-22), on the site and in the 3D viewer alike: an MD3 button
   type (filled, filled tonal, outlined, text, or icon button), its sizes (an icon button: 40 dp container in a 48 dp
-  touch target; a button: 40 dp high, full corners), **Material Symbols** icons at 24 dp (never a text character
+  touch target; a button: 40 dp high, full corners), **Material Symbols Rounded** icons at 24 dp (never a text character
   such as "×" for an icon), the state layers and focus ring below, and a selected state for toggles. Over the 3D
   view: filled tonal icon buttons (`viewer/src/style.css`, `.icon-button`). The 48 dp touch target around a 40 dp
   button: a 4 px transparent border with `background-clip: padding-box` (its colour and state layers inside it), or a

@@ -60,8 +60,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ## Site
 
-- [ ] #74 Every icon of the site and the 3D viewer in Material Symbols' **Rounded** variant (Christian, 2026-10-25):
-  find the icons used (inline SVG paths, the viewer's buttons, the site's components) and replace any other variant
 - [ ] #43 Check the site for accessibility issues (WCAG 2.2 AA): contrast in both themes, keyboard navigation and
   focus (menu, viewer frame, opt-out button), alt texts, headings order, the viewer's controls and the depth gauges
   (aria-hidden), French and English pages

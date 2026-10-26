@@ -1759,7 +1759,7 @@ if (compareUrl) {
   group.className = 'compare'
   group.setAttribute('role', 'group')
   group.setAttribute('aria-label', t('compare'))
-  const check = '<svg aria-hidden="true" width="18" height="18" viewBox="0 -960 960 960" fill="currentColor"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>'
+  const check = '<svg aria-hidden="true" width="18" height="18" viewBox="0 -960 960 960" fill="currentColor"><path d="m382-354 339-339q12-12 28-12t28 12q12 12 12 28.5T777-636L410-268q-12 12-28 12t-28-12L182-440q-12-12-11.5-28.5T183-497q12-12 28.5-12t28.5 12l142 143Z"/></svg>'
   const buttons = sources.map(([label, url]) => {
     const button = group.appendChild(document.createElement('button'))
     button.type = 'button'
