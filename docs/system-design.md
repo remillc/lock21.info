@@ -190,6 +190,10 @@ The 3D viewer is a separate app with no theme to fight; its own stack, planned (
   Rémillard · Licence CC BY 4.0` (link to the licence). At the bottom of the window on short pages (flex columns in
   `custom.scss`), right after the content on long ones. The Baets drawings are credited in their figure captions.
 - **Notebook pages** (Christian, 2026-10-26, from « Le rig »'s mock-up; the pages in a group of the left menu):
+  - the layout, as in the mock-up: the title, text, headings, chips and paired photos in a column set in from both
+    sides (up to 6rem, none on a phone), the wide photos (`figure-wide`) across the whole column; the title tight above
+    the lead (no line between Starlight's panels); text 1rem/1.65, 1.5rem between blocks, 3rem above a heading,
+    headings 1.7rem; captions on two lines (`FIG. NN` and the date, then the text); paired photos the same shape (4:3).
   - the system, on every one: the group's name as an eyebrow above the title (`PageTitle.astro`, mono, signal colour);
     the first paragraph as a lead; the section headings numbered 01, 02… (mono, signal colour, a short rule above);
     figures the column's width (tall images capped at 36rem high), a thin outline and 16 dp corners, captions in the

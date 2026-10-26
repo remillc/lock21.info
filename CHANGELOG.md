@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Notebook pages laid out as in « Le rig »'s mock-up: the text column set in, the wide photos across the whole column,
+  the title tight above the lead, smaller section headings, 1.5rem between blocks, captions on two lines, paired
+  photos the same shape.
 - Accents on four pages (data chips of their facts, dated captions): « Effet de banane » (the curled and the corrected
   segment side by side), « Mise à l'échelle », « À propos de l'écluse 21 », « Matériel utilisé » (with a lead).
 - The notebook's pages get a look of their own (from « Le rig »'s mock-up): the menu group's name above the title, a
