@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#78**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#81**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -24,6 +24,18 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
     for local cases. The real fix is upstream: #75.
 - [ ] #68 Yellow perch schools in the underwater view
 - [ ] #76 Bass: a more natural turn (`viewer/src/bass.js`); the body bends into the turn instead of pivoting
+- [ ] #80 Remove the `/modele/viewer` iframe: the 3D viewer as part of the site (one project, one build, one
+  `package.json`), not a second Vite app embedded in a frame. Options (Christian, 2026-10-26):
+  - a native Custom Element `<l21-viewer>` (`src/viewer/`, the current modules moved in), placed by an Astro component
+    on `/modele`: three.js bundled by the site's Vite, only on that page; recommended (no framework, the site's rules)
+  - the same as a Lit element: only worth it for the panels (settings, tour), the 3D part stays imperative
+  - a first step that keeps the frame: the viewer as an Astro page of the site (`src/pages/modele/viewer.astro`), one
+    build and one set of dependencies, the frame removed later
+  To solve on the way: the viewer's global CSS (`html, body { overflow: hidden }`, `main`) scoped to the element
+  (shadow DOM or a layer), its window-wide listeners (keys, pointer) and WebGL released on `disconnectedCallback`
+  (client-side routing), full screen on the element instead of the document, the postMessage link to the page
+  (camera address, drag) replaced by direct calls, and its texts merged into the site's messages. The bare
+  `/modele/viewer` address can go away (Christian, 2026-10-26: no need to keep or redirect it)
 
 ### Pipeline
 
@@ -75,6 +87,11 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   are drafts to review (zone 18 is not described on the zone map page); step 7 (the north wall's steps) is half hidden
   by a context fill in front of the camera. Not placed: the stone passage through the wall (Christian's favourite,
   `images/views/2026-10-23-view-1.webp`): `?cam=-37.01,2.56,-14.66,-33.02,2.48,-14.40`
+- [ ] #78 /modele, wide screens: a large gap between the second column (« Naviguer ») and the third (downloads). The
+  three columns are equal thirds (`.columns`, `repeat(auto-fit, minmax(18rem, 1fr))`, ModelPage.astro), and the
+  navigation table and button list only take their own width (tables are `width: max-content`, custom.scss), so
+  the rest of the middle third stays empty. Options: columns sized to their content (e.g. `auto auto 1fr`), the table
+  at the column's full width, or the downloads moved under the navigation
 
 ## Other
 

@@ -4,6 +4,12 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Inner padding (Christian, 2026-10-26): a rule in `docs/system-design.md` (a drawn box keeps 8 px between its edge
+  and its content at the sides, 4 px above and below; inline boxes 3 px) and its check,
+  `tools/design-check/inner-padding.mjs` (every page, both themes, desktop and phone). Fixed: the /modele navigation
+  table's first column against its outline (TODO #79), the QR codes' white frames (6 → 8 px).
+- /modele: « (jusqu'à 16 384 px) » removed from the model's description; the full model's download says the model
+  grows with each new zone (« revenez chercher la dernière version »).
 - Accessibility audit (TODO #43; axe-core, WCAG 2.2 AA, every page in both themes on desktop and phone, plus keyboard,
   reflow and text spacing) and its fixes: the /modele navigation table's headings readable in the light theme, and its
   first column named for screen readers; the download buttons' format at full contrast; the phone's « Sur cette page »
