@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- No colour written in a rule (docs/system-design.md): the site and the viewer's colours as MD3 roles and tokens
+  (state-layer opacities, shadow and scrim, elevation level 1, the viewer's container roles), state layers as the
+  content colour at the state's opacity; the « 3D model » pill's stray blue state layer now its own content colour; the
+  viewer's filled buttons' hover darker (their content colour over them, as MD3) instead of lighter.
 - Styles nested (Christian, 2026-10-26): plain CSS with native nesting in the components and the viewer (SCSS only
   where Sass is needed), rewritten by a tool that checked the compiled CSS unchanged; in `.astro` files only the same
   element's states (Astro leaves a nested descendant unscoped). Both builds flatten the nesting for browsers before

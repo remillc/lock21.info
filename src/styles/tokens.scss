@@ -27,6 +27,21 @@
   --lk-panel: #1b1e15;
   --lk-panel-outline: #3c4232;
 
+  // MD3 state layers (both themes): the content colour at these opacities over its container
+  --md-sys-state-hover: 8%;
+  --md-sys-state-focus: 10%;
+  --md-sys-state-pressed: 10%;
+  --md-sys-state-dragged: 16%;
+  // Shadows and scrims (both themes); MD3 elevation level 1 (a modal drawer)
+  --md-sys-color-shadow: #000;
+  --md-sys-color-scrim: #000;
+  --md-sys-elevation-level1: 0 1px 2px color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent),
+    0 1px 3px 1px color-mix(in srgb, var(--md-sys-color-shadow) 15%, transparent);
+  // The bars' icons (the menu button, the magnifier), the bars staying dark in both themes
+  --lk-bar-icon: #c9cdbb;
+  // A QR code's light modules: white in both themes, as scanners expect
+  --l21-qr-light: #ffffff;
+
   // MD3 shape scale
   --md-sys-shape-small: 8px;
   --md-sys-shape-medium: 12px;

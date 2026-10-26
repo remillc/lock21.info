@@ -203,9 +203,7 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
       :global(.lk-menu-overlay) .drawer-menu .sidebar-pane {
         inset-inline-start: 0;
         clip-path: inset(-100vh 100% -100vh -100vw);
-        box-shadow:
-          0 1px 2px rgb(0 0 0 / 30%),
-          0 1px 3px 1px rgb(0 0 0 / 15%);
+        box-shadow: var(--md-sys-elevation-level1);
 
         &:popover-open {
           clip-path: inset(-100vh -1rem -100vh -100vw);

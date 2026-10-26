@@ -173,7 +173,7 @@ dialog.image-zoom {
   cursor: zoom-out;
 
   &::backdrop {
-    background: rgb(0 0 0 / 0.85);
+    background: color-mix(in srgb, var(--md-sys-color-scrim) 85%, transparent);
   }
 
   img {
@@ -463,7 +463,7 @@ site-search button[data-open-modal] {
 .sl-menu-button:has(~ :popover-open) {
   background-color: transparent;
   box-shadow: none;
-  color: #c9cdbb;
+  color: var(--lk-bar-icon);
 
   &:hover {
     background-color: color-mix(in srgb, currentColor 8%, transparent); // MD3 hover state layer
