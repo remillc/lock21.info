@@ -11,8 +11,10 @@ import * as THREE from 'three'
 import { TOUCH } from 'three'
 
 const NEAR = 1
-const FLY_DISTANCE = 2.5
-const FLY_TIME = 700
+// (3.5 m: Christian, 2026-10-26; was 2.5)
+const FLY_DISTANCE = 3.5
+// (2 s: Christian, 2026-10-26, it was a little fast at 700 ms, then 1 s)
+const FLY_TIME = 2000
 // Two taps within DOUBLE_TAP ms and TAP_SLOP px make a double-tap
 const DOUBLE_TAP = 300
 const TAP_SLOP = 24

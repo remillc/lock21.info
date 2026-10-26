@@ -139,7 +139,7 @@ if (document.fullscreenEnabled) {
 const AR_URL = import.meta.env.VITE_AR_URL || 'https://tiles.lock21.info/downloads/ar'
 // Version of the AR files, in their address: the server and the phones keep them an hour, so a rebuild (same names)
 // would otherwise show up late. Change it after each upload of rebuilt AR files (docs/augmented-reality.md)
-const AR_VERSION = '2026-10-23'
+const AR_VERSION = '2026-10-26'
 // ?ar=full: the lock at its real size (70 m) instead of on a table (the /modele/ page's "Taille réelle" QR code and link)
 const arFull = params.get('ar') === 'full'
 const arName = arFull ? 'lock-21-ar-full' : 'lock-21-ar'
@@ -330,8 +330,19 @@ controls.enableDamping = true
 // Turning with the left button (Christian, 2026-10-24: too fast): half OrbitControls' speed, half a turn for a drag
 // across the view's height
 controls.rotateSpeed = 0.5
-// The wheel (Christian, 2026-10-25: far too strong): 0.075 of OrbitControls' zoom per notch (tried down to 0.05, a little too slow)
-controls.zoomSpeed = 0.075
+// The wheel (Christian, 2026-10-25: far too strong): 0.15 of OrbitControls' zoom per notch (0.075 on 2026-10-25, then doubled on 2026-10-26)
+// (0.25: Christian, 2026-10-26, stronger than 0.15)
+const WHEEL_ZOOM = 0.25
+// Pinching keeps OrbitControls' own speed (Christian, 2026-10-26: on a phone, it had become too weak: the wheel's
+// setting slowed it too, both being zoomSpeed): set for each gesture, as it starts
+const PINCH_ZOOM = 1
+controls.zoomSpeed = WHEEL_ZOOM
+renderer.domElement.addEventListener('pointerdown', (event) => {
+  controls.zoomSpeed = event.pointerType === 'touch' ? PINCH_ZOOM : WHEEL_ZOOM
+}, { capture: true })
+renderer.domElement.addEventListener('wheel', () => {
+  controls.zoomSpeed = WHEEL_ZOOM
+}, { capture: true, passive: true })
 // Looking up (Christian, 2026-10-24: the standard view couldn't): the camera may go below the point it turns around,
 // up to ORBIT_UP from straight above it; the soft floor (keepAboveFloor) keeps it above the model. It used to stay
 // above that point's height, so as never to look from under the floor; then (2026-10-24) in front of any surface
@@ -571,7 +582,7 @@ const look = {
   tone: ['neutral', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'agx',
   exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.2,
   // Bump map from the photo's brightness (?bump=0..5, see litMaterial)
-  bump: params.has('bump') ? Number(params.get('bump')) : 0.55,
+  bump: params.has('bump') ? Number(params.get('bump')) : 0.45,
   // « Ambiance sous-marine » (?underwater=1) and its season (?season=0..3: winter, spring, summer, autumn; default
   // summer, the diving season), see underwater.js
   underwater: params.get('underwater') === '1',
@@ -726,8 +737,8 @@ function addDespill(shader) {
 // No wet look any more (a clear-coat film reflecting the sky, ?wet=, removed by Christian on 2026-10-25: barely seen,
 // it made the surfaces read smoother, cost the heaviest material, and the site is under water)
 // The photo's relief: its height at full contrast at ?bump=1 (m: 2.4 cm, tried on zone 3's wooden floor, 2026-10-25:
-// it brings out the wood's grain; from about twice that, the mussels and the sediment crackle). Default 0.55, 1.3 cm
-// (Christian: 1, then 0.75, a little strong)
+// it brings out the wood's grain; from about twice that, the mussels and the sediment crackle). Default 0.45, 1.1 cm
+// (Christian: 1, then 0.75 and 0.55, a little strong)
 const BUMP = 0.024
 function litMaterial(surface, mesh, normalMap, sky) {
   if (!normalMap && !mesh.geometry.attributes.normal) mesh.geometry.computeVertexNormals()
@@ -1191,7 +1202,8 @@ seasonRange.setAttribute('aria-label', t('season'))
 // while the slider moves (Christian, 2026-10-23)
 const seasonLabels = [0, 1, 2, 3].map((index) => {
   const label = document.createElement('span')
-  label.textContent = t('seasonValue', { index })
+  // On a phone, the season's name only (Christian, 2026-10-26: its visibility left out, to save room)
+  label.textContent = mobile ? t('seasonValue', { index }).split(' · ')[0] : t('seasonValue', { index })
   return label
 })
 seasonValue.replaceChildren(...seasonLabels)

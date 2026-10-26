@@ -39,8 +39,10 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 ### Hosting and downloads
 
 - [ ] #13 Google Earth and downloads (`tools/google-earth/README.md`): 700 000 triangles open in Google Earth Pro, the
-  model placed and turned (2026-10-25); rebuilt with the zones of 2026-10-25, ready in `O:\publishing\downloads\online\`
-  (not uploaded). To check: zone 18's sides with the double-sided models; the GLB in Google Earth Web
+  model placed and turned (2026-10-25); rebuilt with the chart terrain, the Macdonnel Island mark and the numbered parts,
+  checked (`check_model.mjs`) and uploaded on 2026-10-25; zone 18's sides checked in Google Earth (Christian, 2026-10-26).
+  Google Earth Web: the KMZ shows only the marks (it draws no KML models); the GLB, placed by hand (it reads no position
+  in a GLB), steps on /modele. To check: those steps, tried by Christian
 - [ ] #72 Other download formats worth adding? Candidates: the OBJ (+ .mtl, .jpg; already built beside the GLB) as a
   zip, for Blender, MeshLab and CloudCompare; STL for 3D printing (a closed, simplified model at 1:200); the AR USDZ
   as a download; a point cloud (PLY or LAZ) for archaeology and GIS tools; an orthophoto and a height map of the floor
@@ -50,11 +52,10 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 - [ ] #17 Add a workflow page to the site (`6. publication.md`) once the pipeline is stable
 
-### Relief, wet look and lamp bands (relief and wet look on every zone since 2026-10-19)
+### Relief and lamp bands (relief on every zone since 2026-10-19; the wet look removed on 2026-10-25)
 
 - [ ] #21 Relief: fold the relief steps (`relief_zones.ps1`) into `publish_zones.ps1`, so that one command republishes a
   zone with its relief
-- [ ] #25 Optional: read each zone's Blender shader settings (wetness, roughness) and pass them through the manifest
 - [ ] #26 Move the viewer's shader patches to three-custom-shader-material (CSM) if the relief is kept
 
 ### Virtual reality (idea)

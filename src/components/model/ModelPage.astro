@@ -11,6 +11,18 @@ import { zonesOnline } from '../../lib/manifest'
 
 const lang = pageLang(Astro.locals)
 const en = lang === 'en'
+/** A number with the page language's decimal mark (Google Earth Web in French shows a comma) @param {string} n */
+const decimal = (n) => (en ? n : n.replace('.', ','))
+// The viewer's buttons, by their own icons (viewer/index.html: Material Symbols paths, 960 units)
+const ICONS = {
+  home: 'M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z',
+  underwater: 'M160-40 96-88l114-152 31-178q3-24 19-42.5t41-24.5l379-115 80-160 120-120 40 40-100 116-60 184-200 140-234 74-46 126L160-40Zm-40-320q-33 0-56.5-23.5T40-440q0-33 23.5-56.5T120-520q33 0 56.5 23.5T200-440q0 33-23.5 56.5T120-360Zm236-196q-24 7-45.5-5.5T282-598q-7-24 5.5-46t36.5-28l182-48 31 116-181 48Z',
+  tour: 'M200-80v-800h80v80h560l-80 200 80 200H280v320h-80Zm80-640v240-240Zm220 200q33 0 56.5-23.5T580-600q0-33-23.5-56.5T500-680q-33 0-56.5 23.5T420-600q0 33 23.5 56.5T500-520Zm-220 40h442l-48-120 48-120H280v240Z',
+  help: 'M478-240q21 0 35.5-14.5T528-290q0-21-14.5-35.5T478-340q-21 0-35.5 14.5T428-290q0 21 14.5 35.5T478-240Zm-36-154h74q0-33 7.5-52t42.5-52q26-26 41-49.5t15-56.5q0-56-41-86t-97-30q-57 0-92.5 30T342-618l66 26q5-18 22.5-39t53.5-21q32 0 48 17.5t16 38.5q0 20-12 37.5T506-526q-44 39-54 59t-10 73Zm38 314q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z',
+  ar: 'M440-181 240-296q-19-11-29.5-29T200-365v-230q0-22 10.5-40t29.5-29l200-115q19-11 40-11t40 11l200 115q19 11 29.5 29t10.5 40v230q0 22-10.5 40T720-296L520-181q-19 11-40 11t-40-11Zm0-92v-184l-160-93v185l160 92Zm80 0 160-92v-185l-160 93v184ZM80-680v-120q0-33 23.5-56.5T160-880h120v80H160v120H80ZM280-80H160q-33 0-56.5-23.5T80-160v-120h80v120h120v80Zm400 0v-80h120v-120h80v120q0 33-23.5 56.5T800-80H680Zm120-600v-120H680v-80h120q33 0 56.5 23.5T880-800v120h-80ZM480-526l158-93-158-91-158 91 158 93Zm0 45Zm0-45Zm40 69Zm-80 0Z',
+}
+// Quotation marks in the page's language: “…” in English, « … » in French
+const [open, close] = en ? ['“', '”'] : ['« ', ' »']
 const pagePath = localPath(site.viewer, lang)
 const t = en
   ? {
@@ -38,18 +50,28 @@ const t = en
       bass: 'The smallmouth bass is based on',
       drawings: 'Original drawings of the site: Nick Baets (1988), via',
       navigate: 'Navigating',
-      controls: [
-        ['Rotate', 'mouse: drag with the left button, around the point you press · fingers: slide one finger'],
-        ['Pan', 'mouse: drag with the right button, or Ctrl and the left button · fingers: slide two fingers'],
-        ['Move about', 'keyboard: W A S D, or the arrows (forward, back, sideways), Shift to go faster'],
-        ['Zoom', 'mouse: wheel · fingers: pinch, toward your fingers'],
-        ['Move closer to a point', 'double-click · double-tap'],
-        ['Start view', 'house button, left of the full-screen button: back to the view the model opens on'],
-        ['Full screen', 'button at the bottom right of the model · Esc to exit · on an iPhone, the model opens on its own page'],
-        ['Underwater', 'diver button: the season (visibility) and the dive light; on a computer, swim with the movement keys (W A S D, or the arrows) and drag to turn your head; double-click a point to turn around it while you drag'],
-        ['Guided tour', '« Guided tour » button at the bottom right: eight steps, back and next on its card'],
-        ['Help', '? button at the top right, on a phone'],
-        ['Augmented reality', 'cube button, on a phone: the lock on a table'],
+      mouse: 'Mouse',
+      fingers: 'Fingers',
+      gestures: [
+        ['Turn', 'left', 'drag', '1 finger'],
+        ['Pan', 'right', 'drag', '2 fingers'],
+        ['Zoom', 'wheel', 'turn the wheel', 'pinch'],
+        ['Fly to a point', 'left', 'double-click', 'double-tap'],
+      ],
+      moveKeys: [
+        ['Forward', ['W', '↑']],
+        ['Back', ['S', '↓']],
+        ['Left', ['A', '←']],
+        ['Right', ['D', '→']],
+        ['Faster', ['Shift']],
+      ],
+      keysOr: 'or',
+      buttons: [
+        ['home', 'Start view'],
+        ['underwater', 'Dive and swim (help opens the first time)'],
+        ['tour', 'Guided tour, eight steps'],
+        ['ar', 'Augmented reality: the lock on a table', 'coarse'],
+        ['help', 'Help with the gestures', 'coarse'],
       ],
       downloads: 'Downloads',
       /** @param {string} n */
@@ -58,6 +80,16 @@ const t = en
       glbName: 'Full model',
       /** @param {string} n */
       glbText: (n) => `Zones and the site's model, ${n} triangles: for Blender, Sketchfab, Windows' 3D Viewer or Google Earth Web's import.`,
+      gewTitle: 'Placing it in Google Earth Web',
+      gewImport: 'In a project, import the GLB (File, Import).',
+      gewPlace: 'In its Placement, type these values as they are (with the point):',
+      gewTurn: 'Under Transform, Rotation:',
+      gewLat: 'Latitude',
+      gewLon: 'Longitude',
+      gewAltitude: 'Altitude',
+      gewGrounding: 'Grounding',
+      gewRelative: 'Relative to ground',
+      gewHeading: 'Heading',
       arTitle: 'Augmented reality',
       arText: 'Place the lock in front of you with a phone or a tablet: on a table, at 1:100 (70 cm), or at its real size (70 m), in a large open space.',
       table: 'On a table',
@@ -91,18 +123,28 @@ const t = en
       bass: 'L’achigan à petite bouche est tiré de',
       drawings: "Dessins d'origine du site: Nick Baets (1988), via",
       navigate: 'Naviguer',
-      controls: [
-        ['Tourner', 'souris: glisser avec le bouton gauche, autour du point appuyé · doigts: glisser un doigt'],
-        ['Déplacer', 'souris: glisser avec le bouton droit, ou Ctrl et le bouton gauche · doigts: glisser deux doigts'],
-        ['Zoomer', 'souris: molette · doigts: pincer, vers les doigts'],
-        ['Avancer', 'clavier: W A S D, ou les flèches (avancer, reculer, de côté), Maj pour aller plus vite'],
-        ['S’approcher d’un point', 'double-clic · toucher deux fois'],
-        ['Vue de départ', 'bouton maison, à gauche du bouton plein écran: retour à la vue d’ouverture du modèle'],
-        ['Plein écran', 'bouton en bas à droite du modèle · Échap pour sortir · sur un iPhone, le modèle s’ouvre sur sa propre page'],
-        ['Sous l’eau', 'bouton du plongeur: la saison (visibilité) et la lampe de plongée; à l’ordinateur, nager avec les touches de déplacement (W A S D, ou les flèches) et glisser pour tourner la tête; double-cliquer un point pour tourner autour en glissant'],
-        ['Visite guidée', 'bouton « Visite guidée » en bas à droite: huit étapes, précédent et suivant sur sa carte'],
-        ['Aide', 'bouton ? en haut à droite, sur un téléphone'],
-        ['Réalité augmentée', 'bouton du cube, sur un téléphone: l’écluse sur une table'],
+      mouse: 'Souris',
+      fingers: 'Doigts',
+      gestures: [
+        ['Tourner', 'left', 'glisser', '1 doigt'],
+        ['Déplacer', 'right', 'glisser', '2 doigts'],
+        ['Zoomer', 'wheel', 'tourner la molette', 'pincer'],
+        ["S'approcher d'un point", 'left', 'double-clic', 'double-toucher'],
+      ],
+      moveKeys: [
+        ['Avancer', ['W', '↑']],
+        ['Reculer', ['S', '↓']],
+        ['À gauche', ['A', '←']],
+        ['À droite', ['D', '→']],
+        ['Plus vite', ['Maj']],
+      ],
+      keysOr: 'ou',
+      buttons: [
+        ['home', 'Vue de départ'],
+        ['underwater', "Plonger et nager (l'aide s'ouvre la première fois)"],
+        ['tour', 'Visite guidée, huit étapes'],
+        ['ar', "Réalité augmentée: l'écluse sur une table", 'coarse'],
+        ['help', 'Aide sur les gestes', 'coarse'],
       ],
       downloads: 'Téléchargements',
       /** @param {string} n */
@@ -111,6 +153,16 @@ const t = en
       glbName: 'Modèle complet',
       /** @param {string} n */
       glbText: (n) => `Zones et maquette du site, ${n} de triangles: pour Blender, Sketchfab, la visionneuse 3D de Windows ou l'import de Google Earth Web.`,
+      gewTitle: 'Le placer dans Google Earth Web',
+      gewImport: 'Dans un projet, importez le GLB (Fichier, Importer).',
+      gewPlace: 'Dans Emplacement, entrez ces valeurs (avec un point plutôt que la virgule si Google Earth est en anglais):',
+      gewTurn: 'Sous Transformation, Rotation:',
+      gewLat: 'Latitude',
+      gewLon: 'Longitude',
+      gewAltitude: 'Altitude',
+      gewGrounding: 'Surface de référence',
+      gewRelative: 'Par rapport au sol',
+      gewHeading: 'Orientation',
       arTitle: 'Réalité augmentée',
       arText: "Posez l'écluse devant vous avec un téléphone ou une tablette: sur une table, au 1:100 (70 cm), ou à sa taille réelle (70 m), dans un grand espace dégagé.",
       table: 'Sur une table',
@@ -172,26 +224,26 @@ const updated = zones.updated
       <section>
         <h2>{t.licenceTitle}</h2>
         <p>
-          {t.licenceText} <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>:
+          {t.licenceText} <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>:{' '}
           {t.licenceRest}
         </p>
         <p class="credit">{t.credit}</p>
         <!-- The crayfish model (viewer/src/crawfish.js): CC BY 4.0, its author credited -->
         <p class="note">
-          {t.crayfish} « <a href="https://sketchfab.com/3d-models/crayfish-cdc4cfc6203443a490f6b5103e7eac18">Crayfish</a> »
-          {t.crayfishBy} <a href="https://sketchfab.com/ucdavisterc">ucdavisterc</a>,
+          {t.crayfish} {open}<a href="https://sketchfab.com/3d-models/crayfish-cdc4cfc6203443a490f6b5103e7eac18">Crayfish</a>{close}{' '}
+          {t.crayfishBy} <a href="https://sketchfab.com/ucdavisterc">ucdavisterc</a>,{' '}
           <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
         </p>
         <!-- The bass (viewer/src/bass.js): CC BY 4.0, its author credited -->
         <p class="note">
-          {t.bass} « <a href="https://sketchfab.com/3d-models/smallmouth-bass-015389aed3414793b3e9e4a0c25169d1">Smallmouth bass</a> »
-          {t.crayfishBy} <a href="https://sketchfab.com/faerbogdan99">faerbogdan99</a>,
+          {t.bass} {open}<a href="https://sketchfab.com/3d-models/smallmouth-bass-015389aed3414793b3e9e4a0c25169d1">Smallmouth bass</a>{close}{' '}
+          {t.crayfishBy} <a href="https://sketchfab.com/faerbogdan99">faerbogdan99</a>,{' '}
           <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
         </p>
         <!-- The diver's arm (viewer/src/diver-arm.js): its shape from a CC BY 4.0 model, its author credited -->
         <p class="note">
-          {t.arm} « <a href="https://sketchfab.com/3d-models/first-person-hands-rigged-547a45535f0c4fe787948f7a7a6a88db">First Person hands rigged</a> »
-          {t.crayfishBy} <a href="https://sketchfab.com/davidfischer">DavidFischer</a>,
+          {t.arm} {open}<a href="https://sketchfab.com/3d-models/first-person-hands-rigged-547a45535f0c4fe787948f7a7a6a88db">First Person hands rigged</a>{close}{' '}
+          {t.crayfishBy} <a href="https://sketchfab.com/davidfischer">DavidFischer</a>,{' '}
           <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
         </p>
         <p class="note">
@@ -203,9 +255,50 @@ const updated = zones.updated
 
     <section>
       <h2>{t.navigate}</h2>
-      <dl class="controls">
-        {t.controls.map(([term, how]) => (<><dt>{term}</dt><dd>{how}</dd></>))}
-      </dl>
+      <!-- Short, and only the visitor's own controls (Christian, 2026-10-26: too much text): the mouse column on a
+           computer, the fingers on a phone or tablet (the pointer: .fine / .coarse); the keys as key caps; the
+           viewer's buttons by their icons. The swimming's details are in the viewer's swim help -->
+      <table class="gestures">
+        <thead>
+          <tr><th></th><th scope="col" class="fine">{t.mouse}</th><th scope="col" class="coarse">{t.fingers}</th></tr>
+        </thead>
+        <tbody>
+          {t.gestures.map(([action, part, mouse, fingers]) => (
+            <tr>
+              <th scope="row">{action}</th>
+              <td class="fine">
+                <!-- A small mouse, the part used in the signal colour (Christian, 2026-10-26: draft B) -->
+                <span class="mouse-how">
+                  <svg class="mouse" aria-hidden="true" width="28" height="40" viewBox="0 0 28 40">
+                    <path class="mouse-body" d="M2 10 Q2 2 14 2 Q26 2 26 10 L26 28 Q26 38 14 38 Q2 38 2 28 Z" />
+                    <path class={part === 'left' ? 'mouse-used' : 'mouse-idle'} d="M2 10 Q2 2 13 2 L13 18 L2 18 Z" />
+                    <path class={part === 'right' ? 'mouse-used' : 'mouse-idle'} d="M15 2 Q26 2 26 10 L26 18 L15 18 Z" />
+                    <rect class={part === 'wheel' ? 'mouse-used' : 'mouse-body'} x="11" y="5" width="6" height="10" rx="3" />
+                  </svg>
+                  {mouse}
+                </span>
+              </td>
+              <td class="coarse">{fingers}</td>
+            </tr>
+          ))}
+          <!-- The keys, in the table, one move a row, its letter and its arrow (Christian, 2026-10-26): the mouse's
+               column, a computer only -->
+          {t.moveKeys.map(([action, keys]) => (
+            <tr class="fine">
+              <th scope="row">{action}</th>
+              <td>{keys.map((key, i) => (<>{i > 0 && ` ${t.keysOr} `}<kbd>{key}</kbd></>))}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <ul class="buttons">
+        {t.buttons.map(([icon, label, only]) => (
+          <li class={only}>
+            <span class="icon"><svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d={ICONS[icon]} /></svg></span>
+            {label}
+          </li>
+        ))}
+      </ul>
     </section>
 
     <div class="stack">
@@ -232,6 +325,36 @@ const updated = zones.updated
             <p>
               {t.glbText(site.downloads.glbTriangles)}
             </p>
+            <!-- Google Earth Web reads no position in a GLB (Christian, 2026-10-26): it is placed by hand. Its panel's labels as
+                 Christian saw them, in each language; its numbers with the language's decimal mark (French: a comma).
+                 The model's origin is the site anchor, its height that of the KMZ (make_kmz.py: about 4 m); its heading
+                 the KMZ's -30 turned 180° about the vertical, 150 (Christian, 2026-10-26: Google Earth Web takes the
+                 GLB's other forward axis) -->
+            <details class="gew">
+              <summary>
+                {t.gewTitle}
+                <!-- Material Symbols Rounded « expand_more », 24 dp: turns over as it opens -->
+                <svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z"/></svg>
+              </summary>
+              <ol>
+                <li>{t.gewImport}</li>
+                <li>
+                  {t.gewPlace}
+                  <dl>
+                    <dt>{t.gewLat}</dt><dd><code>{decimal(site.coordinates.lat.toFixed(6))}</code></dd>
+                    <dt>{t.gewLon}</dt><dd><code>{decimal(site.coordinates.lon.toFixed(6))}</code></dd>
+                    <dt>{t.gewAltitude}</dt><dd><code>4</code> m</dd>
+                    <dt>{t.gewGrounding}</dt><dd>{t.gewRelative}</dd>
+                  </dl>
+                </li>
+                <li>
+                  {t.gewTurn}
+                  <dl>
+                    <dt>{t.gewHeading}</dt><dd><code>150</code></dd>
+                  </dl>
+                </li>
+              </ol>
+            </details>
           </li>
         </ul>
     
@@ -430,21 +553,113 @@ const updated = zones.updated
   section a {
     color: var(--md-sys-color-secondary);
   }
-  .controls {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.5rem 1rem;
-    margin: 0;
-  }
-  .controls dt {
-    font-family: var(--lk-font-data);
-    font-size: 0.8125rem;
-    font-weight: 700;
-  }
-  .controls dd {
-    margin: 0;
+  /* Navigating: a short table (the action, then the visitor's column), key caps, the buttons by their icons */
+  .gestures {
+    border-collapse: collapse;
+    margin: 0 0 1.25rem;
     font-size: 0.9375rem;
+  }
+  .gestures th,
+  .gestures td {
+    padding: 0.375rem 1.5rem 0.375rem 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    vertical-align: middle;
+  }
+  .gestures thead th {
+    font-family: var(--lk-font-data);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.03rem;
+    text-transform: uppercase;
+  }
+  .gestures tbody th {
+    font-weight: 600;
+  }
+  .gestures tbody td {
     color: var(--md-sys-color-on-surface-variant);
+  }
+  /* (more specific than the site's table cells, custom.scss) */
+  table.gestures th,
+  table.gestures td {
+    vertical-align: middle;
+  }
+  .mouse-how {
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .mouse {
+    flex: none;
+  }
+  .mouse-body {
+    fill: var(--md-sys-color-surface-container);
+    stroke: var(--md-sys-color-on-surface-variant);
+    stroke-width: 1.5;
+  }
+  .mouse-idle {
+    fill: var(--md-sys-color-surface-container-lowest);
+    stroke: var(--md-sys-color-on-surface-variant);
+    stroke-width: 1.5;
+  }
+  .mouse-used {
+    fill: var(--md-sys-color-tertiary);
+    stroke: var(--md-sys-color-tertiary);
+    stroke-width: 1.5;
+  }
+  .gestures kbd {
+    display: inline-block;
+    min-width: 1.5rem;
+    padding: 0.125rem 0.375rem;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-extra-small, 4px);
+    background: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface);
+    font-family: var(--lk-font-data);
+    font-size: 0.75rem;
+    text-align: center;
+  }
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 0.75rem 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.9375rem;
+  }
+  .buttons li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+  }
+  /* The icon as the viewer's icon button shows it: 40 dp, full corners, tonal */
+  .buttons .icon {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--md-sys-shape-full);
+    background: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface);
+  }
+  /* The visitor's own controls: the mouse and keys with a fine pointer, the fingers with a coarse one */
+  /* (also on the buttons' list items: their own display rule is more specific than the class alone) */
+  @media (pointer: coarse) {
+    .fine,
+    .buttons li.fine {
+      display: none;
+    }
+  }
+  @media not (pointer: coarse) {
+    .coarse,
+    .buttons li.coarse {
+      display: none;
+    }
   }
   .downloads {
     margin: 0 0 0.75rem;
@@ -496,6 +711,102 @@ const updated = zones.updated
   .downloads p {
     margin: 0.5rem 0 0;
     font-size: 0.9375rem;
+  }
+  /* Google Earth Web: brief steps, folded. Opening and closing animated with MD3 motion (Christian, 2026-10-26):
+     the content unfolds in 400 ms (emphasized decelerate) and folds in 200 ms (emphasized accelerate), its height
+     from 0 to its own (interpolate-size) and its opacity with it; browsers without ::details-content just open it */
+  .gew {
+    margin: 0.5rem 0 0;
+    font-size: 0.9375rem;
+    interpolate-size: allow-keywords;
+  }
+  .gew::details-content {
+    block-size: 0;
+    overflow: clip;
+    opacity: 0;
+    transition:
+      block-size 200ms cubic-bezier(0.3, 0, 0.8, 0.15),
+      opacity 200ms cubic-bezier(0.3, 0, 0.8, 0.15),
+      content-visibility 200ms allow-discrete;
+  }
+  .gew[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+    transition:
+      block-size 400ms cubic-bezier(0.05, 0.7, 0.1, 1),
+      opacity 400ms cubic-bezier(0.05, 0.7, 0.1, 1),
+      content-visibility 400ms allow-discrete;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gew::details-content,
+    .gew[open]::details-content,
+    .gew summary svg {
+      transition: none;
+    }
+  }
+  /* Its summary as an MD3 text button (Christian, 2026-10-26: « comply with MD3 »): label-large, the primary colour,
+     40 dp high in a 48 dp touch target, full corners, a trailing Material Symbols Rounded icon (24 dp) that turns over
+     with the same motion as the content, hover / focus / pressed state layers (8 / 10 / 10 %) */
+  .gew summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-sizing: border-box;
+    min-height: 48px;
+    margin-left: -0.75rem;
+    padding: 0 0.5rem 0 0.75rem;
+    border: 4px solid transparent;
+    border-radius: var(--md-sys-shape-full);
+    background-clip: padding-box;
+    color: var(--md-sys-color-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.00625rem;
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+  }
+  .gew summary::-webkit-details-marker {
+    display: none;
+  }
+  .gew summary:hover {
+    background-color: color-mix(in srgb, currentColor 8%, transparent);
+  }
+  .gew summary:focus-visible,
+  .gew summary:active {
+    background-color: color-mix(in srgb, currentColor 10%, transparent);
+  }
+  .gew summary:focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: -2px;
+  }
+  .gew summary svg {
+    flex: none;
+    transition: transform 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
+  }
+  .gew[open] summary svg {
+    transform: rotate(180deg);
+    transition: transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
+  }
+  .gew ol {
+    margin: 0.5rem 0 0;
+    padding-left: 1.25rem;
+  }
+  .gew dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.125rem 0.75rem;
+    margin: 0.375rem 0 0;
+  }
+  .gew dt {
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  .gew dd {
+    margin: 0;
+  }
+  .gew code {
+    font-family: var(--lk-font-data);
+    user-select: all;
   }
   /* Secondary credit: body-medium (14 / 20) */
   .note {

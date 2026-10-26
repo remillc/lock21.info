@@ -383,6 +383,30 @@ l21-loading.error .loading-label {
 .lamp-button[aria-pressed='true'] .icon-on {
   display: block;
 }
+/* A phone held sideways (Christian, 2026-10-26): the season's slider above the buttons on the right, its right edge
+   on theirs; the row below keeps the lamp and the buttons, so the tour's card has room on its left */
+@media (orientation: landscape) and (hover: none) {
+  /* The compass on the same left edge as the tour's card (Christian, 2026-10-26), not the notch's inset: the notch
+     sits at the middle of that edge, the compass at the top. (html: before .compass's own rule in this file, the same
+     specificity lost to it) */
+  html .compass {
+    left: 12px;
+  }
+  /* The slider's thumb easier to catch: its input 48 dp high (MD3 touch target), past the pill's 40 */
+  .season-range {
+    height: 48px;
+    margin: -4px 0;
+  }
+  .underwater-tools .season-control {
+    position: fixed;
+    right: max(16px, env(safe-area-inset-right));
+    /* 16 dp above the buttons (8 dp between their touch targets) */
+    bottom: calc(max(16px, env(safe-area-inset-bottom)) + 56px);
+  }
+  .underwater-tools:not([hidden]) ~ .tour-button {
+    bottom: calc(max(16px, env(safe-area-inset-bottom)) + 108px);
+  }
+}
 /* Narrow screens (phones, the /modele page's frame): in the bottom-left corner, beside the buttons' row (full screen,
    underwater, and AR where it is offered), the lamp button above the season pill, the pill on two lines (its value
    above the slider; the value wraps if it must). Christian, 2026-10-23 */
@@ -1271,33 +1295,35 @@ l21-tooltip[data-shown='true'] {
   gap: 4px;
   margin: 12px -4px 0 0;
 }
-/* MD3 text and filled buttons: 40 dp in a 48 dp touch target, label-large */
+/* MD3 icon buttons (Christian, 2026-10-26: icons, not words): back a standard one, next a filled one; 40 dp in a
+   48 dp touch target, the icon 24 dp */
 .tour-prev,
 .tour-next {
+  display: grid;
+  place-items: center;
   box-sizing: border-box;
+  width: 48px;
   height: 48px;
-  padding: 0 16px;
+  padding: 0;
   border: 4px solid transparent;
   border-radius: 999px;
   background-clip: padding-box;
-  font: 500 14px/20px var(--lk-font-data);
-  letter-spacing: 0.1px;
   cursor: pointer;
 }
+/* Back: a filled tonal icon button (Christian, 2026-10-26: circled too, as next), the viewer's buttons' tone, its
+   state layers on top of it */
 .tour-prev {
-  padding: 0 12px;
-  background-color: transparent;
-  color: var(--md-sys-color-secondary);
+  background-color: rgb(60 66 50 / 92%);
+  color: var(--md-sys-color-on-surface);
 }
 .tour-prev:hover {
-  background-color: rgb(184 201 122 / 8%);
+  background-color: rgb(73 79 63);
 }
 .tour-prev:focus-visible,
 .tour-prev:active {
-  background-color: rgb(184 201 122 / 10%);
+  background-color: rgb(76 82 66);
 }
 .tour-next {
-  padding: 0 24px;
   background-color: var(--md-sys-color-secondary);
   color: var(--md-sys-color-surface);
 }
@@ -1315,4 +1341,67 @@ l21-tooltip[data-shown='true'] {
 }
 .tour-prev[hidden] {
   display: none;
+}
+/* A phone held sideways (Christian, 2026-10-26: the card took too much of the short screen): wider and shorter, in two
+   columns; the step's number, title and text on the left, the close button above back and next on the right */
+/* (every touch screen held sideways, whatever its height: Christian's phone is taller than 540 px that way, and kept
+   the centred card; and any short window in landscape) */
+@media (orientation: landscape) and (max-height: 540px), (orientation: landscape) and (hover: none) {
+  .tour-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'count close'
+      'title actions'
+      'text actions';
+    column-gap: 16px;
+    /* Beside the buttons at the bottom right, not over them nor above them (Christian, 2026-10-26: « don't hide other
+       buttons »): from the left edge to the buttons' row (up to four buttons: diving, augmented reality, home, full
+       screen) */
+    /* Against the screen's left edge (Christian, 2026-10-26: « to the left of the screen »), its text too: the notch
+       sits at the middle of that edge, above the card at the bottom (padding it by the notch's inset left an empty
+       band on a phone) */
+    left: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    width: min(860px, calc(100vw - 12px - var(--lk-tour-right, 232px)));
+    padding: 8px 8px 10px 16px;
+    border-radius: 16px;
+    transform: translate(0, 16px);
+  }
+  .tour-card.open {
+    transform: translate(0, 0);
+  }
+  .tour-head {
+    display: contents;
+  }
+  .tour-count {
+    grid-area: count;
+    align-self: center;
+  }
+  .tour-close {
+    grid-area: close;
+    justify-self: end;
+    margin: -4px 0 -8px;
+  }
+  .tour-title {
+    grid-area: title;
+    margin: 0 0 2px;
+    font-size: 15px;
+    line-height: 20px;
+  }
+  .tour-text {
+    grid-area: text;
+  }
+  .tour-actions {
+    grid-area: actions;
+    align-self: end;
+    margin: 0;
+  }
+}
+@media (orientation: landscape) and (max-height: 540px) and (prefers-reduced-motion: reduce),
+  (orientation: landscape) and (hover: none) and (prefers-reduced-motion: reduce) {
+  .tour-card,
+  .tour-card.open {
+    transform: none;
+  }
 }

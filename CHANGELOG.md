@@ -4,6 +4,45 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer: the bump map's default at 0.45 (1.1 cm at full contrast; was 0.55).
+- 3D viewer: the flight to a double-clicked or double-tapped point slower (2 s, was 0.7 s), stopping 3.5 m from it (was
+  2.5 m).
+- 3D viewer, guided tour: step 5's camera above the chart terrain (it was under it), its flight in level (no rise and
+  fall); step 6's view lower, looking up at the gates (Christian), its flight level too; steps 5 to 6 in one flight, no stop
+  (step 6 a view reached through its old start); steps 7 to 8 about 1 m over the ground all the way, looking at zone 18's centre (not its top), 25 % faster.
+- 3D viewer, phone held sideways: the compass on the screen's left edge with the tour's card; the season slider's touch
+  target 48 dp high, 8 dp clear of the buttons' targets (MD3).
+- 3D viewer, phone held sideways, diving: the season's slider above the buttons on the right, leaving room for the
+  tour's card on the left.
+- 3D viewer, phones: the season slider shows the season's name only, without its visibility, to save room.
+- 3D viewer: no tooltips on phones and tablets (no hover pointer), not even on focus.
+- 3D viewer, guided tour: back and next as MD3 icon buttons, both round (back filled tonal, next filled; arrows, a
+  check mark on the last step; their names as label and tooltip).
+- 3D viewer, guided tour on a phone held sideways: a wider, shorter card in two columns (the text on the left, close,
+  back and next on the right), squeezed to the left of the buttons at the bottom right (their row measured, diving
+  included) rather than above them.
+- 3D viewer, phones: pinching back to its full strength (the wheel's gentler zoom had slowed it too).
+- The menu button (☰) in the dark theme as in the light one: no disc behind it, the icon in the bar's light text colour.
+- /modele: « Navigating » shorter (Christian, 2026-10-26: too much text, too little space): a table of the visitor's own
+  gestures (the mouse and keys on a computer, the fingers on a phone or tablet; each mouse gesture with a small mouse
+  showing the part used in orange), one row per move key with its letter
+  and its arrow as key caps, then the
+  viewer's buttons by their own icons with a few words (not full screen nor settings); the long underwater
+  explanation dropped.
+- /modele: the Google Earth Web steps behind an MD3 text button (a Rounded « expand_more » icon that turns over, state
+  layers, 48 dp target), unfolding and folding with MD3 motion (400 ms in, 200 ms out; none with reduced motion).
+- /modele: the licence's and credits' missing spaces put back (« CC BY 4.0: free… », « Crayfish » by ucdavisterc, CC BY
+  4.0), and English quotation marks on the English page.
+- 3D viewer: the wheel's zoom stronger (0.25 of OrbitControls' default; 0.075, then 0.15, too slow).
+- /modele: brief steps to place the full model (GLB) in Google Earth Web, which reads no position in a GLB: its
+  Placement and Rotation fields as it names them in each language, with the values to type (latitude, longitude,
+  altitude 4 m relative to ground, heading 150: the KMZ's -30 turned half round, Google Earth Web taking the GLB's
+  other forward axis; a decimal comma in French, as Google Earth shows it).
+- Augmented reality: the models rebuilt with zone 7 as now published (both at 1:100 and full size; `AR_VERSION`
+  2026-10-26, so phones fetch them again).
+- `check_model.mjs` checks a model's size on the site's scale (the 1:100 augmented reality model was « too small »).
+- TODO #25 removed (the zones' wetness in the manifest: no wet look any more).
+
 ## 0.16.0 - 2026-10-25
 
 - 3D viewer, underwater: many more particles in spring (800 per m³, was 300; up to 250,000 drawn, 40 % of that on a

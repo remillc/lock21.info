@@ -81,13 +81,15 @@ for (const texture of root.listTextures()) {
   }
 }
 if (expected && Math.abs(triangles - expected) > expected * 0.15) fail(`${triangles.toLocaleString('en')} triangles, expected about ${expected.toLocaleString('en')}`)
-const size = max.map((v, k) => v - min[k])
+// On the site's scale (the augmented reality model is at 1:100: asset.extras.lock21.scale, glb_metadata.py)
+const scale = Number(asset.extras?.lock21?.scale) || 1
+const size = max.map((v, k) => (v - min[k]) / scale)
 // The site: about 200 m across with the chart terrain, the zones alone about 100 m; up and down tens of metres
 if (size[0] > 2000 || size[2] > 2000 || size[1] > 200) fail(`size ${size.map((v) => v.toFixed(0)).join(' x ')} m: too large`)
 if (size[0] < 1 || size[2] < 1) fail(`size ${size.map((v) => v.toFixed(1)).join(' x ')} m: too small`)
 
 console.log(`${file}: ${root.listMeshes().length} meshes, ${root.listTextures().length} textures, ${triangles.toLocaleString('en')} triangles, ` +
-  `${size.map((v) => v.toFixed(0)).join(' x ')} m (x, y up, z)`)
+  `${size.map((v) => v.toFixed(0)).join(' x ')} m (x, y up, z)${scale !== 1 ? ` on the site, at 1:${Math.round(1 / scale)}` : ''}`)
 if (problems.length) {
   for (const p of problems) console.log(`  PROBLEM: ${p}`)
   process.exit(1)

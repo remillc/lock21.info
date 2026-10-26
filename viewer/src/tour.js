@@ -107,7 +107,19 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   const close = /** @type {HTMLButtonElement} */ (card.querySelector('.tour-close'))
   button.querySelector('.tour-button-label').textContent = t('tourButton')
   card.setAttribute('aria-label', t('tourButton'))
-  prev.textContent = t('tourPrev')
+  // Back and next as icon buttons (Christian, 2026-10-26: nav icons rather than words): Material Symbols Rounded
+  // « arrow_back », « arrow_forward », and « check » on the last step; their names as label and tooltip
+  const ICON = {
+    back: 'm313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z',
+    next: 'M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z',
+    end: 'm382-354 339-339q12-12 28-12t28 12q12 12 12 28.5T777-636L410-268q-12 12-28 12t-28-12L182-440q-12-12-11.5-28.5T183-497q12-12 28.5-12t28.5 12l142 143Z',
+  }
+  const iconButton = (element, icon, label) => {
+    element.innerHTML = `<svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="${ICON[icon]}"/></svg>`
+    element.setAttribute('aria-label', label)
+    element.dataset.tooltip = label
+  }
+  iconButton(prev, 'back', t('tourPrev'))
   close.setAttribute('aria-label', t('tourClose'))
   close.dataset.tooltip = t('tourClose')
 
@@ -374,7 +386,8 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     title.textContent = step.title[lang] ?? step.title.fr
     text.textContent = step.text[lang] ?? step.text.fr
     prev.hidden = i === 0
-    next.textContent = t(i === steps.length - 1 ? 'tourEnd' : 'tourNext')
+    if (i === steps.length - 1) iconButton(next, 'end', t('tourEnd'))
+    else iconButton(next, 'next', t('tourNext'))
     if (jump) {
       // Straight there, no flight (a step restored from the address): the step's view, a move's end
       const view = camOf(step.kind === 'move' ? step.to : step.cam)
@@ -417,10 +430,28 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
    * @param {number} [at] - the step to start at (0: the first)
    * @param {{ jump?: boolean }} [options] - jump: straight to the step's view, without the flight
    */
+  // A phone held sideways (style.css): the card squeezed to the left of the buttons at the bottom right (Christian,
+  // 2026-10-26), however many there are (diving adds the season's strip and the lamp): their row's left edge measured,
+  // as --lk-tour-right, whenever the card shows, the window turns or the row changes
+  const BOTTOM_CONTROLS = '.underwater-tools > *, .underwater-button, .ar-button, .home-button, .fullscreen'
+  function fitBesideControls() {
+    let left = window.innerWidth
+    for (const element of document.querySelectorAll(BOTTOM_CONTROLS)) {
+      if (element.hidden) continue
+      const box = element.getBoundingClientRect()
+      // (the bottom row only: the season's slider sits above it on a phone held sideways)
+      if (box.width && box.bottom > window.innerHeight - 72) left = Math.min(left, box.left)
+    }
+    card.style.setProperty('--lk-tour-right', `${Math.round(window.innerWidth - left + 12)}px`)
+  }
+  window.addEventListener('resize', fitBesideControls)
+  new MutationObserver(fitBesideControls).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['hidden'] })
+
   function start(at = 0, { jump = false } = {}) {
     clearTimeout(hideTimer)
     onStart?.()
     button.hidden = true
+    fitBesideControls()
     card.hidden = false
     // The next frame: from hidden, the transition needs a first style
     requestAnimationFrame(() => card.classList.add('open'))
