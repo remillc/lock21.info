@@ -1,6 +1,15 @@
 ---
 title: Modèle 3D
 description: Le modèle 3D photogrammétrique de l'écluse 21, à explorer dans le navigateur, en plein écran au besoin
+# The <title> and og:title, with place and topic words (SEO audit S2, docs/audits/seo-2026-10-26.md); the menu keeps
+# the title above
+head:
+  - tag: title
+    content: "Modèle 3D de l'écluse 21 | Écluse 21"
+  - tag: meta
+    attrs:
+      property: og:title
+      content: "Modèle 3D de l'écluse 21 | Écluse 21"
 template: splash
 ---
 import ModelPage from '../../components/model/ModelPage.astro'
