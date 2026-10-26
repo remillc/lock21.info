@@ -4,8 +4,6 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
-- 3D viewer, diving: the left button's vertical axis back as it was too (looking around and turning around the
-  pivot), as in the standard view.
 
 ## 0.16.0 - 2026-10-25
 

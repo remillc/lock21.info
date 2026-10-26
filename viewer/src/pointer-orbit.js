@@ -84,7 +84,7 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
     const perPixel = THREE.MathUtils.degToRad(camera.fov) / (surface.clientHeight || 1)
     const yaw = -(event.clientX - drag.x) * perPixel
     // Up and down as the pointer goes, the background following it (the vertical axis was inverted for a while on
-    // 2026-10-25, then put back by Christian, as in diving: swim.js)
+    // 2026-10-25, then put back by Christian; diving keeps it inverted, swim.js)
     const pitch = -(event.clientY - drag.y) * perPixel
     // Its speed for the glide, per 60th of a second
     const frames = Math.max((event.timeStamp - drag.time) / (1000 / 60), 1)

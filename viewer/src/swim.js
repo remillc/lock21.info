@@ -95,8 +95,8 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
       offset.subVectors(camera.position, pivot)
       offset.applyAxisAngle(UP, -(event.clientX - drag.x) * perPixel)
       right.crossVectors(UP, offset).normalize()
-      // Up and down as the pointer goes (inverted for a while on 2026-10-25, then put back by Christian)
-      const tilted = offset.clone().applyAxisAngle(right, -(event.clientY - drag.y) * perPixel)
+      // The vertical axis inverted (Christian, 2026-10-26: diving only; the standard view goes as the pointer)
+      const tilted = offset.clone().applyAxisAngle(right, (event.clientY - drag.y) * perPixel)
       if (Math.abs(Math.asin(THREE.MathUtils.clamp(tilted.y / tilted.length(), -1, 1))) < PITCH_LIMIT) offset.copy(tilted)
       moveBy(camera.position, toward.copy(pivot).add(offset).sub(camera.position))
       camera.lookAt(pivot)
@@ -106,8 +106,8 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
     }
     euler.setFromQuaternion(camera.quaternion)
     euler.y -= (event.clientX - drag.x) * TURN
-    // Up and down as the pointer goes (inverted for a while on 2026-10-25, then put back by Christian)
-    euler.x = THREE.MathUtils.clamp(euler.x - (event.clientY - drag.y) * TURN, -PITCH_LIMIT, PITCH_LIMIT)
+    // The vertical axis inverted (Christian, 2026-10-26: diving only)
+    euler.x = THREE.MathUtils.clamp(euler.x + (event.clientY - drag.y) * TURN, -PITCH_LIMIT, PITCH_LIMIT)
     euler.z = 0
     camera.quaternion.setFromEuler(euler)
     drag.x = event.clientX
