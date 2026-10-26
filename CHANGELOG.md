@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer, guided tour: back and next as MD3 icon buttons (arrows, a check mark on the last step; their names as
+  label and tooltip).
+- 3D viewer, guided tour on a phone held sideways: a wider, shorter card in two columns (the text on the left, close,
+  back and next on the right), beside the buttons at the bottom right rather than above them.
 - 3D viewer, phones: pinching back to its full strength (the wheel's gentler zoom had slowed it too).
 - The menu button (☰) in the dark theme as in the light one: no disc behind it, the icon in the bar's light text colour.
 - /modele: « Navigating » shorter (Christian, 2026-10-26: too much text, too little space): a table of the visitor's own
