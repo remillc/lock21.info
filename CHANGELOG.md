@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- « Matériel utilisé »: a photo of the GoPro Hero6 Black (GoPro's product photo, credited, until Christian's own).
 - Analytics (TODO #88): the visitors' actions go to Google Analytics (unless refused on the privacy page): on the site,
   a search, the menu, the theme and language, the home cards, an image enlarged (links out and scrolls: GA4's own
   measurement); in the 3D viewer, its buttons, the guided tour step by step, the dive (start, end, season, lamp), a

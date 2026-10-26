@@ -5,6 +5,13 @@ title: Gear used
 
 GoPro Hero6 Black camera in its original waterproof housing.
 
+<figure>
+
+![The GoPro Hero6 Black camera, out of its waterproof housing](../../collecte/materiel-utilise/assets/gopro-hero6-black.webp)
+
+<figcaption>The GoPro Hero6 Black. Photo: GoPro</figcaption>
+</figure>
+
 Capture mode: **4k 4:3 video** (4000 pixels x 3000 pixels). I picked this resolution because it captures with the full sensor.
 
 <figure>
