@@ -1829,7 +1829,7 @@ settings.configure({
   button: document.querySelector('.settings-button'),
   session,
 })
-document.body.append(settings)
+document.querySelector('main').append(settings)
 if (look.underwater) setUnderwater(true)
 
 // Loading indicator: share of the tiles loaded among those the first view asks for, all zones together; done once every

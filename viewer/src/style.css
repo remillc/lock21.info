@@ -52,6 +52,11 @@ body {
   overscroll-behavior: none;
 }
 
+/* The page's one landmark (index.html): no box of its own, its children laid out as before */
+main {
+  display: contents;
+}
+
 /* Pointer cursor on every action widget (docs/system-design.md, Spacing and interaction): links, buttons, selects,
    toggles, sliders, and the elements given an action role; not-allowed when disabled. In :where(), so without
    specificity: a widget that sets its own cursor (text fields, image zoom) keeps it */

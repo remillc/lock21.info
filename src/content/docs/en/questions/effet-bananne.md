@@ -6,25 +6,25 @@ A test on a flat surface 100 feet long shows that the model produced by aligning
 - Where does this distortion come from?
 - How do I fix it?
 
-### Hypothesis
+## Hypothesis
 
 My guess is that the banana effect comes from the distortion of the images by the GoPro Hero 6 Black's lens.
 
 Tests on the same set of images (the files `data/2024-05-18/raw-frames-n8/échelle-1`) with 2 different camera calibration files, namely the one obtained from Metashape's processing of the `data/2024-05-18/raw-frames-n8/pilier-3` set, `configs/camera-calibration/camera-calibration from 2024-05-18 pillier 3.xml`, and the file used for the Robert Gaskin project, `configs/camera-calibration/GoPro HERO6 4k wide frame camera calibration.xml`, give different curvatures: the result made with the calibration from the Robert Gaskin project is less curved. So the camera calibration can be tweaked to correct the banana effect.
 
-### Possible solutions
+## Possible solutions
 
 1. Calibrate the camera
 2. Crop the edges of the images with a mask
 3. Use a less wide-angle lens
 
-### Camera calibration
+## Camera calibration
 
 Collect data to calibrate the GoPro's lens.
 
 Calibration Best Practices: [https://calib.io/blogs/knowledge-base/calibration-best-practices](https://calib.io/blogs/knowledge-base/calibration-best-practices)
 
-### In detail
+## In detail
 
 Since the lens's focal length changes with the medium, the test has to be done underwater.
 
@@ -44,7 +44,7 @@ To make sure the data collection goes well, and to keep the images from being to
 <figcaption>Image used to compute the lens calibration</figcaption>
 </figure>
 
-### Processing in Metashape
+## Processing in Metashape
 
 3 data samples were created by filming a 100-foot-long stretch of the wooden floor behind the spillways. The 100-foot distance was measured with a measuring tape. The 0' and 100' positions were marked with 2 targets.
 
@@ -55,8 +55,8 @@ To make sure the data collection goes well, and to keep the images from being to
 <figcaption>Target used to mark the 100-foot position</figcaption>
 </figure>
 
-#### Sample 1
+### Sample 1
 
 Video shot finning, in 4K 16:9.
 
-### Conclusions
+## Conclusions

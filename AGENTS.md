@@ -46,6 +46,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `src/components/DevBreakpoints.astro` | Dev server only (mounted by `SiteTitle.astro`, in the header, under `import.meta.env.DEV`): the same red label as OpenCaves' DebugBreakpoints, top left, with the MUI breakpoint (`xs`, `sm`, `md`, `lg`, `xl`) and its interval in px; never in production builds |
 | `src/styles/tokens.scss` | MD3 colour roles and shape scale, mapped onto Starlight's custom properties (dark = `:root`, light = `[data-theme='light']`) |
 | `src/components/DiveLog.astro` | Adds a total-duration footer row to the dive log table, computed at build time (sums column 5) |
+| `src/components/ScrollTables.astro` | `<l21-scroll-tables>` (in the footer): a Markdown table wider than the column, which scrolls, gets `tabindex="0"` so the keyboard can reach it |
 | `src/styles/custom.scss` | Global styles on top of Starlight: header bar (the search a magnifier at its right on wide screens), links, tables, figures, image zoom, layout |
 | `src/assets/` | Logo (`logo.svg`, `logo-dark.svg`, S4 "21 en écho") and home page images |
 | `public/` | Copied as is: `_headers` (Cloudflare cache headers: a year for hashed files), `robots.txt` (everything indexable except the bare viewer `/modele/viewer`; points to Starlight's `sitemap-index.xml`), `favicon.svg`, `scripts/image-zoom.js` (native Custom Element), `downloads/lock-21.kmz` (the Google Earth KMZ: only a link to its parts on R2, see `tools/google-earth/README.md`), and `modele/viewer/` (the built viewer, gitignored) |

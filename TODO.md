@@ -62,9 +62,10 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ## Site
 
-- [ ] #43 Check the site for accessibility issues (WCAG 2.2 AA): contrast in both themes, keyboard navigation and
-  focus (menu, viewer frame, opt-out button), alt texts, headings order, the viewer's controls and the depth gauges
-  (aria-hidden), French and English pages
+- [ ] #43 Accessibility (WCAG 2.2 AA): audited on 2026-10-26 (axe-core on every page, both themes, desktop and phone;
+  keyboard, 320 px reflow, text spacing) and the code issues fixed. Left: the Markdown tables' empty header cells
+  (14 pages: name the column, or no header row), the heading levels of `questions/nettete-images` (and its English
+  page), a check with a real screen reader (NVDA, VoiceOver) and Windows' high contrast mode
 - [ ] #44 Usability audit of the site: what a first-time visitor (diver, heritage enthusiast, photogrammetrist) finds
   and understands, the paths from the home page to the model and the dive log, the 3D viewer's controls on desktop and
   phone, navigation and search, on both languages

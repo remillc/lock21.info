@@ -47,6 +47,7 @@
   "model_navigate": "Navigating",
   "model_mouse": "Mouse",
   "model_fingers": "Fingers",
+  "model_action": "Action",
   "model_gestureTurn": "Turn",
   "model_gestureTurnMouse": "drag",
   "model_gestureTurnFingers": "1 finger",

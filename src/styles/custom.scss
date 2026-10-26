@@ -64,7 +64,9 @@
 
 @layer l21.layout {
   // --- Header bar and footer bar: dark olive in both themes (MD3 inverse surface in light). Starlight's components in them
-  // (search, theme and language selects) read the grey scale, so it is redefined inside the bars.
+  // (search, theme and language selects) read the grey scale, so it is redefined inside the bars. The phone's « Sur cette
+  // page » bar too (Starlight's mobile table of contents, on the bar's colour): its button and the current section's
+  // name were dark on dark in the light theme (accessibility audit, 2026-10-26); its open list keeps the page's colours.
 
   header.header {
     background: var(--l21-bar);
@@ -78,7 +80,8 @@
   }
 
   header.header,
-  .site-footer {
+  .site-footer,
+  mobile-starlight-toc summary {
     --sl-color-white: var(--l21-bar-text);
     --sl-color-gray-1: #e3e6d8;
     --sl-color-gray-2: #c9cdbb;
@@ -91,6 +94,10 @@
     --sl-color-text-accent: var(--l21-bar-link);
     // The selects' dropdown lists
     --sl-color-bg-nav: var(--l21-bar);
+  }
+
+  mobile-starlight-toc summary {
+    color: var(--l21-bar-text);
   }
 }
 
@@ -114,6 +121,11 @@
     border-collapse: separate;
     border-spacing: 0;
     background: var(--md-sys-color-surface-container-lowest);
+
+    // Wider than the column, it scrolls, and takes the keyboard's focus (ScrollTables.astro): its own ring, inside
+    &:focus-visible {
+      outline-offset: -2px;
+    }
 
     th {
       background: var(--l21-bar);
