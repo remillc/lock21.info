@@ -430,10 +430,28 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
    * @param {number} [at] - the step to start at (0: the first)
    * @param {{ jump?: boolean }} [options] - jump: straight to the step's view, without the flight
    */
+  // A phone held sideways (style.css): the card squeezed to the left of the buttons at the bottom right (Christian,
+  // 2026-10-26), however many there are (diving adds the season's strip and the lamp): their row's left edge measured,
+  // as --lk-tour-right, whenever the card shows, the window turns or the row changes
+  const BOTTOM_CONTROLS = '.underwater-tools > *, .underwater-button, .ar-button, .home-button, .fullscreen'
+  function fitBesideControls() {
+    let left = window.innerWidth
+    for (const element of document.querySelectorAll(BOTTOM_CONTROLS)) {
+      if (element.hidden) continue
+      const box = element.getBoundingClientRect()
+      // (the bottom row only: the season's slider sits above it on a phone held sideways)
+      if (box.width && box.bottom > window.innerHeight - 72) left = Math.min(left, box.left)
+    }
+    card.style.setProperty('--lk-tour-right', `${Math.round(window.innerWidth - left + 12)}px`)
+  }
+  window.addEventListener('resize', fitBesideControls)
+  new MutationObserver(fitBesideControls).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['hidden'] })
+
   function start(at = 0, { jump = false } = {}) {
     clearTimeout(hideTimer)
     onStart?.()
     button.hidden = true
+    fitBesideControls()
     card.hidden = false
     // The next frame: from hidden, the transition needs a first style
     requestAnimationFrame(() => card.classList.add('open'))

@@ -383,6 +383,18 @@ l21-loading.error .loading-label {
 .lamp-button[aria-pressed='true'] .icon-on {
   display: block;
 }
+/* A phone held sideways (Christian, 2026-10-26): the season's slider above the buttons on the right, its right edge
+   on theirs; the row below keeps the lamp and the buttons, so the tour's card has room on its left */
+@media (orientation: landscape) and (hover: none) {
+  .underwater-tools .season-control {
+    position: fixed;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: calc(max(16px, env(safe-area-inset-bottom)) + 52px);
+  }
+  .underwater-tools:not([hidden]) ~ .tour-button {
+    bottom: calc(max(16px, env(safe-area-inset-bottom)) + 104px);
+  }
+}
 /* Narrow screens (phones, the /modele page's frame): in the bottom-left corner, beside the buttons' row (full screen,
    underwater, and AR where it is offered), the lamp button above the season pill, the pill on two lines (its value
    above the slider; the value wraps if it must). Christian, 2026-10-23 */
@@ -1337,7 +1349,7 @@ l21-tooltip[data-shown='true'] {
        band on a phone) */
     left: 12px;
     bottom: max(12px, env(safe-area-inset-bottom));
-    width: min(860px, calc(100vw - 12px - max(16px, env(safe-area-inset-right)) - 216px));
+    width: min(860px, calc(100vw - 12px - var(--lk-tour-right, 232px)));
     padding: 8px 8px 10px 16px;
     border-radius: 16px;
     transform: translate(0, 16px);
@@ -1370,11 +1382,6 @@ l21-tooltip[data-shown='true'] {
     grid-area: actions;
     align-self: end;
     margin: 0;
-  }
-  /* Diving, the bottom row is much wider (the season's strip, the lamp): the card goes above it, the whole width */
-  .underwater-tools:not([hidden]) ~ .tour-card {
-    bottom: calc(max(12px, env(safe-area-inset-bottom)) + 60px);
-    width: min(860px, calc(100vw - 12px - max(16px, env(safe-area-inset-right))));
   }
 }
 @media (orientation: landscape) and (max-height: 540px) and (prefers-reduced-motion: reduce),
