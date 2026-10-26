@@ -4,6 +4,10 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D viewer (usability audit V24, V25, V26, V29, V38): Escape leaves dive mode when nothing else is open; the tour's
+  previous button is « Étape précédente » / “Previous step”; after a manual move during the tour, « Revenir à la vue »
+  on the card replays the step; the settings panel opens with a line on what it keeps, and the session code says what
+  it is for; the tour's last card names the ⌂ button.
 - 3D model on a phone held upright: « Visite guidée » on its own line above the buttons, no longer cut off at the
   frame's left edge (usability audit V11).
 - 3D model: the navigation help names the mouse button (« glisser (bouton gauche) » to turn, « (bouton droit) » to
