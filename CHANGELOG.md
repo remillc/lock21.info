@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- 3D model on a phone held upright: « Visite guidée » on its own line above the buttons, no longer cut off at the
+  frame's left edge (usability audit V11).
 - 3D model: the navigation help names the mouse button (« glisser (bouton gauche) » to turn, « (bouton droit) » to
   pan), and the viewer's « ? » card lists the mouse actions (turn, pan, wheel, double-click) before the keys (usability
   audit V10).

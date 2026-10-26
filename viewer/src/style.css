@@ -1291,6 +1291,15 @@ l21-tooltip {
 .ar-button:not([hidden]) ~ .tour-button {
   right: calc(max(16px, env(safe-area-inset-right)) + 220px);
 }
+/* Frames too narrow for the pill beside the row (about 184 px of pill + 220 with the AR button: a phone held upright):
+   its own line above the row, at the right edge, as underwater (usability audit V11, Christian, 2026-10-26) */
+@media (max-width: 439px) {
+  .tour-button,
+  .ar-button:not([hidden]) ~ .tour-button {
+    right: calc(max(16px, env(safe-area-inset-right)) - 4px);
+    bottom: calc(max(16px, env(safe-area-inset-bottom)) + 52px);
+  }
+}
 /* Underwater the season and the lamp take its place: above the row, at the right edge (Christian, 2026-10-24: the tour
    in dive mode too) */
 .underwater-tools:not([hidden]) ~ .tour-button {
