@@ -256,8 +256,9 @@ const updated = zones.updated
             </p>
             <!-- Google Earth Web reads no position in a GLB (Christian, 2026-10-26): it is placed by hand. Its panel's labels as
                  Christian saw them, in each language; its numbers with the language's decimal mark (French: a comma).
-                 The model's origin is the site anchor, its heading and height those of the KMZ (make_kmz.py: -30,
-                 about 4 m) -->
+                 The model's origin is the site anchor, its height that of the KMZ (make_kmz.py: about 4 m); its heading
+                 the KMZ's -30 turned 180° about the vertical, 150 (Christian, 2026-10-26: Google Earth Web takes the
+                 GLB's other forward axis) -->
             <details class="gew">
               <summary>{t.gewTitle}</summary>
               <ol>
@@ -274,7 +275,7 @@ const updated = zones.updated
                 <li>
                   {t.gewTurn}
                   <dl>
-                    <dt>{t.gewHeading}</dt><dd><code>-30</code></dd>
+                    <dt>{t.gewHeading}</dt><dd><code>150</code></dd>
                   </dl>
                 </li>
               </ol>
