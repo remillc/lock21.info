@@ -10,6 +10,12 @@ So that each model has its real size and the zones line up with each other (see
 placed on the bottom, the distance between them measured, and both targets filmed with the rest of the zone. The
 distance between two targets makes a scale.
 
+<div class="facts">
+<p class="fact"><span>Targets</span><b>7.5 and 15 cm</b></p>
+<p class="fact"><span>Kind</span><b>coded, Metashape</b></p>
+<p class="fact"><span>In pairs</span><b>targets 1 and 2</b></p>
+</div>
+
 ## The targets
 
 Targets of 7.5 cm and 15 cm, numbered in pairs (targets 1 and 2).
@@ -18,7 +24,7 @@ Targets of 7.5 cm and 15 cm, numbered in pairs (targets 1 and 2).
 
 ![Two coded targets on zone 5's wooden floor, one of 7.5 cm and one of 15 cm](../../collecte/mise-echelle/assets/cibles-7-5-cm-15-cm-GX046201.0366.webp)
 
-<figcaption>Both kinds of targets on zone 5's floor, August 2, 2024: a 7.5 cm one (top) and a 15 cm one (bottom
+<figcaption><time datetime="2024-08-02">2024-08-02</time>Both kinds of targets on zone 5's floor: a 7.5 cm one (top) and a 15 cm one (bottom
 left)</figcaption>
 </figure>
 

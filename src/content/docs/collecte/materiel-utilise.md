@@ -3,6 +3,15 @@ title: Matériel utilisé
 sidebar:
   order: 2
 ---
+La caméra et ses réglages pour la collecte, puis les logiciels du traitement.
+
+<div class="facts">
+<p class="fact"><span>Caméra</span><b>GoPro Hero6 Black</b></p>
+<p class="fact"><span>Vidéo</span><b>4K 4:3 · 29,97 i/s</b></p>
+<p class="fact"><span>Protune</span><b>activé</b></p>
+<p class="fact"><span>Blancs</span><b>6500 K</b></p>
+</div>
+
 ## Caméra
 
 Caméra GoPro Hero6 Black avec boîtier étanche d'origine.

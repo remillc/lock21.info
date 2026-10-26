@@ -6,19 +6,29 @@ A test on a flat surface 100 feet long shows that the model produced by aligning
 On a longer segment the effect is plain to see: the 300 feet of the top of the canal's south wall, filmed on July 26,
 2024 between targets 1 and 2 (dive 27), curl up almost into a circle.
 
+<div class="facts">
+<p class="fact"><span>Segment</span><b>300 ft</b></p>
+<p class="fact"><span>Filmed</span><b>2024-07-26</b></p>
+<p class="fact"><span>Dive</span><b>27</b></p>
+</div>
+
+<div class="figure-grid">
+
 <figure>
 
 ![The 300-foot segment aligned in Metashape, curled into an arc between targets 1 and 2](../../problemes/effet-banane/assets/exemple-effet-banane.webp)
 
-<figcaption>The 300-foot segment, distorted: it curls up between targets 1 and 2</figcaption>
+<figcaption><time datetime="2024-07-26">2024-07-26</time>The 300-foot segment, distorted: it curls up between targets 1 and 2</figcaption>
 </figure>
 
 <figure>
 
 ![The same segment corrected, almost straight, with the 300-foot scale between targets 1 and 2](../../problemes/effet-banane/assets/exemple-effet-banane-corrige.webp)
 
-<figcaption>The same segment, corrected: almost straight, with the 300-foot scale between targets 1 and 2</figcaption>
+<figcaption><time datetime="2024-07-26">2024-07-26</time>The same segment, corrected: almost straight, with the 300-foot scale between targets 1 and 2</figcaption>
 </figure>
+
+</div>
 
 - Where does this distortion come from?
 - How do I fix it?

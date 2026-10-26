@@ -6,19 +6,29 @@ Le test effectué sur une surface plane de 100 pieds de long montre que le mod�
 Sur un segment plus long, l'effet est flagrant : les 300 pieds du dessus du mur sud du canal, filmés le 26 juillet
 2024 entre les cibles 1 et 2 (plongée 27), s'enroulent presque en cercle.
 
+<div class="facts">
+<p class="fact"><span>Segment</span><b>300 pi</b></p>
+<p class="fact"><span>Filmé</span><b>2024-07-26</b></p>
+<p class="fact"><span>Plongée</span><b>27</b></p>
+</div>
+
+<div class="figure-grid">
+
 <figure>
 
 ![Le segment de 300 pieds aligné dans Metashape, enroulé en arc entre les cibles 1 et 2](./effet-banane/assets/exemple-effet-banane.webp)
 
-<figcaption>Le segment de 300 pieds, déformé : il s'enroule entre les cibles 1 et 2</figcaption>
+<figcaption><time datetime="2024-07-26">2024-07-26</time>Le segment de 300 pieds, déformé : il s'enroule entre les cibles 1 et 2</figcaption>
 </figure>
 
 <figure>
 
 ![Le même segment corrigé, presque droit, avec l'échelle de 300 pieds entre les cibles 1 et 2](./effet-banane/assets/exemple-effet-banane-corrige.webp)
 
-<figcaption>Le même segment, corrigé : presque droit, avec l'échelle de 300 pieds entre les cibles 1 et 2</figcaption>
+<figcaption><time datetime="2024-07-26">2024-07-26</time>Le même segment, corrigé : presque droit, avec l'échelle de 300 pieds entre les cibles 1 et 2</figcaption>
 </figure>
+
+</div>
 
 - D'où vient cette déformation ?
 - Comment la corriger ?

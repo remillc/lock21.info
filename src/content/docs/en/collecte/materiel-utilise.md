@@ -3,6 +3,15 @@ title: Gear used
 sidebar:
   order: 2
 ---
+The camera and its settings for the collection, then the processing software.
+
+<div class="facts">
+<p class="fact"><span>Camera</span><b>GoPro Hero6 Black</b></p>
+<p class="fact"><span>Video</span><b>4K 4:3 · 29.97 fps</b></p>
+<p class="fact"><span>Protune</span><b>on</b></p>
+<p class="fact"><span>White balance</span><b>6500 K</b></p>
+</div>
+
 ## Camera
 
 GoPro Hero6 Black camera in its original waterproof housing.
