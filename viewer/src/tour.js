@@ -7,6 +7,7 @@
 // is long (over the walls rather than through them) and arriving along the step's own line of sight (from behind
 // the camera, as one walks up to a view); the point looked at glides from one to the other. Its length follows the
 // distance. Back and next during a flight or a move start from where the camera is.
+import { track } from './analytics.js'
 import * as THREE from 'three'
 import { lang, m } from './i18n.js'
 import { icon } from './icons.js'
@@ -93,12 +94,11 @@ const camOf = (cam) => ({ position: new THREE.Vector3(cam[0], cam[1], cam[2]), t
  * @param {() => void} options.requestRender
  * @param {() => void} [options.onStart] - the tour starts (the standard view, the movement keys hidden)
  * @param {() => void} [options.onEnd] - the tour ends
- * @param {(type: string, data?: object) => void} [options.log] - telemetry
  * @param {(index: number) => void} [options.onStep] - a step shown (its index), or -1 when the tour ends
  * @param {(position: THREE.Vector3) => number} [options.headroom] - the free height above a point (m): a flight rises
  *   no higher than it allows (from inside a passage, Next pressed during a move, it rose through the lintel)
  */
-export function createTour({ steps, camera, controls, requestRender, onStart, onEnd, log, headroom, onStep }) {
+export function createTour({ steps, camera, controls, requestRender, onStart, onEnd, headroom, onStep }) {
   const button = /** @type {HTMLButtonElement} */ (document.querySelector('.tour-button'))
   const card = /** @type {HTMLElement} */ (document.querySelector('.tour-card'))
   const count = card.querySelector('.tour-count')
@@ -454,6 +454,8 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     const step = steps[i]
     quick = back
     onStep?.(i)
+    // Analytics (analytics.js): each step reached after the first (that one is tour_start)
+    if (!starting) track('tour_step', { step: i + 1, of: steps.length })
     if (touch.matches && !jump) hideWhileMoving(i)
     else {
       reveal()
@@ -518,6 +520,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   window.addEventListener('resize', fitBesideControls)
   new MutationObserver(fitBesideControls).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['hidden'] })
 
+  let starting = false
   function start(at = 0, { jump = false } = {}) {
     clearTimeout(hideTimer)
     onStart?.()
@@ -528,14 +531,17 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     card.hidden = false
     // The next frame: from hidden, the transition needs a first style
     requestAnimationFrame(() => card.classList.add('open'))
-    log?.('tour', { action: 'start', step: at + 1 })
+    track('tour_start', { step: at + 1 })
+    starting = true
     show(Math.min(Math.max(0, at), steps.length - 1), false, jump)
+    starting = false
     next.focus({ preventScroll: true })
   }
 
   function stop() {
     if (index < 0) return
-    log?.('tour', { action: 'end', step: index + 1, of: steps.length })
+    // Finished (« ✓ » on the last step) or left before
+    track(index === steps.length - 1 ? 'tour_complete' : 'tour_stop', { step: index + 1, of: steps.length })
     index = -1
     onStep?.(-1)
     motions = []
@@ -562,8 +568,10 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     if (index < 0) return
     // (the focus, on the button about to hide, to next)
     if (document.activeElement === again) next.focus({ preventScroll: true })
-    log?.('tour', { action: 'again', step: index + 1 })
+    track('tour_return', { step: index + 1 })
+    starting = true
     show(index)
+    starting = false
   })
   // The camera moved by the visitor (the orbit, the keys, a double-click: every one ends in the orbit's change event)
   // while no motion of the tour runs: away from the step's view, the button to come back

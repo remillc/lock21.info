@@ -288,10 +288,36 @@ const updated = zones.updated
   // menu opened. The viewer says when such a drag starts and ends (lock21:drag); meanwhile, and for DRAG_AFTER ms
   // after (the menu comes with the release, before the viewer's message), the page's context menu is held back
   const DRAG_AFTER = 500
+  // Analytics (TODO #88): the time the viewer is seen in each mode, standard or underwater (lock21:mode from the viewer),
+  // counted while the page is visible and sent as viewer_end (seconds per mode) when it is hidden or left; a visit hidden
+  // and seen again sends one viewer_end each time (sum them per session). Analytics.astro sends it, unless refused
   let connectedBefore = false
   class ModelFrame extends HTMLElement {
     dragging = false
     dragEnd = 0
+    underwater = false
+    since = 0
+    seconds = { standard: 0, underwater: 0 }
+
+    /** The time since `since` added to the current mode */
+    count() {
+      if (this.since) this.seconds[this.underwater ? 'underwater' : 'standard'] += (performance.now() - this.since) / 1000
+      this.since = document.visibilityState === 'visible' ? performance.now() : 0
+    }
+
+    sendTime() {
+      this.count()
+      const standard = Math.round(this.seconds.standard)
+      const underwater = Math.round(this.seconds.underwater)
+      this.seconds = { standard: 0, underwater: 0 }
+      if (standard + underwater < 1) return
+      document.dispatchEvent(new CustomEvent('l21:track', { detail: { name: 'viewer_end', params: { standard_seconds: standard, underwater_seconds: underwater } } }))
+    }
+
+    onVisibility = () => {
+      if (document.visibilityState === 'hidden') this.sendTime()
+      else this.since = performance.now()
+    }
     /** @param {MouseEvent} event */
     onContextMenu = (event) => {
       if (this.dragging || performance.now() < this.dragEnd) event.preventDefault()
@@ -301,6 +327,11 @@ const updated = zones.updated
     onMessage = (event) => {
       const frame = this.querySelector('iframe')
       if (event.origin !== location.origin || event.source !== frame?.contentWindow) return
+      if (event.data?.type === 'lock21:mode') {
+        this.count()
+        this.underwater = Boolean(event.data.underwater)
+        return
+      }
       if (event.data?.type === 'lock21:drag') {
         this.dragging = Boolean(event.data.on)
         if (!this.dragging) this.dragEnd = performance.now() + DRAG_AFTER
@@ -326,9 +357,14 @@ const updated = zones.updated
       history.replaceState(history.state, '', location.pathname + (search ? `?${search}` : ''))
       window.addEventListener('message', this.onMessage)
       window.addEventListener('contextmenu', this.onContextMenu, true)
+      this.underwater = false
+      this.since = document.visibilityState === 'visible' ? performance.now() : 0
+      document.addEventListener('visibilitychange', this.onVisibility)
     }
 
     disconnectedCallback() {
+      this.sendTime()
+      document.removeEventListener('visibilitychange', this.onVisibility)
       window.removeEventListener('message', this.onMessage)
       window.removeEventListener('contextmenu', this.onContextMenu, true)
     }

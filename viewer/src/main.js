@@ -27,6 +27,7 @@ import { createFishes } from './fishes.js'
 import { createDiveComputer } from './dive-computer.js'
 import { createTouchNav } from './touch-nav.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
+import { firstMove, reportMode, track } from './analytics.js'
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
 import { homePath, m } from './i18n.js'
@@ -115,6 +116,7 @@ const fullscreenButton = document.querySelector('.fullscreen')
 if (document.fullscreenEnabled) {
   fullscreenButton.hidden = false
   fullscreenButton.addEventListener('click', () => {
+    track('viewer_button', { button: document.fullscreenElement ? 'fullscreen_exit' : 'fullscreen' })
     if (document.fullscreenElement) document.exitFullscreen()
     else document.documentElement.requestFullscreen()
   })
@@ -128,6 +130,7 @@ if (document.fullscreenEnabled) {
   // screen for the model
   fullscreenButton.hidden = false
   fullscreenButton.addEventListener('click', () => {
+    track('viewer_button', { button: 'fullscreen' })
     window.top.location.href = viewUrl()
   })
 }
@@ -220,10 +223,10 @@ if (arLink.relList?.supports?.('ar')) {
     })
   })
 }
-// Analytics: the page that embeds the viewer counts the AR launches (src/components/Analytics.astro, after consent)
+// AR launches: the technical facts to telemetry, the action to the page's analytics (analytics.js)
 arLink.addEventListener('click', () => {
   log('ar', { size: arFull ? 'full' : 'table', kind: arLink.relList?.supports?.('ar') ? 'quicklook' : arLink.dataset.mode })
-  if (window.self !== window.top) window.parent.postMessage({ type: 'lock21:ar', size: arFull ? 'full' : 'table' }, location.origin)
+  track('ar_launch', { ar_size: arFull ? 'full' : 'table' })
 })
 
 const container = document.getElementById('viewer')
@@ -397,6 +400,12 @@ const pointerOrbit = createPointerOrbit({
 
 // Diving (swimming), a double-click makes the point under the pointer the one the drag turns around (swim.js setPivot;
 // Christian, 2026-10-24)
+// Analytics: the visit's first move (analytics.js: sent once), by its kind
+renderer.domElement.addEventListener('pointerdown', (event) => firstMove(event.pointerType === 'touch' ? 'touch' : event.button === 0 ? 'turn' : 'pan'), { passive: true })
+renderer.domElement.addEventListener('wheel', () => firstMove('zoom'), { passive: true })
+window.addEventListener('keydown', (event) => {
+  if (/^(Key[WASD]|Arrow)/.test(event.code) && !(event.target instanceof Element && event.target.closest('input, select, textarea'))) firstMove(underwater.on ? 'swim' : 'keys')
+})
 renderer.domElement.addEventListener('dblclick', (event) => {
   if (!swim.looking || tour.active) return
   const point = pointerOrbit.pick(event.clientX, event.clientY)
@@ -914,10 +923,22 @@ updateEnvironment()
 
 const underwaterButton = document.querySelector('.underwater-button')
 underwaterButton.hidden = false
-underwaterButton.addEventListener('click', () => setUnderwater(!underwater.on))
+underwaterButton.addEventListener('click', () => {
+  track('viewer_button', { button: underwater.on ? 'dive_off' : 'dive' })
+  setUnderwater(!underwater.on)
+})
+// Analytics (analytics.js): when the dive started, for its duration in dive_end
+let diveStarted = 0
 /** @param {boolean} on */
 function setUnderwater(on) {
   if (on) underwaterReached()
+  if (on !== underwater.on) {
+    if (on) {
+      diveStarted = performance.now()
+      track('dive_start')
+    } else if (diveStarted) track('dive_end', { seconds: Math.round((performance.now() - diveStarted) / 1000) })
+    reportMode(on)
+  }
   look.underwater = on
   underwater.setOn(on)
   underwaterButton.setAttribute('aria-pressed', String(on))
@@ -1053,7 +1074,10 @@ const showKeys = () => {
   swimKeys.hidden = mobile
 }
 showKeys()
-swimHelpButton.addEventListener('click', () => openSwimHelp())
+swimHelpButton.addEventListener('click', () => {
+  track('viewer_button', { button: 'help' })
+  openSwimHelp()
+})
 
 // The guided tour (tour.js, tour-steps.js; TODO #48): in both views (Christian, 2026-10-24: in dive mode too). Diving,
 // the swim is suspended while it plays (the tour drives the camera as the orbit does) and taken up again from where it
@@ -1064,7 +1088,6 @@ const tour = createTour({
   camera,
   controls,
   requestRender: () => requestRender(),
-  log,
   // The step in the address (#tour-3, for debugging: Christian, 2026-10-24), each replacing the last (no new history
   // entry), gone when the tour ends
   onStep: (i) => {
@@ -1094,6 +1117,7 @@ tour.button.hidden = false
 const homeButton = document.querySelector('.home-button')
 homeButton.hidden = false
 homeButton.addEventListener('click', () => {
+  track('viewer_button', { button: 'home' })
   tour.stop()
   setSwimming(false)
   const cam = startView(container.clientWidth / container.clientHeight)
@@ -1103,7 +1127,6 @@ homeButton.addEventListener('click', () => {
   setSwimming(underwater.on && !mobile)
   updateAddress()
   requestRender()
-  log('home', {})
 })
 // Escape leaves the dive (usability audit V25, 2026-10-26), when nothing else takes it: a dialog open (the help), the
 // settings panel, the tour. Read in the capture phase, before those close themselves on the same key
@@ -1230,6 +1253,8 @@ seasonRange.addEventListener('input', () => {
   live.season(seasonRange.value)
   settings.reflect('season', seasonRange.value)
 })
+// Analytics: the season chosen, once the slider is let go
+seasonRange.addEventListener('change', () => track('season_change', { season: Number(seasonRange.value) }))
 showSeason()
 live.lamp = (v) => {
   look.lamp = v === '1'
@@ -1246,6 +1271,7 @@ function showLamp() {
   lampButton.dataset.tooltip = look.lamp ? m.lampOff() : m.lampOn()
 }
 lampButton.addEventListener('click', () => {
+  track('lamp_toggle', { lamp: look.lamp ? 'off' : 'on' })
   live.lamp(look.lamp ? '0' : '1')
   settings.reflect('lamp', look.lamp ? '1' : '0')
 })

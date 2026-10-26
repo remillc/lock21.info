@@ -4,6 +4,12 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Analytics (TODO #88): the visitors' actions go to Google Analytics (unless refused on the privacy page): on the site,
+  a search, the menu, the theme and language, the home cards, an image enlarged (links out and scrolls: GA4's own
+  measurement); in the 3D viewer, its buttons, the guided tour step by step, the dive (start, end, season, lamp), a
+  setting changed, the first move, and the time in the normal view and diving (`viewer_end`). The viewer passes them to
+  `/modele` (`viewer/src/analytics.js`); the telemetry keeps only technical facts. The privacy page lists them.
+- Home page: « PROFONDEUR » / “DEPTH” instead of « PROFONDEUR DU FOND » / “BOTTOM DEPTH”.
 - The 404 pages declare no canonical address nor language versions (SEO audit S16). The 3D model's mockups (zones
   not yet surveyed) are compressed with meshopt, in the publishing pipeline too (step 6b; online 2026-10-26).
 - Hosting: an address with a final slash (`/modele/`) redirects to the page with a 301 instead of Cloudflare's 307

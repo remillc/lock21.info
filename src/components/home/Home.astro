@@ -49,8 +49,8 @@ const entries = [
         <h1 id="_top">{m.home_title1({}, o)}<br />{m.home_title2({}, o)}</h1>
         <p class="lead">{m.home_lead({}, o)}</p>
         <div class="actions">
-          <a class="button filled" href={viewer} data-astro-prefetch="viewport">{m.home_explore({}, o)}</a>
-          <a class="button outlined" href={journal} data-astro-prefetch="viewport">{m.home_journal({}, o)}</a>
+          <a class="button filled" href={viewer} data-astro-prefetch="viewport" data-track-content="home_button" data-track-id="model">{m.home_explore({}, o)}</a>
+          <a class="button outlined" href={journal} data-astro-prefetch="viewport" data-track-content="home_button" data-track-id="dive_log">{m.home_journal({}, o)}</a>
         </div>
       </div>
 
@@ -71,7 +71,7 @@ const entries = [
       </section>
     </section>
 
-    <a class="render" href={renderView} data-astro-prefetch="viewport">
+    <a class="render" href={renderView} data-astro-prefetch="viewport" data-track-content="home_render">
       <Image src={render} alt={m.home_alt({}, o)} widths={[640, 960, 1280]} sizes="(min-width: 75rem) 1100px, 100vw" />
       <span class="chip">ZONE 12 · 13 M FACES · TEX 12 464 PX</span>
     </a>
@@ -90,7 +90,7 @@ const entries = [
            canal.plongeurs →02La méthode… », usability audit V28); the pages they lead to are indexed */}
       <div class="cards" data-pagefind-ignore>
         {entries.map((e) => (
-          <a class="card" href={e.href} data-astro-prefetch="viewport">
+          <a class="card" href={e.href} data-astro-prefetch="viewport" data-track-content="home_card" data-track-id={e.no}>
             <span class="card-no">{e.no}</span>
             <span class="card-title">{e.title}</span>
             <span class="card-text">{e.text}</span>

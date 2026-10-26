@@ -11,8 +11,11 @@
 //   ones would also count every ?cam= update of the /modele/ page as a page.
 // - The arrival address is kept before /modele/ cleans its own (l21-model-frame keeps only ?cam=), so that the QR
 //   codes' campaigns (utm_source=qr, utm_campaign=ra-table / ra-taille-reelle) reach the first page view.
-// - Events: file_download (links with data-track-download: the KMZ and the GLB), ar_launch (the viewer's AR button,
-//   sent by the viewer to this page: ar_size table or full).
+// - Events (TODO #88; the list is on the privacy page): file_download (links with data-track-download: the KMZ and the
+//   GLB); the visitors' other actions, from any script of the site as an l21:track event on document (detail: name,
+//   params), and from the 3D viewer in /modele's frame as a lock21:track message (viewer/src/analytics.js). Outbound
+//   links and scrolls: GA4's enhanced measurement (its own setting, in GA). An action before Google's script is loaded
+//   waits for it (queue), unless the visitor refused the measurement.
 import { site } from '../data/site'
 
 // Not in development (npm run dev): tests on the PC and the phone would count as visits
@@ -67,6 +70,7 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
     script.src = `https://www.googletagmanager.com/gtag/js?id=${id}`
     document.head.append(script)
     pageView()
+    for (const [name, params] of queue.splice(0)) track(name, params)
   }
 
   function pageView() {
@@ -100,8 +104,15 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
    * @param {string} name
    * @param {Record<string, string>} params
    */
+  /** @type {[string, Record<string, unknown>][]} Actions before Google's script, sent when it comes */
+  const queue = []
+  /**
+   * @param {string} name
+   * @param {Record<string, unknown>} params
+   */
   function track(name, params) {
     if (loaded && w.gtag) w.gtag('event', name, params)
+    else if (choice() !== 'denied' && queue.length < 50) queue.push([name, params])
   }
 
   if (id && !w.lock21Analytics) {
@@ -128,10 +139,45 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
       const file = url.pathname.split('/').pop() ?? ''
       track('file_download', { file_name: file, file_extension: file.split('.').pop() ?? '', link_url: url.href })
     })
-    // Augmented reality, launched from the viewer (iframe of /modele/)
+    // The site's own actions, read from the page (delegated: they survive the client-side navigations)
+    // - search: a result opened (the text searched); menu_open: the ☰ menu opened; select_content: a home card, the
+    //   « Modèle 3D » pill, the home page's buttons, a figure enlarged (image-zoom.js)
+    document.addEventListener('click', (event) => {
+      const target = /** @type {Element | null} */ (event.target)
+      const result = target?.closest?.('site-search a[href]')
+      if (result) {
+        const input = /** @type {HTMLInputElement | null} */ (document.querySelector('site-search input'))
+        track('search', { search_term: input?.value.trim() ?? '' })
+        return
+      }
+      const menu = target?.closest?.('[popovertarget="starlight__sidebar"]')
+      if (menu && !document.getElementById('starlight__sidebar')?.matches(':popover-open')) {
+        track('menu_open', {})
+        return
+      }
+      const content = /** @type {HTMLElement | null | undefined} */ (target?.closest?.('[data-track-content]'))
+      if (content) {
+        track('select_content', { content_type: content.dataset.trackContent ?? '', item_id: content.dataset.trackId ?? content.getAttribute('href') ?? '' })
+        return
+      }
+      const figure = /** @type {HTMLImageElement | null | undefined} */ (target?.closest?.('.sl-markdown-content figure img'))
+      if (figure) track('select_content', { content_type: 'image_zoom', item_id: figure.currentSrc.split('/').pop() ?? '' })
+    }, { capture: true })
+    // theme_change, language_change: the footer's selects (Starlight's)
+    document.addEventListener('change', (event) => {
+      const select = /** @type {HTMLSelectElement | null} */ (event.target)
+      if (select?.closest?.('starlight-theme-select')) track('theme_change', { theme: select.value })
+      else if (select?.closest?.('starlight-lang-select')) track('language_change', { language: select.value.startsWith('/en') ? 'en' : 'fr' })
+    })
+    // The other actions, sent by a script of the site (l21:track: /modele's time per mode)
+    document.addEventListener('l21:track', (event) => {
+      const { name, params } = /** @type {CustomEvent<{ name: string, params?: Record<string, unknown> }>} */ (event).detail ?? {}
+      if (typeof name === 'string') track(name, params ?? {})
+    })
+    // The 3D viewer's actions (iframe of /modele, viewer/src/analytics.js)
     window.addEventListener('message', (event) => {
-      if (event.origin !== location.origin || event.data?.type !== 'lock21:ar') return
-      track('ar_launch', { ar_size: event.data.size === 'full' ? 'full' : 'table' })
+      if (event.origin !== location.origin || event.data?.type !== 'lock21:track' || typeof event.data.name !== 'string') return
+      track(event.data.name, event.data.params ?? {})
     })
   }
 </script>
