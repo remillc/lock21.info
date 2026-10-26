@@ -18,6 +18,7 @@
 // forgetSettings). Saved at every change, cleared by "Réinitialiser"; unavailable storage (private browsing,
 // blocked site data) only means nothing is kept.
 import { t } from './i18n.js'
+import { icon } from './icons.js'
 
 const STORAGE_KEY = 'l21-viewer-settings'
 
@@ -196,8 +197,8 @@ class SettingsPanel extends HTMLElement {
     close.type = 'button'
     close.className = 'settings-close'
     close.setAttribute('aria-label', t('settingsClose'))
-    // Material Symbols « close »
-    close.innerHTML = '<svg aria-hidden="true" width="24" height="24" viewBox="0 -960 960 960" fill="currentColor"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>'
+    // Material Symbols Rounded « close »
+    close.innerHTML = icon('close-rounded')
     close.addEventListener('click', () => this.toggle(false))
     head.append(title, close)
     this.append(head)

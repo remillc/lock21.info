@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import Icons from 'unplugin-icons/vite'
 
 // Dev and preview servers: the viewer's address is /modele/viewer (no final slash), as on the hosting. Vite only
 // serves its index.html at the base (/modele/viewer/): the address is passed on as that, without a redirect. The
@@ -24,5 +25,6 @@ export default defineConfig({
   // the dev server (http://localhost:3100/modele/viewer), so the site's dev server can forward that path to it.
   base: '/modele/viewer/',
   server: { host: true },
-  plugins: [viewerAddress],
+  // Icons by name (src/icons.js: ~icons/material-symbols/…?raw), compiled into SVG strings, only those imported
+  plugins: [viewerAddress, Icons({ compiler: 'raw' })],
 })

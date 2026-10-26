@@ -33,6 +33,10 @@ import { homePath, t } from './i18n.js'
 import { createTour } from './tour.js'
 import { createPointerOrbit } from './pointer-orbit.js'
 import { TOUR_STEPS } from './tour-steps.js'
+import { fillIcons, icon } from './icons.js'
+
+// The page's icons, by name (icons.js: index.html's placeholders filled before anything reads the buttons)
+fillIcons()
 
 // 3d-tiles-renderer warns, for each tileset, that version 1.1 has limited support: our tiles declare 1.1 (needed for
 // their .glb content) and use none of the features it lacks. That one message only is silenced (12 lines a visit)
@@ -1759,7 +1763,7 @@ if (compareUrl) {
   group.className = 'compare'
   group.setAttribute('role', 'group')
   group.setAttribute('aria-label', t('compare'))
-  const check = '<svg aria-hidden="true" width="18" height="18" viewBox="0 -960 960 960" fill="currentColor"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>'
+  const check = icon('check-rounded', 18)
   const buttons = sources.map(([label, url]) => {
     const button = group.appendChild(document.createElement('button'))
     button.type = 'button'

@@ -96,7 +96,7 @@ The 3D viewer uses the same fonts (`viewer/src/main.js` imports them) and the da
   controls `not-allowed`. On the site and in the 3D viewer alike.
 - **Buttons are always MD3-compliant** (Christian, 2026-10-22), on the site and in the 3D viewer alike: an MD3 button
   type (filled, filled tonal, outlined, text, or icon button), its sizes (an icon button: 40 dp container in a 48 dp
-  touch target; a button: 40 dp high, full corners), **Material Symbols** icons at 24 dp (never a text character
+  touch target; a button: 40 dp high, full corners), **Material Symbols Rounded** icons at 24 dp (never a text character
   such as "×" for an icon), the state layers and focus ring below, and a selected state for toggles. Over the 3D
   view: filled tonal icon buttons (`viewer/src/style.css`, `.icon-button`). The 48 dp touch target around a 40 dp
   button: a 4 px transparent border with `background-clip: padding-box` (its colour and state layers inside it), or a
@@ -120,6 +120,12 @@ The 3D viewer uses the same fonts (`viewer/src/main.js` imports them) and the da
   over `duration.long1` (450 ms), `easing.emphasized` `cubic-bezier(0.2, 0, 0, 1)`: the old content fades out over the
   first 35 %, then the new one fades in while growing from 92 %, without overlap. The header and the sidebar change
   without moving. Tokens in `tokens.scss`, styles in `custom.scss`.
+
+**Icons by name, never pasted** (2026-10-26): Material Symbols Rounded from Iconify's set (`@iconify-json/material-symbols`,
+a dev dependency in the site and the viewer: `npm update` follows Google's drawings). The site: `<Icon name="material-symbols:home-outline-rounded" />`
+(astro-icon; a name built at run time must be listed in `astro.config.mjs`, `icon({ include })`). The viewer: `viewer/src/icons.js`
+imports each icon it uses (unplugin-icons, `vite.config.js`); `index.html` holds placeholders, `<svg data-icon="…">`,
+filled at start, and scripts call `icon(name, size)`. Outline icons take `-outline-rounded`, filled ones `-rounded`.
 
 ## Components
 
