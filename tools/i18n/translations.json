@@ -11,8 +11,8 @@
       "recorded": "2026-10-26"
     },
     "collecte/journal-plongees.mdx": {
-      "source": "f9675275fa140e3e5f1184f885eb54e600fdf4ff",
-      "commit": "b8a85d0",
+      "source": "8023a91251ef03fc127231bf0018c57115827259",
+      "commit": "27ab564",
       "recorded": "2026-10-26"
     },
     "collecte/materiel-utilise.md": {
@@ -36,8 +36,8 @@
       "recorded": "2026-10-26"
     },
     "decoupage-site.mdx": {
-      "source": "8ff2d6d49cb8b1fd3d85867cbcefd4d66a03e9fd",
-      "commit": "fdcbece",
+      "source": "20704d3b38b18da80548045b66c25716d4fbb487",
+      "commit": "27ab564",
       "recorded": "2026-10-26"
     },
     "index.mdx": {
@@ -56,28 +56,28 @@
       "recorded": "2026-10-26"
     },
     "problemes/calibration-couleurs.md": {
-      "source": "b713e954cf17fb86b895fa3d8602eb464d7dcb30",
-      "commit": "9d608a8",
-      "recorded": "2026-10-21"
+      "source": "3538cb662e432a6f82ee02b696656b6faa1690db",
+      "commit": "27ab564",
+      "recorded": "2026-10-26"
     },
     "problemes/charte-couleurs-surexposee.md": {
-      "source": "9cee57ff84b473a0af8c202560077c81c20d5535",
-      "commit": "fdcbece",
+      "source": "bb3dd11058da78e096a2311812a661d526da52b9",
+      "commit": "27ab564",
       "recorded": "2026-10-26"
     },
     "problemes/dimensions-rig.md": {
-      "source": "2051a3c361e0bfa559d9cce0c409442f6b18a7c8",
-      "commit": "fdcbece",
+      "source": "e09b235b2cb42b9148f090c24b4e6ab18ce07eec",
+      "commit": "27ab564",
       "recorded": "2026-10-26"
     },
     "problemes/effet-banane.md": {
-      "source": "b62b6cae7d84acee5c70cb8da2663bc913742341",
-      "commit": "a69e518",
+      "source": "da8b98b80573398788d8e47520464c50ce3cfd6c",
+      "commit": "27ab564",
       "recorded": "2026-10-26"
     },
     "problemes/fort-courant-canal.md": {
-      "source": "0f6e2599670af050bad78b37ee8a290405ad75d9",
-      "commit": "14f96b1",
+      "source": "5919b719e62a2df92354fd9f47fa1e9f59d01b81",
+      "commit": "27ab564",
       "recorded": "2026-10-26"
     },
     "problemes/index.md": {
@@ -86,8 +86,8 @@
       "recorded": "2026-10-26"
     },
     "problemes/nettete-images.md": {
-      "source": "11d390a9e6748707b634785531704b50d720b65c",
-      "commit": "2affc36",
+      "source": "012903db32c77c63fc8a85710db26a1e0bc25daf",
+      "commit": "27ab564",
       "recorded": "2026-10-26"
     },
     "remerciements.md": {

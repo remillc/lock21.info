@@ -1,5 +1,6 @@
 ---
 title: Netteté des images
+description: "Pourquoi les premières images filmées en mouvement étaient floues : la caméra, l'eau, l'éclairage et les réglages, dont la vitesse d'obturation et l'ISO."
 ---
 Les premières prises de vues avec la caméra GoPro Hero 6 Black montrent des images capturées en mouvement qui sont floues et manquent de détails.
 

@@ -1,5 +1,6 @@
 ---
 title: The colour chart is overexposed
+description: "Filmed at 60 cm, the colour chart came out overexposed, the light background throwing the exposure off: the fix, shooting it one stop under."
 ---
 When shooting the colour chart from the same distance as during data collection, about 60cm, the chart takes up a very small part of the lens's field of view. Since the floor around the chart is much darker than the chart itself, the camera overexposes the chart.
 

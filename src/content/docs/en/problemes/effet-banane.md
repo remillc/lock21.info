@@ -1,5 +1,6 @@
 ---
 title: Banana effect
+description: "Why a flat 100-foot floor came out of Metashape bent like a banana: the GoPro's wide-angle lens, and the leads for fixing it."
 ---
 A test on a flat surface 100 feet long shows that the model produced by aligning the cameras in the photogrammetry software is distorted. Instead of a flat surface, it comes out bent like a banana.
 

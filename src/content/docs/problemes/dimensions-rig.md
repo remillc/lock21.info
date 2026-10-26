@@ -1,5 +1,6 @@
 ---
 title: Dimensions du rig de caméra
+description: "Le champ de vision de la GoPro mesuré au sol à 70 cm et les angles de vue de sa lentille, pour dimensionner le rig et placer ses lampes."
 ---
 ## Champs de vision de la lentille
 
