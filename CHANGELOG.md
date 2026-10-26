@@ -4,6 +4,7 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Lightbox: the next and previous figures are loaded ahead (widest size), so changing figure doesn't wait.
 - Lightbox: as it opens, the scrim from 0 to 300 ms, the image, its caption and its buttons from 100 to 400 ms.
 - Lightbox: the page behind no longer scrolls while it is open.
 - Images in several sizes (Astro's responsive images): the page loads what its column needs, the lightbox the widest;

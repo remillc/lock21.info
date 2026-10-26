@@ -64,6 +64,21 @@ class ImageZoom extends HTMLElement {
       const id = img.closest('figure')?.id || `fig-${String(index + 1).padStart(2, '0')}`
       history.replaceState(history.state, '', `${location.pathname}${location.search}#${id}`)
     }
+    // The next and previous figures, widest size, loaded and decoded ahead (the page's images are lazy): changing
+    // figure then waits for no download (Christian, 2026-10-26)
+    const preloaded = new Map()
+    const preloadAround = () => {
+      if (images.length < 2) return
+      for (const step of [1, -1]) {
+        const url = widest(images[(index + step + images.length) % images.length])
+        if (preloaded.has(url)) continue
+        const ahead = new Image()
+        ahead.decoding = 'async'
+        ahead.src = url
+        ahead.decode().catch(() => {})
+        preloaded.set(url, ahead)
+      }
+    }
     const ready = () => big.decode().catch(() => {}).then(() => dialog.classList.toggle('zoomable', zoomable()))
     /** The widest of the image's sizes (srcset, Astro's responsive images): the lightbox shows as many pixels as it has */
     const widest = (img) => {
@@ -142,6 +157,7 @@ class ImageZoom extends HTMLElement {
       images = [...document.querySelectorAll(FIGURES)]
       if (!images.length || dialog.open) return
       fill(i)
+      preloadAround()
       busy = true
       big.style.visibility = 'hidden'
       // The scrim from 0 to 300 ms, the image, its caption and buttons from 100 to 400 ms (Christian, 2026-10-26)
@@ -186,13 +202,17 @@ class ImageZoom extends HTMLElement {
     /** The next (+1) or previous (-1) figure: out to one side, in from the other */
     const go = async (step) => {
       if (busy || images.length < 2) return
-      if (reduce.matches) return fill(index + step)
+      if (reduce.matches) {
+        fill(index + step)
+        return preloadAround()
+      }
       busy = true
       const shift = 30 * step
       const out = figure.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translateX(${-shift}px)` }],
         { duration: 90, easing: ACCELERATE, fill: 'forwards' })
       await out.finished.catch(() => {})
       fill(index + step)
+      preloadAround()
       await ready()
       figure.animate([{ opacity: 0, transform: `translateX(${shift}px)` }, { opacity: 1, transform: 'none' }], { duration: 210, easing: DECELERATE })
       out.cancel()
