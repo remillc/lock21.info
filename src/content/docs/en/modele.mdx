@@ -1,6 +1,15 @@
 ---
 title: 3D model
 description: The photogrammetric 3D model of Lock 21, to explore in the browser, full screen if you like
+# The <title> and og:title, with place and topic words (SEO audit S2, docs/audits/seo-2026-10-26.md); the menu keeps
+# the title above
+head:
+  - tag: title
+    content: "3D model of Lock 21 | Lock 21"
+  - tag: meta
+    attrs:
+      property: og:title
+      content: "3D model of Lock 21 | Lock 21"
 template: splash
 ---
 import ModelPage from '../../../components/model/ModelPage.astro'

@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- SEO (audit S2): the home page's title names the place and the topic, « Écluse 21 (Lock 21) : plongée et modèle 3D,
+  Long Sault » / “Lock 21, Long Sault: dive site and 3D model”, and the model page's matches its heading, « Modèle 3D de
+  l'écluse 21 » / “3D model of Lock 21” (`head` in their frontmatter; the menu and the headings unchanged).
 - SEO (audit `docs/audits/seo-2026-10-26.md`, S3, S6, S7, S8, S13, S16): a share image for every page
   (`public/images/og-lock21.jpg`), `og:locale` `fr_CA` / `en_CA`, no site-wide description any more (a page has its
   own or none, and the search engine quotes its text), structured data (the site and its author on the home pages, the 3D model on `/modele`),
