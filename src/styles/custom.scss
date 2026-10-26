@@ -299,10 +299,78 @@
     color: var(--md-sys-color-tertiary-text);
   }
 
+  // As in the mock-up: the text, headings, chips and paired photos in a column set in from both sides (up to 6rem,
+  // less on narrow columns), the wide photos across the whole column; the title tight above the lead, without the line
+  // between Starlight's two panels; text 1rem/1.65, 1.5rem between blocks, 3rem above a section heading
+  main:has(.l21-eyebrow) {
+    --l21-inset: max(0px, min(6rem, (100% - 36rem) / 2));
+
+    .content-panel:has(.l21-eyebrow) {
+      padding-bottom: 0;
+
+      .sl-container > * {
+        margin-inline: var(--l21-inset);
+      }
+
+      h1 {
+        font: 800 clamp(2.4rem, 6vw, 3.4rem) / 1.05 var(--l21-font-text);
+        letter-spacing: -0.02em;
+        text-wrap: balance;
+      }
+
+      .l21-eyebrow {
+        margin-bottom: 0.9rem;
+      }
+    }
+
+    .content-panel:has(.l21-eyebrow) + .content-panel {
+      padding-top: 0.9rem;
+      border-top: 0;
+    }
+  }
+
   main:has(.l21-eyebrow) .sl-markdown-content {
+    font-size: 1rem;
+    line-height: 1.65;
+
+    > :not(.figure-wide) {
+      margin-inline: var(--l21-inset);
+    }
+
+    > * + * {
+      margin-top: 1.5rem;
+    }
+
+    > .sl-heading-wrapper.level-h2 {
+      margin-top: 3rem;
+    }
+
+    h2 {
+      font: 800 1.7rem / 1.15 var(--l21-font-text);
+    }
+
     > p:first-child {
       font-size: 1.15rem;
       color: var(--md-sys-color-on-surface-variant);
+    }
+
+    figcaption {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.2rem 0.6rem;
+
+      &::before,
+      time {
+        margin-inline-end: 0;
+      }
+    }
+
+    // Paired photos the same shape, side by side
+    .figure-grid img {
+      width: 100%;
+      max-height: none;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
     }
 
     // The number in front, the heading staying inline (Starlight puts its anchor link in the line's end padding)
