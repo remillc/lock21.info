@@ -22,10 +22,10 @@ The content stays a first-person field notebook.
 ## Look (E2)
 
 - **Underwater instrument**: the page reads like a dive computer and a survey log. Dark olive bars (header, footer),
-  monospace data, a **depth gauge** (0 to 55 ft) down the left side of the content, an **instrument panel** with the key
+  monospace data, a **depth gauge** (0 to 60 ft) down the left side of the content, an **instrument panel** with the key
   numbers (bottom depth, dives, time underwater, zones online, latest zone).
 - **Strong outlines**: 2 px outlines on cards, frames and tables; rounded corners throughout.
-- **One signal colour**, orange, used sparingly: the 3D model button, the bottom depth (55 ft).
+- **One signal colour**, orange, used sparingly: the 3D model button, the bottom depth (60 ft).
 - **The 3D model is the centrepiece**: a framed render under the hero, labelled with its numbers.
 - Readable first: the instrument feel lives in the frame and the data, never at the expense of long text.
 - Light and dark follow the visitor's device, with a switch. The instrument panel stays dark in both (MD3 inverse
@@ -177,7 +177,7 @@ The 3D viewer is a separate app with no theme to fight; its own stack, planned (
 ## Components
 
 - **Header**: dark olive bar, `LOCK/21`, place line, navigation (Site, Méthode, Histoire, Journal), "Modèle 3D" pill.
-- **Depth gauge**: left column of the home page, 0 / 15 / 30 / 45 / 55 ft, the last in the signal colour; hidden on
+- **Depth gauge**: left column of the home page, 0 / 15 / 30 / 45 / 60 ft, the last in the signal colour; hidden on
   phones. On interior pages it runs along the navigation column's left edge, marks in proportion to depth, on screens
   wide enough for its labels.
 - **Instrument panel**: bottom depth (ft and m), dives, time underwater, zones online, latest zone; values from the
