@@ -29,4 +29,6 @@ régler. Certaines pages sont encore des notes de travail.
 - [Effet de banane](/problemes/effet-banane) : un plancher plat de 100 pieds sortait courbé en forme de banane après
   l'alignement dans Metashape. La cause présumée : la déformation de la lentille grand angle de la GoPro. Les pistes :
   calibrer la caméra, rogner les bords des images, une lentille moins grand angle.
-- [Alignement de chunks](/problemes/alignement-chunks) : page à venir.
+- [Alignement de chunks](/problemes/alignement-chunks) : chaque modèle de zone sort un peu déformé, ce qui les
+  rend difficiles à aligner entre eux. Des cibles donnent à chacun sa taille réelle ; la déformation n'est pas encore
+  entièrement réglée.
