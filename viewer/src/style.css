@@ -387,8 +387,9 @@ l21-loading.error .loading-label {
    on theirs; the row below keeps the lamp and the buttons, so the tour's card has room on its left */
 @media (orientation: landscape) and (hover: none) {
   /* The compass on the same left edge as the tour's card (Christian, 2026-10-26), not the notch's inset: the notch
-     sits at the middle of that edge, the compass at the top */
-  .compass {
+     sits at the middle of that edge, the compass at the top. (html: before .compass's own rule in this file, the same
+     specificity lost to it) */
+  html .compass {
     left: 12px;
   }
   /* The slider's thumb easier to catch: its input 48 dp high (MD3 touch target), past the pill's 40 */
