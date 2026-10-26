@@ -5,7 +5,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 ## Unreleased
 
 - /modele: « Navigating » shorter (Christian, 2026-10-26: too much text, too little space): a table of the visitor's own
-  gestures (the mouse and keys on a computer, the fingers on a phone or tablet), the keys as key caps, then the
+  gestures (the mouse and keys on a computer, the fingers on a phone or tablet), one row per move key with its letter
+  and its arrow as key caps, then the
   viewer's buttons by their own icons with a few words; the full-screen and long underwater explanations dropped.
 - /modele: the Google Earth Web steps behind an MD3 text button (a Rounded « expand_more » icon that turns over, state
   layers, 48 dp target), unfolding and folding with MD3 motion (400 ms in, 200 ms out; none with reduced motion).

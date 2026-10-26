@@ -59,9 +59,14 @@ const t = en
         ['Zoom', 'wheel', 'pinch'],
         ['Fly to a point', 'double-click', 'double-tap'],
       ],
-      keysAction: 'Move',
-      keysOr: 'or the arrows',
-      keysFaster: 'faster',
+      moveKeys: [
+        ['Forward', ['W', '↑']],
+        ['Back', ['S', '↓']],
+        ['Left', ['A', '←']],
+        ['Right', ['D', '→']],
+        ['Faster', ['Shift']],
+      ],
+      keysOr: 'or',
       buttons: [
         ['home', 'Start view'],
         ['underwater', 'Dive and swim (help opens the first time)'],
@@ -128,9 +133,14 @@ const t = en
         ['Zoomer', 'molette', 'pincer'],
         ["S'approcher d'un point", 'double-clic', 'double-toucher'],
       ],
-      keysAction: 'Avancer, reculer',
-      keysOr: 'ou les flèches',
-      keysFaster: 'plus vite',
+      moveKeys: [
+        ['Avancer', ['W', '↑']],
+        ['Reculer', ['S', '↓']],
+        ['À gauche', ['A', '←']],
+        ['À droite', ['D', '→']],
+        ['Plus vite', ['Maj']],
+      ],
+      keysOr: 'ou',
       buttons: [
         ['home', 'Vue de départ'],
         ['underwater', "Plonger et nager (l'aide s'ouvre la première fois)"],
@@ -259,11 +269,14 @@ const updated = zones.updated
           {t.gestures.map(([action, mouse, fingers]) => (
             <tr><th scope="row">{action}</th><td class="fine">{mouse}</td><td class="coarse">{fingers}</td></tr>
           ))}
-          <!-- The keys, in the table (Christian, 2026-10-26): the mouse's column, a computer only -->
-          <tr class="fine">
-            <th scope="row">{t.keysAction}</th>
-            <td><kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> {t.keysOr}, <kbd>Shift</kbd> {t.keysFaster}</td>
-          </tr>
+          <!-- The keys, in the table, one move a row, its letter and its arrow (Christian, 2026-10-26): the mouse's
+               column, a computer only -->
+          {t.moveKeys.map(([action, keys]) => (
+            <tr class="fine">
+              <th scope="row">{action}</th>
+              <td>{keys.map((key, i) => (<>{i > 0 && ` ${t.keysOr} `}<kbd>{key}</kbd></>))}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
       <ul class="buttons">
