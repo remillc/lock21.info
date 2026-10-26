@@ -139,7 +139,7 @@ if (document.fullscreenEnabled) {
 const AR_URL = import.meta.env.VITE_AR_URL || 'https://tiles.lock21.info/downloads/ar'
 // Version of the AR files, in their address: the server and the phones keep them an hour, so a rebuild (same names)
 // would otherwise show up late. Change it after each upload of rebuilt AR files (docs/augmented-reality.md)
-const AR_VERSION = '2026-10-23'
+const AR_VERSION = '2026-10-26'
 // ?ar=full: the lock at its real size (70 m) instead of on a table (the /modele/ page's "Taille réelle" QR code and link)
 const arFull = params.get('ar') === 'full'
 const arName = arFull ? 'lock-21-ar-full' : 'lock-21-ar'

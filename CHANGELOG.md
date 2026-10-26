@@ -4,6 +4,11 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Augmented reality: the models rebuilt with zone 7 as now published (both at 1:100 and full size; `AR_VERSION`
+  2026-10-26, so phones fetch them again).
+- `check_model.mjs` checks a model's size on the site's scale (the 1:100 augmented reality model was « too small »).
+- TODO #25 removed (the zones' wetness in the manifest: no wet look any more).
+
 ## 0.16.0 - 2026-10-25
 
 - 3D viewer, underwater: many more particles in spring (800 per m³, was 300; up to 250,000 drawn, 40 % of that on a
