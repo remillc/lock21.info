@@ -395,6 +395,11 @@
   // The lightbox (public/scripts/image-zoom.js): the image as large as the screen allows over a near-black scrim, its
   // caption below in the figures' mono, a counter, MD3 icon buttons (✕ top right, ‹ › on the sides: 40 dp in a 48 dp
   // target, white on the scrim, state layers), MD3 motion (enter 400 ms decelerate, exit 200 ms accelerate)
+  // The page behind stays still while the lightbox is open (the wheel no longer scrolls it under the image)
+  html:has(dialog.lightbox[open]) {
+    overflow: hidden;
+  }
+
   dialog.lightbox {
     width: 100vw;
     max-width: none;
