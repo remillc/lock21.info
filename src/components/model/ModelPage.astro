@@ -92,6 +92,7 @@ const t = en
       gewGrounding: 'Grounding',
       gewRelative: 'Relative to ground',
       gewHeading: 'Heading',
+      gewView: 'Or see it already in place, with nothing to download, in',
       arTitle: 'Augmented reality',
       arText: 'Place the lock in front of you with a phone or a tablet: on a table, at 1:100 (70 cm), or at its real size (70 m), in a large open space.',
       table: 'On a table',
@@ -165,6 +166,7 @@ const t = en
       gewGrounding: 'Surface de référence',
       gewRelative: 'Par rapport au sol',
       gewHeading: 'Orientation',
+      gewView: 'Ou voyez-le déjà en place, sans rien télécharger, dans',
       arTitle: 'Réalité augmentée',
       arText: "Posez l'écluse devant vous avec un téléphone ou une tablette: sur une table, au 1:100 (70 cm), ou à sa taille réelle (70 m), dans un grand espace dégagé.",
       table: 'Sur une table',
@@ -359,7 +361,9 @@ const updated = zones.updated
             </details>
           </li>
         </ul>
-    
+        <p class="gew-view">
+          {t.gewView} <a href={site.downloads.googleEarthWeb}>Google Earth Web</a>.
+        </p>
       </section>
 
       <section>
@@ -713,6 +717,11 @@ const updated = zones.updated
       font-size: 0.75rem;
       font-weight: 500;
       opacity: 0.75;
+    }
+    .gew-view {
+      margin: 0 0 0.75rem;
+      font-size: 0.875rem;
+      color: var(--md-sys-color-on-surface-variant);
     }
     .downloads p {
       margin: 0.5rem 0 0;

@@ -4,6 +4,8 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- /modele: under the downloads, a short line linking to the model already placed in Google Earth Web (a project
+  shared by Christian), nothing to download.
 - CSS cascade layers on the site (docs/system-design.md, CSS layers): `starlight`, then `l21.tokens`, `l21.base`,
   `l21.layout`, `l21.components`, `l21.utilities`, declared first in `tokens.scss`; every component's `<style>` in its
   layer. Starlight's few unlayered rules are overridden outside the layers (the splash pages' content width). Two
