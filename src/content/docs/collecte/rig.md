@@ -74,7 +74,8 @@ caméra](/problemes/dimensions-rig).
 <figcaption><time datetime="2024-05-16">2024-05-16</time>Les lampes, les flotteurs et la GoPro dans son boîtier</figcaption>
 </figure>
 
-*(à compléter : le modèle des lampes, leur nombre et leur puissance.)*
+Quatre lampes de plongée SecurityIng, une à chaque coin du cadre : 10 DEL blanches (6000 K), 4 rouges et 4 bleues, un
+faisceau de 120°, quatre piles 18650. Intensité : 12 000 lumens annoncés par le vendeur.
 
 ## Le scooter
 
