@@ -4,6 +4,9 @@ Versions follow [semantic versioning](https://semver.org/) (major.minor.patch), 
 
 ## Unreleased
 
+- Performance: the first image of a notebook page loads at once and first (it was lazy, and the page's largest
+  element), and every content image tells the browser its column's width (`sizes`), so a smaller file is chosen
+  (`src/integrations/content-images.mjs`).
 - Lightbox: the next and previous figures are loaded ahead (widest size), so changing figure doesn't wait.
 - Lightbox: as it opens, the scrim from 0 to 300 ms, the image, its caption and its buttons from 100 to 400 ms.
 - Lightbox: the page behind no longer scrolls while it is open.

@@ -10,6 +10,7 @@ import homeSlash from './src/integrations/home-slash.mjs'
 import englishPaths from './src/integrations/english-paths.mjs'
 import footnoteLabels from './src/integrations/footnote-labels.mjs'
 import placeholderMarks from './src/integrations/placeholder-marks.mjs'
+import contentImages from './src/integrations/content-images.mjs'
 
 // Dev server only: /modele/viewer (embedded by the /modele page) is forwarded to the viewer's own dev server
 // (npm run viewer:dev, port 3100, same path), so the page shows the viewer's source and reloads with it, websocket
@@ -133,6 +134,8 @@ export default defineConfig({
         // tests/ stays out of the sidebar, as before
       ],
     }),
+    // The notebook's images: sizes for the content column, the first one loaded first (content-images.mjs)
+    contentImages(),
     // After Starlight (and its search index): / and /en/ for the home pages
     homeSlash(),
     // Then the English pages at their English addresses, and the search index rebuilt (TODO #63)
