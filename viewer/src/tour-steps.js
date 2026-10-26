@@ -184,8 +184,9 @@ export const TOUR_STEPS = [
     looks: [[-93.88, 3.22, -3.55], [-93.88, 3.22, -3.55], [-93.88, 3.22, -3.55], [-93.88, 3.22, -3.55], [-93.88, 3.22, -3.55],
       [-93.88, 3.22, -3.55], [-93.88, 3.22, -3.55], [-93.88, 3.22, -3.55]],
     turnFirst: 1.5,
-    paces: [2.5, 5, 5, 5, 5, 5, 4, 2, 1.2],
-    accel: 1.5,
+    // (25 % faster: Christian, 2026-10-26; was 2.5, 5, 5, 5, 5, 5, 4, 2, 1.2 at 1.5 m/s²)
+    paces: [3.1, 6.25, 6.25, 6.25, 6.25, 6.25, 5, 2.5, 1.5],
+    accel: 1.9,
     title: { fr: 'La zone 18', en: 'Zone 18' },
     text: {
       fr: 'Dernier arrêt: le bloc de la zone 18, à l’ouest, et l’écluse au loin. Le relevé continue: les volumes violets sont les zones pas encore numérisées.',
