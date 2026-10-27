@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#100**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#101**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -66,6 +66,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   keyboard, 320 px reflow, text spacing) and the code issues fixed. Left: the Markdown tables' empty header cells
   (14 pages: name the column, or no header row), the heading levels of `problemes/nettete-images` (and its English
   page), a check with a real screen reader (NVDA, VoiceOver) and Windows' high contrast mode
+- [ ] #100 Figure captions (Christian, 2026-10-27): side margins tied to the corner radius of the figure above, so
+  the caption text lines up inside the image's rounded corners instead of the column's edges (e.g.
+  `traitement/extraction-photos`, fig. 2, « Chevauchement latéral »)
 - [ ] #39 Design: applied (tokens, fonts, header and footer bars, home page, logo, tables, the 3D viewer's fonts and
   colours); to do: check contrast (WCAG AA) in both themes
 - [ ] #48 Guided tour (src/viewer/tour.js, tour-steps.js; 8 steps, Christian's views and moves, 2026-10-24): the texts
