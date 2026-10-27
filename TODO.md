@@ -50,7 +50,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 - [ ] #21 Relief: fold the relief steps (`relief_zones.ps1`) into `publish_zones.ps1`, so that one command republishes a
   zone with its relief
-- [ ] #26 Move the viewer's shader patches to three-custom-shader-material (CSM) if the relief is kept
 
 ### Virtual reality (idea)
 

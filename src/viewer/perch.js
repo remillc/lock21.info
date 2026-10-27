@@ -17,6 +17,7 @@
 // frame); the diver closer than SHY m sends the fish away from them, faster.
 import * as THREE from 'three'
 import SHAPE from './perch-shape.json'
+import { insertAt } from './shader-patch.js'
 
 const TEXTURE = `/viewer/creatures/perch.webp`
 // Its width against its depth (a perch is flattened from side to side)
@@ -171,7 +172,8 @@ export function createPerch({ mobile = false, prepare = (m) => m, floor = () => 
     // The swimming wave: the body sways sideways more toward the tail, the wave running down it (per fish: its phase,
     // its sway)
     material.onBeforeCompile = (shader) => {
-      shader.vertexShader = 'attribute vec2 aSwim;\nattribute vec4 aBend;\nattribute vec2 aFold;\n' + shader.vertexShader.replace('#include <begin_vertex>', /* glsl */ `
+      shader.vertexShader = 'attribute vec2 aSwim;\nattribute vec4 aBend;\nattribute vec2 aFold;\n' + shader.vertexShader
+      insertAt(shader, 'vertexShader', '#include <begin_vertex>', /* glsl */ `
         #include <begin_vertex>
         float swimS = 0.5 - position.z;
         // The spiny dorsal fin: folded back along the back at rest, raised by aBend.w
@@ -185,7 +187,7 @@ export function createPerch({ mobile = false, prepare = (m) => m, floor = () => 
         float bendA = swimS < ${PIVOT.toFixed(2)} ? mix(aBend.x, 0.0, swimS / ${PIVOT.toFixed(2)}) : swimS < 0.6 ? mix(0.0, aBend.y, (swimS - ${PIVOT.toFixed(2)}) / ${(0.6 - PIVOT).toFixed(2)}) : mix(aBend.y, aBend.z, (swimS - 0.6) / 0.4);
         float bendZ = transformed.z - ${(0.5 - PIVOT).toFixed(2)};
         transformed.xz = vec2(transformed.x * cos(bendA) + bendZ * sin(bendA), -transformed.x * sin(bendA) + bendZ * cos(bendA) + ${(0.5 - PIVOT).toFixed(2)});
-        transformed.x += aSwim.y * (0.15 + swimS * swimS) * sin(aSwim.x - swimS * 5.0);`)
+        transformed.x += aSwim.y * (0.15 + swimS * swimS) * sin(aSwim.x - swimS * 5.0);`, 'perch-swim')
     }
     material.customProgramCacheKey = () => 'perch'
     prepare(material)

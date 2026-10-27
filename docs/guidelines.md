@@ -76,6 +76,11 @@ content. Scripts must survive that:
 - Escape `<` and `>` in MDX prose.
 - Folder and file names in English (except existing French content slugs, kept to preserve the page addresses as
   much as practical; addresses may change while the site is not indexed).
+- Viewer shaders: the viewer's code goes into three.js's shaders at their `#include <…>` lines, always through
+  `insertAt` (`src/viewer/shader-patch.js`), which reports a hook that is gone (console « shader hook missing », and
+  telemetry) instead of failing silently. three.js is pinned to an exact version: before updating it, open `/modele`
+  (also `?underwater=1`) and look for that message (TODO #26, 2026-10-27; three-custom-shader-material was weighed
+  and not taken: the sun's shadow cascades patch the same materials).
 
 ## Code style
 
