@@ -24,6 +24,7 @@ import { createCrawfish } from './crawfish.js'
 import { createBass } from './bass.js'
 import { createDiverArm } from './diver-arm.js'
 import { createFishes } from './fishes.js'
+import { createPerch } from './perch.js'
 import { createDiveComputer } from './dive-computer.js'
 import { createTouchNav } from './touch-nav.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
@@ -1622,6 +1623,29 @@ const fishes = createFishes({
 })
 scene.add(fishes.object)
 if (import.meta.env.DEV) window.l21.fishes = fishes
+// Schools of young yellow perch (perch.js, TODO #68, Christian, 2026-10-27) where plants grow: over the filler of
+// zone 1 (« filler002 », under the zone) and the floor of zone 6 (its mockup); after the first view, once underwater
+const PERCH_SPOTS = [
+  { x: -29, z: -32, floor: 1 },
+  { x: -27.4, z: 8.6, floor: 0.3 },
+]
+const perch = createPerch({
+  spots: PERCH_SPOTS,
+  mobile,
+  when: afterFirstViewUnderwater,
+  prepare: prepareCreatureMaterial,
+  visibility: () => underwater.visibility,
+  pace: () => [0.4, 0.7, 1, 0.8][Math.round(look.season)] ?? 1,
+  floor: (point) => {
+    pickRay.set(point, DOWN)
+    pickRay.far = 30
+    const hit = pickRay.intersectObjects([...tilesets.map((tiles) => tiles.group), ...contextModels], true)[0]
+    pickRay.far = Infinity
+    return hit ? hit.point.y : null
+  },
+})
+scene.add(perch.object)
+if (import.meta.env.DEV) window.l21.perch = perch
 // The diver's arm and its light, while underwater with the light on: the beam starts at the drawn light
 // The dive computer on its wrist, a Perdix 3, its screen live (dive-computer.js, TODO #65)
 const diveComputer = createDiveComputer({ surfaceY: SURFACE_Y })
@@ -2243,6 +2267,7 @@ function renderLoop() {
   for (const crawfish of crawfishes) if (crawfish.update(camera, dt)) needsRender = true
   if (bass.update(camera, dt, underwater.on)) needsRender = true
   if (fishes.update(camera, dt, underwater.on)) needsRender = true
+  if (perch.update(camera, dt, underwater.on)) needsRender = true
   // The dive goes on while underwater (its time, depth, gas), the computer's screen redrawn once a second
   if (underwater.on) diveComputer.update(camera, dt)
   const loading = tilesets.some((t) => t.stats.queued + t.stats.downloading + t.stats.parsing > 0)
