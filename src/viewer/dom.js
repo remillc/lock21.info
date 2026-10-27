@@ -23,6 +23,10 @@ export function attach(shadow, element, { reset }) {
   launch.reset = reset
 }
 
+/** The viewer's lifetime, one per mount (main.js, mountViewer): every listener on the window, the document or the host
+ *  takes its signal, and dispose() aborts it, removing them all */
+export const life = { signal: /** @type {AbortSignal | undefined} */ (undefined) }
+
 /** The element an event started on, inside the shadow root too
  *  @param {Event} event */
 export const origin = (event) => /** @type {EventTarget | null} */ (event.composedPath?.()[0] ?? event.target)

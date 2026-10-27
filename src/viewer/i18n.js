@@ -9,7 +9,12 @@ import { overwriteGetLocale } from '../paraglide/runtime.js'
 /** @typedef {'fr' | 'en'} Lang */
 
 /** @type {Lang} */
-export const lang = document.documentElement.lang.toLowerCase().startsWith('en') ? 'en' : 'fr'
+export let lang = 'fr'
+/** The page's language, read again at each mount (from /modele to /en/modele without a reload) */
+export function readLang() {
+  lang = document.documentElement.lang.toLowerCase().startsWith('en') ? 'en' : 'fr'
+}
+readLang()
 
 // The texts are Paraglide JS messages, the site's (messages/site/fr.json, en.json, keys viewer_…; compiled by the
 // Vite plugin into src/paraglide/, gitignored): every message in the viewer's language. Import m from here, not from

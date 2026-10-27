@@ -20,6 +20,7 @@
 import { track } from './analytics.js'
 import { m } from './i18n.js'
 import { icon } from './icons.js'
+import { life } from './dom.js'
 
 const STORAGE_KEY = 'l21-viewer-settings'
 
@@ -138,7 +139,7 @@ class SettingsPanel extends HTMLElement {
     }, { passive: false })
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && !this.hidden) this.toggle(false)
-    })
+    }, { signal: life.signal })
   }
 
   // Keyboard focus follows the panel (accessibility audit, 2026-10-26): into its first control when it opens, back to

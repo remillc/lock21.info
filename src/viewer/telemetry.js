@@ -5,6 +5,7 @@
 // keeps it. No cookie, no identifier but a random session code, shown in the settings panel (⚙) so that a tester can
 // read it out and the logs be filtered on it (npx wrangler tail lock21-info --search <code>).
 // Development: printed in the console, not sent (the dev servers have no /api/log).
+import { life } from './dom.js'
 
 const ENDPOINT = '/api/log'
 // A session sends at most this many messages (a loop of errors must not flood the logs); the visit's end always goes
@@ -54,8 +55,9 @@ const errorText = (error) => ({ msg: String(error?.message ?? error).slice(0, 50
 
 /**
  * Starts the session: device facts, the previous visit's end, and the global error handlers
- * @returns {{ previousUnclosed: boolean }} whether the previous visit in this tab never closed (Safari's reload when
- *   memory runs out)
+ * @returns {{ previousUnclosed: boolean, end: () => void }} whether the previous visit in this tab never closed
+ *   (Safari's reload when memory runs out); end(): the visit's end, when the page closes or the viewer is taken down
+ *   (TODO #80: leaving /modele by the site's navigation)
  */
 export function startTelemetry({ renderer, mobile, embedded }) {
   const gl = renderer.getContext()
@@ -88,14 +90,14 @@ export function startTelemetry({ renderer, mobile, embedded }) {
 
   window.addEventListener('error', (event) => {
     log('error', { ...errorText(event.error ?? event.message), src: event.filename, line: event.lineno, col: event.colno })
-  })
-  window.addEventListener('unhandledrejection', (event) => log('rejection', errorText(event.reason)))
+  }, { signal: life.signal })
+  window.addEventListener('unhandledrejection', (event) => log('rejection', errorText(event.reason)), { signal: life.signal })
   renderer.domElement.addEventListener('webglcontextlost', () => log('webgl-lost'))
   renderer.domElement.addEventListener('webglcontextrestored', () => log('webgl-restored'))
 
   const started = performance.now()
   let ended = false
-  window.addEventListener('pagehide', () => {
+  const end = () => {
     try {
       sessionStorage.removeItem(ALIVE_KEY)
     } catch {
@@ -104,8 +106,9 @@ export function startTelemetry({ renderer, mobile, embedded }) {
     if (ended) return
     ended = true
     log('end', { duration: Math.round((performance.now() - started) / 1000), ...endFacts?.() })
-  })
-  return { previousUnclosed }
+  }
+  window.addEventListener('pagehide', end, { signal: life.signal })
+  return { previousUnclosed, end }
 }
 
 // Facts added to the 'end' message (tiles loaded, memory used), supplied by the viewer

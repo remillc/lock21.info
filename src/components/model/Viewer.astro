@@ -3,7 +3,8 @@
 // iframe of a separate app). Its controls in a shadow root (the stylesheet src/viewer/style.css kept apart from the
 // site's, and the site's from it), built from the <template> below as the element is inserted: on a full load as
 // after a client-side navigation (ClientRouter, Head.astro). Its code (src/viewer/main.js, three.js) is loaded then,
-// only on this page. The texts below are the French fallback: main.js sets them in the page's language.
+// only on this page, and set up (mountViewer); taken down again (dispose) when the visitor leaves the page. The texts
+// below are the French fallback: main.js sets them in the page's language.
 // Full screen on the element; where an element can't go full screen (iPhone), it fills the window instead (l21-fill).
 // It takes the keys only while it has the focus (a press on the model gives it): the page's arrows still scroll it.
 interface Props {
@@ -52,7 +53,7 @@ const { label } = Astro.props
       <a class="ar-button icon-button" rel="ar" aria-label="Voir en réalité augmentée" data-tooltip="Voir en réalité augmentée" hidden>
         <img data-icon="view-in-ar-outline-rounded" data-color="#ebede3" width="24" height="24" alt="" width="24" height="24" alt="" />
       </a>
-      <!-- Full screen (the site's /modele/ page embeds the viewer in an iframe with allow="fullscreen"); main.js sets
+      <!-- Full screen (main.js: the element, <l21-viewer>, or the whole window where it can't be); main.js sets
            data-full while full screen, which shows the exit icon -->
       <!-- Home (main.js): back to the start view, by a quick flight; between the full-screen and the underwater buttons
            (Christian, 2026-10-25). Material Symbols Rounded (src/icons.js) « home » -->
@@ -145,23 +146,32 @@ const { label } = Astro.props
   // 2026-10-23)
   let connectedBefore = false
   class Viewer extends HTMLElement {
-    connectedCallback() {
-      if (this.shadowRoot) return
-      // The viewer's code runs once per page load (its module, main.js): back on /modele by the router, the page is
-      // loaded again (TODO #80: until the viewer can be taken down and set up again)
-      if (connectedBefore) {
-        location.reload()
-        return
-      }
-      const reload = /** @type {PerformanceNavigationTiming | undefined} */ (performance.getEntriesByType('navigation')[0])?.type === 'reload'
+    /** @type {(() => void) | null} */
+    dispose = null
+    gone = false
+
+    async connectedCallback() {
+      this.gone = false
+      const reload = !connectedBefore && /** @type {PerformanceNavigationTiming | undefined} */ (performance.getEntriesByType('navigation')[0])?.type === 'reload'
       connectedBefore = true
-      const shadow = this.attachShadow({ mode: 'open' })
+      // Its shadow root, built again from the template at each insertion (a client-side navigation brings a new element)
+      const shadow = this.shadowRoot ?? this.attachShadow({ mode: 'open' })
       const style = document.createElement('style')
       style.textContent = css
       const template = /** @type {HTMLTemplateElement} */ (this.querySelector('template'))
-      shadow.append(style, template.content.cloneNode(true))
+      shadow.replaceChildren(style, template.content.cloneNode(true))
       attach(shadow, this, { reset: !reload })
-      import('../../viewer/main.js')
+      const { mountViewer } = await import('../../viewer/main.js')
+      // (left again before its code arrived)
+      if (this.gone) return
+      this.dispose = mountViewer()
+    }
+
+    // Leaving /modele by the site's navigation: the viewer taken down (its listeners, loop, tiles and WebGL)
+    disconnectedCallback() {
+      this.gone = true
+      this.dispose?.()
+      this.dispose = null
     }
   }
   customElements.define('l21-viewer', Viewer)

@@ -5,7 +5,7 @@
 // (navigator.keyboard.getLayoutMap). Outside the water (Christian, 2026-10-24), the same keys only: the orbit keeps the
 // mouse, and the keys move the camera and the orbit's centre together (main.js), faster the farther the camera is.
 import * as THREE from 'three'
-import { host, origin } from './dom.js'
+import { host, life, origin } from './dom.js'
 
 // Swimming speed (m/s), and with Shift; head turn per pixel dragged (radians); the head's pitch limit
 const SPEED = 1.2
@@ -61,10 +61,10 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
   const looker = new THREE.PerspectiveCamera()
   host.addEventListener('keydown', (event) => {
     if (event.key === 'Shift') fast = true
-  })
+  }, { signal: life.signal })
   window.addEventListener('keyup', (event) => {
     if (event.key === 'Shift') fast = false
-  })
+  }, { signal: life.signal })
 
   // Not while typing in the settings (text fields, sliders, selects)
   const typing = (event) => {
@@ -76,17 +76,17 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
     event.preventDefault()
     if (!held.has(event.code)) onKey?.(event.code, true)
     held.add(event.code)
-  })
+  }, { signal: life.signal })
   window.addEventListener('keyup', (event) => {
     if (!held.delete(event.code)) return
     onKey?.(event.code, false)
-  })
+  }, { signal: life.signal })
   // Keys released while the window lost the focus: forgotten
   window.addEventListener('blur', () => {
     fast = false
     for (const code of held) onKey?.(code, false)
     held.clear()
-  })
+  }, { signal: life.signal })
 
   element.addEventListener('pointerdown', (event) => {
     if (!active || !looking || event.button !== 0) return

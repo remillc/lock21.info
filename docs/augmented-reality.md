@@ -100,16 +100,16 @@ depuis l'ordinateur.
    administrateur):
 
    ```powershell
-   New-NetFirewallRule -DisplayName "lock21 dev (3100, 8084, 8086)" -Direction Inbound -Protocol TCP -LocalPort 3100,8084,8086 -RemoteAddress LocalSubnet -Action Allow -Profile Any
+   New-NetFirewallRule -DisplayName "lock21 dev (4321, 8084, 8086)" -Direction Inbound -Protocol TCP -LocalPort 4321,8084,8086 -RemoteAddress LocalSubnet -Action Allow -Profile Any
    ```
 
-3. Lancer le visualiseur (`npm run viewer:dev`) et un serveur de tuiles visible sur le réseau:
+3. Lancer le site visible sur le réseau (`npm run dev -- --host`) et un serveur de tuiles visible sur le réseau aussi:
 
    ```powershell
    .\tools\publish-model\serve-tiles.ps1 -TilesRoot O:\publishing\tiles -Port 8086 -Lan
    ```
 
-4. Sur le téléphone, ouvrir `http://<adresse de l'ordinateur>:3100/modele/viewer/?tiles=http://<adresse de l'ordinateur>:8086`
+4. Sur le téléphone, ouvrir `http://<adresse de l'ordinateur>:4321/modele?tiles=http://<adresse de l'ordinateur>:8086`
    (ajouter `&ar=full` pour la taille réelle). L'adresse de l'ordinateur est celle de `ipconfig` qui commence comme
    celle du téléphone (par exemple `192.168.0.115`).
 

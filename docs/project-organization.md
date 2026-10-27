@@ -14,7 +14,7 @@ Plongées (vidéo GoPro)
   → Blender: modeles\lock-21-publishing.blend place les zones, dessine leurs découpes (version basse résolution)
   → outils de publication (tools\publish-model\): tuiles dans O:\publishing\tiles\
   → Cloudflare R2: https://tiles.lock21.info/ (tuiles, téléchargements, réalité augmentée)
-  → visualiseur 3D (viewer\), dans la page https://lock21.info/modele
+  → visualiseur 3D (src\viewer\), dans la page https://lock21.info/modele
 ```
 
 Le détail des étapes: le guide **Traiter le fichier .blend**.
@@ -23,9 +23,8 @@ Le détail des étapes: le guide **Traiter le fichier .blend**.
 
 | Dossier ou fichier | Contenu |
 | --- | --- |
-| `src\` | **Le site** (Astro + Starlight). `src\content\docs\`: les pages, en Markdown; `src\components\`: les éléments de page (en-tête, pied de page, page du modèle, accueil); `src\data\site.js`: les réglages du site (coordonnées, adresses des téléchargements, identifiant Google Analytics); `src\styles\`: les couleurs et la mise en page |
-| `public\` | Copié tel quel sur le site: `robots.txt`, l'icône, le KMZ de Google Earth (`downloads\lock-21.kmz`), et le visualiseur construit (`modele\viewer\`, refait à chaque publication, hors de Git) |
-| `viewer\` | **Le visualiseur 3D**, une application à part (three.js), intégrée à la page `/modele` |
+| `src\` | **Le site** (Astro + Starlight). `src\content\docs\`: les pages, en Markdown; `src\components\`: les éléments de page (en-tête, pied de page, page du modèle, accueil); `src\data\site.js`: les réglages du site (coordonnées, adresses des téléchargements, identifiant Google Analytics); `src\styles\`: les couleurs et la mise en page; `src\viewer\`: **le visualiseur 3D** (three.js), partie de la page `/modele` |
+| `public\` | Copié tel quel sur le site: `robots.txt`, l'icône, le KMZ de Google Earth (`downloads\lock-21.kmz`), et les fichiers du visualiseur (`viewer\`: les animaux, le bras du plongeur, le courant, le ciel) |
 | `tools\publish-model\` | **Les outils de publication**: préparer les zones, cuire le relief, tuiler, envoyer sur le serveur. Leur `README.md` explique chaque étape et les leçons apprises |
 | `tools\google-earth\` | Le modèle complet pour Google Earth, le GLB téléchargeable, les modèles de réalité augmentée |
 | `tools\model-analysis\` | Analyse de la résolution des zones; ses rapports datés sont gardés |
@@ -55,7 +54,7 @@ traitement). Le détail: le guide **Installation**, section 5.
      enregistré). Le modèle se publie à part (`npm run model:upload`), sans release.
   2. `npm run i18n:status` : les pages anglaises en retard.
   3. `CHANGELOG.md` : tout ce qui a changé sous la version et sa date, un court résumé en tête ; `package.json`.
-  4. `npm run build:viewer` puis `npm run build` : sans erreur.
+  4. `npm run build` : sans erreur.
 - **Après la publication** : les anciennes adresses redirigent, `/modele`, la lightbox et la page 404 en ligne, la
   version affichée dans À propos, puis `npm run bing:submit` pour signaler les adresses à Bing.
 - **Publier sans version**: sur GitHub, onglet **Actions**, **Deploy**, **Run workflow** sur `main`.
@@ -92,7 +91,7 @@ commandes et rédige des textes à la demande de Christian, qui décide, vérifi
 
 **Fait par l'IA, à la demande et sous le contrôle de Christian:**
 
-- le code: le visualiseur 3D (`viewer\`), les composants et les styles du site (`src\`), les outils de publication
+- le code: le visualiseur 3D (`src\viewer\`), les composants et les styles du site (`src\`), les outils de publication
   (`tools\`, scripts Blender, Node et PowerShell), la configuration (Cloudflare, GitHub Actions);
 - l'exécution des étapes de publication sur l'ordinateur de Christian (guide **Traiter le fichier .blend**: vérifier,
   tuiles, relief, contrôle, téléchargements); la mise en ligne (envoi vers R2, publication du site, versions) et toute

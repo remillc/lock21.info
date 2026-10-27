@@ -5,6 +5,11 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- The 3D viewer is part of the site (TODO #80): on /modele in an element of the page (<l21-viewer>, its controls in a
+  shadow root) instead of an iframe of a separate app; one project, one build and one dev server (4321: `viewer:dev`,
+  `build:viewer` and port 3100 gone; the bare /modele/viewer address too). Its code loads on /modele only and is taken
+  down when the visitor leaves the page; the keys are the viewer's only while it has the focus (a press on the model);
+  full screen on the viewer (the whole window on an iPhone); its texts are the site's messages (`viewer_…`).
 - Underwater view: schools of young yellow perch where plants grow, at the « perches » empties of the .blend (zone 1's
   filler, zone 6's floor; exported with the mockups), 40 fish a school, 16 on a phone; they mill slowly close to the
   bottom and draw back from a diver closer than 1 m. They turn as the bass does, about a point near the head, the bend running down to the tail. The fish is

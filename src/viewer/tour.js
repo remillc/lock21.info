@@ -11,7 +11,7 @@ import { track } from './analytics.js'
 import * as THREE from 'three'
 import { lang, m } from './i18n.js'
 import { icon } from './icons.js'
-import { host, root } from './dom.js'
+import { host, life, root } from './dom.js'
 
 // The flight: its length (s) at least, at most, and per metre; above FLY_HIGH m of way, it rises by FLY_RISE of the
 // way, at most FLY_RISE_MAX m; it arrives along the step's line of sight over FLY_BACK of the way, at most FLY_BACK_MAX m
@@ -520,7 +520,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     }
     card.style.setProperty('--l21-tour-right', `${Math.round(frame.right - left + 12)}px`)
   }
-  window.addEventListener('resize', fitBesideControls)
+  window.addEventListener('resize', fitBesideControls, { signal: life.signal })
   new MutationObserver(fitBesideControls).observe(root, { subtree: true, attributes: true, attributeFilter: ['hidden'] })
 
   let starting = false
@@ -589,7 +589,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   next.addEventListener('click', () => (index < steps.length - 1 ? show(index + 1) : stop()))
   host.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && index >= 0) stop()
-  })
+  }, { signal: life.signal })
 
   return {
     button,

@@ -84,11 +84,10 @@ minutes.
 
 ## 3. Les dépendances
 
-Le projet a trois parties qui ont chacune leurs bibliothèques. Dans le dossier du projet:
+Le projet a deux parties qui ont chacune leurs bibliothèques. Dans le dossier du projet:
 
 ```powershell
-npm install                               # le site
-npm --prefix viewer install               # le visualiseur 3D
+npm install                               # le site, le visualiseur 3D compris
 npm --prefix tools\publish-model install  # les outils de publication (compression, envoi vers le serveur)
 ```
 
@@ -147,14 +146,14 @@ Pour voir le site ou le visualiseur pendant qu'on travaille, on lance de petits 
 
 | Serveur | Commande | Adresse | Sert à |
 | --- | --- | --- | --- |
-| Le site | `npm run dev` | <http://localhost:4321/> | voir les pages; se recharge à chaque modification |
-| Le visualiseur 3D | `npm run viewer:dev` | <http://localhost:3100/modele/viewer> | travailler sur le visualiseur; **nécessaire aussi pour la page `/modele` du site** |
+| Le site | `npm run dev` | <http://localhost:4321/> | voir les pages et le visualiseur 3D (<http://localhost:4321/modele>); se recharge à chaque modification |
 | Les tuiles de l'ordinateur | `npm run model:serve-tiles` | <http://localhost:8081/> | montrer au visualiseur les tuiles produites sur l'ordinateur, avant leur mise en ligne |
 
 **D'où viennent les tuiles du visualiseur?** Pendant le travail, le visualiseur prend celles de l'ordinateur (port
-8081): lancer le troisième serveur. Pour voir plutôt le modèle en ligne, ajouter à l'adresse
+8081): lancer le second serveur. Pour voir plutôt le modèle en ligne, ajouter à l'adresse
 `?tiles=https://tiles.lock21.info`, par exemple
-<http://localhost:3100/modele/viewer?tiles=https://tiles.lock21.info>.
+<http://localhost:4321/modele?tiles=https://tiles.lock21.info>. Le site construit (`npm run build`, en ligne) prend
+toujours les tuiles en ligne (`.env.production`).
 
 ## 7. Le serveur en ligne (Cloudflare R2)
 
@@ -198,8 +197,7 @@ erreurs, fin de visite anormale, réalité augmentée) à `/api/log`, que le scr
 ## 8. Vérifier que tout fonctionne
 
 ```powershell
-npm run build:viewer   # construit le visualiseur
-npm run build          # construit le site: doit finir par « Complete! »
+npm run build          # construit le site et le visualiseur: doit finir par « Complete! »
 npm run dev            # puis ouvrir http://localhost:4321/
 ```
 
@@ -216,9 +214,10 @@ Si tout cela fonctionne, l'ordinateur est prêt. La suite: le guide **Traiter le
 
 - **`npm` n'est pas reconnu**: Node.js n'est pas installé, ou PowerShell a été ouvert avant l'installation. Fermer et
   rouvrir PowerShell.
-- **« Port 4321 is in use »** (ou 3100, 8081): le serveur tourne déjà dans une autre fenêtre. Utiliser celle-là, ou
+- **« Port 4321 is in use »** (ou 8081): le serveur tourne déjà dans une autre fenêtre. Utiliser celle-là, ou
   l'arrêter (Ctrl+C) avant de le relancer.
 - **Le fichier `.blend` fait quelques centaines d'octets**: Git LFS n'était pas installé au moment du clone. Lancer
   `git lfs install`, puis `git lfs pull`.
 - **Blender est installé ailleurs**: les scripts prennent l'option `-Blender "<chemin vers blender.exe>"`.
-- **La page `/modele` est vide en développement**: le serveur du visualiseur (`npm run viewer:dev`) ne tourne pas.
+- **Le modèle de la page `/modele` ne s'affiche pas en développement**: le serveur des tuiles (`npm run model:serve-tiles`)
+  ne tourne pas; ou ajouter `?tiles=https://tiles.lock21.info` à l'adresse.

@@ -1,6 +1,6 @@
 // Site lock21.info: Astro + Starlight (see docs/guidelines.md). French is the root locale; the structure is ready for
 // English (/en/), which ships when pages are translated. The 3D viewer (src/viewer/, three.js) is part of the site
-// since TODO #80 (2026-10-27): its page /modele/viewer (src/pages/modele/viewer.astro), shown in /modele's frame.
+// since TODO #80 (2026-10-27): <l21-viewer> on /modele (src/components/model/Viewer.astro).
 import { paraglideVitePlugin } from '@inlang/paraglide-js'
 import Icons from 'unplugin-icons/vite'
 import { defineConfig } from 'astro/config'
@@ -28,6 +28,26 @@ export default defineConfig({
   // (Safari 16.5 and Chrome 112 read it; older ones, an old iPad included, would drop the nested rules)
   vite: {
     build: { cssTarget: ['chrome100', 'safari15', 'firefox100', 'edge100'] },
+    // The 3D viewer's packages, prepared when the dev server starts: the viewer is loaded on demand (<l21-viewer>), so
+    // Vite would only find them then, prepare them again and reload the page (504 « Outdated Optimize Dep »)
+    optimizeDeps: {
+      include: [
+        'three',
+        '3d-tiles-renderer',
+        'n8ao',
+        'three-mesh-bvh',
+        'three/examples/jsm/controls/OrbitControls.js',
+        'three/examples/jsm/csm/CSM.js',
+        'three/examples/jsm/libs/meshopt_decoder.module.js',
+        'three/examples/jsm/loaders/GLTFLoader.js',
+        'three/examples/jsm/loaders/HDRLoader.js',
+        'three/examples/jsm/loaders/KTX2Loader.js',
+        'three/examples/jsm/postprocessing/EffectComposer.js',
+        'three/examples/jsm/postprocessing/OutputPass.js',
+        'three/examples/jsm/postprocessing/SMAAPass.js',
+        'three/examples/jsm/utils/SkeletonUtils.js',
+      ],
+    },
     // The components' texts: Paraglide JS messages (messages/site.inlang), compiled into src/paraglide (gitignored).
     // Each call names the page's language (m.home_lead({}, { locale })): rendered at build time, no runtime shipped
     // The 3D viewer's icons by name (src/viewer/icons.js: ~icons/material-symbols/…?raw), compiled into SVG strings,

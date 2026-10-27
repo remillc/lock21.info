@@ -74,7 +74,7 @@ Archivo for text and titles, JetBrains Mono for data (numbers, dates, depths, la
 Tabular figures in tables and data.
 
 The 3D viewer uses the same fonts (`src/viewer/main.js` imports them) and the dark theme's colour roles
-(`src/viewer/style.css`, `:root`): it is always dark.
+(`src/viewer/style.css`, `:host`, in its shadow root): it is always dark.
 
 ### Shape scale
 
@@ -142,7 +142,7 @@ native nesting; SCSS (`lang="scss"`, `.scss` files) only where Sass is needed (a
 `&::before`, `&[open]`, `.child`). One exception, in `.astro` files: only the same element's states are nested, never a
 descendant, because Astro's scoping leaves a nested descendant unscoped (`.a { .b {} }` becomes `.a:where(.astro-x) .b`,
 which could reach into another component). Both builds flatten the nesting for browsers before 2023 (`build.cssTarget`
-in `astro.config.mjs` and `viewer/vite.config.js`: an old iPad would otherwise drop the nested rules). No colour or
+in `astro.config.mjs`: an old iPad would otherwise drop the nested rules). No colour or
 opacity written in a rule: MD3 roles and tokens (`tokens.scss`), state layers as the content colour at the state's
 opacity (hover 8 %, focus and pressed 10 %, dragged 16 %).
 
@@ -169,7 +169,7 @@ unlayered (Starlight's splash-page content width, `--sl-content-width`; the note
 `--sl-content-inline-start`, from Starlight's `Page.astro`; the search, Pagefind; the code blocks,
 Expressive Code), each with a comment saying why.
 
-The 3D viewer is a separate app with no theme to fight; its own stack, planned (not yet in `src/viewer/style.css`):
+The 3D viewer has its own stylesheet in its shadow root, with no theme to fight; its own stack, planned (not yet in `src/viewer/style.css`):
 
 ```css
 @layer tokens, base, controls, panels, overlays, utilities;
@@ -219,7 +219,7 @@ The 3D viewer is a separate app with no theme to fight; its own stack, planned (
   as large as the screen allows over a near-black scrim, its caption, ‹ › and the arrow keys or a swipe to the page's
   other figures, ✕ or Escape to close, the figure's id or `#fig-NN` in the address; the widest of its sizes, a click to
   zoom to its own pixels and back (never larger), animated on the spot with MD3's emphasized curve, 400 ms), `<l21-dev-breakpoints>` (dev server only), `<l21-settings-panel>` (the 3D viewer's settings, ⚙),
-  `<l21-model-frame>` (the viewer's frame on `/modele`), `<l21-viewer-warmup>` (prefetches the viewer's files when a
+  `<l21-viewer>` (the 3D viewer on `/modele`), `<l21-viewer-warmup>` (prefetches the viewer's files when a
   `/modele` link is hovered).
 
 ## Page names

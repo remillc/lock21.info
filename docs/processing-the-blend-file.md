@@ -100,8 +100,8 @@ Chaque zone affiche son écart (`gap ... median`, normalement autour de 1 mm) et
 ## Étape 4 · Contrôler sur l'ordinateur
 
 Pour voir les nouvelles tuiles avant de les mettre en ligne, il faut faire tourner deux petits serveurs sur
-l'ordinateur: l'un sert les tuiles, l'autre le visualiseur. Chacun occupe sa fenêtre tant qu'il tourne: on ne peut plus
-rien taper dedans. D'où deux fenêtres.
+l'ordinateur: l'un sert les tuiles, l'autre le site et son visualiseur. Chacun occupe sa fenêtre tant qu'il tourne: on
+ne peut plus rien taper dedans. D'où deux fenêtres.
 
 1. Ouvrir une **première fenêtre PowerShell**, aller dans le dossier du projet, et lancer le serveur des tuiles:
 
@@ -112,19 +112,18 @@ rien taper dedans. D'où deux fenêtres.
 
    Il affiche `Available on: http://127.0.0.1:8081` et reste en marche. Laisser la fenêtre ouverte.
 
-2. Ouvrir une **deuxième fenêtre PowerShell** et lancer le visualiseur:
+2. Ouvrir une **deuxième fenêtre PowerShell** et lancer le site:
 
    ```powershell
    cd F:\projets\lock21.info
-   npm run viewer:dev
+   npm run dev
    ```
 
-   Il affiche une adresse `http://localhost:3100/...` et reste en marche aussi. Laisser cette fenêtre ouverte.
+   Il affiche l'adresse `http://localhost:4321/` et reste en marche aussi. Laisser cette fenêtre ouverte.
 
-3. Dans le navigateur, ouvrir
-   [http://localhost:3100/modele/viewer?tiles=http://localhost:8081](http://localhost:3100/modele/viewer?tiles=http://localhost:8081)
-   (la fin de l'adresse dit au visualiseur de prendre les tuiles de l'ordinateur plutôt que celles en ligne), et regarder
-   les zones refaites: leur place, leurs découpes, leur texture, leur relief de près.
+3. Dans le navigateur, ouvrir [http://localhost:4321/modele](http://localhost:4321/modele) (en développement, le
+   visualiseur prend les tuiles de l'ordinateur), et regarder les zones refaites: leur place, leurs découpes, leur
+   texture, leur relief de près.
 
 4. Une fois le contrôle fini, arrêter chaque serveur: cliquer dans sa fenêtre, puis **Ctrl+C**. On peut aussi fermer
    les fenêtres.

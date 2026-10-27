@@ -7,8 +7,6 @@
 // change, showed one); the buttons keep their aria-label.
 // MD3: inverse surface container, body-small text (12/16), 24 dp high, 8 dp padding, 4 dp corners (extra-small),
 // 4 dp from the button; fades in over 150 ms (decelerate) and out over 75 ms (accelerate), MD3's tooltip durations.
-import { root } from './dom.js'
-
 const HOVER_DELAY = 500
 const GAP = 4
 
@@ -73,4 +71,3 @@ class Tooltip extends HTMLElement {
 }
 
 customElements.define('l21-tooltip', Tooltip)
-root.querySelector('.viewer-frame').append(document.createElement('l21-tooltip'))

@@ -9,11 +9,11 @@
 //   sent then, with the arrival address.
 // - Page views: sent by hand, on the first load and after each client-side navigation (astro:page-load); automatic
 //   ones would also count every ?cam= update of the /modele/ page as a page.
-// - The arrival address is kept before /modele/ cleans its own (l21-model-frame keeps only ?cam=), so that the QR
+// - The arrival address is kept before /modele cleans its own (the 3D viewer keeps only ?cam=), so that the QR
 //   codes' campaigns (utm_source=qr, utm_campaign=ra-table / ra-taille-reelle) reach the first page view.
 // - Events (TODO #88; the list is on the privacy page): file_download (links with data-track-download: the KMZ and the
 //   GLB); the visitors' other actions, from any script of the site as an l21:track event on document (detail: name,
-//   params), and from the 3D viewer in /modele's frame as a lock21:track message (src/viewer/analytics.js). Outbound
+//   params), and from the 3D viewer on /modele as a lock21:track message posted to the window (src/viewer/analytics.js). Outbound
 //   links and scrolls: GA4's enhanced measurement (its own setting, in GA). An action before Google's script is loaded
 //   waits for it (queue), unless the visitor refused the measurement.
 import { site } from '../data/site'
@@ -169,7 +169,7 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
       if (select?.closest?.('starlight-theme-select')) track('theme_change', { theme: select.value })
       else if (select?.closest?.('starlight-lang-select')) track('language_change', { language: select.value.startsWith('/en') ? 'en' : 'fr' })
     })
-    // The other actions, sent by a script of the site (l21:track: /modele's time per mode)
+    // The other actions, sent by a script of the site (l21:track)
     document.addEventListener('l21:track', (event) => {
       const { name, params } = /** @type {CustomEvent<{ name: string, params?: Record<string, unknown> }>} */ (event).detail ?? {}
       if (typeof name === 'string') track(name, params ?? {})
