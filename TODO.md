@@ -125,8 +125,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   previews broke, back to true)
 - [ ] #91 SEO audit: outside the site, for Christian.  S9 links: the Sketchfab profile, DECOSTOP, the Wikipedia « Lost
   Villages » talk page (dead source for Lock 21), Lost Villages Historical Society, Save Ontario Shipwrecks
-- [ ] #98 Each page its own image for sharing (Christian, 2026-10-27): an `og:image` per page (today one image for the
-  whole site, `public/images/og-lock21.jpg`, src/routeData.js), e.g. the page's first figure, cropped to 1200 x 630
 - [ ] #99 For the next dives, for Christian: buy a magenta fluorescent spray paint at Canadian Tire (Rust-Oleum
   Specialty All-Surface, fluorescent,
   https://www.canadiantire.ca/en/pdp/rust-oleum-specialty-all-surface-aerosol-spray-paint-fluorescent-312-g-0482513p.0482515.html)
