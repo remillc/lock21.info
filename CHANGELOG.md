@@ -5,6 +5,12 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Underwater view: the bass turns as a fish does, about a point a third of its length from the snout (the head swings
+  into the turn, the tail out of it), the bend starting at the head and running down to the tail (it pivoted on its
+  centre, its whole body turning at once). The curious bass stops closer, about 3 ft from the diver (was about 4 ft).
+  Swimming away, its body waves less widely.
+- 3D viewer: the address no longer becomes `?cam=0.00,…` while the view loads in the underwater mode (it was written
+  before the camera was placed, and a reload then started from there); such an address now gives the start view.
 - `/modele`: the 3D viewer's frame enters as the page loads, rising to its place while growing and fading in (MD3
   entering motion, 450 ms; none with reduced motion).
 - Underwater view: what stands at the season's visibility distance still shows, faintly; the water hides it
@@ -12,6 +18,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
   barely showed).
 - 3D viewer: a wider view, 60° high instead of 50° (things looked closer than they are: zone 18's wall, 24 ft away,
   looked about 8 ft).
+
 ## 1.0.0-beta.2 - 2026-10-26
 
 Fixes to the 3D viewer: no more holes in the walls on large screens, a steady start view, faster panning and zoom;
