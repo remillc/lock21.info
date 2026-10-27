@@ -6,7 +6,7 @@ sidebar:
 
 Cette opération consiste à extraire des fichiers photos des vidéos tournés. L'opération s'effectue à l'aide du logiciel DaVinci Resolve Studio.
 
-Les vidéos ont été tournées avec une GoPro Hero6 Black ; la caméra, son boîtier et ses réglages sont décrits dans [Matériel utilisé](/collecte/materiel-utilise).
+Les vidéos ont été tournées avec une GoPro Hero6 Black. La caméra, son boîtier et ses réglages sont décrits dans [Matériel utilisé](/collecte/materiel-utilise).
 
 ## Étalonnage
 
@@ -50,7 +50,7 @@ Le chevauchement frontal, lui, est obtenu au moment d'extraire les images des vi
 
 <figure>
 
-![Une bande de film où l'on garde l'image 1 et l'image 9 ; les zones filmées par ces deux images ont 85 % en commun](./extraction-photos/assets/chevauchement-frontal.svg)
+![Une bande de film où l'on garde l'image 1 et l'image 9, et les zones filmées par ces deux images ont 85 % en commun](./extraction-photos/assets/chevauchement-frontal.svg)
 
 <figcaption>Deux images d'un film qui se recoupent à 85 % : entre les images gardées (ici à 8 images d'intervalle, n8), la caméra n'a avancé que de 15 % de la zone filmée.</figcaption>
 </figure>
