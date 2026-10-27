@@ -21,12 +21,16 @@ import SHAPE from './perch-shape.json'
 const TEXTURE = `${import.meta.env.BASE_URL}creatures/perch.webp`
 // Its width against its depth (a perch is flattened from side to side)
 const WIDTH = 0.48
-// The spiny dorsal fin: its height folded (share of its height up), how far it lies back; raised closer than RAISE
-// times SHY to the diver, quickly (RAISE_SPEED, 1/s), folded again slowly (FOLD_SPEED)
+// The spiny dorsal fin: its height folded (share of its height up), how far it lies back; raised as the diver comes
+// closer than RAISE times SHY, quickly (RAISE_SPEED, 1/s), and laid down again after a while (Christian, 2026-10-27),
+// RAISE_HOLD s (at random, each fish its own), even with the diver still there, slowly (FOLD_SPEED); raised again only
+// if the diver comes CLOSER m nearer than when it last rose, or leaves and comes back
 const FOLDED = 0.12
 const RAISE = 1.5
 const RAISE_SPEED = 6
 const FOLD_SPEED = 1
+const RAISE_HOLD = [3, 8]
+const CLOSER = 0.3
 
 // Fish per school (computer, phone), their lengths (m)
 const COUNT = [40, 16]
@@ -220,6 +224,8 @@ export function createPerch({ mobile = false, prepare = (m) => m, floor = () => 
         turnRate: 0,
         pitch: 0,
         raised: 0,
+        raiseUntil: 0,
+        raisedAt: Infinity,
       })
     }
     schools.push({ mesh, swim, bends, home, ground, fish, next: 0 })
@@ -318,7 +324,13 @@ export function createPerch({ mobile = false, prepare = (m) => m, floor = () => 
       const pulse = THREE.MathUtils.clamp(a.length / Math.max(speed, 1e-3), PULSE[0], PULSE[1])
       const bend = (share) => THREE.MathUtils.clamp(-a.turnRate * (share - PIVOT) * pulse, -BEND_MAX, BEND_MAX)
       // The spiny dorsal raised with the diver close, folded again once they are gone
-      const raise = a.near < SHY * RAISE ? 1 : 0
+      if (a.near < SHY * RAISE) {
+        if (a.near < a.raisedAt - CLOSER) {
+          a.raiseUntil = time.value + between(RAISE_HOLD)
+          a.raisedAt = a.near
+        }
+      } else a.raisedAt = Infinity
+      const raise = time.value < a.raiseUntil ? 1 : 0
       a.raised += (raise - a.raised) * Math.min(1, (raise ? RAISE_SPEED : FOLD_SPEED) * dt)
       school.bends.setXYZW(i, bend(0), bend(0.6), bend(1), a.raised)
       euler.set(-a.pitch, a.heading, 0)

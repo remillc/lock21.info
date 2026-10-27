@@ -9,7 +9,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
   filler, zone 6's floor; exported with the mockups), 40 fish a school, 16 on a phone; they mill slowly close to the
   bottom and draw back from a diver closer than 1 m. They turn as the bass does, about a point near the head, the bend running down to the tail. The fish is
   made from a public-domain photo (U.S. Fish and Wildlife Service, credited on /modele); its spiny dorsal fin lies
-  folded at rest and rises when the diver comes close.
+  folded at rest, rises as the diver comes close and is laid down again after a few seconds.
 - Underwater view: the swimming help (?) no longer says that the walls stop the diver. The movement keys' card says only « Maj : plus vite » (Shift: faster).
 - Underwater view: the mouse wheel swims forward and back where the diver looks, 50 cm a notch (three times that with
   Shift), smoothly; the swimming help says so.
