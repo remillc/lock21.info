@@ -18,7 +18,8 @@ zone est publiée (TODO #6).
 - Coordonnées du monde de la scène (mètres), glTF Y vers le haut: même repère que les tuiles et le contexte.
 - Chaque objet garde son nom (« mockup zone 9 »): le visualiseur en tire le numéro de zone.
 - Aussi les empties dont le nom commence par « crawfish » (n'importe quelle collection): la place d'une écrevisse
-  animée dans le visualiseur (viewer/src/crawfish.js).
+  animée dans le visualiseur (viewer/src/crawfish.js); et ceux dont le nom commence par « perch » (« perches »): le
+  milieu d'un banc de perchaudes (viewer/src/perch.js).
 
 Lecture seule pour le .blend (jamais sauvegardé).
 
@@ -48,8 +49,8 @@ assert collection, "pas de collection « mockups » dans le .blend"
 objects = [o for o in collection.all_objects if o.type == 'MESH' and re.fullmatch(r"mockup zone \d+", o.name)]
 assert objects, "aucun objet « mockup zone N » dans la collection « mockups »"
 print("[mockups] objets:", sorted(o.name for o in objects), flush=True)
-creatures = [o for o in bpy.data.objects if o.type == 'EMPTY' and o.name.lower().startswith("crawfish")]
-print("[mockups] écrevisses:", sorted(o.name for o in creatures), flush=True)
+creatures = [o for o in bpy.data.objects if o.type == 'EMPTY' and o.name.lower().startswith(("crawfish", "perch"))]
+print("[mockups] créatures (écrevisses, bancs de perchaudes):", sorted(o.name for o in creatures), flush=True)
 objects += creatures
 
 for o in bpy.context.view_layer.objects:

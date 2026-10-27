@@ -527,7 +527,8 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
     Object.assign(shader.uniforms, uniforms)
     shader.vertexShader = 'varying vec3 vUwWorld;\nvarying float vUwDepth;\n' + shader.vertexShader.replace(
       '#include <project_vertex>',
-      '#include <project_vertex>\nvUwWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;\nvUwDepth = length(mvPosition.xyz);',
+      // (instanced meshes, the perch: each instance's own place)
+      '#include <project_vertex>\n#ifdef USE_INSTANCING\nvUwWorld = (modelMatrix * instanceMatrix * vec4(transformed, 1.0)).xyz;\n#else\nvUwWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;\n#endif\nvUwDepth = length(mvPosition.xyz);',
     )
     shader.fragmentShader =
       'uniform vec3 uUwSpectral;\nuniform float uUwLampPower;\nuniform vec3 uUwLampColor;\nuniform vec3 uUwTop;\nuniform vec3 uUwDeep;\nuniform float uUwOn;\nuniform float uUwClear;\nuniform float uUwGone;\nuniform vec3 uUwAbsorb;\nuniform vec3 uUwWater;\nuniform float uUwTime;\nuniform vec3 uUwSun;\n' +
