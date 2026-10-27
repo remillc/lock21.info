@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Underwater view: the swimming help (?) no longer says that the walls stop the diver.
 - Underwater view: the mouse wheel swims forward and back where the diver looks, 50 cm a notch (three times that with
   Shift), smoothly; the swimming help says so.
 - 3D model: zone 18 republished (its mesh had changed in the .blend, its `source` property lost then restored).

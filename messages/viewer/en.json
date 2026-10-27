@@ -54,7 +54,7 @@
   "swimHint": "swim · drag to look around · Shift: faster",
   "swimKeys": "Keys to swim",
   "swimHelpTitle": "Swimming in the lock",
-  "swimHelpText": "<p>Underwater, you move like a diver, where you look.</p><ul><li><kbd>{w}</kbd> forward, <kbd>{s}</kbd> back</li><li><kbd>{a}</kbd> left, <kbd>{d}</kbd> right</li><li>the arrow keys do the same; so does the mouse wheel, forward and back</li><li>hold <kbd>Shift</kbd>: faster</li><li>mouse button held down, drag: turn your head (up, down, left, right)</li></ul><p>You can’t go through the walls. The {icon} button or the <kbd>Esc</kbd> key brings back the usual navigation.</p>",
+  "swimHelpText": "<p>Underwater, you move like a diver, where you look.</p><ul><li><kbd>{w}</kbd> forward, <kbd>{s}</kbd> back</li><li><kbd>{a}</kbd> left, <kbd>{d}</kbd> right</li><li>the arrow keys do the same; so does the mouse wheel, forward and back</li><li>hold <kbd>Shift</kbd>: faster</li><li>mouse button held down, drag: turn your head (up, down, left, right)</li></ul><p>The {icon} button or the <kbd>Esc</kbd> key brings back the usual navigation.</p>",
   "swimHelpOk": "Got it",
   "keysHint": "move · Shift: faster",
   "keyForward": "Forward",
