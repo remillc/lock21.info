@@ -7,9 +7,38 @@ Cette opération consiste à extraire des fichiers photos des vidéos tournés. 
 
 Les vidéos ont été tournées avec une GoPro Hero6 Black ; la caméra, son boîtier et ses réglages sont décrits dans [Matériel utilisé](/collecte/materiel-utilise).
 
-## Balance des blancs
+## Étalonnage
 
-*(à compléter)*
+Sous l'eau, deux lumières éclairent ce que je filme : celle du jour, qui descend de la surface, et celle des quatre
+lampes du [rig](/collecte/rig#les-lampes), des DEL blanches à 6000 K. L'eau ne laisse pas passer toutes les couleurs
+de la même façon : elle absorbe d'abord le rouge, et dans l'eau chargée du canal, une bonne partie du bleu aussi. Plus
+la lumière traverse d'eau, plus l'image tire sur le vert-jaune. La lumière du jour change donc avec la profondeur, et
+celle des lampes avec la distance entre le rig et ce qu'il filme.
+
+Dans la caméra, la balance des blancs reste fixe, à 6500 K ([Matériel utilisé](/collecte/materiel-utilise)). La
+correction se fait ensuite dans DaVinci Resolve, d'après la charte de couleurs filmée au début de chaque plongée,
+sous-exposée d'un stop ([La charte de couleurs est surexposée](/problemes/charte-couleurs-surexposee)). Pour certaines
+plongées, j'ai filmé la charte à deux hauteurs, sur le plancher et à mi-hauteur, et fait un étalonnage pour chacune
+([Calibration des couleurs](/problemes/calibration-couleurs)).
+
+### Ce que la zone 3 a montré
+
+Dans le modèle, le mur des trois vannes de la zone 3 sortait jaune-olive. Ses images viennent de la plongée 21
+(2024-07-12), étalonnée avec une seule charte, posée sur le plancher, alors que les passages montent le long du mur.
+Sur la charte, le gris sortait bien neutre ; sur le mur, il manquait du bleu. Les autres plongées de la zone avaient
+le même défaut, plus ou moins marqué : la charte corrige la lumière là où elle est posée, pas sur toute la hauteur
+d'un mur.
+
+### La correction ajoutée
+
+En octobre 2026, une correction commune s'est ajoutée à l'étalonnage de la charte, une par plongée. La couleur moyenne
+de chaque passage, mesurée sur une vingtaine d'images, est ramenée aux trois quarts du chemin vers le gris neutre, et
+la correction de la plongée est la médiane des passages. Une seule correction par plongée évite les bandes de couleur
+dans la texture, là où les images de deux passages se mélangent. Pour la plongée 21 et celle du 14 juillet, plus
+plates que les autres, le contraste est remonté au niveau des autres plongées.
+
+La correction est posée dans une copie du projet Resolve de chaque plongée, et les images sont rendues dans un nouveau
+dossier, sous les mêmes noms ; les projets et les images d'origine restent tels quels.
 
 ## Le chevauchement des images
 
