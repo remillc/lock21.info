@@ -66,9 +66,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   keyboard, 320 px reflow, text spacing) and the code issues fixed. Left: the Markdown tables' empty header cells
   (14 pages: name the column, or no header row), the heading levels of `problemes/nettete-images` (and its English
   page), a check with a real screen reader (NVDA, VoiceOver) and Windows' high contrast mode
-- [ ] #101 Layout (Christian, 2026-10-27): the third column (the « Sur cette page » table of contents, on wide
-  screens) grows and shrinks with the window like the second (the content), with an absolute minimum width still
-  to set, so that its entries don't wrap onto a second line
 - [ ] #100 Figure captions (Christian, 2026-10-27): side margins tied to the corner radius of the figure above, so
   the caption text lines up inside the image's rounded corners instead of the column's edges (e.g.
   `traitement/extraction-photos`, fig. 2, « Chevauchement latéral »)
