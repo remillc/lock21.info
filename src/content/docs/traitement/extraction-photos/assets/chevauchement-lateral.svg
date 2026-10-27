@@ -5,21 +5,23 @@
   <text x="32" y="44" fill="#9bb8c6" font-family="JetBrains Mono, ui-monospace, monospace" font-size="15" letter-spacing="1">CHEVAUCHEMENT LATÉRAL · VUE DE DESSUS</text>
 
   <!-- Passage 1: band 1.25 m wide (2 px/cm), y 100 to 350 -->
-  <rect x="40" y="100" width="560" height="250" fill="#3cc2bc" fill-opacity="0.22" stroke="#3cc2bc" stroke-width="2"/>
-  <!-- Passage 2: shifted 25 cm (50 px), y 150 to 400 -->
-  <rect x="40" y="150" width="560" height="250" fill="#f28c28" fill-opacity="0.18" stroke="#f28c28" stroke-width="2" stroke-dasharray="10 6"/>
+  <rect x="40" y="100" width="480" height="250" fill="#3cc2bc" fill-opacity="0.22" stroke="#3cc2bc" stroke-width="2"/>
+  <!-- Passage 2: shifted 25 cm (50 px), y 150 to 400; drawn a little further along (x), so that the two bands show apart -->
+  <rect x="120" y="150" width="480" height="250" fill="#f28c28" fill-opacity="0.18" stroke="#f28c28" stroke-width="2" stroke-dasharray="10 6"/>
 
   <!-- Camera path (centre line of each band) and direction -->
   <g stroke-width="2" fill="none">
-    <line x1="60" y1="225" x2="560" y2="225" stroke="#3cc2bc" stroke-dasharray="4 6"/>
-    <line x1="60" y1="275" x2="560" y2="275" stroke="#f28c28" stroke-dasharray="4 6"/>
+    <line x1="60" y1="225" x2="480" y2="225" stroke="#3cc2bc" stroke-dasharray="4 6"/>
+    <line x1="140" y1="275" x2="560" y2="275" stroke="#f28c28" stroke-dasharray="4 6"/>
   </g>
-  <path d="M560 217 L578 225 L560 233 Z" fill="#3cc2bc"/>
+  <path d="M480 217 L498 225 L480 233 Z" fill="#3cc2bc"/>
   <path d="M560 267 L578 275 L560 283 Z" fill="#f28c28"/>
   <g font-family="Archivo, system-ui, sans-serif" font-size="17" font-weight="700">
     <text x="58" y="128" fill="#3cc2bc">Passage 1 →</text>
-    <text x="58" y="390" fill="#f28c28">Passage 2 →</text>
+    <text x="138" y="390" fill="#f28c28">Passage 2 →</text>
   </g>
+
+  <text x="320" y="320" fill="#e6eff2" fill-opacity="0.85" font-family="Archivo, system-ui, sans-serif" font-size="15" text-anchor="middle">partie commune aux deux passages</text>
 
   <!-- Dimensions on the right -->
   <g stroke="#e6eff2" stroke-width="1.5" fill="none">
