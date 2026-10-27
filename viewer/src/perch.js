@@ -12,8 +12,10 @@
 // - the young (young of the year: a few cm in spring, about 6 to 10 cm in the autumn) school by 50 to 200, near
 //   submerged plants or structures. Here fewer (COUNT per school), for the frame rate.
 // All the fish of a school are one instanced mesh (one draw call); their swimming wave is in the vertex shader.
-// Behaviour: a flock (separation, alignment, cohesion), held within RANGE m of its spot and between FLOOR_GAP and
-// FLOOR_GAP + HEIGHT m above the floor there; the diver closer than SHY m sends the fish away from them, faster.
+// Behaviour: a flock (separation, alignment, cohesion), held within RANGE m of its spot and close to the bottom
+// (Christian, 2026-10-27: they keep to the floor and the structures, never out in open water): each fish between
+// FLOOR_GAP and FLOOR_GAP + HEIGHT m above the floor under it (looked for again every FLOOR_EVERY s, a few fish per
+// frame); the diver closer than SHY m sends the fish away from them, faster.
 import * as THREE from 'three'
 
 // Fish per school (computer, phone), their lengths (m)
@@ -21,8 +23,9 @@ const COUNT = [40, 16]
 const LENGTH = [0.06, 0.1]
 // The school's room: around its spot (m), above the floor there (m)
 const RANGE = 1.2
-const FLOOR_GAP = 0.15
-const HEIGHT = 0.7
+const FLOOR_GAP = 0.08
+const HEIGHT = 0.35
+const FLOOR_EVERY = 0.3
 // Speeds (m/s): milling, cruising at most, fleeing; how fast a fish steers (1/s)
 const MILL = 0.04
 const CRUISE = 0.18
@@ -225,13 +228,15 @@ export function createPerch({ spots, mobile = false, prepare = (m) => m, floor =
           length: between(LENGTH),
           phase: Math.random() * 10,
           wander: Math.random() * 100,
+          floor: null,
         })
       }
-      schools.push({ mesh, swim, home, ground, fish })
+      schools.push({ mesh, swim, home, ground, fish, next: 0 })
     }
   })
 
   const steer = new THREE.Vector3()
+  const probe = new THREE.Vector3()
   const separate = new THREE.Vector3()
   const align = new THREE.Vector3()
   const cohere = new THREE.Vector3()
@@ -243,6 +248,12 @@ export function createPerch({ spots, mobile = false, prepare = (m) => m, floor =
 
   function updateSchool(school, camera, dt, slow) {
     const { fish, home, ground } = school
+    // The floor under a few fish (all of them every FLOOR_EVERY s): looked for from just above each
+    for (let k = Math.ceil((fish.length * dt) / FLOOR_EVERY); k > 0; k--) {
+      const a = fish[school.next]
+      school.next = (school.next + 1) % fish.length
+      a.floor = floor(probe.copy(a.position).setY(a.position.y + 0.3))
+    }
     for (const a of fish) {
       separate.set(0, 0, 0)
       align.set(0, 0, 0)
@@ -271,8 +282,9 @@ export function createPerch({ spots, mobile = false, prepare = (m) => m, floor =
       offset.subVectors(home, a.position).setY(0)
       const out = offset.length() - RANGE
       if (out > 0) steer.addScaledVector(offset.normalize(), W_HOME * (1 + out))
-      const low = ground + FLOOR_GAP - a.position.y
-      const high = a.position.y - (ground + FLOOR_GAP + HEIGHT)
+      const below = a.floor ?? ground
+      const low = below + FLOOR_GAP - a.position.y
+      const high = a.position.y - (below + FLOOR_GAP + HEIGHT)
       if (low > 0) steer.y += W_HOME * (1 + low * 10)
       if (high > 0) steer.y -= W_HOME * (1 + high * 10)
       // A slow wander of its own, mostly level
