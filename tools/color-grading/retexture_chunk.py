@@ -1,4 +1,4 @@
-"""Refait la texture d'un chunk Metashape avec les images étalonnées (TODO #75), dans Metashape Pro 1.7.
+"""Refait la texture d'un chunk Metashape avec les images étalonnées (TODO #75), dans Metashape Pro 1.7 ou 2.x.
 
 À lancer dans Metashape, sur le projet ouvert: Tools > Run Script, ce fichier, et ses arguments dans « Arguments ».
 Le chunk doit être une copie (Duplicate Chunk) dont le nom contient « graded »: le chunk d'origine n'est jamais touché.
@@ -52,6 +52,12 @@ p.add_argument("--no-export", action="store_true", help="ne pas exporter")
 
 class Stop(Exception):
     """Arrêt du script avec un message. Pas de SystemExit: dans Metashape, il ferme l'application."""
+
+
+def const(group, name):
+    """Une constante de l'API: Metashape.<name> en 1.7, Metashape.<group>.<name> en 2.x (rangées par groupe)."""
+    value = getattr(Metashape, name, None)
+    return value if value is not None else getattr(getattr(Metashape, group), name)
 
 
 def norm(path):
@@ -194,8 +200,10 @@ def main():
                        and os.path.isfile(masks + "/" + os.path.splitext(os.path.basename(c.photo.path))[0] + "_guide.png")]
             log("masques: %d photos de %s" % (len(cameras), masks))
             if cameras:
-                chunk.generateMasks(path=masks + "/{filename}_guide.png", masking_mode=Metashape.MaskingModeFile,
-                                    mask_operation=Metashape.MaskOperationReplacement, cameras=cameras)
+                # (generateMasks en 1.7, importMasks depuis 1.8)
+                load = getattr(chunk, "importMasks", None) or chunk.generateMasks
+                load(path=masks + "/{filename}_guide.png", masking_mode=const("MaskingMode", "MaskingModeFile"),
+                     mask_operation=const("MaskOperation", "MaskOperationReplacement"), cameras=cameras)
         doc.save()
         log("masques importés et projet enregistré")
 
@@ -217,7 +225,7 @@ def main():
         log("texture: %d px, mosaïque" % a.size)
         # (cameras only when chosen: without it, every aligned photo)
         extra = {"cameras": cameras} if cameras is not None else {}
-        chunk.buildTexture(blending_mode=Metashape.MosaicBlending, texture_size=a.size, fill_holes=True,
+        chunk.buildTexture(blending_mode=const("BlendingMode", "MosaicBlending"), texture_size=a.size, fill_holes=True,
                            ghosting_filter=True, **extra)
         doc.save()
         log("texture refaite et projet enregistré")
@@ -229,7 +237,7 @@ def main():
             a.out = "O:/modeles/%s/%s - graded - %.1fM faces.glb" % (zone, zone, len(chunk.model.faces) / 1e6)
         if os.path.exists(a.out):
             raise Stop("existe déjà, rien n'est écrasé: " + a.out)
-        chunk.exportModel(path=a.out, binary=True, texture_format=Metashape.ImageFormatJPEG, save_texture=True,
+        chunk.exportModel(path=a.out, binary=True, texture_format=const("ImageFormat", "ImageFormatJPEG"), save_texture=True,
                           save_uv=True, save_normals=True, save_colors=False, save_cameras=False, save_markers=False)
         log("exporté: " + a.out)
 
