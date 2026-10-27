@@ -9,7 +9,7 @@ Each zone's models are generated in Agisoft Metashape, then exported for publish
 
 The face size for the high-resolution models was set to 2mm `<sup>`2 `</sup>, that is:`
 
-|        | Faces / sq ft |
+| Mesh   | Faces / sq ft |
 | :-----: | :------------: |
 | Model |     1 475     |
 | Terrain |                |
@@ -24,7 +24,7 @@ Publishing on [lock21.info/modele](/en/modele) starts from the most detailed exp
 
 ### Faces / area ratio
 
-|        | Faces / m2 | Faces / sq ft |
+| Mesh   | Faces / m2 | Faces / sq ft |
 | :-----: | :-----------: | :------------: |
 | Model (most detailed level) |     3 000     |     ≈ 279      |
 | Terrain |               |                |

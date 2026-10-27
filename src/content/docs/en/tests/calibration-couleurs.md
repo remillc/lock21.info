@@ -6,7 +6,7 @@ title: Colour calibration
 
 Videos of both sides of the colour chart, shot at 2 different depths to find out whether the effect of ambient light changes with depth. The different exposures were meant to find a compensation factor for the camera overexposing the chart. -1 stop is the right factor.
 
-| File         | Date       |   Depth   | Exposure (Ev comp) |                          |
+| File         | Date       |   Depth   | Exposure (Ev comp) | Chart sides              |
 | :----------- | ---------- | :-------: | :----------------: | ------------------------ |
 | GX010147.MP4 | 2024-05-25 |  33 feet  |         0          | both sides               |
 | GX010146.MP4 | 2024-05-25 |  33 feet  |         -1         | both sides               |

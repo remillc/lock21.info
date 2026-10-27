@@ -37,7 +37,7 @@ Mode de capture : **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution
 
 ### Paramètres de capture vidéo
 
-| Paramètre                                              |                                 |
+| Paramètre                                              | Valeur                          |
 | ------------------------------------------------------ | ------------------------------- |
 | Résolution                                             | 4k 4:3                          |
 | Images par seconde                                     | 29.97                           |

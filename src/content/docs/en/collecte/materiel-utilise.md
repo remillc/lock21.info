@@ -37,7 +37,7 @@ Capture mode: **4k 4:3 video** (4000 pixels x 3000 pixels). I picked this resolu
 
 ### Video capture settings
 
-| Setting                                    |                       |
+| Setting                                    | Value                 |
 | ------------------------------------------ | --------------------- |
 | Resolution                                 | 4k 4:3                |
 | Frames per second                          | 29.97                 |

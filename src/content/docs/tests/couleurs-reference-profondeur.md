@@ -32,7 +32,7 @@ Est-ce que la lumière ambiante affecte la charte de couleurs ?
 
 ## Données
 
-| Fichier      | Profondeur | Exposition (Ev comp) |                            |
+| Fichier      | Profondeur | Exposition (Ev comp) | Côtés de la charte         |
 | :----------- | :--------: | :------------------: | -------------------------- |
 | GX010147.MP4 |  33 pieds  |          0           | 2 côtés                    |
 | GX010146.MP4 |  33 pieds  |          -1          | 2 côtés                    |
@@ -43,7 +43,7 @@ Est-ce que la lumière ambiante affecte la charte de couleurs ?
 | GX010143.MP4 |  57 pieds  |          -1          | côté couleurs de référence |
 | GX010144.MP4 |  57 pieds  |          -2          | 2 côtés                    |
 
-|                          |       |
+| Réglage                  | Valeur |
 | ------------------------ | ----- |
 | Distance caméra / charte | 70 cm |
 

@@ -32,7 +32,7 @@ Does ambient light affect the colour chart?
 
 ## Data
 
-| File         |   Depth   | Exposure (Ev comp) |                          |
+| File         |   Depth   | Exposure (Ev comp) | Chart sides              |
 | :----------- | :-------: | :----------------: | ------------------------ |
 | GX010147.MP4 |  33 feet  |         0          | both sides               |
 | GX010146.MP4 |  33 feet  |         -1         | both sides               |
@@ -43,7 +43,7 @@ Does ambient light affect the colour chart?
 | GX010143.MP4 |  57 feet  |         -1         | reference colours side   |
 | GX010144.MP4 |  57 feet  |         -2         | both sides               |
 
-|                         |       |
+| Setting                 | Value |
 | ----------------------- | ----- |
 | Camera / chart distance | 70 cm |
 
