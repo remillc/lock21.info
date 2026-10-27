@@ -138,7 +138,13 @@ def main():
                 % (texel * 1000, texture_side(chunk.model, chunk.transform.scale, texel)))
         return
     for camera, target in changes:
-        camera.photo.path = target
+        # (camera.photo est une copie: changer son chemin puis la remettre sur la caméra)
+        photo = camera.photo.copy()
+        photo.path = target
+        camera.photo = photo
+    changed = sum(1 for camera, target in changes if norm(camera.photo.path) == norm(target))
+    if changed != len(changes):
+        raise Stop("%d chemins sur %d seulement ont changé" % (changed, len(changes)))
     if changes:
         doc.save()
         log("chemins changés et projet enregistré")
