@@ -18,7 +18,12 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   mesh kept); then republish and compare with `?compare=`. Under way (2026-10-27): the graded frames in
   `frames-…-graded-…`, the texture rebuilt in a « graded » copy of chunk 11 inside `O:\photogrammetry\zone-3.psx`
   (`tools/color-grading/retexture_chunk.py`); the wooden floor stayed green from distant views through the water,
-  to retry with `-d` (photos near the model only). If the trial is conclusive (Christian): delete the non-graded
+  per-photo distance does not help (every photo is 0.5 to 1 m from its subject: Mosaic averages the colour of all the
+  views). Published locally from chunk 11 « high res 2 » (`.blend` source `zone-3 - graded - 7.6M faces.glb`): the
+  colours are right but the floor is blurred, chunk 11 being less precisely aligned (RE 0.7) than chunk 5 (RE 0.4), the
+  online texture's source. Next (2026-10-28): duplicate chunk 5 as « graded » (its 24.3M model), `retexture_chunk.py
+  -k --no-texture --no-export`, then without arguments, set the zone's `source` to that export, republish, compare
+  (`?tiles=…8082&compare=…8081`, the « Équilibre » slider at 0). If the trial is conclusive (Christian): delete the non-graded
   TIFFs to free O: (chunks 5 and 11 still point to them: relink them first, or accept that they lose their photos).
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
   - Tried and dropped (2026-10-25): a whole-texture balance before tiling (`color_correct.py`) turned the model mauve
