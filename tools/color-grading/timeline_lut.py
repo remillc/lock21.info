@@ -1,5 +1,6 @@
 """Sets a dive's common colour correction on its « - graded » project (TODO #75): per-channel gains in linear light,
-written as a 33-point LUT (on the timeline's Rec.709 gamma 2.4 values a gain is a slope, gain^(1/2.4)), set on the
+written as a 33-point LUT (on the timeline's Rec.709 gamma 2.4 values a gain is a slope, gain^(1/2.4)), with an
+optional contrast around a pivot (--contrast, --pivot: the dives' contrast matched, exposure_stats.mjs), set on the
 timeline's node graph, after the clips' own grades (the scripting API can't add a node to a clip, but sets a LUT on
 the timeline's). Optionally exports one frame as a still, to check it (--still, --frame).
 
@@ -20,6 +21,8 @@ from resolve_api import LUT_DIR, connect, load
 p = argparse.ArgumentParser(prog="timeline_lut.py", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 p.add_argument("-g", "--gain", nargs=3, type=float, required=True, metavar=("R", "G", "B"), help="gains in linear light")
 p.add_argument("-n", "--name", required=True, help="the LUT's name (file name without .cube)")
+p.add_argument("-c", "--contrast", type=float, default=1.0, help="contrast around --pivot after the gains (1: none; 1.1: +10 %%)")
+p.add_argument("--pivot", type=float, default=110, help="the contrast's pivot, an 8-bit value (default 110, the dives' median)")
 p.add_argument("-f", "--folder", help="project folder from the root, e.g. data/2024-07-12 (with --project)")
 p.add_argument("-p", "--project", help="project name (default: the current project)")
 p.add_argument("-s", "--still", help="export one frame as a still to this file (.png, .tif)")
@@ -30,14 +33,15 @@ slope = [g ** (1 / 2.4) for g in a.gain]
 os.makedirs(LUT_DIR, exist_ok=True)
 lut = os.path.join(LUT_DIR, f"{a.name}.cube")
 size = 33
+pivot = a.pivot / 255
 with open(lut, "w", encoding="ascii") as f:
     f.write(f'TITLE "lock21 {a.name}"\n')
-    f.write(f"# TODO #75: gains (linear) {a.gain}, slopes (gamma 2.4) {[round(s, 4) for s in slope]}\n")
+    f.write(f"# TODO #75: gains (linear) {a.gain}, slopes (gamma 2.4) {[round(s, 4) for s in slope]}, contrast {a.contrast} around {a.pivot}\n")
     f.write(f"LUT_3D_SIZE {size}\n")
     for b in range(size):
         for g in range(size):
             for r in range(size):
-                f.write(" ".join(f"{min(1.0, c / (size - 1) * s):.6f}" for c, s in zip((r, g, b), slope)) + "\n")
+                f.write(" ".join(f"{max(0.0, min(1.0, pivot + a.contrast * (c / (size - 1) * s - pivot))):.6f}" for c, s in zip((r, g, b), slope)) + "\n")
 print("LUT:", lut, "slopes", [round(s, 3) for s in slope])
 
 resolve = connect()
