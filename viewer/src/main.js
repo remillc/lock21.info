@@ -62,12 +62,21 @@ const panelKeys = rememberedKeys(settingsSchema({ mobile: false }))
 // a move, so a reload right after one brought back an older view. The camera is kept in the tab's session storage at
 // every move (CAM_KEY) and taken back on a reload: of the /modele page (no ?reset=1, ModelPage.astro) or of the viewer
 const CAM_KEY = 'l21-viewer-cam'
+// The camera placed (the first view, once the tilesets' roots are in): before, it is at the origin, and neither the
+// address nor the kept camera may take it (Christian, 2026-10-27: the address became ?cam=0.00,…,0.00 after the dev
+// server reloaded the viewer, and the next reload started from there)
+let framed = false
+/** A camera as ?cam= gives it: six numbers, the camera apart from the point it looks at (0,0,0,0,0,0 is none) */
+function validCam(text) {
+  const cam = text.split(',').map(Number)
+  return cam.length === 6 && cam.every(Number.isFinite) && Math.hypot(cam[0] - cam[3], cam[1] - cam[4], cam[2] - cam[5]) > 0.01
+}
 const navigation = /** @type {PerformanceNavigationTiming | undefined} */ (performance.getEntriesByType('navigation')[0])
 const reloading = params.get('reset') !== '1' && (window.self !== window.top || navigation?.type === 'reload')
 if (reloading) {
   try {
     const kept = sessionStorage.getItem(CAM_KEY)
-    if (kept) params.set('cam', kept)
+    if (kept && validCam(kept)) params.set('cam', kept)
   } catch {}
 }
 if (params.get('reset') === '1') {
@@ -1409,7 +1418,6 @@ const coarseWithoutRelief = () => ({
   },
 })
 let contextModels = []
-let framed = false
 let loadCount = 0
 // Every zone's root tileset is in: from then on, the loading indicator ends as soon as no tile is pending
 let rootsLoaded = false
@@ -1513,11 +1521,13 @@ async function loadModel() {
       framed = true
       // ?cam=x,y,z,tx,ty,tz: camera position and target (scene metres, y up), for identical or shared views; without
       // it, the chosen start view (START_VIEW), stepped back on a narrow frame
-      let cam = (params.get('cam') || '').split(',').map(Number)
-      if (!(cam.length === 6 && cam.every(Number.isFinite))) cam = startView(container.clientWidth / container.clientHeight)
+      const given = params.get('cam') || ''
+      const cam = validCam(given) ? given.split(',').map(Number) : startView(container.clientWidth / container.clientHeight)
       camera.position.set(cam[0], cam[1], cam[2])
       controls.target.set(cam[3], cam[4], cam[5])
       controls.update()
+      // The address now (it may have changed while the view was not placed: the underwater mode, the season)
+      updateAddress()
     })
   })
 }
@@ -1733,6 +1743,7 @@ const viewUrl = () => {
 }
 /** The camera, kept for a reload (CAM_KEY) */
 function keepCamera() {
+  if (!framed) return
   try {
     sessionStorage.setItem(CAM_KEY, [...camera.position.toArray(), ...controls.target.toArray()].map((n) => n.toFixed(2)).join(','))
   } catch {}
@@ -1783,6 +1794,7 @@ window.addEventListener('keydown', (event) => {
   event.preventDefault()
 })
 function updateAddress() {
+  if (!framed) return
   keepCamera()
   const hash = tourHash
   history.replaceState(null, '', viewUrl() + hash)
