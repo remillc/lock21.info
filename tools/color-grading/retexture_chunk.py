@@ -70,7 +70,7 @@ def texture_side(model, scale, texel, sample=50):
     for i in range(0, len(faces), sample):
         face = faces[i]
         a, b, c = (verts[k].coord for k in face.vertices)
-        area3 += (b - a).cross(c - a).norm() / 2
+        area3 += Metashape.Vector.cross(b - a, c - a).norm() / 2
         u, v, w = (tex[k].coord for k in face.tex_vertices)
         area_uv += abs((v.x - u.x) * (w.y - u.y) - (w.x - u.x) * (v.y - u.y)) / 2
     if area_uv <= 0:
