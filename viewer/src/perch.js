@@ -3,12 +3,11 @@
 // the bottom; they mill slowly together and draw back from the diver, then come back.
 //
 // No model online fitted (Sketchfab, 2026-10-27: the one light CC BY perch is a round cartoon fish; the others too
-// heavy, non-commercial or not perch), so the fish is built here from the species' descriptions (Missouri Department of
-// Conservation, Iowa DNR, Connecticut DEEP, Virginia DWR):
-// - shape: long, flattened from side to side, deepest at about a third of its length; two separate dorsal fins (spiny,
-//   then soft); a forked tail;
-// - colours: olive back, golden yellow sides, white belly, 6 to 8 dark bars from the back down the sides, narrowing
-//   downward; the young duller than the adults, without the spawning males' orange fins;
+// heavy, non-commercial or not perch). The fish is made from a photo (tools/creatures/make_perch.mjs: a yellow perch
+// on a white background by the U.S. Fish and Wildlife Service, public domain): its body's outline measured on it, the
+// photo laid on the body from the side as its texture, and each fin a flat outline in the middle plane cut by the
+// photo's alpha (Christian, 2026-10-27: the drawn fish did not look real). Its spiny dorsal fin lies folded along the
+// back at rest and rises when the diver comes close (Christian, 2026-10-27).
 // - the young (young of the year: a few cm in spring, about 6 to 10 cm in the autumn) school by 50 to 200, near
 //   submerged plants or structures. Here fewer (COUNT per school), for the frame rate.
 // All the fish of a school are one instanced mesh (one draw call); their swimming wave is in the vertex shader.
@@ -17,6 +16,17 @@
 // FLOOR_GAP and FLOOR_GAP + HEIGHT m above the floor under it (looked for again every FLOOR_EVERY s, a few fish per
 // frame); the diver closer than SHY m sends the fish away from them, faster.
 import * as THREE from 'three'
+import SHAPE from './perch-shape.json'
+
+const TEXTURE = `${import.meta.env.BASE_URL}creatures/perch.webp`
+// Its width against its depth (a perch is flattened from side to side)
+const WIDTH = 0.48
+// The spiny dorsal fin: its height folded (share of its height up), how far it lies back; raised closer than RAISE
+// times SHY to the diver, quickly (RAISE_SPEED, 1/s), folded again slowly (FOLD_SPEED)
+const FOLDED = 0.12
+const RAISE = 1.5
+const RAISE_SPEED = 6
+const FOLD_SPEED = 1
 
 // Fish per school (computer, phone), their lengths (m)
 const COUNT = [40, 16]
@@ -67,123 +77,63 @@ const BEND_MAX = 0.5
 /** A number at random in [min, max] */
 const between = ([min, max]) => min + Math.random() * (max - min)
 
-// The body's depth along its length (share of the length; s from the snout, 0, to the tail fin's end, 1)
-function depth(s) {
-  if (s < 0.38) return 0.25 * Math.sqrt(Math.sin((Math.PI / 2) * (s / 0.38)))
-  if (s < 0.82) return 0.08 + 0.17 * (0.5 + 0.5 * Math.cos((Math.PI * (s - 0.38)) / 0.44))
-  return 0.08
+/** The body's top and bottom at s (shares of the length, up from the axis), between the measured stations */
+function bodyAt(s) {
+  const { body } = SHAPE
+  const k = Math.max(1, body.findIndex((b) => b.s >= s))
+  const a = body[k - 1]
+  const b = body[Math.min(k, body.length - 1)]
+  const f = b.s === a.s ? 0 : THREE.MathUtils.clamp((s - a.s) / (b.s - a.s), 0, 1)
+  return { top: a.top + (b.top - a.top) * f, bottom: a.bottom + (b.bottom - a.bottom) * f }
 }
-// The back is more arched than the belly: the body's middle line a little above the axis toward the head
-const middle = (s) => 0.015 * Math.sin(Math.PI * Math.min(s / 0.82, 1))
 
-/** The fish's geometry: length 1 along z, the snout at +0.5; uv: u along the body, v the height (side projection) */
+/** The fish's geometry: length 1 along z, the snout at +0.5; uv: u along it, v its height (the photo from the side);
+ *  aFold: on the spiny dorsal fin, 1 and the back's height under the point (folded there at rest) */
 function fishGeometry() {
   const positions = []
   const uvs = []
+  const folds = []
   const indices = []
-  const RINGS = 18
-  const AROUND = 10
-  const height = (y) => 0.5 + y / 0.34
-  // The body: rings from the snout to the tail's base (s 0.82)
-  for (let i = 0; i <= RINGS; i++) {
-    const s = (i / RINGS) * 0.82
-    const d = Math.max(depth(s), 0.004)
-    const w = 0.42 * d
+  const AROUND = 12
+  const v = (y) => 0.5 + y / (2 * SHAPE.half)
+  // The body: a ring at each measured station
+  const { body } = SHAPE
+  body.forEach(({ s, top, bottom }) => {
+    const depth = Math.max(top - bottom, 0.004)
+    const width = WIDTH * depth
     for (let j = 0; j < AROUND; j++) {
       const a = (j / AROUND) * Math.PI * 2
-      const y = middle(s) + (d / 2) * Math.cos(a)
-      positions.push((w / 2) * Math.sin(a), y, 0.5 - s)
-      uvs.push(s, height(y))
+      const y = (top + bottom) / 2 + (depth / 2) * Math.cos(a)
+      positions.push((width / 2) * Math.sin(a), y, 0.5 - s)
+      uvs.push(s, v(y))
+      folds.push(0, 0)
     }
-  }
-  for (let i = 0; i < RINGS; i++) {
+  })
+  for (let i = 0; i < body.length - 1; i++) {
     for (let j = 0; j < AROUND; j++) {
       const a = i * AROUND + j
       const b = i * AROUND + ((j + 1) % AROUND)
-      const c = a + AROUND
-      const e = b + AROUND
-      indices.push(a, c, b, b, c, e)
+      indices.push(a, a + AROUND, b, b, a + AROUND, b + AROUND)
     }
   }
-  // The fins: flat, in the middle plane (double-sided material); their colour from the texture's top row (dusky) or
-  // bottom row (yellowish)
-  const fin = (points, row) => {
+  // The fins: flat outlines in the middle plane (double-sided), cut by the texture's alpha
+  for (const { points, fold } of Object.values(SHAPE.fins)) {
     const first = positions.length / 3
     for (const [s, y] of points) {
       positions.push(0, y, 0.5 - s)
-      uvs.push(s, row)
+      uvs.push(s, v(y))
+      folds.push(fold ? 1 : 0, bodyAt(s).top)
     }
-    for (let k = 1; k < points.length - 1; k++) indices.push(first, first + k, first + k + 1)
+    const shape = points.map(([s, y]) => new THREE.Vector2(s, y))
+    for (const [a, b, c] of THREE.ShapeUtils.triangulateShape(shape, [])) indices.push(first + a, first + b, first + c)
   }
-  const top = (s) => middle(s) + depth(s) / 2
-  const bottom = (s) => middle(s) - depth(s) / 2
-  // Spiny dorsal (its spines' tips), soft dorsal, tail (forked), anal, pelvic
-  fin([[0.28, top(0.28)], [0.31, top(0.31) + 0.1], [0.38, top(0.38) + 0.09], [0.46, top(0.46) + 0.06], [0.53, top(0.53)]], 0.99)
-  fin([[0.56, top(0.56)], [0.6, top(0.6) + 0.07], [0.7, top(0.7) + 0.05], [0.75, top(0.75)]], 0.99)
-  fin([[0.8, middle(0.8)], [0.8, top(0.8)], [1, 0.15], [0.92, middle(0.8)], [1, -0.13], [0.8, bottom(0.8)]], 0.99)
-  fin([[0.6, bottom(0.6)], [0.63, bottom(0.63) - 0.06], [0.72, bottom(0.72) - 0.04], [0.74, bottom(0.74)]], 0.01)
-  fin([[0.3, bottom(0.3)], [0.36, bottom(0.36) - 0.07], [0.4, bottom(0.4)]], 0.01)
   const geometry = new THREE.BufferGeometry()
   geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
   geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2))
+  geometry.setAttribute('aFold', new THREE.Float32BufferAttribute(folds, 2))
   geometry.setIndex(indices)
   geometry.computeVertexNormals()
   return geometry
-}
-
-/** Its colours, painted on a small canvas (side projection: u along the body, v the height) */
-function fishTexture() {
-  const W = 256
-  const H = 128
-  const canvas = document.createElement('canvas')
-  canvas.width = W
-  canvas.height = H
-  const context = canvas.getContext('2d')
-  const image = context.createImageData(W, H)
-  const back = [62, 72, 30]
-  const side = [150, 128, 46]
-  const belly = [190, 184, 150]
-  const bar = [34, 40, 18]
-  // The young are duller (Connecticut DEEP): the sides less yellow
-  const dull = 0.8
-  const grey = (c) => (c[0] + c[1] + c[2]) / 3
-  const mute = (c) => c.map((x) => grey(c) + (x - grey(c)) * dull)
-  const bars = [0.27, 0.35, 0.43, 0.51, 0.59, 0.67, 0.75]
-  const mix = (a, b, t) => a.map((x, k) => x + (b[k] - x) * t)
-  for (let py = 0; py < H; py++) {
-    const v = 1 - py / (H - 1)
-    for (let px = 0; px < W; px++) {
-      const u = px / (W - 1)
-      let colour
-      if (v > 0.975) colour = [70, 74, 44]
-      else if (v < 0.025) colour = [150, 124, 60]
-      else {
-        const s = Math.min(u, 0.82)
-        const y = (v - 0.5) * 0.34
-        const rel = THREE.MathUtils.clamp((y - middle(s)) / Math.max(depth(s) / 2, 0.01), -1, 1)
-        colour = rel > 0.35 ? mix(side, back, THREE.MathUtils.smoothstep(rel, 0.35, 0.75)) : mix(belly, side, THREE.MathUtils.smoothstep(rel, -0.7, -0.1))
-        // The bars: widest on the back, narrowing down to about the lower third of the side
-        for (const at of bars) {
-          const reach = THREE.MathUtils.smoothstep(rel, -0.45, 0.6)
-          const width = 0.04 * reach
-          if (Math.abs(u - at) < width) colour = mix(colour, bar, 0.9 * reach)
-        }
-        // The eye, and the gill cover's edge
-        if (Math.hypot(u - 0.08, (rel - 0.25) * 0.06) < 0.022) colour = Math.hypot(u - 0.08, (rel - 0.25) * 0.06) < 0.012 ? [10, 10, 8] : [170, 150, 70]
-        else if (Math.abs(u - 0.2 + 0.02 * rel) < 0.006 && rel > -0.5) colour = mix(colour, bar, 0.5)
-      }
-      colour = mute(colour)
-      const k = (py * W + px) * 4
-      image.data[k] = colour[0]
-      image.data[k + 1] = colour[1]
-      image.data[k + 2] = colour[2]
-      image.data[k + 3] = 255
-    }
-  }
-  context.putImageData(image, 0, 0)
-  const texture = new THREE.CanvasTexture(canvas)
-  texture.colorSpace = THREE.SRGBColorSpace
-  return texture
 }
 
 /**
@@ -210,13 +160,22 @@ export function createPerch({ mobile = false, prepare = (m) => m, floor = () => 
   function build() {
     if (material) return
     geometry = fishGeometry()
-    material = new THREE.MeshStandardMaterial({ map: fishTexture(), roughness: 0.55, side: THREE.DoubleSide })
+    const map = new THREE.TextureLoader().load(TEXTURE)
+    map.colorSpace = THREE.SRGBColorSpace
+    map.anisotropy = 4
+    material = new THREE.MeshStandardMaterial({ map, roughness: 0.5, side: THREE.DoubleSide, alphaTest: 0.5 })
     // The swimming wave: the body sways sideways more toward the tail, the wave running down it (per fish: its phase,
     // its sway)
     material.onBeforeCompile = (shader) => {
-      shader.vertexShader = 'attribute vec2 aSwim;\nattribute vec3 aBend;\n' + shader.vertexShader.replace('#include <begin_vertex>', /* glsl */ `
+      shader.vertexShader = 'attribute vec2 aSwim;\nattribute vec4 aBend;\nattribute vec2 aFold;\n' + shader.vertexShader.replace('#include <begin_vertex>', /* glsl */ `
         #include <begin_vertex>
         float swimS = 0.5 - position.z;
+        // The spiny dorsal fin: folded back along the back at rest, raised by aBend.w
+        if (aFold.x > 0.5) {
+          float up = transformed.y - aFold.y;
+          transformed.y = aFold.y + up * mix(${FOLDED.toFixed(2)}, 1.0, aBend.w);
+          transformed.z -= up * (1.0 - aBend.w) * 0.6;
+        }
         // The turn's bend: each part turned about the pivot by its angle (aBend: at the snout, at 0.6 and at the tail's
         // end; none at the pivot)
         float bendA = swimS < ${PIVOT.toFixed(2)} ? mix(aBend.x, 0.0, swimS / ${PIVOT.toFixed(2)}) : swimS < 0.6 ? mix(0.0, aBend.y, (swimS - ${PIVOT.toFixed(2)}) / ${(0.6 - PIVOT).toFixed(2)}) : mix(aBend.y, aBend.z, (swimS - 0.6) / 0.4);
@@ -238,7 +197,7 @@ export function createPerch({ mobile = false, prepare = (m) => m, floor = () => 
     swim.setUsage(THREE.DynamicDrawUsage)
     const mesh = new THREE.InstancedMesh(geometry.clone(), material, count)
     mesh.geometry.setAttribute('aSwim', swim)
-    const bends = new THREE.InstancedBufferAttribute(new Float32Array(count * 3), 3)
+    const bends = new THREE.InstancedBufferAttribute(new Float32Array(count * 4), 4)
     bends.setUsage(THREE.DynamicDrawUsage)
     mesh.geometry.setAttribute('aBend', bends)
     mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
@@ -260,6 +219,7 @@ export function createPerch({ mobile = false, prepare = (m) => m, floor = () => 
         heading,
         turnRate: 0,
         pitch: 0,
+        raised: 0,
       })
     }
     schools.push({ mesh, swim, bends, home, ground, fish, next: 0 })
@@ -326,6 +286,7 @@ export function createPerch({ mobile = false, prepare = (m) => m, floor = () => 
       // The diver too close: away from them, faster
       offset.subVectors(a.position, camera.position)
       const near = offset.length()
+      a.near = near
       let top = CRUISE
       a.fleeing = near < SHY
       if (near < SHY) {
@@ -356,7 +317,10 @@ export function createPerch({ mobile = false, prepare = (m) => m, floor = () => 
       const speed = a.velocity.length()
       const pulse = THREE.MathUtils.clamp(a.length / Math.max(speed, 1e-3), PULSE[0], PULSE[1])
       const bend = (share) => THREE.MathUtils.clamp(-a.turnRate * (share - PIVOT) * pulse, -BEND_MAX, BEND_MAX)
-      school.bends.setXYZ(i, bend(0), bend(0.6), bend(1))
+      // The spiny dorsal raised with the diver close, folded again once they are gone
+      const raise = a.near < SHY * RAISE ? 1 : 0
+      a.raised += (raise - a.raised) * Math.min(1, (raise ? RAISE_SPEED : FOLD_SPEED) * dt)
+      school.bends.setXYZW(i, bend(0), bend(0.6), bend(1), a.raised)
       euler.set(-a.pitch, a.heading, 0)
       turn.setFromEuler(euler)
       // (the mesh's origin is its middle: the pivot is 0.5 - PIVOT of its length ahead of it)
