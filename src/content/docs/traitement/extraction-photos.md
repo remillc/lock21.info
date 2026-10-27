@@ -24,7 +24,7 @@ Dans la caméra, la balance des blancs reste fixe, à 6500 K ([Matériel utilis�
 
 En octobre 2026, une correction commune s'est ajoutée à l'étalonnage de la charte, à l'aide de l'outil d'intelligence artificielle Claude, une par plongée. La couleur moyenne de chaque passage, mesurée sur une vingtaine d'images, est ramenée aux trois quarts du chemin vers le gris neutre, et la correction de la plongée est la médiane des passages. Une seule correction par plongée évite les bandes de couleur dans la texture, là où les images de deux passages se mélangent. Pour la plongée 21 et celle du 14 juillet, plus plates que les autres, le contraste est remonté au niveau des autres plongées.
 
-La correction est posée dans une copie du projet Resolve de chaque plongée, et les images sont rendues dans un nouveau dossier, sous les mêmes noms. Les projets et les images d'origine restent tels quels.
+La correction de chaque plongée est enregistrée dans un fichier LUT (*look-up table*, une table de correspondance qui donne, pour chaque couleur de l'image, la couleur corrigée). Dans une copie du projet Resolve de la plongée, ce fichier est posé sur le nœud de la timeline, qui s'applique à toutes les images après leur propre étalonnage, puis les images sont rendues dans un nouveau dossier, sous les mêmes noms. Les projets et les images d'origine restent tels quels.
 
 ## Le chevauchement des images
 
