@@ -6,14 +6,20 @@ Le chunk doit être une copie (Duplicate Chunk) dont le nom contient « graded �
 1. Chemins: chaque photo d'un dossier d'origine pointe vers le dossier étalonné, sous le même nom (`-m ancien=nouveau`,
    par défaut les trois dossiers de la zone 3). Tout est vérifié avant: si un fichier manque, rien n'est changé.
 2. Texture: refaite sur le modèle actif du chunk, avec ses coordonnées de texture (pas de nouveau dépliage),
-   mosaïque, `-s` px. Le projet est enregistré.
+   mosaïque. Sa taille suit la taille réelle de la structure: la surface du modèle (en m², échelle du chunk) et
+   la part de la texture que couvrent ses coordonnées donnent le côté qui fait un texel de la taille cible, celle du
+   pixel d'écran à la distance de visionnement de tools/model-analysis/thresholds.json (2 m: 1,73 mm; README de
+   tools/publish-model, « Résolution des textures »), arrondi au multiple de 16 px supérieur. `-s` impose un côté.
+   Le projet est enregistré.
 3. Export: le modèle texturé en .glb (`-o`).
 
 Usage (Arguments):
-    [-c "zone 3 - graded - FINAL"] [-m <ancien dossier>=<nouveau dossier> ...] [-s 16384] [-o <sortie.glb>]
+    [-c "zone 3 - graded"] [-s <px>] [-m <ancien dossier>=<nouveau dossier> ...] [-o <sortie.glb>]
     [--check] (vérifie les chemins seulement) [--no-texture] [--no-export]
 """
 import argparse
+import json
+import math
 import os
 import sys
 
@@ -29,8 +35,8 @@ p = argparse.ArgumentParser(prog="retexture_chunk.py", description=__doc__,
                             formatter_class=argparse.RawDescriptionHelpFormatter)
 p.add_argument("-c", "--chunk", help="nom du chunk (défaut: le chunk actif); doit contenir « graded »")
 p.add_argument("-m", "--map", action="append", help="ancien dossier=nouveau dossier (répétable; défaut: zone 3)")
-p.add_argument("-s", "--size", type=int, default=16384, help="taille de la texture, px (défaut 16384)")
-p.add_argument("-o", "--out", default="O:/modeles/zone-3/zone-3 - graded - mesh 24M faces.glb",
+p.add_argument("-s", "--size", type=int, help="côté de la texture, px (défaut: calculé pour le texel cible)")
+p.add_argument("-o", "--out", default="O:/modeles/zone-3/zone-3 - graded - high res.glb",
                help="modèle texturé à écrire (.glb)")
 p.add_argument("--check", action="store_true", help="vérifier les chemins sans rien changer")
 p.add_argument("--no-texture", action="store_true", help="ne pas refaire la texture")
@@ -93,8 +99,45 @@ if changes:
     doc.save()
     log("chemins changés et projet enregistré")
 
+
+
+def target_texel_m():
+    """Le pixel d'écran à la distance de visionnement la plus proche (thresholds.json), en m."""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "model-analysis", "thresholds.json")
+    with open(path, encoding="utf-8") as f:
+        v = json.load(f)["viewing"]
+    return 2 * v["min_view_distance_m"] * math.tan(math.radians(v["vertical_fov_deg"] / 2)) / v["screen_height_px"]
+
+
+def texture_side(model, scale, texel, sample=50):
+    """Le côté de texture qui donne `texel` m par texel: la surface réelle et la surface des coordonnées de texture,
+    mesurées sur une face sur `sample`."""
+    verts, tex = model.vertices, model.tex_vertices
+    area3, area_uv, faces = 0.0, 0.0, model.faces
+    for i in range(0, len(faces), sample):
+        face = faces[i]
+        a, b, c = (verts[k].coord for k in face.vertices)
+        area3 += (b - a).cross(c - a).norm() / 2
+        u, v, w = (tex[k].coord for k in face.tex_vertices)
+        area_uv += abs((v.x - u.x) * (w.y - u.y) - (w.x - u.x) * (v.y - u.y)) / 2
+    if area_uv <= 0:
+        raise SystemExit("le modèle n'a pas de coordonnées de texture")
+    area_m2 = area3 * scale * scale
+    side = math.sqrt(area_m2 / area_uv) / texel
+    # (une face sur `sample`: les deux sommes sont à multiplier par `sample`, leur rapport reste le même)
+    log("surface %.0f m², coordonnées de texture sur %.0f %% de la texture" % (area_m2 * sample, 100 * area_uv * sample))
+    return int(math.ceil(side / 16) * 16)
+
+
 # 2. Texture, sur les coordonnées existantes
 if not a.no_texture:
+    if not a.size:
+        scale = chunk.transform.scale
+        if not scale:
+            raise SystemExit("le chunk n'a pas d'échelle: donner -s")
+        texel = target_texel_m()
+        a.size = texture_side(chunk.model, scale, texel)
+        log("texel cible %.2f mm: %d px de côté" % (texel * 1000, a.size))
     log("texture: %d px, mosaïque" % a.size)
     chunk.buildTexture(blending_mode=Metashape.MosaicBlending, texture_size=a.size, fill_holes=True,
                        ghosting_filter=True)
