@@ -4,8 +4,7 @@ description: "Pourquoi un plancher plat de 100 pieds sortait courbé en banane d
 ---
 Le test effectué sur une surface plane de 100 pieds de long montre que le modèle résultant de l'alignement des caméras dans le logiciel de photogrammétrie est déformé. Au lieu d'obtenir une surface plate, celle-ci est courbée en forme de banane.
 
-Sur un segment plus long, l'effet est flagrant : les 300 pieds du dessus du mur sud du canal, filmés le 26 juillet
-2024 entre les cibles 1 et 2 (plongée 27), s'enroulent presque en cercle.
+Sur un segment plus long, l'effet est flagrant : les 300 pieds du dessus du mur sud du canal, filmés le 26 juillet 2024 entre les cibles 1 et 2 (plongée 27), s'enroulent presque en cercle.
 
 <div class="facts">
 <p class="fact"><span>Segment</span><b>300 pi</b></p>

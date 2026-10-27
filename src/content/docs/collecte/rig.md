@@ -5,8 +5,7 @@ sidebar:
   order: 3
 ---
 
-Le rig (support de caméras) est un assemblage de profilés d'aluminium à rainure en T (ou T-slot) de 20 × 20 mm
-(série 2020). Il porte la GoPro et les lampes devant le scooter Seacraft Future 1000. Sylvain Marcotte l'a conçu.
+Le rig (support de caméras) est un assemblage de profilés d'aluminium à rainure en T (ou T-slot) de 20 × 20 mm (série 2020). Il porte la GoPro et les lampes devant le scooter Seacraft Future 1000. Sylvain Marcotte l'a conçu.
 
 <div class="facts">
 <p class="fact"><span>Scooter</span><b>Seacraft Future 1000</b></p>
@@ -63,9 +62,7 @@ Le rig (support de caméras) est un assemblage de profilés d'aluminium à rainu
 
 ## Les lampes
 
-Les lampes sont placées pour éclairer également un plan à environ 70 cm de la lentille : 60 cm entre les deux lampes
-du haut, 40 cm entre les deux lampes de droite. Les mesures sont dans [Dimensions du rig de
-caméra](/problemes/dimensions-rig).
+Les lampes sont placées pour éclairer également un plan à environ 70 cm de la lentille : 60 cm entre les deux lampes du haut, 40 cm entre les deux lampes de droite. Les mesures sont dans [Dimensions du rig de caméra](/problemes/dimensions-rig).
 
 <figure id="lampes">
 
@@ -74,8 +71,7 @@ caméra](/problemes/dimensions-rig).
 <figcaption><time datetime="2024-05-16">2024-05-16</time>Les lampes, les flotteurs et la GoPro dans son boîtier</figcaption>
 </figure>
 
-Quatre lampes de plongée SecurityIng, une à chaque coin du cadre : 10 DEL blanches (6000 K), 4 rouges et 4 bleues, un
-faisceau de 120°, quatre piles 18650. Intensité : 12 000 lumens annoncés par le vendeur.
+Quatre lampes de plongée SecurityIng, une à chaque coin du cadre : 10 DEL blanches (6000 K), 4 rouges et 4 bleues, un faisceau de 120°, quatre piles 18650. Intensité : 12 000 lumens annoncés par le vendeur.
 
 <figure id="dimensions-lampe">
 
@@ -86,13 +82,11 @@ faisceau de 120°, quatre piles 18650. Intensité : 12 000 lumens annoncés pa
 
 ## Le scooter
 
-Un Seacraft Future 1000. À la vitesse 1, il avance à 1,2 pied par seconde (0,37 m/s), mesuré dans les vidéos du [test de
-netteté](/problemes/nettete-images). Ses vitesses sont programmables.
+Un Seacraft Future 1000. À la vitesse 1, il avance à 1,2 pied par seconde (0,37 m/s), mesuré dans les vidéos du [test de netteté](/problemes/nettete-images). Ses vitesses sont programmables.
 
 ## Les brosses
 
-Les brosses à plancher servent à préparer les surfaces avant de les filmer, le bois surtout : elles dégagent le limon
-et les coquilles qui les recouvrent par endroits.
+Les brosses à plancher servent à préparer les surfaces avant de les filmer, le bois surtout : elles dégagent le limon et les coquilles qui les recouvrent par endroits.
 
 ## Le matériel d'une plongée
 

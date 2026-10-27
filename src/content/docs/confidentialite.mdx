@@ -13,52 +13,36 @@ Le site mesure sa fréquentation avec Google Analytics 4. Il enregistre, sans vo
 
 - les pages vues, et la page d'où vous arrivez (un autre site, un moteur de recherche, un code QR de la page du modèle) ;
 - le type d'appareil, le système, le navigateur, la langue, le pays et la région approximatifs ;
-- ce que vous faites sur le site : une recherche (le texte cherché, quand vous ouvrez un résultat), l'ouverture du menu,
-  le thème et la langue choisis, une carte ou un bouton de l'accueil, une image agrandie, un lien vers un autre site,
-  la lecture d'une page jusqu'au bas ;
-- ce que vous faites dans le modèle 3D : ses boutons (vue de départ, plein écran, plongée, réglages, aide), la visite
-  guidée (son début, ses étapes, sa fin), la saison et la lampe en plongée, un réglage changé, votre premier geste
-  (tourner, déplacer, zoomer, nager), le temps passé en vue normale et en plongée, le téléchargement des fichiers
-  (Google Earth, GLB) et le lancement de la réalité augmentée (sur une table ou à la taille réelle).
+- ce que vous faites sur le site : une recherche (le texte cherché, quand vous ouvrez un résultat), l'ouverture du menu, le thème et la langue choisis, une carte ou un bouton de l'accueil, une image agrandie, un lien vers un autre site, la lecture d'une page jusqu'au bas ;
+- ce que vous faites dans le modèle 3D : ses boutons (vue de départ, plein écran, plongée, réglages, aide), la visite guidée (son début, ses étapes, sa fin), la saison et la lampe en plongée, un réglage changé, votre premier geste (tourner, déplacer, zoomer, nager), le temps passé en vue normale et en plongée, le téléchargement des fichiers (Google Earth, GLB) et le lancement de la réalité augmentée (sur une table ou à la taille réelle).
 
-**Pourquoi:** savoir quelles pages servent, comment le modèle 3D est utilisé (la visite guidée, la plongée, les
-téléchargements, la réalité augmentée), et d'où viennent les visiteurs, pour décider de la suite du projet.
+**Pourquoi:** savoir quelles pages servent, comment le modèle 3D est utilisé (la visite guidée, la plongée, les téléchargements, la réalité augmentée), et d'où viennent les visiteurs, pour décider de la suite du projet.
 
-**Témoins (cookies):** Google Analytics dépose des témoins (`_ga`, `_ga_…`) pour reconnaître une visite qui se poursuit.
-Les données sont traitées par Google, hors du Québec (États-Unis), selon ses propres règles. Elles sont gardées
-14 mois, puis effacées par Google.
+**Témoins (cookies):** Google Analytics dépose des témoins (`_ga`, `_ga_…`) pour reconnaître une visite qui se poursuit. Les données sont traitées par Google, hors du Québec (États-Unis), selon ses propres règles. Elles sont gardées 14 mois, puis effacées par Google.
 
-**Refuser:** ce bouton arrête la mesure dans ce navigateur et efface les témoins de Google Analytics. Il permet aussi
-de l'accepter à nouveau.
+**Refuser:** ce bouton arrête la mesure dans ce navigateur et efface les témoins de Google Analytics. Il permet aussi de l'accepter à nouveau.
 
 <AnalyticsOptOut />
 
 ## Ce qui reste dans votre navigateur
 
-Le visualiseur 3D garde vos réglages (éclairage, couleurs, etc.), et le site votre refus de la mesure s'il y a lieu,
-dans le stockage local de votre navigateur. Ces informations ne quittent pas votre appareil et ne sont pas des témoins.
+Le visualiseur 3D garde vos réglages (éclairage, couleurs, etc.), et le site votre refus de la mesure s'il y a lieu, dans le stockage local de votre navigateur. Ces informations ne quittent pas votre appareil et ne sont pas des témoins.
 
 ## Journal technique du visualiseur 3D
 
-Le visualiseur 3D envoie au site un court journal technique de chaque visite, pour trouver et corriger ce qui ne
-fonctionne pas sur certains appareils (par exemple un iPhone qui manque de mémoire). Il contient :
+Le visualiseur 3D envoie au site un court journal technique de chaque visite, pour trouver et corriger ce qui ne fonctionne pas sur certains appareils (par exemple un iPhone qui manque de mémoire). Il contient :
 
 - l'appareil tel que le navigateur le décrit : navigateur et système, taille de l'écran, carte graphique, mémoire ;
 - le temps de chargement du modèle, la mémoire utilisée, la durée de la visite ;
 - les erreurs rencontrées, et le déroulement technique de la réalité augmentée ;
 - le pays, déduit par l'hébergeur.
 
-Il ne contient ni votre nom, ni votre adresse IP, ni témoin. Chaque visite reçoit un code au hasard (affiché en bas des
-réglages ⚙ du visualiseur), qui ne permet pas de vous reconnaître d'une visite à l'autre. Pour repérer une visite qui
-s'est mal terminée, le visualiseur garde ce code dans le stockage de l'onglet le temps de la visite. Le journal est
-conservé quelques jours chez Cloudflare, puis effacé. Il ne sert à rien d'autre.
+Il ne contient ni votre nom, ni votre adresse IP, ni témoin. Chaque visite reçoit un code au hasard (affiché en bas des réglages ⚙ du visualiseur), qui ne permet pas de vous reconnaître d'une visite à l'autre. Pour repérer une visite qui s'est mal terminée, le visualiseur garde ce code dans le stockage de l'onglet le temps de la visite. Le journal est conservé quelques jours chez Cloudflare, puis effacé. Il ne sert à rien d'autre.
 
 ## Hébergement
 
-Le site, le modèle 3D et les téléchargements sont hébergés par Cloudflare. Comme tout serveur web, il
-reçoit votre adresse IP pour vous envoyer les pages, mais ce site n'y a pas accès.
+Le site, le modèle 3D et les téléchargements sont hébergés par Cloudflare. Comme tout serveur web, il reçoit votre adresse IP pour vous envoyer les pages, mais ce site n'y a pas accès.
 
 ## Responsable
 
-Responsable de la protection des renseignements personnels : Christian Rémillard, auteur du site. Pour toute question, ou
-pour exercer vos droits (accès, rectification, refus de la mesure) : [info@lock21.info](mailto:info@lock21.info).
+Responsable de la protection des renseignements personnels : Christian Rémillard, auteur du site. Pour toute question, ou pour exercer vos droits (accès, rectification, refus de la mesure) : [info@lock21.info](mailto:info@lock21.info).

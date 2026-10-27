@@ -3,12 +3,9 @@ title: Aligning chunks
 description: Why the zones' models don't line up well with each other, and how targets give them their real size.
 ---
 
-Each zone is processed separately in Metashape, in its own *chunk* (a set of photos processed on its own), and every
-model comes out of the process slightly distorted. These distortions make it hard to line the models up with each
-other.
+Each zone is processed separately in Metashape, in its own *chunk* (a set of photos processed on its own), and every model comes out of the process slightly distorted. These distortions make it hard to line the models up with each other.
 
-The size has to be right too: a model that isn't exactly to scale won't line up with its neighbours. So I used targets
-to set measuring scales on each model and bring it to its exact real dimensions.
+The size has to be right too: a model that isn't exactly to scale won't line up with its neighbours. So I used targets to set measuring scales on each model and bring it to its exact real dimensions.
 
 <figure>
 

@@ -4,8 +4,7 @@ description: "Why a flat 100-foot floor came out of Metashape bent like a banana
 ---
 A test on a flat surface 100 feet long shows that the model produced by aligning the cameras in the photogrammetry software is distorted. Instead of a flat surface, it comes out bent like a banana.
 
-On a longer segment the effect is plain to see: the 300 feet of the top of the canal's south wall, filmed on July 26,
-2024 between targets 1 and 2 (dive 27), curl up almost into a circle.
+On a longer segment the effect is plain to see: the 300 feet of the top of the canal's south wall, filmed on July 26, 2024 between targets 1 and 2 (dive 27), curl up almost into a circle.
 
 <div class="facts">
 <p class="fact"><span>Segment</span><b>300 ft</b></p>
