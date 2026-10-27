@@ -21,7 +21,7 @@ visionneuse.
 | Appareil | Visionneuse | Fichier |
 | --- | --- | --- |
 | iPhone, iPad (Safari) | **AR Quick Look** (Apple) | USDZ |
-| Android | **WebXR dans Chrome** (code du visualiseur, `viewer/src/android-ar.js`): un toucher ouvre la caméra; Scene Viewer (Google) si Chrome n'a pas la RA WebXR | GLB (1:100) |
+| Android | **WebXR dans Chrome** (code du visualiseur, `src/viewer/android-ar.js`): un toucher ouvre la caméra; Scene Viewer (Google) si Chrome n'a pas la RA WebXR | GLB (1:100) |
 
 Le visiteur lance la RA de deux façons:
 
@@ -81,7 +81,7 @@ npm run downloads:upload
 
 Le USDZ part avec le type `model/vnd.usdz+zip`: sans lui, Quick Look refuse de l'ouvrir.
 
-Ensuite, changer `AR_VERSION` dans `viewer/src/main.js` (par exemple la date) et publier le site: le serveur et les
+Ensuite, changer `AR_VERSION` dans `src/viewer/main.js` (par exemple la date) et publier le site: le serveur et les
 téléphones gardent les fichiers RA une heure, et l'adresse versionnée (`?v=…`) leur fait prendre les nouveaux tout de
 suite. Le script d'envoi compare les fichiers à leur empreinte en ligne (MD5): un modèle refait de même taille part
 quand même.
@@ -121,7 +121,7 @@ avant l'essai.
 
 - **Rien ne s'ouvre, la page glisse et revient** (Android, avant le 2026-10-22): Scene Viewer s'ouvrait et se
   refermait aussitôt sur un Pixel 10 Pro, pour tout modèle (même ceux de Google) et depuis toute page. Le bouton RA
-  ouvre donc maintenant la RA dans Chrome même (WebXR, `viewer/src/android-ar.js`): un seul toucher ouvre la caméra,
+  ouvre donc maintenant la RA dans Chrome même (WebXR, `src/viewer/android-ar.js`): un seul toucher ouvre la caméra,
   le modèle au 1:100 se charge pendant ce temps (progression affichée), un anneau suit le sol ou une table, et un
   toucher sur l'écran y pose l'écluse (un autre la déplace), le fond du canal (60 pi) sur la surface. Elle est agrandie à partir de ce point, sans bouger; à 1:1 les murs montent à environ 35 pi. Un curseur « Taille » va de 1:100 (sur une table) à 1:1
   (taille réelle); `?ar=full` ouvre à 1:1. `<model-viewer>` (essayé) demandait deux touchers: il télécharge tout le

@@ -1,6 +1,5 @@
 # Cache headers for Cloudflare (Workers static assets read this file from the built site's root).
-# Astro's and the viewer's built files carry a hash of their content in their name: cached for a year, never stale.
+# Astro's built files (the 3D viewer's included) carry a hash of their content in their name: cached for a year,
+# never stale.
 /_astro/*
-  Cache-Control: public, max-age=31536000, immutable
-/modele/viewer/assets/*
   Cache-Control: public, max-age=31536000, immutable

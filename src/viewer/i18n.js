@@ -2,10 +2,10 @@
 // The language: embedded in a page of the site (/modele or /en/modele, same origin), that page's <html lang>; otherwise
 // ?lang=fr|en in the address (read before main.js tidies the address); otherwise the browser's language.
 //
-// Usage: m.reset(), m.error({ message }).
+// Usage: m.viewer_reset(), m.viewer_error({ message }).
 
-import { m } from './paraglide/messages.js'
-import { overwriteGetLocale } from './paraglide/runtime.js'
+import { m } from '../paraglide/messages.js'
+import { overwriteGetLocale } from '../paraglide/runtime.js'
 
 /** @typedef {'fr' | 'en'} Lang */
 
@@ -34,9 +34,9 @@ function detect() {
 export const lang = detect()
 document.documentElement.lang = lang
 
-// The texts are Paraglide JS messages (messages/viewer/fr.json, en.json; compiled by the Vite plugin into
-// src/paraglide/, gitignored): every message in the viewer's language. Import m from here, not from ./paraglide: this
-// module then runs first, and the language is set before any message is read.
+// The texts are Paraglide JS messages, the site's (messages/site/fr.json, en.json, keys viewer_…; compiled by the
+// Vite plugin into src/paraglide/, gitignored): every message in the viewer's language. Import m from here, not from
+// ../paraglide: this module then runs first, and the language is set before any message is read.
 overwriteGetLocale(() => lang)
 export { m }
 

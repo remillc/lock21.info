@@ -5,7 +5,7 @@
 //   The two home pages keep their slash: / and /en/.
 // - /en/: the English home page is a collection, at /en/ like the French one at /. Every other page has no final slash,
 //   which the static assets enforce (html_handling: drop-trailing-slash) and would apply to /en/ too.
-// - /api/log: the 3D viewer's telemetry (viewer/src/telemetry.js), written to Workers Logs (observability in
+// - /api/log: the 3D viewer's telemetry (src/viewer/telemetry.js), written to Workers Logs (observability in
 //   wrangler.jsonc). Read live with `npx wrangler tail lock21-info`, or in the dashboard (Workers, lock21-info, Logs).
 
 // Largest message accepted (the viewer cuts its own at about 3.9 KB)

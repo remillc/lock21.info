@@ -3,7 +3,7 @@
 //   a non-breaking space (U+00A0) before « : » and inside « », and between a number and its unit, and in thousands;
 //   a narrow non-breaking space (U+202F) before « ; », « ? », « ! ».
 // Checks the French texts: the site's pages (src/content/docs/, not en/), the interface's messages
-// (messages/site/fr.json, messages/viewer/fr.json) and the guided tour's French texts (viewer/src/tour-steps.js).
+// (messages/site/fr.json, the 3D viewer's included) and the guided tour's French texts (src/viewer/tour-steps.js).
 // Prose only: front matter, code blocks, inline code, HTML/JSX tags and comments, MDX imports, link targets, addresses,
 // times (10:30) and ratios (4:3, 1:100) are left alone.
 //
@@ -125,7 +125,7 @@ function walk(dir) {
 const docs = join(ROOT, 'src/content/docs')
 const files = argv.filter((a) => !a.startsWith('-')).length
   ? argv.filter((a) => !a.startsWith('-')).map((a) => join(ROOT, a))
-  : [...walk(docs), join(ROOT, 'messages/site/fr.json'), join(ROOT, 'messages/viewer/fr.json'), join(ROOT, 'viewer/src/tour-steps.js')]
+  : [...walk(docs), join(ROOT, 'messages/site/fr.json'), join(ROOT, 'src/viewer/tour-steps.js')]
 
 let changed = 0
 let count = 0

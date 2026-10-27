@@ -43,7 +43,7 @@ export function createTouchNav({ controls, camera, surface, pick, requestRender 
   // The gestures' card: at the first touch, and from the « ? » button
   let hintTimer = 0
   function showCard() {
-    hint.innerHTML = `<strong>${m.touchHelpTitle()}</strong>${m.touchHelp()}`
+    hint.innerHTML = `<strong>${m.viewer_touchHelpTitle()}</strong>${m.viewer_touchHelp()}`
     hint.hidden = false
     clearTimeout(hintTimer)
     hintTimer = setTimeout(() => (hint.hidden = true), HINT_TIME)
@@ -54,8 +54,8 @@ export function createTouchNav({ controls, camera, surface, pick, requestRender 
   } catch {}
   if (coarse) {
     helpButton.hidden = false
-    helpButton.setAttribute('aria-label', m.touchHelpTitle())
-    helpButton.dataset.tooltip = m.touchHelpTitle()
+    helpButton.setAttribute('aria-label', m.viewer_touchHelpTitle())
+    helpButton.dataset.tooltip = m.viewer_touchHelpTitle()
     helpButton.addEventListener('click', showCard)
   }
 

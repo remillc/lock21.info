@@ -1,7 +1,7 @@
 """Builds the diver's arm of the 3D viewer's underwater view (Christian's references, 2026-10-23): the right arm of a
 scuba diver in cold water, a black neoprene wetsuit sleeve and glove (its cuff over the sleeve), a dive computer on
 the wrist, and the hand light (make_dive_light.py) strapped on the back of the hand. Written as one .glb in the
-camera's frame (the eye at the origin, looking down -Z, Y up, metres), for viewer/public/diver/diver-arm.glb.
+camera's frame (the eye at the origin, looking down -Z, Y up, metres), for public/viewer/diver/diver-arm.glb.
 
 The arm's shape: « First Person hands rigged » (Sketchfab, CC BY 4.0), its right arm only, as posed in the file (its
 rig came through the FBX conversion with garbled bones: the shape is used, not the rig). The hand's frame is measured
@@ -12,7 +12,7 @@ simplified to 60 %, the light without its unseen front: 638 KB and 19,000 triang
 change; diver-arm.js has the decoder):
     blender -b --factory-startup --python tools/diver/make_diver_arm.py -- -a O:/modeles/diver/hands/scene.gltf
         -l tools/diver/dive-light.glb -o O:/temp/diver-arm.glb [-p preview.png]
-    node tools/publish-model/pack_creature.mjs O:/temp/diver-arm.glb viewer/public/diver/diver-arm.glb -m -s 0.6
+    node tools/publish-model/pack_creature.mjs O:/temp/diver-arm.glb public/viewer/diver/diver-arm.glb -m -s 0.6
 """
 import argparse
 import math
@@ -273,7 +273,7 @@ front.matrix_world = light.matrix_world @ Matrix.Translation((0, 0.003, 0)) @ Ma
 
 # 6. A dive computer on the back of the wrist, a Shearwater Perdix 3 (TODO #65, Christian, 2026-10-24; shearwater.com):
 # 81 x 71 mm, its case, a scalloped bezel held by 8 screws, the screen (4:3, its picture drawn by the viewer:
-# viewer/src/dive-computer.js, on the mesh « computer-screen »), the two strap bars at its ends. Kept light (about a
+# src/viewer/dive-computer.js, on the mesh « computer-screen »), the two strap bars at its ends. Kept light (about a
 # thousand triangles): what shows at the bottom of the view, no detail beyond
 # (the wrist: behind the hand's centre, along the fingers' line; the forearm's bones run up to the elbow)
 # Its screen readable (Christian, 2026-10-24): moved up the forearm toward the hand (COMPUTER_BACK m behind the hand's

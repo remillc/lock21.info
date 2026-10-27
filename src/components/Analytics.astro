@@ -13,7 +13,7 @@
 //   codes' campaigns (utm_source=qr, utm_campaign=ra-table / ra-taille-reelle) reach the first page view.
 // - Events (TODO #88; the list is on the privacy page): file_download (links with data-track-download: the KMZ and the
 //   GLB); the visitors' other actions, from any script of the site as an l21:track event on document (detail: name,
-//   params), and from the 3D viewer in /modele's frame as a lock21:track message (viewer/src/analytics.js). Outbound
+//   params), and from the 3D viewer in /modele's frame as a lock21:track message (src/viewer/analytics.js). Outbound
 //   links and scrolls: GA4's enhanced measurement (its own setting, in GA). An action before Google's script is loaded
 //   waits for it (queue), unless the visitor refused the measurement.
 import { site } from '../data/site'
@@ -174,7 +174,7 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
       const { name, params } = /** @type {CustomEvent<{ name: string, params?: Record<string, unknown> }>} */ (event).detail ?? {}
       if (typeof name === 'string') track(name, params ?? {})
     })
-    // The 3D viewer's actions (iframe of /modele, viewer/src/analytics.js)
+    // The 3D viewer's actions (iframe of /modele, src/viewer/analytics.js)
     window.addEventListener('message', (event) => {
       if (event.origin !== location.origin || event.data?.type !== 'lock21:track' || typeof event.data.name !== 'string') return
       track(event.data.name, event.data.params ?? {})

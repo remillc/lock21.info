@@ -9,12 +9,9 @@
     "model:post-modified": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/publish-model/publish_zones.ps1 -Changed",
     "model:publish": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/publish-model/publish_zones.ps1",
     "model:serve-tiles": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/publish-model/serve-tiles.ps1",
-    "viewer:dev": "npm --prefix viewer run dev",
-    "viewer:build": "npm --prefix viewer run build",
     "model:upload": "node tools/publish-model/upload_r2.mjs",
     "downloads:upload": "node tools/publish-model/upload_downloads.mjs",
     "bing:submit": "node tools/bing/submit-urls.mjs",
-    "build:viewer": "npm --prefix viewer run build -- --outDir ../public/modele/viewer --emptyOutDir",
     "preview": "astro preview",
     "i18n:status": "node tools/i18n/status.mjs"
   },
@@ -22,17 +19,21 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "3d-tiles-renderer": "0.5.3",
     "@astrojs/sitemap": "3.7.4",
     "@astrojs/starlight": "0.42.6",
     "@fontsource/archivo": "5.3.0",
     "@fontsource/jetbrains-mono": "5.3.0",
     "astro": "7.4.1",
+    "n8ao": "^2.0.1",
     "pagefind": "^1.5.2",
     "qrcode": "^1.5.4",
-    "sass": "^1.105.2"
+    "sass": "^1.105.2",
+    "three": "0.186.1",
+    "three-mesh-bvh": "0.9.16"
   },
   "engines": {
-    "node": ">=18.0"
+    "node": ">=22.12"
   },
   "type": "module",
   "devDependencies": {
@@ -40,6 +41,7 @@
     "@inlang/paraglide-js": "^2.29.1",
     "@inlang/plugin-message-format": "^4.5.5",
     "astro-icon": "^1.2.0",
+    "unplugin-icons": "^24.0.0",
     "wrangler": "4.151.3"
   }
 }

@@ -107,8 +107,8 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   const prev = /** @type {HTMLButtonElement} */ (card.querySelector('.tour-prev'))
   const next = /** @type {HTMLButtonElement} */ (card.querySelector('.tour-next'))
   const close = /** @type {HTMLButtonElement} */ (card.querySelector('.tour-close'))
-  button.querySelector('.tour-button-label').textContent = m.tourButton()
-  card.setAttribute('aria-label', m.tourButton())
+  button.querySelector('.tour-button-label').textContent = m.viewer_tourButton()
+  card.setAttribute('aria-label', m.viewer_tourButton())
   // Back and next as icon buttons (Christian, 2026-10-26: nav icons rather than words): Material Symbols Rounded
   // « arrow_back », « arrow_forward », and « check » on the last step; their names as label and tooltip
   const ICON = { back: 'arrow-back-rounded', next: 'arrow-forward-rounded', end: 'check-rounded' }
@@ -117,15 +117,15 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     element.setAttribute('aria-label', label)
     element.dataset.tooltip = label
   }
-  iconButton(prev, 'back', m.tourPrev())
+  iconButton(prev, 'back', m.viewer_tourPrev())
   // Back to the step's view after looking around (usability audit V24, 2026-10-26: a drag cleared the step from the
   // address, the card still showed it): an MD3 text button with a leading icon, Material Symbols Rounded « replay »,
   // shown once the camera has left the step's view by more than AWAY m or AWAY_ANGLE rad; it plays the step again
   // from where the camera is (its flight, a move's way too)
   const again = /** @type {HTMLButtonElement} */ (card.querySelector('.tour-return'))
-  again.innerHTML = `${icon('replay-rounded', 18)}<span>${m.tourReturn()}</span>`
+  again.innerHTML = `${icon('replay-rounded', 18)}<span>${m.viewer_tourReturn()}</span>`
   // (its name kept where the label is hidden: a short frame, style.css)
-  again.setAttribute('aria-label', m.tourReturn())
+  again.setAttribute('aria-label', m.viewer_tourReturn())
   const AWAY = 0.2
   const AWAY_ANGLE = 0.03
   // Shown with the MD3 enter motion (400 ms, emphasized decelerate); hidden at once, as the card's texts change
@@ -136,12 +136,12 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
       again.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, easing: 'cubic-bezier(0.05, 0.7, 0.1, 1)' })
     }
   }
-  close.setAttribute('aria-label', m.tourClose())
-  close.dataset.tooltip = m.tourClose()
+  close.setAttribute('aria-label', m.viewer_tourClose())
+  close.dataset.tooltip = m.viewer_tourClose()
   // While the card is hidden for a flight, a close button at the top right (Christian, 2026-10-26)
   const stopButton = /** @type {HTMLButtonElement} */ (document.querySelector('.tour-stop'))
-  stopButton.setAttribute('aria-label', m.tourClose())
-  stopButton.dataset.tooltip = m.tourClose()
+  stopButton.setAttribute('aria-label', m.viewer_tourClose())
+  stopButton.dataset.tooltip = m.viewer_tourClose()
   let stopTimer = 0
   const showStop = (on) => {
     clearTimeout(stopTimer)
@@ -411,13 +411,13 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   // The card's texts and buttons for a step
   function fill(i) {
     const step = steps[i]
-    count.textContent = m.tourCount({ n: i + 1, total: steps.length })
+    count.textContent = m.viewer_tourCount({ n: i + 1, total: steps.length })
     title.textContent = step.title[lang] ?? step.title.fr
     text.textContent = step.text[lang] ?? step.text.fr
     prev.hidden = i === 0
     showAgain(false)
-    if (i === steps.length - 1) iconButton(next, 'end', m.tourEnd())
-    else iconButton(next, 'next', m.tourNext())
+    if (i === steps.length - 1) iconButton(next, 'end', m.viewer_tourEnd())
+    else iconButton(next, 'next', m.viewer_tourNext())
   }
 
   // On a touch screen the card hides while the camera flies to the next step and comes back when it has arrived

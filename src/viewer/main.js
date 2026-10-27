@@ -102,19 +102,19 @@ const embedded = window.self !== window.top
 document.documentElement.classList.toggle('embedded', embedded)
 
 // index.html's texts are in French (its fallback): set in the viewer's language (i18n.js, French or English)
-document.title = m.pageTitle()
-document.querySelector('meta[name="description"]')?.setAttribute('content', m.pageDescription())
+document.title = m.viewer_pageTitle()
+document.querySelector('meta[name="description"]')?.setAttribute('content', m.viewer_pageDescription())
 const homeLink = document.querySelector('.home')
-homeLink.textContent = m.home()
+homeLink.textContent = m.viewer_home()
 homeLink.href = homePath
 // Accessible name, and the tooltip's text (tooltip.js: the MD3 tooltip replaces the browser's title tooltip)
 for (const [selector, label, tooltip] of [
-  ['.settings-button', m.settings(), m.settings()],
-  ['.ar-button', m.ar(), m.ar()],
-  ['.underwater-button', m.underwater(), m.underwater()],
-  ['.fullscreen', m.fullscreen(), m.fullscreenTitle()],
-  ['.compass', m.compass(), m.compass()],
-  ['.home-button', m.homeView(), m.homeView()],
+  ['.settings-button', m.viewer_settings(), m.viewer_settings()],
+  ['.ar-button', m.viewer_ar(), m.viewer_ar()],
+  ['.underwater-button', m.viewer_underwater(), m.viewer_underwater()],
+  ['.fullscreen', m.viewer_fullscreen(), m.viewer_fullscreenTitle()],
+  ['.compass', m.viewer_compass(), m.viewer_compass()],
+  ['.home-button', m.viewer_homeView(), m.viewer_homeView()],
 ]) {
   const element = document.querySelector(selector)
   element.setAttribute('aria-label', label)
@@ -131,8 +131,8 @@ if (document.fullscreenEnabled) {
     else document.documentElement.requestFullscreen()
   })
   document.addEventListener('fullscreenchange', () => {
-    fullscreenButton.setAttribute('aria-label', document.fullscreenElement ? m.fullscreenExit() : m.fullscreen())
-    fullscreenButton.dataset.tooltip = document.fullscreenElement ? m.fullscreenExit() : m.fullscreenTitle()
+    fullscreenButton.setAttribute('aria-label', document.fullscreenElement ? m.viewer_fullscreenExit() : m.viewer_fullscreen())
+    fullscreenButton.dataset.tooltip = document.fullscreenElement ? m.viewer_fullscreenExit() : m.viewer_fullscreenTitle()
     fullscreenButton.dataset.full = String(Boolean(document.fullscreenElement))
   })
 } else if (embedded && window.matchMedia('(pointer: coarse)').matches) {
@@ -171,7 +171,7 @@ const firstView = new Promise((resolve) => { firstViewReached = resolve })
 let underwaterReached
 const underwaterOnce = new Promise((resolve) => { underwaterReached = resolve })
 const afterFirstViewUnderwater = Promise.all([firstView, underwaterOnce])
-if (arFull) arLink.dataset.tooltip = m.arFull()
+if (arFull) arLink.dataset.tooltip = m.viewer_arFull()
 if (arLink.relList?.supports?.('ar')) {
   arLink.href = `${AR_URL}/${arName}.usdz?v=${AR_VERSION}`
   arLink.hidden = false
@@ -179,7 +179,7 @@ if (arLink.relList?.supports?.('ar')) {
   // Scene Viewer: the link as Google's <model-viewer> builds it (scene-viewer/1.2, occlusion off, ARCore). The
   // button's link until WebXR is known to work, and the fallback if the WebXR session can't open
   const page = embedded ? window.top : window
-  const sceneParams = new URLSearchParams({ mode: 'ar_preferred', disable_occlusion: 'true', title: m.name() })
+  const sceneParams = new URLSearchParams({ mode: 'ar_preferred', disable_occlusion: 'true', title: m.viewer_name() })
   if (arFull) sceneParams.set('resizable', 'false')
   const sceneViewer = `intent://arvr.google.com/scene-viewer/1.2?${sceneParams}&file=${encodeURIComponent(`${AR_URL}/${arName}.glb?v=${AR_VERSION}`)}` +
     '#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;' +
@@ -212,7 +212,7 @@ if (arLink.relList?.supports?.('ar')) {
     event.preventDefault()
     startWebXrAr({
       src: arSrc,
-      title: m.name(),
+      title: m.viewer_name(),
       scale: arFull ? 100 : 1,
       log,
       // During AR the 3D view stops and gives back its tiles (up to 450 MB on a phone): with the AR model on top, the
@@ -519,7 +519,7 @@ function capTileTextures(model, finest) {
   })
   return capped
 }
-const ktx2Loader = new KTX2Loader().setTranscoderPath(`${import.meta.env.BASE_URL}vendor/basis/`).detectSupport(renderer)
+const ktx2Loader = new KTX2Loader().setTranscoderPath(`/viewer/vendor/basis/`).detectSupport(renderer)
 // The tiles' textures are ETC1S (Obj2Tiles): on a computer the loader would transcode them to BC7 (1 byte per pixel),
 // which holds no more than ETC1S does; BC1 (DXT1, half a byte per pixel) shows the same and halves the textures'
 // memory (TODO #55). Phones transcode ETC1S to ETC1/ETC2 already
@@ -979,10 +979,10 @@ const SWIM_TARGET = 4
 // On a computer, outside the water too (Christian, 2026-10-24), its line and help saying what the keys do there
 const swimKeys = document.querySelector('.swim-keys')
 function labelKeys(swimming) {
-  swimKeys.setAttribute('aria-label', swimming ? m.swimKeys() : m.keysLabel())
-  swimKeys.querySelector('.swim-hint').textContent = swimming ? m.swimHint() : m.keysHint()
-  swimHelpButton.setAttribute('aria-label', swimming ? m.swimHelpTitle() : m.keysHelpTitle())
-  swimHelpButton.dataset.tooltip = swimming ? m.swimHelpTitle() : m.keysHelpTitle()
+  swimKeys.setAttribute('aria-label', swimming ? m.viewer_swimKeys() : m.viewer_keysLabel())
+  swimKeys.querySelector('.swim-hint').textContent = swimming ? m.viewer_swimHint() : m.viewer_keysHint()
+  swimHelpButton.setAttribute('aria-label', swimming ? m.viewer_swimHelpTitle() : m.viewer_keysHelpTitle())
+  swimHelpButton.dataset.tooltip = swimming ? m.viewer_swimHelpTitle() : m.viewer_keysHelpTitle()
 }
 // The diver can't go through the model: each move stops short of the surfaces and slides along them (collide.js)
 const collider = createCollider(() => [...tilesets.map((tiles) => tiles.group), ...contextModels])
@@ -1009,7 +1009,7 @@ const swim = createSwim({
 // pointer: several can be held at once, and one released outside its button still stops)
 for (const key of swimKeys.querySelectorAll('.swim-key')) {
   const code = key.dataset.code
-  key.setAttribute('aria-label', { KeyW: m.keyForward, KeyS: m.keyBack, KeyA: m.keyLeft, KeyD: m.keyRight }[code]())
+  key.setAttribute('aria-label', { KeyW: m.viewer_keyForward, KeyS: m.viewer_keyBack, KeyA: m.viewer_keyLeft, KeyD: m.viewer_keyRight }[code]())
   key.addEventListener('pointerdown', (event) => {
     key.setPointerCapture(event.pointerId)
     swim.press(code, true)
@@ -1172,12 +1172,12 @@ function showSwimHelp() {
 function openSwimHelp() {
   const letter = (code) => swimKeys.querySelector(`[data-code="${code}"]`)?.textContent ?? code.slice(3)
   const swimming = swim.looking
-  swimHelp.querySelector('h2').textContent = swimming ? m.swimHelpTitle() : m.keysHelpTitle()
+  swimHelp.querySelector('h2').textContent = swimming ? m.viewer_swimHelpTitle() : m.viewer_keysHelpTitle()
   const keys = { w: letter('KeyW'), a: letter('KeyA'), s: letter('KeyS'), d: letter('KeyD') }
   // The underwater button's own icon, in a small round like the button
   const icon = `<span class="swim-help-icon">${underwaterButton.querySelector('svg').outerHTML}</span>`
-  swimHelp.querySelector('.swim-help-text').innerHTML = swimming ? m.swimHelpText({ ...keys, icon }) : m.keysHelpText(keys)
-  swimHelp.querySelector('.swim-help-ok').textContent = m.swimHelpOk()
+  swimHelp.querySelector('.swim-help-text').innerHTML = swimming ? m.viewer_swimHelpText({ ...keys, icon }) : m.viewer_keysHelpText(keys)
+  swimHelp.querySelector('.swim-help-ok').textContent = m.viewer_swimHelpOk()
   swimHelp.showModal()
 }
 swimHelp.querySelector('.swim-help-ok').addEventListener('click', () => swimHelp.close())
@@ -1249,19 +1249,19 @@ function reveal(element, on, hidden, delay = 0) {
 }
 const seasonRange = seasonControl.querySelector('.season-range')
 const seasonValue = seasonControl.querySelector('.season-value')
-seasonRange.setAttribute('aria-label', m.season())
+seasonRange.setAttribute('aria-label', m.viewer_season())
 // All four seasons' values in the same place, only the current one shown: the strip keeps the size of the longest
 // while the slider moves (Christian, 2026-10-23)
 // Each season's name and the water's visibility then, in feet and metres
 const seasonLabels = [
-  [m.seasonWinter(), 100],
-  [m.seasonSpring(), 14],
-  [m.seasonSummer(), 20],
-  [m.seasonAutumn(), 30],
+  [m.viewer_seasonWinter(), 100],
+  [m.viewer_seasonSpring(), 14],
+  [m.viewer_seasonSummer(), 20],
+  [m.viewer_seasonAutumn(), 30],
 ].map(([name, ft]) => {
   const label = document.createElement('span')
   // On a phone, the season's name only (Christian, 2026-10-26: its visibility left out, to save room)
-  label.textContent = mobile ? name : m.seasonValue({ name, ft, m: Math.round(ft * 0.3048) })
+  label.textContent = mobile ? name : m.viewer_seasonValue({ name, ft, m: Math.round(ft * 0.3048) })
   return label
 })
 seasonValue.replaceChildren(...seasonLabels)
@@ -1287,8 +1287,8 @@ live.lamp = (v) => {
 const lampButton = document.querySelector('.lamp-button')
 function showLamp() {
   lampButton.setAttribute('aria-pressed', String(look.lamp))
-  lampButton.setAttribute('aria-label', m.lamp())
-  lampButton.dataset.tooltip = look.lamp ? m.lampOff() : m.lampOn()
+  lampButton.setAttribute('aria-label', m.viewer_lamp())
+  lampButton.dataset.tooltip = look.lamp ? m.viewer_lampOff() : m.viewer_lampOn()
 }
 lampButton.addEventListener('click', () => {
   track('lamp_toggle', { lamp: look.lamp ? 'off' : 'on' })
@@ -1298,7 +1298,7 @@ lampButton.addEventListener('click', () => {
 showLamp()
 underwater.setSeason(look.season)
 underwater.setLamp(look.lamp)
-new HDRLoader().load(`${import.meta.env.BASE_URL}hdri/sky.hdr`, (texture) => {
+new HDRLoader().load(`/viewer/hdri/sky.hdr`, (texture) => {
   texture.mapping = THREE.EquirectangularReflectionMapping
   const pmrem = new THREE.PMREMGenerator(renderer)
   skyEnvironment = pmrem.fromEquirectangular(texture).texture
@@ -1842,11 +1842,11 @@ window.addEventListener('keydown', (e) => {
 // « Après » the ?compare= root; the tiles reload in place, the camera doesn't move. Link only, never shown otherwise.
 const compareUrl = params.get('compare')
 if (compareUrl) {
-  const sources = [[m.before(), tilesUrl], [m.after(), compareUrl]]
+  const sources = [[m.viewer_before(), tilesUrl], [m.viewer_after(), compareUrl]]
   const group = document.body.appendChild(document.createElement('div'))
   group.className = 'compare'
   group.setAttribute('role', 'group')
-  group.setAttribute('aria-label', m.compare())
+  group.setAttribute('aria-label', m.viewer_compare())
   const check = icon('check-rounded', 18)
   const buttons = sources.map(([label, url]) => {
     const button = group.appendChild(document.createElement('button'))
@@ -1894,8 +1894,8 @@ function updateStats() {
   lastStats = performance.now()
   const cache = tilesets[0]?.lruCache
   const lines = [
-    m.statsMemory({ device: mobile ? m.statsDevicePhone() : m.statsDevice(), used: ((cache?.cachedBytes || 0) / 1e6).toFixed(0), max: (profile.maxBytes / 1e6).toFixed(0), full: cache?.isFull() ? m.statsFull() : '' }),
-    ...tilesets.map((tiles) => m.statsZone({ zone: tiles.zoneId.padEnd(8), visible: String(tiles.visibleTiles.size).padStart(3), loading: tiles.stats.downloading + tiles.stats.parsing })),
+    m.viewer_statsMemory({ device: mobile ? m.viewer_statsDevicePhone() : m.viewer_statsDevice(), used: ((cache?.cachedBytes || 0) / 1e6).toFixed(0), max: (profile.maxBytes / 1e6).toFixed(0), full: cache?.isFull() ? m.viewer_statsFull() : '' }),
+    ...tilesets.map((tiles) => m.viewer_statsZone({ zone: tiles.zoneId.padEnd(8), visible: String(tiles.visibleTiles.size).padStart(3), loading: tiles.stats.downloading + tiles.stats.parsing })),
   ]
   statsBox.textContent = lines.join('\n')
 }
@@ -1990,11 +1990,11 @@ function watchLoading(pending) {
   if (w.errors >= LOAD_ERRORS) said = 'errors'
   else if (pending > 0 && now - w.progressAt > LOAD_STALLED * 1000) said = 'stalled'
   else if (now - w.started > LOAD_SLOW * 1000) said = 'slow'
-  if (said === 'slow') status.note(m.loadSlow({ n: w.arrived }))
+  if (said === 'slow') status.note(m.viewer_loadSlow({ n: w.arrived }))
   else if (said !== w.said) {
-    if (said === 'errors') status.note(m.loadErrors({ n: w.errors }), retryLoad)
-    else if (said === 'stalled') status.note(m.loadStalled(), retryLoad)
-    else if (said === 'light') status.note(m.loadLight())
+    if (said === 'errors') status.note(m.viewer_loadErrors({ n: w.errors }), retryLoad)
+    else if (said === 'stalled') status.note(m.viewer_loadStalled(), retryLoad)
+    else if (said === 'light') status.note(m.viewer_loadLight())
     else status.note(null)
   }
   if (said !== w.said && said && said !== 'light') log('loading-note', { note: said, ...tileFacts(), errors: w.errors })
@@ -2025,7 +2025,7 @@ function updateLoading() {
     if (status.active && loadWatch.errors) {
       firstViewReached()
       log('load-failed', { msg: 'tiles failed', ...tileFacts() })
-      status.showError(m.loadErrors({ n: loadWatch.errors }), retryLoad)
+      status.showError(m.viewer_loadErrors({ n: loadWatch.errors }), retryLoad)
       return
     }
     status.done()
@@ -2293,7 +2293,7 @@ const DECLINATION_EPOCH = Date.UTC(2026, 8, 21)
 const declination = DECLINATION_2026 + (DECLINATION_RATE * (Date.now() - DECLINATION_EPOCH)) / (365.25 * 86400e3)
 const NORTH_HEADING = TRUE_HEADING - declination
 const compassRose = document.querySelector('.compass-rose')
-compassRose.querySelector('.compass-w').textContent = m.compassWest()
+compassRose.querySelector('.compass-w').textContent = m.viewer_compassWest()
 const compassAxis = new THREE.Vector3()
 let compassBearing = NaN
 function updateCompass() {

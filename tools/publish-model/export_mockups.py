@@ -18,8 +18,8 @@ zone est publiée (TODO #6).
 - Coordonnées du monde de la scène (mètres), glTF Y vers le haut: même repère que les tuiles et le contexte.
 - Chaque objet garde son nom (« mockup zone 9 »): le visualiseur en tire le numéro de zone.
 - Aussi les empties dont le nom commence par « crawfish » (n'importe quelle collection): la place d'une écrevisse
-  animée dans le visualiseur (viewer/src/crawfish.js); et ceux dont le nom commence par « perch » (« perches »): le
-  milieu d'un banc de perchaudes (viewer/src/perch.js).
+  animée dans le visualiseur (src/viewer/crawfish.js); et ceux dont le nom commence par « perch » (« perches »): le
+  milieu d'un banc de perchaudes (src/viewer/perch.js).
 
 Lecture seule pour le .blend (jamais sauvegardé).
 

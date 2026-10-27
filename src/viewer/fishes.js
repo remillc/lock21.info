@@ -24,7 +24,7 @@ import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js'
 
-const URL = `${import.meta.env.BASE_URL}creatures/bass.glb`
+const URL = `/viewer/creatures/bass.glb`
 const LENGTH_MEAN = 0.36
 const LENGTH_SPREAD = 0.06
 const LENGTH_RANGE = [0.25, 0.5]

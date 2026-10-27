@@ -80,7 +80,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   page), a check with a real screen reader (NVDA, VoiceOver) and Windows' high contrast mode
 - [ ] #39 Design: applied (tokens, fonts, header and footer bars, home page, logo, tables, the 3D viewer's fonts and
   colours); to do: check contrast (WCAG AA) in both themes
-- [ ] #48 Guided tour (viewer/src/tour.js, tour-steps.js; 8 steps, Christian's views and moves, 2026-10-24): the texts
+- [ ] #48 Guided tour (src/viewer/tour.js, tour-steps.js; 8 steps, Christian's views and moves, 2026-10-24): the texts
   are drafts to review (zone 18 is not described on the zone map page); step 7 (the north wall's steps) is half hidden
   by a context fill in front of the camera. Not placed: the stone passage through the wall (Christian's favourite,
   `images/views/2026-10-23-view-1.webp`): `?cam=-37.01,2.56,-14.66,-33.02,2.48,-14.40`

@@ -19,7 +19,7 @@ import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import DANCE_DATA from './crawfish-dance.json'
 
-const URL = `${import.meta.env.BASE_URL}creatures/crayfish.glb`
+const URL = `/viewer/creatures/crayfish.glb`
 // Its length from claws to tail fan (m): a large rusty crayfish
 const LENGTH = 0.16
 const REACT = 1.8

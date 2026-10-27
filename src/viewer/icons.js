@@ -43,7 +43,7 @@ const ICONS = {
 /** The icon's inner drawing and viewBox @param {string} name */
 function parts(name) {
   const svg = ICONS[name]
-  if (!svg) throw new Error(`icon ${name}: not in viewer/src/icons.js`)
+  if (!svg) throw new Error(`icon ${name}: not in src/viewer/icons.js`)
   return {
     viewBox: svg.match(/viewBox="([^"]+)"/)[1],
     body: svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>\s*$/, ''),

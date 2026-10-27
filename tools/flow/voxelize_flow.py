@@ -1,5 +1,5 @@
 """The site as a grid of solid and water cells, for the river's flow around the lock (solve_flow.py, then the viewer's
-particles: viewer/src/underwater.js). Headless Blender.
+particles: src/viewer/underwater.js). Headless Blender.
 
 The geometry: the whole model as downloaded (make_model.py: the zones, the walls, the fillers and the chart terrain,
 decimated, its origin at the site anchor) and the mockups of the zones not yet surveyed (the viewer's mockups.glb,

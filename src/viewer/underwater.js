@@ -18,7 +18,7 @@
 //    observations) and the water's colour (spring's runoff murkier and browner).
 // Distances in metres, y up; the lock floor near y = 0.
 import * as THREE from 'three'
-import { site } from '../../src/data/site.js'
+import { site } from '../data/site.js'
 
 // The water's surface: the lock's depth above its floor (y = 0), the site's own constant (src/data/site.js,
 // bottomDepthFt), so the dive computer and the pages agree (the viewer had its own 55 ft until 2026-10-26)
@@ -50,7 +50,7 @@ const FIELD_PUSH = 0.15
 // for FLOW_LIFE s (FLOW_STEPS steps from its birth: it bends around the walls, speeds up through the gaps, slows in
 // their lee), fading in and out, then is born again elsewhere; in the wake it swirls a little (FLOW_SWIRL cm). Outside the
 // field, and until it has loaded, the even current as before
-const FLOW_URL = `${import.meta.env.BASE_URL}flow/`
+const FLOW_URL = `/viewer/flow/`
 const FLOW_LIFE = 6
 const FLOW_STEPS = 8
 const FLOW_SWIRL = 10

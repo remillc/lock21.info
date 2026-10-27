@@ -1,7 +1,13 @@
+---
+// The 3D viewer's page, /modele/viewer, shown in the /modele page's frame (ModelPage.astro); its code in src/viewer/
+// (main.js), part of the site's build since TODO #80 (2026-10-27: until then a separate app, viewer/)
+import '../../viewer/style.css'
+---
+
 <!doctype html>
 <html lang="fr">
   <head>
-    <!-- The texts below are the French fallback: main.js sets them in the viewer's language (src/i18n.js) -->
+    <!-- The texts below are the French fallback: main.js sets them in the viewer's language (src/viewer/i18n.js) -->
     <meta charset="utf-8" />
     <!-- Not indexed by search engines for now (same rule as the site) -->
     <meta name="robots" content="noindex, nofollow" />
@@ -9,12 +15,12 @@
     <title>Écluse 21 en 3D</title>
     <!-- In the /modele page's frame: known before the page is drawn, so the « ← Écluse 21 » link never shows there
          (main.js sets the same class, once its module has loaded) -->
-    <script>
+    <script is:inline>
       if (window.self !== window.top) document.documentElement.classList.add('embedded')
     </script>
     <!-- Its rule here too: the stylesheet arrives with the script (in development, before the styles, the link showed
          as plain text) -->
-    <style>
+    <style is:inline>
       .embedded .home {
         display: none;
       }
@@ -22,7 +28,6 @@
     <meta name="description" content="Modèle 3D photogrammétrique de l'écluse 21 submergée." />
     <!-- Tab icon of the site (public/favicon.svg, served at the root) -->
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./src/style.css" />
   </head>
   <body>
     <!-- The page's content in one landmark (accessibility audit, 2026-10-26); display: contents, the layout unchanged -->
@@ -146,6 +151,8 @@
       <!-- Loading indicator and errors (src/loading.js) -->
       <l21-loading id="status">Chargement…</l21-loading>
     </main>
-    <script type="module" src="./src/main.js"></script>
+    <script>
+      import '../../viewer/main.js'
+    </script>
   </body>
 </html>

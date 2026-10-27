@@ -23,7 +23,7 @@ const count = (n) =>
     ? new Intl.NumberFormat(locale(lang), { notation: 'compact', compactDisplay: 'long' }).format(n)
     : n.toLocaleString(locale(lang))
 // The viewer's buttons, by their own icons: Material Symbols Rounded names (astro-icon, astro.config.mjs; the viewer
-// uses the same names, viewer/src/icons.js)
+// uses the same names, src/viewer/icons.js)
 const ICONS = {
   home: 'home-outline-rounded',
   underwater: 'scuba-diving-rounded',
@@ -112,23 +112,23 @@ const updated = zones.updated
           {m.model_licenceRest({}, o)}
         </p>
         <p class="credit">{m.model_credit({}, o)}</p>
-        <!-- The crayfish model (viewer/src/crawfish.js): CC BY 4.0, its author credited -->
+        <!-- The crayfish model (src/viewer/crawfish.js): CC BY 4.0, its author credited -->
         <p class="note">
           {m.model_crayfish({}, o)} {open}<a href="https://sketchfab.com/3d-models/crayfish-cdc4cfc6203443a490f6b5103e7eac18">Crayfish</a>{close}{' '}
           {m.model_crayfishBy({}, o)} <a href="https://sketchfab.com/ucdavisterc">ucdavisterc</a>,{' '}
           <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
         </p>
-        <!-- The bass (viewer/src/bass.js): CC BY 4.0, its author credited -->
+        <!-- The bass (src/viewer/bass.js): CC BY 4.0, its author credited -->
         <p class="note">
           {m.model_bass({}, o)} {open}<a href="https://sketchfab.com/3d-models/smallmouth-bass-015389aed3414793b3e9e4a0c25169d1">Smallmouth bass</a>{close}{' '}
           {m.model_crayfishBy({}, o)} <a href="https://sketchfab.com/faerbogdan99">faerbogdan99</a>,{' '}
           <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
         </p>
-        <!-- The yellow perch (viewer/src/perch.js): a public-domain photo, its author credited all the same -->
+        <!-- The yellow perch (src/viewer/perch.js): a public-domain photo, its author credited all the same -->
         <p class="note">
           {m.model_perch({}, o)} Sam Stukel, {open}<a href="https://commons.wikimedia.org/wiki/File:Yellow_Perch_(Perca_flavescens)_white_background.jpg">U.S. Fish and Wildlife Service</a>{close}.
         </p>
-        <!-- The diver's arm (viewer/src/diver-arm.js): its shape from a CC BY 4.0 model, its author credited -->
+        <!-- The diver's arm (src/viewer/diver-arm.js): its shape from a CC BY 4.0 model, its author credited -->
         <p class="note">
           {m.model_arm({}, o)} {open}<a href="https://sketchfab.com/3d-models/first-person-hands-rigged-547a45535f0c4fe787948f7a7a6a88db">First Person hands rigged</a>{close}{' '}
           {m.model_crayfishBy({}, o)} <a href="https://sketchfab.com/davidfischer">DavidFischer</a>,{' '}
