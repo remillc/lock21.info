@@ -54,7 +54,7 @@
   "swimHint": "nager · glisser pour regarder · Maj : plus vite",
   "swimKeys": "Touches pour nager",
   "swimHelpTitle": "Nager dans l’écluse",
-  "swimHelpText": "<p>Sous l’eau, on se déplace comme un plongeur, là où on regarde.</p><ul><li><kbd>{w}</kbd> avancer, <kbd>{s}</kbd> reculer</li><li><kbd>{a}</kbd> à gauche, <kbd>{d}</kbd> à droite</li><li>les flèches font de même</li><li><kbd>Maj</kbd> maintenue : plus vite</li><li>bouton de la souris enfoncé, glisser : tourner la tête (en haut, en bas, à gauche, à droite)</li></ul><p>On ne traverse pas les murs. Le bouton {icon} ou la touche <kbd>Échap</kbd> ramène la navigation habituelle.</p>",
+  "swimHelpText": "<p>Sous l’eau, on se déplace comme un plongeur, là où on regarde.</p><ul><li><kbd>{w}</kbd> avancer, <kbd>{s}</kbd> reculer</li><li><kbd>{a}</kbd> à gauche, <kbd>{d}</kbd> à droite</li><li>les flèches font de même ; la molette de la souris aussi, pour avancer et reculer</li><li><kbd>Maj</kbd> maintenue : plus vite</li><li>bouton de la souris enfoncé, glisser : tourner la tête (en haut, en bas, à gauche, à droite)</li></ul><p>On ne traverse pas les murs. Le bouton {icon} ou la touche <kbd>Échap</kbd> ramène la navigation habituelle.</p>",
   "swimHelpOk": "Compris",
   "keysHint": "avancer · Maj : plus vite",
   "keyForward": "Avancer",

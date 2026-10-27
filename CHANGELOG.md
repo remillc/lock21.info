@@ -5,6 +5,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Underwater view: the mouse wheel swims forward and back where the diver looks, 50 cm a notch (three times that with
+  Shift), smoothly; the swimming help says so.
 - 3D model: zone 18 republished (its mesh had changed in the .blend, its `source` property lost then restored).
 - Underwater view: the bass turns as a fish does, about a point a third of its length from the snout (the head swings
   into the turn, the tail out of it), the bend starting at the head and running down to the tail (it pivoted on its
