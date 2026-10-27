@@ -1,12 +1,12 @@
-// The crayfish's dance (viewer/src/crawfish.js) fitted to the « Iraq lobster » GIF, frame by frame: the keypoints
+// The crayfish's dance (src/viewer/crawfish.js) fitted to the « Iraq lobster » GIF, frame by frame: the keypoints
 // measured on each frame (dance-keypoints.json: head, pelvis, each claw's shoulder, elbow, wrist and tip, each rear
 // leg's hip, knee and foot, the tail's end, the antennae's and the small legs' tips; screen pixels, y down) give the
 // direction of each segment (the rear legs' thigh and shin: the rig's second and last segments, its first being
 // short); the crayfish's skeleton, standing, seen from the front, is turned joint by joint until
 // its segments point the same ways (coordinate descent, from the previous frame's answer, a little pull toward it
-// and toward the standing pose so that what the frame doesn't show stays put). Writes viewer/src/crawfish-dance.json.
+// and toward the standing pose so that what the frame doesn't show stays put). Writes src/viewer/crawfish-dance.json.
 //
-// Runs in the viewer's development server (npm run viewer:dev, http://localhost:3100), in headless Chrome: the
+// Runs in the site's development server (npm run dev, http://localhost:4321/modele), in headless Chrome: the
 // crayfish's own code poses it (its debug hooks danceOverride and danceKeypoints), so the fit and the viewer agree.
 //
 // Usage: node tools/creatures/fit_dance.mjs [-k|--keypoints dance-keypoints.json] [-o|--out crawfish-dance.json]
@@ -59,10 +59,10 @@ const ev = async (expression) => {
 }
 
 // The viewer, then the crayfish's place: the camera in front of it, close (its threat posture, standing)
-await send('Page.navigate', { url: 'http://localhost:3100/modele/viewer' })
+await send('Page.navigate', { url: 'http://localhost:4321/modele' })
 for (let i = 0; i < 60 && !(await ev('!!window.l21?.crawfishes?.[0]?.debug?.ready').catch(() => false)); i++) await sleep(1)
 const [x, y, z] = await ev('window.l21.crawfishes[0].object.position.toArray()')
-await send('Page.navigate', { url: `http://localhost:3100/modele/viewer?cam=${x + 0.5},${y + 0.2},${z},${x},${y + 0.05},${z}` })
+await send('Page.navigate', { url: `http://localhost:4321/modele?cam=${x + 0.5},${y + 0.2},${z},${x},${y + 0.05},${z}` })
 for (let i = 0; i < 60 && !(await ev('!!window.l21?.crawfishes?.[0]?.debug?.ready').catch(() => false)); i++) await sleep(1)
 await sleep(3)
 

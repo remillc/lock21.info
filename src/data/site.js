@@ -2,7 +2,7 @@
 // are computed at build time instead: see src/lib/diveLog.js and src/lib/manifest.js.
 // The lock's depth: its floor below the water's surface, in feet (SOS Ottawa, 1989: lock floor and base of the approach
 // cribs; docs/sos-ottawa-files.md). The one place it is written: the site's pages and the 3D viewer (its water surface,
-// its dive computer: viewer/src/underwater.js) read it from here
+// its dive computer: src/viewer/underwater.js) read it from here
 const BOTTOM_DEPTH_FT = 60
 
 export const site = {

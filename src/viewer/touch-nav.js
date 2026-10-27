@@ -10,6 +10,7 @@
 import * as THREE from 'three'
 import { TOUCH } from 'three'
 import { m } from './i18n.js'
+import { root } from './dom.js'
 
 const NEAR = 1
 // (3.5 m: Christian, 2026-10-26; was 2.5)
@@ -33,8 +34,8 @@ const HINT_TIME = 7000
  */
 export function createTouchNav({ controls, camera, surface, pick, requestRender }) {
   const coarse = window.matchMedia('(pointer: coarse)').matches
-  const hint = document.querySelector('.touch-hint')
-  const helpButton = document.querySelector('.touch-help-button')
+  const hint = root.querySelector('.touch-hint')
+  const helpButton = root.querySelector('.touch-help-button')
 
   controls.touches.ONE = TOUCH.ROTATE
   controls.touches.TWO = TOUCH.DOLLY_PAN
@@ -43,7 +44,7 @@ export function createTouchNav({ controls, camera, surface, pick, requestRender 
   // The gestures' card: at the first touch, and from the « ? » button
   let hintTimer = 0
   function showCard() {
-    hint.innerHTML = `<strong>${m.touchHelpTitle()}</strong>${m.touchHelp()}`
+    hint.innerHTML = `<strong>${m.viewer_touchHelpTitle()}</strong>${m.viewer_touchHelp()}`
     hint.hidden = false
     clearTimeout(hintTimer)
     hintTimer = setTimeout(() => (hint.hidden = true), HINT_TIME)
@@ -54,8 +55,8 @@ export function createTouchNav({ controls, camera, surface, pick, requestRender 
   } catch {}
   if (coarse) {
     helpButton.hidden = false
-    helpButton.setAttribute('aria-label', m.touchHelpTitle())
-    helpButton.dataset.tooltip = m.touchHelpTitle()
+    helpButton.setAttribute('aria-label', m.viewer_touchHelpTitle())
+    helpButton.dataset.tooltip = m.viewer_touchHelpTitle()
     helpButton.addEventListener('click', showCard)
   }
 

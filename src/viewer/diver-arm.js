@@ -10,7 +10,7 @@ import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js'
 
-const URL = `${import.meta.env.BASE_URL}diver/diver-arm.glb`
+const URL = `/viewer/diver/diver-arm.glb`
 // How fast the arm catches up with the camera's turns (1/s), and how far it may lag (rad)
 const FOLLOW = 9
 const MAX_LAG = 0.12

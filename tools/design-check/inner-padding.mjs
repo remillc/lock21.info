@@ -84,14 +84,14 @@ if (!pages) {
     await open(queue.shift())
     const links = await ev(`[...document.querySelectorAll('a[href]')].map((a) => new URL(a.href, location.href)).filter((u) => u.origin === location.origin && !/\\.[a-z0-9]+$/i.test(u.pathname)).map((u) => u.pathname.replace(/\\/$/, '') || '/')`)
     for (const link of links ?? []) {
-      if (!seen.has(link) && !link.startsWith('/modele/viewer')) {
+      if (!seen.has(link)) {
         seen.add(link)
         queue.push(link)
       }
     }
   }
   // The 3D viewer's own page too (its controls; its panels open only on use)
-  pages = [...seen, '/modele/viewer'].sort()
+  pages = [...seen].sort()
 }
 
 // In the page: every drawn box and the smallest gap between its inner edge and its content, side by side

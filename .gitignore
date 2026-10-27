@@ -34,14 +34,8 @@ docs/rig/modele/assets/*
 # Python
 __pycache__/
 
-# Standalone viewer build
-/viewer/dist
-
 # Node dependencies of the publishing tools
 /tools/publish-model/node_modules
-
-# 3D viewer build copied into the site (npm run build:viewer)
-/public/modele
 
 # Python virtual environments (e.g. tools/google-earth/.venv, pycollada)
 .venv/

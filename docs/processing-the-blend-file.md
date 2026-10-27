@@ -100,8 +100,8 @@ Chaque zone affiche son écart (`gap ... median`, normalement autour de 1 mm) et
 ## Étape 4 · Contrôler sur l'ordinateur
 
 Pour voir les nouvelles tuiles avant de les mettre en ligne, il faut faire tourner deux petits serveurs sur
-l'ordinateur: l'un sert les tuiles, l'autre le visualiseur. Chacun occupe sa fenêtre tant qu'il tourne: on ne peut plus
-rien taper dedans. D'où deux fenêtres.
+l'ordinateur: l'un sert les tuiles, l'autre le site et son visualiseur. Chacun occupe sa fenêtre tant qu'il tourne: on
+ne peut plus rien taper dedans. D'où deux fenêtres.
 
 1. Ouvrir une **première fenêtre PowerShell**, aller dans le dossier du projet, et lancer le serveur des tuiles:
 
@@ -112,19 +112,18 @@ rien taper dedans. D'où deux fenêtres.
 
    Il affiche `Available on: http://127.0.0.1:8081` et reste en marche. Laisser la fenêtre ouverte.
 
-2. Ouvrir une **deuxième fenêtre PowerShell** et lancer le visualiseur:
+2. Ouvrir une **deuxième fenêtre PowerShell** et lancer le site:
 
    ```powershell
    cd F:\projets\lock21.info
-   npm run viewer:dev
+   npm run dev
    ```
 
-   Il affiche une adresse `http://localhost:3100/...` et reste en marche aussi. Laisser cette fenêtre ouverte.
+   Il affiche l'adresse `http://localhost:4321/` et reste en marche aussi. Laisser cette fenêtre ouverte.
 
-3. Dans le navigateur, ouvrir
-   [http://localhost:3100/modele/viewer?tiles=http://localhost:8081](http://localhost:3100/modele/viewer?tiles=http://localhost:8081)
-   (la fin de l'adresse dit au visualiseur de prendre les tuiles de l'ordinateur plutôt que celles en ligne), et regarder
-   les zones refaites: leur place, leurs découpes, leur texture, leur relief de près.
+3. Dans le navigateur, ouvrir [http://localhost:4321/modele](http://localhost:4321/modele) (en développement, le
+   visualiseur prend les tuiles de l'ordinateur), et regarder les zones refaites: leur place, leurs découpes, leur
+   texture, leur relief de près.
 
 4. Une fois le contrôle fini, arrêter chaque serveur: cliquer dans sa fenêtre, puis **Ctrl+C**. On peut aussi fermer
    les fenêtres.
@@ -176,7 +175,7 @@ Remove-Item -Recurse -Force O:\publishing\downloads\google-earth\ar -ErrorAction
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar-full -t 400000 -s 2048 -x 1 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*" --origin=-20.100,11.063,0.842 --rebake zone-3
 ```
 
-`--origin` place l'origine des modèles sur le plancher du sas, `--rebake zone-3` recuit la texture de la zone 3 (guide **Réalité augmentée**). Ensuite, changer `AR_VERSION` dans `viewer/src/main.js` (par exemple la date): sans cela, les téléphones gardent l'ancien modèle en cache.
+`--origin` place l'origine des modèles sur le plancher du sas, `--rebake zone-3` recuit la texture de la zone 3 (guide **Réalité augmentée**). Ensuite, changer `AR_VERSION` dans `src/viewer/main.js` (par exemple la date): sans cela, les téléphones gardent l'ancien modèle en cache.
 
 **5. Rassembler ce qui part en ligne** dans `O:\publishing\downloads\online\`:
 

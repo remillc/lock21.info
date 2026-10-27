@@ -1,7 +1,8 @@
 // Site lock21.info: Astro + Starlight (see docs/guidelines.md). French is the root locale; the structure is ready for
-// English (/en/), which ships when pages are translated. The 3D viewer is a separate app (viewer/), built into
-// public/modele/viewer/ and served as is at /modele/viewer (in development, forwarded to the viewer's dev server).
+// English (/en/), which ships when pages are translated. The 3D viewer (src/viewer/, three.js) is part of the site
+// since TODO #80 (2026-10-27): <l21-viewer> on /modele (src/components/model/Viewer.astro).
 import { paraglideVitePlugin } from '@inlang/paraglide-js'
+import Icons from 'unplugin-icons/vite'
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 import sitemap from '@astrojs/sitemap'
@@ -11,11 +12,7 @@ import englishPaths from './src/integrations/english-paths.mjs'
 import footnoteLabels from './src/integrations/footnote-labels.mjs'
 import placeholderMarks from './src/integrations/placeholder-marks.mjs'
 import contentImages from './src/integrations/content-images.mjs'
-
-// Dev server only: /modele/viewer (embedded by the /modele page) is forwarded to the viewer's own dev server
-// (npm run viewer:dev, port 3100, same path), so the page shows the viewer's source and reloads with it, websocket
-// included. In production, the hosting serves the built viewer from public/modele/viewer/.
-const viewerDev = { target: 'http://localhost:3100', changeOrigin: true, ws: true }
+import viewerFiles from './src/integrations/viewer-files.mjs'
 
 export default defineConfig({
   site: 'https://lock21.info',
@@ -27,17 +24,36 @@ export default defineConfig({
   // Former addresses (TODO #58, 2026-10-24: the About page under its French name; /en/about is the English page's own
   // address again since TODO #63, its French path /en/a-propos redirected by src/integrations/english-paths.mjs)
   redirects: { '/about': '/a-propos' },
-  // preview.proxy: {} because Vite's preview server would otherwise inherit the forwarding and serve the dev viewer
-  // instead of the build (astro preview must show what the hosting serves)
   // build.cssTarget: the components' native CSS nesting (docs/system-design.md) flattened for browsers before 2023
   // (Safari 16.5 and Chrome 112 read it; older ones, an old iPad included, would drop the nested rules)
   vite: {
-    server: { proxy: { '/modele/viewer': viewerDev } },
-    preview: { proxy: {} },
     build: { cssTarget: ['chrome100', 'safari15', 'firefox100', 'edge100'] },
+    // The 3D viewer's packages, prepared when the dev server starts: the viewer is loaded on demand (<l21-viewer>), so
+    // Vite would only find them then, prepare them again and reload the page (504 « Outdated Optimize Dep »)
+    optimizeDeps: {
+      include: [
+        'three',
+        '3d-tiles-renderer',
+        'n8ao',
+        'three-mesh-bvh',
+        'three/examples/jsm/controls/OrbitControls.js',
+        'three/examples/jsm/csm/CSM.js',
+        'three/examples/jsm/libs/meshopt_decoder.module.js',
+        'three/examples/jsm/loaders/GLTFLoader.js',
+        'three/examples/jsm/loaders/HDRLoader.js',
+        'three/examples/jsm/loaders/KTX2Loader.js',
+        'three/examples/jsm/postprocessing/EffectComposer.js',
+        'three/examples/jsm/postprocessing/OutputPass.js',
+        'three/examples/jsm/postprocessing/SMAAPass.js',
+        'three/examples/jsm/utils/SkeletonUtils.js',
+      ],
+    },
     // The components' texts: Paraglide JS messages (messages/site.inlang), compiled into src/paraglide (gitignored).
     // Each call names the page's language (m.home_lead({}, { locale })): rendered at build time, no runtime shipped
+    // The 3D viewer's icons by name (src/viewer/icons.js: ~icons/material-symbols/…?raw), compiled into SVG strings,
+    // only those imported
     plugins: [
+      Icons({ compiler: 'raw' }),
       paraglideVitePlugin({
         project: './messages/site.inlang',
         outdir: './src/paraglide',
@@ -69,7 +85,7 @@ export default defineConfig({
     // The sitemap, as Starlight would add it (same i18n), without the test pages (in no menu: usability audit V9) and the 404 pages
     sitemap({
       i18n: { defaultLocale: 'root', locales: { root: 'fr', en: 'en' } },
-      filter: (page) => !/\/tests\/|\/404$/.test(new URL(page).pathname),
+      filter: (page) => !/\/tests\/|\/404$|\/modele\/viewer$/.test(new URL(page).pathname),
     }),
     starlight({
       // Site name per language (docs/system-design.md): Écluse 21 in French, Lock 21 in English
@@ -136,6 +152,8 @@ export default defineConfig({
     }),
     // The notebook's images: sizes for the content column, the first one loaded first (content-images.mjs)
     contentImages(),
+    // The 3D viewer's script files for the warm-up on hover of a /modele link (viewer-files.mjs)
+    viewerFiles(),
     // After Starlight (and its search index): / and /en/ for the home pages
     homeSlash(),
     // Then the English pages at their English addresses, and the search index rebuilt (TODO #63)

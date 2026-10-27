@@ -1,4 +1,4 @@
-// The viewer's yellow perch (viewer/src/perch.js) from a photo (Christian, 2026-10-27: the fish drawn from the
+// The viewer's yellow perch (src/viewer/perch.js) from a photo (Christian, 2026-10-27: the fish drawn from the
 // species' descriptions did not look real): a yellow perch on a white background, side view, by Sam Stukel, U.S. Fish
 // and Wildlife Service (public domain; Wikimedia Commons, « Yellow Perch (Perca flavescens) white background.jpg »;
 // original in O:\modeles\creatures\perch\yellow-perch-usfws.jpg). The shape of the fins checked against the Florida
@@ -17,14 +17,14 @@ import sharp from 'sharp'
 const { values: args } = parseArgs({
   options: {
     input: { type: 'string', short: 'i', default: 'O:/modeles/creatures/perch/yellow-perch-usfws.jpg' },
-    out: { type: 'string', short: 'o', default: 'viewer/public/creatures/perch.webp' },
-    profile: { type: 'string', short: 'p', default: 'viewer/src/perch-shape.json' },
+    out: { type: 'string', short: 'o', default: 'public/viewer/creatures/perch.webp' },
+    profile: { type: 'string', short: 'p', default: 'src/viewer/perch-shape.json' },
     help: { type: 'boolean', short: 'h' },
   },
 })
 if (args.help) {
   console.log('node tools/creatures/make_perch.mjs [-i photo] [-o texture.webp] [-p shape.json]\n' +
-    'The perch texture and shape for viewer/src/perch.js, from a side photo on a white background.')
+    'The perch texture and shape for src/viewer/perch.js, from a side photo on a white background.')
   process.exit(0)
 }
 

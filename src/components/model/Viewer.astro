@@ -1,35 +1,23 @@
-<!doctype html>
-<html lang="fr">
-  <head>
-    <!-- The texts below are the French fallback: main.js sets them in the viewer's language (src/i18n.js) -->
-    <meta charset="utf-8" />
-    <!-- Not indexed by search engines for now (same rule as the site) -->
-    <meta name="robots" content="noindex, nofollow" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Écluse 21 en 3D</title>
-    <!-- In the /modele page's frame: known before the page is drawn, so the « ← Écluse 21 » link never shows there
-         (main.js sets the same class, once its module has loaded) -->
-    <script>
-      if (window.self !== window.top) document.documentElement.classList.add('embedded')
-    </script>
-    <!-- Its rule here too: the stylesheet arrives with the script (in development, before the styles, the link showed
-         as plain text) -->
-    <style>
-      .embedded .home {
-        display: none;
-      }
-    </style>
-    <meta name="description" content="Modèle 3D photogrammétrique de l'écluse 21 submergée." />
-    <!-- Tab icon of the site (public/favicon.svg, served at the root) -->
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./src/style.css" />
-  </head>
-  <body>
-    <!-- The page's content in one landmark (accessibility audit, 2026-10-26); display: contents, the layout unchanged -->
-    <main>
+---
+// <l21-viewer>: the 3D viewer, part of the /modele page (ModelPage.astro) since TODO #80 (2026-10-27; until then an
+// iframe of a separate app). Its controls in a shadow root (the stylesheet src/viewer/style.css kept apart from the
+// site's, and the site's from it), built from the <template> below as the element is inserted: on a full load as
+// after a client-side navigation (ClientRouter, Head.astro). Its code (src/viewer/main.js, three.js) is loaded then,
+// only on this page, and set up (mountViewer); taken down again (dispose) when the visitor leaves the page. The texts
+// below are the French fallback: main.js sets them in the page's language.
+// Full screen on the element; where an element can't go full screen (iPhone), it fills the window instead (l21-fill).
+// It takes the keys only while it has the focus (a press on the model gives it): the page's arrows still scroll it.
+interface Props {
+  /** Its accessible name */
+  label: string
+}
+const { label } = Astro.props
+---
+
+<l21-viewer tabindex="0">
+  <template>
+    <div class="viewer-frame" role="region" aria-label={label}>
       <div id="viewer"></div>
-      <!-- Root of the site serving this page: lock21.info in production, the Astro dev server (localhost:4321) locally -->
-      <a class="home" href="/">← Écluse 21</a>
       <!-- The viewer's buttons are MD3 icon buttons (filled tonal, style.css .icon-button): 40 dp in a 48 dp touch target,
            Material Symbols Rounded icons (24 dp), state layers, focus ring (docs/system-design.md, Buttons) -->
       <!-- Settings (config-panel.js, <l21-settings-panel>): one control per query parameter -->
@@ -65,7 +53,7 @@
       <a class="ar-button icon-button" rel="ar" aria-label="Voir en réalité augmentée" data-tooltip="Voir en réalité augmentée" hidden>
         <img data-icon="view-in-ar-outline-rounded" data-color="#ebede3" width="24" height="24" alt="" width="24" height="24" alt="" />
       </a>
-      <!-- Full screen (the site's /modele/ page embeds the viewer in an iframe with allow="fullscreen"); main.js sets
+      <!-- Full screen (main.js: the element, <l21-viewer>, or the whole window where it can't be); main.js sets
            data-full while full screen, which shows the exit icon -->
       <!-- Home (main.js): back to the start view, by a quick flight; between the full-screen and the underwater buttons
            (Christian, 2026-10-25). Material Symbols Rounded (src/icons.js) « home » -->
@@ -145,7 +133,72 @@
       </button>
       <!-- Loading indicator and errors (src/loading.js) -->
       <l21-loading id="status">Chargement…</l21-loading>
-    </main>
-    <script type="module" src="./src/main.js"></script>
-  </body>
-</html>
+    </div>
+  </template>
+</l21-viewer>
+
+<script>
+  import css from '../../viewer/style.css?inline'
+  import { attach } from '../../viewer/dom.js'
+
+  // The settings and the camera kept when the page reloads; forgotten when the visitor arrives from elsewhere (a link,
+  // the router's navigation, the address bar, back and forward): the viewer then starts from its defaults (Christian,
+  // 2026-10-23)
+  let connectedBefore = false
+  class Viewer extends HTMLElement {
+    /** @type {(() => void) | null} */
+    dispose = null
+    gone = false
+
+    async connectedCallback() {
+      this.gone = false
+      const reload = !connectedBefore && /** @type {PerformanceNavigationTiming | undefined} */ (performance.getEntriesByType('navigation')[0])?.type === 'reload'
+      connectedBefore = true
+      // Its shadow root, built again from the template at each insertion (a client-side navigation brings a new element)
+      const shadow = this.shadowRoot ?? this.attachShadow({ mode: 'open' })
+      const style = document.createElement('style')
+      style.textContent = css
+      const template = /** @type {HTMLTemplateElement} */ (this.querySelector('template'))
+      shadow.replaceChildren(style, template.content.cloneNode(true))
+      attach(shadow, this, { reset: !reload })
+      const { mountViewer } = await import('../../viewer/main.js')
+      // (left again before its code arrived)
+      if (this.gone) return
+      this.dispose = mountViewer()
+    }
+
+    // Leaving /modele by the site's navigation: the viewer taken down (its listeners, loop, tiles and WebGL)
+    disconnectedCallback() {
+      this.gone = true
+      this.dispose?.()
+      this.dispose = null
+    }
+  }
+  customElements.define('l21-viewer', Viewer)
+</script>
+
+<style>
+  @layer l21.components {
+    l21-viewer {
+      display: block;
+      width: 100%;
+      height: 100%;
+      /* Its focus ring only from the keyboard (a press on the model gives it the focus, for the keys) */
+      &:focus {
+        outline: none;
+      }
+      &:focus-visible {
+        outline: 3px solid var(--md-sys-color-secondary);
+        outline-offset: -3px;
+      }
+      /* Full screen where an element can't go full screen (iPhone): the whole window */
+      &.l21-fill {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        width: 100%;
+        height: 100dvh;
+      }
+    }
+  }
+</style>

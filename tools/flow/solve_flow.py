@@ -16,7 +16,7 @@ velocity mapped from [-SCALE, SCALE] to 0..255, A the turbulence; flow.json, the
 flow-top-*.png, the speed and streamlines seen from above at a few heights.
 
 Usage:
-    python tools/flow/solve_flow.py -i O:/temp/flow/solid.npz -o viewer/public/flow --pictures O:/temp/flow
+    python tools/flow/solve_flow.py -i O:/temp/flow/solid.npz -o public/viewer/flow --pictures O:/temp/flow
 """
 import argparse
 import gzip

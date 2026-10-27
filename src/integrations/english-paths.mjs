@@ -61,8 +61,8 @@ export default function englishPathsIntegration() {
           // The English address: Starlight's page at the French path
           const french = toFrench.get(path)
           if (french) req.url = french + rest
-          // A page (no file extension, not Vite's own nor the viewer): its links rewritten, as in the build
-          if (req.method !== 'GET' || /\.[a-z0-9]+$/i.test(path) || path.startsWith('/@') || path.startsWith('/modele/viewer')) return next()
+          // A page (no file extension, not Vite's own): its links rewritten, as in the build
+          if (req.method !== 'GET' || /\.[a-z0-9]+$/i.test(path) || path.startsWith('/@')) return next()
           const chunks = []
           const write = res.write.bind(res)
           const end = res.end.bind(res)

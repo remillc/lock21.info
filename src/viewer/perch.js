@@ -18,7 +18,7 @@
 import * as THREE from 'three'
 import SHAPE from './perch-shape.json'
 
-const TEXTURE = `${import.meta.env.BASE_URL}creatures/perch.webp`
+const TEXTURE = `/viewer/creatures/perch.webp`
 // Its width against its depth (a perch is flattened from side to side)
 const WIDTH = 0.48
 // The spiny dorsal fin: its height folded (share of its height up), how far it lies back; raised as the diver comes

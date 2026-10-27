@@ -39,7 +39,7 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
                 // No room for the menu left of the frame (its 18.75rem, 2rem from the frame, 4rem for the gauge's labels:
                 // 24.75rem): it opens from the window's left edge over the frame instead (l21-menu-overlay)
                 const align = () => {
-                  const frame = document.querySelector('l21-model-frame')
+                  const frame = document.querySelector('.model-page .frame')
                   if (!frame) return
                   const left = frame.getBoundingClientRect().left
                   const root = document.documentElement

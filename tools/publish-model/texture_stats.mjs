@@ -1,6 +1,6 @@
 // Average colour of a zone texture, in linear light (the space where the viewer multiplies the texture by a
 // colour). The viewer derives each zone's colour balance from it: see `color` in manifest.json and
-// `colorBalance` in viewer/src/main.js. Near-black pixels (empty atlas background) are left out.
+// `colorBalance` in src/viewer/main.js. Near-black pixels (empty atlas background) are left out.
 //
 // Usage: node texture_stats.mjs <image>         prints "r g b" (linear, 0 to 1)
 //        node texture_stats.mjs -h | --help

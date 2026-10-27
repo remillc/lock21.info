@@ -23,9 +23,9 @@ to any UI added to the 3D viewer. Decided with Christian on 2026-10-19.
 | Styles | **SCSS** (`sass` package) | Overrides of Starlight's CSS custom properties; component styles scoped in `.astro` files, plain CSS nested (SCSS only where Sass is needed), in the `l21.*` cascade layers (`docs/system-design.md`) |
 | Components | **Astro components** first | Rendered at build time, no JavaScript shipped |
 | Interactive components | **Web Components** | **Lit** when a component has reactive state (re-renders when its data changes, e.g. a filterable dive log); **native Custom Elements** otherwise. Responsive layout is done in CSS either way |
-| 3D viewer | Separate app (`viewer/`, Vite + three.js) | Built into the site's `public/modele/`, served at `/modele`; not an Astro page |
+| 3D viewer | Part of the site (`src/viewer/`, three.js; TODO #80, 2026-10-27) | `<l21-viewer>` on `/modele` (`src/components/model/Viewer.astro`): its controls in a shadow root, its code loaded on demand and taken down when the page is left |
 | Search | Pagefind (built into Starlight) | Static index generated at build |
-| Interface texts | **Paraglide JS** (inlang) | The components' and the viewer's texts as messages (`messages/site/`, `messages/viewer/`, one JSON file per language), compiled by a Vite plugin into one plain JS function per message (`src/paraglide/`, `viewer/src/paraglide/`, gitignored). The site renders them at build time, each call naming the page's language (`m.home_lead({}, { locale })`); the viewer bundles only the ones it uses. The doc pages themselves are Starlight content, not messages |
+| Interface texts | **Paraglide JS** (inlang) | The components' and the viewer's texts as messages (`messages/site/`, the viewer's keys `viewer_…`, one JSON file per language), compiled by a Vite plugin into one plain JS function per message (`src/paraglide/`, gitignored). The site renders them at build time, each call naming the page's language (`m.home_lead({}, { locale })`); the viewer bundles only the ones it uses. The doc pages themselves are Starlight content, not messages |
 
 ## Content and structure
 
@@ -55,7 +55,7 @@ content. Scripts must survive that:
 
 - **Page behaviour goes in Custom Elements**, set up in `connectedCallback` and undone in `disconnectedCallback`
   (global listeners): they run on every page where the element appears, after a full load as after a swap. A plain
-  page script runs once only (e.g. `<l21-model-frame>` on `/modele`).
+  page script runs once only (e.g. `<l21-viewer>` on `/modele`, which sets the 3D viewer up and takes it down).
 - **Elements added by script to `<body>`** are moved into the new body on `astro:after-swap` (`image-zoom.js`).
 - **`history.replaceState` keeps `history.state`** (`history.replaceState(history.state, '', url)`): the router stores
   its entry there; `null` breaks the back and forward buttons.
@@ -70,8 +70,8 @@ content. Scripts must survive that:
 
 ## Rules kept from today
 
-- Indexing: every page is open to search engines (no `noindex`); `robots.txt` only keeps out the bare viewer
-  `/modele/viewer` (embedded by `/modele`) and points to the sitemap that Starlight generates.
+- Indexing: every page is open to search engines (no `noindex`); `robots.txt` points to the sitemap that Starlight
+  generates.
 - Custom domain `lock21.info` on the Cloudflare Worker `lock21-info` (`wrangler.jsonc`), deployed by the workflow on a release tag or a manual run.
 - Escape `<` and `>` in MDX prose.
 - Folder and file names in English (except existing French content slugs, kept to preserve the page addresses as

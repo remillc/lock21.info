@@ -13,7 +13,7 @@ import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { bassColour, bassLength } from './fishes.js'
 
-const URL = `${import.meta.env.BASE_URL}creatures/bass.glb`
+const URL = `/viewer/creatures/bass.glb`
 // An adult smallmouth bass (m, nose to tail)
 const LENGTH = 0.4
 // Once in a while only (Christian, 2026-10-24): the camera still for IDLE s (drawn again at each move), then COOLDOWN s

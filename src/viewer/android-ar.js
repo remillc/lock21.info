@@ -12,6 +12,8 @@ import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { m } from './i18n.js'
 import { icon } from './icons.js'
+// Its overlay's styles, in the page's document (the viewer's own are in its shadow root)
+import './ar.css'
 
 /** Whether Chrome can open a WebXR AR session here (checked once, before any tap) */
 export async function webxrArSupported() {
@@ -97,13 +99,13 @@ function createOverlay(title, scale) {
     <div class="xr-frame">
       <div class="xr-overlay-head">
         <span class="xr-overlay-title"></span>
-        <button type="button" class="xr-overlay-close" aria-label="${m.arClose()}">${icon('close-rounded')}</button>
+        <button type="button" class="xr-overlay-close" aria-label="${m.viewer_arClose()}">${icon('close-rounded')}</button>
       </div>
       <div class="xr-overlay-foot">
-        <p class="xr-overlay-status" role="status">${m.arOpening()}</p>
+        <p class="xr-overlay-status" role="status">${m.viewer_arOpening()}</p>
         <div class="xr-overlay-scale">
-          <span>${m.arSize()}</span>
-          <div class="xr-slider" role="slider" tabindex="0" aria-label="${m.arSizeLabel()}" aria-valuemin="0" aria-valuemax="100">
+          <span>${m.viewer_arSize()}</span>
+          <div class="xr-slider" role="slider" tabindex="0" aria-label="${m.viewer_arSizeLabel()}" aria-valuemin="0" aria-valuemax="100">
             <div class="xr-slider-track"><div class="xr-slider-fill"></div><div class="xr-slider-thumb"></div></div>
           </div>
           <output></output>
@@ -232,7 +234,7 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
 
   // The model, downloaded while the camera is already on
   let model = null
-  say(m.arLoading())
+  say(m.viewer_arLoading())
   // The model: downloaded in the background since the 3D view finished loading (preloadArModel, main.js), or now if
   // not yet; the download in progress is shown, then the preparation (parsing, decoding the textures). Timing logged.
   const started = performance.now()
@@ -241,8 +243,8 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
   const progress = () => {
     const mb = (download.loaded / 1e6).toFixed(1)
     say(download.total
-      ? m.arLoadingPercent({ n: Math.round((download.loaded / download.total) * 100), mb })
-      : m.arLoadingMb({ mb }))
+      ? m.viewer_arLoadingPercent({ n: Math.round((download.loaded / download.total) * 100), mb })
+      : m.viewer_arLoadingMb({ mb }))
   }
   if (!wasReady) {
     progress()
@@ -252,7 +254,7 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
     (buffer) => {
       download.listeners.delete(progress)
       const downloaded = performance.now()
-      say(m.arPreparing())
+      say(m.viewer_arPreparing())
       new GLTFLoader().parse(buffer, '', (gltf) => {
         model = gltf.scene
         model.traverse((child) => {
@@ -280,19 +282,19 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
           net: connection?.effectiveType ?? null, downlinkMbps: connection?.downlink ?? null,
         })
         say(wasReady
-          ? m.arReady({ prepare: prepareS.toFixed(1) })
-          : m.arLoaded({ wait: downloadS.toFixed(1), prepare: prepareS.toFixed(1) }))
+          ? m.viewer_arReady({ prepare: prepareS.toFixed(1) })
+          : m.viewer_arLoaded({ wait: downloadS.toFixed(1), prepare: prepareS.toFixed(1) }))
         setTimeout(() => {
-          if (!placed) say(m.arPoint())
+          if (!placed) say(m.viewer_arPoint())
         }, 3000)
       }, (error) => {
-        say(m.arPrepareFailed())
+        say(m.viewer_arPrepareFailed())
         log('ar-status', { status: 'failed', step: 'parse', msg: String(error?.message ?? error).slice(0, 300) })
       })
     },
     (error) => {
       download.listeners.delete(progress)
-      say(m.arLoadFailed())
+      say(m.viewer_arLoadFailed())
       log('ar-status', { status: 'failed', step: 'model', msg: String(error?.message ?? error).slice(0, 300) })
     },
   )
@@ -315,7 +317,7 @@ async function run({ session, overlay, src, scale, log, onStart, onEnd }) {
     model.visible = true
     if (!placed) {
       placed = true
-      say(m.arMove())
+      say(m.viewer_arMove())
       log('ar-status', { status: 'placed' })
     }
   })

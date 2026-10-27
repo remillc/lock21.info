@@ -22,14 +22,14 @@ class Loading extends HTMLElement {
     // On a card of its own: readable over the dark background as over the light terrain that loads behind it
     this.innerHTML = `
       <div class="loading-card">
-        <div class="loading-label">${m.loading()}<span class="loading-dots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span></div>
-        <div class="loading-bar" role="progressbar" aria-label="${m.loadingBar()}"><div class="loading-fill"></div></div>
+        <div class="loading-label">${m.viewer_loading()}<span class="loading-dots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span></div>
+        <div class="loading-bar" role="progressbar" aria-label="${m.viewer_loadingBar()}"><div class="loading-fill"></div></div>
         <p class="loading-note" hidden></p>
-        <button class="loading-retry" type="button" hidden>${m.retry()}</button>
+        <button class="loading-retry" type="button" hidden>${m.viewer_retry()}</button>
       </div>
       <div class="refining">
-        <div class="refining-bar" role="progressbar" aria-label="${m.refining()}"><div class="loading-fill"></div></div>
-        <div class="refining-label">${m.refining()}</div>
+        <div class="refining-bar" role="progressbar" aria-label="${m.viewer_refining()}"><div class="loading-fill"></div></div>
+        <div class="refining-label">${m.viewer_refining()}</div>
       </div>`
     this.card = this.querySelector('.loading-card')
     this.label = this.querySelector('.loading-label')
@@ -55,7 +55,7 @@ class Loading extends HTMLElement {
     this.leaving = false
     this.hidden = false
     this.classList.remove('error', 'refine')
-    this.label.firstChild.textContent = m.loading()
+    this.label.firstChild.textContent = m.viewer_loading()
     this.note(null)
   }
 
@@ -102,7 +102,7 @@ class Loading extends HTMLElement {
     this.hidden = false
     this.classList.remove('refine')
     this.classList.add('error')
-    this.label.firstChild.textContent = m.error({ message })
+    this.label.firstChild.textContent = m.viewer_error({ message })
     this.note(null, retry)
   }
 }

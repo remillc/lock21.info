@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#95**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#98**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -22,18 +22,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
     textures. The viewer's look stays the reference: bake its corrections (zone balance, green and cyan removal,
     saturation) into the downloadable model. `color_patch.py` (a part of a zone brought to its neighbours' colour) stays
     for local cases. The real fix is upstream: #75.
-- [ ] #80 Remove the `/modele/viewer` iframe: the 3D viewer as part of the site (one project, one build, one
-  `package.json`), not a second Vite app embedded in a frame. Options (Christian, 2026-10-26):
-  - a native Custom Element `<l21-viewer>` (`src/viewer/`, the current modules moved in), placed by an Astro component
-    on `/modele`: three.js bundled by the site's Vite, only on that page; recommended (no framework, the site's rules)
-  - the same as a Lit element: only worth it for the panels (settings, tour), the 3D part stays imperative
-  - a first step that keeps the frame: the viewer as an Astro page of the site (`src/pages/modele/viewer.astro`), one
-    build and one set of dependencies, the frame removed later
-  To solve on the way: the viewer's global CSS (`html, body { overflow: hidden }`, `main`) scoped to the element
-  (shadow DOM or a layer), its window-wide listeners (keys, pointer) and WebGL released on `disconnectedCallback`
-  (client-side routing), full screen on the element instead of the document, the postMessage link to the page
-  (camera address, drag) replaced by direct calls, and its texts merged into the site's messages. The bare
-  `/modele/viewer` address can go away (Christian, 2026-10-26: no need to keep or redirect it)
 
 ### Pipeline
 
@@ -80,7 +68,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   page), a check with a real screen reader (NVDA, VoiceOver) and Windows' high contrast mode
 - [ ] #39 Design: applied (tokens, fonts, header and footer bars, home page, logo, tables, the 3D viewer's fonts and
   colours); to do: check contrast (WCAG AA) in both themes
-- [ ] #48 Guided tour (viewer/src/tour.js, tour-steps.js; 8 steps, Christian's views and moves, 2026-10-24): the texts
+- [ ] #48 Guided tour (src/viewer/tour.js, tour-steps.js; 8 steps, Christian's views and moves, 2026-10-24): the texts
   are drafts to review (zone 18 is not described on the zone map page); step 7 (the north wall's steps) is half hidden
   by a context fill in front of the camera. Not placed: the stone passage through the wall (Christian's favourite,
   `images/views/2026-10-23-view-1.webp`): `?cam=-37.01,2.56,-14.66,-33.02,2.48,-14.40`
@@ -116,6 +104,17 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   GoPro's product photo (« Matériel utilisé », Caméra); « Le rig » (`collecte/rig.md`, since 2026-10-26: photos of
   2024-05-16 and 2024-06-14, Sylvain Marcotte's 3D model) still has one « à compléter »: the rig's construction
   (fittings, how it attaches to the scooter; the 2020 aluminium profiles and the lights written)
+- [ ] #97 Performance audit (Christian, 2026-10-27): the site's pages and /modele, on a computer and a phone (Lighthouse,
+  Core Web Vitals; the 3D viewer's load time and frame rate, its memory), with findings to act on, as the usability and
+  SEO audits (docs/audits/)
+- [ ] #96 /modele: are prefetch or preload hints worth adding to speed up the 3D viewer's start (Christian,
+  2026-10-27)? Candidates: modulepreload of the viewer's script (src/viewer/main.js, listed in /viewer/files.json), preload
+  of the sky HDR and the KTX2 transcoder, preconnect to tiles.lock21.info, the manifest and the root tilesets; measure
+  before and after (Lighthouse, the telemetry's load time)
+- [ ] #95 A flag in the address that turns Google Analytics off for that visit (Christian, 2026-10-27), e.g.
+  `?no-analytics=1`, kept for the visit (sessionStorage) so the site's navigation keeps it: for tests and for Claude,
+  who uses it on every request to the production site so as not to count in the statistics (the 3D viewer's actions
+  included; telemetry is separate)
 - [ ] #92 Google Analytics, for Christian: register the custom definitions of the actions sent since TODO #88
   (Admin › Custom definitions). Metrics (unit: seconds): `standard_seconds`, `underwater_seconds` (viewer_end),
   `seconds` (dive_end). Dimensions (event scope): `button`, `step`, `move`, `setting`, `season`, `lamp`, `theme`,

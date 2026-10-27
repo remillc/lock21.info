@@ -1,10 +1,10 @@
 """Rigs the viewer's smallmouth bass (« Smallmouth bass » by faerbogdan99, Sketchfab, CC BY 4.0) for swimming
 (Christian, 2026-10-23: it must be rigged): a spine of SPINE bones from the head to the tail fin along the body's
 middle line, each vertex weighted by its place along the body (smoothly shared between its two nearest bones, the head
-held stiff); written as a skinned .glb for viewer/src/bass.js, which bends the spine in a travelling wave.
+held stiff); written as a skinned .glb for src/viewer/bass.js, which bends the spine in a travelling wave.
 
 The model, as imported: head toward -Y, tail toward +Y, the body's middle line about BODY_Z high (Blender, metres of the
-file). Then pack its textures: node tools/publish-model/pack_creature.mjs <out.glb> viewer/public/creatures/bass.glb
+file). Then pack its textures: node tools/publish-model/pack_creature.mjs <out.glb> public/viewer/creatures/bass.glb
 
 The model is lightened to --faces triangles first (Decimate, collapse: texture coordinates kept; Christian, 2026-10-24:
 a few fish here and there, the original's 40,000 triangles were as many as a tile of the lock).

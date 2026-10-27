@@ -24,19 +24,12 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
-          # Astro 7 and Vite 8 (3D viewer) need Node 22.12+
+          # Astro 7 and Vite 8 need Node 22.12+
           node-version: 22
           cache: npm
-          cache-dependency-path: |
-            package-lock.json
-            viewer/package-lock.json
       - name: Install dependencies
-        run: |
-          npm ci
-          npm ci --prefix viewer
-      # The viewer (lock21.info/modele/) is built into public/, which Astro copies as is
-      - name: Build the 3D viewer into public/modele
-        run: npm run build:viewer
+        run: npm ci
+      # The site, the 3D viewer included (src/viewer/, TODO #80)
       - name: Build the site
         run: npm run build
 

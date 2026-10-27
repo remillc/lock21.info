@@ -73,8 +73,8 @@ Archivo for text and titles, JetBrains Mono for data (numbers, dates, depths, la
 
 Tabular figures in tables and data.
 
-The 3D viewer uses the same fonts (`viewer/src/main.js` imports them) and the dark theme's colour roles
-(`viewer/src/style.css`, `:root`): it is always dark.
+The 3D viewer uses the same fonts (`src/viewer/main.js` imports them) and the dark theme's colour roles
+(`src/viewer/style.css`, `:host`, in its shadow root): it is always dark.
 
 ### Shape scale
 
@@ -103,13 +103,13 @@ The 3D viewer uses the same fonts (`viewer/src/main.js` imports them) and the da
   type (filled, filled tonal, outlined, text, or icon button), its sizes (an icon button: 40 dp container in a 48 dp
   touch target; a button: 40 dp high, full corners), **Material Symbols Rounded** icons at 24 dp (never a text character
   such as "×" for an icon), the state layers and focus ring below, and a selected state for toggles. Over the 3D
-  view: filled tonal icon buttons (`viewer/src/style.css`, `.icon-button`). The 48 dp touch target around a 40 dp
+  view: filled tonal icon buttons (`src/viewer/style.css`, `.icon-button`). The 48 dp touch target around a 40 dp
   button: a 4 px transparent border with `background-clip: padding-box` (its colour and state layers inside it), or a
   `::before` 4 px larger when the border shows (outlined button) or the pseudo-elements are taken (the ☰'s bars).
   Checked on 2026-10-24 (TODO #59): the header's magnifier, ☰ and « Modèle 3D », the /modele downloads, every
   viewer button.
 - **Icon buttons get an MD3 plain tooltip** (Christian, 2026-10-23), not the browser's `title` tooltip: its text in
-  `data-tooltip`, shown by one `<l21-tooltip>` element (`viewer/src/tooltip.js`) after a 500 ms hover or at once on
+  `data-tooltip`, shown by one `<l21-tooltip>` element (`src/viewer/tooltip.js`) after a 500 ms hover or at once on
   keyboard focus; inverse surface, body-small, 24 dp high, 4 dp corners, above the button or below when there is no
   room; fades in over 150 ms and out over 75 ms.
 - MD3 state layers on interactive elements: hover 8 %, focus 10 %, pressed 10 % of the content colour; visible focus
@@ -120,7 +120,7 @@ The 3D viewer uses the same fonts (`viewer/src/main.js` imports them) and the da
   (400 ms); exiting = `easing.emphasized-accelerate` `cubic-bezier(0.3, 0, 0.8, 0.15)` over `duration.short4`
   (200 ms), exits being shorter than entries. A section that opens animates its height and opacity, so what follows
   slides instead of jumping. No animation on first display. Example: the viewer settings panel's ambient occlusion
-  rows (`viewer/src/config-panel.js`).
+  rows (`src/viewer/config-panel.js`).
 - **Page transitions** (client-side navigation): MD3 *fade through* on the content (article and table of contents),
   over `duration.long1` (450 ms), `easing.emphasized` `cubic-bezier(0.2, 0, 0, 1)`: the old content fades out over the
   first 35 %, then the new one fades in while growing from 92 %, without overlap. The header and the sidebar change
@@ -132,17 +132,17 @@ The 3D viewer uses the same fonts (`viewer/src/main.js` imports them) and the da
 
 **Icons by name, never pasted** (2026-10-26): Material Symbols Rounded from Iconify's set (`@iconify-json/material-symbols`,
 a dev dependency in the site and the viewer: `npm update` follows Google's drawings). The site: `<Icon name="material-symbols:home-outline-rounded" />`
-(astro-icon; a name built at run time must be listed in `astro.config.mjs`, `icon({ include })`). The viewer: `viewer/src/icons.js`
+(astro-icon; a name built at run time must be listed in `astro.config.mjs`, `icon({ include })`). The viewer: `src/viewer/icons.js`
 imports each icon it uses (unplugin-icons, `vite.config.js`); `index.html` holds placeholders, `<svg data-icon="…">`,
 filled at start, and scripts call `icon(name, size)`. Outline icons take `-outline-rounded`, filled ones `-rounded`.
 
-**Styles: plain CSS, nested** (2026-10-26). `<style>` in `.astro` files and `viewer/src/style.css` are plain CSS with
+**Styles: plain CSS, nested** (2026-10-26). `<style>` in `.astro` files and `src/viewer/style.css` are plain CSS with
 native nesting; SCSS (`lang="scss"`, `.scss` files) only where Sass is needed (a loop, a mixin: `DiveLog.astro`;
 `tokens.scss`, `custom.scss`). Rules are nested by default: a rule's states and parts inside it (`&:hover`,
 `&::before`, `&[open]`, `.child`). One exception, in `.astro` files: only the same element's states are nested, never a
 descendant, because Astro's scoping leaves a nested descendant unscoped (`.a { .b {} }` becomes `.a:where(.astro-x) .b`,
 which could reach into another component). Both builds flatten the nesting for browsers before 2023 (`build.cssTarget`
-in `astro.config.mjs` and `viewer/vite.config.js`: an old iPad would otherwise drop the nested rules). No colour or
+in `astro.config.mjs`: an old iPad would otherwise drop the nested rules). No colour or
 opacity written in a rule: MD3 roles and tokens (`tokens.scss`), state layers as the content colour at the state's
 opacity (hover 8 %, focus and pressed 10 %, dragged 16 %).
 
@@ -169,7 +169,7 @@ unlayered (Starlight's splash-page content width, `--sl-content-width`; the note
 `--sl-content-inline-start`, from Starlight's `Page.astro`; the search, Pagefind; the code blocks,
 Expressive Code), each with a comment saying why.
 
-The 3D viewer is a separate app with no theme to fight; its own stack, planned (not yet in `viewer/src/style.css`):
+The 3D viewer has its own stylesheet in its shadow root, with no theme to fight; its own stack, planned (not yet in `src/viewer/style.css`):
 
 ```css
 @layer tokens, base, controls, panels, overlays, utilities;
@@ -219,7 +219,7 @@ The 3D viewer is a separate app with no theme to fight; its own stack, planned (
   as large as the screen allows over a near-black scrim, its caption, ‹ › and the arrow keys or a swipe to the page's
   other figures, ✕ or Escape to close, the figure's id or `#fig-NN` in the address; the widest of its sizes, a click to
   zoom to its own pixels and back (never larger), animated on the spot with MD3's emphasized curve, 400 ms), `<l21-dev-breakpoints>` (dev server only), `<l21-settings-panel>` (the 3D viewer's settings, ⚙),
-  `<l21-model-frame>` (the viewer's frame on `/modele`), `<l21-viewer-warmup>` (prefetches the viewer's files when a
+  `<l21-viewer>` (the 3D viewer on `/modele`), `<l21-viewer-warmup>` (prefetches the viewer's files when a
   `/modele` link is hovered).
 
 ## Page names

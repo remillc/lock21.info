@@ -20,6 +20,7 @@
 import { track } from './analytics.js'
 import { m } from './i18n.js'
 import { icon } from './icons.js'
+import { life } from './dom.js'
 
 const STORAGE_KEY = 'l21-viewer-settings'
 
@@ -71,35 +72,35 @@ export function settingsSchema({ mobile }) {
   return [
     // No underwater section (Christian, 2026-10-25): the diver's button and its strip (season, lamp) are the controls
     {
-      title: m.lighting(),
+      title: m.viewer_lighting(),
       items: [
-        { key: 'hdriIntensity', label: m.skyStrength(), hint: m.skyStrengthHint(), type: 'range', min: 0, max: 2, step: 0.05, def: '0.35' },
-        { key: 'sunIntensity', label: m.sunStrength(), hint: m.sunStrengthHint(), type: 'range', min: 0, max: 3, step: 0.05, def: '1' },
-        { key: 'light', label: m.sun(), hint: m.sunHint(), type: 'angles', def: '320,65', ranges: [[0, 360, 1], [0, 90, 1]], unit: '°' },
-        { key: 'exposure', label: m.exposure(), type: 'range', min: 0.25, max: 3, step: 0.05, def: '1.2' },
-        { key: 'contrast', label: m.contrast(), hint: m.contrastHint(), type: 'range', min: 0.5, max: 2, step: 0.05, def: '1' },
-        { key: 'saturation', label: m.saturation(), hint: m.saturationHint(), type: 'range', min: 0, max: 2, step: 0.05, def: '1.3' },
+        { key: 'hdriIntensity', label: m.viewer_skyStrength(), hint: m.viewer_skyStrengthHint(), type: 'range', min: 0, max: 2, step: 0.05, def: '0.35' },
+        { key: 'sunIntensity', label: m.viewer_sunStrength(), hint: m.viewer_sunStrengthHint(), type: 'range', min: 0, max: 3, step: 0.05, def: '1' },
+        { key: 'light', label: m.viewer_sun(), hint: m.viewer_sunHint(), type: 'angles', def: '320,65', ranges: [[0, 360, 1], [0, 90, 1]], unit: '°' },
+        { key: 'exposure', label: m.viewer_exposure(), type: 'range', min: 0.25, max: 3, step: 0.05, def: '1.2' },
+        { key: 'contrast', label: m.viewer_contrast(), hint: m.viewer_contrastHint(), type: 'range', min: 0.5, max: 2, step: 0.05, def: '1' },
+        { key: 'saturation', label: m.viewer_saturation(), hint: m.viewer_saturationHint(), type: 'range', min: 0, max: 2, step: 0.05, def: '1.3' },
         // Bump map from the photo (Christian, 2026-10-25: to try strengths), 0 to 5 times its default 2.4 cm
-        { key: 'bump', label: m.bump(), hint: m.bumpHint(), type: 'range', min: 0, max: 5, step: 0.05, def: '0.45' },
+        { key: 'bump', label: m.viewer_bump(), hint: m.viewer_bumpHint(), type: 'range', min: 0, max: 5, step: 0.05, def: '0.45' },
       ],
     },
     {
-      title: m.modelSection(),
+      title: m.viewer_modelSection(),
       items: [
-        { key: 'textures', label: m.textures(), hint: m.texturesHint(), type: 'select', def: '', options: [['', m.texturesAuto()], ['light', m.texturesLight()], ['full', m.texturesFull()]] },
+        { key: 'textures', label: m.viewer_textures(), hint: m.viewer_texturesHint(), type: 'select', def: '', options: [['', m.viewer_texturesAuto()], ['light', m.viewer_texturesLight()], ['full', m.viewer_texturesFull()]] },
         // Out of the advanced settings (Christian, 2026-10-25)
-        { key: 'mesh', label: m.meshView(), hint: m.meshViewHint(), type: 'toggle', def: '0', remember: false },
+        { key: 'mesh', label: m.viewer_meshView(), hint: m.viewer_meshViewHint(), type: 'toggle', def: '0', remember: false },
       ],
     },
     {
-      title: m.advanced(),
+      title: m.viewer_advanced(),
       advanced: true,
       items: [
-        { key: 'profile', label: m.profile(), type: 'select', def: '', options: [['', m.profileAuto()], ['desktop', m.profileDesktop()], ['mobile', m.profileMobile()]] },
-        { key: 'stats', label: m.stats(), type: 'toggle', def: '0' },
+        { key: 'profile', label: m.viewer_profile(), type: 'select', def: '', options: [['', m.viewer_profileAuto()], ['desktop', m.viewer_profileDesktop()], ['mobile', m.viewer_profileMobile()]] },
+        { key: 'stats', label: m.viewer_stats(), type: 'toggle', def: '0' },
         // The crayfish dancing all through its threat posture (crawfish.js; Christian, 2026-10-25: to tune the dance)
-        { key: 'dance', label: m.dance(), hint: m.danceHint(), type: 'toggle', def: '0' },
-        { key: 'tone', label: m.tone(), type: 'select', def: 'agx', options: [['agx', 'AgX'], ['neutral', m.toneNeutral()], ['aces', 'ACES'], ['none', m.toneNone()]] },
+        { key: 'dance', label: m.viewer_dance(), hint: m.viewer_danceHint(), type: 'toggle', def: '0' },
+        { key: 'tone', label: m.viewer_tone(), type: 'select', def: 'agx', options: [['agx', 'AgX'], ['neutral', m.viewer_toneNeutral()], ['aces', 'ACES'], ['none', m.viewer_toneNone()]] },
       ],
     },
   ]
@@ -122,7 +123,7 @@ class SettingsPanel extends HTMLElement {
   connectedCallback() {
     this.hidden = true
     this.setAttribute('role', 'dialog')
-    this.setAttribute('aria-label', m.settingsDialog())
+    this.setAttribute('aria-label', m.viewer_settingsDialog())
     this.render()
     this.button.hidden = false
     this.button.addEventListener('click', () => {
@@ -138,13 +139,13 @@ class SettingsPanel extends HTMLElement {
     }, { passive: false })
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && !this.hidden) this.toggle(false)
-    })
+    }, { signal: life.signal })
   }
 
   // Keyboard focus follows the panel (accessibility audit, 2026-10-26): into its first control when it opens, back to
   // the ⚙ button when it closes with the focus inside it
   toggle(open) {
-    const focusInside = this.contains(document.activeElement)
+    const focusInside = this.contains(/** @type {ShadowRoot | Document} */ (this.getRootNode()).activeElement)
     this.hidden = !open
     this.button.setAttribute('aria-expanded', String(open))
     if (open) this.querySelector('input, select, button:not(.settings-close)')?.focus()
@@ -207,11 +208,11 @@ class SettingsPanel extends HTMLElement {
     const head = document.createElement('div')
     head.className = 'settings-head'
     const title = document.createElement('h2')
-    title.textContent = m.settings()
+    title.textContent = m.viewer_settings()
     const close = document.createElement('button')
     close.type = 'button'
     close.className = 'settings-close'
-    close.setAttribute('aria-label', m.settingsClose())
+    close.setAttribute('aria-label', m.viewer_settingsClose())
     // Material Symbols Rounded « close »
     close.innerHTML = icon('close-rounded')
     close.addEventListener('click', () => this.toggle(false))
@@ -219,7 +220,7 @@ class SettingsPanel extends HTMLElement {
     // What these settings are (usability audit V29, 2026-10-26): the display, kept by the browser (saveSettings)
     const intro = document.createElement('p')
     intro.className = 'settings-hint settings-intro'
-    intro.textContent = m.settingsIntro()
+    intro.textContent = m.viewer_settingsIntro()
     this.append(head, intro)
 
     for (const section of this.schema) {
@@ -238,7 +239,7 @@ class SettingsPanel extends HTMLElement {
 
     const actions = document.createElement('div')
     actions.className = 'settings-actions'
-    const reset = button(m.reset(), () => {
+    const reset = button(m.viewer_reset(), () => {
       // Back to the defaults, keeping the view; the controls are drawn again with their default values
       for (const item of this.schema.flatMap((section) => section.items)) {
         if (!this.params.has(item.key)) continue
@@ -257,8 +258,8 @@ class SettingsPanel extends HTMLElement {
       // and what it is for (usability audit V29)
       const value = document.createElement('span')
       value.className = 'settings-session-code'
-      value.textContent = m.session({ code: this.session })
-      code.append(value, ` · ${m.sessionHint()}`)
+      value.textContent = m.viewer_session({ code: this.session })
+      code.append(value, ` · ${m.viewer_sessionHint()}`)
       this.append(code)
     }
     this.showDependents(false)

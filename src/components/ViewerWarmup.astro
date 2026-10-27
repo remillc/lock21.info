@@ -2,24 +2,11 @@
 // <l21-viewer-warmup>: when a link to /modele (or /en/modele) is hovered, focused or touched, the browser fetches the 3D viewer's
 // heavy files in the background (<link rel="prefetch">: about 3 MB, JavaScript bundle, sky HDR, KTX2 transcoder), so
 // that the viewer starts at once on /modele. Astro's own prefetch (ClientRouter) only fetches the page's HTML, not
-// what its iframe loads. Once per visit; not on /modele itself, nor with data saver or a 2G connection.
-// The bundle's file names change with each build: read here from the built viewer (public/modele/viewer/index.html,
-// npm run build:viewer, run before the site's build). Nothing in development, where the viewer is its own dev server.
-import fs from 'node:fs'
-import path from 'node:path'
-
-const base = '/modele/viewer/'
-/** @type {string[]} */
-let files = []
-if (import.meta.env.PROD) {
-  try {
-    const html = fs.readFileSync(path.join(process.cwd(), 'public', 'modele', 'viewer', 'index.html'), 'utf-8')
-    const built = [...html.matchAll(/<(?:script|link)[^>]+(?:src|href)="(\/modele\/viewer\/assets\/[^"]+\.(?:js|css))"/g)].map((m) => m[1])
-    files = [...built, `${base}hdri/sky.hdr`, `${base}vendor/basis/basis_transcoder.js`, `${base}vendor/basis/basis_transcoder.wasm`]
-  } catch {
-    // Viewer not built: no warm-up
-  }
-}
+// what <l21-viewer> loads there. Once per visit; not on /modele itself, nor with data saver or a 2G connection.
+// The script's file names change with each build: listed at build time in /viewer/files.json
+// (src/integrations/viewer-files.mjs), read when a link is first hovered; the sky and the transcoder have fixed names
+// (public/viewer/).
+const files = ['/viewer/hdri/sky.hdr', '/viewer/vendor/basis/basis_transcoder.js', '/viewer/vendor/basis/basis_transcoder.wasm']
 ---
 
 {files.length > 0 && <l21-viewer-warmup data-files={JSON.stringify(files)} hidden />}
@@ -35,7 +22,17 @@ if (import.meta.env.PROD) {
       const connection = /** @type {any} */ (navigator).connection
       if (connection?.saveData || /2g/.test(connection?.effectiveType ?? '')) return
       ;/** @type {any} */ (window).lock21ViewerWarm = true
-      for (const href of /** @type {string[]} */ (JSON.parse(this.dataset.files ?? '[]'))) {
+      this.prefetch(/** @type {string[]} */ (JSON.parse(this.dataset.files ?? '[]')))
+      // The viewer's scripts (their names carry a hash of their content)
+      fetch('/viewer/files.json')
+        .then((response) => (response.ok ? response.json() : []))
+        .then((files) => this.prefetch(files))
+        .catch(() => {})
+    }
+
+    /** @param {string[]} hrefs */
+    prefetch(hrefs) {
+      for (const href of hrefs) {
         const prefetch = document.createElement('link')
         prefetch.rel = 'prefetch'
         prefetch.href = href
