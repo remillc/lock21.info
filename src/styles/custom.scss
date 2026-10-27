@@ -592,23 +592,38 @@
 
   // Notebook pages, three columns: navigation, content at a fixed width, and "Sur cette page" right next to it. On wide
   // screens the spare space goes to the right of the page (Starlight spreads it between the columns instead).
+  // On narrower screens, the content and "Sur cette page" give up width together, in the same 3 : 1 ratio (TODO #101,
+  // Christian 2026-10-27), "Sur cette page" down to 14.5rem: its entries fit on one line on 42 of the 46 pages
+  // (measured 2026-10-27; longer headings wrap).
   :root {
     --lock21-content-width: 60rem;
     --lock21-toc-width: 20rem;
+    --lock21-toc-min: 14.5rem;
+    // (the space beside the navigation, in vw: "Sur cette page" is fixed, a percentage would be of the window)
+    --lock21-toc: clamp(var(--lock21-toc-min), (100vw - var(--sl-sidebar-width)) / 4, var(--lock21-toc-width));
   }
 
   @media (min-width: 72rem) {
     [data-has-sidebar][data-has-toc] .main-pane {
       flex: 0 0 auto;
-      // Fixed width, but never so wide that "Sur cette page" is pushed off narrower screens
-      width: min(var(--lock21-content-width), 100% - var(--lock21-toc-width));
+      width: min(var(--lock21-content-width), 100% - var(--lock21-toc));
       --sl-content-width: 100%;
       --sl-content-margin-inline: 0;
     }
 
     .right-sidebar-container {
       flex: 0 0 auto;
-      width: var(--lock21-toc-width);
+      width: var(--lock21-toc);
+    }
+
+    // Its text as wide as the column (Starlight: its own sidebar's width, 18.75rem, and a quarter of the window at most)
+    .right-sidebar {
+      width: var(--lock21-toc);
+    }
+
+    .right-sidebar-panel .sl-container {
+      width: auto;
+      max-width: none;
     }
 
     // The three columns centred in the viewport: the same margin on both sides once the screen is wider than
