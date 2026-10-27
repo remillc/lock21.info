@@ -22,7 +22,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
     textures. The viewer's look stays the reference: bake its corrections (zone balance, green and cyan removal,
     saturation) into the downloadable model. `color_patch.py` (a part of a zone brought to its neighbours' colour) stays
     for local cases. The real fix is upstream: #75.
-- [ ] #68 Yellow perch schools in the underwater view
 - [ ] #80 Remove the `/modele/viewer` iframe: the 3D viewer as part of the site (one project, one build, one
   `package.json`), not a second Vite app embedded in a frame. Options (Christian, 2026-10-26):
   - a native Custom Element `<l21-viewer>` (`src/viewer/`, the current modules moved in), placed by an Astro component
