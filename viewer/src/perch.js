@@ -123,12 +123,12 @@ function fishTexture() {
   canvas.height = H
   const context = canvas.getContext('2d')
   const image = context.createImageData(W, H)
-  const back = [92, 98, 48]
-  const side = [184, 160, 72]
-  const belly = [212, 206, 178]
-  const bar = [58, 62, 34]
+  const back = [62, 72, 30]
+  const side = [150, 128, 46]
+  const belly = [190, 184, 150]
+  const bar = [34, 40, 18]
   // The young are duller (Connecticut DEEP): the sides less yellow
-  const dull = 0.7
+  const dull = 0.8
   const grey = (c) => (c[0] + c[1] + c[2]) / 3
   const mute = (c) => c.map((x) => grey(c) + (x - grey(c)) * dull)
   const bars = [0.27, 0.35, 0.43, 0.51, 0.59, 0.67, 0.75]
@@ -138,8 +138,8 @@ function fishTexture() {
     for (let px = 0; px < W; px++) {
       const u = px / (W - 1)
       let colour
-      if (v > 0.975) colour = [96, 98, 62]
-      else if (v < 0.025) colour = [176, 150, 90]
+      if (v > 0.975) colour = [70, 74, 44]
+      else if (v < 0.025) colour = [150, 124, 60]
       else {
         const s = Math.min(u, 0.82)
         const y = (v - 0.5) * 0.34
@@ -148,11 +148,11 @@ function fishTexture() {
         // The bars: widest on the back, narrowing down to about the lower third of the side
         for (const at of bars) {
           const reach = THREE.MathUtils.smoothstep(rel, -0.45, 0.6)
-          const width = 0.028 * reach
-          if (Math.abs(u - at) < width) colour = mix(colour, bar, 0.75 * reach)
+          const width = 0.04 * reach
+          if (Math.abs(u - at) < width) colour = mix(colour, bar, 0.9 * reach)
         }
         // The eye, and the gill cover's edge
-        if (Math.hypot((u - 0.075) * 1.3, rel - 0.3) < 0.06) colour = [20, 20, 16]
+        if (Math.hypot(u - 0.08, (rel - 0.25) * 0.06) < 0.022) colour = Math.hypot(u - 0.08, (rel - 0.25) * 0.06) < 0.012 ? [10, 10, 8] : [170, 150, 70]
         else if (Math.abs(u - 0.2 + 0.02 * rel) < 0.006 && rel > -0.5) colour = mix(colour, bar, 0.5)
       }
       colour = mute(colour)
