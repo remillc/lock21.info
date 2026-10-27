@@ -183,6 +183,9 @@
   }
 
   .sl-markdown-content figure {
+    // The image's corner radius; the caption is inset by it, its text starting where the image's straight edge does
+    // (TODO #100, Christian 2026-10-27)
+    --l21-figure-radius: var(--md-sys-shape-large);
     margin-inline: 0;
     display: grid;
     gap: 0.6rem;
@@ -195,12 +198,13 @@
       max-height: 36rem;
       height: auto;
       border: 1px solid var(--md-sys-color-outline-variant);
-      border-radius: var(--md-sys-shape-large);
+      border-radius: var(--l21-figure-radius);
       background: var(--md-sys-color-surface-container);
       cursor: zoom-in;
     }
 
     figcaption {
+      padding-inline: var(--l21-figure-radius);
       font: 400 0.8rem/1.5 var(--l21-font-data);
       color: var(--md-sys-color-on-surface-variant);
 

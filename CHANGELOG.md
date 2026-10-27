@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Figure captions start where the image's straight edge does: inset by its corner radius (TODO #100).
 - Notebook pages, wide screens: « Sur cette page » gives up width with the content as the window narrows (3 : 1,
   down to 14.5rem), and its entries use the column's whole width (Starlight held them to 16.75rem) (TODO #101).
 - 3D viewer: its shader patches go through one function that reports a missing hook (console and telemetry) instead
