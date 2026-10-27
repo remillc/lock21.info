@@ -42,8 +42,8 @@ const W_ALIGN = 0.6
 const W_COHERE = 0.5
 const W_HOME = 1.2
 const W_WANDER = 0.3
-// The diver: closer than SHY m, the fish swim away (FLEE_WEIGHT)
-const SHY = 1.5
+// The diver: closer than SHY m, the fish swim away (FLEE_WEIGHT; 1 m: Christian, 2026-10-27, was 1.5)
+const SHY = 1
 const FLEE_WEIGHT = 3
 // Not updated beyond this many visibilities from the camera (the water hides it)
 const AWAKE = 1.6
