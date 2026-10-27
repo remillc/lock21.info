@@ -5,8 +5,7 @@ sidebar:
   order: 3
 ---
 
-The rig (the camera frame) is an assembly of 20 × 20 mm T-slot aluminium extrusions (the 2020 series). It carries
-the GoPro and the lights in front of the Seacraft Future 1000 scooter; Sylvain Marcotte designed it.
+The rig (the camera frame) is an assembly of 20 × 20 mm T-slot aluminium extrusions (the 2020 series). It carries the GoPro and the lights in front of the Seacraft Future 1000 scooter; Sylvain Marcotte designed it.
 
 <div class="facts">
 <p class="fact"><span>Scooter</span><b>Seacraft Future 1000</b></p>
@@ -63,8 +62,7 @@ the GoPro and the lights in front of the Seacraft Future 1000 scooter; Sylvain M
 
 ## The lights
 
-The lights are placed to light a plane about 70 cm from the lens evenly: 60 cm between the two top lights, 40 cm
-between the two right-hand ones. The measurements are in [Camera rig dimensions](/en/problemes/dimensions-rig).
+The lights are placed to light a plane about 70 cm from the lens evenly: 60 cm between the two top lights, 40 cm between the two right-hand ones. The measurements are in [Camera rig dimensions](/en/problemes/dimensions-rig).
 
 <figure id="lampes">
 
@@ -73,8 +71,7 @@ between the two right-hand ones. The measurements are in [Camera rig dimensions]
 <figcaption><time datetime="2024-05-16">2024-05-16</time>The lights, the floats and the GoPro in its housing</figcaption>
 </figure>
 
-Four SecurityIng dive lights, one at each corner of the frame: 10 white LEDs (6000 K), 4 red and 4 blue, a 120° beam,
-four 18650 batteries. Intensity: 12,000 lumens, as claimed by the seller.
+Four SecurityIng dive lights, one at each corner of the frame: 10 white LEDs (6000 K), 4 red and 4 blue, a 120° beam, four 18650 batteries. Intensity: 12,000 lumens, as claimed by the seller.
 
 <figure id="dimensions-lampe">
 
@@ -85,13 +82,11 @@ four 18650 batteries. Intensity: 12,000 lumens, as claimed by the seller.
 
 ## The scooter
 
-A Seacraft Future 1000. At speed 1 it moves at 1.2 feet per second (0.37 m/s), measured in the videos of the [sharpness
-test](/en/problemes/nettete-images); its speeds are programmable.
+A Seacraft Future 1000. At speed 1 it moves at 1.2 feet per second (0.37 m/s), measured in the videos of the [sharpness test](/en/problemes/nettete-images); its speeds are programmable.
 
 ## The brushes
 
-The floor brushes prepare the surfaces before filming them, the wood above all: they clear the silt and the shells
-that cover them in places.
+The floor brushes prepare the surfaces before filming them, the wood above all: they clear the silt and the shells that cover them in places.
 
 ## The gear of a dive
 

@@ -1,23 +1,29 @@
 // TODO #75: a Metashape mask per frame (Christian, 2026-10-27), each made from its own frame only (not from a template):
-// - the measuring rod, found on the frame at a quarter of its size: orange pixels (bright, saturated: b < r / 2), in
-//   connected pieces to which a line is fitted (refitted to the pixels near it when the rod touches a blob); kept when
-//   the piece is a straight thin bar leaning up to the right (30 to 75°), its upper end in the frame's right half, and
-//   either long (60 px or more) with its upper end near the top edge or on the right edge near the top-right corner, or
-//   a short end cut by the top edge (the rod mostly out of view). Masked along its line from its lower end out to the
-//   frame's edge (its pale tip and the line holding it are not orange), widened by --grow. The rail's rust, rusty
-//   pipes, the mussels' glints and the yellow-tinted mud are not taken;
+// - the measuring rod, found on the frame at a quarter of its size: orange to lemon yellow pixels (saturated: b < r / 2,
+//   g <= 1.25 r; bright, r > 140, then dimmer, r > 115, when nothing is found), in connected pieces to which a line is
+//   fitted (refitted to the pixels near it when the rod touches a blob); kept when the piece is a straight thin bar
+//   leaning up to the right (30 to 75°), its upper end right of 60 % of the width, and either long (60 px or more)
+//   with its upper end near the top edge or on the right edge near the top-right corner, or long with a bright ridge
+//   from its upper end (up to mid-frame) out to the edge (the rod's pale upper part, white to light blue, in the
+//   greenish clips of 2024-07-05 and 2024-07-07), or a short end cut by the top edge (the rod mostly out of view).
+//   When no piece passes (the rod merged with a yellow plank or a tinted wall, or its end far away, dim olive in
+//   greenish water), a scan of straight lines from the top or right edge, for a thin bar (rod-coloured or dim olive with
+//   both sides not, or a bright ridge) 100 px long or more, or 35 px from the top edge in the rod's colours, continued
+//   through its dim lower end and by 60 % of its length at least. Masked along its line from its lower end out to the frame's edge (its pale tip and the line holding it are not orange),
+//   widened by --grow. The rail's rust, rusty pipes, the mussels' glints, the yellow-tinted mud and the planks' yellow
+//   edges (upright, or not thin) are not taken;
 // - open water (« green background »), only with --water: found on a frame 16 times smaller and blurred, smooth over
 //   a wide window, green-cyan, in pieces touching the frame's edge and covering more than --water of the frame. Off by
 //   default (Christian, 2026-10-27): it also took mussels in shadow, real surfaces; open water covers no surface of
 //   the model, so it hardly colours the texture.
 // Written to --out (default: the zone's _masks folder, beside the frames folder), named <frame>_guide.png as
 // O:\scripts\generateMasks.mjs did (Metashape: Import Masks, From File, {filename}_guide.png; black = left out).
-// Prints what was found per frame (every --log frames), a summary and the frames with more than one rod piece (worth a
-// look); --sheet: a contact sheet of frames with their masks (the rod's in red, the water's in cyan), for a look;
-// --match and --every take a sample of the frames, for tests.
+// Prints what was found per frame (every --log frames), a summary, the frames found by the line scan and those with
+// more than one rod piece (worth a look); --sheet: a contact sheet of frames with their masks (the rod's in red, the
+// water's in cyan), for a look; --match and --every take a sample of the frames, for tests.
 // Usage: node tools/color-grading/make_masks.mjs -d O:/data/2024-07-12/zone-3/frames-lens-corrected-graded-n10
 //          [-o O:/data/2024-07-12/zone-3/_masks] [--grow 28] [--water 0.02] [-m <regex>] [-e <n>]
-//          [-s O:/temp/masks.jpg] [--sheet-of all|rod|none|several] [--sheet-max 15] [-n]
+//          [-s O:/temp/masks.jpg] [--sheet-of all|rod|none|several|scan] [--sheet-max 15] [-n]
 import { mkdirSync, readdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { parseArgs } from 'node:util'
@@ -41,7 +47,7 @@ const { values: args } = parseArgs({
 })
 if (args.help || !args.dir) {
   console.log('node tools/color-grading/make_masks.mjs -d <frames folder> [-o <masks folder>] [--grow 28] [--water 0.02]\n' +
-    '  [-m <regex>] [-e <n>] [-s sheet.jpg] [--sheet-of all|rod|none|several] [--sheet-max 15] [--log 200] [-n]\n' +
+    '  [-m <regex>] [-e <n>] [-s sheet.jpg] [--sheet-of all|rod|none|several|scan] [--sheet-max 15] [--log 200] [-n]\n' +
     'A Metashape mask per frame (<frame>_guide.png): the measuring rod (and, with --water, the open water) found in the frame itself.\n' +
     '  -d, --dir        the frames (TIFF)\n' +
     '  -o, --out        the masks folder (default: _masks beside the frames folder)\n' +
@@ -50,7 +56,7 @@ if (args.help || !args.dir) {
     '  -m, --match      only the frames whose name matches this regular expression (for tests)\n' +
     '  -e, --every      only one frame in n (for tests)\n' +
     '  -s, --sheet      a contact sheet (JPEG) of a sample of the frames, their masks in colour\n' +
-    '  --sheet-of       the sheet\'s frames: all, rod (the rod found), none (nothing found) or several (more than one rod piece)\n' +
+    '  --sheet-of       the sheet\'s frames: all, rod (the rod found), none (nothing found), several (more than one rod piece) or scan (found by the line scan)\n' +
     '  --sheet-max      the sheet\'s number of frames, spread over those kept (default 15)\n' +
     '  --log            a line every n frames (default 200)\n' +
     '  -n, --dry-run    no mask written')
@@ -67,6 +73,8 @@ const full = await sharp(dir + files[0]).metadata()
 const W = Math.round(full.width / SCALE)
 const H = Math.round(full.height / SCALE)
 const ROD_MIN = 60
+const SCAN_MIN = 100
+const SCAN_SHORT = 35
 const WATER = Number(args.water) * W * H
 
 /** A binary image grown by r pixels (square) */
@@ -161,6 +169,109 @@ function straightLine(members) {
   let line = fitLine(members)
   for (let k = 0; k < 3 && line.spread > 0.5 * (line.n / line.length); k++) line = fitLine(line.near())
   return line
+}
+
+/** The share of the line from the bar's upper end out to the frame's edge that is a bright ridge (its centre brighter
+ *  than both sides, hw + 3 pixels away, by 12 levels or more): the rod's pale upper part, white to light blue, not orange
+ *  nor yellow; 0 when the bar's upper end is on the edge */
+function ridgeTo(data, bottom, top, hw) {
+  const len = Math.hypot(top[0] - bottom[0], top[1] - bottom[1])
+  const [ux, uy] = [(top[0] - bottom[0]) / len, (top[1] - bottom[1]) / len]
+  const lum = (x, y) => {
+    const i = 3 * (Math.min(H - 1, Math.max(0, Math.round(y))) * W + Math.min(W - 1, Math.max(0, Math.round(x))))
+    return 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]
+  }
+  const side = hw + 3
+  let n = 0
+  let bright = 0
+  for (let t = 2; ; t++) {
+    const cx = top[0] + t * ux
+    const cy = top[1] + t * uy
+    if (cx < 0 || cy < 0 || cx > W - 1 || cy > H - 1) break
+    const centre = Math.max(lum(cx, cy), lum(cx - uy, cy + ux), lum(cx + uy, cy - ux))
+    const sides = Math.max(lum(cx - side * uy, cy + side * ux), lum(cx + side * uy, cy - side * ux))
+    n++
+    if (centre > sides + 12) bright++
+  }
+  return n ? bright / n : 0
+}
+
+/** When no piece passes (the rod over a yellow plank merges with it): straight lines from the top edge (x from 60 % of
+ *  the width) or the right edge (top 30 %), leaning up to the right 40 to 65°, half-widths 3, 5 and 8; along each, from
+ *  the edge, the samples where the rod shows as a bar: rod-coloured or dim olive with both sides not, or a bright ridge
+ *  (both sides darker by 15 levels). The longest run from the edge (starting within 6 pixels of it, gaps of 4 at most)
+ *  of SCAN_MIN pixels or more with 80 % of bar samples, or of SCAN_SHORT or more from the top edge with 90 % of coloured ones, is the rod, continued through yellowish pixels (its lower end, orange to
+ *  olive) and by 60 % of its length at least (that end too faint to see): its ends, or null */
+function scanRod(data, colour) {
+  const lum = (x, y) => {
+    const i = 3 * (Math.min(H - 1, Math.max(0, Math.round(y))) * W + Math.min(W - 1, Math.max(0, Math.round(x))))
+    return 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]
+  }
+  const yellowish = (x, y) => {
+    const i = 3 * (Math.min(H - 1, Math.max(0, Math.round(y))) * W + Math.min(W - 1, Math.max(0, Math.round(x))))
+    return data[i] > 110 && (data[i] + data[i + 1]) / 2 - data[i + 2] >= 40
+  }
+  // (the rod's end far away in greenish water: dim olive)
+  const dimYellow = (x, y) => {
+    const i = 3 * (Math.min(H - 1, Math.max(0, Math.round(y))) * W + Math.min(W - 1, Math.max(0, Math.round(x))))
+    return data[i] > 100 && (data[i] + data[i + 1]) / 2 - data[i + 2] >= 35
+  }
+  const col = (x, y) => colour[Math.min(H - 1, Math.max(0, Math.round(y))) * W + Math.min(W - 1, Math.max(0, Math.round(x)))]
+  const starts = []
+  for (let x = Math.round(W * 0.6); x < W; x += 2) starts.push([x, 0])
+  for (let y = 2; y < H * 0.3; y += 2) starts.push([W - 1, y])
+  let best = null
+  for (let lean = 40; lean <= 65; lean += 0.75) {
+    // (down and to the left, into the frame)
+    const ux = -Math.cos((lean * Math.PI) / 180)
+    const uy = Math.sin((lean * Math.PI) / 180)
+    for (const hw of [3, 5, 8]) {
+      const side = hw + 3
+      for (const [x0, y0] of starts) {
+        let run = 0
+        let bars = 0
+        let colourBars = 0
+        let gap = 0
+        let first = -1
+        for (let t = 0; ; t++) {
+          const cx = x0 + t * ux
+          const cy = y0 + t * uy
+          if (cx < 0 || cy > H - 1) break
+          const [ax, ay, bx, by] = [cx - side * uy, cy + side * ux, cx + side * uy, cy - side * ux]
+          const colourBar = (col(cx, cy) && !col(ax, ay) && !col(bx, by)) || (dimYellow(cx, cy) && !dimYellow(ax, ay) && !dimYellow(bx, by))
+          const bar = colourBar || lum(cx, cy) > Math.max(lum(ax, ay), lum(bx, by)) + 15
+          if (bar) {
+            if (first < 0) { if (t > 6) break; first = t }
+            bars++
+            if (colourBar) colourBars++
+            run = t
+            gap = 0
+          } else if (first >= 0 && ++gap > 4) break
+        }
+        const core = run - Math.max(first, 0)
+        // (then on through yellowish pixels, within 3 pixels of the line, their sides not yellowish: the rod's lower end,
+        // orange to olive, dim; not along a yellow-tinted wall)
+        if (first >= 0) for (let t = run + 1, miss = 0; t < run + 80 && miss <= 3; t++) {
+          const cx = x0 + t * ux
+          const cy = y0 + t * uy
+          const on = [-3, 0, 3].some((d) => yellowish(cx - d * uy, cy + d * ux))
+          const sides = yellowish(cx - (side + 3) * uy, cy + (side + 3) * ux) || yellowish(cx + (side + 3) * uy, cy - (side + 3) * ux)
+          if (on && !sides) { run = t; miss = 0 } else miss++
+        }
+        // (at least 60 % of the bright part further: the lower end, too faint for a colour test, is masked too)
+        run = Math.max(run, Math.round(Math.max(first, 0) + 1.6 * core))
+        // (not past the frame's left or bottom edge, where the drawing would start outside it)
+        while (run > 0 && (x0 + run * ux < 0 || y0 + run * uy > H - 1)) run--
+        const length = run - Math.max(first, 0)
+        // (long, or a short end cut by the top edge, in the rod's colours only: bright ridges are common in the mussel
+        // beds, yellow shells on the right edge)
+        const found = (core >= SCAN_MIN && bars >= 0.8 * (core + 1)) || (y0 === 0 && core >= SCAN_SHORT && colourBars >= 0.9 * (core + 1))
+        if (first >= 0 && found && (!best || core > best.core))
+          best = { core, length, hw, ends: [[x0 + run * ux, y0 + run * uy], [x0 - 2 * ux, y0 - 2 * uy]] }
+      }
+    }
+  }
+  return best
 }
 
 /** The rod painted from its lower end through its upper end out to the frame's edge, half-width hw */
@@ -277,25 +388,30 @@ function waterOf(data) {
 if (!args['dry-run']) mkdirSync(out, { recursive: true })
 const counts = { rod: 0, water: 0, none: 0 }
 const several = []
+const scanned = []
 const sheet = []
 for (const [k, f] of files.entries()) {
   const { data } = await sharp(dir + f).resize(W, H, { fit: 'fill' }).removeAlpha().raw().toBuffer({ resolveWithObject: true })
-  // (orange: saturated, bright; the yellow-tinted mud and concrete of some clips stay under b < r / 2)
-  const orange = new Uint8Array(W * H)
-  for (let y = 0; y < H; y++) {
-    for (let x = 0; x < W; x++) {
-      const i = y * W + x
+  // (the rod's colours: orange to lemon yellow, saturated: the yellow-tinted mud and concrete of some clips stay above
+  // b = r / 2, green-yellow algae above g = 1.25 r; bright (r > 140) first, then dimmer (r > 115: the rod's thin tip far
+  // away in some clips), which in other clips joins the rod to the tinted walls. Its pale upper part, white to light blue
+  // in some clips, is found as a bright ridge, by ridgeTo)
+  const colourOf = (min) => {
+    const colour = new Uint8Array(W * H)
+    for (let i = 0; i < W * H; i++) {
       const [r, g, b] = [data[3 * i], data[3 * i + 1], data[3 * i + 2]]
-      if (r > 140 && b < 0.5 * r && r >= g - 10) orange[i] = 1
+      if (r > min && b < 0.5 * r && g <= 1.25 * r) colour[i] = 1
     }
+    return colour
   }
   // The rod: straight, thin pieces (a line fitted to each) leaning up to the right (30 to 75° from the horizontal),
-  // their upper end in the frame's right half; either long (ROD_MIN), their upper end near the top edge (its pale tip
-  // and the line holding it are not orange) or the right edge, or a short end cut by the top edge (the rod mostly out of
-  // view); drawn along their line from their lower end out to the frame's edge
+  // their upper end right of 60 % of the width; either long (ROD_MIN), their upper end near the top edge (its pale tip
+  // and the line holding it are not orange) or the right edge, or long with a bright ridge from their upper end (up to
+  // mid-frame) out to the edge, or a short end cut by the top edge (the rod mostly out of view); drawn along their line
+  // from their lower end out to the frame's edge
   const rod = new Uint8Array(W * H)
   let rods = 0
-  pieces(grow(orange, 1), (p) => {
+  const findRods = (colour) => pieces(grow(colour, 1), (p) => {
     if (p.n < 150 || p.n > 40000) return false
     // (the bar must hold at least half of the piece)
     const line = straightLine(p.members)
@@ -303,14 +419,26 @@ for (const [k, f] of files.entries()) {
     if (line.n < 0.5 * p.n || width > 20 || line.spread > 0.5 * width) return false
     const [top, bottom] = line.ends[0][1] <= line.ends[1][1] ? line.ends : [line.ends[1], line.ends[0]]
     const lean = (Math.atan2(bottom[1] - top[1], top[0] - bottom[0]) * 180) / Math.PI
-    if (top[0] < W * 0.5 || lean < 30 || lean > 75) return false
-    const long = line.length >= ROD_MIN && line.length >= 6 * width && (top[1] <= H * 0.15 || (top[0] >= W - 4 && top[1] <= H * 0.3))
+    if (top[0] < W * 0.6 || lean < 30 || lean > 75) return false
+    const bar = line.length >= ROD_MIN && line.length >= 6 * width
+    const long = bar && (top[1] <= H * 0.15 || (top[0] >= W - 4 && top[1] <= H * 0.3))
     const cut = top[1] <= 2 && line.length >= 18 && line.length >= 1.8 * width
-    if (!long && !cut) return false
+    // (a long rod's pale upper part: its coloured part ends lower, up to mid-frame, below a bright ridge)
+    const ridge = bar && !long && top[1] <= H * 0.5 ? ridgeTo(data, bottom, top, Math.max(2, width / 2)) : 0
+    if (!long && !cut && ridge < 0.6) return false
     paintRod(rod, bottom, top, Math.max(2, 2 * line.spread))
     rods++
     return false
   })
+  findRods(colourOf(140))
+  const dim = rods ? null : colourOf(115)
+  if (dim) findRods(dim)
+  // (else a line scan, for the rod merged with a yellow plank or a tinted wall)
+  const scan = rods ? null : scanRod(data, dim)
+  if (scan) {
+    paintRod(rod, scan.ends[0], scan.ends[1], scan.hw)
+    scanned.push(f)
+  }
   // Open water: large smooth pieces touching the frame's edge, their holes filled
   const water = args.water ? waterOf(data) : new Uint8Array(W * H)
   const rodPx = rod.reduce((s, v) => s + v, 0)
@@ -329,7 +457,7 @@ for (const [k, f] of files.entries()) {
     await sharp(pixels, { raw: { width: W, height: H, channels: 1 } }).resize(full.width, full.height, { kernel: 'nearest' }).toColourspace('b-w').png({ compressionLevel: 9 }).toFile(out + f.replace(/\.tiff?$/i, '_guide.png'))
   }
   // (every frame of the kind asked, kept small; a sample spread over them goes on the sheet)
-  const kinds = ['all', rodPx || waterPx ? 'rod' : 'none', ...(rods > 1 ? ['several'] : [])]
+  const kinds = ['all', rodPx || waterPx ? 'rod' : 'none', ...(rods > 1 ? ['several'] : []), ...(scan ? ['scan'] : [])]
   if (args.sheet && kinds.includes(args['sheet-of'])) {
     for (let i = 0; i < W * H; i++) {
       if (masked[i] === 1) data.set([Math.min(255, data[3 * i] * 0.4 + 153), data[3 * i + 1] * 0.4, data[3 * i + 2] * 0.4], 3 * i)
@@ -340,6 +468,7 @@ for (const [k, f] of files.entries()) {
   if (k % Number(args.log) === 0) console.log(`${k}/${files.length} ${f}: rod ${rodPx} px, water ${((100 * waterPx) / (W * H)).toFixed(1)} %`)
 }
 console.log(`${files.length} frames: the rod found in ${counts.rod}, open water in ${counts.water}, nothing in ${counts.none}; masks${args['dry-run'] ? ' not written (dry run)' : ' in ' + out}`)
+if (scanned.length) console.log(`the rod found by the line scan in ${scanned.length} frames: ${scanned.join(' ')}`)
 if (several.length) console.log(`more than one rod piece in ${several.length} frames: ${several.join(' ')}`)
 
 if (args.sheet && sheet.length) {

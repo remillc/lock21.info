@@ -3,8 +3,7 @@ title: Suivi du travail par zone
 sidebar:
   order: 6
 ---
-*Ce tableau est un outil de travail : il peut ne pas être à jour. Pour savoir quelles zones sont en ligne, voir le
-[modèle 3D](/modele).*
+*Ce tableau est un outil de travail : il peut ne pas être à jour. Pour savoir quelles zones sont en ligne, voir le [modèle 3D](/modele).*
 
 | Zone | Collecte complétée | À faire                                                                                                                                                                                    | Echelle présente | Fichiers transférés et renommés | Balance des blancs<br />(face A de la charte) | Tifs générés | Cibles détectées /<br />Échelle(s) définie(s) | Camera calibration z18v2 /<br />capture distance | Alignement<br />(workflow 1) | Optimisation<br />(workflow 2) | Nettoyage<br />du nuage |
 | ---: | :------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :---------------: | :--------------------------------: | :-------------------------------------------: | :-------------: | :------------------------------------------------: | ------------------------------------------------ | ---------------------------- | ------------------------------ | ----------------------- |

@@ -3,8 +3,7 @@ title: Progress by zone
 sidebar:
   order: 6
 ---
-*This table is a working tool: it may not be up to date. To see which zones are online, see the
-[3D model](/en/modele).*
+*This table is a working tool: it may not be up to date. To see which zones are online, see the [3D model](/en/modele).*
 
 | Zone | Collection complete | To do                                                                                                                                                                                      | Scale present | Files transferred and renamed | White balance<br />(side A of the chart) | TIFs generated | Targets detected /<br />Scale(s) defined | Camera calibration z18v2 /<br />capture distance | Alignment<br />(workflow 1) | Optimization<br />(workflow 2) | Cloud<br />cleanup |
 | ---: | :------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :---------------: | :--------------------------------: | :-------------------------------------------: | :-------------: | :------------------------------------------------: | ------------------------------------------------ | ---------------------------- | ------------------------------ | ----------------------- |

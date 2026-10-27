@@ -27,6 +27,8 @@ répond à `-h`.
 | `clip_gains.mjs` | la couleur moyenne de chaque clip (une vingtaine d'images réparties), ramenée aux trois quarts du neutre, et la médiane des clips: la correction commune de la plongée |
 | `grade_preview.mjs` | avant et après sur quelques images, côte à côte, pour choisir un dosage |
 | `timeline_lut.py` | écrit la correction commune en LUT et la pose sur le nœud de la timeline de la copie `- graded` (après les nœuds des clips); refuse un projet qui n'est pas une copie |
+| `retexture_chunk.py` | dans Metashape 1.7 (*Tools › Run Script*): les photos d'un *chunk* « graded » pointées vers les images étalonnées (tout vérifié avant), avec `-k` les masques de chaque plongée (`_masks`, make_masks.mjs) importés sur ses seules photos, la texture refaite sur les coordonnées existantes, l'export `.glb`. Côté de la texture calculé par la taille réelle: surface du modèle et part de la texture couverte, pour le texel cible de `tools/model-analysis/thresholds.json` (pixel d'écran à 2 m: 1,73 mm) |
+| `relink_frame.py` | Metashape fermé: écrit dans le fichier du *chunk* « graded » (`<projet>.files/<chunk>/0/frame.zip`) les chemins des images étalonnées. Metashape n'enregistre pas un chemin changé par script: sans cette étape, le projet rouvert pointe de nouveau vers les images d'origine. Fichier d'origine gardé (`.bak`), `-n` pour vérifier |
 
 ## Le déroulement
 
@@ -38,8 +40,11 @@ répond à `-h`.
    (**Alt+S**; l'interface Python ne sait pas en créer). Puis `timeline_lut.py`, qui y pose la LUT et exporte une
    image de test (`-s`, `--frame`); vérification à l'œil dans Resolve.
 5. Rendu de la copie dans un nouveau dossier, `frames-lens-corrected-graded-n10`, sous les mêmes noms: les images actuelles restent.
-6. Une copie de travail du projet Metashape (`O:\publishing\metashape\<zone>`) pointée vers ce dossier, texture
-   seulement; puis la publication de la zone et la comparaison avec `?compare=`.
+6. Dans le projet Metashape de la zone (`O:\photogrammetry\`, Christian 2026-10-27), le *chunk* du modèle publié
+   dupliqué (*Duplicate Chunk*: caméras, masques et le seul modèle à texturer, sans nuage de points ni cartes de
+   profondeur) et nommé avec « graded »; les *chunks* d'origine restent tels quels. Dans Metashape, *Tools › Run
+   Script*: `retexture_chunk.py`, d'abord avec `--check`. Ensuite, Metashape fermé, `relink_frame.py <projet.psx> <chunk>` pour que les nouveaux chemins restent dans le projet. Puis la publication de la zone et la comparaison avec
+   `?compare=`.
 
 ## Les LUT
 
