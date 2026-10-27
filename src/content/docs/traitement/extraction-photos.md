@@ -30,7 +30,8 @@ plongées, j'ai filmé la charte à deux hauteurs, sur le plancher et à mi-haut
 
 ### La correction ajoutée
 
-En octobre 2026, une correction commune s'est ajoutée à l'étalonnage de la charte, une par plongée. La couleur moyenne
+En octobre 2026, une correction commune s'est ajoutée à l'étalonnage de la charte, à l'aide de l'outil
+d'intelligence artificielle Claude, une par plongée. La couleur moyenne
 de chaque passage, mesurée sur une vingtaine d'images, est ramenée aux trois quarts du chemin vers le gris neutre, et
 la correction de la plongée est la médiane des passages. Une seule correction par plongée évite les bandes de couleur
 dans la texture, là où les images de deux passages se mélangent. Pour la plongée 21 et celle du 14 juillet, plus
