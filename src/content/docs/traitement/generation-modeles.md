@@ -9,7 +9,7 @@ Les modèles de chaque zone sont générés dans Agisoft Metashape, puis export�
 
 La taille d'une face pour les modèles haute résolution a été définie 2mm `<sup>`2 `</sup>, soit:`
 
-|        | Nb faces / pi2 |
+| Maillage | Nb faces / pi2 |
 | :-----: | :------------: |
 | Modèle |     1 475     |
 | Terrain |                |
@@ -24,7 +24,7 @@ La publication sur [lock21.info/modele](/modele) part de l'export le plus détai
 
 ### Ratio faces / surface
 
-|        | Nb faces / m2 | Nb faces / pi2 |
+| Maillage | Nb faces / m2 | Nb faces / pi2 |
 | :-----: | :-----------: | :------------: |
 | Modèle (niveau le plus détaillé) |     3 000     |     ≈ 279      |
 | Terrain |               |                |

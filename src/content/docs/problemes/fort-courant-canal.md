@@ -16,7 +16,7 @@ J'ai fait un test (2024-06-08) en dérivant dans le canal entre les 2 portes, sa
 <figcaption>Croquis (détail) illustrant la longueur du canal de l'écluse. Dessin original de Nick Baets (1988) Source : <cite><a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks - Ottawa chapter</a></cite></figcaption>
 </figure>
 
-|       |                                      |
+| Repère | Temps dans la vidéo                  |
 | ----- | ------------------------------------ |
 | Début | 26 secondes                          |
 | Fin   | 8 minutes 9 secondes                 |

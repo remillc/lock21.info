@@ -50,7 +50,7 @@ Diagonale "E" : 155,6cm mesuré par règle de trois
 
 Spécifications du fabricant. 4:3 W (zoom=0%)
 
-|             | Angle         |
+| Axe         | Angle         |
 | ----------- | ------------- |
 | Diagonale   | 149.5 degrés |
 | Horizontale | 122.6 degrés |
@@ -60,7 +60,7 @@ Source : [https://community.gopro.com/s/article/hero6-black-field-of-view-fov-i
 
 D'après les mesures obtenues plus haut :
 
-|             | Angle      |
+| Axe         | Angle      |
 | ----------- | ---------- |
 | Diagonale   | 96 degrés |
 | Horizontale | 84 degrés |
@@ -68,7 +68,7 @@ D'après les mesures obtenues plus haut :
 
 ### Ratios des angles du champs de vision expérimentation vs spécification
 
-|             | Spécification | Mesurée | Ratio |
+| Axe         | Spécification | Mesurée | Ratio |
 | ----------- | -------------- | -------- | ----- |
 | Diagonale   | 149.5          | 96       | 0,642 |
 | Horizontale | 122.6          | 84       | 0,685 |

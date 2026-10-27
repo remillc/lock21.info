@@ -4,7 +4,7 @@ title: Varying the minimum ISO setting
 ---
 Scans of a 50-foot-long horizontal strip, varying the minimum ISO setting and using a concentrated and a distributed lamp configuration.
 
-|          | Minimum ISO | Lamp configuration |
+| Series   | Minimum ISO | Lamp configuration |
 | :------: | :---------: | :----------------: |
 | Series 1 |     100     |    concentrated    |
 | Series 2 |     100     |    distributed     |

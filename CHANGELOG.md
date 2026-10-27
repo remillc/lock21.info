@@ -5,6 +5,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Accessibility (TODO #43): every Markdown table's header cells named (8 pages, French and English), and the progress
+  table's two empty spacer columns removed.
 - Figure captions start where the image's straight edge does: inset by its corner radius (TODO #100).
 - Notebook pages, wide screens: « Sur cette page » gives up width with the content as the window narrows (3 : 1,
   down to 14.5rem), and its entries use the column's whole width (Starlight held them to 16.75rem) (TODO #101).

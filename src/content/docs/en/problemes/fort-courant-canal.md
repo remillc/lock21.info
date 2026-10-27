@@ -16,7 +16,7 @@ I ran a test (2024-06-08) by drifting through the canal between the 2 gates, kno
 <figcaption>Sketch (detail) showing the length of the lock canal. Original drawing by Nick Baets (1988) Source: <cite><a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks - Ottawa chapter</a></cite></figcaption>
 </figure>
 
-|       |                                      |
+| Point | Time in the video                    |
 | ----- | ------------------------------------ |
 | Start | 26 seconds                           |
 | End   | 8 minutes 9 seconds                  |
