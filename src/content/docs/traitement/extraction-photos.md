@@ -17,9 +17,9 @@ celle des lampes avec la distance entre le rig et ce qu'il filme.
 
 <figure id="absorption">
 
-![Coupe sous l'eau : la lumière du jour descend vers le mur, son rouge s'éteint en premier, puis son bleu, seul le vert-jaune atteint le mur ; les lampes du rig éclairent le mur sur un trajet court, toutes leurs couleurs arrivent](./extraction-photos/assets/absorption-couleurs.svg)
+![Coupe sous l'eau : la lumière du jour descend vers le mur, son rouge s'éteint en premier, puis son bleu, seul le vert-jaune atteint le mur. Les lampes du rig éclairent le mur sur un trajet court, toutes leurs couleurs arrivent](./extraction-photos/assets/absorption-couleurs.svg)
 
-<figcaption>L'eau absorbe les couleurs de la lumière, le rouge en premier. Le jour, qui traverse toute la profondeur, arrive vert-jaune ; les lampes, à courte distance, gardent presque toutes leurs couleurs.</figcaption>
+<figcaption>L'eau absorbe les couleurs de la lumière, le rouge en premier. Le jour, qui traverse toute la profondeur, arrive vert-jaune. Les lampes, situées à courte distance du sujet, gardent presque toutes les couleurs, ce qui permet de restaurer les couleurs perdues par l'éclairage ambiant.</figcaption>
 </figure>
 
 Dans la caméra, la balance des blancs reste fixe, à 6500 K ([Matériel utilisé](/collecte/materiel-utilise)). La
@@ -32,7 +32,7 @@ plongées, j'ai filmé la charte à deux hauteurs, sur le plancher et à mi-haut
 
 Dans le modèle, le mur des trois vannes de la zone 3 sortait jaune-olive. Ses images viennent de la plongée 21
 (2024-07-12), étalonnée avec une seule charte, posée sur le plancher, alors que les passages montent le long du mur.
-Sur la charte, le gris sortait bien neutre ; sur le mur, il manquait du bleu. Les autres plongées de la zone avaient
+Sur la charte, le gris sortait bien neutre, mais sur le mur, il manquait du bleu. Les autres plongées de la zone avaient
 le même défaut, plus ou moins marqué : la charte corrige la lumière là où elle est posée, pas sur toute la hauteur
 d'un mur.
 
@@ -45,7 +45,7 @@ dans la texture, là où les images de deux passages se mélangent. Pour la plon
 plates que les autres, le contraste est remonté au niveau des autres plongées.
 
 La correction est posée dans une copie du projet Resolve de chaque plongée, et les images sont rendues dans un nouveau
-dossier, sous les mêmes noms ; les projets et les images d'origine restent tels quels.
+dossier, sous les mêmes noms. Les projets et les images d'origine restent tels quels.
 
 ## Le chevauchement des images
 
