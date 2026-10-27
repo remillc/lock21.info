@@ -6,7 +6,7 @@ clip (individual clips, frames numbered from 1), the timeline's whole length, 40
 Only on a project whose name ends with « - graded ». Resolve must be open (External scripting: Local).
 
 Example:
-    python tools/color-grading/render_graded.py -t O:/data/2024-07-12/zone-3/frames-graded-n10 --wait
+    python tools/color-grading/render_graded.py -t O:/data/2024-07-12/zone-3/frames-lens-corrected-graded-n10 --wait
 """
 import argparse
 import os

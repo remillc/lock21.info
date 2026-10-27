@@ -37,7 +37,7 @@ répond à `-h`.
 4. Dans Resolve, sur la copie `- graded`: page **Color**, menu de l'éditeur de nœuds sur **Timeline**, un nœud
    (**Alt+S**; l'interface Python ne sait pas en créer). Puis `timeline_lut.py`, qui y pose la LUT et exporte une
    image de test (`-s`, `--frame`); vérification à l'œil dans Resolve.
-5. Rendu de la copie dans un nouveau dossier, `frames-graded-n10`, sous les mêmes noms: les images actuelles restent.
+5. Rendu de la copie dans un nouveau dossier, `frames-lens-corrected-graded-n10`, sous les mêmes noms: les images actuelles restent.
 6. Une copie de travail du projet Metashape (`O:\publishing\metashape\<zone>`) pointée vers ce dossier, texture
    seulement; puis la publication de la zone et la comparaison avec `?compare=`.
 
