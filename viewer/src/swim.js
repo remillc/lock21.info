@@ -11,6 +11,10 @@ const SPEED = 1.2
 const FAST = 3
 const TURN = 0.004
 const PITCH_LIMIT = 1.45
+// The wheel swims too (Christian, 2026-10-27): forward or back where the diver looks, WHEEL_STEP m per notch (FAST times
+// with Shift), glided smoothly (GLIDE_EASE: the share of what is left covered per second, about a third of a second)
+const WHEEL_STEP = 0.5
+const GLIDE_EASE = 10
 
 const MOVES = {
   KeyW: [0, 0, -1],
@@ -113,6 +117,13 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
     drag.x = event.clientX
     drag.y = event.clientY
   })
+  // The wheel: a notch is about 100 px (or 3 lines); up swims forward
+  let glide = 0
+  element.addEventListener('wheel', (event) => {
+    if (!active || !looking) return
+    const notches = event.deltaY / (event.deltaMode === 1 ? 3 : event.deltaMode === 2 ? 0.1 : 100)
+    glide -= THREE.MathUtils.clamp(notches, -3, 3) * WHEEL_STEP * (fast ? FAST : 1)
+  }, { passive: true })
   const endDrag = (event) => {
     if (drag && event.pointerId === drag.id) drag = null
   }
@@ -184,13 +195,27 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
         if (k >= 1) facing = null
         if (!held.size) return true
       }
-      if (!active || !held.size) return Boolean(drag)
+      if (!active) {
+        glide = 0
+        return Boolean(drag)
+      }
+      // The wheel's glide, forward (negative z) where the diver looks
+      let glided = false
+      if (Math.abs(glide) > 0.002) {
+        const step = glide * Math.min(1, GLIDE_EASE * dt)
+        glide -= step
+        pivot = null
+        facing = null
+        moveBy(camera.position, move.set(0, 0, step).applyQuaternion(camera.quaternion).negate())
+        glided = true
+      } else glide = 0
+      if (!held.size) return glided || Boolean(drag)
       // Swimming away: the pivot forgotten
       pivot = null
       facing = null
       move.set(0, 0, 0)
       for (const code of held) move.add(new THREE.Vector3(...MOVES[code]))
-      if (!move.lengthSq()) return Boolean(drag)
+      if (!move.lengthSq()) return glided || Boolean(drag)
       move.normalize().multiplyScalar((fast ? SPEED * FAST : SPEED) * speed() * dt).applyQuaternion(camera.quaternion)
       moveBy(camera.position, move)
       return true
