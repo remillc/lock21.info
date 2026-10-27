@@ -168,6 +168,8 @@
   "viewer_sun": "Soleil (azimut, hauteur)",
   "viewer_sunHint": "azimut 0 = du sud, 90 = de l’est",
   "viewer_exposure": "Exposition",
+  "viewer_balance": "Équilibre des zones",
+  "viewer_balanceHint": "1 : chaque zone ramenée à la couleur moyenne du modèle ; 0 : les textures telles quelles",
   "viewer_contrast": "Contraste",
   "viewer_contrastHint": "1 = celui des textures ; plus haut : sombres plus sombres, clairs plus clairs",
   "viewer_saturation": "Saturation",

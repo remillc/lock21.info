@@ -601,6 +601,9 @@ export function mountViewer() {
     skyBackground: (params.get('sky') ?? '1') === '1',
     // Colour balance between zones (?neutral=0..1), see colorBalance
     neutral: params.has('neutral') ? Number(params.get('neutral')) : 0.2,
+    // How much of that balance is applied (?balance=0..1, settings « Équilibre des zones », 2026-10-27): 0 shows each
+    // texture as it is (to judge a zone graded at the source, TODO #75), 1 the full balance
+    balance: params.has('balance') ? Number(params.get('balance')) : 1,
     // Relief from the zones' normal maps (?relief=1 default, 0 = without) or the normal map shown as the colour
     // (?relief=debug). The sun's direction: azimuth (0 = from the south, 90 = from the east),
     // elevation, in degrees
@@ -1350,7 +1353,8 @@ export function mountViewer() {
     const luminance = 0.2126 * average[0] + 0.7152 * average[1] + 0.0722 * average[2]
     const target = average.map((c) => c + (luminance - c) * look.neutral)
     // Clamped: a very dark or very tinted texture would otherwise get extreme gains (noise, compression blocks)
-    const gain = (t, m) => Math.min(Math.max(t / m, 0.4), 3)
+    // (?balance= of the way from no change, 1, to the full gain)
+    const gain = (t, m) => 1 + (Math.min(Math.max(t / m, 0.4), 3) - 1) * look.balance
     for (const e of measured) gains.set(e.id, new THREE.Color(...target.map((t, c) => gain(t, e.color[c]))))
   }
   // New gains: only the zones' material colours change
@@ -1363,6 +1367,7 @@ export function mountViewer() {
     requestRender()
   }
   live.neutral = (v) => { look.neutral = Number(v); updateZoneColors() }
+  live.balance = (v) => { look.balance = Number(v); updateZoneColors() }
 
   // Ambient occlusion (N8AO): darkens recesses and joints, giving depth to unlit surfaces. N8AO rebuilds the
   // normals from the depth buffer (the tiles carry none). Hardware antialiasing does not survive the

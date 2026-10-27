@@ -5,6 +5,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- 3D viewer: « Équilibre des zones » in the settings (?balance=0..1): how much of the colour balance between zones
+  is applied; at 0 each texture shows as it is (the balance brought a zone graded at the source back to the other
+  zones' yellow-green).
 - Accessibility (TODO #43): every Markdown table's header cells named (8 pages, French and English), and the progress
   table's two empty spacer columns removed.
 - Figure captions start where the image's straight edge does: inset by its corner radius (TODO #100).
