@@ -12,12 +12,16 @@ Le chunk doit être une copie (Duplicate Chunk) dont le nom contient « graded �
    la part de la texture que couvrent ses coordonnées donnent le côté qui fait un texel de la taille cible, celle du
    pixel d'écran à la distance de visionnement de tools/model-analysis/thresholds.json (2 m: 1,73 mm; README de
    tools/publish-model, « Résolution des textures »), arrondi au multiple de 16 px supérieur. `-s` impose un côté.
+   Avec `-d`, seules les photos prises assez près servent à la texture: pour chaque photo, la distance au modèle
+   sur une grille de 3 x 3 points de l'image (médiane); une photo plus loin que `-d` m, ou qui ne voit pas le modèle,
+   est laissée de côté (zone 3, 2026-10-27: le plancher de bois verdi par des vues lointaines à travers l'eau, alors
+   que des vues au rig, à 70 cm, le couvrent). `--check` montre la répartition des distances, sans rien changer.
    Le projet est enregistré.
 3. Export: le modèle texturé en .glb (`-o`).
 
 Usage (Arguments):
     [-c "zone 3 - graded"] [-s <px>] [-m <ancien dossier>=<nouveau dossier> ...] [-o <sortie.glb>]
-    [-k] (importe les masques) [--check] (vérifie les chemins seulement) [--no-texture] [--no-export]
+    [-k] (importe les masques) [-d <m>] (distance maximale des photos de la texture) [--check] (vérifie les chemins seulement) [--no-texture] [--no-export]
 """
 import argparse
 import json
@@ -42,6 +46,7 @@ p.add_argument("-o", "--out", help="modèle texturé à écrire (.glb; défaut: 
 p.add_argument("--check", action="store_true", help="vérifier les chemins sans rien changer")
 p.add_argument("--no-texture", action="store_true", help="ne pas refaire la texture")
 p.add_argument("-k", "--masks", action="store_true", help="importer les masques _masks de chaque plongée")
+p.add_argument("-d", "--max-distance", type=float, help="photos de la texture: à au plus tant de m du modèle (médiane)")
 p.add_argument("--no-export", action="store_true", help="ne pas exporter")
 
 
@@ -83,6 +88,37 @@ def texture_side(model, scale, texel, sample=50):
     # (une face sur `sample`: les deux sommes sont à multiplier par `sample`, leur rapport reste le même)
     log("surface %.0f m², coordonnées de texture sur %.0f %% de la texture" % (area_m2 * sample, 100 * area_uv * sample))
     return int(math.ceil(side / 16) * 16)
+
+
+def camera_distances(chunk, scale):
+    """Pour chaque photo alignée: la médiane des distances au modèle sur une grille de 3 x 3 points de l'image (m),
+    ou None si aucun de ces rayons ne touche le modèle."""
+    model, out = chunk.model, {}
+    cameras = [c for c in chunk.cameras if c.transform is not None and c.sensor is not None]
+    for i, camera in enumerate(cameras):
+        w, h = camera.sensor.width, camera.sensor.height
+        hits = []
+        for fx in (0.25, 0.5, 0.75):
+            for fy in (0.25, 0.5, 0.75):
+                target = camera.unproject(Metashape.Vector([fx * w, fy * h]))
+                hit = model.pickPoint(camera.center, target)
+                if hit is not None:
+                    hits.append((hit - camera.center).norm() * scale)
+        hits.sort()
+        out[camera] = hits[len(hits) // 2] if hits else None
+        if i and i % 5000 == 0:
+            log("distances: %d / %d photos" % (i, len(cameras)))
+    return out
+
+
+def report_distances(distances):
+    values = [d for d in distances.values() if d is not None]
+    log("distance au modèle: %d photos, %d qui ne le voient pas" % (len(distances), len(distances) - len(values)))
+    low = 0
+    for high in (0.5, 1, 1.5, 2, 3, 5, 1e9):
+        count = sum(1 for d in values if low <= d < high)
+        log("  %s m: %d" % ("%.1f à %.1f" % (low, high) if high < 1e9 else "plus de %.1f" % low, count))
+        low = high
 
 
 def main():
@@ -136,6 +172,7 @@ def main():
             texel = target_texel_m()
             log("texel cible %.2f mm: %d px de côté"
                 % (texel * 1000, texture_side(chunk.model, chunk.transform.scale, texel)))
+            report_distances(camera_distances(chunk, chunk.transform.scale))
         return
     for camera, target in changes:
         # (camera.photo est une copie: changer son chemin puis la remettre sur la caméra)
@@ -171,9 +208,17 @@ def main():
             texel = target_texel_m()
             a.size = texture_side(chunk.model, scale, texel)
             log("texel cible %.2f mm: %d px de côté" % (texel * 1000, a.size))
+        cameras = None
+        if a.max_distance:
+            distances = camera_distances(chunk, chunk.transform.scale or 1.0)
+            report_distances(distances)
+            cameras = [c for c, d in distances.items() if d is not None and d <= a.max_distance]
+            log("photos de la texture: %d à au plus %.1f m (sur %d)" % (len(cameras), a.max_distance, len(distances)))
         log("texture: %d px, mosaïque" % a.size)
+        # (cameras only when chosen: without it, every aligned photo)
+        extra = {"cameras": cameras} if cameras is not None else {}
         chunk.buildTexture(blending_mode=Metashape.MosaicBlending, texture_size=a.size, fill_holes=True,
-                           ghosting_filter=True)
+                           ghosting_filter=True, **extra)
         doc.save()
         log("texture refaite et projet enregistré")
 
