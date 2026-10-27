@@ -68,4 +68,5 @@ Scripts PowerShell
 
 [Claude Code](https://claude.com/claude-code) (Anthropic, modèle Claude Opus) : assistant de programmation, pour le site, le visualiseur 3D et la chaîne de publication du modèle
 
-[^1]: Disponible lorsque le paramètre Protune est activé [^2]: Choisi en fonction de la température de couleur des lampes,
+[^1]: Disponible lorsque le paramètre Protune est activé
+[^2]: Choisi en fonction de la température de couleur des lampes,
