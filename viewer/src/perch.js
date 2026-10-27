@@ -51,6 +51,18 @@ const AWAKE = 1.6
 const BEAT_REST = 6
 const BEAT_PER_SPEED = 60
 const SWAY = 0.06
+// Turning as a fish does (Christian, 2026-10-27: their turns were not natural; the bass's way, bass.js): the body
+// heads where the fish goes only as fast as it can turn (its turning rate eases toward TURN_GAIN times what is left,
+// at most TURN, or FLEE_TURN fleeing, rad/s), and it swims where its body points; it turns about PIVOT of its length
+// from the snout, the head leading, the bend running down to the tail over the pulse's time (its length over its
+// speed, between PULSE[0] and PULSE[1] s); BEND_MAX rad at most at the tail
+const TURN = 2.5
+const FLEE_TURN = 7
+const TURN_GAIN = 2.5
+const TURN_EASE = 3
+const PIVOT = 0.3
+const PULSE = [0.12, 0.4]
+const BEND_MAX = 0.5
 
 /** A number at random in [min, max] */
 const between = ([min, max]) => min + Math.random() * (max - min)
@@ -202,9 +214,14 @@ export function createPerch({ mobile = false, prepare = (m) => m, floor = () => 
     // The swimming wave: the body sways sideways more toward the tail, the wave running down it (per fish: its phase,
     // its sway)
     material.onBeforeCompile = (shader) => {
-      shader.vertexShader = 'attribute vec2 aSwim;\n' + shader.vertexShader.replace('#include <begin_vertex>', /* glsl */ `
+      shader.vertexShader = 'attribute vec2 aSwim;\nattribute vec3 aBend;\n' + shader.vertexShader.replace('#include <begin_vertex>', /* glsl */ `
         #include <begin_vertex>
         float swimS = 0.5 - position.z;
+        // The turn's bend: each part turned about the pivot by its angle (aBend: at the snout, at 0.6 and at the tail's
+        // end; none at the pivot)
+        float bendA = swimS < ${PIVOT.toFixed(2)} ? mix(aBend.x, 0.0, swimS / ${PIVOT.toFixed(2)}) : swimS < 0.6 ? mix(0.0, aBend.y, (swimS - ${PIVOT.toFixed(2)}) / ${(0.6 - PIVOT).toFixed(2)}) : mix(aBend.y, aBend.z, (swimS - 0.6) / 0.4);
+        float bendZ = transformed.z - ${(0.5 - PIVOT).toFixed(2)};
+        transformed.xz = vec2(transformed.x * cos(bendA) + bendZ * sin(bendA), -transformed.x * sin(bendA) + bendZ * cos(bendA) + ${(0.5 - PIVOT).toFixed(2)});
         transformed.x += aSwim.y * (0.15 + swimS * swimS) * sin(aSwim.x - swimS * 5.0);`)
     }
     material.customProgramCacheKey = () => 'perch'
@@ -221,6 +238,9 @@ export function createPerch({ mobile = false, prepare = (m) => m, floor = () => 
     swim.setUsage(THREE.DynamicDrawUsage)
     const mesh = new THREE.InstancedMesh(geometry.clone(), material, count)
     mesh.geometry.setAttribute('aSwim', swim)
+    const bends = new THREE.InstancedBufferAttribute(new Float32Array(count * 3), 3)
+    bends.setUsage(THREE.DynamicDrawUsage)
+    mesh.geometry.setAttribute('aBend', bends)
     mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
     mesh.frustumCulled = false
     root.add(mesh)
@@ -237,13 +257,17 @@ export function createPerch({ mobile = false, prepare = (m) => m, floor = () => 
         phase: Math.random() * 10,
         wander: Math.random() * 100,
         floor: null,
+        heading,
+        turnRate: 0,
+        pitch: 0,
       })
     }
-    schools.push({ mesh, swim, home, ground, fish, next: 0 })
+    schools.push({ mesh, swim, bends, home, ground, fish, next: 0 })
   }
 
   const steer = new THREE.Vector3()
   const probe = new THREE.Vector3()
+  const placed = new THREE.Vector3()
   const separate = new THREE.Vector3()
   const align = new THREE.Vector3()
   const cohere = new THREE.Vector3()
@@ -303,6 +327,7 @@ export function createPerch({ mobile = false, prepare = (m) => m, floor = () => 
       offset.subVectors(a.position, camera.position)
       const near = offset.length()
       let top = CRUISE
+      a.fleeing = near < SHY
       if (near < SHY) {
         steer.addScaledVector(offset.setY(offset.y * 0.3).normalize(), FLEE_WEIGHT * (1 - near / SHY) * 4)
         top = FLEE
@@ -313,20 +338,37 @@ export function createPerch({ mobile = false, prepare = (m) => m, floor = () => 
       const speed = a.velocity.length()
       if (speed > top * slow) a.velocity.multiplyScalar((top * slow) / speed)
       else if (speed < MILL * slow) a.velocity.multiplyScalar((MILL * slow) / Math.max(speed, 1e-6))
+      // Its body turns toward where it would go, as fast as it can; it swims where its body points
+      const flat = Math.hypot(a.velocity.x, a.velocity.z)
+      const wanted = Math.atan2(a.velocity.x, a.velocity.z)
+      const delta = Math.atan2(Math.sin(wanted - a.heading), Math.cos(wanted - a.heading))
+      const most = a.fleeing ? FLEE_TURN : TURN * Math.max(slow / ACTIVITY, 0.4)
+      a.turnRate += (THREE.MathUtils.clamp(delta * TURN_GAIN, -most, most) - a.turnRate) * Math.min(1, (a.fleeing ? TURN_EASE * 3 : TURN_EASE) * dt)
+      a.heading += a.turnRate * dt
+      a.velocity.x = Math.sin(a.heading) * flat
+      a.velocity.z = Math.cos(a.heading) * flat
+      a.pitch += (Math.asin(THREE.MathUtils.clamp(a.velocity.y / Math.max(a.velocity.length(), 1e-6), -1, 1)) - a.pitch) * Math.min(1, 3 * dt)
       a.position.addScaledVector(a.velocity, dt)
     }
-    // Their matrices: along their velocity (+z the snout), level-ish; the swimming wave's phase by their speed
+    // Their matrices: the pivot at its place, the body along the pivot's heading (+z the snout); the bend from the
+    // turning rate (the head turned ahead of the pivot, the tail behind it); the swimming wave's phase by their speed
     fish.forEach((a, i) => {
       const speed = a.velocity.length()
-      euler.set(-Math.asin(THREE.MathUtils.clamp(a.velocity.y / Math.max(speed, 1e-6), -1, 1)), Math.atan2(a.velocity.x, a.velocity.z), 0)
+      const pulse = THREE.MathUtils.clamp(a.length / Math.max(speed, 1e-3), PULSE[0], PULSE[1])
+      const bend = (share) => THREE.MathUtils.clamp(-a.turnRate * (share - PIVOT) * pulse, -BEND_MAX, BEND_MAX)
+      school.bends.setXYZ(i, bend(0), bend(0.6), bend(1))
+      euler.set(-a.pitch, a.heading, 0)
       turn.setFromEuler(euler)
-      matrix.compose(a.position, turn, scale.setScalar(a.length))
+      // (the mesh's origin is its middle: the pivot is 0.5 - PIVOT of its length ahead of it)
+      placed.set(0, 0, -(0.5 - PIVOT) * a.length).applyQuaternion(turn).add(a.position)
+      matrix.compose(placed, turn, scale.setScalar(a.length))
       school.mesh.setMatrixAt(i, matrix)
       a.phase += dt * (BEAT_REST + BEAT_PER_SPEED * speed)
       school.swim.setXY(i, a.phase, SWAY * Math.min(1.5, 0.4 + speed / CRUISE))
     })
     school.mesh.instanceMatrix.needsUpdate = true
     school.swim.needsUpdate = true
+    school.bends.needsUpdate = true
   }
 
   return {
