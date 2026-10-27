@@ -28,7 +28,7 @@ Le détail des étapes: le guide **Traiter le fichier .blend**.
 | `tools\publish-model\` | **Les outils de publication**: préparer les zones, cuire le relief, tuiler, envoyer sur le serveur. Leur `README.md` explique chaque étape et les leçons apprises |
 | `tools\google-earth\` | Le modèle complet pour Google Earth, le GLB téléchargeable, les modèles de réalité augmentée |
 | `tools\model-analysis\` | Analyse de la résolution des zones; ses rapports datés sont gardés |
-| `modeles\` | Les fichiers Blender, stockés avec Git LFS: `lock-21-publishing.blend` (le fichier de travail de la publication) et `lock-21-mockup.blend` (la maquette) |
+| `modeles\` | Les fichiers Blender, stockés avec Git LFS: `lock-21-publishing.blend` (le fichier de travail de la publication; la maquette `lock-21-mockup.blend`, dont il est la copie, retirée le 2026-10-27, reste dans l'historique Git) |
 | `docs\` | Les guides pour les personnes: celui-ci, **Installation**, **Traiter le fichier .blend**, **Réalité augmentée**, **Documents de SOS Ottawa** (`sos-ottawa-files.md`, résumé des documents numérisés de `docs\sos-files\`) |
 | `AGENTS.md` | Les consignes pour les assistants d'IA (Claude) qui travaillent dans le projet |
 | `docs/guidelines.md`, `docs/system-design.md` | Les règles du code du site, et le design (couleurs, typographie, mouvement) |
