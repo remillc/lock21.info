@@ -1552,6 +1552,7 @@ function unloadModel() {
     model.traverse((child) => child.geometry?.dispose())
   }
   for (const crawfish of crawfishes) scene.remove(crawfish.object)
+  perch.clear()
   crawfishes = []
   tilesets = []
   contextModels = []
@@ -1623,14 +1624,9 @@ const fishes = createFishes({
 })
 scene.add(fishes.object)
 if (import.meta.env.DEV) window.l21.fishes = fishes
-// Schools of young yellow perch (perch.js, TODO #68, Christian, 2026-10-27) where plants grow: over the filler of
-// zone 1 (« filler002 », under the zone) and the floor of zone 6 (its mockup); after the first view, once underwater
-const PERCH_SPOTS = [
-  { x: -29, z: -32, floor: 1 },
-  { x: -27.4, z: 8.6, floor: 0.3 },
-]
+// Schools of young yellow perch (perch.js, TODO #68, Christian, 2026-10-27) where plants grow, at the « perches »
+// empties of the .blend (exported with the mockups: showMockups); after the first view, once underwater
 const perch = createPerch({
-  spots: PERCH_SPOTS,
   mobile,
   when: afterFirstViewUnderwater,
   prepare: prepareCreatureMaterial,
@@ -1679,6 +1675,10 @@ function prepareCreatureMaterial(material, { tint = false } = {}) {
 function showMockups(model, manifest) {
   const online = new Set(manifest.tilesets.map((t) => t.id))
   model.updateMatrixWorld(true)
+  // Perch schools at the « perches » empties (perch.js)
+  model.traverse((child) => {
+    if (/^perch/i.test(child.name) && !child.isMesh) perch.add(child.getWorldPosition(new THREE.Vector3()))
+  })
   // Crayfish at the « crawfish » empties (crawfish.js)
   model.traverse((child) => {
     if (!/^crawfish/i.test(child.name) || child.isMesh) return

@@ -31,6 +31,8 @@ const MILL = 0.04
 const CRUISE = 0.18
 const FLEE = 0.6
 const STEER = 2.5
+// Their activity: speeds, wander and steering, half of the first try (Christian, 2026-10-27)
+const ACTIVITY = 0.5
 // The flock: neighbours within these distances (in body lengths for the separation, m for the others) and weights
 const SEPARATE = 2
 const ALIGN = 0.35
@@ -174,26 +176,29 @@ function fishTexture() {
 
 /**
  * @param {object} options
- * @param {{ x: number, z: number, floor: number }[]} options.spots - each school's spot (scene metres) and the floor's
- *   height there if no floor is found below it
  * @param {boolean} [options.mobile] - fewer fish
  * @param {(material: THREE.Material) => THREE.Material} [options.prepare] - the viewer's material set-up (underwater)
  * @param {(point: THREE.Vector3) => number | null} [options.floor] - the floor's height below a point
  * @param {() => number} [options.visibility] - the water's visibility (m)
  * @param {() => number} [options.pace] - its pace in this season's water
- * @param {Promise<unknown>} [options.when] - built once this settles
+ * @param {Promise<unknown>} [options.when] - the schools are built once this settles
  */
-export function createPerch({ spots, mobile = false, prepare = (m) => m, floor = () => null, visibility = () => 6, pace = () => 1, when = Promise.resolve() }) {
+export function createPerch({ mobile = false, prepare = (m) => m, floor = () => null, visibility = () => 6, pace = () => 1, when = Promise.resolve() }) {
   const root = new THREE.Group()
   root.name = 'perch'
   root.visible = false
   /** @type {object[]} */
   const schools = []
   const time = { value: 0 }
+  /** @type {THREE.BufferGeometry | null} */
+  let geometry = null
+  /** @type {THREE.Material | null} */
+  let material = null
 
-  when.then(() => {
-    const geometry = fishGeometry()
-    const material = new THREE.MeshStandardMaterial({ map: fishTexture(), roughness: 0.55, side: THREE.DoubleSide })
+  function build() {
+    if (material) return
+    geometry = fishGeometry()
+    material = new THREE.MeshStandardMaterial({ map: fishTexture(), roughness: 0.55, side: THREE.DoubleSide })
     // The swimming wave: the body sways sideways more toward the tail, the wave running down it (per fish: its phase,
     // its sway)
     material.onBeforeCompile = (shader) => {
@@ -204,36 +209,38 @@ export function createPerch({ spots, mobile = false, prepare = (m) => m, floor =
     }
     material.customProgramCacheKey = () => 'perch'
     prepare(material)
+  }
+
+  /** A school around a spot (the .blend's « perches » empties: the school's middle) */
+  function addSchool(spot) {
+    build()
     const count = COUNT[mobile ? 1 : 0]
-    const point = new THREE.Vector3()
-    for (const spot of spots) {
-      // The floor there (its tiles may not be loaded yet: the spot's own height then)
-      const ground = floor(point.set(spot.x, 20, spot.z)) ?? spot.floor
-      const swim = new THREE.InstancedBufferAttribute(new Float32Array(count * 2), 2)
-      swim.setUsage(THREE.DynamicDrawUsage)
-      const mesh = new THREE.InstancedMesh(geometry.clone(), material, count)
-      mesh.geometry.setAttribute('aSwim', swim)
-      mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
-      mesh.frustumCulled = false
-      root.add(mesh)
-      const home = new THREE.Vector3(spot.x, ground + FLOOR_GAP + HEIGHT / 2, spot.z)
-      const fish = []
-      for (let i = 0; i < count; i++) {
-        const angle = Math.random() * Math.PI * 2
-        const position = home.clone().add(new THREE.Vector3(Math.sin(angle), (Math.random() - 0.5) * 0.6, Math.cos(angle)).multiplyScalar(Math.random() * RANGE * 0.6))
-        const heading = Math.random() * Math.PI * 2
-        fish.push({
-          position,
-          velocity: new THREE.Vector3(Math.sin(heading), 0, Math.cos(heading)).multiplyScalar(MILL),
-          length: between(LENGTH),
-          phase: Math.random() * 10,
-          wander: Math.random() * 100,
-          floor: null,
-        })
-      }
-      schools.push({ mesh, swim, home, ground, fish, next: 0 })
+    // The floor below the spot (its tiles may not be loaded yet: a little below the spot then)
+    const ground = floor(spot.clone()) ?? spot.y - FLOOR_GAP - HEIGHT / 2
+    const swim = new THREE.InstancedBufferAttribute(new Float32Array(count * 2), 2)
+    swim.setUsage(THREE.DynamicDrawUsage)
+    const mesh = new THREE.InstancedMesh(geometry.clone(), material, count)
+    mesh.geometry.setAttribute('aSwim', swim)
+    mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+    mesh.frustumCulled = false
+    root.add(mesh)
+    const home = spot.clone()
+    const fish = []
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2
+      const position = home.clone().add(new THREE.Vector3(Math.sin(angle), (Math.random() - 0.5) * 0.3, Math.cos(angle)).multiplyScalar(Math.random() * RANGE * 0.6))
+      const heading = Math.random() * Math.PI * 2
+      fish.push({
+        position,
+        velocity: new THREE.Vector3(Math.sin(heading), 0, Math.cos(heading)).multiplyScalar(MILL),
+        length: between(LENGTH),
+        phase: Math.random() * 10,
+        wander: Math.random() * 100,
+        floor: null,
+      })
     }
-  })
+    schools.push({ mesh, swim, home, ground, fish, next: 0 })
+  }
 
   const steer = new THREE.Vector3()
   const probe = new THREE.Vector3()
@@ -288,7 +295,7 @@ export function createPerch({ spots, mobile = false, prepare = (m) => m, floor =
       if (low > 0) steer.y += W_HOME * (1 + low * 10)
       if (high > 0) steer.y -= W_HOME * (1 + high * 10)
       // A slow wander of its own, mostly level
-      a.wander += dt * 0.5
+      a.wander += dt * 0.5 * slow
       steer.x += W_WANDER * Math.sin(a.wander * 1.3)
       steer.z += W_WANDER * Math.cos(a.wander * 1.1)
       steer.y += W_WANDER * 0.2 * Math.sin(a.wander * 0.7)
@@ -324,6 +331,23 @@ export function createPerch({ spots, mobile = false, prepare = (m) => m, floor =
 
   return {
     object: root,
+    /**
+     * A school at this spot, built once `when` settles
+     * @param {THREE.Vector3} spot - the school's middle (scene metres)
+     */
+    add(spot) {
+      const at = spot.clone()
+      when.then(() => addSchool(at))
+    },
+    /** All the schools removed (a new model loaded) */
+    clear() {
+      for (const school of schools) {
+        root.remove(school.mesh)
+        school.mesh.geometry.dispose()
+        school.mesh.dispose()
+      }
+      schools.length = 0
+    },
     /** For tests */
     get debug() {
       return schools.map((s) => ({ home: s.home.toArray().map((x) => +x.toFixed(2)), fish: s.fish.length }))
@@ -340,7 +364,7 @@ export function createPerch({ spots, mobile = false, prepare = (m) => m, floor =
       if (!on || !schools.length) return false
       time.value += dt
       const awake = visibility() * AWAKE + RANGE
-      const slow = pace()
+      const slow = pace() * ACTIVITY
       let moved = false
       for (const school of schools) {
         const far = camera.position.distanceTo(school.home) > awake

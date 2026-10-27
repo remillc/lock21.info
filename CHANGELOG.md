@@ -5,8 +5,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
-- Underwater view: schools of young yellow perch where plants grow, over the filler of zone 1 and the floor of zone 6
-  (40 fish a school, 16 on a phone); they mill slowly near the bottom and draw back from the diver. The fish is
+- Underwater view: schools of young yellow perch where plants grow, at the « perches » empties of the .blend (zone 1's
+  filler, zone 6's floor; exported with the mockups), 40 fish a school, 16 on a phone; they mill slowly close to the
+  bottom and draw back from the diver. The fish is
   modelled from the species' descriptions (olive back, golden sides, dark bars, two dorsal fins).
 - Underwater view: the swimming help (?) no longer says that the walls stop the diver. The movement keys' card says only « Maj : plus vite » (Shift: faster).
 - Underwater view: the mouse wheel swims forward and back where the diver looks, 50 cm a notch (three times that with
