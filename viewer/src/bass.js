@@ -23,7 +23,8 @@ const COOLDOWN = [30, 120]
 const FIRST = 45
 const CLEARANCE = 0.15
 // Its distance ahead of the camera (m, at most a share of the visibility), its speeds (m/s), its turn (rad/s)
-const DISTANCE = 1
+// (0.75: it stops about 3 ft from the diver, on a 16:9 view, Christian, 2026-10-27; was 1, about 4 ft)
+const DISTANCE = 0.75
 const VISIBILITY_SHARE = 0.5
 // Fleeing (Christian, 2026-10-23: it rushes out): a quick turn away and a dash, speeding up over its first second
 const SWIM = 0.16
