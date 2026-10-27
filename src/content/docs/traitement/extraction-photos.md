@@ -15,6 +15,13 @@ de la même façon : elle absorbe d'abord le rouge, et dans l'eau chargée du c
 la lumière traverse d'eau, plus l'image tire sur le vert-jaune. La lumière du jour change donc avec la profondeur, et
 celle des lampes avec la distance entre le rig et ce qu'il filme.
 
+<figure id="absorption">
+
+![Coupe sous l'eau : la lumière du jour descend vers le mur, son rouge s'éteint en premier, puis son bleu, seul le vert-jaune atteint le mur ; les lampes du rig éclairent le mur sur un trajet court, toutes leurs couleurs arrivent](./extraction-photos/assets/absorption-couleurs.svg)
+
+<figcaption>L'eau absorbe les couleurs de la lumière, le rouge en premier. Le jour, qui traverse toute la profondeur, arrive vert-jaune ; les lampes, à courte distance, gardent presque toutes leurs couleurs.</figcaption>
+</figure>
+
 Dans la caméra, la balance des blancs reste fixe, à 6500 K ([Matériel utilisé](/collecte/materiel-utilise)). La
 correction se fait ensuite dans DaVinci Resolve, d'après la charte de couleurs filmée au début de chaque plongée,
 sous-exposée d'un stop ([La charte de couleurs est surexposée](/problemes/charte-couleurs-surexposee)). Pour certaines
