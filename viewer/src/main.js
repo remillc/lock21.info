@@ -316,7 +316,8 @@ const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container
 // water's colour: their tiles are neither loaded nor drawn (spring, 14 ft: about 5 m instead of the whole site).
 // The view itself stops there too (the context and the mockups as well, and the water column fits inside: an empty
 // area showed where tiles were missing in front of the context: Christian, 2026-10-24); FAR in the air
-const TILES_VISIBILITY = 1.2
+// (1.6: the surfaces are gone at 1.5 visibilities, underwater.js GONE_SHARE; was 1.2)
+const TILES_VISIBILITY = 1.6
 const FAR = 2000
 const tilesCamera = new THREE.PerspectiveCamera()
 function syncTilesCamera() {

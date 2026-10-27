@@ -7,6 +7,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 - `/modele`: the 3D viewer's frame enters as the page loads, rising to its place while growing and fading in (MD3
   entering motion, 450 ms; none with reduced motion).
+- Underwater view: what stands at the season's visibility distance still shows, faintly; the water hides it
+  completely at 1.5 times that distance (it was gone at the visibility itself: zone 18, 8 m away in autumn's 30 ft,
+  barely showed).
 ## 1.0.0-beta.2 - 2026-10-26
 
 Fixes to the 3D viewer: no more holes in the walls on large screens, a steady start view, faster panning and zoom;

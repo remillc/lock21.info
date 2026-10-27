@@ -4,7 +4,7 @@
 //  - distances are the true distance from the camera to each point (not the depth along its axis): facing a wall, its
 //    parts away from the centre are further, and fade first;
 //  - the background: the water column around the camera, lighter toward the surface, with the refracted sun; the
-//    surfaces fade into its colour: seen as they are up close, gone at the season's visibility (the usual sky and sun
+//    surfaces fade into its colour: seen as they are up close, faint at the season's visibility, gone at 1.5 times it (the usual sky and sun
 //    lighting stays: the water only hides the distance);
 //  - the sun bent toward the vertical by the surface (Snell), from the « Soleil » setting; caustics (the moving light
 //    network of the waves) on surfaces facing it, fading with depth;
@@ -59,6 +59,9 @@ const WATER_BRIGHTNESS = 0.6
 // The surfaces are seen as they are up to this share of the visibility (Christian, 2026-10-23: textures seen up close,
 // nothing far away); the usual lighting (sky and sun) stays, the water only hides the distance
 const CLEAR_SHARE = 0.15
+// ... and gone at this many visibilities: a diver still makes out what stands at the visibility distance, faintly
+// (Christian, 2026-10-27: zone 18 barely showed 8 m away in autumn's 30 ft; gone at 1 visibility left 6 % of it)
+const GONE_SHARE = 1.5
 // The dive light: held at the bottom right of the view (35 cm right of and 30 cm below the eye, until the diver's arm
 // gives the drawn light's front and axis, which follow its sway: setLampPose, diver-arm.js), aimed at the point LAMP_AIM ahead in the middle of the view, so its ray crosses the view toward the centre (Christian, 2026-10-23);
 // candela (as a three.js spot light: about 2 times the sun at the floor 3 m away; was 200, 15 %, twice 20 % then twice
@@ -573,7 +576,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
           // the walls show in clear water: Christian, 2026-10-23)
           float uwMurk = 1.0 - smoothstep(${UP_HAZE_MURKY.toFixed(2)}, ${UP_HAZE_CLEAR.toFixed(2)}, uUwGone);
           float uwUp = mix(1.0, ${UP_HAZE.toFixed(2)}, smoothstep(0.0, 0.8, uwDir.y) * uwMurk);
-          float uwTransmit = 1.0 - smoothstep(uUwClear * uwUp, uUwGone * uwUp, vUwDepth);
+          float uwTransmit = 1.0 - smoothstep(uUwClear * uwUp, uUwGone * ${GONE_SHARE.toFixed(2)} * uwUp, vUwDepth);
           vec3 uwBack = uwDir.y > 0.0 ? mix(uUwWater, uUwTop, smoothstep(0.35, 1.0, uwDir.y)) : mix(uUwWater, uUwDeep, smoothstep(0.35, 1.0, -uwDir.y));
           gl_FragColor.rgb = uwColor * uwTransmit + uwBack * (1.0 - uwTransmit);
           gl_FragColor.rgb += vec3(1.0, 0.94, 0.87) * uwBeam(cameraPosition, vUwWorld, uUwAbsorb);
@@ -614,7 +617,8 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
     const count = Math.min(PARTICLE_COUNT, season.density * box ** 3) * (mobile ? MOBILE_SHARE : 1)
     particleGeometry.setDrawRange(0, Math.round(count))
     particles.material.uniforms.uCurrent.value.set(CURRENT * season.current, 0, 0)
-    // The surfaces: clear up to CLEAR_SHARE of the visibility, gone at the visibility; the water's absorption
+    // The surfaces: clear up to CLEAR_SHARE of the visibility, gone at GONE_SHARE visibilities (patchShader); the
+    // water's absorption
     uniforms.uUwGone.value = season.visibilityFt * 0.3048
     uniforms.uUwClear.value = CLEAR_SHARE * uniforms.uUwGone.value
     uniforms.uUwSpectral.value.set(...season.absorb)
