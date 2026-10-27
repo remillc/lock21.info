@@ -36,8 +36,7 @@ p = argparse.ArgumentParser(prog="retexture_chunk.py", description=__doc__,
 p.add_argument("-c", "--chunk", help="nom du chunk (défaut: le chunk actif); doit contenir « graded »")
 p.add_argument("-m", "--map", action="append", help="ancien dossier=nouveau dossier (répétable; défaut: zone 3)")
 p.add_argument("-s", "--size", type=int, help="côté de la texture, px (défaut: calculé pour le texel cible)")
-p.add_argument("-o", "--out", default="O:/modeles/zone-3/zone-3 - graded - high res.glb",
-               help="modèle texturé à écrire (.glb)")
+p.add_argument("-o", "--out", help="modèle texturé à écrire (.glb; défaut: O:/modeles/<zone>/<zone> - graded - <faces>M faces.glb)")
 p.add_argument("--check", action="store_true", help="vérifier les chemins sans rien changer")
 p.add_argument("--no-texture", action="store_true", help="ne pas refaire la texture")
 p.add_argument("--no-export", action="store_true", help="ne pas exporter")
@@ -146,6 +145,9 @@ if not a.no_texture:
 
 # 3. Export
 if not a.no_export:
+    if not a.out:
+        zone = "zone-" + chunk.label.split()[1]
+        a.out = "O:/modeles/%s/%s - graded - %.1fM faces.glb" % (zone, zone, len(chunk.model.faces) / 1e6)
     if os.path.exists(a.out):
         raise SystemExit("existe déjà, rien n'est écrasé: " + a.out)
     chunk.exportModel(path=a.out, binary=True, texture_format=Metashape.ImageFormatJPEG, save_texture=True,
