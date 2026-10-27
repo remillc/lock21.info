@@ -40,7 +40,10 @@ p.add_argument("-o", "--out", help="modèle texturé à écrire (.glb; défaut: 
 p.add_argument("--check", action="store_true", help="vérifier les chemins sans rien changer")
 p.add_argument("--no-texture", action="store_true", help="ne pas refaire la texture")
 p.add_argument("--no-export", action="store_true", help="ne pas exporter")
-a = p.parse_args(sys.argv[1:])
+
+
+class Stop(Exception):
+    """Arrêt du script avec un message. Pas de SystemExit: dans Metashape, il ferme l'application."""
 
 
 def norm(path):
@@ -49,55 +52,6 @@ def norm(path):
 
 def log(msg):
     print("[retexture] " + msg, flush=True)
-
-
-doc = Metashape.app.document
-if a.chunk:
-    chunks = [c for c in doc.chunks if c.label == a.chunk]
-    if len(chunks) != 1:
-        raise SystemExit("chunk introuvable ou ambigu: " + a.chunk)
-    chunk = chunks[0]
-else:
-    chunk = doc.chunk
-if "graded" not in chunk.label:
-    raise SystemExit("le chunk « %s » n'est pas une copie « graded »: rien n'est fait" % chunk.label)
-if chunk.model is None:
-    raise SystemExit("le chunk n'a pas de modèle actif")
-log("chunk: %s, modèle: %s, %d caméras" % (chunk.label, chunk.model.label, len(chunk.cameras)))
-
-pairs = [(norm(old), new.replace(chr(92), "/").rstrip("/")) for old, new in (m.split("=", 1) for m in (a.map or ZONE_3))]
-
-# 1. Chemins: tout vérifier, puis tout changer
-changes, missing, kept, done = [], [], 0, 0
-for camera in chunk.cameras:
-    if camera.photo is None:
-        continue
-    folder, name = os.path.split(camera.photo.path)
-    folder = norm(folder)
-    for old, new in pairs:
-        if folder == norm(new):
-            done += 1
-            break
-        if folder == old:
-            target = new + "/" + name
-            (changes if os.path.isfile(target) else missing).append((camera, target))
-            break
-    else:
-        kept += 1
-log("à changer: %d, déjà changées: %d, autres dossiers (gardés): %d, fichiers manquants: %d"
-    % (len(changes), done, kept, len(missing)))
-for camera, target in missing[:10]:
-    log("manquant: " + target)
-if missing:
-    raise SystemExit("des images étalonnées manquent: rien n'est changé")
-if a.check:
-    raise SystemExit(0)
-for camera, target in changes:
-    camera.photo.path = target
-if changes:
-    doc.save()
-    log("chemins changés et projet enregistré")
-
 
 
 def target_texel_m():
@@ -120,7 +74,7 @@ def texture_side(model, scale, texel, sample=50):
         u, v, w = (tex[k].coord for k in face.tex_vertices)
         area_uv += abs((v.x - u.x) * (w.y - u.y) - (w.x - u.x) * (v.y - u.y)) / 2
     if area_uv <= 0:
-        raise SystemExit("le modèle n'a pas de coordonnées de texture")
+        raise Stop("le modèle n'a pas de coordonnées de texture")
     area_m2 = area3 * scale * scale
     side = math.sqrt(area_m2 / area_uv) / texel
     # (une face sur `sample`: les deux sommes sont à multiplier par `sample`, leur rapport reste le même)
@@ -128,28 +82,92 @@ def texture_side(model, scale, texel, sample=50):
     return int(math.ceil(side / 16) * 16)
 
 
-# 2. Texture, sur les coordonnées existantes
-if not a.no_texture:
-    if not a.size:
-        scale = chunk.transform.scale
-        if not scale:
-            raise SystemExit("le chunk n'a pas d'échelle: donner -s")
-        texel = target_texel_m()
-        a.size = texture_side(chunk.model, scale, texel)
-        log("texel cible %.2f mm: %d px de côté" % (texel * 1000, a.size))
-    log("texture: %d px, mosaïque" % a.size)
-    chunk.buildTexture(blending_mode=Metashape.MosaicBlending, texture_size=a.size, fill_holes=True,
-                       ghosting_filter=True)
-    doc.save()
-    log("texture refaite et projet enregistré")
+def main():
+    try:
+        a = p.parse_args(sys.argv[1:])
+    except SystemExit:
+        # (-h ou une erreur d'argument: argparse a écrit son message; ne pas fermer Metashape)
+        return
+    doc = Metashape.app.document
+    if a.chunk:
+        chunks = [c for c in doc.chunks if c.label == a.chunk]
+        if len(chunks) != 1:
+            raise Stop("chunk introuvable ou ambigu: " + a.chunk)
+        chunk = chunks[0]
+    else:
+        chunk = doc.chunk
+    if "graded" not in chunk.label:
+        raise Stop("le chunk « %s » n'est pas une copie « graded »: rien n'est fait" % chunk.label)
+    if chunk.model is None:
+        raise Stop("le chunk n'a pas de modèle actif")
+    log("chunk: %s, modèle: %s, %d caméras" % (chunk.label, chunk.model.label, len(chunk.cameras)))
 
-# 3. Export
-if not a.no_export:
-    if not a.out:
-        zone = "zone-" + chunk.label.split()[1]
-        a.out = "O:/modeles/%s/%s - graded - %.1fM faces.glb" % (zone, zone, len(chunk.model.faces) / 1e6)
-    if os.path.exists(a.out):
-        raise SystemExit("existe déjà, rien n'est écrasé: " + a.out)
-    chunk.exportModel(path=a.out, binary=True, texture_format=Metashape.ImageFormatJPEG, save_texture=True,
-                      save_uv=True, save_normals=True, save_colors=False, save_cameras=False, save_markers=False)
-    log("exporté: " + a.out)
+    pairs = [(norm(old), new.replace(chr(92), "/").rstrip("/")) for old, new in (m.split("=", 1) for m in (a.map or ZONE_3))]
+
+    # 1. Chemins: tout vérifier, puis tout changer
+    changes, missing, kept, done = [], [], 0, 0
+    for camera in chunk.cameras:
+        if camera.photo is None:
+            continue
+        folder, name = os.path.split(camera.photo.path)
+        folder = norm(folder)
+        for old, new in pairs:
+            if folder == norm(new):
+                done += 1
+                break
+            if folder == old:
+                target = new + "/" + name
+                (changes if os.path.isfile(target) else missing).append((camera, target))
+                break
+        else:
+            kept += 1
+    log("à changer: %d, déjà changées: %d, autres dossiers (gardés): %d, fichiers manquants: %d"
+        % (len(changes), done, kept, len(missing)))
+    for camera, target in missing[:10]:
+        log("manquant: " + target)
+    if missing:
+        raise Stop("des images étalonnées manquent: rien n'est changé")
+    if a.check:
+        # (la taille que prendrait la texture, sans rien changer)
+        if chunk.transform.scale:
+            texel = target_texel_m()
+            log("texel cible %.2f mm: %d px de côté"
+                % (texel * 1000, texture_side(chunk.model, chunk.transform.scale, texel)))
+        return
+    for camera, target in changes:
+        camera.photo.path = target
+    if changes:
+        doc.save()
+        log("chemins changés et projet enregistré")
+
+    # 2. Texture, sur les coordonnées existantes
+    if not a.no_texture:
+        if not a.size:
+            scale = chunk.transform.scale
+            if not scale:
+                raise Stop("le chunk n'a pas d'échelle: donner -s")
+            texel = target_texel_m()
+            a.size = texture_side(chunk.model, scale, texel)
+            log("texel cible %.2f mm: %d px de côté" % (texel * 1000, a.size))
+        log("texture: %d px, mosaïque" % a.size)
+        chunk.buildTexture(blending_mode=Metashape.MosaicBlending, texture_size=a.size, fill_holes=True,
+                           ghosting_filter=True)
+        doc.save()
+        log("texture refaite et projet enregistré")
+
+    # 3. Export
+    if not a.no_export:
+        if not a.out:
+            zone = "zone-" + chunk.label.split()[1]
+            a.out = "O:/modeles/%s/%s - graded - %.1fM faces.glb" % (zone, zone, len(chunk.model.faces) / 1e6)
+        if os.path.exists(a.out):
+            raise Stop("existe déjà, rien n'est écrasé: " + a.out)
+        chunk.exportModel(path=a.out, binary=True, texture_format=Metashape.ImageFormatJPEG, save_texture=True,
+                          save_uv=True, save_normals=True, save_colors=False, save_cameras=False, save_markers=False)
+        log("exporté: " + a.out)
+
+
+try:
+    main()
+except Stop as e:
+    log("arrêt: %s" % e)
