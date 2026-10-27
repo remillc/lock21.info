@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#98**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#100**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -125,4 +125,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   previews broke, back to true)
 - [ ] #91 SEO audit: outside the site, for Christian.  S9 links: the Sketchfab profile, DECOSTOP, the Wikipedia « Lost
   Villages » talk page (dead source for Lock 21), Lost Villages Historical Society, Save Ontario Shipwrecks
+- [ ] #99 For the next dives, for Christian: buy a magenta fluorescent spray paint at Canadian Tire (Rust-Oleum
+  Specialty All-Surface, fluorescent,
+  https://www.canadiantire.ca/en/pdp/rust-oleum-specialty-all-surface-aerosol-spray-paint-fluorescent-312-g-0482513p.0482515.html)
+  and repaint the measuring rods, then cover them with a protective matte clear coat (the orange rod blends with the
+  mussels and rust: tools/color-grading/make_masks.mjs, TODO #75)
 - [ ] #35 lock21.ca: owner contacted on 2026-10-18 through CIRA; reminder in Google Calendar on 2027-03-14 (expiry)

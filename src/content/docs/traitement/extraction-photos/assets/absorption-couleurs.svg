@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-labelledby="t d">
+  <title id="t">L'eau absorbe les couleurs de la lumière, le rouge en premier</title>
+  <desc id="d">Coupe sous l'eau. Le jour descend de la surface en biais vers le mur de l'écluse : décomposé en rouge, bleu et vert, son rouge s'éteint en premier, puis son bleu, et seul le vert-jaune atteint le mur. Les lampes du rig, devant la caméra, éclairent le mur sur un trajet court : leurs trois couleurs arrivent, le rouge un peu affaibli, et la lumière revient à la caméra. Plus le mur est loin, plus l'image tire sur le vert.</desc>
+  <defs>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2e5a52"/>
+      <stop offset="0.5" stop-color="#1f3d2c"/>
+      <stop offset="1" stop-color="#141c10"/>
+    </linearGradient>
+    <linearGradient id="fade-red" gradientUnits="userSpaceOnUse" x1="420" y1="140" x2="478" y2="246">
+      <stop offset="0" stop-color="#ef6a55"/>
+      <stop offset="1" stop-color="#ef6a55" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="fade-blue" gradientUnits="userSpaceOnUse" x1="436" y1="140" x2="540" y2="330">
+      <stop offset="0" stop-color="#6fa8ef"/>
+      <stop offset="1" stop-color="#6fa8ef" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="fade-green" gradientUnits="userSpaceOnUse" x1="452" y1="140" x2="616" y2="440">
+      <stop offset="0" stop-color="#a6d46a"/>
+      <stop offset="1" stop-color="#a6d46a" stop-opacity="0.55"/>
+    </linearGradient>
+    <linearGradient id="lamp-red" gradientUnits="userSpaceOnUse" x1="330" y1="0" x2="616" y2="0">
+      <stop offset="0" stop-color="#ef6a55"/>
+      <stop offset="1" stop-color="#ef6a55" stop-opacity="0.4"/>
+    </linearGradient>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto">
+      <path d="M0 1 L10 5 L0 9 Z" fill="context-stroke"/>
+    </marker>
+    <pattern id="stones" width="44" height="22" patternUnits="userSpaceOnUse">
+      <rect width="44" height="22" fill="#4a4b3b"/>
+      <path d="M0 0.5 H44 M0 11.5 H44 M22 0 V11 M0 11 V22 M44 11 V22" stroke="#2c2d22" stroke-width="1.5" fill="none"/>
+    </pattern>
+  </defs>
+
+  <rect width="800" height="600" rx="16" fill="#12140e"/>
+  <text x="32" y="44" fill="#a3a893" font-family="JetBrains Mono, ui-monospace, monospace" font-size="15" letter-spacing="1">ABSORPTION DES COULEURS · SOUS L'EAU</text>
+
+  <!-- Sky, sun, surface, water darker and greener with depth -->
+  <circle cx="370" cy="88" r="20" fill="#f2d27a"/>
+  <rect x="24" y="130" width="752" height="446" fill="url(#water)"/>
+  <path d="M24 130 Q 62 122 100 130 T 176 130 T 252 130 T 328 130 T 404 130 T 480 130 T 556 130 T 632 130 T 708 130 T 776 130" fill="none" stroke="#8fc7c0" stroke-width="2"/>
+  <text x="40" y="118" fill="#a3a893" font-family="JetBrains Mono, ui-monospace, monospace" font-size="12">surface</text>
+
+  <!-- Depth -->
+  <g font-family="JetBrains Mono, ui-monospace, monospace" font-size="12" fill="#a3a893">
+    <line x1="40" y1="134" x2="40" y2="560" stroke="#3c4232" stroke-width="1.5"/>
+    <line x1="34" y1="560" x2="46" y2="560" stroke="#3c4232" stroke-width="1.5"/>
+    <text x="52" y="300" fill="#6f7563">profondeur ↓</text>
+    <text x="52" y="572">fond de l'écluse, 60 pi (18,3 m)</text>
+  </g>
+
+  <!-- The wall of the lock -->
+  <rect x="620" y="150" width="156" height="426" fill="url(#stones)"/>
+  <rect x="620" y="150" width="156" height="426" fill="#1f3d2c" fill-opacity="0.35"/>
+  <text x="680" y="172" fill="#ebede3" font-family="JetBrains Mono, ui-monospace, monospace" font-size="12">mur</text>
+
+  <!-- Daylight, down and across toward the wall: the red gone first, then the blue; the green-yellow reaches the wall -->
+  <g stroke-width="5" stroke-linecap="round" fill="none">
+    <line x1="420" y1="140" x2="478" y2="246" stroke="url(#fade-red)"/>
+    <line x1="436" y1="140" x2="540" y2="330" stroke="url(#fade-blue)"/>
+    <line x1="452" y1="140" x2="612" y2="432" stroke="url(#fade-green)" marker-end="url(#head)"/>
+  </g>
+  <g font-family="Archivo, system-ui, sans-serif" font-size="14" text-anchor="end">
+    <text x="462" y="232" fill="#ef6a55">le rouge s'éteint en premier</text>
+    <text x="522" y="320" fill="#6fa8ef">puis le bleu, dans l'eau chargée</text>
+    <text x="586" y="404" fill="#a6d46a">le vert-jaune atteint le mur</text>
+  </g>
+
+  <!-- The rig: the camera between two lamps, facing the wall -->
+  <g>
+    <rect x="270" y="438" width="56" height="40" rx="6" fill="#2b2f24" stroke="#8f9482" stroke-width="2"/>
+    <circle cx="326" cy="458" r="11" fill="#12140e" stroke="#8f9482" stroke-width="2"/>
+    <rect x="292" y="402" width="26" height="16" rx="4" fill="#d9d4b8"/>
+    <rect x="292" y="498" width="26" height="16" rx="4" fill="#d9d4b8"/>
+    <line x1="298" y1="418" x2="298" y2="438" stroke="#8f9482" stroke-width="3"/>
+    <line x1="298" y1="478" x2="298" y2="498" stroke="#8f9482" stroke-width="3"/>
+    <text x="250" y="462" fill="#ebede3" font-family="JetBrains Mono, ui-monospace, monospace" font-size="12" text-anchor="end">caméra et lampes</text>
+  </g>
+
+  <!-- The lamps' light: a short way to the wall, all three colours arrive, the red a little weaker; back to the camera -->
+  <g stroke-width="4" stroke-linecap="round" fill="none">
+    <line x1="322" y1="404" x2="612" y2="446" stroke="url(#lamp-red)" marker-end="url(#head)"/>
+    <line x1="322" y1="410" x2="612" y2="456" stroke="#a6d46a" marker-end="url(#head)"/>
+    <line x1="322" y1="416" x2="612" y2="466" stroke="#6fa8ef" marker-end="url(#head)"/>
+    <line x1="612" y1="488" x2="344" y2="466" stroke="#ebede3" stroke-opacity="0.8" stroke-dasharray="6 6" stroke-width="3" marker-end="url(#head)"/>
+  </g>
+  <g font-family="Archivo, system-ui, sans-serif" font-size="14">
+    <text x="360" y="522" fill="#ebede3">les lampes : un trajet court,</text>
+    <text x="360" y="540" fill="#ebede3">le rouge affaibli mais présent</text>
+    <text x="60" y="520" fill="#a3a893">plus le mur est loin,</text>
+    <text x="60" y="538" fill="#a3a893">plus l'image tire sur le vert</text>
+  </g>
+</svg>
