@@ -1,7 +1,9 @@
 // Starlight route middleware (astro.config.mjs, routeMiddleware): what the <head> says to search engines and to the
 // sites a link is shared on (SEO audit, docs/audits/seo-2026-10-26.md):
 // - og:locale as a region code (fr_CA, en_CA), with the other language as og:locale:alternate;
-// - a share image (public/images/og-lock21.jpg, 1200 x 630, cropped from the home page's render of zone 12);
+// - a share image (public/images/og-lock21.jpg, 1200 x 630, cropped from the home page's render of zone 12), replaced
+//   after the build by the page's first photo where it has one (src/integrations/share-images.mjs); on /modele, the
+//   3D viewer's start view (public/images/og-modele.jpg, tools/share-image/capture_model.mjs);
 // - structured data (JSON-LD): the site and its author on the two home pages, the 3D model on the model page;
 // - no canonical address nor language versions on the 404 pages (an error page has no address of its own).
 import { defineRouteMiddleware } from '@astrojs/starlight/route-data'
@@ -19,6 +21,7 @@ const text = {
     siteName: 'Écluse 21',
     otherName: 'Lock 21',
     model: 'Modèle 3D de l’écluse 21',
+    modelImageAlt: 'La vue de départ du modèle 3D de l’écluse 21 : le sas, ses murs de pierre et les trois pertuis des vannes',
     modelDescription: 'L’écluse 21 de Dickinson’s Landing, submergée depuis 1958 dans le Saint-Laurent, relevée zone par zone en photogrammétrie sous-marine.',
   },
   en: {
@@ -26,6 +29,7 @@ const text = {
     siteName: 'Lock 21',
     otherName: 'Écluse 21',
     model: '3D model of Lock 21',
+    modelImageAlt: 'The start view of the 3D model of Lock 21: the chamber, its stone walls and the three sluice openings',
     modelDescription: 'Lock 21 at Dickinson’s Landing, under the St. Lawrence since 1958, surveyed zone by zone with underwater photogrammetry.',
   },
 }
@@ -51,12 +55,14 @@ export const onRequest = defineRouteMiddleware((context) => {
   if (locale) locale.attrs.content = lang === 'en' ? 'en_CA' : 'fr_CA'
   head.push({ tag: 'meta', attrs: { property: 'og:locale:alternate', content: lang === 'en' ? 'fr_CA' : 'en_CA' } })
 
-  const image = `${ORIGIN}/images/og-lock21.jpg`
+  // The model page: the 3D viewer's start view (tools/share-image/capture_model.mjs)
+  const modelPage = path === '/modele' || path === '/en/modele'
+  const image = `${ORIGIN}/images/${modelPage ? 'og-modele.jpg' : 'og-lock21.jpg'}`
   head.push(
     { tag: 'meta', attrs: { property: 'og:image', content: image } },
     { tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
     { tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
-    { tag: 'meta', attrs: { property: 'og:image:alt', content: t.imageAlt } },
+    { tag: 'meta', attrs: { property: 'og:image:alt', content: modelPage ? t.modelImageAlt : t.imageAlt } },
     { tag: 'meta', attrs: { name: 'twitter:image', content: image } },
   )
 
@@ -73,7 +79,7 @@ export const onRequest = defineRouteMiddleware((context) => {
       description: route.entry.data.description,
       author: AUTHOR,
     }
-  } else if (path === '/modele' || path === '/en/modele') {
+  } else if (modelPage) {
     data = {
       '@context': 'https://schema.org',
       '@type': '3DModel',
