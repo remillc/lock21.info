@@ -12,8 +12,8 @@ Le chunk doit être une copie (Duplicate Chunk) dont le nom contient « graded �
    la part de la texture que couvrent ses coordonnées donnent le côté qui fait un texel de la taille cible, celle du
    pixel d'écran à la distance de visionnement de tools/model-analysis/thresholds.json (2 m: 1,73 mm; README de
    tools/publish-model, « Résolution des textures »), arrondi au multiple de 16 px supérieur. `-s` impose un côté.
-   Avec `-d`, seules les photos prises assez près servent à la texture: pour chaque photo, la distance au modèle
-   sur une grille de 3 x 3 points de l'image (médiane); une photo plus loin que `-d` m, ou qui ne voit pas le modèle,
+   Avec `-d`, seules les photos prises assez près servent à la texture: pour chaque photo, la distance médiane aux
+   points de liaison de l'alignement qu'elle voit; une photo plus loin que `-d` m, ou qui ne voit pas le modèle,
    est laissée de côté (zone 3, 2026-10-27: le plancher de bois verdi par des vues lointaines à travers l'eau, alors
    que des vues au rig, à 70 cm, le couvrent). `--check` montre la répartition des distances, sans rien changer.
    Le projet est enregistré.
@@ -96,24 +96,27 @@ def texture_side(model, scale, texel, sample=50):
     return int(math.ceil(side / 16) * 16)
 
 
-def camera_distances(chunk, scale):
-    """Pour chaque photo alignée: la médiane des distances au modèle sur une grille de 3 x 3 points de l'image (m),
-    ou None si aucun de ces rayons ne touche le modèle."""
-    model, out = chunk.model, {}
+def camera_distances(chunk, scale, sample=60):
+    """Pour chaque photo alignée: la médiane des distances aux points de liaison qu'elle voit (m), sur au plus
+    `sample` d'entre eux, ou None si elle n'en voit aucun. Les points de liaison de l'alignement (tie points) donnent
+    la distance au sujet sans lancer de rayon sur le modèle (pickPoint: des heures pour 30 000 photos)."""
+    # (le nuage épars: chunk.point_cloud en 1.7, chunk.tie_points en 2.x)
+    cloud = getattr(chunk, "tie_points", None) or chunk.point_cloud
+    where = {point.track_id: point.coord for point in cloud.points if point.valid}
+    out = {}
     cameras = [c for c in chunk.cameras if c.transform is not None and c.sensor is not None]
-    for i, camera in enumerate(cameras):
-        w, h = camera.sensor.width, camera.sensor.height
-        hits = []
-        for fx in (0.25, 0.5, 0.75):
-            for fy in (0.25, 0.5, 0.75):
-                target = camera.unproject(Metashape.Vector([fx * w, fy * h]))
-                hit = model.pickPoint(camera.center, target)
-                if hit is not None:
-                    hits.append((hit - camera.center).norm() * scale)
-        hits.sort()
-        out[camera] = hits[len(hits) // 2] if hits else None
-        if i and i % 5000 == 0:
-            log("distances: %d / %d photos" % (i, len(cameras)))
+    for camera in cameras:
+        projections = cloud.projections[camera] or []
+        step = max(1, len(projections) // sample)
+        center = camera.center
+        dists = []
+        for k in range(0, len(projections), step):
+            coord = where.get(projections[k].track_id)
+            if coord is not None:
+                c3 = Metashape.Vector([coord.x, coord.y, coord.z])
+                dists.append((c3 - center).norm() * scale)
+        dists.sort()
+        out[camera] = dists[len(dists) // 2] if dists else None
     return out
 
 
