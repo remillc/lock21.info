@@ -17,7 +17,8 @@ Le chunk doit être une copie (Duplicate Chunk) dont le nom contient « graded �
    est laissée de côté (zone 3, 2026-10-27: le plancher de bois verdi par des vues lointaines à travers l'eau, alors
    que des vues au rig, à 70 cm, le couvrent). `--check` montre la répartition des distances, sans rien changer.
    Le projet est enregistré.
-3. Export: le modèle texturé en .glb (`-o`).
+3. Export: le modèle texturé en .glb (`-o`), mis en pieds comme tous les modèles du projet (glb_to_feet.py; `--metres` le
+   laisse en mètres, l'unité de l'échelle du chunk).
 
 Usage (Arguments):
     [-c "zone 3 - graded"] [-s <px>] [-m <ancien dossier>=<nouveau dossier> ...] [-o <sortie.glb>]
@@ -48,6 +49,7 @@ p.add_argument("--no-texture", action="store_true", help="ne pas refaire la text
 p.add_argument("-k", "--masks", action="store_true", help="importer les masques _masks de chaque plongée")
 p.add_argument("-d", "--max-distance", type=float, help="photos de la texture: à au plus tant de m du modèle (médiane)")
 p.add_argument("--no-export", action="store_true", help="ne pas exporter")
+p.add_argument("--metres", action="store_true", help="garder l'export en mètres (défaut: mis en pieds, comme les modèles)")
 
 
 class Stop(Exception):
@@ -243,6 +245,12 @@ def main():
         chunk.exportModel(path=a.out, binary=True, texture_format=const("ImageFormat", "ImageFormatJPEG"), save_texture=True,
                           save_uv=True, save_normals=True, save_colors=False, save_cameras=False, save_markers=False)
         log("exporté: " + a.out)
+        # Les modèles du projet sont en pieds (Christian, 2026-10-27), le chunk à l'échelle en mètres
+        if not a.metres:
+            sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+            from glb_to_feet import to_feet
+            to_feet(a.out)
+            log("mis en pieds (glb_to_feet.py)")
 
 
 try:
