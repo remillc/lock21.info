@@ -169,6 +169,7 @@
   "viewer_sunHint": "azimuth 0 = from the south, 90 = from the east",
   "viewer_exposure": "Exposure",
   "viewer_balance": "Zone balance",
+  "viewer_balanceShort": "Balance",
   "viewer_balanceHint": "1: each zone brought to the model’s average colour; 0: the textures as they are",
   "viewer_contrast": "Contrast",
   "viewer_contrastHint": "1 = the textures’ own; higher: darker darks, lighter lights",

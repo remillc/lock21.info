@@ -601,7 +601,7 @@ export function mountViewer() {
     skyBackground: (params.get('sky') ?? '1') === '1',
     // Colour balance between zones (?neutral=0..1), see colorBalance
     neutral: params.has('neutral') ? Number(params.get('neutral')) : 0.2,
-    // How much of that balance is applied (?balance=0..1, settings « Équilibre des zones », 2026-10-27): 0 shows each
+    // How much of that balance is applied (?balance=0..1, the slider under the settings button, 2026-10-27): 0 shows each
     // texture as it is (to judge a zone graded at the source, TODO #75), 1 the full balance
     balance: params.has('balance') ? Number(params.get('balance')) : 1,
     // Relief from the zones' normal maps (?relief=1 default, 0 = without) or the normal map shown as the colour
@@ -1368,6 +1368,31 @@ export function mountViewer() {
   }
   live.neutral = (v) => { look.neutral = Number(v); updateZoneColors() }
   live.balance = (v) => { look.balance = Number(v); updateZoneColors() }
+  // Its slider, under the settings button; the value kept by the browser (?balance= wins)
+  const BALANCE_KEY = 'l21-viewer-balance'
+  if (!params.has('balance')) {
+    try {
+      const kept = localStorage.getItem(BALANCE_KEY)
+      if (kept !== null && Number.isFinite(Number(kept))) look.balance = Number(kept)
+    } catch {}
+  }
+  {
+    const control = root.querySelector('.balance-control')
+    const range = control.querySelector('.balance-range')
+    const value = control.querySelector('.balance-value')
+    control.querySelector('.balance-label').textContent = m.viewer_balanceShort()
+    control.title = m.viewer_balanceHint()
+    range.setAttribute('aria-label', m.viewer_balance())
+    const show = () => { value.textContent = Number(range.value).toFixed(2) }
+    range.value = String(look.balance)
+    show()
+    range.addEventListener('input', () => {
+      show()
+      live.balance(range.value)
+      try { localStorage.setItem(BALANCE_KEY, range.value) } catch {}
+    }, { signal: life.signal })
+    control.hidden = false
+  }
 
   // Ambient occlusion (N8AO): darkens recesses and joints, giving depth to unlit surfaces. N8AO rebuilds the
   // normals from the depth buffer (the tiles carry none). Hardware antialiasing does not survive the

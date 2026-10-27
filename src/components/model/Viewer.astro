@@ -24,6 +24,13 @@ const { label } = Astro.props
       <button class="settings-button icon-button" type="button" aria-label="Réglages" data-tooltip="Réglages" aria-expanded="false" hidden>
         <svg data-icon="settings-outline-rounded" aria-hidden="true" width="24" height="24"></svg>
       </button>
+      <!-- The colour balance between zones, under the settings (main.js, look.balance; Christian, 2026-10-27, TODO #75):
+           0 shows each texture as it is -->
+      <label class="balance-control" hidden>
+        <span class="balance-label">Équilibre</span>
+        <input class="balance-range" type="range" min="0" max="1" step="0.05" />
+        <output class="balance-value"></output>
+      </label>
       <!-- Compass (main.js, updateCompass), top left (below the way back to the site when standalone): the card turns
            with the view, its red N toward magnetic north (Christian, 2026-10-25). Shown only: not a button. West's
            letter set by main.js from the language (W, or O in French) -->

@@ -512,6 +512,33 @@ l21-loading.error .loading-label {
   top: max(16px, env(safe-area-inset-top));
   right: max(16px, env(safe-area-inset-right));
 }
+/* The colour balance between zones (main.js): a slider under the settings button, as the season's strip */
+.balance-control {
+  position: fixed;
+  top: calc(max(16px, env(safe-area-inset-top)) + 56px);
+  right: max(16px, env(safe-area-inset-right));
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--md-sys-color-surface-container) 88%, transparent);
+  color: var(--md-sys-color-on-surface);
+  font: 500 12px/16px var(--l21-font-data);
+  letter-spacing: 0.5px;
+}
+.balance-range {
+  width: 112px;
+  margin: 0;
+  accent-color: var(--md-sys-color-secondary);
+  cursor: pointer;
+}
+.balance-value {
+  min-width: 3ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
 /* Compass (main.js): top left, a 56 dp tonal disc with the four cardinal letters; below the way back to the site when
    the viewer is on its own page; shown only, no state layer */
 .compass {
@@ -1219,7 +1246,7 @@ l21-tooltip {
   }
 }
 /* While the tour runs, the buttons at the top right (settings, the gestures' help) go away too (Christian, 2026-10-26) */
-:host(.l21-touring) :is(.settings-button, .touch-help-button) {
+:host(.l21-touring) :is(.settings-button, .touch-help-button, .balance-control) {
   display: none;
 }
 .tour-head {
