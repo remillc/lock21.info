@@ -18,6 +18,7 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import DANCE_DATA from './crawfish-dance.json'
+import { insertAt } from './shader-patch.js'
 
 const URL = `/viewer/creatures/crayfish.glb`
 // Its length from claws to tail fan (m): a large rusty crayfish
@@ -220,14 +221,14 @@ export function createCrawfish({ prepare = (m) => m, ground = null, current = ()
     mesh.geometry.setAttribute('tipness', new THREE.BufferAttribute(tipness, 1))
     material.onBeforeCompile = (shader) => {
       shader.uniforms.clawTip = { value: CLAW_TIP }
-      shader.vertexShader = 'attribute float clawness;\nattribute float tipness;\nvarying float vClawness;\nvarying float vTipness;\n' +
-        shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nvClawness = clawness;\nvTipness = tipness;')
-      shader.fragmentShader = 'uniform vec3 clawTip;\nvarying float vClawness;\nvarying float vTipness;\n' +
-        shader.fragmentShader.replace('#include <map_fragment>', `#include <map_fragment>
+      shader.vertexShader = 'attribute float clawness;\nattribute float tipness;\nvarying float vClawness;\nvarying float vTipness;\n' + shader.vertexShader
+      insertAt(shader, 'vertexShader', '#include <begin_vertex>', '#include <begin_vertex>\nvClawness = clawness;\nvTipness = tipness;', 'crayfish-claws')
+      shader.fragmentShader = 'uniform vec3 clawTip;\nvarying float vClawness;\nvarying float vTipness;\n' + shader.fragmentShader
+      insertAt(shader, 'fragmentShader', '#include <map_fragment>', `#include <map_fragment>
           // The tips' orange, with the texture's light and shade (the claws otherwise keep the texture's colours)
           float clawShade = 0.45 + 1.6 * dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
           float onClaw = smoothstep(0.3, 0.9, vClawness);
-          diffuseColor.rgb = mix(diffuseColor.rgb, clawTip * clawShade, vTipness * onClaw);`)
+          diffuseColor.rgb = mix(diffuseColor.rgb, clawTip * clawShade, vTipness * onClaw);`, 'crayfish-claws')
     }
     material.customProgramCacheKey = () => 'crayfish-claws'
     return material

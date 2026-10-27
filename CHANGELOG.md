@@ -5,6 +5,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- 3D viewer: its shader patches go through one function that reports a missing hook (console and telemetry) instead
+  of failing silently after a three.js update; the relief's normal no longer copies a piece of three.js's own shader
+  code (TODO #26).
 - Each page its own share image (TODO #98): its first photo, cropped to 1200 × 630; on /modele, the 3D viewer's start
   view; the home pages and the pages without a photo keep the site's image.
 - The 3D viewer is part of the site (TODO #80): on /modele in an element of the page (<l21-viewer>, its controls in a

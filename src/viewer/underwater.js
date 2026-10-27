@@ -19,6 +19,7 @@
 // Distances in metres, y up; the lock floor near y = 0.
 import * as THREE from 'three'
 import { site } from '../data/site.js'
+import { insertAt } from './shader-patch.js'
 
 // The water's surface: the lock's depth above its floor (y = 0), the site's own constant (src/data/site.js,
 // bottomDepthFt), so the dive computer and the pages agree (the viewer had its own 55 ft until 2026-10-26)
@@ -525,15 +526,19 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
    */
   function patchShader(shader) {
     Object.assign(shader.uniforms, uniforms)
-    shader.vertexShader = 'varying vec3 vUwWorld;\nvarying float vUwDepth;\n' + shader.vertexShader.replace(
+    shader.vertexShader = 'varying vec3 vUwWorld;\nvarying float vUwDepth;\n' + shader.vertexShader
+    insertAt(
+      shader,
+      'vertexShader',
       '#include <project_vertex>',
       // (instanced meshes, the perch: each instance's own place)
       '#include <project_vertex>\n#ifdef USE_INSTANCING\nvUwWorld = (modelMatrix * instanceMatrix * vec4(transformed, 1.0)).xyz;\n#else\nvUwWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;\n#endif\nvUwDepth = length(mvPosition.xyz);',
+      'underwater-world',
     )
     shader.fragmentShader =
       'uniform vec3 uUwSpectral;\nuniform float uUwLampPower;\nuniform vec3 uUwLampColor;\nuniform vec3 uUwTop;\nuniform vec3 uUwDeep;\nuniform float uUwOn;\nuniform float uUwClear;\nuniform float uUwGone;\nuniform vec3 uUwAbsorb;\nuniform vec3 uUwWater;\nuniform float uUwTime;\nuniform vec3 uUwSun;\n' +
-      'uniform float uUwSurface;\nvarying vec3 vUwWorld;\nvarying float vUwDepth;\n' + CAUSTIC_GLSL + BEAM_GLSL + '\n' +
-      shader.fragmentShader.replace('#include <tonemapping_fragment>', /* glsl */ `
+      'uniform float uUwSurface;\nvarying vec3 vUwWorld;\nvarying float vUwDepth;\n' + CAUSTIC_GLSL + BEAM_GLSL + '\n' + shader.fragmentShader
+    insertAt(shader, 'fragmentShader', '#include <tonemapping_fragment>', /* glsl */ `
         if (uUwOn > 0.5) {
           // Face orientation from screen-space derivatives; double-sided
           vec3 uwNormal = normalize(cross(dFdx(vUwWorld), dFdy(vUwWorld)));
@@ -582,7 +587,7 @@ export function createUnderwater(scene, renderer, { mobile = false } = {}) {
           gl_FragColor.rgb = uwColor * uwTransmit + uwBack * (1.0 - uwTransmit);
           gl_FragColor.rgb += vec3(1.0, 0.94, 0.87) * uwBeam(cameraPosition, vUwWorld, uUwAbsorb);
         }
-        #include <tonemapping_fragment>`)
+        #include <tonemapping_fragment>`, 'underwater-colour')
   }
 
   // The dive light is computed in the surfaces' shader (patchShader), not a three.js light: its light must lose its

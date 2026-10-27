@@ -28,6 +28,7 @@ import { createPerch } from './perch.js'
 import { createDiveComputer } from './dive-computer.js'
 import { createTouchNav } from './touch-nav.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
+import { insertAt } from './shader-patch.js'
 import { firstMove, reportMode, sendViewerTime, startViewerClock, track } from './analytics.js'
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
@@ -747,15 +748,17 @@ export function mountViewer() {
   function addDespill(shader) {
     shader.uniforms.despill = despill
     shader.uniforms.cyanCut = cyanCut
-    shader.fragmentShader = shader.fragmentShader
-      .replace('void main() {', 'uniform float despill;\nuniform float cyanCut;\nvoid main() {')
-      .replace(
-        '#include <map_fragment>',
-        '#include <map_fragment>\n' +
-          'float despillG = min(diffuseColor.g, max(diffuseColor.r, diffuseColor.b));\n' +
-          'float despillCyan = min(cyanCut * max(min(despillG, diffuseColor.b) - diffuseColor.r, 0.0), min(despillG, diffuseColor.b));\n' +
-          'diffuseColor.rgb = mix(diffuseColor.rgb, vec3(diffuseColor.r, despillG - despillCyan, diffuseColor.b - despillCyan), despill);',
-      )
+    shader.fragmentShader = 'uniform float despill;\nuniform float cyanCut;\n' + shader.fragmentShader
+    insertAt(
+      shader,
+      'fragmentShader',
+      '#include <map_fragment>',
+      '#include <map_fragment>\n' +
+        'float despillG = min(diffuseColor.g, max(diffuseColor.r, diffuseColor.b));\n' +
+        'float despillCyan = min(cyanCut * max(min(despillG, diffuseColor.b) - diffuseColor.r, 0.0), min(despillG, diffuseColor.b));\n' +
+        'diffuseColor.rgb = mix(diffuseColor.rgb, vec3(diffuseColor.r, despillG - despillCyan, diffuseColor.b - despillCyan), despill);',
+      'despill',
+    )
   }
 
   // Sky lighting: a partly cloudy sky (HDRI "Kloofendal 48d Partly Cloudy, Pure Sky", Poly Haven, CC0,
@@ -795,10 +798,10 @@ export function mountViewer() {
     material.onBeforeCompile = (shader) => {
       if (surface.zoneId) addDespill(shader)
       if (look.saturation !== 1 || look.contrast !== 1) {
-        shader.fragmentShader = shader.fragmentShader.replace('#include <color_fragment>', `#include <color_fragment>
+        insertAt(shader, 'fragmentShader', '#include <color_fragment>', `#include <color_fragment>
           diffuseColor.rgb = mix(vec3(dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722))), diffuseColor.rgb, ${look.saturation.toFixed(3)});
           float contrastLuma = max(dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722)), 1e-4);
-          diffuseColor.rgb *= 0.18 * pow(contrastLuma / 0.18, ${look.contrast.toFixed(3)}) / contrastLuma; diffuseColor.rgb = min(diffuseColor.rgb, vec3(1.0));`)
+          diffuseColor.rgb *= 0.18 * pow(contrastLuma / 0.18, ${look.contrast.toFixed(3)}) / contrastLuma; diffuseColor.rgb = min(diffuseColor.rgb, vec3(1.0));`, 'saturation-contrast')
       }
       // Double-sided: three.js flips the normal of faces seen from behind. The triangle winding of the
       // photogrammetry meshes is not consistent from one texture chart to the next, so whole charts came out
@@ -807,10 +810,14 @@ export function mountViewer() {
       // normals: flipped when it points away from the face actually seen (the flat-shading normal, from screen
       // derivatives, always faces the camera). Otherwise the sky lights it from behind (dark).
       if (normalMap) {
-        shader.fragmentShader = shader.fragmentShader.replace(
+        // (three.js turns it by faceDirection inside the chunk: turned back right after, faceDirection being 1 or -1)
+        insertAt(
+          shader,
+          'fragmentShader',
           '#include <normal_fragment_maps>',
-          THREE.ShaderChunk.normal_fragment_maps.replace('normal = normal * faceDirection;', '') +
-            '\nif (dot(normal, nonPerturbedNormal) < 0.0) normal = -normal;',
+          '#include <normal_fragment_maps>\n#ifdef DOUBLE_SIDED\nnormal *= faceDirection;\n#endif\n' +
+            'if (dot(normal, nonPerturbedNormal) < 0.0) normal = -normal;',
+          'relief-facing',
         )
       }
       // Bump map from the photo (?bump=0..5, zones only; Christian, 2026-10-25: the wooden floor lacked roughness):
@@ -818,8 +825,8 @@ export function mountViewer() {
       // and the nail holes are only in the photo. Its brightness taken as a height (darker: lower), BUMP m at full
       // contrast, the normal tilted by its slope on screen (three.js's bump mapping, from screen derivatives)
       if (surface.zoneId && look.bump > 0) {
-        // (before the emissive part: the normal map's own replacement above has taken out its include)
-        shader.fragmentShader = shader.fragmentShader.replace('#include <emissivemap_fragment>', `{
+        // (before the emissive part: after every change to the normal)
+        insertAt(shader, 'fragmentShader', '#include <emissivemap_fragment>', `{
             float bumpHeight = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722)) * ${(BUMP * look.bump).toFixed(5)};
             vec2 bumpSlope = vec2(dFdx(bumpHeight), dFdy(bumpHeight));
             vec3 bumpX = dFdx(-vViewPosition);
@@ -830,7 +837,7 @@ export function mountViewer() {
             vec3 bumpGrad = sign(bumpDet) * (bumpSlope.x * bumpR1 + bumpSlope.y * bumpR2);
             normal = normalize(abs(bumpDet) * normal - bumpGrad);
           }
-          #include <emissivemap_fragment>`)
+          #include <emissivemap_fragment>`, 'bump')
       }
       underwater.patchShader(shader)
     }
