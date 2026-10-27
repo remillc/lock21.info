@@ -5,6 +5,8 @@ Le chunk doit être une copie (Duplicate Chunk) dont le nom contient « graded �
 
 1. Chemins: chaque photo d'un dossier d'origine pointe vers le dossier étalonné, sous le même nom (`-m ancien=nouveau`,
    par défaut les trois dossiers de la zone 3). Tout est vérifié avant: si un fichier manque, rien n'est changé.
+   Avec `-k`, les masques de chaque plongée (`<plongée>/<zone>/_masks/<image>_guide.png`, à côté du dossier
+   étalonné; make_masks.mjs) importés sur ses seules photos, en remplacement; une photo sans masque garde le sien.
 2. Texture: refaite sur le modèle actif du chunk, avec ses coordonnées de texture (pas de nouveau dépliage),
    mosaïque. Sa taille suit la taille réelle de la structure: la surface du modèle (en m², échelle du chunk) et
    la part de la texture que couvrent ses coordonnées donnent le côté qui fait un texel de la taille cible, celle du
@@ -15,7 +17,7 @@ Le chunk doit être une copie (Duplicate Chunk) dont le nom contient « graded �
 
 Usage (Arguments):
     [-c "zone 3 - graded"] [-s <px>] [-m <ancien dossier>=<nouveau dossier> ...] [-o <sortie.glb>]
-    [--check] (vérifie les chemins seulement) [--no-texture] [--no-export]
+    [-k] (importe les masques) [--check] (vérifie les chemins seulement) [--no-texture] [--no-export]
 """
 import argparse
 import json
@@ -39,6 +41,7 @@ p.add_argument("-s", "--size", type=int, help="côté de la texture, px (défaut
 p.add_argument("-o", "--out", help="modèle texturé à écrire (.glb; défaut: O:/modeles/<zone>/<zone> - graded - <faces>M faces.glb)")
 p.add_argument("--check", action="store_true", help="vérifier les chemins sans rien changer")
 p.add_argument("--no-texture", action="store_true", help="ne pas refaire la texture")
+p.add_argument("-k", "--masks", action="store_true", help="importer les masques _masks de chaque plongée")
 p.add_argument("--no-export", action="store_true", help="ne pas exporter")
 
 
@@ -139,6 +142,19 @@ def main():
     if changes:
         doc.save()
         log("chemins changés et projet enregistré")
+
+    # 1b. Masques: ceux de chaque plongée, sur ses seules photos
+    if a.masks:
+        for old, new in pairs:
+            masks = os.path.dirname(new) + "/_masks"
+            cameras = [c for c in chunk.cameras if c.photo and norm(os.path.dirname(c.photo.path)) == norm(new)
+                       and os.path.isfile(masks + "/" + os.path.splitext(os.path.basename(c.photo.path))[0] + "_guide.png")]
+            log("masques: %d photos de %s" % (len(cameras), masks))
+            if cameras:
+                chunk.generateMasks(path=masks + "/{filename}_guide.png", masking_mode=Metashape.MaskingModeFile,
+                                    mask_operation=Metashape.MaskOperationReplacement, cameras=cameras)
+        doc.save()
+        log("masques importés et projet enregistré")
 
     # 2. Texture, sur les coordonnées existantes
     if not a.no_texture:
