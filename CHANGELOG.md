@@ -5,6 +5,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Underwater view: the bass turns as a fish does, about a point a third of its length from the snout (the head swings
+  into the turn, the tail out of it), the bend starting at the head and running down to the tail (it pivoted on its
+  centre, its whole body turning at once).
 - `/modele`: the 3D viewer's frame enters as the page loads, rising to its place while growing and fading in (MD3
   entering motion, 450 ms; none with reduced motion).
 - Underwater view: what stands at the season's visibility distance still shows, faintly; the water hides it

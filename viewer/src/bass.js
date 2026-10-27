@@ -51,12 +51,18 @@ const LEAVE_NEAR = 0.3
 const LEAVE_MAX = 10
 // ... and if it is still in sight then, it swims on until it is not, LEAVE_GIVE_UP s at most
 const LEAVE_GIVE_UP = 40
-// The most a spine bone bends in a turn (rad): a fast turn (the flight) folded the body
-const MAX_BEND = 0.45
-// The turn runs down the body (Christian, 2026-10-24: the C bend didn't look natural, the whole body bent at once and
-// stayed so): each spine bone bends with the turning rate of BEND_LAG s earlier than the one before it, so the head
-// leads and the tail follows its line, as a fish's body follows the path of its head
-const BEND_LAG = 0.06
+// Turning as a fish does (Christian, 2026-10-27: it pivoted on its centre and its body bent wrongly; studies of routine
+// turns: the front of the body bends first, the head turning while the tail hardly does, then the bend travels down to
+// the tail; the body rotates about a point near its centre of mass, about a third of its length from the snout):
+// - it turns about PIVOT of its length from the snout: that point follows its path, the head swings into the turn and
+//   the tail out of it;
+// - the head points where it goes now; each part of the body points where the head pointed a moment earlier (its place
+//   along the body, SEGMENTS, times the pulse's time down the whole body: the body's length over its speed, between
+//   PULSE[0] and PULSE[1] s), so the bend starts at the head and runs down to the tail
+const PIVOT = 0.3
+// The spine bones' middles along the body (share of its length from the snout: tools/creatures/rig_bass.py, JOINTS)
+const SEGMENTS = [0.13, 0.37, 0.57, 0.74, 0.91]
+const PULSE = [0.12, 0.4]
 // Each spine bone's whole bend (the swimming wave and the turn together, rad), head to tail: added up, they folded the
 // tail to 1.25 rad leaving (Christian, 2026-10-24: not natural)
 const BEND_LIMIT = [0.2, 0.3, 0.4, 0.5, 0.6]
@@ -95,12 +101,10 @@ const SIZE_SPEED = 0.2
 const WAVE_MAX = 1.3
 // How a turn counts as speed for the tail (m/s per rad/s): the tail beats as it turns
 const TURN_AS_SPEED = 0.12
-// Turning: how fast its turning rate follows (1/s) and how it scales with what is left to turn; the C-curve of its body
-// per bone (rad per rad/s of turning, head to tail: the body lags behind the head); its glide while turning (m per rad)
+// Turning: how fast its turning rate follows (1/s) and how it scales with what is left to turn; its glide while turning
+// (m per rad: a turn about 0.12 of its length across, smallmouth bass turn within 0.2)
 const TURN_EASE = 3
 const TURN_GAIN = 2.5
-// (four times as supple as the first try: Christian, 2026-10-23; eight was too much)
-const CURVE = [0, 0.5, 0.64, 0.64, 0.5]
 const GLIDE = 0.05
 
 /** A number at random in [min, max] */
@@ -156,6 +160,12 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
       const toLocal = bone.parent.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(bodyTurn)
       spine.push({ bone, rest: bone.quaternion.clone(), axis: new THREE.Vector3(0, 1, 0).applyQuaternion(toLocal).normalize() })
     }
+    // The pivot (PIVOT of the length from the snout, the head toward +z), held by the last bone that starts ahead of it:
+    // its place in that bone's frame, to follow it as the body bends
+    const pivot = new THREE.Vector3(0, 0, (size.z / 2 - PIVOT * size.z))
+    const relative = (bone) => body.matrixWorld.clone().invert().multiply(bone.matrixWorld)
+    anchor = spine.filter(({ bone }) => new THREE.Vector3().setFromMatrixPosition(relative(bone)).z >= pivot.z).pop()?.bone ?? spine[0].bone
+    anchorPoint.copy(pivot).applyMatrix4(relative(anchor).invert())
     ready = true
   }))
 
@@ -181,8 +191,14 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   let unitScale = 1
   /** @type {THREE.Material[]} */
   const materials = []
-  /** @type {[number, number][]} time and turning rate, newest first (the turn running down the body) */
-  const turns = []
+  /** @type {[number, number][]} time and heading, newest first (the body following its head) */
+  const headings = []
+  /** @type {THREE.Bone | null} the bone that holds the pivot, and the pivot in its frame */
+  let anchor = null
+  const anchorPoint = new THREE.Vector3()
+  const pivotNow = new THREE.Matrix4()
+  const bodyInverse = new THREE.Matrix4()
+  const held = new THREE.Vector3()
   const ahead = new THREE.Vector3()
   const toCamera = new THREE.Vector3()
   const aim = new THREE.Vector3()
@@ -326,6 +342,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         since = 0
         root.position.copy(from)
         heading = Math.atan2(to.x - from.x, to.z - from.z)
+        headings.length = 0
         turnRate = 0
         lastRoot.copy(from)
         speedNow = 0
@@ -408,18 +425,39 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
       speedNow += (travelled + Math.abs(turnRate) * TURN_AS_SPEED - speedNow) * Math.min(1, 4 * dt)
       phase += dt * Math.min(BEAT_MAX, BEAT_REST + BEAT_PER_SPEED * speedNow) * BEAT_PACE * Math.PI * 2
       const size = speedNow < SIZE_SPEED ? SIZE_REST + (1 - SIZE_REST) * (speedNow / SIZE_SPEED) : Math.min(WAVE_MAX, 1 + (speedNow - SIZE_SPEED) * 0.2)
-      // The recent turning rates (BEND_LAG apart down the body), newest first
-      turns.unshift([time, turnRate])
-      while (turns.length > 2 && turns[turns.length - 2][0] < time - BEND_LAG * spine.length) turns.pop()
-      const turnAt = (ago) => (turns.find(([t]) => t <= time - ago) ?? turns[turns.length - 1])[1]
+      // The recent headings, newest first; each part of the body points where the head pointed `ago` s earlier
+      headings.unshift([time, heading])
+      while (headings.length > 2 && headings[headings.length - 2][0] < time - PULSE[1]) headings.pop()
+      const headingAt = (ago) => {
+        const when = time - ago
+        const k = headings.findIndex(([t]) => t <= when)
+        if (k < 0) return headings[headings.length - 1][1]
+        if (k === 0) return headings[0][1]
+        const [t0, h0] = headings[k]
+        const [t1, h1] = headings[k - 1]
+        return h0 + ((h1 - h0) * (when - t0)) / Math.max(t1 - t0, 1e-6)
+      }
+      // The bend's time down the whole body: its length over its speed (the body follows the head's path), a short
+      // pulse when it dashes, a slower one when it turns in place
+      const length = body.scale.z / unitScale
+      const pulse = THREE.MathUtils.clamp(length / Math.max(speedNow, 1e-3), PULSE[0], PULSE[1])
+      // The body's frame: where the pivot's part points; each bone turns by its part's heading less the one before it
+      const frame = headingAt(PIVOT * pulse)
+      let before = frame
       spine.forEach(({ bone, rest, axis }, k) => {
         const wave = WAVE[k] * size * Math.sin(phase - k * WAVE_LAG)
-        const curve = THREE.MathUtils.clamp(turnAt(k * BEND_LAG) * CURVE[k], -MAX_BEND, MAX_BEND)
+        const part = headingAt(SEGMENTS[k] * pulse)
         const limit = BEND_LIMIT[k] ?? BEND_LIMIT[BEND_LIMIT.length - 1]
-        bone.quaternion.copy(rest).premultiply(bend.setFromAxisAngle(axis, THREE.MathUtils.clamp(wave - curve, -limit, limit)))
+        bone.quaternion.copy(rest).premultiply(bend.setFromAxisAngle(axis, THREE.MathUtils.clamp(wave + part - before, -limit, limit)))
+        before = part
       })
-      root.rotation.set(0, heading, 0)
-      body.position.y = BOB * Math.sin(time * 1.3)
+      root.rotation.set(0, frame, 0)
+      // The pivot kept on its path: the body moved so that the pivot, wherever the bend took it, is at the root
+      body.position.set(0, 0, 0)
+      body.updateMatrixWorld(true)
+      bodyInverse.copy(body.matrixWorld).invert()
+      held.copy(anchorPoint).applyMatrix4(pivotNow.multiplyMatrices(bodyInverse, anchor.matrixWorld)).multiply(body.scale)
+      body.position.set(-held.x, BOB * Math.sin(time * 1.3), -held.z)
       return true
     },
   }
