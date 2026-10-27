@@ -5,6 +5,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Notebook pages, wide screens: « Sur cette page » gives up width with the content as the window narrows (3 : 1,
+  down to 14.5rem), and its entries use the column's whole width (Starlight held them to 16.75rem) (TODO #101).
 - Each page its own share image (TODO #98): its first photo, cropped to 1200 × 630; on /modele, the 3D viewer's start
   view; the home pages and the pages without a photo keep the site's image.
 - The 3D viewer is part of the site (TODO #80): on /modele in an element of the page (<l21-viewer>, its controls in a
