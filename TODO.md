@@ -15,7 +15,11 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   more olive than its side walls) and, with zone 12, the zone with the most visual potential. Grade per dive from the
   Protune footage (the colour chart where it is usable), export the TIFFs under the same names, point a working copy
   of the Metashape project (`O:\publishing\metashape\zone-3`) to them and rebuild only the texture (the alignment and
-  mesh kept); then republish and compare with `?compare=`.
+  mesh kept); then republish and compare with `?compare=`. Under way (2026-10-27): the graded frames in
+  `frames-…-graded-…`, the texture rebuilt in a « graded » copy of chunk 11 inside `O:\photogrammetry\zone-3.psx`
+  (`tools/color-grading/retexture_chunk.py`); the wooden floor stayed green from distant views through the water,
+  to retry with `-d` (photos near the model only). If the trial is conclusive (Christian): delete the non-graded
+  TIFFs to free O: (chunks 5 and 11 still point to them: relink them first, or accept that they lose their photos).
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
   - Tried and dropped (2026-10-25): a whole-texture balance before tiling (`color_correct.py`) turned the model mauve
     and flat in the viewer, whose own corrections then applied twice; the blue and red the water took are not in the
