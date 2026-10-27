@@ -100,6 +100,9 @@ const BEAT_MAX = 4
 const SIZE_REST = 0.25
 const SIZE_SPEED = 0.2
 const WAVE_MAX = 1.3
+// Swimming away (calm or fleeing), the wave this much smaller (Christian, 2026-10-27: too wide), reached in about a
+// third of a second
+const LEAVE_WAVE = 0.6
 // How a turn counts as speed for the tail (m/s per rad/s): the tail beats as it turns
 const TURN_AS_SPEED = 0.12
 // Turning: how fast its turning rate follows (1/s) and how it scales with what is left to turn; its glide while turning
@@ -209,6 +212,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
   let calm = false
   let stayFor = STAY[1]
   let phase = 0
+  let waveScale = 1
   let camSpeed = 0
   let moving = false
   let stillFor = 0
@@ -344,6 +348,7 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
         root.position.copy(from)
         heading = Math.atan2(to.x - from.x, to.z - from.z)
         headings.length = 0
+        waveScale = 1
         turnRate = 0
         lastRoot.copy(from)
         speedNow = 0
@@ -425,7 +430,8 @@ export function createBass({ prepare = (m) => m, clearance = () => Infinity, vis
       lastRoot.copy(root.position)
       speedNow += (travelled + Math.abs(turnRate) * TURN_AS_SPEED - speedNow) * Math.min(1, 4 * dt)
       phase += dt * Math.min(BEAT_MAX, BEAT_REST + BEAT_PER_SPEED * speedNow) * BEAT_PACE * Math.PI * 2
-      const size = speedNow < SIZE_SPEED ? SIZE_REST + (1 - SIZE_REST) * (speedNow / SIZE_SPEED) : Math.min(WAVE_MAX, 1 + (speedNow - SIZE_SPEED) * 0.2)
+      waveScale += ((state === 'leaving' ? LEAVE_WAVE : 1) - waveScale) * Math.min(1, 3 * dt)
+      const size = waveScale * (speedNow < SIZE_SPEED ? SIZE_REST + (1 - SIZE_REST) * (speedNow / SIZE_SPEED) : Math.min(WAVE_MAX, 1 + (speedNow - SIZE_SPEED) * 0.2))
       // The recent headings, newest first; each part of the body points where the head pointed `ago` s earlier
       headings.unshift([time, heading])
       while (headings.length > 2 && headings[headings.length - 2][0] < time - PULSE[1]) headings.pop()
