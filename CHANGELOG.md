@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- 3D model: zone 18 republished (its mesh had changed in the .blend, its `source` property lost then restored).
 - Underwater view: the bass turns as a fish does, about a point a third of its length from the snout (the head swings
   into the turn, the tail out of it), the bend starting at the head and running down to the tail (it pivoted on its
   centre, its whole body turning at once). The curious bass stops closer, about 3 ft from the diver (was about 4 ft).
