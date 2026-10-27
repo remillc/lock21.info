@@ -28,14 +28,6 @@ sous-exposée d'un stop ([La charte de couleurs est surexposée](/problemes/char
 plongées, j'ai filmé la charte à deux hauteurs, sur le plancher et à mi-hauteur, et fait un étalonnage pour chacune
 ([Calibration des couleurs](/problemes/calibration-couleurs)).
 
-### Ce que la zone 3 a montré
-
-Dans le modèle, le mur des trois vannes de la zone 3 sortait jaune-olive. Ses images viennent de la plongée 21
-(2024-07-12), étalonnée avec une seule charte, posée sur le plancher, alors que les passages montent le long du mur.
-Sur la charte, le gris sortait bien neutre, mais sur le mur, il manquait du bleu. Les autres plongées de la zone avaient
-le même défaut, plus ou moins marqué : la charte corrige la lumière là où elle est posée, pas sur toute la hauteur
-d'un mur.
-
 ### La correction ajoutée
 
 En octobre 2026, une correction commune s'est ajoutée à l'étalonnage de la charte, une par plongée. La couleur moyenne
