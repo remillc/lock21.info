@@ -174,7 +174,7 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
       const { name, params } = /** @type {CustomEvent<{ name: string, params?: Record<string, unknown> }>} */ (event).detail ?? {}
       if (typeof name === 'string') track(name, params ?? {})
     })
-    // The 3D viewer's actions (iframe of /modele, src/viewer/analytics.js)
+    // The 3D viewer's actions (src/viewer/analytics.js, on /modele: posted to this window)
     window.addEventListener('message', (event) => {
       if (event.origin !== location.origin || event.data?.type !== 'lock21:track' || typeof event.data.name !== 'string') return
       track(event.data.name, event.data.params ?? {})

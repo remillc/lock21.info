@@ -5,7 +5,6 @@
 // Also: the mode (lock21:mode, standard or underwater), whose visible time the page counts (l21-model-frame,
 // viewer_end), and the first move of the visit (first_move), sent once.
 
-const embedded = window.self !== window.top
 
 /**
  * One action, by its GA4 event name (docs: the privacy page lists them).
@@ -13,12 +12,12 @@ const embedded = window.self !== window.top
  * @param {Record<string, string | number | boolean>} [params]
  */
 export function track(name, params = {}) {
-  if (embedded) window.parent.postMessage({ type: 'lock21:track', name, params }, location.origin)
+  window.postMessage({ type: 'lock21:track', name, params }, location.origin)
 }
 
 /** The viewer's mode, for the time counted in each. @param {boolean} underwater */
 export function reportMode(underwater) {
-  if (embedded) window.parent.postMessage({ type: 'lock21:mode', underwater }, location.origin)
+  window.postMessage({ type: 'lock21:mode', underwater }, location.origin)
 }
 
 let moved = false

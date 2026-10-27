@@ -12,6 +12,7 @@ import englishPaths from './src/integrations/english-paths.mjs'
 import footnoteLabels from './src/integrations/footnote-labels.mjs'
 import placeholderMarks from './src/integrations/placeholder-marks.mjs'
 import contentImages from './src/integrations/content-images.mjs'
+import viewerFiles from './src/integrations/viewer-files.mjs'
 
 export default defineConfig({
   site: 'https://lock21.info',
@@ -131,6 +132,8 @@ export default defineConfig({
     }),
     // The notebook's images: sizes for the content column, the first one loaded first (content-images.mjs)
     contentImages(),
+    // The 3D viewer's script files for the warm-up on hover of a /modele link (viewer-files.mjs)
+    viewerFiles(),
     // After Starlight (and its search index): / and /en/ for the home pages
     homeSlash(),
     // Then the English pages at their English addresses, and the search index rebuilt (TODO #63)

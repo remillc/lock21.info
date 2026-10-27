@@ -7,6 +7,8 @@
 // change, showed one); the buttons keep their aria-label.
 // MD3: inverse surface container, body-small text (12/16), 24 dp high, 8 dp padding, 4 dp corners (extra-small),
 // 4 dp from the button; fades in over 150 ms (decelerate) and out over 75 ms (accelerate), MD3's tooltip durations.
+import { root } from './dom.js'
+
 const HOVER_DELAY = 500
 const GAP = 4
 
@@ -16,25 +18,25 @@ class Tooltip extends HTMLElement {
     this.anchor = null
     this.timer = 0
     const hoverable = window.matchMedia('(hover: hover)')
-    document.addEventListener('pointerover', (e) => {
+    this.getRootNode().addEventListener('pointerover', (e) => {
       if (!hoverable.matches || e.pointerType === 'touch') return
       const target = e.target.closest?.('[data-tooltip]')
       if (!target || target === this.anchor) return
       clearTimeout(this.timer)
       this.timer = setTimeout(() => this.show(target), HOVER_DELAY)
     })
-    document.addEventListener('pointerout', (e) => {
+    this.getRootNode().addEventListener('pointerout', (e) => {
       const target = e.target.closest?.('[data-tooltip]')
       if (target && !target.contains(e.relatedTarget)) this.hide()
     })
-    document.addEventListener('focusin', (e) => {
+    this.getRootNode().addEventListener('focusin', (e) => {
       if (!hoverable.matches) return
       const target = e.target.closest?.('[data-tooltip]')
       if (target?.matches(':focus-visible')) this.show(target)
     })
-    document.addEventListener('focusout', () => this.hide())
-    document.addEventListener('pointerdown', () => this.hide(), true)
-    document.addEventListener('keydown', (e) => {
+    this.getRootNode().addEventListener('focusout', () => this.hide())
+    this.getRootNode().addEventListener('pointerdown', () => this.hide(), true)
+    this.getRootNode().addEventListener('keydown', (e) => {
       if (e.key === 'Escape') this.hide()
     })
   }
@@ -52,11 +54,13 @@ class Tooltip extends HTMLElement {
     anchor.setAttribute('aria-describedby', this.id)
     this.dataset.shown = 'true'
     const box = anchor.getBoundingClientRect()
+    const frame = this.parentElement.getBoundingClientRect()
     const own = this.getBoundingClientRect()
     const above = box.top - GAP - own.height
-    const top = above >= GAP ? above : box.bottom + GAP
-    const left = Math.min(Math.max(GAP, box.left + box.width / 2 - own.width / 2), window.innerWidth - own.width - GAP)
-    this.style.transform = `translate(${Math.round(left)}px, ${Math.round(top)}px)`
+    const top = above >= frame.top + GAP ? above : box.bottom + GAP
+    const left = Math.min(Math.max(frame.left + GAP, box.left + box.width / 2 - own.width / 2), frame.right - own.width - GAP)
+    // (placed in the viewer's frame, its containing block: the window's coordinates less the frame's corner)
+    this.style.transform = `translate(${Math.round(left - frame.left)}px, ${Math.round(top - frame.top)}px)`
   }
 
   hide() {
@@ -69,4 +73,4 @@ class Tooltip extends HTMLElement {
 }
 
 customElements.define('l21-tooltip', Tooltip)
-document.querySelector('main').append(document.createElement('l21-tooltip'))
+root.querySelector('.viewer-frame').append(document.createElement('l21-tooltip'))

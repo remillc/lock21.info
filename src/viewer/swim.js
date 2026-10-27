@@ -5,6 +5,7 @@
 // (navigator.keyboard.getLayoutMap). Outside the water (Christian, 2026-10-24), the same keys only: the orbit keeps the
 // mouse, and the keys move the camera and the orbit's centre together (main.js), faster the farther the camera is.
 import * as THREE from 'three'
+import { host, origin } from './dom.js'
 
 // Swimming speed (m/s), and with Shift; head turn per pixel dragged (radians); the head's pitch limit
 const SPEED = 1.2
@@ -58,7 +59,7 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
   const UP = new THREE.Vector3(0, 1, 0)
   // A camera's lookAt turns its -z axis to the point (an Object3D's turns +z)
   const looker = new THREE.PerspectiveCamera()
-  window.addEventListener('keydown', (event) => {
+  host.addEventListener('keydown', (event) => {
     if (event.key === 'Shift') fast = true
   })
   window.addEventListener('keyup', (event) => {
@@ -66,8 +67,11 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
   })
 
   // Not while typing in the settings (text fields, sliders, selects)
-  const typing = (event) => event.target instanceof HTMLElement && event.target.closest('input, select, textarea')
-  window.addEventListener('keydown', (event) => {
+  const typing = (event) => {
+    const target = origin(event)
+    return target instanceof HTMLElement && target.closest('input, select, textarea')
+  }
+  host.addEventListener('keydown', (event) => {
     if (!active || !(event.code in MOVES) || typing(event) || event.ctrlKey || event.metaKey || event.altKey) return
     event.preventDefault()
     if (!held.has(event.code)) onKey?.(event.code, true)

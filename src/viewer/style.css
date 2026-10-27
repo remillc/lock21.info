@@ -4,7 +4,10 @@
   display: none !important;
 }
 
-:root {
+/* The viewer in its shadow root (<l21-viewer>, src/components/model/Viewer.astro, TODO #80): the host is the frame on
+   /modele; .viewer-frame inside it is the container every control is placed and sized in (position: fixed and the
+   container units cqw and cqh are relative to it, not to the window), and @container queries read its size */
+:host {
   /* The site's dark theme (src/styles/tokens.scss, docs/system-design.md; TODO #39): the viewer is always dark */
   --md-sys-color-surface: #12140e;
   --md-sys-color-on-surface: #ebede3;
@@ -40,10 +43,9 @@
   --l21-font-data: 'JetBrains Mono', ui-monospace, monospace;
 }
 
-html,
-body {
-  margin: 0;
-  height: 100%;
+:host {
+  display: block;
+  position: relative;
   background: var(--md-sys-color-surface);
   color: var(--md-sys-color-on-surface);
   font-family: var(--l21-font-text);
@@ -52,9 +54,11 @@ body {
   overscroll-behavior: none;
 }
 
-/* The page's one landmark (index.html): no box of its own, its children laid out as before */
-main {
-  display: contents;
+.viewer-frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container: viewer / size;
 }
 
 /* Pointer cursor on every action widget (docs/system-design.md, Spacing and interaction): links, buttons, selects,
@@ -103,7 +107,7 @@ l21-loading {
 }
 
 .loading-bar {
-  width: min(240px, 60vw);
+  width: min(240px, 60cqw);
   height: 4px;
   border-radius: 2px;
   overflow: hidden;
@@ -211,14 +215,14 @@ l21-loading.error .loading-bar {
   display: none;
 }
 l21-loading.error .loading-label {
-  max-width: min(320px, 80vw);
+  max-width: min(320px, 80cqw);
   text-align: center;
 }
 
 /* What is going on when the first view is slow, stalled or failing (main.js, updateLoading): a short text under the
    bar, and « Réessayer », an MD3 text button (40 dp high, label-large, state layers); the card then takes touches */
 .loading-note {
-  max-width: min(280px, 70vw);
+  max-width: min(280px, 70cqw);
   margin: 0;
   color: var(--md-sys-color-on-surface-variant);
   font: 400 13px/18px var(--l21-font-text);
@@ -266,22 +270,7 @@ l21-loading.error .loading-label {
   }
 }
 
-.home {
-  position: fixed;
-  top: max(12px, env(safe-area-inset-top));
-  left: max(12px, env(safe-area-inset-left));
-  padding: 6px 10px;
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--md-sys-color-surface) 70%, transparent);
-  color: inherit;
-  font-size: 0.85rem;
-  text-decoration: none;
-}
 
-/* Embedded in the site's /modele/ page: the page provides the way back */
-.embedded .home {
-  display: none;
-}
 
 /* MD3 icon buttons (docs/system-design.md, Buttons): filled tonal, 40 dp container in a 48 dp touch target (8 dp apart),
    Material Symbols icons at 24 dp, state layers (hover 8 %, focus and pressed 10 %), focus ring. Over the 3D view the
@@ -432,11 +421,12 @@ l21-loading.error .loading-label {
    on theirs; the row below keeps the lamp and the buttons, so the tour's card has room on its left. Only when wide
    (600 px): the /modele frame on a phone held upright is « landscape » too, and keeps the narrow screens' layout below
    (usability audit V2, V11) */
-@media (orientation: landscape) and (hover: none) and (min-width: 600px) {
+@media (hover: none) {
+@container viewer (orientation: landscape) and (min-width: 600px) {
   /* The compass on the same left edge as the tour's card (Christian, 2026-10-26), not the notch's inset: the notch
      sits at the middle of that edge, the compass at the top. (html: before .compass's own rule in this file, the same
      specificity lost to it) */
-  html .compass {
+  :host .compass {
     left: 12px;
   }
   /* The slider's thumb easier to catch: its input 48 dp high (MD3 touch target), past the pill's 40 */
@@ -454,10 +444,11 @@ l21-loading.error .loading-label {
     bottom: calc(max(16px, env(safe-area-inset-bottom)) + 108px);
   }
 }
+}
 /* Narrow screens (phones, the /modele page's frame): in the bottom-left corner, beside the buttons' row (full screen,
    underwater, and AR where it is offered), the lamp button above the season pill, the pill on two lines (its value
    above the slider; the value wraps if it must). Christian, 2026-10-23 */
-@media (max-width: 600px) {
+@container viewer (max-width: 600px) {
   .underwater-tools {
     left: max(16px, env(safe-area-inset-left));
     right: calc(max(16px, env(safe-area-inset-right)) + 224px);
@@ -533,9 +524,6 @@ l21-loading.error .loading-label {
   background: var(--l21-control);
   color: var(--md-sys-color-on-surface);
 }
-html:not(.embedded) .compass {
-  top: calc(max(12px, env(safe-area-inset-top)) + 40px);
-}
 .compass svg {
   display: block;
 }
@@ -562,7 +550,7 @@ html:not(.embedded) .compass {
   pointer-events: none;
 }
 /* A small frame (the /modele page on a phone): just below the top edge, the buttons beside it */
-@media (max-height: 400px) {
+@container viewer (max-height: 400px) {
   .touch-hint {
     top: max(8px, env(safe-area-inset-top));
     max-width: calc(100% - 136px);
@@ -585,7 +573,7 @@ l21-settings-panel {
   right: max(12px, env(safe-area-inset-right));
   bottom: 68px;
   display: block;
-  width: min(320px, calc(100vw - 24px));
+  width: min(320px, calc(100cqw - 24px));
   overflow-y: auto;
   /* Scrolling stays in the panel (also config-panel.js, for the wheel) */
   overscroll-behavior: contain;
@@ -779,178 +767,6 @@ l21-settings-panel {
       outline-offset: 2px;
     }
   }
-}
-
-/* Augmented reality on Android (android-ar.js, WebXR): the AR canvas, and the overlay Chrome shows over the camera
-   (title and close button at the top; status and size slider at the bottom), in the viewer's colours */
-.xr-canvas {
-  position: fixed;
-  inset: 0;
-}
-.xr-overlay {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  color: var(--l21-on-bar);
-  font-family: var(--l21-font-text);
-}
-/* The controls' frame: the screen, or a quarter turn of it when the phone is held sideways (android-ar.js,
-   trackTurn: Chrome keeps the screen's orientation during AR) */
-.xr-frame {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transform: translate(-50%, -50%);
-  transition: transform 200ms ease;
-}
-.xr-overlay[data-turn='90'] .xr-frame,
-.xr-overlay[data-turn='-90'] .xr-frame {
-  width: 100vh;
-  height: 100vw;
-}
-.xr-overlay[data-turn='90'] .xr-frame {
-  transform: translate(-50%, -50%) rotate(90deg);
-}
-.xr-overlay[data-turn='-90'] .xr-frame {
-  transform: translate(-50%, -50%) rotate(-90deg);
-}
-.xr-overlay-head,
-.xr-overlay-foot {
-  pointer-events: auto;
-  background: color-mix(in srgb, var(--md-sys-color-surface) 72%, transparent);
-}
-.xr-overlay-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 8px 8px 16px;
-}
-.xr-overlay-title {
-  font-weight: 700;
-}
-/* MD3 filled tonal icon button: 40 dp container in a 48 dp touch target, Material Symbols "close" (24 dp), state layer
-   on press, focus ring */
-.xr-overlay-close {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  margin: 4px;
-  padding: 0;
-  border: 0;
-  border-radius: 999px;
-  background: var(--md-sys-color-outline);
-  color: var(--l21-on-bar);
-  cursor: pointer;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -4px;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: currentColor;
-    opacity: 0;
-    transition: opacity 200ms;
-  }
-
-  &:active::after {
-    opacity: 0.1;
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--md-sys-color-secondary);
-    outline-offset: 2px;
-  }
-}
-.xr-overlay-foot {
-  padding: 12px 16px calc(16px + env(safe-area-inset-bottom));
-}
-.xr-overlay-status {
-  margin: 0 0 10px;
-  font-size: 14px;
-}
-.xr-overlay-scale {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-}
-/* The size slider (android-ar.js, createSlider), MD3-like: 4 dp track, active part and 20 dp thumb in the signal
-   colour, 48 dp of touch height; --value (0..1) set by the code */
-.xr-slider {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  min-height: 48px;
-  touch-action: none;
-  cursor: pointer;
-
-  &:focus-visible {
-    outline: 2px solid var(--md-sys-color-secondary);
-    outline-offset: 2px;
-    border-radius: 8px;
-  }
-}
-.xr-slider-track {
-  position: relative;
-  flex: 1;
-  height: 4px;
-  margin: 0 10px;
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--l21-on-bar) 35%, transparent);
-}
-.xr-slider-fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: calc(var(--value, 0) * 100%);
-  border-radius: inherit;
-  background: var(--md-sys-color-tertiary);
-}
-.xr-slider-thumb {
-  position: absolute;
-  top: 50%;
-  left: calc(var(--value, 0) * 100%);
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--md-sys-color-tertiary);
-  transform: translate(-50%, -50%);
-}
-.xr-overlay-scale output {
-  min-width: 3.5em;
-  text-align: right;
-  font-family: var(--l21-font-data);
-}
-/* Side insets (notch, rounded corners) in both orientations */
-.xr-overlay-head {
-  padding-left: calc(16px + env(safe-area-inset-left));
-  padding-right: calc(8px + env(safe-area-inset-right));
-}
-.xr-overlay-foot {
-  padding-left: calc(16px + env(safe-area-inset-left));
-  padding-right: calc(16px + env(safe-area-inset-right));
-}
-/* Landscape (phone held sideways, or a landscape screen): the status and the slider in a compact card at the bottom
-   right (within the thumb's reach), the rest of the camera view left clear */
-.xr-overlay[data-layout='landscape'] .xr-overlay-foot {
-  align-self: flex-end;
-  width: min(340px, 45%);
-  margin: 0 12px 12px 0;
-  padding: 12px 16px;
-  border-radius: 16px;
 }
 
 /* ?compare= (test tool): MD3 segmented button « Avant | Après », top centre. 40 dp high, outlined, the selected
@@ -1179,7 +995,7 @@ l21-tooltip {
 /* The swim mode's help (main.js): MD3 basic dialog. Surface container high, 28 dp corners, 24 dp padding,
    headline-small title, body-medium text, a text button bottom right; a scrim behind it */
 .swim-help {
-  max-width: min(400px, calc(100vw - 48px));
+  max-width: min(400px, calc(100cqw - 48px));
   padding: 24px;
   border: 0;
   border-radius: 28px;
@@ -1299,7 +1115,7 @@ l21-tooltip {
 }
 /* Frames too narrow for the pill beside the row (about 184 px of pill + 220 with the AR button: a phone held upright):
    its own line above the row, at the right edge, as underwater (usability audit V11, Christian, 2026-10-26) */
-@media (max-width: 439px) {
+@container viewer (max-width: 439px) {
   .tour-button,
   .ar-button:not([hidden]) ~ .tour-button {
     right: calc(max(16px, env(safe-area-inset-right)) - 4px);
@@ -1336,7 +1152,7 @@ l21-tooltip {
   left: 50%;
   bottom: max(16px, env(safe-area-inset-bottom));
   box-sizing: border-box;
-  width: min(440px, calc(100vw - 32px));
+  width: min(440px, calc(100cqw - 32px));
   padding: 12px 16px 12px 20px;
   border-radius: 20px;
   background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 94%, transparent);
@@ -1359,7 +1175,7 @@ l21-tooltip {
     transition: opacity 400ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
   }
 }
-@media (max-width: 960px) {
+@container viewer (max-width: 960px) {
   .tour-card {
     --l21-tour-bottom: 72px;
     bottom: calc(max(16px, env(safe-area-inset-bottom)) + 56px);
@@ -1381,10 +1197,10 @@ l21-tooltip {
     pointer-events: none;
     transition: opacity 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
   }
-  html.l21-touring:not(:fullscreen) :is(.ar-button, .underwater-button, .home-button, .fullscreen, .underwater-tools, .swim-keys) {
+  :host(.l21-touring:not(:fullscreen)) :is(.ar-button, .underwater-button, .home-button, .fullscreen, .underwater-tools, .swim-keys) {
     display: none;
   }
-  html.l21-touring:not(:fullscreen) .tour-card {
+  :host(.l21-touring:not(:fullscreen)) .tour-card {
     --l21-tour-bottom: 16px;
     bottom: max(16px, env(safe-area-inset-bottom));
   }
@@ -1403,7 +1219,7 @@ l21-tooltip {
   }
 }
 /* While the tour runs, the buttons at the top right (settings, the gestures' help) go away too (Christian, 2026-10-26) */
-html.l21-touring :is(.settings-button, .touch-help-button) {
+:host(.l21-touring) :is(.settings-button, .touch-help-button) {
   display: none;
 }
 .tour-head {
@@ -1558,9 +1374,7 @@ html.l21-touring :is(.settings-button, .touch-help-button) {
 }
 /* Where the arrows sit beside the text or the step's number (a short frame, a phone held sideways): its icon only, an
    MD3 standard icon button (40 dp in 48 dp) */
-@media (max-height: 420px) and (max-width: 599px),
-  (orientation: landscape) and (max-height: 540px) and (min-width: 600px),
-  (orientation: landscape) and (hover: none) and (min-width: 600px) {
+@container viewer ((max-height: 420px) and (max-width: 599px)) or ((orientation: landscape) and (max-height: 540px) and (min-width: 600px)) {
   .tour-return {
     justify-content: center;
     width: 48px;
@@ -1577,9 +1391,28 @@ html.l21-touring :is(.settings-button, .touch-help-button) {
     }
   }
 }
+@media (hover: none) {
+@container viewer (orientation: landscape) and (min-width: 600px) {
+  .tour-return {
+    justify-content: center;
+    width: 48px;
+    margin-right: 0;
+    padding: 0;
+
+    span {
+      display: none;
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+}
 /* A short, narrow frame (/modele on a phone held upright: 358 × 316): the arrows on the top row, beside the step's
    number and the close button, so the text has four lines before it scrolls (usability audit V2, 2026-10-26) */
-@media (max-height: 420px) and (max-width: 599px) {
+@container viewer ((max-height: 420px) and (max-width: 599px)) {
   .tour-card {
     display: grid;
     grid-template-columns: 1fr auto auto;
@@ -1623,8 +1456,7 @@ html.l21-touring :is(.settings-button, .touch-help-button) {
 /* Only when the window is wide too (600 px): the frame on /modele, on a phone held upright, is 358 × 316, « landscape »
    for the viewer, and the card was squeezed to 100 px between the edge and the buttons, its arrows over the AR and
    dive buttons (usability audit V2, 2026-10-26); there it takes the standard card above the buttons */
-@media (orientation: landscape) and (max-height: 540px) and (min-width: 600px),
-  (orientation: landscape) and (hover: none) and (min-width: 600px) {
+@container viewer ((orientation: landscape) and (max-height: 540px) and (min-width: 600px)) {
   .tour-card {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -1641,7 +1473,7 @@ html.l21-touring :is(.settings-button, .touch-help-button) {
        band on a phone) */
     left: 12px;
     bottom: max(12px, env(safe-area-inset-bottom));
-    width: min(860px, calc(100vw - 12px - var(--l21-tour-right, 232px)));
+    width: min(860px, calc(100cqw - 12px - var(--l21-tour-right, 232px)));
     padding: 8px 8px 10px 16px;
     border-radius: 16px;
     transform: translate(0, 16px);
@@ -1677,10 +1509,74 @@ html.l21-touring :is(.settings-button, .touch-help-button) {
     margin: 0;
   }
 }
-@media (orientation: landscape) and (max-height: 540px) and (min-width: 600px) and (prefers-reduced-motion: reduce),
-  (orientation: landscape) and (hover: none) and (min-width: 600px) and (prefers-reduced-motion: reduce) {
+@media (hover: none) {
+@container viewer (orientation: landscape) and (min-width: 600px) {
+  .tour-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'count close'
+      'title actions'
+      'text actions';
+    column-gap: 16px;
+    /* Beside the buttons at the bottom right, not over them nor above them (Christian, 2026-10-26: « don't hide other
+       buttons »): from the left edge to the buttons' row (up to four buttons: diving, augmented reality, home, full
+       screen) */
+    /* Against the screen's left edge (Christian, 2026-10-26: « to the left of the screen »), its text too: the notch
+       sits at the middle of that edge, above the card at the bottom (padding it by the notch's inset left an empty
+       band on a phone) */
+    left: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    width: min(860px, calc(100cqw - 12px - var(--l21-tour-right, 232px)));
+    padding: 8px 8px 10px 16px;
+    border-radius: 16px;
+    transform: translate(0, 16px);
+
+    &.open {
+      transform: translate(0, 0);
+    }
+  }
+  .tour-head {
+    display: contents;
+  }
+  .tour-count {
+    grid-area: count;
+    align-self: center;
+  }
+  .tour-close {
+    grid-area: close;
+    justify-self: end;
+    margin: -4px 0 -8px;
+  }
+  .tour-title {
+    grid-area: title;
+    margin: 0 0 2px;
+    font-size: 15px;
+    line-height: 20px;
+  }
+  .tour-text {
+    grid-area: text;
+  }
+  .tour-actions {
+    grid-area: actions;
+    align-self: end;
+    margin: 0;
+  }
+}
+}
+@media (prefers-reduced-motion: reduce) {
+@container viewer (orientation: landscape) and (max-height: 540px) and (min-width: 600px) {
   .tour-card,
   .tour-card.open {
     transform: none;
   }
+}
+}
+@media (hover: none) and (prefers-reduced-motion: reduce) {
+@container viewer (orientation: landscape) and (min-width: 600px) {
+  .tour-card,
+  .tour-card.open {
+    transform: none;
+  }
+}
 }

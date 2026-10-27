@@ -31,14 +31,15 @@ import { errorText, log, session, setEndFacts, startTelemetry } from './telemetr
 import { firstMove, reportMode, track } from './analytics.js'
 import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
-import { homePath, m } from './i18n.js'
+import { m } from './i18n.js'
 import { createTour } from './tour.js'
 import { createPointerOrbit } from './pointer-orbit.js'
 import { TOUR_STEPS } from './tour-steps.js'
 import { fillIcons, icon } from './icons.js'
+import { host, launch, origin, root } from './dom.js'
 
 // The page's icons, by name (icons.js: index.html's placeholders filled before anything reads the buttons)
-fillIcons()
+fillIcons(root)
 
 // 3d-tiles-renderer warns, for each tileset, that version 1.1 has limited support: our tiles declare 1.1 (needed for
 // their .glb content) and use none of the features it lacks. That one message only is silenced (12 lines a visit)
@@ -57,11 +58,11 @@ const params = new URLSearchParams(location.search)
 // change it back; those work only in a link (?tiles=, ?relief=, for tests). Nor those not remembered (underwater: a
 // value saved before is ignored)
 const panelKeys = rememberedKeys(settingsSchema({ mobile: false }))
-// Arriving on the /modele page from another page (?reset=1, ModelPage.astro): the saved settings are forgotten, the
-// viewer starts from its defaults; a reload of the page keeps them
+// Arriving on the /modele page from another page (launch.reset, <l21-viewer>; or ?reset=1 in a link): the saved settings
+// are forgotten, the viewer starts from its defaults; a reload of the page keeps them
 // A reload keeps the view the camera was at (Christian, 2026-10-23): the address follows the camera only 300 ms after
 // a move, so a reload right after one brought back an older view. The camera is kept in the tab's session storage at
-// every move (CAM_KEY) and taken back on a reload: of the /modele page (no ?reset=1, ModelPage.astro) or of the viewer
+// every move (CAM_KEY) and taken back on a reload of the /modele page
 const CAM_KEY = 'l21-viewer-cam'
 // The camera placed (the first view, once the tilesets' roots are in): before, it is at the origin, and neither the
 // address nor the kept camera may take it (Christian, 2026-10-27: the address became ?cam=0.00,…,0.00 after the dev
@@ -72,18 +73,15 @@ function validCam(text) {
   const cam = text.split(',').map(Number)
   return cam.length === 6 && cam.every(Number.isFinite) && Math.hypot(cam[0] - cam[3], cam[1] - cam[4], cam[2] - cam[5]) > 0.01
 }
-const navigation = /** @type {PerformanceNavigationTiming | undefined} */ (performance.getEntriesByType('navigation')[0])
-const reloading = params.get('reset') !== '1' && (window.self !== window.top || navigation?.type === 'reload')
-if (reloading) {
+const reset = launch.reset || params.get('reset') === '1'
+if (!reset) {
   try {
     const kept = sessionStorage.getItem(CAM_KEY)
     if (kept && validCam(kept)) params.set('cam', kept)
   } catch {}
 }
-if (params.get('reset') === '1') {
-  forgetSettings()
-  params.delete('reset')
-}
+if (reset) forgetSettings()
+params.delete('reset')
 for (const [key, value] of savedSettings()) if (!params.has(key) && panelKeys.has(key)) params.set(key, value)
 const live = {}
 // The address keeps only what makes the view shareable (viewUrl): the camera, and underwater with its season and lamp
@@ -91,22 +89,16 @@ const SHARED_KEYS = ['cam', 'underwater', 'season', 'lamp']
 const shared = new URLSearchParams([...params].filter(([key]) => SHARED_KEYS.includes(key) && (key === 'cam' || params.get('underwater') === '1')))
 // (the tour's step, #tour-3, kept: a reload keeps it, Christian, 2026-10-24)
 const startHash = /^#tour-\d+$/.test(location.hash) ? location.hash : ''
-history.replaceState(null, '', location.pathname + (shared.size ? `?${shared}` : '').replaceAll('%2C', ',') + startHash)
+history.replaceState(history.state, '', location.pathname + (shared.size ? `?${shared}` : '').replaceAll('%2C', ',') + startHash)
 
 // Root of the published tiles (manifest.json + tilesets). Override with ?tiles=<url> (e.g. phone tests on the LAN)
-const DEFAULT_TILES_URL = import.meta.env.VITE_TILES_URL || 'http://localhost:8081'
+const DEFAULT_TILES_URL = import.meta.env.PUBLIC_TILES_URL || 'http://localhost:8081'
 let tilesUrl = params.get('tiles') || DEFAULT_TILES_URL
 
-// Embedded in the site's /modele/ page (an iframe): no "back" link, and the camera is reported to the page
-const embedded = window.self !== window.top
-document.documentElement.classList.toggle('embedded', embedded)
+// Part of the /modele page (TODO #80; until 2026-10-27 in its frame): its actions and its mode reported to the page
+const embedded = true
 
-// index.html's texts are in French (its fallback): set in the viewer's language (i18n.js, French or English)
-document.title = m.viewer_pageTitle()
-document.querySelector('meta[name="description"]')?.setAttribute('content', m.viewer_pageDescription())
-const homeLink = document.querySelector('.home')
-homeLink.textContent = m.viewer_home()
-homeLink.href = homePath
+// The markup's texts are in French (its fallback): set in the viewer's language (i18n.js, French or English)
 // Accessible name, and the tooltip's text (tooltip.js: the MD3 tooltip replaces the browser's title tooltip)
 for (const [selector, label, tooltip] of [
   ['.settings-button', m.viewer_settings(), m.viewer_settings()],
@@ -116,34 +108,36 @@ for (const [selector, label, tooltip] of [
   ['.compass', m.viewer_compass(), m.viewer_compass()],
   ['.home-button', m.viewer_homeView(), m.viewer_homeView()],
 ]) {
-  const element = document.querySelector(selector)
+  const element = root.querySelector(selector)
   element.setAttribute('aria-label', label)
   element.dataset.tooltip = tooltip
 }
 
-// Full screen: works standalone and embedded (the iframe allows it)
-const fullscreenButton = document.querySelector('.fullscreen')
-if (document.fullscreenEnabled) {
-  fullscreenButton.hidden = false
-  fullscreenButton.addEventListener('click', () => {
-    track('viewer_button', { button: document.fullscreenElement ? 'fullscreen_exit' : 'fullscreen' })
-    if (document.fullscreenElement) document.exitFullscreen()
-    else document.documentElement.requestFullscreen()
-  })
-  document.addEventListener('fullscreenchange', () => {
-    fullscreenButton.setAttribute('aria-label', document.fullscreenElement ? m.viewer_fullscreenExit() : m.viewer_fullscreen())
-    fullscreenButton.dataset.tooltip = document.fullscreenElement ? m.viewer_fullscreenExit() : m.viewer_fullscreenTitle()
-    fullscreenButton.dataset.full = String(Boolean(document.fullscreenElement))
-  })
-} else if (embedded && window.matchMedia('(pointer: coarse)').matches) {
-  // No full screen for a frame (iPhone): the button opens the viewer on its own page, at the same view, the whole
-  // screen for the model
-  fullscreenButton.hidden = false
-  fullscreenButton.addEventListener('click', () => {
-    track('viewer_button', { button: 'fullscreen' })
-    window.top.location.href = viewUrl()
-  })
+// Full screen: the viewer's element (<l21-viewer>), not the page. Where a page's element can't go full screen (iPhone),
+// the element fills the window instead (the class l21-fill, Viewer.astro), until the button or Escape
+const fullscreenButton = root.querySelector('.fullscreen')
+const isFull = () => document.fullscreenElement === host || host.classList.contains('l21-fill')
+function showFull() {
+  const full = isFull()
+  fullscreenButton.setAttribute('aria-label', full ? m.viewer_fullscreenExit() : m.viewer_fullscreen())
+  fullscreenButton.dataset.tooltip = full ? m.viewer_fullscreenExit() : m.viewer_fullscreenTitle()
+  fullscreenButton.dataset.full = String(full)
 }
+fullscreenButton.hidden = false
+fullscreenButton.addEventListener('click', () => {
+  track('viewer_button', { button: isFull() ? 'fullscreen_exit' : 'fullscreen' })
+  if (document.fullscreenElement === host) document.exitFullscreen()
+  else if (host.classList.contains('l21-fill')) host.classList.remove('l21-fill')
+  else if (document.fullscreenEnabled && host.requestFullscreen) host.requestFullscreen()
+  else host.classList.add('l21-fill')
+  showFull()
+})
+document.addEventListener('fullscreenchange', showFull)
+host.addEventListener('keydown', (event) => {
+  if (event.key !== 'Escape' || !host.classList.contains('l21-fill')) return
+  host.classList.remove('l21-fill')
+  showFull()
+})
 
 // Augmented reality: the whole lock on a table, at 1:100 (70 cm), from the viewer's button, with the same model
 // (tools/google-earth/make_model.py -x 0.01, on R2 under downloads/ar/):
@@ -153,14 +147,14 @@ if (document.fullscreenEnabled) {
 // The button stays hidden elsewhere (computers, other browsers). To check on a real phone: AR can't be tested on a
 // computer. The AR files are always the online ones, in development too: Scene Viewer doesn't load a model from the
 // local network (tested on a Pixel, 2026-10-21: the phone never asked for the file)
-const AR_URL = import.meta.env.VITE_AR_URL || 'https://tiles.lock21.info/downloads/ar'
+const AR_URL = import.meta.env.PUBLIC_AR_URL || 'https://tiles.lock21.info/downloads/ar'
 // Version of the AR files, in their address: the server and the phones keep them an hour, so a rebuild (same names)
 // would otherwise show up late. Change it after each upload of rebuilt AR files (docs/augmented-reality.md)
 const AR_VERSION = '2026-10-26'
 // ?ar=full: the lock at its real size (70 m) instead of on a table (the /modele/ page's "Taille réelle" QR code and link)
 const arFull = params.get('ar') === 'full'
 const arName = arFull ? 'lock-21-ar-full' : 'lock-21-ar'
-const arLink = document.querySelector('.ar-button')
+const arLink = root.querySelector('.ar-button')
 // Run once the 3D view has finished its first load (updateLoading): the AR model's background download waits for it
 const afterFirstLoad = []
 // The first view drawn, and the underwater view opened once (Christian, 2026-10-24: on a slow connection, the crayfish,
@@ -178,7 +172,7 @@ if (arLink.relList?.supports?.('ar')) {
 } else if (/Android/i.test(navigator.userAgent)) {
   // Scene Viewer: the link as Google's <model-viewer> builds it (scene-viewer/1.2, occlusion off, ARCore). The
   // button's link until WebXR is known to work, and the fallback if the WebXR session can't open
-  const page = embedded ? window.top : window
+  const page = window
   const sceneParams = new URLSearchParams({ mode: 'ar_preferred', disable_occlusion: 'true', title: m.viewer_name() })
   if (arFull) sceneParams.set('resizable', 'false')
   const sceneViewer = `intent://arvr.google.com/scene-viewer/1.2?${sceneParams}&file=${encodeURIComponent(`${AR_URL}/${arName}.glb?v=${AR_VERSION}`)}` +
@@ -186,8 +180,7 @@ if (arLink.relList?.supports?.('ar')) {
     `S.browser_fallback_url=${encodeURIComponent(page.location.href.split('#')[0])};end;`
   arLink.removeAttribute('rel')
   arLink.href = sceneViewer
-  arLink.target = '_top'
-  arLink.hidden = false
+    arLink.hidden = false
   // WebXR in Chrome (android-ar.js): one tap opens the camera, the 1:100 model loads meanwhile; its size slider goes
   // up to 1:1 (?ar=full starts there)
   let webxr = false
@@ -239,8 +232,8 @@ arLink.addEventListener('click', () => {
   track('ar_launch', { ar_size: arFull ? 'full' : 'table' })
 })
 
-const container = document.getElementById('viewer')
-const status = document.getElementById('status')
+const container = root.querySelector('#viewer')
+const status = root.querySelector('#status')
 
 // Phones: coarser detail and a smaller memory budget (Safari iOS reloads the page beyond ~1-1.5 GB).
 // ?profile=mobile|desktop forces a profile (tests on the PC).
@@ -416,8 +409,8 @@ const pointerOrbit = createPointerOrbit({
 // Analytics: the visit's first move (analytics.js: sent once), by its kind
 renderer.domElement.addEventListener('pointerdown', (event) => firstMove(event.pointerType === 'touch' ? 'touch' : event.button === 0 ? 'turn' : 'pan'), { passive: true })
 renderer.domElement.addEventListener('wheel', () => firstMove('zoom'), { passive: true })
-window.addEventListener('keydown', (event) => {
-  if (/^(Key[WASD]|Arrow)/.test(event.code) && !(event.target instanceof Element && event.target.closest('input, select, textarea'))) firstMove(underwater.on ? 'swim' : 'keys')
+host.addEventListener('keydown', (event) => {
+  if (/^(Key[WASD]|Arrow)/.test(event.code) && !(origin(event) instanceof Element && /** @type {Element} */ (origin(event)).closest('input, select, textarea'))) firstMove(underwater.on ? 'swim' : 'keys')
 })
 renderer.domElement.addEventListener('dblclick', (event) => {
   if (!swim.looking || tour.active) return
@@ -941,7 +934,7 @@ function updateEnvironment() {
 }
 updateEnvironment()
 
-const underwaterButton = document.querySelector('.underwater-button')
+const underwaterButton = root.querySelector('.underwater-button')
 underwaterButton.hidden = false
 underwaterButton.addEventListener('click', () => {
   track('viewer_button', { button: underwater.on ? 'dive_off' : 'dive' })
@@ -963,7 +956,7 @@ function setUnderwater(on) {
   underwater.setOn(on)
   underwaterButton.setAttribute('aria-pressed', String(on))
   // The tour's button (tour.js), in both views (Christian, 2026-10-24: in dive mode too), hidden while it plays
-  document.querySelector('.tour-button').hidden = !document.querySelector('.tour-card').hidden
+  root.querySelector('.tour-button').hidden = !root.querySelector('.tour-card').hidden
   showSeasonControl(on)
   setSwimming(on && !mobile)
   updateAddress()
@@ -977,7 +970,7 @@ live.underwater = (v) => setUnderwater(v === '1')
 // turns around the point SWIM_TARGET ahead of where the diver looks. The movement keys drawn bottom left
 const SWIM_TARGET = 4
 // On a computer, outside the water too (Christian, 2026-10-24), its line and help saying what the keys do there
-const swimKeys = document.querySelector('.swim-keys')
+const swimKeys = root.querySelector('.swim-keys')
 function labelKeys(swimming) {
   swimKeys.setAttribute('aria-label', swimming ? m.viewer_swimKeys() : m.viewer_keysLabel())
   swimKeys.querySelector('.swim-hint').textContent = swimming ? m.viewer_swimHint() : m.viewer_keysHint()
@@ -1086,7 +1079,7 @@ function buildParticleField() {
 // The swim mode's help: an MD3 basic dialog (native <dialog>), opened by itself the first time the swim mode starts
 // (remembered by the browser), then by the « ? » button of the keys, bottom left
 const SWIM_HELP_KEY = 'l21-swim-help-seen'
-const swimHelp = document.querySelector('.swim-help')
+const swimHelp = root.querySelector('.swim-help')
 const swimHelpButton = swimKeys.querySelector('.swim-help-button')
 labelKeys(false)
 // Shown from the start on a computer (not on a phone: no keys)
@@ -1134,7 +1127,7 @@ const tour = createTour({
 tour.button.hidden = false
 // Home: straight back to the start view (START_VIEW, as at the start: stepped back on a narrow frame), at once
 // (Christian, 2026-10-25), the tour stopped if it was on. Diving, the swim starts again from there
-const homeButton = document.querySelector('.home-button')
+const homeButton = root.querySelector('.home-button')
 homeButton.hidden = false
 homeButton.addEventListener('click', () => {
   track('viewer_button', { button: 'home' })
@@ -1150,9 +1143,9 @@ homeButton.addEventListener('click', () => {
 })
 // Escape leaves the dive (usability audit V25, 2026-10-26), when nothing else takes it: a dialog open (the help), the
 // settings panel, the tour. Read in the capture phase, before those close themselves on the same key
-window.addEventListener('keydown', (event) => {
+host.addEventListener('keydown', (event) => {
   if (event.key !== 'Escape' || !underwater.on || tour.active) return
-  if (document.querySelector('dialog[open], l21-settings-panel:not([hidden])')) return
+  if (root.querySelector('dialog[open], l21-settings-panel:not([hidden])')) return
   setUnderwater(false)
 }, { capture: true })
 // A step in the address at load (#tour-3, Christian, 2026-10-25): the tour starts there, the camera straight at that
@@ -1199,7 +1192,7 @@ live.season = (v) => {
   if (look.underwater) updateAddress()
 }
 // The season slider beside the 🤿 button (while underwater), kept in step with the settings' « Saison »
-const seasonControl = document.querySelector('.season-control')
+const seasonControl = root.querySelector('.season-control')
 // Shown and hidden with the MD3 motion (docs/system-design.md, Motion): it slides out from the button and fades in
 // over 400 ms (emphasized decelerate), back over 200 ms (emphasized accelerate); at once on start-up or when the
 // system asks for reduced motion
@@ -1209,7 +1202,7 @@ const SEASON_MOTION = {
 }
 // The strip with the season slider and the dive light's button: its whole width unrolls out of the 🤿 button
 // (revealed from the right) and rolls back into it
-const underwaterTools = document.querySelector('.underwater-tools')
+const underwaterTools = root.querySelector('.underwater-tools')
 /** @param {boolean} on */
 function showSeasonControl(on) {
   // Unrolls out of the 🤿 button: revealed from its right edge
@@ -1284,7 +1277,7 @@ live.lamp = (v) => {
   if (look.underwater) updateAddress()
 }
 // The dive light's button, between the season slider and the 🤿 button, kept in step with the settings' « Lampe de plongée »
-const lampButton = document.querySelector('.lamp-button')
+const lampButton = root.querySelector('.lamp-button')
 function showLamp() {
   lampButton.setAttribute('aria-pressed', String(look.lamp))
   lampButton.setAttribute('aria-label', m.viewer_lamp())
@@ -1756,6 +1749,8 @@ function resize() {
   requestRender()
 }
 window.addEventListener('resize', resize)
+// The frame's own size changes too (full screen, the page's layout): TODO #80
+new ResizeObserver(() => resize()).observe(host)
 
 // The address bar follows the view: ?cam=x,y,z,tx,ty,tz, updated when a gesture ends, and while underwater
 // &underwater=1&season=0..3 (&lamp=0 with the dive light off), updated when they change: the URL can be copied at any
@@ -1781,19 +1776,21 @@ const freeMove = () => {
   updateAddress()
 }
 renderer.domElement.addEventListener('pointerdown', freeMove)
+renderer.domElement.addEventListener('pointerdown', () => host.focus({ preventScroll: true }))
 renderer.domElement.addEventListener('wheel', freeMove, { passive: true })
-window.addEventListener('keydown', (event) => {
+host.addEventListener('keydown', (event) => {
   if (/^(Key[WASD]|Arrow(Up|Down|Left|Right))$/.test(event.code)) freeMove()
 })
-// Nothing the viewer is given may scroll the page around it (TODO #70): the viewer's page itself never scrolls, so the
-// browser handed on to the /modele page what it didn't use: the wheel while the orbit is off (the tour, swimming,
-// a flight), the middle button's autoscroll (Windows: moving the mouse then scrolled the page), and the scrolling
-// keys. Only the settings panel and the dialogs scroll, inside themselves
+// Nothing the viewer is given may scroll the page around it (TODO #70): the wheel over it while the orbit is off (the
+// tour, swimming, a flight), the middle button's autoscroll (Windows: moving the mouse then scrolled the page), and the
+// scrolling keys while it has the focus. Only the settings panel and the dialogs scroll, inside themselves. The keys
+// are the viewer's only while it has the focus (TODO #80: its listeners on <l21-viewer>, not the window, so the page's
+// arrows and space still scroll it): a press on the model gives it the focus
 const scrollsInside = (target) => target instanceof Element && target.closest('l21-settings-panel, dialog')
-window.addEventListener('wheel', (event) => {
-  if (!scrollsInside(event.target)) event.preventDefault()
+host.addEventListener('wheel', (event) => {
+  if (!scrollsInside(origin(event))) event.preventDefault()
 }, { passive: false })
-window.addEventListener('mousedown', (event) => {
+host.addEventListener('mousedown', (event) => {
   if (event.button === 1) event.preventDefault()
 })
 // The right or middle button held on the model, then released outside the frame: the /modele page holds back its
@@ -1802,28 +1799,28 @@ let draggingAside = false
 const dragAside = (on) => {
   if (draggingAside === on) return
   draggingAside = on
-  if (embedded) window.parent.postMessage({ type: 'lock21:drag', on }, location.origin)
+  if (embedded) window.postMessage({ type: 'lock21:drag', on }, location.origin)
 }
 renderer.domElement.addEventListener('pointerdown', (event) => {
   if (event.button === 1 || event.button === 2) dragAside(true)
 })
 window.addEventListener('pointerup', () => dragAside(false))
 window.addEventListener('pointercancel', () => dragAside(false))
-window.addEventListener('contextmenu', (event) => {
-  if (!(event.target instanceof Element && event.target.closest('input, textarea'))) event.preventDefault()
+host.addEventListener('contextmenu', (event) => {
+  const target = origin(event)
+  if (!(target instanceof Element && target.closest('input, textarea'))) event.preventDefault()
 })
-window.addEventListener('keydown', (event) => {
+host.addEventListener('keydown', (event) => {
   if (!/^(Space|PageUp|PageDown|Home|End|Arrow(Up|Down|Left|Right))$/.test(event.code)) return
-  if (scrollsInside(event.target) || (event.target instanceof Element && event.target.closest('input, select, textarea, button'))) return
+  const target = origin(event)
+  if (scrollsInside(target) || (target instanceof Element && target.closest('input, select, textarea, button'))) return
   event.preventDefault()
 })
 function updateAddress() {
   if (!framed) return
   keepCamera()
   const hash = tourHash
-  history.replaceState(null, '', viewUrl() + hash)
-  // The /modele page shows the same query string in its own address, so that copying it shares this view
-  if (embedded) window.parent.postMessage({ type: 'lock21:cam', search: location.search, hash }, location.origin)
+  history.replaceState(history.state, '', viewUrl() + hash)
 }
 let urlTimer = 0
 controls.addEventListener('change', () => {
@@ -1831,7 +1828,7 @@ controls.addEventListener('change', () => {
   clearTimeout(urlTimer)
   urlTimer = setTimeout(updateAddress, 300)
 })
-window.addEventListener('keydown', (e) => {
+host.addEventListener('keydown', (e) => {
   if (e.key !== 'c' && e.key !== 'C') return
   console.log(viewUrl())
   navigator.clipboard?.writeText(viewUrl()).catch(() => {})
@@ -1843,7 +1840,7 @@ window.addEventListener('keydown', (e) => {
 const compareUrl = params.get('compare')
 if (compareUrl) {
   const sources = [[m.viewer_before(), tilesUrl], [m.viewer_after(), compareUrl]]
-  const group = document.body.appendChild(document.createElement('div'))
+  const group = root.querySelector('.viewer-frame').appendChild(document.createElement('div'))
   group.className = 'compare'
   group.setAttribute('role', 'group')
   group.setAttribute('aria-label', m.viewer_compare())
@@ -1860,7 +1857,7 @@ if (compareUrl) {
     buttons.forEach((button, i) => button.setAttribute('aria-pressed', String(sources[i][1] === url)))
   }
   select(tilesUrl)
-  window.addEventListener('keydown', (e) => {
+  host.addEventListener('keydown', (e) => {
     if (e.key === 'b' || e.key === 'B') select(tilesUrl === compareUrl ? sources[0][1] : compareUrl)
   })
 }
@@ -1870,7 +1867,7 @@ let statsBox = null
 let lastStats = 0
 live.stats = (v) => {
   if (v === '1' && !statsBox) {
-    statsBox = document.body.appendChild(document.createElement('pre'))
+    statsBox = root.querySelector('.viewer-frame').appendChild(document.createElement('pre'))
     statsBox.className = 'stats'
     lastStats = 0
   } else if (v !== '1' && statsBox) {
@@ -1906,10 +1903,10 @@ settings.configure({
   schema: settingsSchema({ mobile }),
   values: params,
   live,
-  button: document.querySelector('.settings-button'),
+  button: root.querySelector('.settings-button'),
   session,
 })
-document.querySelector('main').append(settings)
+root.querySelector('.viewer-frame').append(settings)
 if (look.underwater) setUnderwater(true)
 
 // Loading indicator: share of the tiles loaded among those the first view asks for, all zones together; done once every
@@ -2292,7 +2289,7 @@ const DECLINATION_RATE = 0.0804
 const DECLINATION_EPOCH = Date.UTC(2026, 8, 21)
 const declination = DECLINATION_2026 + (DECLINATION_RATE * (Date.now() - DECLINATION_EPOCH)) / (365.25 * 86400e3)
 const NORTH_HEADING = TRUE_HEADING - declination
-const compassRose = document.querySelector('.compass-rose')
+const compassRose = root.querySelector('.compass-rose')
 compassRose.querySelector('.compass-w').textContent = m.viewer_compassWest()
 const compassAxis = new THREE.Vector3()
 let compassBearing = NaN

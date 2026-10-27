@@ -2,9 +2,10 @@
 // <l21-viewer-warmup>: when a link to /modele (or /en/modele) is hovered, focused or touched, the browser fetches the 3D viewer's
 // heavy files in the background (<link rel="prefetch">: about 3 MB, JavaScript bundle, sky HDR, KTX2 transcoder), so
 // that the viewer starts at once on /modele. Astro's own prefetch (ClientRouter) only fetches the page's HTML, not
-// what its iframe loads. Once per visit; not on /modele itself, nor with data saver or a 2G connection.
-// The bundle's file names change with each build: read from the viewer's page (/modele/viewer, part of the site's build
-// since TODO #80) when the link is first hovered; the sky and the transcoder have fixed names (public/viewer/).
+// what <l21-viewer> loads there. Once per visit; not on /modele itself, nor with data saver or a 2G connection.
+// The script's file names change with each build: listed at build time in /viewer/files.json
+// (src/integrations/viewer-files.mjs), read when a link is first hovered; the sky and the transcoder have fixed names
+// (public/viewer/).
 const files = ['/viewer/hdri/sky.hdr', '/viewer/vendor/basis/basis_transcoder.js', '/viewer/vendor/basis/basis_transcoder.wasm']
 ---
 
@@ -22,10 +23,10 @@ const files = ['/viewer/hdri/sky.hdr', '/viewer/vendor/basis/basis_transcoder.js
       if (connection?.saveData || /2g/.test(connection?.effectiveType ?? '')) return
       ;/** @type {any} */ (window).lock21ViewerWarm = true
       this.prefetch(/** @type {string[]} */ (JSON.parse(this.dataset.files ?? '[]')))
-      // The viewer page's own scripts and styles (their names carry a hash of their content)
-      fetch('/modele/viewer')
-        .then((response) => (response.ok ? response.text() : ''))
-        .then((html) => this.prefetch([...new Set(html.match(/\/_astro\/[^"'\s>]+\.(?:js|css)/g) ?? [])]))
+      // The viewer's scripts (their names carry a hash of their content)
+      fetch('/viewer/files.json')
+        .then((response) => (response.ok ? response.json() : []))
+        .then((files) => this.prefetch(files))
         .catch(() => {})
     }
 

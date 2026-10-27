@@ -12,6 +12,8 @@ import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { m } from './i18n.js'
 import { icon } from './icons.js'
+// Its overlay's styles, in the page's document (the viewer's own are in its shadow root)
+import './ar.css'
 
 /** Whether Chrome can open a WebXR AR session here (checked once, before any tap) */
 export async function webxrArSupported() {

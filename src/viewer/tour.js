@@ -11,6 +11,7 @@ import { track } from './analytics.js'
 import * as THREE from 'three'
 import { lang, m } from './i18n.js'
 import { icon } from './icons.js'
+import { host, root } from './dom.js'
 
 // The flight: its length (s) at least, at most, and per metre; above FLY_HIGH m of way, it rises by FLY_RISE of the
 // way, at most FLY_RISE_MAX m; it arrives along the step's line of sight over FLY_BACK of the way, at most FLY_BACK_MAX m
@@ -99,8 +100,8 @@ const camOf = (cam) => ({ position: new THREE.Vector3(cam[0], cam[1], cam[2]), t
  *   no higher than it allows (from inside a passage, Next pressed during a move, it rose through the lintel)
  */
 export function createTour({ steps, camera, controls, requestRender, onStart, onEnd, headroom, onStep }) {
-  const button = /** @type {HTMLButtonElement} */ (document.querySelector('.tour-button'))
-  const card = /** @type {HTMLElement} */ (document.querySelector('.tour-card'))
+  const button = /** @type {HTMLButtonElement} */ (root.querySelector('.tour-button'))
+  const card = /** @type {HTMLElement} */ (root.querySelector('.tour-card'))
   const count = card.querySelector('.tour-count')
   const title = card.querySelector('.tour-title')
   const text = card.querySelector('.tour-text')
@@ -139,7 +140,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   close.setAttribute('aria-label', m.viewer_tourClose())
   close.dataset.tooltip = m.viewer_tourClose()
   // While the card is hidden for a flight, a close button at the top right (Christian, 2026-10-26)
-  const stopButton = /** @type {HTMLButtonElement} */ (document.querySelector('.tour-stop'))
+  const stopButton = /** @type {HTMLButtonElement} */ (root.querySelector('.tour-stop'))
   stopButton.setAttribute('aria-label', m.viewer_tourClose())
   stopButton.dataset.tooltip = m.viewer_tourClose()
   let stopTimer = 0
@@ -508,17 +509,19 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   // as --l21-tour-right, whenever the card shows, the window turns or the row changes
   const BOTTOM_CONTROLS = '.underwater-tools > *, .underwater-button, .ar-button, .home-button, .fullscreen'
   function fitBesideControls() {
-    let left = window.innerWidth
-    for (const element of document.querySelectorAll(BOTTOM_CONTROLS)) {
+    // (in the viewer's frame, not the window: TODO #80)
+    const frame = card.parentElement.getBoundingClientRect()
+    let left = frame.right
+    for (const element of root.querySelectorAll(BOTTOM_CONTROLS)) {
       if (element.hidden) continue
       const box = element.getBoundingClientRect()
       // (the bottom row only: the season's slider sits above it on a phone held sideways)
-      if (box.width && box.bottom > window.innerHeight - 72) left = Math.min(left, box.left)
+      if (box.width && box.bottom > frame.bottom - 72) left = Math.min(left, box.left)
     }
-    card.style.setProperty('--l21-tour-right', `${Math.round(window.innerWidth - left + 12)}px`)
+    card.style.setProperty('--l21-tour-right', `${Math.round(frame.right - left + 12)}px`)
   }
   window.addEventListener('resize', fitBesideControls)
-  new MutationObserver(fitBesideControls).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['hidden'] })
+  new MutationObserver(fitBesideControls).observe(root, { subtree: true, attributes: true, attributeFilter: ['hidden'] })
 
   let starting = false
   function start(at = 0, { jump = false } = {}) {
@@ -526,7 +529,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     onStart?.()
     button.hidden = true
     // The buttons at the bottom out of the way while the tour runs, on a touch screen outside full screen (style.css)
-    document.documentElement.classList.add('l21-touring')
+    host.classList.add('l21-touring')
     fitBesideControls()
     card.hidden = false
     // The next frame: from hidden, the transition needs a first style
@@ -549,7 +552,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     spin.set(0, 0, 0)
     velocity.set(0, 0, 0)
     controls.enabled = true
-    document.documentElement.classList.remove('l21-touring')
+    host.classList.remove('l21-touring')
     reveal()
     card.classList.remove('open')
     hideTimer = setTimeout(() => {
@@ -567,7 +570,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   again.addEventListener('click', () => {
     if (index < 0) return
     // (the focus, on the button about to hide, to next)
-    if (document.activeElement === again) next.focus({ preventScroll: true })
+    if (root.activeElement === again) next.focus({ preventScroll: true })
     track('tour_return', { step: index + 1 })
     starting = true
     show(index)
@@ -584,7 +587,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     if (away) showAgain(true)
   })
   next.addEventListener('click', () => (index < steps.length - 1 ? show(index + 1) : stop()))
-  document.addEventListener('keydown', (event) => {
+  host.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && index >= 0) stop()
   })
 
