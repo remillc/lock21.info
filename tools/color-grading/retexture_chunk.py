@@ -228,10 +228,10 @@ def main():
             cameras = [c for c, d in distances.items() if d is not None and d <= a.max_distance]
             log("photos de la texture: %d à au plus %.1f m (sur %d)" % (len(cameras), a.max_distance, len(distances)))
         log("texture: %d px, mosaïque" % a.size)
-        # (the settings of O:\config\workflows\4. Texture.xml: no hole filling; cameras only when chosen,
-        # without it every aligned photo)
+        # (holes filled, unlike O:\config\workflows\4. Texture.xml: Christian, 2026-10-28; cameras only when
+        # chosen, without it every aligned photo)
         extra = {"cameras": cameras} if cameras is not None else {}
-        chunk.buildTexture(blending_mode=const("BlendingMode", "MosaicBlending"), texture_size=a.size, fill_holes=False,
+        chunk.buildTexture(blending_mode=const("BlendingMode", "MosaicBlending"), texture_size=a.size, fill_holes=True,
                            ghosting_filter=True, **extra)
         doc.save()
         log("texture refaite et projet enregistré")
