@@ -79,8 +79,7 @@ git clone https://github.com/remillc/lock21.info.git F:\projets\lock21.info
 cd F:\projets\lock21.info
 ```
 
-Le clone télécharge aussi les fichiers `.blend` (environ 1 Go pour `lock-21-publishing.blend`): compter quelques
-minutes.
+Le fichier Blender de la publication n'est plus dans le dépôt depuis le 2026-10-28: il est sur le disque `O:`, dans `O:\modeles\lock-21\lock-21-publishing.blend`. Le clone ne télécharge que les anciennes versions que Git LFS rattache à l'historique, à la demande.
 
 ## 3. Les dépendances
 

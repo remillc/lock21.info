@@ -24,7 +24,7 @@ Triangles visés par m² après décimation, pour toutes les zones de l'appel. S
 zone-density.json, sinon 3000.
 
 .PARAMETER Blend
-Fichier .blend de travail (défaut modeles\lock-21-publishing.blend).
+Fichier .blend de travail (défaut O:\modeles\lock-21\lock-21-publishing.blend).
 
 .PARAMETER Help
 Afficher cette aide (-h, -Help ou --help).
@@ -53,7 +53,7 @@ param(
 if ($Help -or ($Rest -contains '--help') -or ($Zones -contains '--help')) { Get-Help $PSCommandPath -Detailed; return }
 # Défaut calculé ici: dans un script « avancé » (attribut [Parameter]), Windows PowerShell 5.1 laisse
 # $PSScriptRoot vide dans les valeurs par défaut des paramètres
-if (-not $Blend) { $Blend = Join-Path $PSScriptRoot "..\..\modeles\lock-21-publishing.blend" }
+if (-not $Blend) { $Blend = "O:\modeles\lock-21\lock-21-publishing.blend" }
 $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $Blend = (Resolve-Path $Blend).Path

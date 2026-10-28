@@ -1,6 +1,6 @@
 """Remplace le mesh d'une zone dans le .blend par un nouvel export Metashape (zone refaite).
 
-À exécuter DANS Blender, sur modeles/lock-21-publishing.blend:
+À exécuter DANS Blender, sur O:/modeles/lock-21/lock-21-publishing.blend:
   onglet Scripting > Text > Open... > ce fichier, modifier les PARAMÈTRES ci-dessous, puis Run Script (▶).
 Blender reste figé pendant le recalage (environ 1 à 2 minutes).
 

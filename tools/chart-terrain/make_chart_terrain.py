@@ -14,9 +14,9 @@ terrain's (the position in the .blend over 1.5 m: the textures continue from one
 is out of the water.
 
 Usage:
-    blender -b modeles/lock-21-publishing.blend --factory-startup --python tools/chart-terrain/make_chart_terrain.py -- \\
+    blender -b O:/modeles/lock-21/lock-21-publishing.blend --factory-startup --python tools/chart-terrain/make_chart_terrain.py -- \\
         [-i O:/temp/chart-terrain/heights.npz] [-o O:/temp/lock-21-publishing-chart.blend]
-    then, Blender closed: move the copy over modeles/lock-21-publishing.blend
+    then, Blender closed: move the copy over O:/modeles/lock-21/lock-21-publishing.blend
 """
 import argparse
 import math
@@ -41,7 +41,7 @@ p.add_argument("-o", "--out", default="O:/temp/lock-21-publishing-chart.blend",
                help="the copy of the .blend, to move in place (default O:/temp/lock-21-publishing-chart.blend)")
 a = p.parse_args(argv)
 if not bpy.data.filepath:
-    sys.exit("make_chart_terrain.py: run it on the publishing .blend (blender -b modeles/lock-21-publishing.blend ...)")
+    sys.exit("make_chart_terrain.py: run it on the publishing .blend (blender -b O:/modeles/lock-21/lock-21-publishing.blend ...)")
 
 grid = np.load(a.input)
 height = grid["height"]

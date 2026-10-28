@@ -11,7 +11,7 @@ Ce guide donne la carte du projet: les dossiers, les branches, les services en l
 ```text
 Plongées (vidéo GoPro)
   → Metashape: projets dans O:\photogrammetry\, exports des zones dans O:\modeles\ (basse et haute résolution)
-  → Blender: modeles\lock-21-publishing.blend place les zones, dessine leurs découpes (version basse résolution)
+  → Blender: O:\modeles\lock-21\lock-21-publishing.blend place les zones, dessine leurs découpes (version basse résolution)
   → outils de publication (tools\publish-model\): tuiles dans O:\publishing\tiles\
   → Cloudflare R2: https://tiles.lock21.info/ (tuiles, téléchargements, réalité augmentée)
   → visualiseur 3D (src\viewer\), dans la page https://lock21.info/modele
@@ -28,7 +28,7 @@ Le détail des étapes: le guide **Traiter le fichier .blend**.
 | `tools\publish-model\` | **Les outils de publication**: préparer les zones, cuire le relief, tuiler, envoyer sur le serveur. Leur `README.md` explique chaque étape et les leçons apprises |
 | `tools\google-earth\` | Le modèle complet pour Google Earth, le GLB téléchargeable, les modèles de réalité augmentée |
 | `tools\model-analysis\` | Analyse de la résolution des zones; ses rapports datés sont gardés |
-| `modeles\` | Les fichiers Blender, stockés avec Git LFS: `lock-21-publishing.blend` (le fichier de travail de la publication; la maquette `lock-21-mockup.blend`, dont il est la copie, retirée le 2026-10-27, reste dans l'historique Git) |
+| `O:\modeles\lock-21\` (hors du dépôt) | Le fichier Blender de la publication, `lock-21-publishing.blend`, et ses `textures\`. Il était dans `modeles\` du dépôt, avec Git LFS, jusqu'au 2026-10-28 : ses anciennes versions et la maquette `lock-21-mockup.blend` restent dans l'historique Git |
 | `docs\` | Les guides pour les personnes: celui-ci, **Installation**, **Traiter le fichier .blend**, **Réalité augmentée**, **Documents de SOS Ottawa** (`sos-ottawa-files.md`, résumé des documents numérisés de `docs\sos-files\`) |
 | `AGENTS.md` | Les consignes pour les assistants d'IA (Claude) qui travaillent dans le projet |
 | `docs/guidelines.md`, `docs/system-design.md` | Les règles du code du site, et le design (couleurs, typographie, mouvement) |
@@ -84,7 +84,7 @@ commandes et rédige des textes à la demande de Christian, qui décide, vérifi
 
 - les plongées, le tournage et les réglages de la caméra; le journal des plongées;
 - la photogrammétrie dans Metashape: alignement, nuage dense, maillage, texture (projets dans `O:\photogrammetry\`);
-- dans Blender, `modeles\lock-21-publishing.blend`: la place des zones, leurs découpes (booléens), les maquettes et
+- dans Blender, `O:\modeles\lock-21\lock-21-publishing.blend`: la place des zones, leurs découpes (booléens), les maquettes et
   leurs matériaux, le terrain;
 - les textes des pages du site en français (carnet de terrain), sauf les passages notés plus bas;
 - les choix: ce qui est publié, l'aspect du site et du visualiseur, les réglages (lumière, saisons, visibilité).

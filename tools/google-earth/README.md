@@ -66,7 +66,7 @@ de la caméra de Google Earth).
 # 1. Contexte non compressé (le context.glb publié a des textures KTX2, que Blender ne lit pas). Lit le .blend
 #    (lecture seule): seulement quand il est sauvegardé, et pas en mode Édition (un objet sauvegardé en mode
 #    Édition perd ses attributs dans le fichier, et l'export glTF échoue).
-& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b modeles\lock-21-publishing.blend --factory-startup --python tools\publish-model\export_context.py -- O:\temp\google-earth\context
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b O:\modeles\lock-21\lock-21-publishing.blend --factory-startup --python tools\publish-model\export_context.py -- O:\temp\google-earth\context
 
 # 2. Modèle complet (Blender): 700 000 triangles, textures de 2048 px
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\t700k -t 700000 -s 2048 --context O:\temp\google-earth\context\context.glb

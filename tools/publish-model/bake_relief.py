@@ -42,9 +42,8 @@ p.add_argument("-c", "--cage", type=float, help="cage extrusion, m (default: twi
 p.add_argument("--source", help="the zone's source export (default: the one recorded in <slug>-prepare.json)")
 p.add_argument("--high", help="high-res geometry export from the SAME Metashape chunk as the source (same frame), when the "
                "source is too coarse for the relief; placed with the source's registration (default: the source itself)")
-p.add_argument("-b", "--blend", default=os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-                                                    "modeles", "lock-21-publishing.blend"),
-               help="the publishing .blend, read for the zone's deform modifiers (default: modeles/lock-21-publishing.blend)")
+p.add_argument("-b", "--blend", default="O:/modeles/lock-21/lock-21-publishing.blend",
+               help="the publishing .blend, read for the zone's deform modifiers (default: O:/modeles/lock-21/lock-21-publishing.blend)")
 a = p.parse_args(script_args())
 slug = a.zone.replace(" ", "-")
 os.makedirs(a.out, exist_ok=True)

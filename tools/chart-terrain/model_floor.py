@@ -12,7 +12,7 @@ rendered (modifiers applied, Show in Render only), in two kinds of parts:
 The .blend is never saved.
 
 Usage:
-    blender -b modeles/lock-21-publishing.blend --factory-startup --python tools/chart-terrain/model_floor.py -- \\
+    blender -b O:/modeles/lock-21/lock-21-publishing.blend --factory-startup --python tools/chart-terrain/model_floor.py -- \\
         [-i O:/temp/chart-terrain/heights.npz] [-o O:/temp/chart-terrain/floor.npz]
 """
 import argparse

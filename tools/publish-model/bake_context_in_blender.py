@@ -1,6 +1,6 @@
 """Cuit les matériaux procéduraux du contexte (terrain: rampes de couleur, bruit, relief) en textures, DANS Blender.
 
-À exécuter dans le Blender ouvert sur modeles/lock-21-publishing.blend:
+À exécuter dans le Blender ouvert sur O:/modeles/lock-21/lock-21-publishing.blend:
   onglet Scripting > Text > Open... > ce fichier > Run Script (▶). Blender reste figé pendant la cuisson
   (environ 2 minutes pour le terrain, sur la carte graphique si elle est choisie dans les préférences Cycles).
 
@@ -8,7 +8,7 @@ Pour chaque objet du contexte (noms contenant « filler », collection `terrain`
   - rendu Cycles de la couleur sous l'éclairage de la scène (direct + indirect: le relief Bump n'est visible
     que sous la lumière), dans une image de TAILLE px; les autres objets sont exclus du rendu pendant la
     cuisson (pas d'ombres portées), puis leur visibilité est rétablie;
-  - image enregistrée dans modeles/textures/baked/<objet>.png (fichier externe: le .blend ne grossit pas);
+  - image enregistrée dans O:/modeles/lock-21/textures/baked/<objet>.png (fichier externe: le .blend ne grossit pas);
   - chemin noté dans la propriété `baked_texture` de l'objet. export_context.py utilise alors cette image.
 Les matériaux de l'objet ne sont pas modifiés. Pour mettre à jour après une retouche de matériau: relancer.
 Sauvegarder ensuite le .blend (la propriété `baked_texture` y est stockée).

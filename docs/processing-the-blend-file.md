@@ -3,7 +3,7 @@ title: Traiter le fichier .blend
 description: Les étapes à suivre après une modification de lock-21-publishing.blend, jusqu'à la mise en ligne du modèle 3D et des téléchargements.
 ---
 
-Ce guide explique quoi faire **après avoir modifié le fichier `modeles/lock-21-publishing.blend`**: déplacer une zone, retoucher une découpe, ajouter une zone, changer l'export d'une zone, modifier le terrain. Il mène, étape par étape, jusqu'au modèle en ligne sur lock21.info et aux téléchargements (Google Earth, GLB).
+Ce guide explique quoi faire **après avoir modifié le fichier `O:/modeles/lock-21/lock-21-publishing.blend`**: déplacer une zone, retoucher une découpe, ajouter une zone, changer l'export d'une zone, modifier le terrain. Il mène, étape par étape, jusqu'au modèle en ligne sur lock21.info et aux téléchargements (Google Earth, GLB).
 
 Toutes les commandes se lancent dans **PowerShell**, depuis le dossier du projet (`F:\projets\lock21.info`).
 L'ordinateur doit être prêt: voir le guide **Installation** (`docs/installation.md`).
@@ -151,7 +151,7 @@ Les téléchargements de la page `/modele` et les modèles de réalité augment�
 **1. Exporter le contexte** (terrain, murs, remplissages), sans compression:
 
 ```powershell
-& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b modeles\lock-21-publishing.blend --factory-startup --python tools\publish-model\export_context.py -- O:\temp\google-earth\context
+& "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b O:\modeles\lock-21\lock-21-publishing.blend --factory-startup --python tools\publish-model\export_context.py -- O:\temp\google-earth\context
 ```
 
 **2. Le modèle pour Google Earth** (700 000 triangles), puis son KMZ:
@@ -239,7 +239,7 @@ gh workflow run deploy.yml --ref main
 
 | Quoi                          | Où                                                                                         |
 | ----------------------------- | ------------------------------------------------------------------------------------------ |
-| Le fichier de travail         | `modeles\lock-21-publishing.blend`                                                         |
+| Le fichier de travail         | `O:\modeles\lock-21\lock-21-publishing.blend`                                                         |
 | Les exports des zones         | `O:\modeles\zone-N\`                                                                       |
 | Les zones préparées           | `O:\publishing\prepared\`                                                                  |
 | Les journaux, intermédiaires  | `O:\temp\` (jetable)                                                                       |

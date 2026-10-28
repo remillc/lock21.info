@@ -14,11 +14,11 @@ $blender = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe"
 # 1. La grille des hauteurs (Python du système: numpy, scipy, scikit-image, Pillow), 35 s
 python tools\chart-terrain\chart_terrain.py
 # 2. Le modèle sous cette grille (lecture seule du .blend), 15 s, puis refaire la grille avec lui
-& $blender -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\model_floor.py
+& $blender -b O:\modeles\lock-21\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\model_floor.py
 python tools\chart-terrain\chart_terrain.py
 # 3. Le terrain dans une copie du .blend, puis la copie à la place du .blend
-& $blender -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\make_chart_terrain.py
-Move-Item -Force O:\temp\lock-21-publishing-chart.blend modeles\lock-21-publishing.blend
+& $blender -b O:\modeles\lock-21\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\make_chart_terrain.py
+Move-Item -Force O:\temp\lock-21-publishing-chart.blend O:\modeles\lock-21\lock-21-publishing.blend
 ```
 
 L'étape 2 n'est à refaire que si le modèle a changé (zones, murs, remplissages, maquettes). Sorties intermédiaires dans
@@ -33,12 +33,12 @@ modèle, ajuster le terrain là seulement où il rencontre le modèle (Blender f
 ```powershell
 $blender = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe"
 # 1. Mesurer chaque sommet du terrain et le modèle sous lui et au-dessus (lecture seule), 15 s
-& $blender -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\fit_mesh.py -- --measure
+& $blender -b O:\modeles\lock-21\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\fit_mesh.py -- --measure
 # 2. Les hauteurs ajustées (Python du système)
 python tools\chart-terrain\fit_terrain.py
 # 3. Les écrire dans le maillage, dans une copie du .blend, puis la copie à la place du .blend
-& $blender -b modeles\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\fit_mesh.py -- --apply
-Move-Item -Force O:\temp\lock-21-publishing-chart.blend modeles\lock-21-publishing.blend
+& $blender -b O:\modeles\lock-21\lock-21-publishing.blend --factory-startup --python tools\chart-terrain\fit_mesh.py -- --apply
+Move-Item -Force O:\temp\lock-21-publishing-chart.blend O:\modeles\lock-21\lock-21-publishing.blend
 ```
 
 `fit_terrain.py` ne touche un sommet que s'il le faut (le reste garde la hauteur retouchée):

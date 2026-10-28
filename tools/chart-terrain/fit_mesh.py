@@ -14,10 +14,10 @@ The mesh must still be the grid make_chart_terrain.py built (one vertex per grid
 up or down). The .blend itself is never saved.
 
 Usage:
-    blender -b modeles/lock-21-publishing.blend --factory-startup --python tools/chart-terrain/fit_mesh.py -- --measure
+    blender -b O:/modeles/lock-21/lock-21-publishing.blend --factory-startup --python tools/chart-terrain/fit_mesh.py -- --measure
     python tools/chart-terrain/fit_terrain.py
-    blender -b modeles/lock-21-publishing.blend --factory-startup --python tools/chart-terrain/fit_mesh.py -- --apply
-    then, Blender closed: move O:/temp/lock-21-publishing-chart.blend over modeles/lock-21-publishing.blend
+    blender -b O:/modeles/lock-21/lock-21-publishing.blend --factory-startup --python tools/chart-terrain/fit_mesh.py -- --apply
+    then, Blender closed: move O:/temp/lock-21-publishing-chart.blend over O:/modeles/lock-21/lock-21-publishing.blend
 """
 import argparse
 import os
