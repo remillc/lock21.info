@@ -43,7 +43,7 @@ p = argparse.ArgumentParser(prog="retexture_chunk.py", description=__doc__,
 p.add_argument("-c", "--chunk", help="nom du chunk (défaut: le chunk actif); doit contenir « graded »")
 p.add_argument("-m", "--map", action="append", help="ancien dossier=nouveau dossier (répétable; défaut: zone 3)")
 p.add_argument("-s", "--size", type=int, help="côté de la texture, px (défaut: calculé pour le texel cible)")
-p.add_argument("-o", "--out", help="modèle texturé à écrire (.glb; défaut: O:/modeles/<zone>/<zone> - graded - <faces>M faces.glb)")
+p.add_argument("-o", "--out", help="modèle texturé à écrire (.glb; défaut: O:/modeles/<zone>/<nom du chunk> (<faces>M faces).glb)")
 p.add_argument("--check", action="store_true", help="vérifier les chemins sans rien changer")
 p.add_argument("--no-texture", action="store_true", help="ne pas refaire la texture")
 p.add_argument("-k", "--masks", action="store_true", help="importer les masques _masks de chaque plongée")
@@ -239,7 +239,9 @@ def main():
     if not a.no_export:
         if not a.out:
             zone = "zone-" + chunk.label.split()[1]
-            a.out = "O:/modeles/%s/%s - graded - %.1fM faces.glb" % (zone, zone, len(chunk.model.faces) / 1e6)
+            # (le nom du chunk, puis le nombre de faces: on sait de quel chunk vient le modèle; Christian, 2026-10-28)
+            name = "".join("-" if ch in '<>:"/|?*' else ch for ch in chunk.label)
+            a.out = "O:/modeles/%s/%s (%.1fM faces).glb" % (zone, name, len(chunk.model.faces) / 1e6)
         if os.path.exists(a.out):
             raise Stop("existe déjà, rien n'est écrasé: " + a.out)
         chunk.exportModel(path=a.out, binary=True, texture_format=const("ImageFormat", "ImageFormatJPEG"), save_texture=True,
