@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#103**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#104**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -73,6 +73,10 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #43 Accessibility (WCAG 2.2 AA): audited on 2026-10-26 (axe-core on every page, both themes, desktop and phone;
   keyboard, 320 px reflow, text spacing) and the code issues fixed. Left, for Christian: a check with a real screen
   reader (NVDA, VoiceOver) and Windows' high contrast mode
+- [ ] #103 Serve the download files (whole-model GLB, the KMZ's parts, the AR models; today on R2 under
+  `tiles.lock21.info/downloads/`) from the site, `lock21.info` (Christian, 2026-10-28). To check first: Workers static
+  assets refuse files over 25 MiB (the GLB is 130 MB), so the site's address may have to reach R2 through the Worker
+  (a route on `/downloads/*`) rather than ship the files with the site
 - [ ] #102 Rename the page « À propos de l'écluse 21 » to « L'écluse 21 » (Christian, 2026-10-27): its title, the
   sidebar and the links that name it (French; the English page on request)
 - [ ] #48 Guided tour (src/viewer/tour.js, tour-steps.js; 8 steps, Christian's views and moves, 2026-10-24): the texts
