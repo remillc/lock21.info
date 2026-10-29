@@ -49,8 +49,7 @@ répond à `-h`.
 5. Essai adopté: relier les *chunks* d'origine aux images étalonnées (`relink_frame.py <projet.psx> <chunk> -a`, Metashape
    fermé), puis supprimer les dossiers d'images non étalonnées. Zone 3 (2026-10-29): les trois *chunks* d'origine reliés,
    les dossiers `frames-lens-corrected-n10/-nx` des 5, 7 et 12 juillet 2024 supprimés (349 Go), ainsi que la copie
-   `zone-3 - Copie.psx` (468 Go); les masques qui étaient dans ces dossiers, différents de ceux de la plongée, gardés
-   dans `<plongée>\zone-3\_masks-old-<dossier>`.
+   `zone-3 - Copie.psx` (468 Go), et les masques plus anciens qui étaient dans ces dossiers.
 
 ## Les LUT
 
