@@ -7,8 +7,12 @@ sous le même nom, avec la taille et la date du nouveau fichier. Avant: le proje
 `lock`), le chunk doit être une copie « graded », chaque nouvelle image doit exister; le fichier d'origine est
 gardé à côté (`frame.zip.<date>.bak`). Seul ce chunk est touché.
 
+Avec -a, un chunk d'origine aussi (non « graded »), quand ses images d'origine vont être supprimées une fois
+l'étalonnage adopté (zone 3, Christian 2026-10-29): il garde son modèle et sa texture, mais une prochaine texture
+prendrait les couleurs étalonnées.
+
 Usage:
-    python -I relink_frame.py <projet.psx> <id du chunk> [-m <ancien dossier>=<nouveau dossier> ...] [-n]
+    python -I relink_frame.py <projet.psx> <id du chunk> [-m <ancien dossier>=<nouveau dossier> ...] [-a] [-n]
 Exemple:
     python -I relink_frame.py O:/photogrammetry/zone-3.psx 14 -n
 """
@@ -31,6 +35,8 @@ p = argparse.ArgumentParser(prog="relink_frame.py", description=__doc__,
 p.add_argument("project", help="projet Metashape (.psx)")
 p.add_argument("chunk", help="id du chunk (dossier dans <projet>.files), ex. 14")
 p.add_argument("-m", "--map", action="append", help="ancien dossier=nouveau dossier (répétable; défaut: zone 3)")
+p.add_argument("-a", "--any-chunk", action="store_true",
+               help="accepter un chunk d'origine (non « graded »), quand ses images d'origine vont être supprimées")
 p.add_argument("-n", "--dry-run", action="store_true", help="compter et vérifier sans rien écrire")
 a = p.parse_args()
 
@@ -46,7 +52,7 @@ if os.path.exists(os.path.join(files, "lock")):
     sys.exit("le projet est ouvert dans Metashape (%s): le fermer d'abord" % os.path.join(files, "lock"))
 with zipfile.ZipFile(os.path.join(chunk_dir, "chunk.zip")) as z:
     label = re.search(r'<chunk[^>]*label="([^"]*)"', z.read("doc.xml").decode("utf-8")).group(1)
-if "graded" not in label:
+if "graded" not in label and not a.any_chunk:
     sys.exit("le chunk %s (« %s ») n'est pas une copie « graded »: rien n'est fait" % (a.chunk, label))
 print("chunk %s: %s" % (a.chunk, label))
 
