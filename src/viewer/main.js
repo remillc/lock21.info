@@ -1185,8 +1185,7 @@ export function mountViewer() {
   firstView.then(() => {
     if (life.signal.aborted || underwater.on || tour.active) return
     try {
-      // (on the dev server, at every load: Christian, 2026-10-29, while it is worked on)
-      if (localStorage.getItem(NAV_HELP_KEY) && !import.meta.env.DEV) return
+      if (localStorage.getItem(NAV_HELP_KEY)) return
       localStorage.setItem(NAV_HELP_KEY, '1')
       if (touchScreen) localStorage.setItem(TOUCH_HELP_KEY, '1')
     } catch {

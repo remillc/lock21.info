@@ -19,7 +19,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
   points to its parts at `lock21.info/downloads`. The context no longer carries a helper box of the .blend's `terrain`
   collection (« boolean.032 », left visible to the render: a white block over the site from afar, online for an hour).
 - 3D viewer: the navigation's help opens by itself at the first visit, once the first view shows in the standard
-  mode (remembered by the browser; at every load on the dev server). It is drawn as the /modele page's « Naviguer »
+  mode (remembered by the browser). It is drawn as the /modele page's « Naviguer »
   box: the mouse gestures with the small mouse and the keys as key caps, side by side, or the fingers on a touch
   screen (the first touch's card then not shown again). The « ? » of the keys opens the same.
 - Guided tour: back is quicker and straight (about 3 s from step 3 to 2, was 5.4 s: up to 25 m/s and 20 m/s², no
