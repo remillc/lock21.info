@@ -93,11 +93,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #97 Performance audit (Christian, 2026-10-27): the site's pages and /modele, on a computer and a phone (Lighthouse,
   Core Web Vitals; the 3D viewer's load time and frame rate, its memory), with findings to act on, as the usability and
   SEO audits (docs/audits/)
-- [ ] #92 Google Analytics, for Christian: register the custom definitions of the actions sent since TODO #88
-  (Admin › Custom definitions). Metrics (unit: seconds): `standard_seconds`, `underwater_seconds` (viewer_end),
-  `seconds` (dive_end). Dimensions (event scope): `button`, `step`, `move`, `setting`, `season`, `lamp`, `theme`,
-  `language`, `ar_size`. Then, in Explore: sessions with viewer_end, those with underwater_seconds > 0, the sums per
-  session
 - [ ] #89 SEO audit (2026-10-26, `docs/audits/seo-2026-10-26.md`): the code fixes left. S11 check that a branch preview still works, the next time one is made
   (`workers_dev: false` in `wrangler.jsonc`, off since 1.0.0-beta.1: the workers.dev address answers 404; if the
   previews broke, back to true)
