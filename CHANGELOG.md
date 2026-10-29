@@ -22,6 +22,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
   mode (remembered by the browser). It is drawn as the /modele page's « Naviguer »
   box: the mouse gestures with the small mouse and the keys as key caps, side by side, or the fingers on a touch
   screen (the first touch's card then not shown again). The « ? » of the keys opens the same.
+- 3D viewer: the contrast of the lit surfaces at 1.3 by default (was 1, the textures' own).
 - Guided tour: back is quicker and straight (about 3 s from step 3 to 2, was 5.4 s: up to 25 m/s and 20 m/s², no
   rise), and back again during a flight sets off at once toward the step before, from where the camera is and at its
   speed (it braked first, and went on toward the step it left for seconds).
