@@ -1,43 +1,336 @@
 ---
-// The 404 page's content (usability audit V13), in the page's language: src/pages/404.astro (French) and
-// src/pages/en/404.astro (English, served by the hosting for unknown addresses under /en/: wrangler.jsonc). A way onward:
-// the home page, the 3D model and the zone map. The page's full redesign is TODO #86.
+// The 404 page's content (usability audit V13; its design, TODO #86: Christian's choice of 2026-10-29, the mockup « 1 + 2 »
+// of docs/mockups/404-visuals.html), in the page's language: src/pages/404.astro (French) and src/pages/en/404.astro
+// (English, served by the hosting for unknown addresses under /en/: wrangler.jsonc).
+// - The site's instruments in alarm: the dive computer of the home page's panel reads 404 ft, out of range; the depth
+//   gauge of the pages runs past the lock's bottom (60 ft), dashed in the signal orange, down to 404 ft. The content
+//   stays at the top (Christian); the gauge on wide screens only, as on the home page.
+// - What is said: the address asked for (read in the page, the page being static), three ways out (the 3D model in the
+//   signal orange, like the header's pill; the home page; the zone map) and a search, which opens the site's own
+//   (Starlight's dialog, Pagefind) with the words typed, or else the words of the address.
+import { site } from '../data/site'
 import { localPath, pageLang } from '../lib/i18n'
 import { m } from '../paraglide/messages.js'
 
 const lang = pageLang(Astro.locals)
 const o = { locale: lang }
+const ft = m.site_feet({}, o)
+const bottomM = site.bottomDepthM.toLocaleString(lang === 'en' ? 'en-CA' : 'fr-CA')
 const links = [
-  { href: localPath('/', lang), label: m.notfound_home({}, o) },
-  { href: localPath('/modele', lang), label: m.notfound_model({}, o) },
-  { href: localPath('/decoupage-site', lang), label: m.notfound_zones({}, o) },
+  { href: localPath('/modele', lang), label: m.notfound_model({}, o), signal: true },
+  { href: localPath('/', lang), label: m.notfound_home({}, o), signal: false },
+  { href: localPath('/decoupage-site', lang), label: m.notfound_zones({}, o), signal: false },
 ]
 ---
 
 <div class="not-found">
-  <p class="code">404</p>
-  <h1>{m.notfound_title({}, o)}</h1>
-  <p>{m.notfound_text({}, o)}</p>
-  <ul>
-    {links.map(({ href, label }) => <li><a href={href}>{label}</a></li>)}
-  </ul>
+  <div class="gauge" aria-hidden="true">
+    <span>0 {ft}</span>
+    <span>15 {ft}</span>
+    <span>30 {ft}</span>
+    <span>45 {ft}</span>
+    <span class="bottom">{site.bottomDepthFt} {ft}</span>
+    <span class="beyond"><span class="here">404 {ft}</span></span>
+  </div>
+
+  <div class="body">
+    <div class="text">
+      <p class="code">{m.notfound_code({}, o)}</p>
+      <h1>{m.notfound_title({}, o)}</h1>
+      <p class="lead">{m.notfound_text({}, o)}</p>
+      <p class="asked" hidden></p>
+      <ul class="exits">
+        {
+          links.map(({ href, label, signal }) => (
+            <li>
+              <a class:list={['button', { signal }]} href={href}>
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <form class="search" role="search">
+        <input type="search" name="q" aria-label={m.notfound_search({}, o)} placeholder={`${m.notfound_search({}, o)}…`} />
+        <button type="submit">{m.notfound_searchButton({}, o)}</button>
+      </form>
+    </div>
+
+    <div class="computer" aria-hidden="true">
+      <div class="head"><span>{m.notfound_dive({}, o)}</span><span class="alarm">▲ {m.notfound_alarm({}, o)}</span></div>
+      <div class="wide">
+        <div class="label">{m.home_depth({}, o)}</div>
+        <div class="depth">404<span> {ft}</span></div>
+        <div class="label">{m.notfound_bottom({ ft: String(site.bottomDepthFt), m: bottomM }, o)}</div>
+      </div>
+      <div><div class="label">{m.notfound_page({}, o)}</div><div class="reading">{m.notfound_lost({}, o)}</div></div>
+      <div><div class="label">{m.notfound_stop({}, o)}</div><div class="reading">{m.notfound_up({}, o)}</div></div>
+    </div>
+  </div>
 </div>
+
+<script>
+  // The address asked for (the page is the same static file for every unknown address), and the search: Starlight's
+  // dialog opened with the words typed, or, with nothing typed, the words of the address
+  const setUp = () => {
+    const page = document.querySelector('.not-found')
+    if (!page) return
+    const asked = /** @type {HTMLElement} */ (page.querySelector('.asked'))
+    asked.textContent = location.host + decodeURI(location.pathname)
+    asked.hidden = false
+    const form = /** @type {HTMLFormElement} */ (page.querySelector('.search'))
+    form.addEventListener('submit', (event) => {
+      event.preventDefault()
+      const typed = /** @type {HTMLInputElement} */ (form.elements.namedItem('q')).value.trim()
+      const words = typed || decodeURI(location.pathname).replace(/^\/(en\/)?/, '').split(/[/\-_.]+/).filter(Boolean).join(' ')
+      const open = /** @type {HTMLButtonElement | null} */ (document.querySelector('site-search button[data-open-modal]'))
+      if (!open) return
+      open.click()
+      // Pagefind's field appears in the dialog once it is set up
+      /** @param {number} tries */
+      const fill = (tries) => {
+        const input = /** @type {HTMLInputElement | null} */ (document.querySelector('site-search .pagefind-ui__search-input'))
+        if (!input) {
+          if (tries > 0) setTimeout(() => fill(tries - 1), 100)
+          return
+        }
+        input.value = words
+        input.dispatchEvent(new Event('input', { bubbles: true }))
+        input.focus()
+      }
+      fill(20)
+    })
+  }
+  setUp()
+  document.addEventListener('astro:page-load', setUp)
+</script>
 
 <style>
   @layer l21.components {
     .not-found {
-      padding-block: 2rem;
+      display: flex;
+      gap: 1.5rem;
+      padding-top: 1.5rem;
+      /* The window's whole height between the header and the footer, so that the gauge runs down to the footer
+         (Christian, 2026-10-29): 11.25rem is what Starlight puts around the content (its panel's padding, the page
+         footer's margins), less the 5rem the footer is pulled up by, 1.5rem from the gauge; measured, the page then fits the window */
+      min-height: calc(100dvh - var(--sl-nav-height) - 11.25rem);
+      margin-bottom: -5rem;
+    }
+
+    /* The depth gauge (the home page's, Home.astro), on past the lock's bottom: dashed orange down to 404 ft */
+    .gauge {
+      flex: 0 0 4.5rem;
+      display: flex;
+      flex-direction: column;
+      min-height: 24rem;
+      padding-left: 0.75rem;
+      border-left: 2px solid var(--md-sys-color-secondary);
+      font-family: var(--l21-font-data);
+      font-size: 0.75rem;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+    .gauge > span {
+      flex: 1;
+    }
+    .gauge .bottom {
+      color: var(--md-sys-color-secondary);
+      font-weight: 700;
+    }
+    .gauge .beyond {
+      flex: 3;
+      position: relative;
+      margin-left: calc(-0.75rem - 2px);
+      padding-left: 0.75rem;
+      border-left: 2px dashed var(--md-sys-color-tertiary);
+    }
+    .gauge .here {
+      position: absolute;
+      bottom: 0;
+      left: 0.75rem;
+      white-space: nowrap;
+      color: var(--md-sys-color-tertiary-text);
+      font-weight: 800;
+    }
+    /* Phones: no gauge, so no page stretched to the footer either */
+    @media (max-width: 50rem) {
+      .gauge {
+        display: none;
+      }
+      .not-found {
+        min-height: 0;
+        margin-bottom: 0;
+      }
+    }
+
+    .body {
+      flex: 1;
+      min-width: 0;
+      align-self: flex-start;
+      /* The margin under the search, kept when the page is taller than the window (a small screen) */
+      padding-bottom: 3rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+    .text {
+      flex: 999 1 22rem;
+      min-width: 0;
     }
     .code {
       margin: 0;
       font-family: var(--l21-font-data);
       font-size: 0.75rem;
-      font-weight: 500;
+      font-weight: 700;
       letter-spacing: 0.1em;
-      color: var(--md-sys-color-secondary);
+      color: var(--md-sys-color-tertiary-text);
     }
     h1 {
-      margin-top: 0.25rem;
+      margin: 0.25rem 0 0.5rem;
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      line-height: 1.12;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--md-sys-color-on-surface);
+    }
+    .lead {
+      margin: 0 0 1rem;
+      max-width: 34rem;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+    .asked {
+      display: inline-block;
+      margin: 0 0 1.5rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: var(--md-sys-shape-small);
+      background: var(--md-sys-color-surface-container);
+      font: 400 0.8rem/1.4 var(--l21-font-data);
+      color: var(--md-sys-color-on-surface-variant);
+      overflow-wrap: anywhere;
+    }
+    .asked[hidden] {
+      display: none;
+    }
+    .exits {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin: 0 0 1.25rem;
+      padding: 0;
+      list-style: none;
+    }
+    .exits li {
+      margin: 0;
+    }
+    /* MD3 buttons (docs/system-design.md): 48 px, outlined; the 3D model filled in the signal orange */
+    .button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 48px;
+      padding: 0 1.25rem;
+      border: 2px solid var(--md-sys-color-primary);
+      border-radius: var(--md-sys-shape-medium);
+      color: var(--md-sys-color-primary);
+      font: 700 0.875rem/1 var(--l21-font-data);
+      text-decoration: none;
+    }
+    .button.signal {
+      border-color: var(--md-sys-color-tertiary);
+      background-color: var(--md-sys-color-tertiary);
+      color: #12140e;
+    }
+    .button:hover,
+    .search button:hover {
+      background-image: linear-gradient(color-mix(in srgb, currentColor 8%, transparent) 0 0);
+    }
+    .search {
+      display: flex;
+      max-width: 26rem;
+      border: 2px solid var(--md-sys-color-outline);
+      border-radius: var(--md-sys-shape-medium);
+      overflow: hidden;
+      background: var(--md-sys-color-surface-container-lowest);
+    }
+    .search input {
+      flex: 1;
+      min-width: 0;
+      min-height: 48px;
+      padding: 0 0.9rem;
+      border: 0;
+      background: none;
+      color: var(--md-sys-color-on-surface);
+      font: 400 0.875rem var(--l21-font-data);
+    }
+    .search button {
+      min-height: 48px;
+      padding: 0 1.1rem;
+      border: 0;
+      border-left: 2px solid var(--md-sys-color-outline);
+      background-color: var(--md-sys-color-surface-container);
+      color: var(--md-sys-color-on-surface);
+      font: 700 0.8rem var(--l21-font-data);
+      cursor: pointer;
+    }
+
+    /* The dive computer: the home page's instrument panel (dark in both themes), in alarm */
+    .computer {
+      flex: 1 1 20rem;
+      max-width: 24rem;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      border: 2px solid var(--l21-panel-outline);
+      border-radius: var(--md-sys-shape-extra-large);
+      background: var(--l21-panel);
+      color: var(--l21-bar-text);
+      font-family: var(--l21-font-data);
+    }
+    .head {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .head,
+    .label {
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      color: var(--l21-bar-muted);
+    }
+    .alarm {
+      color: var(--md-sys-color-tertiary);
+      font-weight: 800;
+      animation: l21-alarm 1.6s ease-in-out infinite;
+    }
+    .wide {
+      grid-column: 1 / -1;
+    }
+    .depth {
+      font-size: 3.25rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--md-sys-color-tertiary);
+    }
+    .depth span {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    .reading {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    @keyframes l21-alarm {
+      50% {
+        opacity: 0.35;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .alarm {
+        animation: none;
+      }
     }
   }
 </style>

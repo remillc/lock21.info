@@ -5,13 +5,13 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "lock21-info",
   "compatibility_date": "2026-10-01",
-  // A small script only for the English home page (/en/) and the viewer's telemetry (/api/log): worker/index.js;
-  // every other address is a static file
+  // A small script only for the English home page (/en/), the viewer's telemetry (/api/log) and the downloads
+  // (/downloads/*): worker/index.js; every other address is a static file
   "main": "worker/index.js",
   "assets": {
     "binding": "ASSETS",
     // /*/: the addresses with a final slash, redirected for good to the page's address (worker/index.js)
-    "run_worker_first": ["/en", "/en/", "/api/*", "/*/"],
+    "run_worker_first": ["/en", "/en/", "/api/*", "/downloads/*", "/*/"],
     "directory": "./dist",
     // Addresses without a final slash (astro.config.mjs, trailingSlash): <path>/index.html is served at <path>, and
     // <path>/ redirects there
@@ -25,6 +25,9 @@
   // No lock21-info.lock21.workers.dev: the site at one address only (SEO audit S11, docs/audits/seo-2026-10-26.md);
   // the previews keep theirs (preview_urls). If a preview stops working after a deploy, set it back to true
   "workers_dev": false,
+  // The R2 bucket of the tiles, read by the Worker for /downloads/* (its downloads/ folder; TODO #103). Read only: the
+  // bucket's own settings (tiles.lock21.info, CORS, robots.txt) don't change
+  "r2_buckets": [{ "binding": "DOWNLOADS", "bucket_name": "lock21-tiles" }],
   // Workers Logs: the telemetry messages (and the script's errors), kept a few days, searchable in the dashboard
   "observability": { "enabled": true }
 }

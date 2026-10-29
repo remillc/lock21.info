@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page 404 · visuels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Les jetons du site (src/styles/tokens.scss) : sombre par défaut, clair au choix */
+  :root {
+    --primary: #ebede3; --on-primary: #12140e; --secondary: #b8c97a; --tertiary: #f28c28; --tertiary-text: #f28c28;
+    --surface: #12140e; --on-surface: #ebede3; --on-surface-variant: #c9cdbb;
+    --container-lowest: #0d0f0a; --container: #1f231a; --outline: #3c4232; --outline-variant: #2a2f22;
+    --bar: #1b1e15; --bar-text: #f2f3ea; --bar-muted: #a3a893; --bar-outline: #30352a; --bar-link: #b8c97a;
+    --panel: #1b1e15; --panel-outline: #3c4232; --unsurveyed: #8d7bd6;
+    --page: #0b0c08;
+    --font-text: 'Archivo', system-ui, sans-serif; --font-data: 'JetBrains Mono', ui-monospace, monospace;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --primary: #2e3322; --on-primary: #f4f4ee; --secondary: #5b6b1f; --tertiary-text: #b4530c;
+      --surface: #f4f4ee; --on-surface: #22251b; --on-surface-variant: #4f5444;
+      --container-lowest: #ffffff; --container: #e7e8dc; --outline: #2e3322; --outline-variant: #e1e2d6;
+      --bar: #2e3322; --bar-text: #f2f3ea; --bar-muted: #b6bca3; --bar-outline: #2e3322; --bar-link: #c5d48a;
+      --panel: #2e3322; --panel-outline: #2e3322; --unsurveyed: #6a55c4; --page: #dfe0d4;
+      color-scheme: light;
+    }
+  }
+  :root[data-theme="light"] {
+    --primary: #2e3322; --on-primary: #f4f4ee; --secondary: #5b6b1f; --tertiary-text: #b4530c;
+    --surface: #f4f4ee; --on-surface: #22251b; --on-surface-variant: #4f5444;
+    --container-lowest: #ffffff; --container: #e7e8dc; --outline: #2e3322; --outline-variant: #e1e2d6;
+    --bar: #2e3322; --bar-text: #f2f3ea; --bar-muted: #b6bca3; --bar-outline: #2e3322; --bar-link: #c5d48a;
+    --panel: #2e3322; --panel-outline: #2e3322; --unsurveyed: #6a55c4; --page: #dfe0d4;
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--on-surface); font: 400 1rem/1.6 var(--font-text); }
+  .wrap { max-width: 72rem; margin: 0 auto; padding: 2rem 16px 4rem; }
+  header.top { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: end; margin-bottom: 1.5rem; }
+  header.top h1 { margin: 0; font-size: 1.75rem; font-weight: 800; letter-spacing: -0.01em; }
+  header.top p { margin: 0.25rem 0 0; color: var(--on-surface-variant); max-width: 44rem; }
+  .theme { display: inline-flex; border: 2px solid var(--outline); border-radius: 999px; overflow: hidden; }
+  .theme button { border: 0; background: none; color: var(--on-surface); font: 700 0.8rem var(--font-data); padding: 0.55rem 1rem; min-height: 40px; cursor: pointer; }
+  .theme button[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); }
+
+  .brief { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1rem; margin-bottom: 2.5rem; }
+  .brief section { border: 2px solid var(--outline); border-radius: 16px; padding: 1rem 1.25rem; background: var(--surface); }
+  .brief h2 { margin: 0 0 0.5rem; font: 700 0.75rem var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; color: var(--secondary); }
+  .brief ul, .brief ol { margin: 0; padding-left: 1.2rem; color: var(--on-surface-variant); font-size: 0.95rem; }
+
+  .mock { margin-bottom: 3rem; }
+  .mock > h2 { margin: 0 0 0.25rem; font-size: 1.25rem; font-weight: 800; }
+  .mock > h2 span { font: 700 0.8rem var(--font-data); color: var(--tertiary-text); margin-right: 0.5rem; }
+  .mock > p.why { margin: 0 0 1rem; color: var(--on-surface-variant); max-width: 48rem; }
+
+  /* Le cadre d'une page du site : la barre, le contenu, le pied */
+  .frame { border: 2px solid var(--outline); border-radius: 20px; overflow: hidden; background: var(--surface); }
+  .bar { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.25rem; background: var(--bar); color: var(--bar-text); border-bottom: 2px solid var(--bar-outline); }
+  .bar .logo { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--bar-link); display: grid; place-items: center; font: 800 0.7rem var(--font-data); color: var(--bar-link); }
+  .bar .name { font-weight: 800; letter-spacing: 0.02em; }
+  .bar .coords { font: 400 0.7rem var(--font-data); color: var(--bar-muted); }
+  .bar .pill { margin-left: auto; font: 700 0.75rem var(--font-data); padding: 0.4rem 0.9rem; border-radius: 999px; background: var(--tertiary); color: #12140e; }
+  .foot { padding: 0.6rem 1.25rem; background: var(--bar); color: var(--bar-muted); font: 400 0.7rem var(--font-data); border-top: 2px solid var(--bar-outline); }
+  .content { padding: 2.5rem clamp(1rem, 4vw, 3rem); }
+
+  .code { margin: 0; font: 700 0.75rem var(--font-data); letter-spacing: 0.1em; color: var(--tertiary-text); }
+  .content h3 { margin: 0.25rem 0 0.5rem; font-size: clamp(1.75rem, 4vw, 2.5rem); line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; }
+  .lead { margin: 0 0 1rem; color: var(--on-surface-variant); max-width: 34rem; }
+  .asked { display: inline-block; margin: 0 0 1.5rem; padding: 0.3rem 0.6rem; border-radius: 8px; background: var(--container); font: 400 0.8rem var(--font-data); color: var(--on-surface-variant); overflow-wrap: anywhere; }
+  .exits { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 0 0 1.25rem; padding: 0; list-style: none; }
+  .btn { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 48px; padding: 0 1.25rem; border-radius: 12px; border: 2px solid var(--primary); color: var(--primary); font: 700 0.85rem var(--font-data); text-decoration: none; }
+  .btn.filled { background: var(--primary); color: var(--on-primary); }
+  .btn.signal { background: var(--tertiary); border-color: var(--tertiary); color: #12140e; }
+  .search { display: flex; max-width: 26rem; border: 2px solid var(--outline); border-radius: 12px; overflow: hidden; background: var(--container-lowest); }
+  .search span { padding: 0.7rem 0.9rem; font: 400 0.85rem var(--font-data); color: var(--on-surface-variant); flex: 1; }
+  .search b { padding: 0.7rem 1rem; font: 700 0.8rem var(--font-data); background: var(--container); color: var(--on-surface); }
+
+  /* 1. L'ordinateur de plongée en alarme */
+  .v1 { display: flex; flex-wrap: wrap; gap: 2rem; align-items: stretch; }
+  .v1 .text { flex: 999 1 22rem; min-width: 0; }
+  .computer { flex: 1 1 17rem; border-radius: 28px; border: 2px solid var(--panel-outline); background: var(--panel); color: var(--bar-text); padding: 1.25rem 1.5rem; font-family: var(--font-data); display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .computer .head { grid-column: 1 / -1; display: flex; justify-content: space-between; font-size: 0.7rem; letter-spacing: 0.06em; color: var(--bar-muted); }
+  .computer .alarm { color: var(--tertiary); font-weight: 800; animation: blink 1.6s ease-in-out infinite; }
+  .computer .big { grid-column: 1 / -1; }
+  .computer .label { font-size: 0.7rem; color: var(--bar-muted); letter-spacing: 0.04em; }
+  .computer .depth { font-size: 3.25rem; font-weight: 800; line-height: 1; color: var(--tertiary); }
+  .computer .depth small { font-size: 1rem; font-weight: 500; }
+  .computer .reading { font-size: 1.15rem; font-weight: 700; }
+  @keyframes blink { 50% { opacity: 0.35; } }
+
+  /* 2. Le gabarit qui déborde */
+  .v2 { display: flex; gap: 1.5rem; }
+  .ruler { flex: 0 0 5rem; position: relative; border-left: 2px solid var(--secondary); padding-left: 0.6rem; font: 400 0.72rem var(--font-data); color: var(--on-surface-variant); min-height: 26rem; display: flex; flex-direction: column; }
+  .ruler .mark { flex: 1; }
+  .ruler .bottom { color: var(--secondary); font-weight: 700; }
+  .ruler .beyond { flex: 3; border-left: 2px dashed var(--tertiary); margin-left: calc(-0.6rem - 2px); padding-left: 0.6rem; position: relative; }
+  .ruler .beyond::before { content: ""; position: absolute; left: -2px; top: 0; width: 0; }
+  .ruler .you { color: var(--tertiary-text); font-weight: 800; position: absolute; bottom: 0; left: 0.6rem; white-space: nowrap; }
+  .ruler .you::before { content: "◀ "; }
+  .v2 .text { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: flex-end; }
+  .stops { list-style: none; margin: 0 0 1.25rem; padding: 0; display: grid; gap: 0.6rem; max-width: 30rem; }
+  .stops a { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 48px; padding: 0.5rem 1rem; border: 2px solid var(--outline); border-radius: 12px; text-decoration: none; color: var(--on-surface); background: var(--container-lowest); }
+  .stops b { font: 700 0.9rem var(--font-text); }
+  .stops span { font: 400 0.72rem var(--font-data); color: var(--on-surface-variant); white-space: nowrap; }
+
+  /* 1 + 2 : l'ordinateur, avec le gabarit qui déborde à gauche */
+  .v12 { display: flex; gap: 1.5rem; }
+  .v12 .ruler { min-height: 30rem; }
+  .v12 .v1 { flex: 1; min-width: 0; align-self: flex-start; }
+
+  /* 3. Le plan des zones avec une case de plus */
+  .v3 { display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; }
+  .v3 .text { flex: 999 1 20rem; min-width: 0; }
+  .zones { flex: 1 1 18rem; display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; max-width: 22rem; }
+  .zones div { aspect-ratio: 1; border-radius: 6px; display: grid; place-items: center; font: 700 0.7rem var(--font-data); }
+  .zones .on { background: var(--secondary); color: var(--on-primary); }
+  .zones .off { border: 2px solid var(--outline); color: var(--on-surface-variant); }
+  .zones .lost { border: 2px dashed var(--unsurveyed); color: var(--unsurveyed); background: color-mix(in srgb, var(--unsurveyed) 14%, transparent); }
+  .legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.6rem; font: 400 0.7rem var(--font-data); color: var(--on-surface-variant); }
+  .legend i { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 3px; vertical-align: -1px; margin-right: 0.3rem; }
+
+  /* 4. La ligne du carnet de plongée */
+  .log { width: 100%; border-collapse: separate; border-spacing: 0; border: 2px solid var(--outline); border-radius: 16px; overflow: hidden; font: 400 0.8rem var(--font-data); margin: 0 0 1.5rem; }
+  .log th, .log td { padding: 0.55rem 0.75rem; text-align: left; border-bottom: 1px solid var(--outline-variant); white-space: nowrap; }
+  .log th { background: var(--container); font-weight: 700; color: var(--on-surface-variant); }
+  .log tr.ghost td { color: var(--on-surface-variant); opacity: 0.55; }
+  .log tr.this td { color: var(--on-surface); border-bottom: 0; background: color-mix(in srgb, var(--tertiary) 10%, transparent); }
+  .log tr.this td:first-child { color: var(--tertiary-text); font-weight: 800; }
+  .log .note { white-space: normal; min-width: 14rem; }
+  .scroll { overflow-x: auto; }
+  .v4 .lead { max-width: 40rem; }
+
+  @media (prefers-reduced-motion: reduce) { .computer .alarm { animation: none; } }
+  @media (max-width: 40rem) { .ruler { flex-basis: 3.75rem; min-height: 22rem; } .bar .coords { display: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Page 404 : quatre visuels</h1>
+      <p>Des maquettes pour le TODO #86, avec les couleurs, les polices et les formes du site. Le contenu est le même dans les quatre : seul le visuel change.</p>
+    </div>
+    <div class="theme" role="group" aria-label="Thème">
+      <button type="button" data-theme="dark">Sombre</button>
+      <button type="button" data-theme="light">Clair</button>
+    </div>
+  </header>
+
+  <div class="brief">
+    <section>
+      <h2>Ambiance</h2>
+      <ul>
+        <li>L’instrument de plongée du site (E2) : ordinateur, carnet, gabarit de profondeur.</li>
+        <li>L’idée : « hors du relevé », le visiteur est descendu là où rien n’est numérisé.</li>
+        <li>Un ton léger de plongeur, une phrase. L’orange seulement pour le 404.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Informations</h2>
+      <ol>
+        <li>Le constat, en une ligne.</li>
+        <li>L’adresse demandée, en petit.</li>
+        <li>Trois sorties : accueil, modèle 3D, découpage du site.</li>
+        <li>Une recherche dans la page.</li>
+      </ol>
+    </section>
+  </div>
+
+  <!-- 1 + 2 -->
+  <article class="mock" id="choix">
+    <h2><span>1 + 2</span>L’ordinateur en alarme, avec le gabarit qui déborde</h2>
+    <p class="why">Le choix de Christian (2026-10-29) : la maquette 1, et à sa gauche le gabarit de profondeur des pages, qui continue sous le fond de 60 pi en pointillé orange jusqu’à 404 pi, le contenu en haut de la page (Christian, 2026-10-29).</p>
+    <div class="frame">
+      <div class="bar"><span class="logo">21</span><span class="name">Écluse 21</span><span class="coords">44°59.814′ N · 74°53.983′ O</span><span class="pill">Modèle 3D</span></div>
+      <div class="content v12">
+        <div class="ruler" aria-hidden="true">
+          <span class="mark">0 pi</span><span class="mark">15 pi</span><span class="mark">30 pi</span><span class="mark">45 pi</span><span class="mark bottom">60 pi</span>
+          <span class="beyond"><span class="you">404 pi</span></span>
+        </div>
+        <div class="v1">
+          <div class="text">
+            <p class="code">ERREUR 404</p>
+            <h3>Trop profond.</h3>
+            <p class="lead">Cette page n’existe pas ou a changé d’adresse. On remonte ?</p>
+            <p class="asked">lock21.info/ecluse-21/zone-26</p>
+            <ul class="exits">
+              <li><a class="btn signal" href="#choix">Modèle 3D</a></li>
+              <li><a class="btn" href="#choix">Accueil</a></li>
+              <li><a class="btn" href="#choix">Découpage du site</a></li>
+            </ul>
+            <div class="search"><span>Chercher dans le site…</span><b>Chercher</b></div>
+          </div>
+          <div class="computer" aria-hidden="true">
+            <div class="head"><span>PLONGÉE EN COURS</span><span class="alarm">▲ HORS LIMITE</span></div>
+            <div class="big"><div class="label">PROFONDEUR</div><div class="depth">404<small> pi</small></div><div class="label">fond de l’écluse : 60 pi (18,3 m)</div></div>
+            <div><div class="label">PAGE</div><div class="reading">INTROUVABLE</div></div>
+            <div><div class="label">PALIER</div><div class="reading">REMONTER</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="foot">© 2024–2026 Christian Rémillard · CC BY 4.0</div>
+    </div>
+  </article>
+
+  <!-- 1 -->
+  <article class="mock" id="ordinateur">
+    <h2><span>1</span>L’ordinateur de plongée en alarme</h2>
+    <p class="why">Le panneau d’instruments de l’accueil, passé en alarme : la profondeur affiche 404 pi en orange, « HORS LIMITE » clignote doucement. Les sorties sont des boutons, la première en orange comme le bouton « Modèle 3D ».</p>
+    <div class="frame">
+      <div class="bar"><span class="logo">21</span><span class="name">Écluse 21</span><span class="coords">44°59.814′ N · 74°53.983′ O</span><span class="pill">Modèle 3D</span></div>
+      <div class="content v1">
+        <div class="text">
+          <p class="code">ERREUR 404</p>
+          <h3>Trop profond.</h3>
+          <p class="lead">Cette page n’existe pas ou a changé d’adresse. On remonte ?</p>
+          <p class="asked">lock21.info/ecluse-21/zone-26</p>
+          <ul class="exits">
+            <li><a class="btn signal" href="#ordinateur">Modèle 3D</a></li>
+            <li><a class="btn" href="#ordinateur">Accueil</a></li>
+            <li><a class="btn" href="#ordinateur">Découpage du site</a></li>
+          </ul>
+          <div class="search"><span>Chercher dans le site…</span><b>Chercher</b></div>
+        </div>
+        <div class="computer" aria-hidden="true">
+          <div class="head"><span>PLONGÉE EN COURS</span><span class="alarm">▲ HORS LIMITE</span></div>
+          <div class="big"><div class="label">PROFONDEUR</div><div class="depth">404<small> pi</small></div><div class="label">fond de l’écluse : 60 pi (18,3 m)</div></div>
+          <div><div class="label">PAGE</div><div class="reading">INTROUVABLE</div></div>
+          <div><div class="label">PALIER</div><div class="reading">REMONTER</div></div>
+        </div>
+      </div>
+      <div class="foot">© 2024–2026 Christian Rémillard · CC BY 4.0</div>
+    </div>
+  </article>
+
+  <!-- 2 -->
+  <article class="mock" id="gabarit">
+    <h2><span>2</span>Le gabarit de profondeur qui déborde</h2>
+    <p class="why">La règle de 0 à 60 pi, à gauche des pages, continue sous le fond en pointillé orange jusqu’à « 404 pi », où se trouve le visiteur. Les sorties sont des paliers de remontée.</p>
+    <div class="frame">
+      <div class="bar"><span class="logo">21</span><span class="name">Écluse 21</span><span class="coords">44°59.814′ N · 74°53.983′ O</span><span class="pill">Modèle 3D</span></div>
+      <div class="content v2">
+        <div class="ruler" aria-hidden="true">
+          <span class="mark">0 pi</span><span class="mark">15 pi</span><span class="mark">30 pi</span><span class="mark">45 pi</span><span class="mark bottom">60 pi</span>
+          <span class="beyond"><span class="you">404 pi</span></span>
+        </div>
+        <div class="text">
+          <p class="code">ERREUR 404</p>
+          <h3>Sous le fond de l’écluse.</h3>
+          <p class="lead">Il n’y a rien à cette adresse : la page n’existe pas ou a changé d’adresse.</p>
+          <p class="asked">lock21.info/ecluse-21/zone-26</p>
+          <ul class="stops">
+            <li><a href="#gabarit"><b>Le modèle 3D</b><span>palier 1</span></a></li>
+            <li><a href="#gabarit"><b>Le découpage du site</b><span>palier 2</span></a></li>
+            <li><a href="#gabarit"><b>L’accueil</b><span>surface</span></a></li>
+          </ul>
+          <div class="search"><span>Chercher dans le site…</span><b>Chercher</b></div>
+        </div>
+      </div>
+      <div class="foot">© 2024–2026 Christian Rémillard · CC BY 4.0</div>
+    </div>
+  </article>
+
+  <!-- 3 -->
+  <article class="mock" id="zones">
+    <h2><span>3</span>Le plan des zones, avec une case de plus</h2>
+    <p class="why">Les zones 1 à 25 en petit (un schéma, pas le vrai plan), et une 26ᵉ case en pointillé violet, la couleur des zones pas encore numérisées dans la visionneuse.</p>
+    <div class="frame">
+      <div class="bar"><span class="logo">21</span><span class="name">Écluse 21</span><span class="coords">44°59.814′ N · 74°53.983′ O</span><span class="pill">Modèle 3D</span></div>
+      <div class="content v3">
+        <div class="text">
+          <p class="code">ERREUR 404</p>
+          <h3>Cette zone n’a pas été relevée.</h3>
+          <p class="lead">La page demandée n’existe pas ou a changé d’adresse.</p>
+          <p class="asked">lock21.info/ecluse-21/zone-26</p>
+          <ul class="exits">
+            <li><a class="btn filled" href="#zones">Découpage du site</a></li>
+            <li><a class="btn" href="#zones">Modèle 3D</a></li>
+            <li><a class="btn" href="#zones">Accueil</a></li>
+          </ul>
+          <div class="search"><span>Chercher dans le site…</span><b>Chercher</b></div>
+        </div>
+        <div>
+          <div class="zones" aria-hidden="true" id="zone-grid"></div>
+          <div class="legend"><span><i style="background:var(--secondary)"></i>en ligne</span><span><i style="border:2px solid var(--outline)"></i>à venir</span><span><i style="border:2px dashed var(--unsurveyed)"></i>introuvable</span></div>
+        </div>
+      </div>
+      <div class="foot">© 2024–2026 Christian Rémillard · CC BY 4.0</div>
+    </div>
+  </article>
+
+  <!-- 4 -->
+  <article class="mock" id="carnet">
+    <h2><span>4</span>La ligne du carnet de plongée</h2>
+    <p class="why">Le tableau du journal des plongées, avec ses vraies colonnes : les dernières lignes en grisé, puis la plongée n° 404, qui n’a mené nulle part. Les sorties suivent comme des notes.</p>
+    <div class="frame">
+      <div class="bar"><span class="logo">21</span><span class="name">Écluse 21</span><span class="coords">44°59.814′ N · 74°53.983′ O</span><span class="pill">Modèle 3D</span></div>
+      <div class="content v4">
+        <p class="code">ERREUR 404</p>
+        <h3>Plongée sans résultat.</h3>
+        <p class="lead">Cette page n’existe pas ou a changé d’adresse. Rien à noter au carnet, sauf l’adresse :</p>
+        <div class="scroll">
+          <table class="log">
+            <thead><tr><th>No</th><th>Date</th><th>Activité</th><th>Zones</th><th>Durée (min)</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr class="ghost"><td>…</td><td>…</td><td>Relevé</td><td>…</td><td>…</td><td class="note">…</td></tr>
+              <tr class="this"><td>404</td><td>—</td><td>Recherche</td><td>?</td><td>0</td><td class="note">/ecluse-21/zone-26 : introuvable</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <ul class="exits">
+          <li><a class="btn filled" href="#carnet">Accueil</a></li>
+          <li><a class="btn" href="#carnet">Modèle 3D</a></li>
+          <li><a class="btn" href="#carnet">Découpage du site</a></li>
+        </ul>
+        <div class="search"><span>Chercher dans le site…</span><b>Chercher</b></div>
+      </div>
+      <div class="foot">© 2024–2026 Christian Rémillard · CC BY 4.0</div>
+    </div>
+  </article>
+</div>
+<script>
+  // Le schéma des zones : 1 à 25, quelques-unes en ligne, et la 26e introuvable
+  const online = new Set([1, 2, 3, 4, 7, 8, 10, 11, 12, 13, 16, 18])
+  const grid = document.getElementById('zone-grid')
+  for (let z = 1; z <= 26; z++) {
+    const cell = document.createElement('div')
+    cell.textContent = z === 26 ? '?' : z
+    cell.className = z === 26 ? 'lost' : online.has(z) ? 'on' : 'off'
+    grid.append(cell)
+  }
+  // Le thème : celui de l'appareil, ou le choix du visiteur
+  const buttons = document.querySelectorAll('.theme button')
+  const apply = (theme) => {
+    if (theme) document.documentElement.dataset.theme = theme
+    const current = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.theme === current)))
+  }
+  buttons.forEach((b) => b.addEventListener('click', () => { apply(b.dataset.theme); try { localStorage.setItem('theme', b.dataset.theme) } catch {} }))
+  try { apply(localStorage.getItem('theme')) } catch { apply() }
+</script>
+</body>
+</html>

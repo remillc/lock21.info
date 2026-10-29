@@ -5,11 +5,37 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- The 404 page redesigned (TODO #86): « Trop profond. » / “Too deep.”, the home page's dive computer in alarm at
+  404 ft and the depth gauge running past the lock's bottom down to it, the address asked for, the 3D model, the home
+  page and the zone map as buttons, and a search that opens the site's own with the address's words.
 - The publishing Blender file moved out of the repo, to `O:\modeles\lock-21\lock-21-publishing.blend` with its
   textures (Christian, 2026-10-28): the tools read it there by default; its earlier versions stay in the Git history.
 - 3D viewer: a « Équilibre » slider under the settings button (?balance=0..1): how much of the colour balance between zones
   is applied; at 0 each texture shows as it is (the balance brought a zone graded at the source back to the other
   zones' yellow-green).
+- 3D model: zone 3 retextured from colour-graded footage (TODO #75; the same mesh and texture size, online since
+  2026-10-29), along with zone 12, the context and the mockups republished on 2026-10-27.
+
+## 1.0.0-beta.3 - 2026-10-29
+
+- Downloads at the site's address, `lock21.info/downloads/…` (TODO #103): the whole-model GLB, the AR models and
+  the Google Earth list, read from R2 by the site's Worker (too large for the static assets: 25 MiB a file), with
+  ranges for resumed downloads. The files stay on R2 and their `tiles.lock21.info` addresses keep working.
+- Analytics: a viewer setting's new value is sent as `setting_value` (was `value`, a parameter Google Analytics keeps
+  for money), so it can be registered as a dimension.
+- Tiles: the responses of `tiles.lock21.info` without the headers the viewer doesn't use (`Report-To`, `NEL`,
+  `Speculation-Rules`, `Last-Modified`; a Cloudflare rule, docs/installation.md): 363 bytes of headers instead of 783 per
+  tile (TODO #104).
+- `?no-analytics=1` in an address turns Google Analytics off for the rest of the visit, for tests and Claude's checks
+  of the live site (TODO #95); the 3D viewer's telemetry is not affected.
+- 3D viewer, a faster start on /modele (TODO #96): its scripts preloaded with the page (`modulepreload`), a connection
+  opened to the tiles' server and the manifest asked for in the `<head>`, instead of one after the other; the sky in two
+  sizes, a 512 × 256 one (229 KB instead of 784 KB compressed) for the light and the background at first, the full one
+  replacing the background once the first load is done. Measured on a simulated 4G connection: the first view's tiles
+  arrive about 2 s sooner (34.5 → 32.4 s), the first one asked for 0.35 s sooner.
+- « À propos de l'écluse 21 » is now « L'écluse 21 » (“Lock 21”; the tab keeps « À propos de l'écluse 21 »), at `/ecluse-21` (`/en/lock-21`); the former
+  addresses redirect there for good (301). Its description names the depth, the current and the size, not only
+  the history (TODO #102).
 - Accessibility (TODO #43): every Markdown table's header cells named (8 pages, French and English), and the progress
   table's two empty spacer columns removed.
 - Figure captions start where the image's straight edge does: inset by its corner radius (TODO #100).

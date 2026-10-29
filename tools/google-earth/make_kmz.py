@@ -60,8 +60,8 @@ p.add_argument("--view", default="44.996898,-74.899692,132,-89,48", metavar="LAT
 p.add_argument("-m", "--markers", default="O:/temp/google-earth/context/markers.json",
                help="the .blend's marks (export_context.py), pinned on the map (default "
                     "O:/temp/google-earth/context/markers.json; none if missing)")
-p.add_argument("--network", metavar="URL", default="https://tiles.lock21.info/downloads/google-earth",
-               help="where the list and the parts are served (default https://tiles.lock21.info/downloads/google-earth)")
+p.add_argument("--network", metavar="URL", default="https://lock21.info/downloads/google-earth",
+               help="where the list and the parts are served (default https://lock21.info/downloads/google-earth)")
 a = p.parse_args()
 view_lat, view_lon, view_range, view_heading, view_tilt = (float(v) for v in a.view.split(","))
 look_at = (f"<LookAt><longitude>{view_lon}</longitude><latitude>{view_lat}</latitude><altitude>0</altitude>"
