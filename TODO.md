@@ -79,8 +79,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   (a route on `/downloads/*`) rather than ship the files with the site. The tiles domain keeps its `robots.txt`
   (`Disallow: /`, `tools/publish-model/upload_r2.mjs`; Christian, 2026-10-28): the downloads become indexable through
   the site's address, whose `robots.txt` allows everything
-- [ ] #102 Rename the page « À propos de l'écluse 21 » to « L'écluse 21 » (Christian, 2026-10-27): its title, the
-  sidebar and the links that name it (French; the English page on request)
 - [ ] #48 Guided tour (src/viewer/tour.js, tour-steps.js; 8 steps, Christian's views and moves, 2026-10-24): the texts
   are drafts to review (zone 18 is not described on the zone map page); step 7 (the north wall's steps) is half hidden
   by a context fill in front of the camera. Not placed: the stone passage through the wall (Christian's favourite,
