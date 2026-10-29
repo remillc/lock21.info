@@ -1310,14 +1310,28 @@ export function mountViewer() {
   showLamp()
   underwater.setSeason(look.season)
   underwater.setLamp(look.lamp)
-  new HDRLoader().load(`/viewer/hdri/sky.hdr`, (texture) => {
+  // The sky in two sizes (TODO #96): 512 x 256 (229 KB compressed, tools/sky/downscale_hdr.py) lights the scene and is
+  // the background from the start; the full 1024 x 512 (784 KB) only replaces the background, once the first load is
+  // done, so that it doesn't take the bandwidth of the first tiles. The halved sky keeps the light's energy, the sun's
+  // included: the lighting is the same, only the clouds' edges are softer until the sharp one arrives
+  new HDRLoader().load(`/viewer/hdri/sky-512.hdr`, (texture) => {
+    if (life.signal.aborted) return texture.dispose()
     texture.mapping = THREE.EquirectangularReflectionMapping
     const pmrem = new THREE.PMREMGenerator(renderer)
     skyEnvironment = pmrem.fromEquirectangular(texture).texture
     pmrem.dispose()
-    skyTexture = texture
+    // (the sharp sky may have come first, on a fast connection with the small one slow to arrive)
+    if (skyTexture) texture.dispose()
+    else skyTexture = texture
     updateEnvironment()
   })
+  afterFirstLoad.push(() => new HDRLoader().load(`/viewer/hdri/sky.hdr`, (texture) => {
+    if (life.signal.aborted) return texture.dispose()
+    texture.mapping = THREE.EquirectangularReflectionMapping
+    skyTexture?.dispose()
+    skyTexture = texture
+    updateEnvironment()
+  }))
 
   live.hdri = (v) => {
     look.sky = v === '1'
@@ -1439,7 +1453,13 @@ export function mountViewer() {
     status.start()
     rootsLoaded = false
     loadWatch = { started: performance.now(), arrived: 0, seen: 0, progressAt: performance.now(), errors: 0, reports: 0, said: null }
-    const manifest = await (await fetch(`${tilesUrl}/manifest.json`, { cache: 'no-cache' })).json()
+    // The manifest asked for by the page's <head> (src/routeData.js, TODO #96), taken once if it is the same address
+    const manifestUrl = `${tilesUrl}/manifest.json`
+    const early = /** @type {any} */ (window).lock21Manifest
+    ;/** @type {any} */ (window).lock21Manifest = undefined
+    const earlyResponse = early?.url === manifestUrl ? await early.response : null
+    const response = earlyResponse?.ok ? earlyResponse : await fetch(manifestUrl, { cache: 'no-cache' })
+    const manifest = await response.json()
     if (load !== loadCount) return
     unloadModel()
     zoneEntries = manifest.tilesets

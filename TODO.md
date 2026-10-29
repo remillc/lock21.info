@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#102**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#105**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -31,6 +31,13 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ### Hosting and downloads
 
+- [ ] #104 Trim the HTTP headers of `tiles.lock21.info`'s responses (Christian, 2026-10-29): drop those the viewer
+  doesn't need, to lighten each response (hundreds per visit). A tile's answer on 2026-10-29 carried, besides what is
+  needed (Content-Type, Content-Length, ETag, Cache-Control, Access-Control-Allow-Origin, Vary): `Nel` and `Report-To`
+  (about 400 bytes: Cloudflare's Network Error Logging, a zone setting), `Speculation-Rules` (Speed Brain, of no use on
+  the tiles), `Last-Modified` (the ETag is enough), `Server`, `Age`, `cf-cache-status`. Removed with a Transform Rule
+  (response headers) on the host and the zone settings; `CF-RAY` stays. To weigh: over HTTP/2 and HTTP/3 a header
+  repeated on the same connection is sent compressed (HPACK, QPACK), so the gain per response is smaller than its text
 - [ ] #13 Google Earth and downloads (`tools/google-earth/README.md`): 700 000 triangles open in Google Earth Pro, the
   model placed and turned (2026-10-25); rebuilt with the chart terrain, the Macdonnel Island mark and the numbered parts,
   checked (`check_model.mjs`) and uploaded on 2026-10-25; zone 18's sides checked in Google Earth (Christian, 2026-10-26).
@@ -99,10 +106,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #97 Performance audit (Christian, 2026-10-27): the site's pages and /modele, on a computer and a phone (Lighthouse,
   Core Web Vitals; the 3D viewer's load time and frame rate, its memory), with findings to act on, as the usability and
   SEO audits (docs/audits/)
-- [ ] #96 /modele: are prefetch or preload hints worth adding to speed up the 3D viewer's start (Christian,
-  2026-10-27)? Candidates: modulepreload of the viewer's script (src/viewer/main.js, listed in /viewer/files.json), preload
-  of the sky HDR and the KTX2 transcoder, preconnect to tiles.lock21.info, the manifest and the root tilesets; measure
-  before and after (Lighthouse, the telemetry's load time)
 - [ ] #95 A flag in the address that turns Google Analytics off for that visit (Christian, 2026-10-27), e.g.
   `?no-analytics=1`, kept for the visit (sessionStorage) so the site's navigation keeps it: for tests and for Claude,
   who uses it on every request to the production site so as not to count in the statistics (the 3D viewer's actions
