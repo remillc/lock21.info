@@ -637,8 +637,9 @@ export function mountViewer() {
     // colours, 1.5 matched the unlit textures' saturation on zone 3, see tone)
     saturation: saturationOf(params.has('saturation') ? params.get('saturation') : 1.3),
     // Contrast of the lit surfaces' colours (?contrast=0.5..2, 1 = the textures' own): their brightness stretched around a
-    // mid-grey (0.18 in linear light), the hue kept; above 1, darks darker and lights lighter
-    contrast: contrastOf(params.has('contrast') ? params.get('contrast') : 1),
+    // mid-grey (0.18 in linear light), the hue kept; above 1, darks darker and lights lighter. Default 1.3 (Christian,
+    // 2026-10-29; was 1)
+    contrast: contrastOf(params.has('contrast') ? params.get('contrast') : 1.3),
   }
   function contrastOf(v) {
     return Math.min(Math.max(Number(v) || 1, 0.5), 2)
