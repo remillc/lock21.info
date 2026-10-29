@@ -1310,14 +1310,28 @@ export function mountViewer() {
   showLamp()
   underwater.setSeason(look.season)
   underwater.setLamp(look.lamp)
-  new HDRLoader().load(`/viewer/hdri/sky.hdr`, (texture) => {
+  // The sky in two sizes (TODO #96): 512 x 256 (229 KB compressed, tools/sky/downscale_hdr.py) lights the scene and is
+  // the background from the start; the full 1024 x 512 (784 KB) only replaces the background, once the first load is
+  // done, so that it doesn't take the bandwidth of the first tiles. The halved sky keeps the light's energy, the sun's
+  // included: the lighting is the same, only the clouds' edges are softer until the sharp one arrives
+  new HDRLoader().load(`/viewer/hdri/sky-512.hdr`, (texture) => {
+    if (life.signal.aborted) return texture.dispose()
     texture.mapping = THREE.EquirectangularReflectionMapping
     const pmrem = new THREE.PMREMGenerator(renderer)
     skyEnvironment = pmrem.fromEquirectangular(texture).texture
     pmrem.dispose()
-    skyTexture = texture
+    // (the sharp sky may have come first, on a fast connection with the small one slow to arrive)
+    if (skyTexture) texture.dispose()
+    else skyTexture = texture
     updateEnvironment()
   })
+  afterFirstLoad.push(() => new HDRLoader().load(`/viewer/hdri/sky.hdr`, (texture) => {
+    if (life.signal.aborted) return texture.dispose()
+    texture.mapping = THREE.EquirectangularReflectionMapping
+    skyTexture?.dispose()
+    skyTexture = texture
+    updateEnvironment()
+  }))
 
   live.hdri = (v) => {
     look.sky = v === '1'

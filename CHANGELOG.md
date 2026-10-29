@@ -5,6 +5,11 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- 3D viewer, a faster start on /modele (TODO #96): its scripts preloaded with the page (`modulepreload`), a connection
+  opened to the tiles' server and the manifest asked for in the `<head>`, instead of one after the other; the sky in two
+  sizes, a 512 × 256 one (229 KB instead of 784 KB compressed) for the light and the background at first, the full one
+  replacing the background once the first load is done. Measured on a simulated 4G connection: the first view's tiles
+  arrive about 2 s sooner (34.5 → 32.4 s), the first one asked for 0.35 s sooner.
 - « À propos de l'écluse 21 » is now « L'écluse 21 » (“Lock 21”; the tab keeps « À propos de l'écluse 21 »), at `/ecluse-21` (`/en/lock-21`); the former
   addresses redirect there for good (301). Its description names the depth, the current and the size, not only
   the history (TODO #102).

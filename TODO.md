@@ -106,10 +106,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #97 Performance audit (Christian, 2026-10-27): the site's pages and /modele, on a computer and a phone (Lighthouse,
   Core Web Vitals; the 3D viewer's load time and frame rate, its memory), with findings to act on, as the usability and
   SEO audits (docs/audits/)
-- [ ] #96 /modele: are prefetch or preload hints worth adding to speed up the 3D viewer's start (Christian,
-  2026-10-27)? Candidates: modulepreload of the viewer's script (src/viewer/main.js, listed in /viewer/files.json), preload
-  of the sky HDR and the KTX2 transcoder, preconnect to tiles.lock21.info, the manifest and the root tilesets; measure
-  before and after (Lighthouse, the telemetry's load time)
 - [ ] #95 A flag in the address that turns Google Analytics off for that visit (Christian, 2026-10-27), e.g.
   `?no-analytics=1`, kept for the visit (sessionStorage) so the site's navigation keeps it: for tests and for Claude,
   who uses it on every request to the production site so as not to count in the statistics (the 3D viewer's actions
