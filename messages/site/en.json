@@ -192,7 +192,7 @@
   "viewer_swimHint": "Shift: faster",
   "viewer_swimKeys": "Keys to swim",
   "viewer_swimHelpTitle": "Swimming in the lock",
-  "viewer_swimHelpText": "<p>Underwater, you move like a diver, where you look.</p><ul><li><kbd>{w}</kbd> forward, <kbd>{s}</kbd> back</li><li><kbd>{a}</kbd> left, <kbd>{d}</kbd> right</li><li>the arrow keys do the same; so does the mouse wheel, forward and back</li><li>hold <kbd>Shift</kbd>: faster</li><li>mouse button held down, drag: turn your head (up, down, left, right)</li></ul><p>The {icon} button or the <kbd>Esc</kbd> key brings back the usual navigation.</p>",
+  "viewer_swimHelpText": "<p>Underwater, you move like a diver, where you look.</p><ul><li><kbd>{w}</kbd> forward, <kbd>{s}</kbd> back</li><li><kbd>{a}</kbd> left, <kbd>{d}</kbd> right</li><li>the arrow keys do the same; so does the mouse wheel, forward and back</li><li>hold <kbd>Shift</kbd>: faster</li><li>left button held down, drag: turn your head (up, down, left, right)</li><li>right button held down, drag: move sideways, up or down</li></ul><p>The {icon} button or the <kbd>Esc</kbd> key brings back the usual navigation.</p>",
   "viewer_swimHelpOk": "Got it",
   "viewer_keysHint": "move · Shift: faster",
   "viewer_keyForward": "Forward",
