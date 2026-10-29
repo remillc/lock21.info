@@ -5,7 +5,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
-- « À propos de l'écluse 21 » is now « L'écluse 21 » (“Lock 21”), at `/ecluse-21` (`/en/lock-21`); the former
+- « À propos de l'écluse 21 » is now « L'écluse 21 » (“Lock 21”; the tab keeps « À propos de l'écluse 21 »), at `/ecluse-21` (`/en/lock-21`); the former
   addresses redirect there for good (301). Its description names the depth, the current and the size, not only
   the history (TODO #102).
 - Accessibility (TODO #43): every Markdown table's header cells named (8 pages, French and English), and the progress

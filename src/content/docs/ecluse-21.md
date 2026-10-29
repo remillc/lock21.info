@@ -1,5 +1,9 @@
 ---
 title: L'écluse 21
+# The tab's and search results' title (Christian, 2026-10-29), the page's own being « L'écluse 21 »
+head:
+  - tag: title
+    content: À propos de l'écluse 21 | Écluse 21
 description: "L'écluse 21 du canal de Cornwall : sa profondeur, le courant, ses dimensions, son histoire jusqu'à l'ennoiement de 1958, et des liens pour en savoir plus."
 ---
 

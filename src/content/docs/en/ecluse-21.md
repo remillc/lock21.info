@@ -1,5 +1,9 @@
 ---
 title: Lock 21
+# The tab's and search results' title (Christian, 2026-10-29), the page's own being “Lock 21”
+head:
+  - tag: title
+    content: About Lock 21 | Lock 21
 description: "Lock 21 of the Cornwall Canal: its depth, the current, its size, its history up to the 1958 flooding, and links to learn more."
 ---
 
