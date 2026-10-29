@@ -67,11 +67,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #43 Accessibility (WCAG 2.2 AA): audited on 2026-10-26 (axe-core on every page, both themes, desktop and phone;
   keyboard, 320 px reflow, text spacing) and the code issues fixed. Left, for Christian: a check with a real screen
   reader (NVDA, VoiceOver) and Windows' high contrast mode
-- [ ] #78 /modele, wide screens: a large gap between the second column (« Naviguer ») and the third (downloads). The
-  three columns are equal thirds (`.columns`, `repeat(auto-fit, minmax(18rem, 1fr))`, ModelPage.astro), and the
-  navigation table and button list only take their own width (tables are `width: max-content`, custom.scss), so
-  the rest of the middle third stays empty. Options: columns sized to their content (e.g. `auto auto 1fr`), the table
-  at the column's full width, or the downloads moved under the navigation
 - [ ] #81 Make the site (a multi-page Astro site) a progressive web app (Christian, 2026-10-26): a web app manifest
   (name, icons from the logo, theme colours, start at `/` or `/en/`), installable on a phone; a service worker
   (e.g. `@vite-pwa/astro`, Workbox) caching the pages and their assets so the notebook reads offline (at the dive site,
