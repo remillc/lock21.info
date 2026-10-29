@@ -116,11 +116,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   `?no-analytics=1`, kept for the visit (sessionStorage) so the site's navigation keeps it: for tests and for Claude,
   who uses it on every request to the production site so as not to count in the statistics (the 3D viewer's actions
   included; telemetry is separate)
-- [ ] #92 Google Analytics, for Christian: register the custom definitions of the actions sent since TODO #88
-  (Admin › Custom definitions). Metrics (unit: seconds): `standard_seconds`, `underwater_seconds` (viewer_end),
-  `seconds` (dive_end). Dimensions (event scope): `button`, `step`, `move`, `setting`, `season`, `lamp`, `theme`,
-  `language`, `ar_size`. Then, in Explore: sessions with viewer_end, those with underwater_seconds > 0, the sums per
-  session
 - [ ] #89 SEO audit (2026-10-26, `docs/audits/seo-2026-10-26.md`): the code fixes left. S11 check that a branch preview still works, the next time one is made
   (`workers_dev: false` in `wrangler.jsonc`, off since 1.0.0-beta.1: the workers.dev address answers 404; if the
   previews broke, back to true)
