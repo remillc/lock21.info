@@ -160,7 +160,7 @@ class SettingsPanel extends HTMLElement {
     saveSettings(this.params, this.schema)
     // Analytics (analytics.js): the setting changed, once it settles (a slider sends many values while dragged)
     clearTimeout(this.trackTimers.get(item.key))
-    this.trackTimers.set(item.key, setTimeout(() => track('setting_change', { setting: item.key, value }), 1000))
+    this.trackTimers.set(item.key, setTimeout(() => track('setting_change', { setting: item.key, setting_value: value }), 1000))
     this.showDependents()
   }
 

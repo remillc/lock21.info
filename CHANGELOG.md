@@ -5,6 +5,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Analytics: a viewer setting's new value is sent as `setting_value` (was `value`, a parameter Google Analytics keeps
+  for money), so it can be registered as a dimension.
 - Tiles: the responses of `tiles.lock21.info` without the headers the viewer doesn't use (`Report-To`, `NEL`,
   `Speculation-Rules`, `Last-Modified`; a Cloudflare rule, docs/installation.md): 363 bytes of headers instead of 783 per
   tile (TODO #104).
