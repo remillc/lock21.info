@@ -5,6 +5,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+## 1.0.0-beta.3 - 2026-10-29
+
 - Downloads at the site's address, `lock21.info/downloads/…` (TODO #103): the whole-model GLB, the AR models and
   the Google Earth list, read from R2 by the site's Worker (too large for the static assets: 25 MiB a file), with
   ranges for resumed downloads. The files stay on R2 and their `tiles.lock21.info` addresses keep working.
