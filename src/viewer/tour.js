@@ -70,12 +70,14 @@ const MOVE_SPRING = 36
 // Back or next while the camera moves (a flight under way): it first brakes along its way at BRAKE m/s², then the new
 // flight starts from rest (the spring alone stopped it from 1.6 m/s in 0.3 s)
 const BRAKE = 1
-// Back (Christian, 2026-10-24: its ways were absurd, grotesque and slow): straight back to the step's view (a move's
-// end), quick: a plain flight, none of the step's own way in, at up to BACK_SPEED m/s and BACK_ACCEL m/s², the line of
-// sight turning up to BACK_TURN times faster
-const BACK_SPEED = 12
-const BACK_ACCEL = 6
-const BACK_TURN = 2
+// Back (Christian, 2026-10-24: its ways were absurd, grotesque and slow; 2026-10-29: still too slow, more direct):
+// straight back to the step's view (a move's end), quick: no rise, no arrival from behind, none of the step's own way
+// in, at up to BACK_SPEED m/s and BACK_ACCEL m/s², the line of sight turning up to BACK_TURN times faster. Back again
+// during it (or during any motion): the new flight sets off at once from where the camera is, at its speed (no
+// braking first)
+const BACK_SPEED = 25
+const BACK_ACCEL = 20
+const BACK_TURN = 3
 
 const UP = new THREE.Vector3(0, 1, 0)
 // Minimum jerk (the smoothest start and stop: no jolt in the acceleration, as a natural movement), for the turns and
@@ -260,13 +262,8 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
         }
       } else {
         const way = from.position.distanceTo(to.position)
-        if (step?.back) {
-          // Back: as quick as BACK_SPEED and BACK_ACCEL allow (a second at least)
-          duration = Math.max(1, (1.875 * way) / BACK_SPEED, Math.sqrt((5.77 * way) / BACK_ACCEL), angle * 0.4) * 1000
-        } else {
-          const physical = Math.max((1.875 * way) / FLY_MAX_SPEED, Math.sqrt((5.77 * way) / FLY_MAX_ACCEL))
-          duration = THREE.MathUtils.clamp(Math.max(FLY_TIME[0] + way * FLY_PER_METRE + angle * FLY_PER_RADIAN, physical), FLY_TIME[0], FLY_TIME[1]) * 1000
-        }
+        const physical = Math.max((1.875 * way) / FLY_MAX_SPEED, Math.sqrt((5.77 * way) / FLY_MAX_ACCEL))
+        duration = THREE.MathUtils.clamp(Math.max(FLY_TIME[0] + way * FLY_PER_METRE + angle * FLY_PER_RADIAN, physical), FLY_TIME[0], FLY_TIME[1]) * 1000
         const room = headroom ? Math.max(0, headroom(from.position) - 0.5) : Infinity
         const rise = way > FLY_HIGH ? Math.min(way * FLY_RISE, FLY_RISE_MAX, room) : 0
         const back = Math.min(way * FLY_BACK, FLY_BACK_MAX)
@@ -334,6 +331,49 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
           const turn = step?.turn ? 1 - (1 - Math.min(k / step.turn, 1)) ** 3 : e
           controls.target.lerpVectors(from.target, to.target, turn)
         }
+        return k >= 1
+      },
+    }
+  }
+
+  /**
+   * Back: a straight flight to a camera, from where the planned place is and at its velocity (the motion it
+   * interrupts carried on, no jolt), to rest: minimum jerk with a start velocity (a quintic in time, per axis)
+   * @param {{ position: THREE.Vector3, target: THREE.Vector3 }} to
+   */
+  function backFlight(to) {
+    let start = 0
+    let duration = 1
+    const from = new THREE.Vector3()
+    const fromTarget = new THREE.Vector3()
+    // The start velocity times the duration, and the quintic's coefficients
+    const v = new THREE.Vector3()
+    const c3 = new THREE.Vector3()
+    const c4 = new THREE.Vector3()
+    const c5 = new THREE.Vector3()
+    return {
+      begin(now) {
+        start = now
+        from.copy(camera.position)
+        fromTarget.copy(controls.target)
+        const velocity = sightTime ? plannedVelocity : v.set(0, 0, 0)
+        const speed = velocity.length()
+        const way = from.distanceTo(to.position)
+        const angle = fromTarget.clone().sub(from).angleTo(to.target.clone().sub(to.position))
+        // As quick as BACK_SPEED and BACK_ACCEL allow, and long enough to turn from the speed it had
+        const seconds = Math.max(1, (1.875 * way) / BACK_SPEED, Math.sqrt((5.77 * way) / BACK_ACCEL), (2 * speed) / BACK_ACCEL, angle * 0.3)
+        duration = seconds * 1000
+        v.copy(velocity).multiplyScalar(seconds)
+        const d = to.position.clone().sub(from)
+        c3.copy(d).multiplyScalar(10).addScaledVector(v, -6)
+        c4.copy(d).multiplyScalar(-15).addScaledVector(v, 8)
+        c5.copy(d).multiplyScalar(6).addScaledVector(v, -3)
+      },
+      run(now) {
+        const k = THREE.MathUtils.clamp((now - start) / duration, 0, 1)
+        const k3 = k * k * k
+        camera.position.copy(from).addScaledVector(v, k).addScaledVector(c3, k3).addScaledVector(c4, k3 * k).addScaledVector(c5, k3 * k * k)
+        controls.target.lerpVectors(fromTarget, to.target, easeInOut(k))
         return k >= 1
       },
     }
@@ -479,11 +519,15 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     // The motions start from the planned place (the camera follows it a little behind)
     if (sightTime) camera.position.copy(planned)
     const queued = back
-      ? [flight(camOf(step.kind === 'move' ? step.to : step.cam), { back: true })]
+      ? [backFlight(camOf(step.kind === 'move' ? step.to : step.cam))]
       : step.kind === 'move' ? [flight(camOf(step.from), step), pause(step.wait ?? MOVE_PAUSE), travel(step)] : [flight(camOf(step.cam), step)]
-    // A move under way ends its way first (hurried); otherwise the new step's motions start at once
+    // Back: at once, whatever runs (its flight carries the speed on); a move under way ends its way first (hurried);
+    // otherwise the new step's motions start at once
     const running = motions[0]
-    if (running?.hurry) {
+    if (back) {
+      motions = queued
+      motions[0].begin(now)
+    } else if (running?.hurry) {
       running.hurry(now)
       motions = [running, ...queued]
     } else if (sightTime && plannedVelocity.length() > 0.1) {

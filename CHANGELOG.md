@@ -18,6 +18,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 - Downloads rebuilt with the new zone 3 (GLB, Google Earth, AR: `AR_VERSION` 2026-10-29); the Google Earth list now
   points to its parts at `lock21.info/downloads`. The context no longer carries a helper box of the .blend's `terrain`
   collection (« boolean.032 », left visible to the render: a white block over the site from afar, online for an hour).
+- Guided tour: back is quicker and straight (about 3 s from step 3 to 2, was 5.4 s: up to 25 m/s and 20 m/s², no
+  rise), and back again during a flight sets off at once toward the step before, from where the camera is and at its
+  speed (it braked first, and went on toward the step it left for seconds).
 
 ## 1.0.0-beta.3 - 2026-10-29
 
