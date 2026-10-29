@@ -5,6 +5,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- `?no-analytics=1` in an address turns Google Analytics off for the rest of the visit, for tests and Claude's checks
+  of the live site (TODO #95); the 3D viewer's telemetry is not affected.
 - 3D viewer, a faster start on /modele (TODO #96): its scripts preloaded with the page (`modulepreload`), a connection
   opened to the tiles' server and the manifest asked for in the `<head>`, instead of one after the other; the sky in two
   sizes, a 512 × 256 one (229 KB instead of 784 KB compressed) for the light and the background at first, the full one

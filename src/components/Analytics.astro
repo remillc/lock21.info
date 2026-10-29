@@ -4,6 +4,9 @@
 // - Refusing (Québec's Loi 25: Google Analytics uses cookies): the privacy page's button (<l21-analytics-optout>,
 //   AnalyticsOptOut.astro) keeps the choice in localStorage ('l21-consent': denied, or granted to accept again).
 //   Nothing is loaded for a visitor who refused, including those who refused in the former banner.
+// - ?no-analytics=1 in an address (TODO #95): nothing loaded nor sent for the rest of the visit (sessionStorage, so the
+//   site's links keep it; gone when the tab closes), for tests and for Claude's checks of the live site. Read in the
+//   <head>, before /modele cleans its address. The 3D viewer's telemetry (/api/log, not Google) is not affected.
 // - Loaded late on purpose: Google's script weighs 180 KB and its long tasks slowed the page (PageSpeed). It comes on
 //   the first interaction (tap, key, scroll) or 4 s after the page has loaded, whichever is first; the page view is
 //   sent then, with the arrival address.
@@ -26,7 +29,10 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
   id && (
     <>
       <meta name="lock21-ga4" content={id} />
-      <script is:inline set:html="window.lock21Landing = window.lock21Landing || location.href" />
+      <script
+        is:inline
+        set:html="window.lock21Landing = window.lock21Landing || location.href; try { if (/[?&]no-analytics=1(&|$)/.test(location.search)) sessionStorage.setItem('l21-no-analytics', '1') } catch {}"
+      />
     </>
   )
 }
@@ -40,9 +46,10 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
     /** @type {unknown} */ (window)
   )
 
-  /** @returns {string | null} */
+  /** The visitor's choice; denied for this visit with ?no-analytics=1 (read in the <head>, above) @returns {string | null} */
   function choice() {
     try {
+      if (sessionStorage.getItem('l21-no-analytics')) return 'denied'
       return localStorage.getItem(KEY)
     } catch {
       return null
