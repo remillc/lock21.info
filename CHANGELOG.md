@@ -3,9 +3,12 @@
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
 public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
-## Unreleased
+## 1.0.0-beta.4 - 2026-10-29
 
-- Downloads (GLB, Google Earth, AR): the context's fillers smooth-shaded, as in the .blend, instead of faceted.
+- Downloads (GLB, Google Earth, AR) rebuilt (`AR_VERSION` 2026-10-29b): the context's fillers smooth-shaded, as in
+  the .blend, instead of faceted.
+- 3D model: zones 3, 4, 11 and 13 republished with the .blend's boolean modifiers enabled again, and the mockups
+  republished.
 - The 404 page redesigned (TODO #86): « Trop profond. » / “Too deep.”, the home page's dive computer in alarm at
   404 ft and the depth gauge running past the lock's bottom down to it, the address asked for, the 3D model, the home
   page and the zone map as buttons, and a search that opens the site's own with the address's words.
