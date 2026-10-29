@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#105**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#106**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -96,6 +96,11 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #89 SEO audit (2026-10-26, `docs/audits/seo-2026-10-26.md`): the code fixes left. S11 check that a branch preview still works, the next time one is made
   (`workers_dev: false` in `wrangler.jsonc`, off since 1.0.0-beta.1: the workers.dev address answers 404; if the
   previews broke, back to true)
+- [ ] #105 Google Analytics, with Christian, from 2026-10-31 (two or three days after the custom definitions were
+  registered on 2026-10-29): explore the new values in Explore: sessions with viewer_end, the time standard and
+  underwater (standard_seconds, underwater_seconds), dives (dive_end, seconds), the tour's steps (step), the viewer's
+  buttons (button), the first move (move), the settings, season, lamp, theme, language and AR size. Open question: the
+  setting_change event sends the new value as `value`, a name GA keeps for money; rename it setting_value?
 - [ ] #91 SEO audit: outside the site, for Christian.  S9 links: the Sketchfab profile, DECOSTOP, the Wikipedia « Lost
   Villages » talk page (dead source for Lock 21), Lost Villages Historical Society, Save Ontario Shipwrecks
 - [ ] #99 For the next dives, for Christian: buy a magenta fluorescent spray paint at Canadian Tire (Rust-Oleum
