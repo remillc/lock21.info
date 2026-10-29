@@ -67,12 +67,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #43 Accessibility (WCAG 2.2 AA): audited on 2026-10-26 (axe-core on every page, both themes, desktop and phone;
   keyboard, 320 px reflow, text spacing) and the code issues fixed. Left, for Christian: a check with a real screen
   reader (NVDA, VoiceOver) and Windows' high contrast mode
-- [ ] #103 Serve the download files (whole-model GLB, the KMZ's parts, the AR models; today on R2 under
-  `tiles.lock21.info/downloads/`) from the site, `lock21.info` (Christian, 2026-10-28). To check first: Workers static
-  assets refuse files over 25 MiB (the GLB is 130 MB), so the site's address may have to reach R2 through the Worker
-  (a route on `/downloads/*`) rather than ship the files with the site. The tiles domain keeps its `robots.txt`
-  (`Disallow: /`, `tools/publish-model/upload_r2.mjs`; Christian, 2026-10-28): the downloads become indexable through
-  the site's address, whose `robots.txt` allows everything
 - [ ] #78 /modele, wide screens: a large gap between the second column (« Naviguer ») and the third (downloads). The
   three columns are equal thirds (`.columns`, `repeat(auto-fit, minmax(18rem, 1fr))`, ModelPage.astro), and the
   navigation table and button list only take their own width (tables are `width: max-content`, custom.scss), so
@@ -116,9 +110,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   `?no-analytics=1`, kept for the visit (sessionStorage) so the site's navigation keeps it: for tests and for Claude,
   who uses it on every request to the production site so as not to count in the statistics (the 3D viewer's actions
   included; telemetry is separate)
-- [ ] #89 SEO audit (2026-10-26, `docs/audits/seo-2026-10-26.md`): the code fixes left. S11 check that a branch preview still works, the next time one is made
-  (`workers_dev: false` in `wrangler.jsonc`, off since 1.0.0-beta.1: the workers.dev address answers 404; if the
-  previews broke, back to true)
 - [ ] #91 SEO audit: outside the site, for Christian.  S9 links: the Sketchfab profile, DECOSTOP, the Wikipedia « Lost
   Villages » talk page (dead source for Lock 21), Lost Villages Historical Society, Save Ontario Shipwrecks
 - [ ] #99 For the next dives, for Christian: buy a magenta fluorescent spray paint at Canadian Tire (Rust-Oleum
