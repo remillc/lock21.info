@@ -5,6 +5,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- The 404 page redesigned (TODO #86): « Trop profond. » / “Too deep.”, the home page's dive computer in alarm at
+  404 ft and the depth gauge running past the lock's bottom down to it, the address asked for, the 3D model, the home
+  page and the zone map as buttons, and a search that opens the site's own with the address's words.
 ## 1.0.0-beta.3 - 2026-10-29
 
 - Downloads at the site's address, `lock21.info/downloads/…` (TODO #103): the whole-model GLB, the AR models and
