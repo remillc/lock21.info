@@ -112,8 +112,8 @@ def read_mtl(path):
 
 
 def read_obj(path):
-    """Positions, UVs, and per material the corners (position index, UV index or -1)"""
-    positions, uvs, groups, current = [], [], {}, "default"
+    """Positions, UVs, normals, and per material the corners (position, UV and normal indices, -1 if none)"""
+    positions, uvs, normals, groups, current = [], [], [], {}, "default"
     for line in open(path, encoding="utf-8"):
         parts = line.split()
         if not parts:
@@ -122,28 +122,37 @@ def read_obj(path):
             positions.append([float(x) for x in parts[1:4]])
         elif parts[0] == "vt":
             uvs.append([float(x) for x in parts[1:3]])
+        elif parts[0] == "vn":
+            normals.append([float(x) for x in parts[1:4]])
         elif parts[0] == "usemtl":
             current = " ".join(parts[1:])
         elif parts[0] == "f":
             face = []
             for c in parts[1:]:
                 ids = c.split("/")
-                face.append((int(ids[0]) - 1, int(ids[1]) - 1 if len(ids) > 1 and ids[1] else -1))
+                face.append((int(ids[0]) - 1, int(ids[1]) - 1 if len(ids) > 1 and ids[1] else -1,
+                             int(ids[2]) - 1 if len(ids) > 2 and ids[2] else -1))
             corners = groups.setdefault(current, [])
             for k in range(1, len(face) - 1):  # fan, in case of quads
                 corners += [face[0], face[k], face[k + 1]]
-    return np.array(positions), np.array(uvs) if uvs else np.zeros((1, 2)), groups
+    return (np.array(positions), np.array(uvs) if uvs else np.zeros((1, 2)),
+            np.array(normals) if normals else np.zeros((1, 3)), groups)
 
 
 materials = read_mtl(os.path.join(a.dir, f"{a.name}.mtl"))
-positions, uvs, groups = read_obj(os.path.join(a.dir, f"{a.name}.obj"))
+positions, uvs, normals, groups = read_obj(os.path.join(a.dir, f"{a.name}.obj"))
+# The parts that keep their normals: the fillers, smooth-shaded by make_model.py (Christian, 2026-10-29). The others
+# leave them out: Google Earth shades them by facet, as before (their parts, unchanged, are not sent again)
+SMOOTH = "context-filler"
+groups = {name: corners if name.startswith(SMOOTH) else [(v, t, -1) for v, t, _ in corners]
+          for name, corners in groups.items()}
 # Its height above the ground (the OBJ is Z up): its lowest point on the ground, 5 cm above, unless given
 altitude = max(0.0, -float(positions[:, 2].min())) + 0.05 if a.altitude == "auto" else float(a.altitude)
 print(f"altitude: {altitude:.2f} m (lowest point {positions[:, 2].min():.2f} m)", flush=True)
 
 # Google Earth Pro drops or crashes on large COLLADA meshes: a single mesh of 30,000 vertices / 50,000 triangles
 # shows, meshes of 60,000 vertices / 90,000 triangles don't (2026-10-19 tests). Each material's triangles are split
-# into meshes below the size that works (a vertex = a position + UV pair), each with its own, re-indexed positions and UVs.
+# into meshes below the size that works (a vertex = a position, UV and normal), each with its own, re-indexed positions and UVs.
 MAX_VERTICES = 30_000
 MAX_TRIANGLES = 45_000
 
@@ -193,12 +202,18 @@ def write_model(mat_name, corners, spec):
         sources = [source.FloatSource(f"positions-{n}", positions[order[:, 0]].ravel(), ("X", "Y", "Z"))]
         inputs = source.InputList()
         inputs.addInput(0, "VERTEX", f"#positions-{n}")
+        offset = 1
         if textured:
             sources.append(source.FloatSource(f"uvs-{n}", uvs[np.maximum(order[:, 1], 0)].ravel(), ("S", "T")))
-            inputs.addInput(1, "TEXCOORD", f"#uvs-{n}", set="0")
+            inputs.addInput(offset, "TEXCOORD", f"#uvs-{n}", set="0")
+            offset += 1
+        if (order[:, 2] >= 0).all():
+            sources.append(source.FloatSource(f"normals-{n}", normals[order[:, 2]].ravel(), ("X", "Y", "Z")))
+            inputs.addInput(offset, "NORMAL", f"#normals-{n}")
+            offset += 1
         geom = geometry.Geometry(dae, f"geometry-{n}", f"{mat_name}-{n}", sources)
-        # One index per corner: the same index for the position and the UV, both re-indexed per mesh
-        indices = np.repeat(np.array(index), 2) if textured else np.array(index)
+        # One index per corner: the same index for the position, the UV and the normal, all re-indexed per mesh
+        indices = np.repeat(np.array(index), offset)
         geom.primitives.append(geom.createTriangleSet(indices, inputs, "material-ref"))
         dae.geometries.append(geom)
         bind = [("UVSET0", "TEXCOORD", "0")] if textured else []

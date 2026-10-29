@@ -122,6 +122,8 @@ tournées vers l'intérieur et n'apparaissaient pas (2026-10-21). Les modèles s
 (`<double_sided>1</double_sided>`, extension COLLADA `GOOGLEEARTH`), comme le visualiseur du site, qui retourne ces
 faces vers la caméra.
 
+**Remplissages lissés:** les remplissages du contexte (`filler*`) sont lissés (*shade smooth*, Christian, 2026-10-29), comme dans le `.blend`: le `context.glb` est exporté sans normales (`export_context.py`), l'ombrage du `.blend` s'y perd. `make_model.py` soude donc leurs sommets (l'import glTF les sépare aux coutures de la texture) et les lisse avant et après la décimation: lissés dans le GLB et le USDZ; l'OBJ garde leurs normales, que `make_kmz.py` écrit dans leurs modèles COLLADA. Les autres parties restent sans normales (Google Earth les ombre par facette): leurs fichiers ne changent pas.
+
 **Temps de chargement:** les 21 parties pèsent 25 Mo en tout (1,6 à 2,8 Mo par zone). L'essentiel du temps tient à
 Google Earth Pro, qui ouvre, décompresse et lit chaque COLLADA (du XML) une partie après l'autre; à la deuxième
 ouverture, il lit son cache.
