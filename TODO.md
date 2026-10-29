@@ -83,9 +83,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   outlined, and room for one more state (dashed, the viewer's violet for zones not yet surveyed). Kept for later use;
   mockup: `docs/mockups/404-visuals.html` (#zones), also at https://claude.ai/artifact/HsJ5EGnLeGffA6mJWmY1oZ. The
   mockup's grid is a schematic, not the real layout of the zones (decoupage-site)
-- [ ] #86 The 404 page (Christian, 2026-10-26): its design and its message. Since audit V13 (2026-10-26) it is ours
-  (`src/pages/404.astro`, `src/pages/en/404.astro`, `NotFound.astro`), in the page's language, with links to the home
-  page, the 3D model and the zone map; its wording is a first draft to review, and its look is plain
 - [ ] #93 Document the gear (Christian, 2026-10-26): his own photo of the GoPro Hero6 Black in its housing, to replace
   GoPro's product photo (« Matériel utilisé », Caméra); « Le rig » (`collecte/rig.md`, since 2026-10-26: photos of
   2024-05-16 and 2024-06-14, Sylvain Marcotte's 3D model) still has one « à compléter »: the rig's construction
