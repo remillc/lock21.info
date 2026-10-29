@@ -38,12 +38,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   the tiles), `Last-Modified` (the ETag is enough), `Server`, `Age`, `cf-cache-status`. Removed with a Transform Rule
   (response headers) on the host and the zone settings; `CF-RAY` stays. To weigh: over HTTP/2 and HTTP/3 a header
   repeated on the same connection is sent compressed (HPACK, QPACK), so the gain per response is smaller than its text
-- [ ] #13 Google Earth and downloads (`tools/google-earth/README.md`): 700 000 triangles open in Google Earth Pro, the
-  model placed and turned (2026-10-25); rebuilt with the chart terrain, the Macdonnel Island mark and the numbered parts,
-  checked (`check_model.mjs`) and uploaded on 2026-10-25; zone 18's sides checked in Google Earth (Christian, 2026-10-26).
-  Google Earth Web: the KMZ shows only the marks (it draws no KML models); the GLB, placed by hand (it reads no position
-  in a GLB), steps on /modele; a shared Google Earth Web project with the model placed, linked under the downloads
-  (2026-10-26). To check: those steps, tried by Christian
 - [ ] #72 Other download formats worth adding? Candidates: the OBJ (+ .mtl, .jpg; already built beside the GLB) as a
   zip, for Blender, MeshLab and CloudCompare; STL for 3D printing (a closed, simplified model at 1:200); the AR USDZ
   as a download; a point cloud (PLY or LAZ) for archaeology and GIS tools; an orthophoto and a height map of the floor
