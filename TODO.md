@@ -93,9 +93,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #97 Performance audit (Christian, 2026-10-27): the site's pages and /modele, on a computer and a phone (Lighthouse,
   Core Web Vitals; the 3D viewer's load time and frame rate, its memory), with findings to act on, as the usability and
   SEO audits (docs/audits/)
-- [ ] #89 SEO audit (2026-10-26, `docs/audits/seo-2026-10-26.md`): the code fixes left. S11 check that a branch preview still works, the next time one is made
-  (`workers_dev: false` in `wrangler.jsonc`, off since 1.0.0-beta.1: the workers.dev address answers 404; if the
-  previews broke, back to true)
 - [ ] #105 Google Analytics, with Christian, from 2026-10-31 (two or three days after the custom definitions were
   registered on 2026-10-29): explore the new values in Explore: sessions with viewer_end, the time standard and
   underwater (standard_seconds, underwater_seconds), dives (dive_end, seconds), the tour's steps (step), the viewer's
