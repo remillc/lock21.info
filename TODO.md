@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#106**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#107**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -78,6 +78,11 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   20-minute test with three to five people, in French and English (the eight tasks in the report's « A test with real
   people »)
 
+- [ ] #106 A small zone map as a site component (Christian, 2026-10-29, from the 404 page's mockup 3): zones 1 to 25
+  as squares, those online in the secondary colour (from the manifest, like the home page's count), those to come
+  outlined, and room for one more state (dashed, the viewer's violet for zones not yet surveyed). Kept for later use;
+  mockup: `docs/mockups/404-visuals.html` (#zones), also at https://claude.ai/artifact/HsJ5EGnLeGffA6mJWmY1oZ. The
+  mockup's grid is a schematic, not the real layout of the zones (decoupage-site)
 - [ ] #86 The 404 page (Christian, 2026-10-26): its design and its message. Since audit V13 (2026-10-26) it is ours
   (`src/pages/404.astro`, `src/pages/en/404.astro`, `NotFound.astro`), in the page's language, with links to the home
   page, the 3D model and the zone map; its wording is a first draft to review, and its look is plain
