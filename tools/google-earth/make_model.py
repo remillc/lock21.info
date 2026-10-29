@@ -325,9 +325,28 @@ for z in zones:
                       texture_px=z["texture"].size[0]))
     log(f"{z['slug']}: {z['before']:,} -> {z['after']:,} triangles, texture {z['texture'].size[0]} px")
 
+# The fillers (sediment) smooth-shaded (Christian, 2026-10-29): context.glb has no normals, so they came in faceted.
+# Their vertices welded first (the glTF import splits them at the UV seams, which a smooth shading would show)
+SMOOTH = "filler*"
+
+
+def smooth(ob):
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.001)
+    bm.to_mesh(ob.data)
+    bm.free()
+    ob.data.shade_smooth()
+
+
 # Context: budget spread by triangle count; each material's image (or colour) on a plain material
 for ob in context_obs:
+    smoothed = fnmatch.fnmatch(ob.name, SMOOTH)
+    if smoothed:
+        smooth(ob)
     before, after = decimate(ob, int(context_budget * len(ob.data.polygons) / max(context_faces, 1)))
+    if smoothed:
+        ob.data.shade_smooth()
     for i, slot in enumerate(ob.material_slots):
         old = slot.material
         image = color = None
@@ -370,7 +389,7 @@ if a.usdz:
                           export_custom_properties=True, custom_properties_namespace="userProperties",
                           convert_scene_units='METERS')
 obj = os.path.join(a.out, f"{a.name}.obj")
-bpy.ops.wm.obj_export(filepath=obj, export_selected_objects=True, forward_axis='Y', up_axis='Z', export_normals=False,
+bpy.ops.wm.obj_export(filepath=obj, export_selected_objects=True, forward_axis='Y', up_axis='Z', export_normals=True,
                       export_uv=True, export_materials=True, path_mode='STRIP', export_triangulated_mesh=True)
 
 info = dict(triangles=sum(p["triangles"] for p in parts), budget=a.triangles, texture_px=a.size,
