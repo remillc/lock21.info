@@ -192,7 +192,7 @@
   "viewer_swimHint": "Maj : plus vite",
   "viewer_swimKeys": "Touches pour nager",
   "viewer_swimHelpTitle": "Nager dans l’écluse",
-  "viewer_swimHelpText": "<p>Sous l’eau, on se déplace comme un plongeur, là où on regarde.</p><ul><li><kbd>{w}</kbd> avancer, <kbd>{s}</kbd> reculer</li><li><kbd>{a}</kbd> à gauche, <kbd>{d}</kbd> à droite</li><li>les flèches font de même ; la molette de la souris aussi, pour avancer et reculer</li><li><kbd>Maj</kbd> maintenue : plus vite</li><li>bouton de la souris enfoncé, glisser : tourner la tête (en haut, en bas, à gauche, à droite)</li></ul><p>Le bouton {icon} ou la touche <kbd>Échap</kbd> ramène la navigation habituelle.</p>",
+  "viewer_swimHelpText": "<p>Sous l’eau, on se déplace comme un plongeur, là où on regarde.</p><ul><li><kbd>{w}</kbd> avancer, <kbd>{s}</kbd> reculer</li><li><kbd>{a}</kbd> à gauche, <kbd>{d}</kbd> à droite</li><li>les flèches font de même ; la molette de la souris aussi, pour avancer et reculer</li><li><kbd>Maj</kbd> maintenue : plus vite</li><li>bouton gauche enfoncé, glisser : tourner la tête (en haut, en bas, à gauche, à droite)</li><li>bouton droit enfoncé, glisser : se déplacer de côté, monter ou descendre</li></ul><p>Le bouton {icon} ou la touche <kbd>Échap</kbd> ramène la navigation habituelle.</p>",
   "viewer_swimHelpOk": "Compris",
   "viewer_keysHint": "avancer · Maj : plus vite",
   "viewer_keyForward": "Avancer",

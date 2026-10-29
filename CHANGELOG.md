@@ -18,6 +18,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 - Downloads rebuilt with the new zone 3 (GLB, Google Earth, AR: `AR_VERSION` 2026-10-29); the Google Earth list now
   points to its parts at `lock21.info/downloads`. The context no longer carries a helper box of the .blend's `terrain`
   collection (« boolean.032 », left visible to the render: a white block over the site from afar, online for an hour).
+- 3D viewer, diving: the right button drags the diver sideways, up or down, and the wheel swims by a share of the
+  distance ahead, as in the standard view (it was 0.5 m a notch).
 - 3D viewer: the navigation's help opens by itself at the first visit, once the first view shows in the standard
   mode (remembered by the browser). It is drawn as the /modele page's « Naviguer »
   box: the mouse gestures with the small mouse and the keys as key caps, side by side, or the fingers on a touch

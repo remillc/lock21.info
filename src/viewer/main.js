@@ -1018,6 +1018,9 @@ export function mountViewer() {
       if (!swim.looking) controls.target.add(walked.subVectors(position, walked))
     },
     speed: () => (swim.looking ? 1 : Math.max(1, camera.position.distanceTo(controls.target) / SWIM_TARGET)),
+    // The wheel and the right button as in the standard view
+    pick: (x, y) => pointerOrbit.pick(x, y),
+    wheelZoom: WHEEL_ZOOM,
     onKey: (code, down) => {
       const arrow = { ArrowUp: 'KeyW', ArrowDown: 'KeyS', ArrowLeft: 'KeyA', ArrowRight: 'KeyD' }[code] ?? code
       swimKeys.querySelector(`[data-code="${arrow}"]`)?.toggleAttribute('data-down', down)

@@ -12,10 +12,16 @@ const SPEED = 1.2
 const FAST = 3
 const TURN = 0.004
 const PITCH_LIMIT = 1.45
-// The wheel swims too (Christian, 2026-10-27): forward or back where the diver looks, WHEEL_STEP m per notch (FAST times
-// with Shift), glided smoothly (GLIDE_EASE: the share of what is left covered per second, about a third of a second)
-const WHEEL_STEP = 0.5
+// The wheel swims too (Christian, 2026-10-27): forward or back where the diver looks, glided smoothly (GLIDE_EASE: the
+// share of what is left covered per second, about a third of a second). As the standard view's zoom (Christian,
+// 2026-10-29): a share of the distance to the model's point in the middle of the view (or AHEAD m over the open water),
+// OrbitControls' 0.95 ^ (zoom x notches), never less than WHEEL_MIN m a notch (FAST times with Shift)
 const GLIDE_EASE = 10
+const AHEAD = 4
+const WHEEL_MIN = 0.05
+// The right button drags the diver sideways and up or down, as the standard view's pan (Christian, 2026-10-29): the
+// point pressed moves at PAN times the pointer's pace (pointer-orbit.js)
+const PAN = 0.5
 
 const MOVES = {
   KeyW: [0, 0, -1],
@@ -36,8 +42,11 @@ const MOVES = {
  * @param {(position: THREE.Vector3, step: THREE.Vector3) => void} [options.move] - moves the camera by a step (collisions:
  *   collide.js); by default straight
  * @param {() => number} [options.speed] - a factor on the speed (outside the water: the orbit's distance)
+ * @param {(x: number, y: number) => THREE.Vector3 | null} [options.pick] - the model's point under client coordinates
+ *   (the wheel's and the pan's distance)
+ * @param {number} [options.wheelZoom] - the standard view's zoom speed per notch (OrbitControls' zoomSpeed)
  */
-export function createSwim({ camera, element, onKey, move: moveBy = (position, step) => position.add(step), speed = () => 1 }) {
+export function createSwim({ camera, element, onKey, move: moveBy = (position, step) => position.add(step), speed = () => 1, pick = () => null, wheelZoom = 1 }) {
   let active = false
   // Dragging turns the head (swimming); without it, the keys only
   let looking = false
@@ -88,13 +97,35 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
     held.clear()
   }, { signal: life.signal })
 
+  /** How far ahead the model is under a client position (m, along the view), AHEAD over the open water */
+  function depthAt(x, y) {
+    const point = pick(x, y)
+    const depth = point ? point.sub(camera.position).dot(camera.getWorldDirection(toward)) : 0
+    return depth > 0.05 ? depth : AHEAD
+  }
   element.addEventListener('pointerdown', (event) => {
-    if (!active || !looking || event.button !== 0) return
-    drag = { id: event.pointerId, x: event.clientX, y: event.clientY }
+    if (!active || !looking || (event.button !== 0 && event.button !== 2)) return
+    drag = { id: event.pointerId, x: event.clientX, y: event.clientY, pan: event.button === 2 ? depthAt(event.clientX, event.clientY) : 0 }
     element.setPointerCapture(event.pointerId)
+  })
+  // (the orbit, off while swimming, no longer keeps the browser's menu from the right button)
+  element.addEventListener('contextmenu', (event) => {
+    if (active && looking) event.preventDefault()
   })
   element.addEventListener('pointermove', (event) => {
     if (!active || !looking || !drag || event.pointerId !== drag.id) return
+    if (drag.pan) {
+      // The pan: the diver moves against the pointer, the point pressed following it at PAN its pace; the walls stop
+      // them (move). A swim away: the pivot forgotten
+      const perPixel = (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * drag.pan) / (element.clientHeight || 1)
+      pivot = null
+      facing = null
+      move.set(-(event.clientX - drag.x), event.clientY - drag.y, 0).multiplyScalar(perPixel * PAN).applyQuaternion(camera.quaternion)
+      moveBy(camera.position, move)
+      drag.x = event.clientX
+      drag.y = event.clientY
+      return
+    }
     if (pivot) {
       // Around the pivot: a pixel turns by the angle a pixel covers (the background moves with the pointer sideways); not over
       // nor under it (PITCH_LIMIT from level); the walls stop the diver (move)
@@ -121,12 +152,17 @@ export function createSwim({ camera, element, onKey, move: moveBy = (position, s
     drag.x = event.clientX
     drag.y = event.clientY
   })
-  // The wheel: a notch is about 100 px (or 3 lines); up swims forward
+  // The wheel: a notch is about 100 px (or 3 lines); up swims forward, by a share of the distance ahead
   let glide = 0
   element.addEventListener('wheel', (event) => {
     if (!active || !looking) return
-    const notches = event.deltaY / (event.deltaMode === 1 ? 3 : event.deltaMode === 2 ? 0.1 : 100)
-    glide -= THREE.MathUtils.clamp(notches, -3, 3) * WHEEL_STEP * (fast ? FAST : 1)
+    const notches = THREE.MathUtils.clamp(event.deltaY / (event.deltaMode === 1 ? 3 : event.deltaMode === 2 ? 0.1 : 100), -3, 3)
+    const box = element.getBoundingClientRect()
+    const ahead = depthAt(box.left + box.width / 2, box.top + box.height / 2)
+    const scale = 0.95 ** (wheelZoom * Math.abs(notches))
+    // In: that share of the way; out: back as far as zooming in again would bring the diver here
+    const step = Math.max(notches < 0 ? ahead * (1 - scale) : ahead * (1 / scale - 1), WHEEL_MIN * Math.abs(notches))
+    glide -= Math.sign(notches) * step * (fast ? FAST : 1)
   }, { passive: true })
   const endDrag = (event) => {
     if (drag && event.pointerId === drag.id) drag = null
