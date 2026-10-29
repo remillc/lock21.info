@@ -5,6 +5,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Downloads at the site's address, `lock21.info/downloads/…` (TODO #103): the whole-model GLB, the AR models and
+  the Google Earth list, read from R2 by the site's Worker (too large for the static assets: 25 MiB a file), with
+  ranges for resumed downloads. The files stay on R2 and their `tiles.lock21.info` addresses keep working.
 - Analytics: a viewer setting's new value is sent as `setting_value` (was `value`, a parameter Google Analytics keeps
   for money), so it can be registered as a dimension.
 - Tiles: the responses of `tiles.lock21.info` without the headers the viewer doesn't use (`Report-To`, `NEL`,

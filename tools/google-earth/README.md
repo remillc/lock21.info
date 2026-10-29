@@ -6,7 +6,7 @@ téléchargements de `/modele` et pour Google Earth (TODO #13). Deux télécharg
 | Fichier | Où | Pour |
 | --- | --- | --- |
 | `lock-21.kmz` (311 octets) | sur le site: `https://lock21.info/downloads/lock-21.kmz` (`public/downloads/`) | **Google Earth Pro** (ordinateur): double-clic. Un lien vers les parties du modèle sur R2: les zones ajoutées apparaissent à la prochaine ouverture, sans nouveau téléchargement |
-| `lock-21.glb` (114 Mo) | sur R2: `https://tiles.lock21.info/downloads/lock-21.glb` | **Google Earth Web** (importer, puis placer à la main), Blender, visionneuse 3D de Windows, Sketchfab… |
+| `lock-21.glb` (114 Mo) | sur R2, servi à l'adresse du site par son Worker (`worker/index.js`): `https://lock21.info/downloads/lock-21.glb` | **Google Earth Web** (importer, puis placer à la main), Blender, visionneuse 3D de Windows, Sketchfab… |
 
 Liés depuis la page `/modele` (`src/data/site.js`, `downloads`). Le modèle est posé **au sol** (profondeur 0): Google
 Earth n'a pas de profondeur négative, l'écluse y est montrée au niveau du sol plutôt qu'à 55 pi (16,8 m) sous l'eau. Il est élevé juste assez pour que son point le plus bas touche le sol (`make_kmz.py -a/--altitude`, automatique par défaut): le chenal du terrain de la carte descend environ 4 m sous le plancher de l'écluse, le zéro du modèle, et passait sous le sol de Google Earth (2026-10-25).
@@ -24,7 +24,7 @@ exporté en USDZ par `make_model.py` (`-x 0.01 --usdz`). Une seconde version, **
 & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python tools\google-earth\make_model.py -- -o O:\publishing\downloads\google-earth\ar -n lock-21-ar -t 400000 -s 2048 -x 0.01 --usdz --context O:\temp\google-earth\context\context.glb --context-objects "filler*"
 ```
 
-En ligne sous `https://tiles.lock21.info/downloads/ar/` (`lock-21-ar.usdz`, `lock-21-ar.glb`): les copier dans
+En ligne sous `https://lock21.info/downloads/ar/` (`lock-21-ar.usdz`, `lock-21-ar.glb`): les copier dans
 `O:\publishing\downloads\online\ar\` avant `npm run downloads:upload` (le USDZ part avec le type
 `model/vnd.usdz+zip`, exigé par Quick Look). Le copyright est dans les deux fichiers: champs glTF du GLB, propriétés USD
 (`userProperties:lock21:copyright`) de chaque objet du USDZ. À vérifier sur un vrai téléphone: la réalité augmentée ne
@@ -46,7 +46,8 @@ lock21.info`.
 ## Le KMZ en réseau
 
 Le KMZ téléchargé ne contient qu'un lien (`<NetworkLink>`) vers la **liste** `lock-21.kml` sur R2
-(`https://tiles.lock21.info/downloads/google-earth/lock-21.kml`): l'épingle de l'écluse, la vue d'arrivée, et un lien
+(`https://lock21.info/downloads/google-earth/lock-21.kml`, servie par le Worker du site; `tiles.lock21.info` jusqu'au
+2026-10-29, toujours en ligne pour les KMZ déjà téléchargés): l'épingle de l'écluse, la vue d'arrivée, et un lien
 par **partie**, rangés dans deux dossiers, « Zones » et « Contexte (maquette) ». Chaque partie est un petit KMZ (un
 modèle COLLADA et sa texture) dans `parts/<partie>-<hash>.kmz`; le hash, calculé sans les dates que pycollada écrit, ne
 change qu'avec le contenu: Google Earth ne garde jamais une partie périmée, et une partie inchangée n'est pas renvoyée.

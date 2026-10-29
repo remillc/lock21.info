@@ -20,7 +20,7 @@ export const site = {
   manifest: 'https://tiles.lock21.info/manifest.json',
   // Downloads (built by tools/google-earth/). The KMZ, on the site (public/downloads/), only links to the list of parts
   // on R2 (tools/publish-model/upload_downloads.mjs), so zones added later show up without a new download or a site
-  // deploy; the GLB is on R2
+  // deploy; the GLB is on R2, served at the site's address by its Worker (worker/index.js, TODO #103)
   // Google Analytics 4 measurement ID (G-...), public; empty: no analytics (Analytics.astro; refusing:
   // AnalyticsOptOut.astro on the privacy page)
   analytics: {
@@ -30,7 +30,7 @@ export const site = {
     kmz: '/downloads/lock-21.kmz',
     // Numbers, written in the page's language by ModelPage.astro (700 000 / 700,000; 2 millions / 2 million; Mo / MB)
     kmzTriangles: 700_000,
-    glb: 'https://tiles.lock21.info/downloads/lock-21.glb',
+    glb: '/downloads/lock-21.glb',
     glbMegabytes: 122,
     glbTriangles: 2_000_000,
     // The model already placed, shared from Google Earth Web (Christian, 2026-10-26)
