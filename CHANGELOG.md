@@ -5,6 +5,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Tiles: the responses of `tiles.lock21.info` without the headers the viewer doesn't use (`Report-To`, `NEL`,
+  `Speculation-Rules`, `Last-Modified`; a Cloudflare rule, docs/installation.md): 363 bytes of headers instead of 783 per
+  tile (TODO #104).
 - `?no-analytics=1` in an address turns Google Analytics off for the rest of the visit, for tests and Claude's checks
   of the live site (TODO #95); the 3D viewer's telemetry is not affected.
 - 3D viewer, a faster start on /modele (TODO #96): its scripts preloaded with the page (`modulepreload`), a connection

@@ -165,6 +165,12 @@ qui l'avait demandé: une autre adresse (un aperçu de branche, un autre port) r
 et le navigateur la refusait (« Load failed », « blocked by CORS policy »). La liste d'adresses de R2
 (**R2** › `lock21-tiles` › **Settings** › **CORS Policy**) ne sert plus qu'aux réponses hors cache.
 
+Une deuxième règle, **tiles: trim headers** (même endroit, même condition, quatre lignes *Remove*), retire des réponses
+des tuiles les en-têtes dont le visualiseur n'a pas besoin (TODO #104, 2026-10-29): `Report-To` (environ 380 octets,
+différent à chaque réponse à cause de sa signature, donc jamais compressé par HTTP/2), `NEL`, `Speculation-Rules` et
+`Last-Modified` (l'ETag suffit à revalider le manifeste). Une réponse de tuile est passée de 783 à 363 octets
+d'en-têtes. `Server`, `CF-RAY` et `cf-cache-status` restent: Cloudflare ne permet pas d'y toucher.
+
 Le cache de Cloudflare garde les fichiers de `tiles.lock21.info` près des visiteurs: règle **Tuiles R2** (domaine
 `lock21.info` › **Caching** › **Cache Rules**: *Hostname equals `tiles.lock21.info`*, *Eligible for cache*). Il suit
 l'en-tête `Cache-Control` des fichiers: un an pour les tuiles (chaque publication a son propre dossier daté),
