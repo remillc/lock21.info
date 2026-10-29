@@ -108,6 +108,11 @@
   .stops b { font: 700 0.9rem var(--font-text); }
   .stops span { font: 400 0.72rem var(--font-data); color: var(--on-surface-variant); white-space: nowrap; }
 
+  /* 1 + 2 : l'ordinateur, avec le gabarit qui déborde à gauche */
+  .v12 { display: flex; gap: 1.5rem; }
+  .v12 .ruler { min-height: 30rem; }
+  .v12 .v1 { flex: 1; min-width: 0; align-self: flex-end; }
+
   /* 3. Le plan des zones avec une case de plus */
   .v3 { display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; }
   .v3 .text { flex: 999 1 20rem; min-width: 0; }
@@ -166,6 +171,42 @@
       </ol>
     </section>
   </div>
+
+  <!-- 1 + 2 -->
+  <article class="mock" id="choix">
+    <h2><span>1 + 2</span>L’ordinateur en alarme, avec le gabarit qui déborde</h2>
+    <p class="why">Le choix de Christian (2026-10-29) : la maquette 1, et à sa gauche le gabarit de profondeur des pages, qui continue sous le fond de 60 pi en pointillé orange jusqu’à 404 pi, à la hauteur où se trouve le visiteur.</p>
+    <div class="frame">
+      <div class="bar"><span class="logo">21</span><span class="name">Écluse 21</span><span class="coords">44°59.814′ N · 74°53.983′ O</span><span class="pill">Modèle 3D</span></div>
+      <div class="content v12">
+        <div class="ruler" aria-hidden="true">
+          <span class="mark">0 pi</span><span class="mark">15 pi</span><span class="mark">30 pi</span><span class="mark">45 pi</span><span class="mark bottom">60 pi</span>
+          <span class="beyond"><span class="you">404 pi</span></span>
+        </div>
+        <div class="v1">
+          <div class="text">
+            <p class="code">ERREUR 404</p>
+            <h3>Trop profond.</h3>
+            <p class="lead">Cette page n’existe pas ou a changé d’adresse. On remonte ?</p>
+            <p class="asked">lock21.info/ecluse-21/zone-26</p>
+            <ul class="exits">
+              <li><a class="btn signal" href="#choix">Modèle 3D</a></li>
+              <li><a class="btn" href="#choix">Accueil</a></li>
+              <li><a class="btn" href="#choix">Découpage du site</a></li>
+            </ul>
+            <div class="search"><span>Chercher dans le site…</span><b>Chercher</b></div>
+          </div>
+          <div class="computer" aria-hidden="true">
+            <div class="head"><span>PLONGÉE EN COURS</span><span class="alarm">▲ HORS LIMITE</span></div>
+            <div class="big"><div class="label">PROFONDEUR</div><div class="depth">404<small> pi</small></div><div class="label">fond de l’écluse : 60 pi (18,3 m)</div></div>
+            <div><div class="label">PAGE</div><div class="reading">INTROUVABLE</div></div>
+            <div><div class="label">PALIER</div><div class="reading">REMONTER</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="foot">© 2024–2026 Christian Rémillard · CC BY 4.0</div>
+    </div>
+  </article>
 
   <!-- 1 -->
   <article class="mock" id="ordinateur">
