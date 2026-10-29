@@ -6,7 +6,8 @@
 //   NEAR m of the orbit's centre, the centre moves ahead with it, so zooming in never stalls (the wheel too).
 // - A double-tap (a double-click with a mouse) on the model flies there: the orbit's centre glides to that point and
 //   the camera comes FLY_DISTANCE m from it (nearer only if it already was), in FLY_TIME ms.
-// - The first touch shows a card with the gestures (remembered: HINT_KEY); the « ? » button shows it again.
+// - The first touch shows a card with the gestures (remembered: HINT_KEY; not when the navigation's help, main.js, has
+//   shown them as the first view came); the « ? » button shows it again.
 import * as THREE from 'three'
 import { TOUCH } from 'three'
 import { m } from './i18n.js'
@@ -20,7 +21,7 @@ const FLY_TIME = 2000
 // Two taps within DOUBLE_TAP ms and TAP_SLOP px make a double-tap
 const DOUBLE_TAP = 300
 const TAP_SLOP = 24
-const HINT_KEY = 'l21-touch-help-seen'
+export const HINT_KEY = 'l21-touch-help-seen'
 const HINT_TIME = 7000
 
 /**
@@ -70,6 +71,8 @@ export function createTouchNav({ controls, camera, surface, pick, requestRender 
     if (!seen) {
       seen = true
       try {
+        // (read again: the navigation's help may have been shown since, main.js)
+        if (localStorage.getItem(HINT_KEY) === '1') return
         localStorage.setItem(HINT_KEY, '1')
       } catch {}
       showCard()

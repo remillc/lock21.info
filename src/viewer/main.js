@@ -26,7 +26,8 @@ import { createDiverArm } from './diver-arm.js'
 import { createFishes } from './fishes.js'
 import { createPerch } from './perch.js'
 import { createDiveComputer } from './dive-computer.js'
-import { createTouchNav } from './touch-nav.js'
+import { createTouchNav, HINT_KEY as TOUCH_HELP_KEY } from './touch-nav.js'
+import { navHelp } from './nav-help.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
 import { insertAt } from './shader-patch.js'
 import { firstMove, reportMode, sendViewerTime, startViewerClock, track } from './analytics.js'
@@ -1176,6 +1177,24 @@ export function mountViewer() {
   const startStep = startHash ? Number(startHash.slice(6)) - 1 : -1
   if (startStep >= 0 && startStep < TOUR_STEPS.length) firstView.then(() => tour.start(startStep, { jump: true }))
   else if (params.get('tour') === '1') firstView.then(() => tour.start())
+  // The navigation's help at the first visit (Christian, 2026-10-29): the same dialog, once (remembered by the
+  // browser), when the first view shows in the standard mode (not diving, no tour starting); on a touch screen, the
+  // gestures, and the first touch's card then not shown (touch-nav.js, its key)
+  const NAV_HELP_KEY = 'l21-nav-help-seen'
+  const touchScreen = window.matchMedia('(pointer: coarse)').matches
+  firstView.then(() => {
+    if (life.signal.aborted || underwater.on || tour.active) return
+    try {
+      // (on the dev server, at every load: Christian, 2026-10-29, while it is worked on)
+      if (localStorage.getItem(NAV_HELP_KEY) && !import.meta.env.DEV) return
+      localStorage.setItem(NAV_HELP_KEY, '1')
+      if (touchScreen) localStorage.setItem(TOUCH_HELP_KEY, '1')
+    } catch {
+      // storage unavailable: not shown (it would come back at each visit)
+      return
+    }
+    openSwimHelp(touchScreen)
+  })
   function showSwimHelp() {
     try {
       if (localStorage.getItem(SWIM_HELP_KEY)) return
@@ -1185,16 +1204,22 @@ export function mountViewer() {
     }
     openSwimHelp()
   }
-  function openSwimHelp() {
+  /** @param {boolean} [touch] - the touch gestures (the navigation's help at the first visit, on a touch screen) */
+  function openSwimHelp(touch = false) {
     const letter = (code) => swimKeys.querySelector(`[data-code="${code}"]`)?.textContent ?? code.slice(3)
     const swimming = swim.looking
     swimHelp.querySelector('h2').textContent = swimming ? m.viewer_swimHelpTitle() : m.viewer_keysHelpTitle()
     const keys = { w: letter('KeyW'), a: letter('KeyA'), s: letter('KeyS'), d: letter('KeyD') }
     // The underwater button's own icon, in a small round like the button
     const icon = `<span class="swim-help-icon">${underwaterButton.querySelector('svg').outerHTML}</span>`
-    swimHelp.querySelector('.swim-help-text').innerHTML = swimming ? m.viewer_swimHelpText({ ...keys, icon }) : m.viewer_keysHelpText(keys)
+    // Not swimming: as the page's « Naviguer » box (nav-help.js)
+    swimHelp.querySelector('.swim-help-text').innerHTML = swimming
+      ? m.viewer_swimHelpText({ ...keys, icon })
+      : navHelp({ touch, keys, ar: !arLink.hidden })
     swimHelp.querySelector('.swim-help-ok').textContent = m.viewer_swimHelpOk()
     swimHelp.showModal()
+    // From its top (the focus on « Compris », at the bottom, scrolled a long one down)
+    swimHelp.scrollTop = 0
   }
   swimHelp.querySelector('.swim-help-ok').addEventListener('click', () => swimHelp.close())
   let swimTimer = 0
