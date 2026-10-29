@@ -1,10 +1,5 @@
 {
   "pages": {
-    "ecluse-21.md": {
-      "source": "82207001258189a560dd054497866ea89ae29638",
-      "commit": "ba3b567",
-      "recorded": "2026-10-26"
-    },
     "a-propos.mdx": {
       "source": "5dcd84dcec4fb52d7d5a8401ea370f492b4cd205",
       "commit": "dca8db7",
@@ -39,6 +34,11 @@
       "source": "20704d3b38b18da80548045b66c25716d4fbb487",
       "commit": "27ab564",
       "recorded": "2026-10-26"
+    },
+    "ecluse-21.md": {
+      "source": "85265732b2e39c6e100347402f8fddc21e467087",
+      "commit": "166859b",
+      "recorded": "2026-10-29"
     },
     "index.mdx": {
       "source": "8939a492e523c4b731fe0efb540b51d648492756",
