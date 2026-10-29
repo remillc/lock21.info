@@ -1,6 +1,6 @@
 ---
-title: À propos de l'écluse 21
-description: L'écluse 21 du canal de Cornwall en quelques points, de sa construction à son ennoiement en 1958, et des liens pour en savoir plus.
+title: L'écluse 21
+description: "L'écluse 21 du canal de Cornwall : sa profondeur, le courant, ses dimensions, son histoire jusqu'à l'ennoiement de 1958, et des liens pour en savoir plus."
 ---
 
 L'écluse 21 est sous 60 pieds (18,3 m) d'eau dans le Saint-Laurent, près de Long Sault (Ontario). Le dessus des piliers est à 40 pieds (12 m). Le courant y est soutenu : dans le canal de l'écluse, je l'ai [mesuré](/problemes/fort-courant-canal) à environ 35 pieds par minute (10,7 m/min) en juin 2024. Il est plus fort au-dessus du déversoir.
@@ -19,7 +19,7 @@ C'était une écluse de garde : pas de différence de niveau entre l'amont et l
 
 <figure class="figure-wide">
 
-![L'écluse 21 vers 1904 : le canal, son talus à gauche et les ouvrages de l'écluse au loin](./a-propos-ecluse-21/assets/ecluse-21-vers-1904.webp)
+![L'écluse 21 vers 1904 : le canal, son talus à gauche et les ouvrages de l'écluse au loin](./ecluse-21/assets/ecluse-21-vers-1904.webp)
 
 <figcaption>L'écluse 21 vers 1904. Source : <cite><a href="https://stlawrencepiks.com/seawayhistory/beforeseaway/cornwall/">Seaway History</a></cite></figcaption>
 </figure>
@@ -30,7 +30,7 @@ En 1988 et 1989, Nick Baets et la section d'Ottawa de Save Ontario Shipwrecks on
 
 <figure class="figure-wide">
 
-![Vue de l'écluse 21 dessinée par Nick Baets : l'écluse, le déversoir et ses vannes, l'entrée des plongeurs depuis l'île Macdonell, les câbles et le courant](./a-propos-ecluse-21/assets/ecluse-21-n-baets.webp)
+![Vue de l'écluse 21 dessinée par Nick Baets : l'écluse, le déversoir et ses vannes, l'entrée des plongeurs depuis l'île Macdonell, les câbles et le courant](./ecluse-21/assets/ecluse-21-n-baets.webp)
 
 <figcaption>Le plan de l'écluse 21 par Nick Baets, affiché au pavillon des plongeurs de l'île Macdonell (d'après le guide de terrain de Save Ontario Shipwrecks, 1989). Source : <cite><a href="http://davidgibbins.com/journal/2016/4/8/diving-lock-21-a-submerged-victorian-canal-lock-on-the-st-lawrence-river-canada">David Gibbins, <em>Diving Lock 21</em></a></cite></figcaption>
 </figure>

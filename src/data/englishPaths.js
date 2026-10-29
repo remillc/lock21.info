@@ -11,7 +11,7 @@ export const englishPaths = {
   remerciements: 'thanks',
   confidentialite: 'privacy',
   'decoupage-site': 'site-zones',
-  'a-propos-ecluse-21': 'about-lock-21',
+  'ecluse-21': 'lock-21',
   modele: 'model',
   'collecte/journal-plongees': 'data-collection/dive-log',
   'collecte/materiel-utilise': 'data-collection/gear',

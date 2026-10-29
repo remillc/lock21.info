@@ -141,7 +141,7 @@ export default defineConfig({
         { label: 'Modèle 3D', translations: { en: '3D model' }, link: '/modele' },
         { label: 'À propos', translations: { en: 'About' }, link: '/a-propos' },
         { label: 'Remerciements', translations: { en: 'Thanks' }, link: '/remerciements' },
-        { label: "À propos de l'écluse 21", translations: { en: 'About Lock 21' }, link: '/a-propos-ecluse-21' },
+        { label: "L'écluse 21", translations: { en: 'Lock 21' }, link: '/ecluse-21' },
         { label: 'Découpage du site', translations: { en: 'Site zones' }, link: '/decoupage-site' },
         // collapsed: each group closed in the page's HTML, except the current page's (Starlight opens that one), so that
         // nothing opens then closes as the page loads (TODO #87; the memory of the open groups: Head.astro)

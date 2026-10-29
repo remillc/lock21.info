@@ -1,6 +1,6 @@
 ---
-title: About Lock 21
-description: Lock 21 of the Cornwall Canal in a few points, from its building to its flooding in 1958, and links to learn more.
+title: Lock 21
+description: "Lock 21 of the Cornwall Canal: its depth, the current, its size, its history up to the 1958 flooding, and links to learn more."
 ---
 
 Lock 21 lies under 60 feet (18.3 m) of water in the St. Lawrence, near Long Sault, Ontario. The tops of the piers are at 40 feet (12 m). The current is strong: in the lock I [measured](/en/problemes/fort-courant-canal) about 35 feet per minute (10.7 m/min) in June 2024; it is stronger over the spillway.
@@ -19,7 +19,7 @@ It was a guard lock: no difference in level between upstream and downstream. The
 
 <figure class="figure-wide">
 
-![Lock 21 around 1904: the canal, its bank on the left and the lock's works in the distance](../a-propos-ecluse-21/assets/ecluse-21-vers-1904.webp)
+![Lock 21 around 1904: the canal, its bank on the left and the lock's works in the distance](../ecluse-21/assets/ecluse-21-vers-1904.webp)
 
 <figcaption>Lock 21 around 1904. Source: <cite><a href="https://stlawrencepiks.com/seawayhistory/beforeseaway/cornwall/">Seaway History</a></cite></figcaption>
 </figure>
@@ -30,7 +30,7 @@ In 1988 and 1989, Nick Baets and the Ottawa chapter of Save Ontario Shipwrecks d
 
 <figure class="figure-wide">
 
-![Lock 21 drawn by Nick Baets: the lock, the weir and its sluice gates, the divers' entry from Macdonell Island, the ropes and the current](../a-propos-ecluse-21/assets/ecluse-21-n-baets.webp)
+![Lock 21 drawn by Nick Baets: the lock, the weir and its sluice gates, the divers' entry from Macdonell Island, the ropes and the current](../ecluse-21/assets/ecluse-21-n-baets.webp)
 
 <figcaption>Nick Baets' plan of Lock 21, displayed at the divers' pavilion on Macdonell Island (after Save Ontario Shipwrecks' field guide, 1989). Source: <cite><a href="http://davidgibbins.com/journal/2016/4/8/diving-lock-21-a-submerged-victorian-canal-lock-on-the-st-lawrence-river-canada">David Gibbins, <em>Diving Lock 21</em></a></cite></figcaption>
 </figure>
