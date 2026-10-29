@@ -1,6 +1,6 @@
 {
   "name": "lock21.info",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "lock21.info: field notebook and 3D model of the submerged Lock 21 (Astro + Starlight)",
   "scripts": {
     "dev": "astro dev",
