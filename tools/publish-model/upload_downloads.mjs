@@ -1,5 +1,6 @@
 // Synchronises the downloads (O:\publishing\downloads\online) with downloads/ in the Cloudflare R2 bucket, served at
-// https://tiles.lock21.info/downloads/ and linked from the /modele/ page.
+// https://lock21.info/downloads/ by the site's Worker (worker/index.js, TODO #103; also at
+// https://tiles.lock21.info/downloads/) and linked from the /modele/ page.
 //
 // - Every local file is uploaded, except unchanged ones and parts already online (their name carries a hash of the
 //   content: same name, same part). Unchanged: same size and same MD5 as R2's ETag (files sent in one piece, as this

@@ -35,7 +35,7 @@ Chaque lancement est compté dans Google Analytics (événement `ar_launch`, ave
 
 ## Les fichiers
 
-En ligne sur le serveur des tuiles (Cloudflare R2), sous `https://tiles.lock21.info/downloads/ar/`:
+En ligne dans le bucket des tuiles (Cloudflare R2), sous `downloads/ar/`, servis à l'adresse du site par son Worker (`worker/index.js`, TODO #103): `https://lock21.info/downloads/ar/` (aussi `https://tiles.lock21.info/downloads/ar/`):
 
 | Fichier | Pour |
 | --- | --- |

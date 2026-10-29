@@ -160,7 +160,8 @@ export function mountViewer() {
   // The button stays hidden elsewhere (computers, other browsers). To check on a real phone: AR can't be tested on a
   // computer. The AR files are always the online ones, in development too: Scene Viewer doesn't load a model from the
   // local network (tested on a Pixel, 2026-10-21: the phone never asked for the file)
-  const AR_URL = import.meta.env.PUBLIC_AR_URL || 'https://tiles.lock21.info/downloads/ar'
+  // (on R2, served at the site's address by its Worker, worker/index.js; absolute, for Scene Viewer's intent)
+  const AR_URL = import.meta.env.PUBLIC_AR_URL || 'https://lock21.info/downloads/ar'
   // Version of the AR files, in their address: the server and the phones keep them an hour, so a rebuild (same names)
   // would otherwise show up late. Change it after each upload of rebuilt AR files (docs/augmented-reality.md)
   const AR_VERSION = '2026-10-26'

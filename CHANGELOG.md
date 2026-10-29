@@ -5,6 +5,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Downloads at the site's address, `lock21.info/downloads/…` (TODO #103): the whole-model GLB, the AR models and
+  the Google Earth list, read from R2 by the site's Worker (too large for the static assets: 25 MiB a file), with
+  ranges for resumed downloads. The files stay on R2 and their `tiles.lock21.info` addresses keep working.
 - Accessibility (TODO #43): every Markdown table's header cells named (8 pages, French and English), and the progress
   table's two empty spacer columns removed.
 - Figure captions start where the image's straight edge does: inset by its corner radius (TODO #100).
