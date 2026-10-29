@@ -5,7 +5,10 @@
 //   after the build by the page's first photo where it has one (src/integrations/share-images.mjs); on /modele, the
 //   3D viewer's start view (public/images/og-modele.jpg, tools/share-image/capture_model.mjs);
 // - structured data (JSON-LD): the site and its author on the two home pages, the 3D model on the model page;
-// - no canonical address nor language versions on the 404 pages (an error page has no address of its own).
+// - no canonical address nor language versions on the 404 pages (an error page has no address of its own);
+// - on the model page, an early start for the 3D viewer (TODO #96): a connection opened to the tiles' server, and the
+//   manifest asked for at once, the viewer's code (src/viewer/main.js) taking the answer instead of asking again once
+//   loaded, about a second later on a phone. Its scripts are preloaded too, after the build (viewer-files.mjs).
 import { defineRouteMiddleware } from '@astrojs/starlight/route-data'
 import { site } from './data/site.js'
 
@@ -100,4 +103,18 @@ export const onRequest = defineRouteMiddleware((context) => {
   }
   // Every < escaped, so that no text can close the script element
   if (data) head.push({ tag: 'script', attrs: { type: 'application/ld+json' }, content: JSON.stringify(data).replace(/</g, '\\u003c') })
+
+  if (modelPage) {
+    // The same root as the viewer's (main.js, DEFAULT_TILES_URL); with ?tiles= in the address, the viewer asks itself
+    const tiles = import.meta.env.PUBLIC_TILES_URL || 'http://localhost:8081'
+    const manifest = JSON.stringify(`${tiles}/manifest.json`).replace(/</g, '\\u003c')
+    head.push(
+      // (crossorigin: the viewer's requests to the tiles are CORS requests without credentials)
+      { tag: 'link', attrs: { rel: 'preconnect', href: new URL(tiles).origin, crossorigin: 'anonymous' } },
+      {
+        tag: 'script',
+        content: `if(!new URLSearchParams(location.search).has('tiles'))window.lock21Manifest={url:${manifest},response:fetch(${manifest},{cache:'no-cache'}).catch(()=>null)}`,
+      },
+    )
+  }
 })

@@ -1439,7 +1439,13 @@ export function mountViewer() {
     status.start()
     rootsLoaded = false
     loadWatch = { started: performance.now(), arrived: 0, seen: 0, progressAt: performance.now(), errors: 0, reports: 0, said: null }
-    const manifest = await (await fetch(`${tilesUrl}/manifest.json`, { cache: 'no-cache' })).json()
+    // The manifest asked for by the page's <head> (src/routeData.js, TODO #96), taken once if it is the same address
+    const manifestUrl = `${tilesUrl}/manifest.json`
+    const early = /** @type {any} */ (window).lock21Manifest
+    ;/** @type {any} */ (window).lock21Manifest = undefined
+    const earlyResponse = early?.url === manifestUrl ? await early.response : null
+    const response = earlyResponse?.ok ? earlyResponse : await fetch(manifestUrl, { cache: 'no-cache' })
+    const manifest = await response.json()
     if (load !== loadCount) return
     unloadModel()
     zoneEntries = manifest.tilesets
