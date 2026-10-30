@@ -15,10 +15,12 @@ const files = ['/viewer/hdri/sky-512.hdr', '/viewer/vendor/basis/basis_transcode
   class ViewerWarmup extends HTMLElement {
     /** @param {Event} event */
     onIntent = (event) => {
-      const link = /** @type {HTMLAnchorElement | undefined} */ (/** @type {Element | null} */ (event.target)?.closest?.('a[href]'))
+      const link = /** @type {Element | null} */ (event.target)?.closest?.('a[href]')
       /** @param {string} path */
       const toModel = (path) => /^(\/en)?\/modele$/.test(path)
-      if (!link || !toModel(new URL(link.href).pathname) || /** @type {any} */ (window).lock21ViewerWarm || toModel(location.pathname)) return
+      // The attribute, resolved against the page: an SVG link's href is an object, not the address (the zone map's
+      // links, ZoneMap.astro, threw « Invalid URL »)
+      if (!link || !toModel(new URL(link.getAttribute('href') ?? '', location.href).pathname) || /** @type {any} */ (window).lock21ViewerWarm || toModel(location.pathname)) return
       const connection = /** @type {any} */ (navigator).connection
       if (connection?.saveData || /2g/.test(connection?.effectiveType ?? '')) return
       ;/** @type {any} */ (window).lock21ViewerWarm = true

@@ -215,7 +215,7 @@ Copy-Item O:\publishing\downloads\google-earth\t700k\network\lock-21.kmz public\
 
 Le nombre de zones en ligne et la date de mise à jour se mettent à jour seuls à la publication du site (ils sont lus sur le serveur). À la main:
 
-- `src/content/docs/traitement/suivi.md`: l'avancement de la zone;
+- `src/content/docs/traitement/suivi.mdx`: l'avancement de la zone;
 - `tools/publish-model/README.md`: la ligne **État** en haut, si une zone s'ajoute;
 - `CHANGELOG.md`: une ligne sous **Unreleased**.
 
