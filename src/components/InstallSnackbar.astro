@@ -1,0 +1,201 @@
+---
+// The install offered once in an MD3 snackbar (TODO #110, Christian 2026-10-30): « Lire le site hors ligne, au bord de
+// l'eau ? Installer ✕ », at the bottom of the window. Never at arrival: from the 3rd visit (a visit: a tab's session),
+// or the 5th page read in a visit; only where the browser offers the install (Chrome, Edge, Android: Head.astro keeps
+// its beforeinstallprompt), not in the installed app, not on /modele (the 3D view). Shown once: closed, ignored or
+// used, it never comes back (localStorage l21-install-offer). In the footer (Footer.astro), so on every page.
+// Analytics: app_install_offer (shown), app_install (source: snackbar; its outcome, or dismissed when closed).
+import { Icon } from 'astro-icon/components'
+import { pageLang } from '../lib/i18n'
+import { m } from '../paraglide/messages.js'
+
+const o = { locale: pageLang(Astro.locals) }
+---
+
+<l21-install-snackbar popover="manual">
+  <div class="snackbar" role="status">
+    <span>{m.install_snackbar({}, o)}</span>
+    <button type="button" class="action">{m.install_action({}, o)}</button>
+    <button type="button" class="close" aria-label={m.install_close({}, o)}>
+      <Icon name="material-symbols:close-rounded" aria-hidden="true" width="24" height="24" />
+    </button>
+  </div>
+</l21-install-snackbar>
+
+<script>
+  /** @typedef {Event & { prompt: () => Promise<void>, userChoice: Promise<{ outcome: string }> }} InstallPrompt */
+  const w = /** @type {{ lock21Install?: InstallPrompt | null, lock21Pages?: number }} */ (/** @type {unknown} */ (window))
+  const KEY = 'l21-install-offer'
+  const VISITS = 'l21-visits'
+  const track = (/** @type {string} */ name, params = {}) =>
+    document.dispatchEvent(new CustomEvent('l21:track', { detail: { name, params } }))
+  /** @param {string} key */
+  const read = (key) => {
+    try {
+      return localStorage.getItem(key)
+    } catch {
+      return null
+    }
+  }
+  /** @param {string} key @param {string} value */
+  const write = (key, value) => {
+    try {
+      localStorage.setItem(key, value)
+    } catch {}
+  }
+
+  // The visit counted once per tab session, the pages read in it (this script runs once; the element at each page)
+  let visits = Number(read(VISITS) ?? 0)
+  try {
+    if (!sessionStorage.getItem(VISITS)) {
+      sessionStorage.setItem(VISITS, '1')
+      visits += 1
+      write(VISITS, String(visits))
+    }
+  } catch {}
+  document.addEventListener('astro:page-load', () => (w.lock21Pages = (w.lock21Pages ?? 0) + 1))
+
+  class InstallSnackbar extends HTMLElement {
+    connectedCallback() {
+      this.abort = new AbortController()
+      const signal = this.abort.signal
+      this.querySelector('.action')?.addEventListener('click', () => this.install(), { signal })
+      this.querySelector('.close')?.addEventListener('click', () => {
+        track('app_install', { outcome: 'dismissed', source: 'snackbar' })
+        this.close()
+      }, { signal })
+      document.addEventListener('l21:installable', () => this.maybeShow(), { signal })
+      this.timer = setTimeout(() => this.maybeShow(), 2000)
+    }
+
+    disconnectedCallback() {
+      this.abort?.abort()
+      clearTimeout(this.timer)
+    }
+
+    maybeShow() {
+      const standalone = matchMedia('(display-mode: standalone)').matches
+      const due = visits >= 3 || (w.lock21Pages ?? 0) >= 5
+      if (!w.lock21Install || standalone || read(KEY) || !due || /^(\/en)?\/modele$/.test(location.pathname)) return
+      write(KEY, 'shown')
+      track('app_install_offer')
+      // A popover: in the window's top layer, over the navigation column and the bars
+      this.showPopover()
+      requestAnimationFrame(() => this.classList.add('open'))
+    }
+
+    async install() {
+      const prompt = w.lock21Install
+      this.close()
+      if (!prompt) return
+      await prompt.prompt()
+      const { outcome } = await prompt.userChoice
+      track('app_install', { outcome, source: 'snackbar' })
+      w.lock21Install = null
+    }
+
+    close() {
+      this.classList.remove('open')
+      setTimeout(() => this.hidePopover(), 200)
+    }
+  }
+  customElements.define('l21-install-snackbar', InstallSnackbar)
+</script>
+
+<style>
+  @layer l21.components {
+    /* MD3 snackbar (docs/system-design.md): on the bars' dark olive (the inverse surface of the light theme), 4 dp
+       corners, elevation 3, body-medium, a text button in the bars' link colour and a close icon button; at the
+       bottom, centred, 344 to 672 dp wide; MD3 motion (enter 400 ms decelerate, exit 200 ms accelerate) */
+    /* A manual popover (the browser's top layer): its default box (centred, bordered, on the canvas colour) undone */
+    l21-install-snackbar {
+      position: fixed;
+      inset: auto 0 max(16px, env(safe-area-inset-bottom));
+      width: auto;
+      height: auto;
+      margin: 0;
+      border: 0;
+      background: transparent;
+      overflow: visible;
+      display: flex;
+      justify-content: center;
+      padding-inline: 16px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(16px);
+      transition:
+        opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-emphasized-accelerate),
+        transform var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-emphasized-accelerate);
+
+      &:not(:popover-open) {
+        display: none;
+      }
+
+      &.open {
+        opacity: 1;
+        transform: none;
+        transition-duration: var(--md-sys-motion-duration-medium4);
+        transition-timing-function: var(--md-sys-motion-easing-emphasized-decelerate);
+      }
+    }
+    .snackbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-sizing: border-box;
+      width: min(100%, 42rem);
+      min-width: min(100%, 21.5rem);
+      min-height: 48px;
+      padding: 4px 4px 4px 16px;
+      border-radius: var(--md-sys-shape-extra-small);
+      background: var(--l21-bar);
+      color: var(--l21-bar-text);
+      box-shadow: var(--md-sys-elevation-level3);
+      font: 400 0.875rem / 1.25rem var(--l21-font-text);
+      letter-spacing: 0.25px;
+      pointer-events: auto;
+
+      span {
+        flex: 1;
+      }
+    }
+    .action,
+    .close {
+      flex: none;
+      box-sizing: border-box;
+      min-height: 48px;
+      border: 4px solid transparent;
+      border-radius: var(--md-sys-shape-full);
+      background: transparent;
+      background-clip: padding-box;
+      cursor: pointer;
+
+      &:hover {
+        background-color: color-mix(in srgb, currentColor var(--md-sys-state-hover), transparent);
+      }
+
+      &:focus-visible,
+      &:active {
+        background-color: color-mix(in srgb, currentColor var(--md-sys-state-pressed), transparent);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--l21-bar-link);
+        outline-offset: -2px;
+      }
+    }
+    .action {
+      padding: 0 12px;
+      color: var(--l21-bar-link);
+      font: 500 0.875rem / 1.25rem var(--l21-font-text);
+      letter-spacing: 0.1px;
+    }
+    .close {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      padding: 0;
+      color: var(--l21-bar-text);
+    }
+  }
+</style>

@@ -252,5 +252,12 @@
   "viewer_seasonSpring": "Spring",
   "viewer_seasonSummer": "Summer",
   "viewer_seasonAutumn": "Autumn",
-  "viewer_seasonValue": "{name} · {ft} ft ({m} m)"
+  "viewer_seasonValue": "{name} · {ft} ft ({m} m)",
+  "install_button": "Install the app",
+  "install_installed": "The app is installed on this device.",
+  "install_ios": "On iPhone or iPad, in Safari: tap the Share button, then “Add to Home Screen”.",
+  "install_other": "In the browser’s menu, choose “Install” or “Add to Home Screen”. On a Mac, in Safari: File › Add to Dock.",
+  "install_snackbar": "Read the site offline, by the water?",
+  "install_action": "Install",
+  "install_close": "Close"
 }

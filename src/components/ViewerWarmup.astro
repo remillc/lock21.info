@@ -23,7 +23,9 @@ const files = ['/viewer/hdri/sky-512.hdr', '/viewer/vendor/basis/basis_transcode
       if (connection?.saveData || /2g/.test(connection?.effectiveType ?? '')) return
       ;/** @type {any} */ (window).lock21ViewerWarm = true
       this.prefetch(/** @type {string[]} */ (JSON.parse(this.dataset.files ?? '[]')))
-      // The viewer's scripts (their names carry a hash of their content)
+      // The viewer's scripts (their names carry a hash of their content). The list is written by the build only: none
+      // on the dev server (npm run dev), where it was a 404 in the console
+      if (!import.meta.env.PROD) return
       fetch('/viewer/files.json')
         .then((response) => (response.ok ? response.json() : []))
         .then((files) => this.prefetch(files))

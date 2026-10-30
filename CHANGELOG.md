@@ -5,6 +5,16 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- About page: Lock 23 3D described as it is, measured underwater and redrawn in 3D piece by piece (it was « the same
+  work », photogrammetry).
+- « Installer l'app » / “Install the app” on the About page (TODO #110): what the app gives (offline reading by the
+  water, the home screen) and a button, always shown: it opens the browser's install where it offers one (Chrome,
+  Edge, Android; their own bar at arrival stopped), else shows the steps (Safari on iPhone and iPad, or the browser's
+  menu); « installed » once it is. Also a « Installer l'app » link in the footer bar and at the end of the ☰ menu on
+  phones (its icon orange), and, once only, an MD3 snackbar at the bottom (« Lire le site hors ligne, au bord de
+  l'eau ? Installer ✕ »): from the 3rd visit or the 5th page read, where the browser offers the install, never at
+  arrival nor on /modele. Analytics: app_install_offer, app_install (accepted, dismissed, steps; source about or snackbar)
+  and app_installed.
 - Google Analytics, the guided tour: `tour_step` says whether the visitor went forward or back (`direction`), and
   `tour_step`, `tour_return`, `tour_stop` and `tour_complete` the time spent on the step left (`step_seconds`).
 - The site is a web app (TODO #81): installable on a phone or a computer (its manifest in French or English, icons
