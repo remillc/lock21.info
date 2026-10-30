@@ -188,6 +188,8 @@ avec Wrangler (réglages dans `wrangler.jsonc`, en-têtes de cache dans `public/
 (page d'accueil du compte, **Account ID**). Rien à faire sur un nouvel ordinateur: ces valeurs ne sont pas dans
 `.env.local`. Pour essayer en local: `npm run build`, puis `npx wrangler dev` (le site tel que Cloudflare le sert).
 
+**Ouvertures du KMZ.** Le Worker compte chaque ouverture du KMZ dans Google Earth (la liste `lock-21.kml` demandée) comme un événement `kmz_open` de Google Analytics. Il lui faut un secret du Worker, pas du dépôt: `GA_API_SECRET`, créé dans Google Analytics (**Admin** › **Flux de données** › le flux Web › **Clés secrètes de l'API Measurement Protocol** › **Créer**) et donné une fois à Cloudflare: `npx wrangler secret put GA_API_SECRET` (la valeur est demandée, jamais écrite dans un fichier). Sans lui, rien n'est compté.
+
 **Journal du visualiseur.** Le visualiseur 3D envoie un court journal de chaque visite (appareil, temps de chargement,
 erreurs, fin de visite anormale, réalité augmentée) à `/api/log`, que le script `worker/index.js` écrit dans les
 **Workers Logs** de Cloudflare (gardés quelques jours). Pour le lire:

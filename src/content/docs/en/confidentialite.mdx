@@ -37,7 +37,11 @@ The 3D viewer sends the site a short technical log of each visit, to find and fi
 - the errors encountered, and how augmented reality runs technically;
 - the country, inferred by the host.
 
-It holds neither your name, nor your IP address, nor a cookie. Each visit gets a random code (shown at the bottom of the viewer's ⚙ settings), which can't recognise you from one visit to the next. To spot a visit that ended badly, the viewer keeps that code in the tab's storage for the length of the visit. The log is kept a few days at Cloudflare, then deleted. It is used for nothing else.
+It holds neither your name, nor your IP address, nor a cookie. Each visit gets a random code, which can't recognise you from one visit to the next. To spot a visit that ended badly, the viewer keeps that code in the tab's storage for the length of the visit. The log is kept a few days at Cloudflare, then deleted. It is used for nothing else.
+
+## Opening the model in Google Earth
+
+The Google Earth file (KMZ) holds only a link to the model, on this site. Each time you open it, Google Earth asks the site for the list of the model's parts, and the site counts that opening in Google Analytics, with the Google Earth version, its language, and the approximate country, region and city the host infers. Your IP address is not passed on: a code computed from it, which changes every day, only lets the same person be counted once a day. No cookie is set. The opt-out button above doesn't apply here, since Google Earth doesn't go through your browser: to not be counted, don't open the KMZ file, or write to me.
 
 ## Hosting
 
