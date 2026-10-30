@@ -1198,13 +1198,16 @@ l21-tooltip {
   stroke: var(--md-sys-color-tertiary);
   stroke-width: 1.5;
 }
-/* The fingers' movement in their sketch (nav-help.js, fingers) */
-.mouse-arrow {
-  fill: none;
-  stroke: var(--md-sys-color-on-surface-variant);
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+/* A touch gesture's icon (nav-help.js, fingers): 32 px, in the signal colour as the small mouse's part used */
+.finger-gesture {
+  display: inline-grid;
+  flex: none;
+  color: var(--md-sys-color-tertiary);
+
+  svg {
+    width: 32px;
+    height: 32px;
+  }
 }
 .swim-help .nav-buttons {
   display: grid;
@@ -1275,7 +1278,7 @@ l21-tooltip {
       gap: 8px;
     }
 
-    /* The mouse and the fingers' sketches smaller */
+    /* The small mouse smaller (the gestures' icons keep their 32 px: the frame is 4:5 on a phone held upright) */
     .mouse {
       width: 24px;
       height: 24px;

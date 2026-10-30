@@ -8,8 +8,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 - 3D viewer: the navigation's help (and the swim help) a non-modal dialog inside the viewer's frame, centred on it,
   with a scrim over the frame only: it stays over the viewer when the page scrolls (TODO #108; a modal dialog sat in the
   window's middle). Escape still closes it, and a ✕ button at its top right; on a low frame (a phone), tighter margins
-  and a smaller title. On a touch screen, each gesture with a sketch of the fingers (one finger, two, a pinch, a double
-  tap), as the small mouse on a computer.
+  and a smaller title. On a touch screen, each gesture with Material Symbols' gesture icon (a hand's finger pressed and
+  its movement: swipe, two-finger swipe, pinch, double tap) in orange, as the small mouse on a computer; and the « ? »
+  at the top right opens this same help (it showed a card that closed by itself after 7 s).
 - /modele on a phone held upright: the 3D viewer in 4:5 instead of 16:9 (about 358 x 444 px instead of 358 x 316 on a
   390 px phone), and the compass 40 px instead of 56.
 - /modele, « Réalité augmentée »: the QR codes' captions on one line, centred under each code, without the

@@ -15,25 +15,13 @@ const GESTURES = [
 ]
 
 /**
- * The fingers' sketch of a gesture (Christian, 2026-10-30), as the small mouse on a computer: the fingertips in the
- * signal colour (mouse-used), the movement as arrows (mouse-arrow)
+ * The gesture on a touch screen (Christian, 2026-10-30): Material Symbols' gesture icons, a finger pressed and its
+ * movement, in the signal colour (.finger-gesture), as the small mouse on a computer
  * @param {string} kind - one (one finger drags), two (two fingers drag), pinch (two fingers apart), double (double tap)
  */
 function fingers(kind) {
-  const tip = (x, y) => `<circle class="mouse-used" cx="${x}" cy="${y}" r="4" />`
-  /** An arrow from (x1, y1) to (x2, y2), its head at the end */
-  const arrow = (x1, y1, x2, y2) => {
-    const a = Math.atan2(y2 - y1, x2 - x1)
-    const head = (d) => `${(x2 - 5 * Math.cos(a + d)).toFixed(1)} ${(y2 - 5 * Math.sin(a + d)).toFixed(1)}`
-    return `<path class="mouse-arrow" d="M${x1} ${y1} L${x2} ${y2} M${head(0.5)} L${x2} ${y2} L${head(-0.5)}" />`
-  }
-  const parts = {
-    one: tip(10, 18) + arrow(17, 18, 28, 18),
-    two: tip(8, 13) + tip(8, 23) + arrow(15, 18, 28, 18),
-    pinch: tip(13, 19) + tip(19, 13) + arrow(10, 22, 4, 28) + arrow(22, 10, 28, 4),
-    double: tip(16, 16) + '<circle class="mouse-arrow" cx="16" cy="16" r="8" /><circle class="mouse-arrow" cx="16" cy="16" r="12" />',
-  }
-  return `<svg class="mouse" aria-hidden="true" width="32" height="32" viewBox="0 0 32 32">${parts[kind]}</svg>`
+  const names = { one: 'swipe-outline-rounded', two: 'swipe-right-2-outline-rounded', pinch: 'pinch-zoom-out-outline-rounded', double: 'touch-double-outline-rounded' }
+  return `<span class="finger-gesture" aria-hidden="true">${icon(names[kind])}</span>`
 }
 
 /** The small mouse (ModelPage.astro's drawing) @param {string} part - left, right or wheel */

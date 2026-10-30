@@ -392,6 +392,8 @@ export function mountViewer() {
     camera,
     surface: renderer.domElement,
     requestRender: () => requestRender(),
+    // The « ? » on a touch screen: the navigation's help with the gestures (openSwimHelp, below)
+    showHelp: () => openSwimHelp(true),
     pick: (x, y) => {
       const box = renderer.domElement.getBoundingClientRect()
       pickPointer.set(((x - box.left) / box.width) * 2 - 1, -((y - box.top) / box.height) * 2 + 1)
