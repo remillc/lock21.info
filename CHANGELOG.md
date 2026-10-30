@@ -5,6 +5,10 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- The visit's first page in the visitor's language (TODO #107): the language chosen in the language menu prevails
+  (kept by the browser); else the first of French and English in the browser's languages, English when neither is
+  there. Not when coming from another page of the site, never for search engines and other robots (each address
+  keeps its language for them; hreflang gives the other). The privacy page says the choice is kept.
 - A small zone map (TODO #106) on « Découpage du site » (« État des zones ») and « Suivi du travail par zone »: the
   26 zones at their place on Nick Baets' drawing, online in the secondary colour (from the 3D model's manifest),
   surveyed and to come outlined (named in the dive log), not surveyed yet dashed in violet; each zone leads to its

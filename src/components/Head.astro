@@ -13,6 +13,7 @@ import Default from '@astrojs/starlight/components/Head.astro'
 import { ClientRouter } from 'astro:transitions'
 import Analytics from './Analytics.astro'
 import { pageLang } from '../lib/i18n.js'
+import { englishPaths } from '../data/englishPaths.js'
 // Fonts seen at the top of every page, fetched with the HTML instead of after the stylesheet: Archivo 400 (text), 700
 // (the left menu's labels, weight 600: drawn first in a lighter weight, then bold, a flicker; TODO #87) and 800 (titles:
 // the home page's title is its largest element), JetBrains Mono 700 (the "Modèle 3D" pill, the home
@@ -28,7 +29,44 @@ const fonts = [archivo400, archivo700, archivo800, mono700, mono800]
 // the icon iOS shows on the home screen (public/icons/, tools/pwa/make_icons.mjs), and the service worker
 // (public/sw.js: the network first, the pages read kept for offline), in production only
 const manifest = pageLang(Astro.locals) === 'en' ? '/manifest-en.webmanifest' : '/manifest.webmanifest'
+// The language a visitor lands in (TODO #107, Christian 2026-10-30): each French page's address and its English one
+const pairs = [['/', '/en/'], ...Object.entries(englishPaths).map(([fr, en]) => [`/${fr}`, `/en/${en}`])]
 ---
+
+<script is:inline define:vars={{ pairs }}>
+  // The page in the visitor's language, at the first page of a visit (TODO #107, Christian 2026-10-30):
+  // - the language chosen in the language menu (kept: localStorage l21-lang) prevails;
+  // - else the first of French and English in the browser's languages; neither of them: English;
+  // - only the visit's first page, not when coming from another page of the site (sessionStorage l21-lang-checked);
+  // - never for search engines and other robots, nor automated browsers: each address keeps its own language for
+  //   them (the pages' hreflang links give the other one), and their indexing doesn't depend on a redirect;
+  // - only between pages that have both versions (pairs); the address's query and fragment kept.
+  try {
+    const KEY = 'l21-lang'
+    // The language menu's choice (Starlight's select, in the header and the mobile menu), whenever it is made
+    if (!window.lock21LangWatch) {
+      window.lock21LangWatch = true
+      document.addEventListener('change', (event) => {
+        const select = event.target
+        if (select?.closest?.('starlight-lang-select')) localStorage.setItem(KEY, select.value.startsWith('/en') ? 'en' : 'fr')
+      })
+    }
+    const robot = /bot|crawl|spider|slurp|bingpreview|mediapartners|facebookexternalhit|embedly|lighthouse|headless/i.test(navigator.userAgent) || navigator.webdriver
+    const fromSite = document.referrer && new URL(document.referrer).origin === location.origin
+    if (!robot && !sessionStorage.getItem('l21-lang-checked')) {
+      sessionStorage.setItem('l21-lang-checked', '1')
+      const path = location.pathname.replace(/(.)\/$/, '$1')
+      const pair = pairs.find(([fr, en]) => fr === path || en === path || en === `${path}/`)
+      if (pair && !fromSite) {
+        const chosen = localStorage.getItem(KEY)
+        const first = (navigator.languages ?? [navigator.language]).map((l) => l.slice(0, 2).toLowerCase()).find((l) => l === 'fr' || l === 'en')
+        const want = chosen ?? first ?? 'en'
+        const here = path === '/en' || path.startsWith('/en/') ? 'en' : 'fr'
+        if (want !== here) location.replace((want === 'en' ? pair[1] : pair[0]) + location.search + location.hash)
+      }
+    }
+  } catch {}
+</script>
 
 <Default />
 {fonts.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
