@@ -139,7 +139,11 @@ filled at start, and scripts call `icon(name, size)`. Outline icons take `-outli
 **Styles: plain CSS, nested** (2026-10-26). `<style>` in `.astro` files and `src/viewer/style.css` are plain CSS with
 native nesting; SCSS (`lang="scss"`, `.scss` files) only where Sass is needed (a loop, a mixin: `DiveLog.astro`;
 `tokens.scss`, `custom.scss`). Rules are nested by default: a rule's states and parts inside it (`&:hover`,
-`&::before`, `&[open]`, `.child`). One exception, in `.astro` files: only the same element's states are nested, never a
+`&::before`, `&[open]`, `.child`), and its variants too, a class or an attribute on the same element (`rect { &.online
+{} &.surveyed {} }`, `.button { &.signal {} }`, `&[hidden]`), never a separate `rect.online {}` beside `rect {}`
+(Christian, 2026-10-30: the same element's look in one place). Left flat: a rule in another context than its base (a
+media or container query, `@starting-style`, which stays flat with its whole selector), and code copied from
+Starlight (`PageFrame.astro`). One exception, in `.astro` files: only the same element's states are nested, never a
 descendant, because Astro's scoping leaves a nested descendant unscoped (`.a { .b {} }` becomes `.a:where(.astro-x) .b`,
 which could reach into another component). Both builds flatten the nesting for browsers before 2023 (`build.cssTarget`
 in `astro.config.mjs`: an old iPad would otherwise drop the nested rules). No colour or
