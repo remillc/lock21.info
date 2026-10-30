@@ -1225,34 +1225,21 @@ export function mountViewer() {
       ? m.viewer_swimHelpText({ ...keys, icon })
       : navHelp({ touch, keys, ar: !arLink.hidden })
     swimHelp.querySelector('.swim-help-ok').textContent = m.viewer_swimHelpOk()
-    swimHelp.showModal()
+    // Non-modal, in the viewer's frame (style.css): the page around stays usable and scrolls with it
+    swimHelp.show()
+    swimHelp.querySelector('.swim-help-ok').focus({ preventScroll: true })
     // From its top (the focus on « Compris », at the bottom, scrolled a long one down)
     swimHelp.scrollTop = 0
-    pinHelp()
   }
   swimHelp.querySelector('.swim-help-ok').addEventListener('click', () => swimHelp.close())
-  // The dialog over the viewer's frame, not the window's middle (TODO #108, Christian 2026-10-30): a modal dialog is in
-  // the window's top layer and stays put when the page scrolls, while the frame goes. Centred on the frame when it opens
-  // (brought inside the window if it would stick out), then moved with the frame as the page scrolls; the frame filling
-  // the window (full screen), the window's middle
-  const helpFrame = root.querySelector('.viewer-frame')
-  let helpOffset = 0
-  function pinHelp() {
-    const frame = helpFrame.getBoundingClientRect()
-    const height = swimHelp.offsetHeight
-    const top = Math.min(Math.max(frame.top + (frame.height - height) / 2, 24), Math.max(24, innerHeight - height - 24))
-    helpOffset = top - frame.top
-    swimHelp.style.setProperty('--help-dx', `${frame.left + frame.width / 2 - innerWidth / 2}px`)
-    swimHelp.style.setProperty('--help-top', `${top}px`)
-  }
-  function followHelp() {
-    if (!swimHelp.open) return
-    const frame = helpFrame.getBoundingClientRect()
-    swimHelp.style.setProperty('--help-dx', `${frame.left + frame.width / 2 - innerWidth / 2}px`)
-    swimHelp.style.setProperty('--help-top', `${frame.top + helpOffset}px`)
-  }
-  addEventListener('scroll', followHelp, { passive: true, signal: life.signal })
-  addEventListener('resize', () => swimHelp.open && pinHelp(), { signal: life.signal })
+  // A non-modal dialog in the viewer's frame (TODO #108, Christian 2026-10-30: it stays over the viewer when the page
+  // scrolls; style.css): Escape closes it, as a modal one would
+  swimHelp.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      event.stopPropagation()
+      swimHelp.close()
+    }
+  })
   let swimTimer = 0
   function swimMoved() {
     // The address (viewUrl) reads the orbit's target: kept ahead of the diver

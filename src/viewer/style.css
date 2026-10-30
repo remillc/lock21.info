@@ -1025,6 +1025,15 @@ l21-tooltip {
 
 /* The swim mode's help (main.js): MD3 basic dialog. Surface container high, 28 dp corners, 24 dp padding,
    headline-small title, body-medium text, a text button bottom right; a scrim behind it */
+/* The scrim under the help dialog, over the whole frame (the view and its buttons) */
+.viewer-frame:has(> .swim-help[open])::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  background: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent);
+}
+
 .swim-help {
   max-width: min(400px, calc(100cqw - 48px));
 
@@ -1032,15 +1041,16 @@ l21-tooltip {
   &:has(.nav-groups) {
     max-width: min(720px, calc(100cqw - 48px));
   }
-  /* (a modal dialog, over the whole window: on a phone, taller than the frame; a low window: it scrolls) */
-  max-height: calc(100dvh - 48px);
-  /* Placed over the viewer's frame by main.js (pinHelp, followHelp: --help-top its top, --help-dx the frame's centre
-     from the window's), and moved with it as the page scrolls (TODO #108). Centred on the window, then shifted: its
-     width stays the window's to fit in (a left edge at the frame's centre left it half the window, 214 px on a phone) */
-  position: fixed;
-  inset: var(--help-top, 0) 0 auto;
+  /* A non-modal dialog (main.js: show()) in the viewer's frame, centred in it (TODO #108, Christian 2026-10-30: over
+     the viewer when the page scrolls); taller than the frame (a phone), it scrolls inside. The frame dimmed under it
+     (MD3's scrim: .viewer-frame::before, below) */
+  position: absolute;
+  inset: 0;
+  z-index: 10;
   margin: auto;
-  translate: var(--help-dx, 0) 0;
+  box-sizing: border-box;
+  max-height: calc(100% - 32px);
+  overflow: auto;
   padding: 24px;
   border: 0;
   border-radius: 28px;
@@ -1048,10 +1058,6 @@ l21-tooltip {
   color: var(--md-sys-color-on-surface);
   font: 400 14px/20px var(--l21-font-text);
   letter-spacing: 0.25px;
-
-  &::backdrop {
-    background: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent);
-  }
 
   h2 {
     margin: 0 0 16px;

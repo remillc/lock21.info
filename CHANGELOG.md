@@ -5,8 +5,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
-- 3D viewer: the navigation's help (and the swim help) centred on the viewer's frame instead of the window, and moving
-  with it when the page scrolls (TODO #108); brought inside the window when it opens.
+- 3D viewer: the navigation's help (and the swim help) a non-modal dialog inside the viewer's frame, centred on it,
+  with a scrim over the frame only: it stays over the viewer when the page scrolls (TODO #108; a modal dialog sat in the
+  window's middle). Escape still closes it; taller than the frame (a phone), it scrolls inside.
 - /modele, « Réalité augmentée »: the QR codes' captions on one line, centred under each code, without the
   notebook's « FIG. NN » (it broke them over two lines; TODO #109), and some room before the first code and after the
   second.
