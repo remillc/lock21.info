@@ -491,12 +491,14 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   }
 
   function show(i, back = false, jump = false) {
+    const from = index
     index = i
     const step = steps[i]
     quick = back
     onStep?.(i)
-    // Analytics (analytics.js): each step reached after the first (that one is tour_start)
-    if (!starting) track('tour_step', { step: i + 1, of: steps.length })
+    // Analytics (analytics.js): each step reached after the first (that one is tour_start), whether forward or back,
+    // and the time spent on the step left (Christian, 2026-10-30: the visitors' way through the tour)
+    if (!starting) track('tour_step', { step: i + 1, of: steps.length, direction: i < from ? 'back' : 'next', step_seconds: stepSeconds() })
     if (touch.matches && !jump) hideWhileMoving(i)
     else {
       reveal()
@@ -568,6 +570,14 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   new MutationObserver(fitBesideControls).observe(root, { subtree: true, attributes: true, attributeFilter: ['hidden'] })
 
   let starting = false
+  // When the current step was reached (analytics: step_seconds, the time spent on the step left, in seconds)
+  let stepSince = 0
+  function stepSeconds() {
+    const now = performance.now()
+    const seconds = stepSince ? Math.round((now - stepSince) / 100) / 10 : 0
+    stepSince = now
+    return seconds
+  }
   function start(at = 0, { jump = false } = {}) {
     clearTimeout(hideTimer)
     onStart?.()
@@ -579,6 +589,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     // The next frame: from hidden, the transition needs a first style
     requestAnimationFrame(() => card.classList.add('open'))
     track('tour_start', { step: at + 1 })
+    stepSince = performance.now()
     starting = true
     show(Math.min(Math.max(0, at), steps.length - 1), false, jump)
     starting = false
@@ -588,7 +599,8 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
   function stop() {
     if (index < 0) return
     // Finished (« ✓ » on the last step) or left before
-    track(index === steps.length - 1 ? 'tour_complete' : 'tour_stop', { step: index + 1, of: steps.length })
+    track(index === steps.length - 1 ? 'tour_complete' : 'tour_stop', { step: index + 1, of: steps.length, step_seconds: stepSeconds() })
+    stepSince = 0
     index = -1
     onStep?.(-1)
     motions = []
@@ -615,7 +627,7 @@ export function createTour({ steps, camera, controls, requestRender, onStart, on
     if (index < 0) return
     // (the focus, on the button about to hide, to next)
     if (root.activeElement === again) next.focus({ preventScroll: true })
-    track('tour_return', { step: index + 1 })
+    track('tour_return', { step: index + 1, step_seconds: stepSeconds() })
     starting = true
     show(index)
     starting = false

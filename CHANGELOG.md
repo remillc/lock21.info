@@ -5,6 +5,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Google Analytics, the guided tour: `tour_step` says whether the visitor went forward or back (`direction`), and
+  `tour_step`, `tour_return`, `tour_stop` and `tour_complete` the time spent on the step left (`step_seconds`).
 - The site is a web app (TODO #81): installable on a phone or a computer (its manifest in French or English, icons
   from the logo), and readable offline. A service worker fetches pages from the network first and keeps each page read
   on the device (with its images and styles); without network, the kept copy, or an offline page listing the kept
