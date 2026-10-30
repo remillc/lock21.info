@@ -12,6 +12,7 @@
 import Default from '@astrojs/starlight/components/Head.astro'
 import { ClientRouter } from 'astro:transitions'
 import Analytics from './Analytics.astro'
+import { pageLang } from '../lib/i18n.js'
 // Fonts seen at the top of every page, fetched with the HTML instead of after the stylesheet: Archivo 400 (text), 700
 // (the left menu's labels, weight 600: drawn first in a lighter weight, then bold, a flicker; TODO #87) and 800 (titles:
 // the home page's title is its largest element), JetBrains Mono 700 (the "Modèle 3D" pill, the home
@@ -23,12 +24,29 @@ import mono700 from '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-700-n
 import mono800 from '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-800-normal.woff2?url'
 
 const fonts = [archivo400, archivo700, archivo800, mono700, mono800]
+// The web app (TODO #81): its manifest in the page's language (installed from an English page, the app opens on /en/),
+// the icon iOS shows on the home screen (public/icons/, tools/pwa/make_icons.mjs), and the service worker
+// (public/sw.js: the network first, the pages read kept for offline), in production only
+const manifest = pageLang(Astro.locals) === 'en' ? '/manifest-en.webmanifest' : '/manifest.webmanifest'
 ---
 
 <Default />
 {fonts.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
+<link rel="manifest" href={manifest} />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<meta name="theme-color" content="#1b1e15" />
 <ClientRouter />
 <Analytics />
+{
+  import.meta.env.PROD && (
+    <script is:inline>
+      if ('serviceWorker' in navigator && !window.lock21Worker) {
+        window.lock21Worker = true
+        navigator.serviceWorker.register('/sw.js').catch(() => {})
+      }
+    </script>
+  )
+}
 <script is:inline>
   if (!window.lock21Router) {
     window.lock21Router = true

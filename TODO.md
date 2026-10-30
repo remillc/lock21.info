@@ -58,12 +58,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #43 Accessibility (WCAG 2.2 AA): audited on 2026-10-26 (axe-core on every page, both themes, desktop and phone;
   keyboard, 320 px reflow, text spacing) and the code issues fixed. Left, for Christian: a check with a real screen
   reader (NVDA, VoiceOver) and Windows' high contrast mode
-- [ ] #81 Make the site (a multi-page Astro site) a progressive web app (Christian, 2026-10-26): a web app manifest
-  (name, icons from the logo, theme colours, start at `/` or `/en/`), installable on a phone; a service worker
-  (e.g. `@vite-pwa/astro`, Workbox) caching the pages and their assets so the notebook reads offline (at the dive site,
-  no network), with an offline page. To decide: what the 3D model keeps offline (its tiles are hundreds of MB on
-  `tiles.lock21.info`: none, the start view's, or a chosen zone), how updates reach visitors (the new version on the
-  next visit), and how it fits client-side routing and Cloudflare's cache headers (`public/_headers`)
 
 - [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): what is left of the small
   fixes, each needing Christian's call. V23 the ☰ on the desktop home; V26 one name for the dive mode; V14
