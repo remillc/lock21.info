@@ -26,6 +26,12 @@ Cette calibration rend les photos d'un même chunk cohérentes entre elles, mais
 
 Plus besoin d'une version basse résolution : la texture de l'export est publiée telle quelle, découpée en tuiles de 4096 px au plus et compressée (KTX2), et le visualiseur ne charge que les tuiles visibles. Une seule page de texture par zone, jusqu'à 16 384 px (ex. zone 4 refaite : 16 384 px).
 
+## Les masques de la baguette
+
+La baguette de mesure orange et blanche que je tiens devant la caméra se voit dans beaucoup d'images. Sans masque, Metashape la peindrait sur la texture, comme une rayure orange sur les moules. Pour chaque image, un masque en noir et blanc lui dit quoi laisser de côté : la baguette en noir, le reste en blanc. Metashape ne prend alors rien de la baguette quand il construit la texture.
+
+Les masques sont faits par un script écrit à l'aide de l'outil d'intelligence artificielle Claude, en octobre 2026. Dans chaque image, il cherche le segment orange de la baguette, une barre droite et mince qui entre par le haut de l'image, puis il suit la même ligne vers le bas, sur le segment blanc et jusqu'au bout orange. Je les ai faits seulement pour les plongées qui servent aux zones en ligne, plus de 130 000 images.
+
 ## Génération de la texture
 
 Menu `Workflow` > `Build texture...`
