@@ -5,6 +5,10 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- A small zone map (TODO #106) on « Découpage du site » (« État des zones ») and « Suivi du travail par zone »: the
+  26 zones at their place on Nick Baets' drawing, online in the secondary colour (from the 3D model's manifest),
+  surveyed and to come outlined (named in the dive log), not surveyed yet dashed in violet; each zone leads to its
+  description. « Suivi » became an `.mdx` page for it.
 - 3D viewer: the navigation's help (and the swim help) a non-modal dialog inside the viewer's frame, centred on it,
   with a scrim over the frame only: it stays over the viewer when the page scrolls (TODO #108; a modal dialog sat in the
   window's middle). Escape still closes it, and a ✕ button at its top right; on a low frame (a phone), tighter margins

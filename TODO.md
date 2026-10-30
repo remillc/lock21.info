@@ -79,11 +79,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   20-minute test with three to five people, in French and English (the eight tasks in the report's « A test with real
   people »)
 
-- [ ] #106 A small zone map as a site component (Christian, 2026-10-29, from the 404 page's mockup 3): zones 1 to 25
-  as squares, those online in the secondary colour (from the manifest, like the home page's count), those to come
-  outlined, and room for one more state (dashed, the viewer's violet for zones not yet surveyed). Kept for later use;
-  mockup: `docs/mockups/404-visuals.html` (#zones), also at https://claude.ai/artifact/HsJ5EGnLeGffA6mJWmY1oZ. The
-  mockup's grid is a schematic, not the real layout of the zones (decoupage-site)
 - [ ] #93 Document the gear (Christian, 2026-10-26): his own photo of the GoPro Hero6 Black in its housing, to replace
   GoPro's product photo (« Matériel utilisé », Caméra); « Le rig » (`collecte/rig.md`, since 2026-10-26: photos of
   2024-05-16 and 2024-06-14, Sylvain Marcotte's 3D model) still has one « à compléter »: the rig's construction

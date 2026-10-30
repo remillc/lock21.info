@@ -1,0 +1,156 @@
+---
+// The small zone map (TODO #106, Christian 2026-10-30): the lock's zones at their place on Nick Baets' drawing
+// (src/data/zoneMap.js), each in its state, a link to its description on the « Découpage du site » page. On that page
+// (a live legend beside the drawing) and on « Suivi du travail par zone ».
+// - online: the 3D model's manifest at build (src/lib/manifest.js, as the home page's count), the secondary colour;
+// - surveyed, to come: named in the dive log (src/lib/diveLog.js, the « Zones » column), outlined;
+// - not surveyed yet: dashed, the viewer's violet for the zones not yet digitised (as its mockups).
+import { dives } from '../lib/diveLog'
+import { localPath, pageLang } from '../lib/i18n'
+import { zonesOnline } from '../lib/manifest'
+import { viewBox, zones } from '../data/zoneMap'
+import { m } from '../paraglide/messages.js'
+
+const lang = pageLang(Astro.locals)
+const o = { locale: lang }
+const online = new Set((await zonesOnline()).ids)
+const surveyed = new Set(dives.flatMap((dive) => dive.zones.split(/[,\s]+/).map(Number).filter(Number.isFinite)))
+/** @param {number} zone */
+const state = (zone) => (online.has(zone) ? 'online' : surveyed.has(zone) ? 'surveyed' : 'unsurveyed')
+const words = { online: m.zonemap_online({}, o), surveyed: m.zonemap_surveyed({}, o), unsurveyed: m.zonemap_unsurveyed({}, o) }
+// The zones described on « Découpage du site » (1 to 25), their headings' anchors
+const page = localPath('/decoupage-site', lang)
+const counts = Object.fromEntries(Object.keys(words).map((s) => [s, zones.filter((z) => state(z.zone) === s).length]))
+---
+
+<figure class="zone-map">
+  <svg viewBox={viewBox.join(' ')} role="img" aria-label={m.zonemap_label({}, o)}>
+    {
+      zones.map(({ zone, rects, label, small, outside }) => {
+        const s = state(zone)
+        const [x, y, w, h] = rects[0]
+        const [lx, ly] = label ?? [x + w / 2, y + h / 2]
+        const title = m.zonemap_zone({ n: String(zone), state: words[s] }, o)
+        const shape = (
+          <>
+            <title>{title}</title>
+            {rects.map(([rx, ry, rw, rh]) => <rect class={s} x={rx} y={ry} width={rw} height={rh} rx="4" />)}
+            <text x={lx} y={ly} class:list={[outside ? 'outside' : s, { small }]}>{zone}</text>
+          </>
+        )
+        return zone <= 25 ? <a href={`${page}#zone-${zone}`} aria-label={title}>{shape}</a> : <g>{shape}</g>
+      })
+    }
+  </svg>
+  <figcaption>
+    {Object.entries(words).map(([s, word]) => <span><i class={s} />{word} ({counts[s]})</span>)}
+  </figcaption>
+</figure>
+
+<style>
+  @layer l21.components {
+    /* Not a notebook figure (custom.scss: FIG. NN, the image's frame): its own legend */
+    .zone-map {
+      --unsurveyed: #8d7bd6;
+      margin: 1.5rem auto;
+      max-width: 22rem;
+      counter-increment: none;
+
+      svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      rect {
+        stroke-width: 4;
+      }
+      rect.online {
+        fill: var(--md-sys-color-secondary);
+        stroke: var(--md-sys-color-secondary);
+      }
+      rect.surveyed {
+        fill: var(--md-sys-color-surface-container);
+        stroke: var(--md-sys-color-on-surface-variant);
+      }
+      rect.unsurveyed {
+        fill: color-mix(in srgb, var(--unsurveyed) 14%, transparent);
+        stroke: var(--unsurveyed);
+        stroke-dasharray: 10 6;
+      }
+
+      text {
+        font: 700 30px var(--l21-font-data);
+        text-anchor: middle;
+        dominant-baseline: central;
+        pointer-events: none;
+      }
+      /* A narrow zone's number: smaller, beside it when it doesn't fit (17 to 19), in the page's colours then */
+      text.small {
+        font-size: 22px;
+      }
+      text.online {
+        fill: var(--md-sys-color-on-secondary);
+      }
+      text.surveyed {
+        fill: var(--md-sys-color-on-surface);
+      }
+      text.unsurveyed {
+        fill: var(--unsurveyed);
+      }
+      text.outside {
+        fill: var(--md-sys-color-on-surface-variant);
+      }
+
+      /* A zone's link: MD3's hover state layer, its outline thicker on the keyboard's focus */
+      a:hover rect {
+        filter: brightness(1.15);
+      }
+      a:focus-visible {
+        outline: none;
+      }
+      a:focus-visible rect {
+        stroke: var(--md-sys-color-tertiary);
+        stroke-width: 8;
+      }
+
+      figcaption {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.25rem 1rem;
+        margin-top: 0.75rem;
+        padding: 0;
+        font: 400 0.8rem/1.5 var(--l21-font-data);
+        color: var(--md-sys-color-on-surface-variant);
+
+        &::before {
+          content: none;
+        }
+
+        span {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+        }
+
+        i {
+          width: 0.9rem;
+          height: 0.9rem;
+          border-radius: 3px;
+          box-sizing: border-box;
+        }
+        i.online {
+          background: var(--md-sys-color-secondary);
+        }
+        i.surveyed {
+          border: 2px solid var(--md-sys-color-on-surface-variant);
+        }
+        i.unsurveyed {
+          border: 2px dashed var(--unsurveyed);
+          background: color-mix(in srgb, var(--unsurveyed) 14%, transparent);
+        }
+      }
+    }
+  }
+</style>

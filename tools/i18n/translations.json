@@ -31,9 +31,9 @@
       "recorded": "2026-10-30"
     },
     "decoupage-site.mdx": {
-      "source": "20704d3b38b18da80548045b66c25716d4fbb487",
-      "commit": "27ab564",
-      "recorded": "2026-10-26"
+      "source": "ce6335536b710c312be772e33abdab9407d5e24b",
+      "commit": "abadf21",
+      "recorded": "2026-10-30"
     },
     "ecluse-21.md": {
       "source": "cc48478f0e136d1143a54efb6d35994445644bf0",
@@ -134,6 +134,11 @@
       "source": "f52d59df06317c468f1efe509e4805a2147f2c79",
       "commit": "ad235eb",
       "recorded": "2026-10-26"
+    },
+    "traitement/suivi.mdx": {
+      "source": "ca4fab3a90509de3582144d1ccdaf2471f662da4",
+      "commit": "abadf21",
+      "recorded": "2026-10-30"
     },
     "traitement/texture.md": {
       "source": "e1c2748846e5267d8145a4cd2b0c1a7bff5485cb",

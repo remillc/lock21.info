@@ -260,5 +260,10 @@
   "install_snackbar": "Lire le site hors ligne, au bord de l’eau ?",
   "install_action": "Installer",
   "install_close": "Fermer",
-  "viewer_helpClose": "Fermer"
+  "viewer_helpClose": "Fermer",
+  "zonemap_label": "Plan des zones de l’écluse et leur état",
+  "zonemap_online": "en ligne",
+  "zonemap_surveyed": "relevée, à venir",
+  "zonemap_unsurveyed": "pas encore relevée",
+  "zonemap_zone": "Zone {n} : {state}"
 }
