@@ -260,5 +260,10 @@
   "install_snackbar": "Read the site offline, by the water?",
   "install_action": "Install",
   "install_close": "Close",
-  "viewer_helpClose": "Close"
+  "viewer_helpClose": "Close",
+  "zonemap_label": "Map of the lock’s zones and their state",
+  "zonemap_online": "online",
+  "zonemap_surveyed": "surveyed, to come",
+  "zonemap_unsurveyed": "not surveyed yet",
+  "zonemap_zone": "Zone {n}: {state}"
 }
