@@ -208,9 +208,10 @@ const links = [
       font: 400 0.8rem/1.4 var(--l21-font-data);
       color: var(--md-sys-color-on-surface-variant);
       overflow-wrap: anywhere;
-    }
-    .asked[hidden] {
-      display: none;
+
+      &[hidden] {
+        display: none;
+      }
     }
     .exits {
       display: flex;
@@ -234,15 +235,16 @@ const links = [
       color: var(--md-sys-color-primary);
       font: 700 0.875rem/1 var(--l21-font-data);
       text-decoration: none;
-    }
-    .button.signal {
-      border-color: var(--md-sys-color-tertiary);
-      background-color: var(--md-sys-color-tertiary);
-      color: #12140e;
-    }
-    .button:hover,
-    .search button:hover {
-      background-image: linear-gradient(color-mix(in srgb, currentColor 8%, transparent) 0 0);
+
+      &.signal {
+        border-color: var(--md-sys-color-tertiary);
+        background-color: var(--md-sys-color-tertiary);
+        color: #12140e;
+      }
+
+      &:hover {
+        background-image: linear-gradient(color-mix(in srgb, currentColor 8%, transparent) 0 0);
+      }
     }
     .search {
       display: flex;
@@ -271,6 +273,10 @@ const links = [
       color: var(--md-sys-color-on-surface);
       font: 700 0.8rem var(--l21-font-data);
       cursor: pointer;
+
+      &:hover {
+        background-image: linear-gradient(color-mix(in srgb, currentColor 8%, transparent) 0 0);
+      }
     }
 
     /* The dive computer: the home page's instrument panel (dark in both themes), in alarm */

@@ -5,6 +5,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Styles: a rule's variants (a class or an attribute of the same element) nested inside it, as its states already
+  were (`rect { &.online {} }`), across the components, `custom.scss` and the viewer's `style.css`; the zone map and the
+  install snackbar no longer nest descendants in `.astro` files (Astro wouldn't scope them). docs/system-design.md says so.
 - The visit's first page in the visitor's language (TODO #107): the language chosen in the language menu prevails
   (kept by the browser); else the first of French and English in the browser's languages, English when neither is
   there. Not when coming from another page of the site, never for search engines and other robots (each address

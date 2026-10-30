@@ -692,6 +692,14 @@ const updated = zones.updated
       margin: 0;
       counter-increment: none;
       text-align: center;
+
+      /* Some room before the first code and after the second (Christian, 2026-10-30) */
+      &:first-child {
+        margin-inline-start: 1.5rem;
+      }
+      &:last-child {
+        margin-inline-end: 1.5rem;
+      }
     }
     /* The QR code in its white frame, 8 px from the frame's edge (docs/system-design.md: content never touches an edge) */
     .qr {
@@ -706,21 +714,15 @@ const updated = zones.updated
       width: 100%;
       height: auto;
     }
-    /* Some room before the first code and after the second (Christian, 2026-10-30) */
-    .qr-codes figure:first-child {
-      margin-inline-start: 1.5rem;
-    }
-    .qr-codes figure:last-child {
-      margin-inline-end: 1.5rem;
-    }
     .qr-codes figcaption {
       padding-inline: 0;
       margin-top: 0.5rem;
       font-size: 0.875rem;
       font-weight: 700;
-    }
-    .qr-codes figcaption::before {
-      content: none;
+
+      &::before {
+        content: none;
+      }
     }
     .qr-codes figcaption span {
       display: block;

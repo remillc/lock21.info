@@ -49,107 +49,111 @@ const counts = Object.fromEntries(Object.keys(words).map((s) => [s, zones.filter
 
 <style>
   @layer l21.components {
-    /* Not a notebook figure (custom.scss: FIG. NN, the image's frame): its own legend */
+    /* Not a notebook figure (custom.scss: FIG. NN, the image's frame): its own legend. Descendants flat, states nested
+       (docs/system-design.md, Styles: Astro scopes only the selectors it sees at the top) */
     .zone-map {
       --unsurveyed: #8d7bd6;
       margin: 1.5rem auto;
       max-width: 22rem;
       counter-increment: none;
+    }
 
-      svg {
-        display: block;
-        width: 100%;
-        height: auto;
-      }
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
 
-      rect {
-        stroke-width: 4;
-      }
-      rect.online {
+    rect {
+      stroke-width: 4;
+
+      &.online {
         fill: var(--md-sys-color-secondary);
         stroke: var(--md-sys-color-secondary);
       }
-      rect.surveyed {
+      &.surveyed {
         fill: var(--md-sys-color-surface-container);
         stroke: var(--md-sys-color-on-surface-variant);
       }
-      rect.unsurveyed {
+      &.unsurveyed {
         fill: color-mix(in srgb, var(--unsurveyed) 14%, transparent);
         stroke: var(--unsurveyed);
         stroke-dasharray: 10 6;
       }
+    }
 
-      text {
-        font: 700 30px var(--l21-font-data);
-        text-anchor: middle;
-        dominant-baseline: central;
-        pointer-events: none;
-      }
+    text {
+      font: 700 30px var(--l21-font-data);
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none;
+
       /* A narrow zone's number: smaller, beside it when it doesn't fit (17 to 19), in the page's colours then */
-      text.small {
+      &.small {
         font-size: 22px;
       }
-      text.online {
+      &.online {
         fill: var(--md-sys-color-on-secondary);
       }
-      text.surveyed {
+      &.surveyed {
         fill: var(--md-sys-color-on-surface);
       }
-      text.unsurveyed {
+      &.unsurveyed {
         fill: var(--unsurveyed);
       }
-      text.outside {
+      &.outside {
         fill: var(--md-sys-color-on-surface-variant);
       }
+    }
 
-      /* A zone's link: MD3's hover state layer, its outline thicker on the keyboard's focus */
-      a:hover rect {
-        filter: brightness(1.15);
-      }
-      a:focus-visible {
+    /* A zone's link: lighter under the pointer, its outline thicker in the signal colour on the keyboard's focus */
+    a {
+      &:focus-visible {
         outline: none;
       }
-      a:focus-visible rect {
-        stroke: var(--md-sys-color-tertiary);
-        stroke-width: 8;
+    }
+    a:hover rect {
+      filter: brightness(1.15);
+    }
+    a:focus-visible rect {
+      stroke: var(--md-sys-color-tertiary);
+      stroke-width: 8;
+    }
+
+    figcaption {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.25rem 1rem;
+      margin-top: 0.75rem;
+      padding: 0;
+      font: 400 0.8rem/1.5 var(--l21-font-data);
+      color: var(--md-sys-color-on-surface-variant);
+
+      &::before {
+        content: none;
       }
+    }
+    figcaption span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    figcaption i {
+      width: 0.9rem;
+      height: 0.9rem;
+      border-radius: 3px;
+      box-sizing: border-box;
 
-      figcaption {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.25rem 1rem;
-        margin-top: 0.75rem;
-        padding: 0;
-        font: 400 0.8rem/1.5 var(--l21-font-data);
-        color: var(--md-sys-color-on-surface-variant);
-
-        &::before {
-          content: none;
-        }
-
-        span {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.4rem;
-        }
-
-        i {
-          width: 0.9rem;
-          height: 0.9rem;
-          border-radius: 3px;
-          box-sizing: border-box;
-        }
-        i.online {
-          background: var(--md-sys-color-secondary);
-        }
-        i.surveyed {
-          border: 2px solid var(--md-sys-color-on-surface-variant);
-        }
-        i.unsurveyed {
-          border: 2px dashed var(--unsurveyed);
-          background: color-mix(in srgb, var(--unsurveyed) 14%, transparent);
-        }
+      &.online {
+        background: var(--md-sys-color-secondary);
+      }
+      &.surveyed {
+        border: 2px solid var(--md-sys-color-on-surface-variant);
+      }
+      &.unsurveyed {
+        border: 2px dashed var(--unsurveyed);
+        background: color-mix(in srgb, var(--unsurveyed) 14%, transparent);
       }
     }
   }
