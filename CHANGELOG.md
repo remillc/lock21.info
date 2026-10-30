@@ -3,6 +3,11 @@
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
 public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
+## Unreleased
+
+- 3D viewer: the settings (the ⚙ panel and the « Équilibre » slider) hidden on the live site, shown in development or
+  with `?settings=1` in a link; without them, the settings kept by the browser no longer apply.
+
 ## 1.0.0-beta.4 - 2026-10-29
 
 - Downloads (GLB, Google Earth, AR) rebuilt (`AR_VERSION` 2026-10-29b): the context's fillers smooth-shaded, as in

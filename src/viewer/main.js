@@ -67,6 +67,10 @@ export function mountViewer() {
   // reloads the page. `live` holds one handler per parameter. The address keeps only the camera (?cam=, see viewUrl):
   // the other parameters still work in a link (tests), and are removed from the address once read.
   const params = new URLSearchParams(location.search)
+  // The settings (the ⚙ panel and the « Équilibre » slider under it) only in development (Christian, 2026-10-30), or with
+  // ?settings=1 in a link (tests on the live site)
+  const showSettings = import.meta.env.DEV || params.get('settings') === '1'
+  params.delete('settings')
   // Settings saved by the browser (config-panel.js) where the link doesn't set them. Only the panel's current settings:
   // one saved earlier and since taken out of the panel (the tiles' source, the relief) would apply with no control to
   // change it back; those work only in a link (?tiles=, ?relief=, for tests). Nor those not remembered (underwater: a
@@ -96,7 +100,8 @@ export function mountViewer() {
   }
   if (reset) forgetSettings()
   params.delete('reset')
-  for (const [key, value] of savedSettings()) if (!params.has(key) && panelKeys.has(key)) params.set(key, value)
+  // Without the panel (production), none: they would apply with no control to change them back
+  if (showSettings) for (const [key, value] of savedSettings()) if (!params.has(key) && panelKeys.has(key)) params.set(key, value)
   const live = {}
   // The address keeps only what makes the view shareable (viewUrl): the camera, and underwater with its season and lamp
   const SHARED_KEYS = ['cam', 'underwater', 'season', 'lamp']
@@ -1413,7 +1418,7 @@ export function mountViewer() {
   live.balance = (v) => { look.balance = Number(v); updateZoneColors() }
   // Its slider, under the settings button; the value kept by the browser (?balance= wins)
   const BALANCE_KEY = 'l21-viewer-balance'
-  if (!params.has('balance')) {
+  if (!params.has('balance') && showSettings) {
     try {
       const kept = localStorage.getItem(BALANCE_KEY)
       if (kept !== null && Number.isFinite(Number(kept))) look.balance = Number(kept)
@@ -1434,7 +1439,7 @@ export function mountViewer() {
       live.balance(range.value)
       try { localStorage.setItem(BALANCE_KEY, range.value) } catch {}
     }, { signal: life.signal })
-    control.hidden = false
+    control.hidden = !showSettings
   }
 
   // Ambient occlusion (N8AO): darkens recesses and joints, giving depth to unlit surfaces. N8AO rebuilds the
@@ -2009,6 +2014,7 @@ export function mountViewer() {
     live,
     button: root.querySelector('.settings-button'),
     session,
+    shown: showSettings,
   })
   root.querySelector('.viewer-frame').append(settings)
   if (look.underwater) setUnderwater(true)

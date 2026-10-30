@@ -110,8 +110,10 @@ class SettingsPanel extends HTMLElement {
   /** @type {Map<string, number>} The pending setting_change of each setting (set) */
   trackTimers = new Map()
 
-  configure({ schema, values, live, button, session }) {
+  configure({ schema, values, live, button, session, shown = true }) {
     this.schema = schema
+    // The ⚙ button shown (main.js: in development, or ?settings=1 in production)
+    this.shown = shown
     // Telemetry session code (telemetry.js), shown at the bottom so that a tester can read it out
     this.session = session
     // Current values (URLSearchParams); a setting at its default is absent
@@ -125,7 +127,7 @@ class SettingsPanel extends HTMLElement {
     this.setAttribute('role', 'dialog')
     this.setAttribute('aria-label', m.viewer_settingsDialog())
     this.render()
-    this.button.hidden = false
+    this.button.hidden = !this.shown
     this.button.addEventListener('click', () => {
       if (this.hidden) track('viewer_button', { button: 'settings' })
       this.toggle(this.hidden)
