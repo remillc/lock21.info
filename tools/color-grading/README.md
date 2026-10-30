@@ -119,6 +119,8 @@ Les zones 3 et 4 sont données à part (`-f`) et retirées de la liste de `used_
 
 **Dans Metashape.** `retexture_chunk.py -k` importe les masques de chaque plongée sur ses seules photos. À la main: *File › Import › Import Masks*, *Method: From File*, *Operation: Replacement*, *Filename template*: `{filename}_guide.png`, dans le dossier `_masks`. Metashape ne prend rien des parties noires pour la texture.
 
+Les images peuvent être des TIFF ou des JPEG (la zone 10, 2024-06-29, n'a que des JPEG: ajouté le 2026-10-30).
+
 ## Les LUT
 
 Les LUT du projet sont dans `O:\_davinci-resolve-library\luts`. Resolve ne pose qu'une LUT qu'il a listée dans son

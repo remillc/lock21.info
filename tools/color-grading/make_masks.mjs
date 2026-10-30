@@ -87,7 +87,7 @@ const alt = args.alt?.replace(/[\\/]?$/, '/')
 const out = (args.out ?? join(dirname(dir.replace(/\/$/, '')), '_masks')).replace(/[\\/]?$/, '/')
 const match = args.match ? new RegExp(args.match) : null
 const list = (d) => (d && existsSync(d) ? readdirSync(d) : [])
-const files = [...new Set([...list(dir), ...list(alt)])].filter((f) => /\.tiff?$/i.test(f) && (!match || match.test(f))).sort()
+const files = [...new Set([...list(dir), ...list(alt)])].filter((f) => /\.(tiff?|jpe?g)$/i.test(f) && (!match || match.test(f))).sort()
   .filter((f, k) => k % Number(args.every) === 0)
 /** A frame's path: in --dir, else in --alt */
 const frameOf = (f) => (existsSync(dir + f) || !alt ? dir + f : alt + f)
@@ -547,7 +547,7 @@ const scanned = []
 const extended = []
 const sheet = []
 for (const [k, f] of files.entries()) {
-  const mask = out + f.replace(/\.tiff?$/i, '_guide.png')
+  const mask = out + f.replace(/\.(tiff?|jpe?g)$/i, '_guide.png')
   // (--resume: a frame whose mask is already 1-bit was done by this version)
   if (args.resume && !args['dry-run'] && bitDepth(mask) === 1) { counts.skipped++; continue }
   let data
