@@ -3,12 +3,19 @@
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
 public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
-## 1.0.0-beta.6 - 2026-10-30
+## Unreleased
 
+- 3D model: zone 3 retextured (2026-10-30) from its frames with the colour evened out across the frame (the yellow
+  patches of the rig's lamps gone) and with the new masks of the rod (white segment and tip included); the downloads
+  and the augmented reality models rebuilt. `retexture_chunk.py` never overwrites an export of the same name: its
+  README says to move the old one aside first, or to export afterwards with `--no-texture`.
 - Texture: the measuring rod's masks for every frame of the dives behind the published zones, so that Metashape leaves
   the rod out of the textures (`tools/color-grading/make_masks.mjs`, `used_frames.py`, `masks_queue.mjs`). The rod is now
   masked whole: its orange segment, then its white segment and orange tip followed along its axis (the masks covered the
   orange segment only). Masks written as 1-bit PNG, 8 times smaller. The texture page says what they are for.
+
+## 1.0.0-beta.6 - 2026-10-30
+
 - 3D model: zone 4 retextured from colour-graded frames (TODO #75): two corrections by group of clips (green water,
   the lamps) and the colour evened out across the frame (the rig's lamps light its middle warm, the water its edges
   green; `tools/color-grading/flat_color.py`). The terrain and the mockups republished from the .blend.
