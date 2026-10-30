@@ -29,6 +29,8 @@ GAMMA = 2.4
 GRID = (48, 64)  # rows, columns of the map
 LUMA = np.array([0.2126, 0.7152, 0.0722])
 TO_LINEAR = (np.arange(256) / 255.0) ** GAMMA
+# The frames corrected so far, one name a line, in the output folder (a run started again skips them)
+DONE = ".flat-done"
 TO_CODE = np.round(255 * np.linspace(0, 1, 4096) ** (1 / GAMMA)).astype(np.uint8)
 
 p = argparse.ArgumentParser(prog="flat_color.py", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -40,14 +42,16 @@ p.add_argument("-n", "--sample", type=int, default=400, help="frames measured pe
 p.add_argument("-s", "--smooth", type=float, default=3.0, help="smoothing of the map, in cells of the 64 x 48 grid (default 3)")
 p.add_argument("--limit", type=float, default=2.0, help="largest gain on a channel, and 1/limit the smallest (default 2)")
 p.add_argument("--strength", type=float, default=1.0, help="share of the correction applied (default 1)")
-p.add_argument("-o", "--out", help="write the corrected frames there, same names")
+p.add_argument("-o", "--out", help="write the corrected frames there, same names; the frames' own folder (-o = -d) corrects them in place")
 p.add_argument("--preview", nargs="+", metavar=("OUT.jpg", "FRAME"), help="before and after, side by side: the output, then frames")
 p.add_argument("--original", metavar="DIR", help="with --preview: first the frame of the same name in DIR (before any grade)")
 p.add_argument("-j", "--jobs", type=int, default=max(1, (os.cpu_count() or 2) - 2), help="processes (default: cores - 2)")
 
 
 def linear(path, size=None):
-    image = Image.open(path).convert("RGB")
+    # Read whole and closed at once: a frame corrected in place is written over the same file
+    with Image.open(path) as source:
+        image = source.convert("RGB")
     if size:
         image = image.resize(size, Image.BILINEAR)
     return TO_LINEAR[np.asarray(image)]
@@ -98,12 +102,15 @@ _maps, _full = {}, {}
 
 
 def work(args):
-    """One frame corrected; each process sizes a group's map to the frames once"""
+    """One frame corrected; each process sizes a group's map to the frames once. Written to a temporary file, then
+    moved over the output: in place, a frame is never left half written"""
     path, out, key = args
     if key not in _full:
         with Image.open(path) as image:
             _full[key] = full_size(_maps[key], (image.height, image.width))
-    correct(path, _full[key]).save(out, compression=None)
+    temporary = out + ".tmp"
+    correct(path, _full[key]).save(temporary, format="TIFF", compression=None)
+    os.replace(temporary, out)
     return os.path.basename(path)
 
 
@@ -157,16 +164,23 @@ if __name__ == "__main__":
         print("preview:", out)
     if a.out:
         os.makedirs(a.out, exist_ok=True)
+        # The frames already corrected (DONE, in the output folder): skipped, so that a run started again after a stop
+        # never corrects a frame twice in place
+        done_path = os.path.join(a.out, DONE)
+        done = set(open(done_path, encoding="utf-8").read().split()) if os.path.exists(done_path) else set()
         jobs = []
         for f in sorted(os.listdir(a.dir)):
-            if not f.lower().endswith(".tif"):
+            if not f.lower().endswith(".tif") or f in done:
                 continue
             key = group_of(f, groups)
             if key is None:
                 print(f, "no group: skipped")
                 continue
             jobs.append((os.path.join(a.dir, f), os.path.join(a.out, f), key))
-        with ProcessPoolExecutor(a.jobs, initializer=init, initargs=(maps,)) as pool:
+        print(f"{len(jobs)} frames to correct, {len(done)} already done", flush=True)
+        with ProcessPoolExecutor(a.jobs, initializer=init, initargs=(maps,)) as pool, open(done_path, "a", encoding="utf-8") as log:
             for i, name in enumerate(pool.map(work, jobs, chunksize=8), 1):
+                log.write(name + "\n")
+                log.flush()
                 if i % 500 == 0 or i == len(jobs):
                     print(f"{i}/{len(jobs)} {name}", flush=True)
