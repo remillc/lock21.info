@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#107**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#108**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -55,6 +55,13 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ## Site
 
+- [ ] #107 The display language for a visitor whose browser prefers English (Christian, 2026-10-30): today `/` is
+  always French (a static file: the Worker doesn't read `Accept-Language`, and no script reads `navigator.language`);
+  English only through the footer's language select or an `/en/` link. No automatic redirect on the same address
+  (Googlebot crawls mostly in English and might no longer see the French page). Proposed: a discreet banner on the
+  French pages, shown only when the browser prefers English (« This site is also in English → », to the page's
+  English version, `localPath`), dismissed for good once closed or once the visitor chose a language. To decide: on
+  every page or the home page only, and the reverse (French on the English pages)
 - [ ] #43 Accessibility (WCAG 2.2 AA): audited on 2026-10-26 (axe-core on every page, both themes, desktop and phone;
   keyboard, 320 px reflow, text spacing) and the code issues fixed. Left, for Christian: a check with a real screen
   reader (NVDA, VoiceOver) and Windows' high contrast mode
