@@ -3,36 +3,39 @@
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
 public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
-## Unreleased
+## 1.0.0-beta.6 - 2026-10-30
 
 - 3D model: zone 4 retextured from colour-graded frames (TODO #75): two corrections by group of clips (green water,
-  the lamps) and the colour evened out across the frame (the rig's lamps lit its middle warm, the water its edges
+  the lamps) and the colour evened out across the frame (the rig's lamps light its middle warm, the water its edges
   green; `tools/color-grading/flat_color.py`). The terrain and the mockups republished from the .blend.
 - 3D viewer: the mockups of the zones not yet online in a light grey, a little see-through (opacity 0.65), instead of
-  their textures from the .blend (the 1988 drawing through colour ramps); still lit as the context. The zone map's
-  « not surveyed yet » in the same grey (it was violet, the mockups' former colour).
-- Styles: a rule's variants (a class or an attribute of the same element) nested inside it, as its states already
-  were (`rect { &.online {} }`), across the components, `custom.scss` and the viewer's `style.css`; the zone map and the
-  install snackbar no longer nest descendants in `.astro` files (Astro wouldn't scope them). docs/system-design.md says so.
-- The visit's first page in the visitor's language (TODO #107): the language chosen in the language menu prevails
-  (kept by the browser); else the first of French and English in the browser's languages, English when neither is
-  there. Not when coming from another page of the site, never for search engines and other robots (each address
-  keeps its language for them; hreflang gives the other). The privacy page says the choice is kept.
+  their textures from the .blend (the 1988 drawing through colour ramps); still lit as the context.
+- 3D viewer: the navigation's help (and the swim help) a non-modal dialog inside the viewer's frame, centred on it,
+  with a scrim over the frame only: it stays over the viewer when the page scrolls (TODO #108). Escape closes it, and
+  a ✕ button at its top right; on a low frame (a phone), tighter margins and a smaller title. On a touch screen, each
+  gesture with Material Symbols' gesture icon (a finger pressed and its movement) in orange, as the small mouse on a
+  computer; the « ? » at the top right opens this same help (it showed a card that closed by itself after 7 s).
+- /modele on a phone held upright: the 3D viewer in 4:5 instead of 16:9 (about 358 x 444 px instead of 358 x 316 on a
+  390 px phone), and the compass 40 px instead of 56. The « Réalité augmentée » QR codes' captions on one line,
+  centred, without the notebook's « FIG. NN » (TODO #109).
 - A small zone map (TODO #106) on « Découpage du site » (« État des zones ») and « Suivi du travail par zone »: the
   26 zones at their place on Nick Baets' drawing, online in the secondary colour (from the 3D model's manifest),
-  surveyed and to come outlined (named in the dive log), not surveyed yet dashed in violet; each zone leads to its
-  description. « Suivi » became an `.mdx` page for it.
-- 3D viewer: the navigation's help (and the swim help) a non-modal dialog inside the viewer's frame, centred on it,
-  with a scrim over the frame only: it stays over the viewer when the page scrolls (TODO #108; a modal dialog sat in the
-  window's middle). Escape still closes it, and a ✕ button at its top right; on a low frame (a phone), tighter margins
-  and a smaller title. On a touch screen, each gesture with Material Symbols' gesture icon (a hand's finger pressed and
-  its movement: swipe, two-finger swipe, pinch, double tap) in orange, as the small mouse on a computer; and the « ? »
-  at the top right opens this same help (it showed a card that closed by itself after 7 s).
-- /modele on a phone held upright: the 3D viewer in 4:5 instead of 16:9 (about 358 x 444 px instead of 358 x 316 on a
-  390 px phone), and the compass 40 px instead of 56.
-- /modele, « Réalité augmentée »: the QR codes' captions on one line, centred under each code, without the
-  notebook's « FIG. NN » (it broke them over two lines; TODO #109), and some room before the first code and after the
-  second.
+  surveyed and to come outlined (named in the dive log), not surveyed yet dashed in grey as the viewer's mockups; each
+  zone leads to its description. « Suivi » became an `.mdx` page for it; its table has zones 21 to 26 and the columns
+  « En ligne » and « Couleurs étalonnées ».
+- « Étalonnage des couleurs »: a section on the rig's lamps lighting the middle of the frame (the yellow patches on
+  zone 3's floor) and how the colour is evened out across the frame, with a frame before and after and the correction
+  map.
+- The visit's first page in the visitor's language (TODO #107): the language chosen in the language menu prevails
+  (kept by the browser); else the first of French and English in the browser's languages, English when neither is
+  there. Not when coming from another page of the site, never for search engines and other robots. The privacy page
+  says the choice is kept.
+- Styles: a rule's variants (a class or an attribute of the same element) nested inside it, as its states already
+  were (`rect { &.online {} }`); the zone map and the install snackbar no longer nest descendants in `.astro` files
+  (Astro wouldn't scope them). docs/system-design.md says so.
+- Tools: each step that changes a zone's frames writes a new folder named after it (`…-graded-flat-…`), relinks
+  Metashape and deletes the previous one (tools/color-grading/README.md); `flat_color.py` writes through a temporary
+  file and keeps a list of the frames done.
 
 ## 1.0.0-beta.5 - 2026-10-30
 
