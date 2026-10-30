@@ -37,6 +37,24 @@ const manifest = pageLang(Astro.locals) === 'en' ? '/manifest-en.webmanifest' : 
 <meta name="theme-color" content="#1b1e15" />
 <ClientRouter />
 <Analytics />
+<script is:inline>
+  // The browser's offer to install (Chrome, Edge, Android): kept for the « Installer l'app » button of the « À propos »
+  // page (InstallApp.astro, TODO #110); preventDefault stops Chrome's own bar at the bottom of a phone's screen (never
+  // a popup at arrival). In development too (the button tried on npm run dev)
+  if (!window.lock21InstallWatch) {
+    window.lock21InstallWatch = true
+    addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault()
+      window.lock21Install = event
+      document.dispatchEvent(new Event('l21:installable'))
+    })
+    addEventListener('appinstalled', () => {
+      window.lock21Install = null
+      document.dispatchEvent(new Event('l21:installed'))
+      document.dispatchEvent(new CustomEvent('l21:track', { detail: { name: 'app_installed', params: {} } }))
+    })
+  }
+</script>
 {
   import.meta.env.PROD && (
     <script is:inline>

@@ -252,5 +252,9 @@
   "viewer_seasonSpring": "Printemps",
   "viewer_seasonSummer": "Été",
   "viewer_seasonAutumn": "Automne",
-  "viewer_seasonValue": "{name} · {ft} pi ({m} m)"
+  "viewer_seasonValue": "{name} · {ft} pi ({m} m)",
+  "install_button": "Installer l’app",
+  "install_installed": "L’app est installée sur cet appareil.",
+  "install_ios": "Sur iPhone ou iPad, dans Safari : touchez le bouton Partager, puis « Sur l’écran d’accueil ».",
+  "install_other": "Dans le menu du navigateur, choisissez « Installer » ou « Ajouter à l’écran d’accueil ». Sur Mac, dans Safari : Fichier › Ajouter au Dock."
 }

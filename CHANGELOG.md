@@ -5,6 +5,10 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- « Installer l'app » / “Install the app” on the About page (TODO #110): what the app gives (offline reading by the
+  water, the home screen) and a button, always shown: it opens the browser's install where it offers one (Chrome,
+  Edge, Android; their own bar at arrival stopped), else shows the steps (Safari on iPhone and iPad, or the browser's
+  menu); « installed » once it is. Analytics: app_install (accepted, dismissed, steps) and app_installed.
 - Google Analytics, the guided tour: `tour_step` says whether the visitor went forward or back (`direction`), and
   `tour_step`, `tour_return`, `tour_stop` and `tour_complete` the time spent on the step left (`step_seconds`).
 - The site is a web app (TODO #81): installable on a phone or a computer (its manifest in French or English, icons

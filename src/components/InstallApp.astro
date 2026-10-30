@@ -1,0 +1,123 @@
+---
+// The web app's install (TODO #110, Christian 2026-10-30), on the « À propos » page: what this device can do, never a
+// popup at arrival.
+// - an « Installer l'app » button (MD3 filled), always shown (Christian, 2026-10-30): where the browser offers the
+//   install (Chrome, Edge, Android: its beforeinstallprompt event, kept by Head.astro, which also stops Chrome's own
+//   mini bar on phones), it opens the browser's install; elsewhere it shows the steps: in Safari on iPhone and iPad,
+//   or where the browser's menu has the install;
+// - already installed (opened as the app, or just installed): says so instead of the button.
+// Analytics: app_install (the button's outcome: accepted, dismissed) and app_installed, through l21:track.
+import { Icon } from 'astro-icon/components'
+import { pageLang } from '../lib/i18n'
+import { m } from '../paraglide/messages.js'
+
+const o = { locale: pageLang(Astro.locals) }
+---
+
+<l21-install-app>
+  <button type="button" class="install-button">
+    <Icon name="material-symbols:install-mobile-outline-rounded" aria-hidden="true" width="18" height="18" />
+    {m.install_button({}, o)}
+  </button>
+  <p data-state="ios" hidden>{m.install_ios({}, o)}</p>
+  <p data-state="other" hidden>{m.install_other({}, o)}</p>
+  <p data-state="installed" hidden>{m.install_installed({}, o)}</p>
+</l21-install-app>
+
+<script>
+  /** @typedef {Event & { prompt: () => Promise<void>, userChoice: Promise<{ outcome: string }> }} InstallPrompt */
+  const w = /** @type {{ lock21Install?: InstallPrompt | null }} */ (/** @type {unknown} */ (window))
+  const track = (/** @type {string} */ name, params = {}) =>
+    document.dispatchEvent(new CustomEvent('l21:track', { detail: { name, params } }))
+
+  class InstallApp extends HTMLElement {
+    connectedCallback() {
+      this.abort = new AbortController()
+      const signal = this.abort.signal
+      this.update()
+      document.addEventListener('l21:installable', () => this.update(), { signal })
+      document.addEventListener('l21:installed', () => this.update(true), { signal })
+      this.querySelector('button')?.addEventListener('click', async () => {
+        const prompt = w.lock21Install
+        if (!prompt) {
+          // No install offered by this browser: its steps
+          this.steps = true
+          this.update()
+          track('app_install', { outcome: 'steps' })
+          return
+        }
+        await prompt.prompt()
+        const { outcome } = await prompt.userChoice
+        track('app_install', { outcome })
+        // A prompt is used once; the browser offers another later if the visitor said no
+        w.lock21Install = null
+        this.update(outcome === 'accepted')
+      }, { signal })
+    }
+
+    disconnectedCallback() {
+      this.abort?.abort()
+    }
+
+    /** Shows the button, the steps once it was pressed without an install offered, or « installed » @param {boolean} [installed] */
+    update(installed = false) {
+      const standalone = matchMedia('(display-mode: standalone)').matches || /** @type {{ standalone?: boolean }} */ (navigator).standalone === true
+      const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+      const done = installed || standalone
+      const steps = !done && this.steps && !w.lock21Install ? (ios ? 'ios' : 'other') : ''
+      const button = /** @type {HTMLButtonElement} */ (this.querySelector('button'))
+      button.hidden = done
+      for (const p of this.querySelectorAll('p')) p.hidden = p.dataset.state !== (done ? 'installed' : steps)
+    }
+  }
+  customElements.define('l21-install-app', InstallApp)
+</script>
+
+<style>
+  @layer l21.components {
+    l21-install-app {
+      display: block;
+    }
+    l21-install-app p {
+      margin-top: 0.75rem;
+    }
+    /* MD3 filled button (docs/system-design.md): 40 px high in a 48 px touch target (the transparent border, its
+       colour inside it), full corners, its icon 18 px; as the « Modèle 3D » pill (ModelPill.astro), in the primary
+       colour */
+    .install-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-sizing: border-box;
+      min-height: 48px;
+      padding: 0 1.25rem;
+      border: 4px solid transparent;
+      border-radius: var(--md-sys-shape-full);
+      background: var(--md-sys-color-primary);
+      background-clip: padding-box;
+      color: var(--md-sys-color-on-primary);
+      font-family: var(--l21-font-data);
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+
+      &[hidden] {
+        display: none;
+      }
+
+      &:hover {
+        box-shadow: inset 0 0 0 100px color-mix(in srgb, var(--md-sys-color-on-primary) var(--md-sys-state-hover), transparent);
+      }
+
+      &:focus-visible,
+      &:active {
+        box-shadow: inset 0 0 0 100px color-mix(in srgb, var(--md-sys-color-on-primary) var(--md-sys-state-pressed), transparent);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--md-sys-color-secondary);
+        outline-offset: -2px;
+      }
+    }
+  }
+</style>
