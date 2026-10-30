@@ -252,5 +252,18 @@
   "viewer_seasonSpring": "Printemps",
   "viewer_seasonSummer": "Été",
   "viewer_seasonAutumn": "Automne",
-  "viewer_seasonValue": "{name} · {ft} pi ({m} m)"
+  "viewer_seasonValue": "{name} · {ft} pi ({m} m)",
+  "install_button": "Installer l’app",
+  "install_installed": "L’app est installée sur cet appareil.",
+  "install_ios": "Sur iPhone ou iPad, dans Safari : touchez le bouton Partager, puis « Sur l’écran d’accueil ».",
+  "install_other": "Dans le menu du navigateur, choisissez « Installer » ou « Ajouter à l’écran d’accueil ». Sur Mac, dans Safari : Fichier › Ajouter au Dock.",
+  "install_snackbar": "Lire le site hors ligne, au bord de l’eau ?",
+  "install_action": "Installer",
+  "install_close": "Fermer",
+  "viewer_helpClose": "Fermer",
+  "zonemap_label": "Plan des zones de l’écluse et leur état",
+  "zonemap_online": "en ligne",
+  "zonemap_surveyed": "relevée, à venir",
+  "zonemap_unsurveyed": "pas encore relevée",
+  "zonemap_zone": "Zone {n} : {state}"
 }

@@ -13,8 +13,8 @@ The site measures its traffic with Google Analytics 4. Without your name or your
 
 - the pages viewed, and the page you came from (another site, a search engine, a QR code on the model page);
 - the type of device, the operating system, the browser, the language, and the approximate country and region;
-- what you do on the site: a search (the text searched, when you open a result), opening the menu, the theme and language chosen, a card or button of the home page, an image enlarged, a link to another site, reading a page to the bottom;
-- what you do in the 3D model: its buttons (start view, full screen, dive, settings, help), the guided tour (its start, steps and end), the season and the lamp while diving, a setting changed, your first move (turn, pan, zoom, swim), the time spent in the normal view and diving, downloading the files (Google Earth, GLB) and launching augmented reality (on a table or at full scale).
+- what you do on the site: a search (the text searched, when you open a result), opening the menu, installing the app, the theme and language chosen, the theme shown (light or dark, from your choice or your system), a card or button of the home page, an image enlarged, a link to another site, reading a page to the bottom;
+- what you do in the 3D model: its buttons (start view, full screen, dive, settings, help), the guided tour (its start, its steps forward or back, the time spent on each, its end), the season and the lamp while diving, a setting changed, your first move (turn, pan, zoom, swim), the time spent in the normal view and diving, downloading the files (Google Earth, GLB) and launching augmented reality (on a table or at full scale).
 
 **Why:** to know which pages are useful, how the 3D model is used (the guided tour, diving, the downloads, augmented reality), and where visitors come from, to decide where the project goes next.
 
@@ -26,7 +26,7 @@ The site measures its traffic with Google Analytics 4. Without your name or your
 
 ## What stays in your browser
 
-The 3D viewer keeps your settings (lighting, colours, etc.), and the site keeps your opt-out if you made one, in your browser's local storage. This information doesn't leave your device and isn't a cookie.
+The 3D viewer keeps your settings (lighting, colours, etc.), and the site keeps the language chosen in its menu and your opt-out if you made one, in your browser's local storage. So that the site reads without a network, your browser also keeps a copy of the pages you have read, with their images. This information doesn't leave your device and isn't a cookie. You can erase it by deleting the site's data in your browser.
 
 ## 3D viewer technical log
 
@@ -37,7 +37,11 @@ The 3D viewer sends the site a short technical log of each visit, to find and fi
 - the errors encountered, and how augmented reality runs technically;
 - the country, inferred by the host.
 
-It holds neither your name, nor your IP address, nor a cookie. Each visit gets a random code (shown at the bottom of the viewer's ⚙ settings), which can't recognise you from one visit to the next. To spot a visit that ended badly, the viewer keeps that code in the tab's storage for the length of the visit. The log is kept a few days at Cloudflare, then deleted. It is used for nothing else.
+It holds neither your name, nor your IP address, nor a cookie. Each visit gets a random code, which can't recognise you from one visit to the next. To spot a visit that ended badly, the viewer keeps that code in the tab's storage for the length of the visit. The log is kept a few days at Cloudflare, then deleted. It is used for nothing else.
+
+## Opening the model in Google Earth
+
+The Google Earth file (KMZ) holds only a link to the model, on this site. Each time you open it, Google Earth asks the site for the list of the model's parts, and the site counts that opening in Google Analytics, with the Google Earth version, its language, and the approximate country, region and city the host infers. Your IP address is not passed on: a code computed from it, which changes every day, only lets the same person be counted once a day. No cookie is set. The opt-out button above doesn't apply here, since Google Earth doesn't go through your browser: to not be counted, don't open the KMZ file, or write to me.
 
 ## Hosting
 

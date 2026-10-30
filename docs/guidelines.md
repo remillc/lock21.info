@@ -68,6 +68,27 @@ content. Scripts must survive that:
   kept across pages) fill the gaps. Check them after a Starlight upgrade. A link to the other language (French ↔
   `/en/`) loads the page in full, so that the search starts again in that language.
 
+## Web app and offline (service worker)
+
+The site is a progressive web app (TODO #81, Christian 2026-10-30: the network first). `public/sw.js` is registered by
+`Head.astro`, in production only; its comment at the top is the reference.
+
+- **Pages:** the network first, each page read kept on the device (200 at most); without network, the kept copy, else
+  `public/offline.html` (self-contained, French or English by the address, it lists the kept pages). On a slow network
+  (no answer in 4 s) a kept copy is shown and the network's answer kept for next time. Pages prefetched by the router
+  are kept too, so a page hovered once reads offline.
+- **Files:** `/_astro/` (hashed, never stale) from the kept copy first; the other files of the site the network first.
+  Never kept: other sites (Google Analytics, the 3D tiles: the 3D model is not available offline), `/api/`,
+  `/downloads/`, `/viewer/`.
+- **Updates:** a new `sw.js` takes over at the next visit (`skipWaiting`, `clients.claim`; `public/_headers` serves it
+  with `no-cache`). Bump its `VERSION` when the kept copies must start over (a change of what is kept or how).
+- **Manifests:** `public/manifest.webmanifest` (French, starts at `/`) and `public/manifest-en.webmanifest` (English,
+  `/en/`), linked by the page's language: an app installed from an English page opens in English. Icons in
+  `public/icons/`, drawn from `favicon.svg` by `tools/pwa/make_icons.mjs` (run it again after the logo changes).
+- **Testing:** the service worker only runs on a build (`npm run build`, then `npx wrangler dev`, which serves
+  `offline.html` at `/offline` as Cloudflare does); Chrome's DevTools, Application tab, shows it, its caches and the
+  manifest, and Network › Offline tries it without network.
+
 ## Rules kept from today
 
 - Indexing: every page is open to search engines (no `noindex`); `robots.txt` points to the sitemap that Starlight

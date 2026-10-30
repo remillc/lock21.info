@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#107**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#111**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -58,12 +58,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #43 Accessibility (WCAG 2.2 AA): audited on 2026-10-26 (axe-core on every page, both themes, desktop and phone;
   keyboard, 320 px reflow, text spacing) and the code issues fixed. Left, for Christian: a check with a real screen
   reader (NVDA, VoiceOver) and Windows' high contrast mode
-- [ ] #81 Make the site (a multi-page Astro site) a progressive web app (Christian, 2026-10-26): a web app manifest
-  (name, icons from the logo, theme colours, start at `/` or `/en/`), installable on a phone; a service worker
-  (e.g. `@vite-pwa/astro`, Workbox) caching the pages and their assets so the notebook reads offline (at the dive site,
-  no network), with an offline page. To decide: what the 3D model keeps offline (its tiles are hundreds of MB on
-  `tiles.lock21.info`: none, the start view's, or a chosen zone), how updates reach visitors (the new version on the
-  next visit), and how it fits client-side routing and Cloudflare's cache headers (`public/_headers`)
 
 - [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): what is left of the small
   fixes, each needing Christian's call. V23 the ☰ on the desktop home; V26 one name for the dive mode; V14
@@ -78,11 +72,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   20-minute test with three to five people, in French and English (the eight tasks in the report's « A test with real
   people »)
 
-- [ ] #106 A small zone map as a site component (Christian, 2026-10-29, from the 404 page's mockup 3): zones 1 to 25
-  as squares, those online in the secondary colour (from the manifest, like the home page's count), those to come
-  outlined, and room for one more state (dashed, the viewer's violet for zones not yet surveyed). Kept for later use;
-  mockup: `docs/mockups/404-visuals.html` (#zones), also at https://claude.ai/artifact/HsJ5EGnLeGffA6mJWmY1oZ. The
-  mockup's grid is a schematic, not the real layout of the zones (decoupage-site)
 - [ ] #93 Document the gear (Christian, 2026-10-26): his own photo of the GoPro Hero6 Black in its housing, to replace
   GoPro's product photo (« Matériel utilisé », Caméra); « Le rig » (`collecte/rig.md`, since 2026-10-26: photos of
   2024-05-16 and 2024-06-14, Sylvain Marcotte's 3D model) still has one « à compléter »: the rig's construction

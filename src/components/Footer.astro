@@ -1,13 +1,16 @@
 ---
-// Footer: Starlight's (previous/next page links), then the dark olive bar of the design with the site's name, the theme and
-// language selects (Starlight's, moved here from the header: astro.config.mjs), the copyright and the licence
+// Footer: Starlight's (previous/next page links), then the dark olive bar of the design with the site's name, the theme
+// select (Starlight's, moved here from the header: astro.config.mjs; the language select is in the header since
+// 2026-10-30, HeaderActions.astro) and the « Installer l'app » link (InstallLink.astro), the copyright and the licence;
+// and the install offered once (InstallSnackbar.astro)
 // (CC BY 4.0, as for the 3D model: /modele).
 // Both stay together at the bottom of the window on short pages (margin-top: auto; the flex columns in custom.scss).
 import Default from '@astrojs/starlight/components/Footer.astro'
-import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro'
 import ThemeSelect from '@astrojs/starlight/components/ThemeSelect.astro'
 import { pageLang } from '../lib/i18n'
 import { m } from '../paraglide/messages.js'
+import InstallLink from './InstallLink.astro'
+import InstallSnackbar from './InstallSnackbar.astro'
 import ScrollTables from './ScrollTables.astro'
 
 const lang = pageLang(Astro.locals)
@@ -22,6 +25,7 @@ const licence = `https://creativecommons.org/licenses/by/4.0/deed.${lang}`
 <div class="page-end">
 <Default />
 <ScrollTables />
+<InstallSnackbar />
 <script is:inline>
   // Previous / next page (Starlight's links): prefetched as soon as they are on screen (Astro prefetch, "viewport"),
   // the likely next step. Inline: runs while the page is parsed and again after each client-side navigation, before
@@ -30,9 +34,9 @@ const licence = `https://creativecommons.org/licenses/by/4.0/deed.${lang}`
 </script>
 <div class="site-footer">
   <span translate="no">{m.site_wordmark({}, o)} · {m.footer_notebook({}, o)}</span>
-  <div class="preferences print:hidden">
+  <div class="preferences l21-select print:hidden">
     <ThemeSelect />
-    <LanguageSelect />
+    <InstallLink />
   </div>
   <span>© {years} Christian Rémillard · {m.footer_licence({}, o)} <a href={licence} rel="license">CC BY 4.0</a>
     · <a href={privacy}>{m.footer_privacy({}, o)}</a></span>
@@ -67,78 +71,6 @@ const licence = `https://creativecommons.org/licenses/by/4.0/deed.${lang}`
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem 1rem;
-    }
-    /* Starlight gives each select a fixed width, made for the header, which cut « Sombre » and « Français » short in
-       this bar's font (usability audit V21): sized to their longest option instead */
-    .preferences :global(select) {
-      width: auto;
-    }
-    /* The list a select opens: an MD3 menu (docs/system-design.md) where the browser lets CSS draw it (appearance:
-       base-select: Chrome and Edge 135+); elsewhere the system's own list, as before. Surface container, 4 dp corners,
-       elevation 2, items 48 dp high in label-large, a state layer on the item under the pointer or the focus, the
-       chosen one tinted and checked; MD3 motion (enter 400 ms decelerate, exit 200 ms accelerate) */
-    @supports (appearance: base-select) {
-      .preferences :global(select),
-      .preferences :global(select)::picker(select) {
-        appearance: base-select;
-      }
-      /* The closed select keeps Starlight's look and its own caret */
-      .preferences :global(select)::picker-icon {
-        display: none;
-      }
-      .preferences :global(select)::picker(select) {
-        min-inline-size: 7rem;
-        margin-block: 4px;
-        padding-block: 8px;
-        border: 0;
-        border-radius: var(--md-sys-shape-extra-small);
-        background: var(--md-sys-color-surface-container);
-        color: var(--md-sys-color-on-surface);
-        box-shadow: var(--md-sys-elevation-level2);
-        font: 500 0.875rem / 1.25rem var(--l21-font-text);
-        letter-spacing: 0.1px;
-        transform-origin: top;
-        opacity: 0;
-        transform: scaleY(0.8);
-        transition:
-          opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-emphasized-accelerate),
-          transform var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-emphasized-accelerate),
-          display var(--md-sys-motion-duration-short4) allow-discrete,
-          overlay var(--md-sys-motion-duration-short4) allow-discrete;
-      }
-      .preferences :global(select:open)::picker(select) {
-        opacity: 1;
-        transform: none;
-        transition-duration: var(--md-sys-motion-duration-medium4);
-        transition-timing-function: var(--md-sys-motion-easing-emphasized-decelerate);
-      }
-      @starting-style {
-        .preferences :global(select:open)::picker(select) {
-          opacity: 0;
-          transform: scaleY(0.8);
-        }
-      }
-      .preferences :global(option) {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        min-block-size: 48px;
-        padding-inline: 12px;
-        background: transparent;
-        color: inherit;
-        cursor: pointer;
-      }
-      .preferences :global(option:hover),
-      .preferences :global(option:focus-visible) {
-        background: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-hover), transparent);
-        outline: none;
-      }
-      .preferences :global(option:checked) {
-        background: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
-      }
-      .preferences :global(option)::checkmark {
-        inline-size: 1.25rem;
-      }
     }
   }
 </style>

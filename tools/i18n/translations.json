@@ -1,9 +1,9 @@
 {
   "pages": {
     "a-propos.mdx": {
-      "source": "5dcd84dcec4fb52d7d5a8401ea370f492b4cd205",
-      "commit": "dca8db7",
-      "recorded": "2026-10-26"
+      "source": "8255600e74df5624333ecafde8b68f8e4760ccbd",
+      "commit": "9dd3e8e",
+      "recorded": "2026-10-30"
     },
     "collecte/journal-plongees.mdx": {
       "source": "8023a91251ef03fc127231bf0018c57115827259",
@@ -26,14 +26,14 @@
       "recorded": "2026-10-26"
     },
     "confidentialite.mdx": {
-      "source": "b85c2166f6b4f07c515344915f640615e8eed257",
-      "commit": "ac76596",
-      "recorded": "2026-10-26"
+      "source": "27e326bdc51945682d0e58b63a12920c5682dbca",
+      "commit": "bede1b5",
+      "recorded": "2026-10-30"
     },
     "decoupage-site.mdx": {
-      "source": "20704d3b38b18da80548045b66c25716d4fbb487",
-      "commit": "27ab564",
-      "recorded": "2026-10-26"
+      "source": "ce6335536b710c312be772e33abdab9407d5e24b",
+      "commit": "abadf21",
+      "recorded": "2026-10-30"
     },
     "ecluse-21.md": {
       "source": "cc48478f0e136d1143a54efb6d35994445644bf0",
@@ -134,6 +134,11 @@
       "source": "f52d59df06317c468f1efe509e4805a2147f2c79",
       "commit": "ad235eb",
       "recorded": "2026-10-26"
+    },
+    "traitement/suivi.mdx": {
+      "source": "12e01ef7386c475cde12b627e5746f6d50cdd2a2",
+      "commit": "ba7f918",
+      "recorded": "2026-10-30"
     },
     "traitement/texture.md": {
       "source": "e1c2748846e5267d8145a4cd2b0c1a7bff5485cb",

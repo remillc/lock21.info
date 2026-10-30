@@ -5,8 +5,60 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Styles: a rule's variants (a class or an attribute of the same element) nested inside it, as its states already
+  were (`rect { &.online {} }`), across the components, `custom.scss` and the viewer's `style.css`; the zone map and the
+  install snackbar no longer nest descendants in `.astro` files (Astro wouldn't scope them). docs/system-design.md says so.
+- The visit's first page in the visitor's language (TODO #107): the language chosen in the language menu prevails
+  (kept by the browser); else the first of French and English in the browser's languages, English when neither is
+  there. Not when coming from another page of the site, never for search engines and other robots (each address
+  keeps its language for them; hreflang gives the other). The privacy page says the choice is kept.
+- A small zone map (TODO #106) on « Découpage du site » (« État des zones ») and « Suivi du travail par zone »: the
+  26 zones at their place on Nick Baets' drawing, online in the secondary colour (from the 3D model's manifest),
+  surveyed and to come outlined (named in the dive log), not surveyed yet dashed in violet; each zone leads to its
+  description. « Suivi » became an `.mdx` page for it.
+- 3D viewer: the navigation's help (and the swim help) a non-modal dialog inside the viewer's frame, centred on it,
+  with a scrim over the frame only: it stays over the viewer when the page scrolls (TODO #108; a modal dialog sat in the
+  window's middle). Escape still closes it, and a ✕ button at its top right; on a low frame (a phone), tighter margins
+  and a smaller title. On a touch screen, each gesture with Material Symbols' gesture icon (a hand's finger pressed and
+  its movement: swipe, two-finger swipe, pinch, double tap) in orange, as the small mouse on a computer; and the « ? »
+  at the top right opens this same help (it showed a card that closed by itself after 7 s).
+- /modele on a phone held upright: the 3D viewer in 4:5 instead of 16:9 (about 358 x 444 px instead of 358 x 316 on a
+  390 px phone), and the compass 40 px instead of 56.
+- /modele, « Réalité augmentée »: the QR codes' captions on one line, centred under each code, without the
+  notebook's « FIG. NN » (it broke them over two lines; TODO #109), and some room before the first code and after the
+  second.
+
+## 1.0.0-beta.5 - 2026-10-30
+
+- The site is a web app (TODO #81): installable on a phone or a computer (its manifest in French or English, icons
+  from the logo), and readable offline. A service worker fetches pages from the network first and keeps each page read
+  on the device (with its images and styles); without network, the kept copy, or an offline page listing the kept
+  pages. The 3D model is not kept offline.
+- « Installer l'app » / “Install the app” (TODO #110): a section of the About page saying what the app gives (offline
+  reading by the water, the home screen), with a button, always shown: it opens the browser's install where it offers
+  one (Chrome, Edge, Android; their own bar at arrival stopped), else shows the steps (Safari on iPhone and iPad, or
+  the browser's menu); « installed » once it is. A link to it in the footer bar and at the end of the ☰ menu on phones
+  (its icon orange), and, once only, an MD3 snackbar at the bottom (« Lire le site hors ligne, au bord de l'eau ?
+  Installer ✕ »): from the 3rd visit or the 5th page read, where the browser offers the install, never at arrival nor
+  on /modele.
+- The language select moved from the footer to the header bar, between the search and « Modèle 3D » (wide screens),
+  and to the end of the ☰ menu on phones; the theme select stays in the footer.
 - 3D viewer: the settings (the ⚙ panel and the « Équilibre » slider) hidden on the live site, shown in development or
-  with `?settings=1` in a link; without them, the settings kept by the browser no longer apply.
+  with `?settings=1` in a link; without them, the settings kept by the browser no longer apply. On touch screens the
+  « ? » (the gestures' help) takes the settings' place, top right.
+- About page: Lock 23 3D described as it is, measured underwater and redrawn in 3D piece by piece (it was « the same
+  work », photogrammetry).
+- Google Analytics (the privacy page says so, in French and English):
+  - each opening of the downloaded KMZ in Google Earth (its list asked for) counted as `kmz_open`, by the site's
+    Worker (Measurement Protocol, secret `GA_API_SECRET`);
+  - the theme as user properties: `theme_setting` (auto, dark, light: the footer's choice) and `theme_color_scheme`
+    (the theme shown, the system's when the choice is auto);
+  - the guided tour: `tour_step` with `direction` (next, back), and the time spent on the step left (`step_seconds`)
+    with `tour_step`, `tour_return`, `tour_stop` and `tour_complete`;
+  - the app's install: `app_install_offer` (the snackbar shown), `app_install` (accepted, dismissed, steps; source
+    about or snackbar) and `app_installed`.
+- Development: no 404 on `/viewer/files.json` in the dev server's console (the viewer's file list is written by the
+  build only).
 
 ## 1.0.0-beta.4 - 2026-10-29
 

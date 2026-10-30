@@ -6,13 +6,23 @@
 import { m } from './i18n.js'
 import { icon } from './icons.js'
 
-// The mouse's part each gesture uses (as ModelPage.astro)
+// The mouse's part each gesture uses (as ModelPage.astro), and its fingers' sketch on a touch screen
 const GESTURES = [
-  [() => m.model_gestureTurn(), 'left', () => m.model_gestureTurnMouse(), () => m.model_gestureTurnFingers()],
-  [() => m.model_gesturePan(), 'right', () => m.model_gesturePanMouse(), () => m.model_gesturePanFingers()],
-  [() => m.model_gestureZoom(), 'wheel', () => m.model_gestureZoomMouse(), () => m.model_gestureZoomFingers()],
-  [() => m.model_gestureFly(), 'left', () => m.model_gestureFlyMouse(), () => m.model_gestureFlyFingers()],
+  [() => m.model_gestureTurn(), 'left', () => m.model_gestureTurnMouse(), () => m.model_gestureTurnFingers(), 'one'],
+  [() => m.model_gesturePan(), 'right', () => m.model_gesturePanMouse(), () => m.model_gesturePanFingers(), 'two'],
+  [() => m.model_gestureZoom(), 'wheel', () => m.model_gestureZoomMouse(), () => m.model_gestureZoomFingers(), 'pinch'],
+  [() => m.model_gestureFly(), 'left', () => m.model_gestureFlyMouse(), () => m.model_gestureFlyFingers(), 'double'],
 ]
+
+/**
+ * The gesture on a touch screen (Christian, 2026-10-30): Material Symbols' gesture icons, a finger pressed and its
+ * movement, in the signal colour (.finger-gesture), as the small mouse on a computer
+ * @param {string} kind - one (one finger drags), two (two fingers drag), pinch (two fingers apart), double (double tap)
+ */
+function fingers(kind) {
+  const names = { one: 'swipe-outline-rounded', two: 'swipe-right-2-outline-rounded', pinch: 'pinch-zoom-out-outline-rounded', double: 'touch-double-outline-rounded' }
+  return `<span class="finger-gesture" aria-hidden="true">${icon(names[kind])}</span>`
+}
 
 /** The small mouse (ModelPage.astro's drawing) @param {string} part - left, right or wheel */
 function mouse(part) {
@@ -40,7 +50,7 @@ export function navHelp({ touch, keys, ar }) {
       ...(ar ? [['view-in-ar-outline-rounded', m.model_buttonAr()]] : []),
       ['help-outline-rounded', m.model_buttonHelp()],
     ]
-    return `<div class="nav-groups">${table(m.model_fingers(), GESTURES.map(([action, , , byFingers]) => [action(), byFingers()]))}</div>
+    return `<div class="nav-groups">${table(m.model_fingers(), GESTURES.map(([action, , , byFingers, kind]) => [action(), `<span class="mouse-how">${fingers(kind)}${byFingers()}</span>`]))}</div>
       <ul class="nav-buttons">${buttons.map(([name, label]) => `<li><span class="icon">${icon(name)}</span>${label}</li>`).join('')}</ul>`
   }
   const or = ` ${m.model_keysOr()} `

@@ -295,6 +295,14 @@ const updated = zones.updated
       overflow: hidden;
       background: var(--l21-panel);
     }
+    /* A phone held upright: 4:5 instead of 16:9 (Christian, 2026-10-30: 358 x 316 px on a 390 px phone, the 3D view
+       squeezed between the buttons, the navigation's help not fitting), the page's title still in sight below */
+    @media (orientation: portrait) and (max-width: 37.5rem) {
+      .frame {
+        aspect-ratio: 4 / 5;
+        max-height: calc(100svh - var(--sl-nav-height) - 10rem);
+      }
+    }
     /* Its entrance as the page loads (Christian, 2026-10-26): from lower up to its place, growing from 88 % and fading in,
        all at once (a little more apparent than first: 3rem and 92 % over 400 ms); MD3 entering motion (long1, 450 ms,
        emphasized decelerate). Reduced motion: none */
@@ -677,9 +685,21 @@ const updated = zones.updated
         display: none;
       }
     }
+    /* Not notebook figures (custom.scss: FIG. NN, the caption inset by the photos' corner radius): in a figure as narrow
+       as the code, the label broke the caption over two lines (TODO #109). No number, not counted, the caption
+       centred under the code */
     .qr-codes figure {
       margin: 0;
+      counter-increment: none;
       text-align: center;
+
+      /* Some room before the first code and after the second (Christian, 2026-10-30) */
+      &:first-child {
+        margin-inline-start: 1.5rem;
+      }
+      &:last-child {
+        margin-inline-end: 1.5rem;
+      }
     }
     /* The QR code in its white frame, 8 px from the frame's edge (docs/system-design.md: content never touches an edge) */
     .qr {
@@ -695,9 +715,14 @@ const updated = zones.updated
       height: auto;
     }
     .qr-codes figcaption {
+      padding-inline: 0;
       margin-top: 0.5rem;
       font-size: 0.875rem;
       font-weight: 700;
+
+      &::before {
+        content: none;
+      }
     }
     .qr-codes figcaption span {
       display: block;

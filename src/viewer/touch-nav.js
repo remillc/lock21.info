@@ -6,8 +6,9 @@
 //   NEAR m of the orbit's centre, the centre moves ahead with it, so zooming in never stalls (the wheel too).
 // - A double-tap (a double-click with a mouse) on the model flies there: the orbit's centre glides to that point and
 //   the camera comes FLY_DISTANCE m from it (nearer only if it already was), in FLY_TIME ms.
-// - The first touch shows a card with the gestures (remembered: HINT_KEY; not when the navigation's help, main.js, has
-//   shown them as the first view came); the « ? » button shows it again.
+// - The « ? » button opens the navigation's help with the gestures (main.js, showHelp; Christian, 2026-10-30: the card
+//   it showed before closed by itself after 7 s). Without showHelp, the former card: at the first touch (remembered:
+//   HINT_KEY) and from the « ? ».
 import * as THREE from 'three'
 import { TOUCH } from 'three'
 import { m } from './i18n.js'
@@ -32,8 +33,10 @@ const HINT_TIME = 7000
  * @param {(x: number, y: number) => THREE.Vector3 | null} options.pick - the model's point under these client
  *   coordinates
  * @param {() => void} options.requestRender
+ * @param {() => void} [options.showHelp] - opens the navigation's help (the « ? » button); no card at the first touch
+ *   then, the help having opened at the first visit
  */
-export function createTouchNav({ controls, camera, surface, pick, requestRender }) {
+export function createTouchNav({ controls, camera, surface, pick, requestRender, showHelp }) {
   const coarse = window.matchMedia('(pointer: coarse)').matches
   const hint = root.querySelector('.touch-hint')
   const helpButton = root.querySelector('.touch-help-button')
@@ -50,15 +53,15 @@ export function createTouchNav({ controls, camera, surface, pick, requestRender 
     clearTimeout(hintTimer)
     hintTimer = setTimeout(() => (hint.hidden = true), HINT_TIME)
   }
-  let seen = false
+  let seen = Boolean(showHelp)
   try {
-    seen = localStorage.getItem(HINT_KEY) === '1'
+    seen ||= localStorage.getItem(HINT_KEY) === '1'
   } catch {}
   if (coarse) {
     helpButton.hidden = false
     helpButton.setAttribute('aria-label', m.viewer_touchHelpTitle())
     helpButton.dataset.tooltip = m.viewer_touchHelpTitle()
-    helpButton.addEventListener('click', showCard)
+    helpButton.addEventListener('click', showHelp ?? showCard)
   }
 
   // Taps (touch), for the double-tap and the first touch's card

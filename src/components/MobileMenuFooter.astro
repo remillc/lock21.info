@@ -1,5 +1,30 @@
 ---
-// Footer of the mobile menu: empty. Starlight puts the social-icons slot there (the "Modèle 3D" pill, which on small
-// screens sits at the top of the menu instead: Sidebar.astro) and the theme and language selects (in the page footer
-// instead: Footer.astro).
+// Footer of the mobile menu: the language select (Starlight's; in the header on wide screens, HeaderActions.astro), then
+// the « Installer l'app » link (InstallLink.astro; Christian, 2026-10-30).
+// Starlight also puts the social-icons slot there (the "Modèle 3D" pill, which on small screens sits at the top of the
+// menu instead: Sidebar.astro) and the theme select (in the page footer instead: Footer.astro).
+import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro'
+import InstallLink from './InstallLink.astro'
 ---
+
+<div class="l21-select print:hidden"><LanguageSelect /></div>
+<div class="install"><InstallLink /></div>
+
+<style>
+  @layer l21.layout {
+    /* Starlight's select pulls itself 0.5rem out to the left (its negative margin, made for the header): lined up
+       with the menu's entries */
+    .l21-select {
+      margin-inline-start: 0.5rem;
+    }
+    .install {
+      margin-inline-start: 0.5rem;
+      font-size: var(--sl-text-sm);
+      color: var(--sl-color-gray-2);
+    }
+    /* Its icon in the tertiary colour, as the menu's « Modèle 3D » cube (custom.scss; Christian, 2026-10-30) */
+    .install :global(svg) {
+      color: var(--md-sys-color-tertiary);
+    }
+  }
+</style>

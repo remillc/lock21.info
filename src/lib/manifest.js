@@ -8,10 +8,11 @@ import { site } from '../data/site'
  * @property {number} count
  * @property {string} latest - the zone added last, e.g. "16"
  * @property {string | null} updated - date of the latest publication, "2026-10-19"
+ * @property {number[]} ids - the zones online, by number (the zone map, ZoneMap.astro)
  */
 
 /** @type {ZonesOnline} */
-const fallback = { count: 12, latest: '16', updated: null }
+const fallback = { count: 12, latest: '16', updated: null, ids: [1, 2, 3, 4, 7, 8, 10, 11, 12, 13, 16, 18] }
 
 /** @returns {Promise<ZonesOnline>} */
 export async function zonesOnline() {
@@ -27,7 +28,8 @@ export async function zonesOnline() {
       .map((t) => ({ zone: t.id.replace('zone-', ''), added: t.added ?? '', version: t.url.split('/')[1] ?? '' }))
       .sort((a, b) => a.added.localeCompare(b.added) || a.version.localeCompare(b.version))
       .at(-1)
-    return { count: manifest.tilesets.length, latest: latest?.zone ?? fallback.latest, updated: manifest.updated?.slice(0, 10) ?? null }
+    const ids = manifest.tilesets.map((t) => Number(t.id.replace('zone-', ''))).filter(Number.isFinite)
+    return { count: manifest.tilesets.length, latest: latest?.zone ?? fallback.latest, updated: manifest.updated?.slice(0, 10) ?? null, ids }
   } catch (error) {
     console.warn(`[manifest] ${site.manifest} unreachable (${/** @type {Error} */ (error).message}): using fallback values`)
     return fallback

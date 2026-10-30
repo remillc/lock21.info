@@ -57,6 +57,8 @@ partent d'abord, la liste ensuite (cache de 5 min), les parties qui n'y sont plu
 fichier voient la zone à la prochaine ouverture. Ni le KMZ du site ni le site ne changent (le KMZ ne contient que
 l'adresse de la liste): pas de déploiement.
 
+**Ouvertures comptées** (2026-10-30): Google Earth demande la liste à chaque ouverture du KMZ; le Worker du site compte chaque demande comme un événement `kmz_open` dans Google Analytics (Measurement Protocol: client, version de Google Earth, langue, lieu d'après Cloudflare; un code par personne et par jour haché de l'IP, jamais l'IP). Il faut le secret du Worker `GA_API_SECRET` (GA: Admin, Flux de données, Web, Clés secrètes de l'API Measurement Protocol; `npx wrangler secret put GA_API_SECRET`). Les KMZ téléchargés avant le 2026-10-29 pointent vers `tiles.lock21.info`: pas comptés. Décrit sur la page Confidentialité.
+
 **Vue d'arrivée:** réglée dans Google Earth Pro par Christian (2026-10-25): 44,996898° N, 74,899692° O, distance 132 m,
 direction −89°, inclinaison 48°. `make_kmz.py --view lat,lon,distance,direction,inclinaison` la change (valeurs des propriétés
 de la caméra de Google Earth).

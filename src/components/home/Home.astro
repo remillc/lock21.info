@@ -211,21 +211,23 @@ const entries = [
       font-size: 0.875rem;
       font-weight: 700;
       text-decoration: none;
-    }
-    .filled {
-      background-color: var(--md-sys-color-primary);
-      color: var(--md-sys-color-on-primary);
-    }
-    .outlined {
-      border: 2px solid var(--md-sys-color-primary);
-      color: var(--md-sys-color-primary);
-    }
-    /* MD3 hover state layer: a layer over the whole surface, under its content (an inset shadow covered only 100 px from
-       each edge: the cards' middle stayed bare, a light rectangle, Christian 2026-10-25); their colour is a
-       background-color, so the layer adds to it */
-    .button:hover,
-    .card:hover {
-      background-image: linear-gradient(color-mix(in srgb, currentColor 8%, transparent) 0 0);
+
+      &.filled {
+        background-color: var(--md-sys-color-primary);
+        color: var(--md-sys-color-on-primary);
+      }
+
+      &.outlined {
+        border: 2px solid var(--md-sys-color-primary);
+        color: var(--md-sys-color-primary);
+      }
+
+      /* MD3 hover state layer: a layer over the whole surface, under its content (an inset shadow covered only 100 px
+         from each edge: the cards' middle stayed bare, a light rectangle, Christian 2026-10-25); their colour is a
+         background-color, so the layer adds to it. The same on the cards */
+      &:hover {
+        background-image: linear-gradient(color-mix(in srgb, currentColor 8%, transparent) 0 0);
+      }
     }
 
     .panel {
@@ -351,6 +353,11 @@ const entries = [
       background-color: var(--md-sys-color-surface-container-lowest);
       color: var(--md-sys-color-on-surface);
       text-decoration: none;
+
+      /* The buttons' state layer (above) */
+      &:hover {
+        background-image: linear-gradient(color-mix(in srgb, currentColor 8%, transparent) 0 0);
+      }
     }
     :global([data-theme='dark']) .card,
     :global(:root:not([data-theme='light'])) .card {
