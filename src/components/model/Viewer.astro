@@ -101,6 +101,11 @@ const { label } = Astro.props
       </div>
       <!-- The swim mode's help (main.js, showSwimHelp): an MD3 basic dialog; texts set by main.js -->
       <dialog class="swim-help">
+        <!-- Closes it (Christian, 2026-10-30), as « Compris » and Escape: an MD3 standard icon button, top right,
+             Material Symbols Rounded « close » -->
+        <button class="swim-help-close" type="button">
+          <svg data-icon="close-rounded" aria-hidden="true" width="24" height="24"></svg>
+        </button>
         <h2></h2>
         <div class="swim-help-text"></div>
         <div class="swim-help-actions"><button class="swim-help-ok" type="button"></button></div>

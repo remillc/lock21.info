@@ -19,6 +19,11 @@ import home from '~icons/material-symbols/home-outline-rounded?raw'
 import replay from '~icons/material-symbols/replay-rounded?raw'
 import scubaDiving from '~icons/material-symbols/scuba-diving-rounded?raw'
 import settings from '~icons/material-symbols/settings-outline-rounded?raw'
+// The touch gestures in the navigation's help (nav-help.js): a hand's finger pressed, its movement
+import swipe from '~icons/material-symbols/swipe-outline-rounded?raw'
+import swipeTwo from '~icons/material-symbols/swipe-right-2-outline-rounded?raw'
+import pinch from '~icons/material-symbols/pinch-zoom-out-outline-rounded?raw'
+import touchDouble from '~icons/material-symbols/touch-double-outline-rounded?raw'
 import tour from '~icons/material-symbols/tour-outline-rounded?raw'
 import viewInAr from '~icons/material-symbols/view-in-ar-outline-rounded?raw'
 
@@ -36,6 +41,10 @@ const ICONS = {
   'replay-rounded': replay,
   'scuba-diving-rounded': scubaDiving,
   'settings-outline-rounded': settings,
+  'swipe-outline-rounded': swipe,
+  'swipe-right-2-outline-rounded': swipeTwo,
+  'pinch-zoom-out-outline-rounded': pinch,
+  'touch-double-outline-rounded': touchDouble,
   'tour-outline-rounded': tour,
   'view-in-ar-outline-rounded': viewInAr,
 }

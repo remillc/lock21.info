@@ -259,5 +259,6 @@
   "install_other": "In the browser’s menu, choose “Install” or “Add to Home Screen”. On a Mac, in Safari: File › Add to Dock.",
   "install_snackbar": "Read the site offline, by the water?",
   "install_action": "Install",
-  "install_close": "Close"
+  "install_close": "Close",
+  "viewer_helpClose": "Close"
 }

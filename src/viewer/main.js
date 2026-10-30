@@ -392,6 +392,8 @@ export function mountViewer() {
     camera,
     surface: renderer.domElement,
     requestRender: () => requestRender(),
+    // The « ? » on a touch screen: the navigation's help with the gestures (openSwimHelp, below)
+    showHelp: () => openSwimHelp(true),
     pick: (x, y) => {
       const box = renderer.domElement.getBoundingClientRect()
       pickPointer.set(((x - box.left) / box.width) * 2 - 1, -((y - box.top) / box.height) * 2 + 1)
@@ -1225,11 +1227,25 @@ export function mountViewer() {
       ? m.viewer_swimHelpText({ ...keys, icon })
       : navHelp({ touch, keys, ar: !arLink.hidden })
     swimHelp.querySelector('.swim-help-ok').textContent = m.viewer_swimHelpOk()
-    swimHelp.showModal()
+    // Non-modal, in the viewer's frame (style.css): the page around stays usable and scrolls with it
+    swimHelp.show()
+    swimHelp.querySelector('.swim-help-ok').focus({ preventScroll: true })
     // From its top (the focus on « Compris », at the bottom, scrolled a long one down)
     swimHelp.scrollTop = 0
   }
   swimHelp.querySelector('.swim-help-ok').addEventListener('click', () => swimHelp.close())
+  const helpClose = swimHelp.querySelector('.swim-help-close')
+  helpClose.setAttribute('aria-label', m.viewer_helpClose())
+  helpClose.dataset.tooltip = m.viewer_helpClose()
+  helpClose.addEventListener('click', () => swimHelp.close())
+  // A non-modal dialog in the viewer's frame (TODO #108, Christian 2026-10-30: it stays over the viewer when the page
+  // scrolls; style.css): Escape closes it, as a modal one would
+  swimHelp.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      event.stopPropagation()
+      swimHelp.close()
+    }
+  })
   let swimTimer = 0
   function swimMoved() {
     // The address (viewUrl) reads the orbit's target: kept ahead of the diver
