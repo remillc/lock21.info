@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#109**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#110**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -59,6 +59,10 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ## Site
 
+- [ ] #109 Figure captions badly aligned (Christian, 2026-10-30, the /modele page's « Réalité augmentée » QR codes on a
+  phone): « FIG. 01 Sur une table 1:100 » centred and wrapped under a narrow image (the label broken over two lines,
+  the second line of the caption offset). Look at the captions of figures narrower than the column (`figure-center`,
+  side-by-side figures): the label and the text on one line, aligned with the image's edge or centred as a block
 - [ ] #107 The display language for a visitor whose browser prefers English (Christian, 2026-10-30): today `/` is
   always French (a static file: the Worker doesn't read `Accept-Language`, and no script reads `navigator.language`);
   English only through the footer's language select or an `/en/` link. No automatic redirect on the same address
