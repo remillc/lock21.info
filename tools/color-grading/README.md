@@ -49,6 +49,17 @@ répond à `-h`.
 | `flat_color.py` | la couleur égalisée dans l'image: par groupe de clips, la couleur moyenne à chaque endroit de l'image (l'éclairage du rig, qui suit la caméra), puis chaque endroit ramené aux rapports R/V et B/V de l'image entière, luminance gardée; `--preview` (avec `--original`, trois colonnes), `-o` pour toutes les images |
 | `glb_to_feet.py` | met en pieds un export `.glb` de Metashape écrit en mètres (positions × 3,28084), l'unité des exports et des zones du `.blend`: sans cela, `prepare_zone.py` refuse le recalage (zone 3, 2026-10-27: échelle 0,31). Python avec numpy (`tools/google-earth/.venv`) |
 
+## Les dossiers d'images
+
+Chaque étape qui change les images d'une zone les écrit dans un **nouveau dossier dont le nom dit l'étape**
+(`frames-lens-corrected-n10`, puis `frames-lens-corrected-graded-n10`, puis `frames-lens-corrected-graded-flat-n10`),
+relie les *chunks* Metashape à ce dossier (`relink_frame.py`, avec `-a` pour les *chunks* d'origine; Metashape fermé),
+puis **supprime le dossier précédent** (Christian, 2026-10-30). Le nom du dossier garde la trace de ce que les images ont
+reçu, et une seule copie reste sur `O:` (des centaines de Go par zone). En cas de problème, les images se refont à partir
+de Resolve (les copies `- graded` des projets). Un dossier n'est supprimé qu'une fois le nouveau complet (chaque image,
+aucun `.tmp`), une plongée à la fois. `flat_color.py` sait aussi corriger sur place (`-o` = `-d`, avec sa liste
+`.flat-done` pour ne jamais corriger deux fois), mais ce n'est plus la façon de faire.
+
 ## Le déroulement
 
 1. `duplicate_projects.py -z 3`: les copies `- graded` et leurs sauvegardes.
