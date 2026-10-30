@@ -27,6 +27,11 @@ nœud de ses clips (« zone-4 2024-08-18 green (75 %) », GX0521 à GX0530; « z
 
 Les lampes du rig éclairent le centre de l'image en chaud et l'eau ses bords en vert, de la même façon sur chaque image: un gain pour toute l'image laisse le centre jaune et vire les bords au magenta. `flat_color.py` mesure, par groupe, la couleur moyenne à chaque endroit de l'image (400 images, lissée) et ramène le rapport R/V et B/V de chaque endroit à celui de l'image entière, luminance gardée; appliqué aux images étalonnées, dans `frames-lens-corrected-graded-flat-n18` (Christian, 2026-10-30: « c'est concluant »; net sous les lampes, faible dans l'eau verte, où l'eau libre entre dans la mesure). C'est ce dossier que la texture utilise.
 
+Texture refaite le 2026-10-30 (`retexture_chunk.py -k`, masques de la baguette: 6 124 images sur 10 044; 13 872 px,
+environ 1 h 30 de mélange), publiée et adoptée le même jour (Christian: « c'est bon, on conserve »). Le *chunk*
+« graded » avait déjà ses nouveaux chemins enregistrés par Metashape: `relink_frame.py` n'a rien eu à changer. Recalage:
+13,5 mm (l'export étalonné tourné de 90°, comme celui de la zone 3).
+
 ## Les outils
 
 Resolve doit être ouvert, avec **Préférences › System › General › External scripting using: Local**. Chaque script

@@ -15,7 +15,11 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   `O:\photogrammetry\zone-3.psx` retextured from the graded frames with the masks, 16 206 px, Mosaic, holes filled
   (`tools/color-grading/retexture_chunk.py`, Metashape 2.3.1: about 26 h of blending), registration as before (14.4 mm).
   Its non-graded frames deleted the same day (the original chunks relinked to the graded ones, `relink_frame.py -a`;
-  tools/color-grading/README.md). Downloads rebuilt with it the same day. Left: the other zones, zone 12 first
+  tools/color-grading/README.md). Downloads rebuilt with it the same day. Zone 4 done (2026-10-30, Christian: « c'est
+  bon, on conserve »): one dive (2024-08-18), two corrections by group of clips (green water, lamps;
+  `timeline_lut.py -k`), then the colour evened out across the frame (`flat_color.py`, the rig's lamps), retextured
+  13 872 px in about 1 h 30, registration 13.5 mm (the graded export turned 90°, as zone 3's). Left: the other
+  zones, zone 12 first
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
   - Tried and dropped (2026-10-25): a whole-texture balance before tiling (`color_correct.py`) turned the model mauve
     and flat in the viewer, whose own corrections then applied twice; the blue and red the water took are not in the
