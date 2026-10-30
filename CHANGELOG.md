@@ -5,6 +5,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- 3D model: zone 4 retextured from colour-graded frames (TODO #75): two corrections by group of clips (green water,
+  the lamps) and the colour evened out across the frame (the rig's lamps lit its middle warm, the water its edges
+  green; `tools/color-grading/flat_color.py`). The terrain and the mockups republished from the .blend.
 - Styles: a rule's variants (a class or an attribute of the same element) nested inside it, as its states already
   were (`rect { &.online {} }`), across the components, `custom.scss` and the viewer's `style.css`; the zone map and the
   install snackbar no longer nest descendants in `.astro` files (Astro wouldn't scope them). docs/system-design.md says so.
