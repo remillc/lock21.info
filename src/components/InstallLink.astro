@@ -1,0 +1,39 @@
+---
+// « Installer l'app »: a link to the About page's install section (InstallApp.astro, TODO #110), in the footer bar
+// (Footer.astro) and at the end of the mobile menu (MobileMenuFooter.astro) (Christian, 2026-10-30). Not shown in the
+// installed app (display-mode: standalone).
+import { Icon } from 'astro-icon/components'
+import { localPath, pageLang } from '../lib/i18n'
+import { m } from '../paraglide/messages.js'
+
+const lang = pageLang(Astro.locals)
+// The section's anchor (its heading's id, by Starlight)
+const href = localPath('/a-propos', lang) + (lang === 'en' ? '#install-the-app' : '#installer-lapp')
+---
+
+<a class="install-link print:hidden" href={href} data-track-content="install_link">
+  <Icon name="material-symbols:install-mobile-outline-rounded" aria-hidden="true" width="16" height="16" />
+  {m.install_button({}, { locale: lang })}
+</a>
+
+<style>
+  @layer l21.components {
+    .install-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      min-height: 2.75rem;
+      color: inherit;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    @media (display-mode: standalone) {
+      .install-link {
+        display: none;
+      }
+    }
+  }
+</style>

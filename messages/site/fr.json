@@ -256,5 +256,8 @@
   "install_button": "Installer l’app",
   "install_installed": "L’app est installée sur cet appareil.",
   "install_ios": "Sur iPhone ou iPad, dans Safari : touchez le bouton Partager, puis « Sur l’écran d’accueil ».",
-  "install_other": "Dans le menu du navigateur, choisissez « Installer » ou « Ajouter à l’écran d’accueil ». Sur Mac, dans Safari : Fichier › Ajouter au Dock."
+  "install_other": "Dans le menu du navigateur, choisissez « Installer » ou « Ajouter à l’écran d’accueil ». Sur Mac, dans Safari : Fichier › Ajouter au Dock.",
+  "install_snackbar": "Lire le site hors ligne, au bord de l’eau ?",
+  "install_action": "Installer",
+  "install_close": "Fermer"
 }

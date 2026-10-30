@@ -43,12 +43,12 @@ const o = { locale: pageLang(Astro.locals) }
           // No install offered by this browser: its steps
           this.steps = true
           this.update()
-          track('app_install', { outcome: 'steps' })
+          track('app_install', { outcome: 'steps', source: 'about' })
           return
         }
         await prompt.prompt()
         const { outcome } = await prompt.userChoice
-        track('app_install', { outcome })
+        track('app_install', { outcome, source: 'about' })
         // A prompt is used once; the browser offers another later if the visitor said no
         w.lock21Install = null
         this.update(outcome === 'accepted')

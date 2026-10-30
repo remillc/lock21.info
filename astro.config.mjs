@@ -77,7 +77,7 @@ export default defineConfig({
       include: {
         'material-symbols': ['deployed-code-outline-rounded', 'public-outline-rounded', 'download-rounded', 'expand-more-rounded',
           'home-outline-rounded', 'scuba-diving-rounded', 'tour-outline-rounded', 'help-outline-rounded', 'view-in-ar-outline-rounded',
-          'install-mobile-outline-rounded'],
+          'install-mobile-outline-rounded', 'close-rounded'],
       },
     }),
     // Footnotes headed « Notes » on the French pages, « Footnotes » on the English ones (usability audit V19)
