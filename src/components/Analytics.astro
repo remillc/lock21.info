@@ -19,6 +19,10 @@
 //   params), and from the 3D viewer on /modele as a lock21:track message posted to the window (src/viewer/analytics.js). Outbound
 //   links and scrolls: GA4's enhanced measurement (its own setting, in GA). An action before Google's script is loaded
 //   waits for it (queue), unless the visitor refused the measurement.
+// - The theme, as user properties set before each page view and at each change (Christian, 2026-10-30): theme_setting,
+//   the footer's choice (auto, dark, light: Starlight keeps it in localStorage, starlight-theme, empty for auto), and
+//   theme_color_scheme, the theme shown (dark, light: <html data-theme>, which Starlight sets from the system's
+//   preference when the choice is auto, and updates when the system's preference changes).
 import { site } from '../data/site'
 
 // Not in development (npm run dev): tests on the PC and the phone would count as visits
@@ -86,8 +90,24 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
     const location = firstView && w.lock21Landing ? w.lock21Landing : window.location.href
     firstView = false
     lastPath = window.location.pathname
+    setTheme()
     w.gtag('event', 'page_view', { page_location: location, page_title: document.title })
   }
+
+  /** The theme chosen and the theme shown, as user properties (sent with the next event) */
+  function setTheme() {
+    if (!loaded || !w.gtag) return
+    let setting = 'auto'
+    try {
+      setting = localStorage.getItem('starlight-theme') || 'auto'
+    } catch {}
+    w.gtag('set', 'user_properties', {
+      theme_setting: setting,
+      theme_color_scheme: document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
+    })
+  }
+  // The system's preference changed while the choice is auto: Starlight changes the theme shown
+  matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => setTimeout(setTheme))
 
   // load(), on the first interaction or 4 s after the page's load event
   function loadSoon() {
@@ -170,11 +190,16 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
       const figure = /** @type {HTMLImageElement | null | undefined} */ (target?.closest?.('.sl-markdown-content figure img'))
       if (figure) track('select_content', { content_type: 'image_zoom', item_id: figure.currentSrc.split('/').pop() ?? '' })
     }, { capture: true })
-    // theme_change, language_change: the footer's selects (Starlight's)
+    // theme_change, language_change: the theme select (footer) and the language select (header, mobile menu),
+    // Starlight's. The theme's user properties updated first (Starlight has already applied the choice)
     document.addEventListener('change', (event) => {
       const select = /** @type {HTMLSelectElement | null} */ (event.target)
-      if (select?.closest?.('starlight-theme-select')) track('theme_change', { theme: select.value })
-      else if (select?.closest?.('starlight-lang-select')) track('language_change', { language: select.value.startsWith('/en') ? 'en' : 'fr' })
+      if (select?.closest?.('starlight-theme-select')) {
+        setTimeout(() => {
+          setTheme()
+          track('theme_change', { theme: select.value })
+        })
+      } else if (select?.closest?.('starlight-lang-select')) track('language_change', { language: select.value.startsWith('/en') ? 'en' : 'fr' })
     })
     // The other actions, sent by a script of the site (l21:track)
     document.addEventListener('l21:track', (event) => {
