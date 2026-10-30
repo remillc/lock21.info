@@ -37,7 +37,11 @@ Le visualiseur 3D envoie au site un court journal technique de chaque visite, po
 - les erreurs rencontrées, et le déroulement technique de la réalité augmentée ;
 - le pays, déduit par l'hébergeur.
 
-Il ne contient ni votre nom, ni votre adresse IP, ni témoin. Chaque visite reçoit un code au hasard (affiché en bas des réglages ⚙ du visualiseur), qui ne permet pas de vous reconnaître d'une visite à l'autre. Pour repérer une visite qui s'est mal terminée, le visualiseur garde ce code dans le stockage de l'onglet le temps de la visite. Le journal est conservé quelques jours chez Cloudflare, puis effacé. Il ne sert à rien d'autre.
+Il ne contient ni votre nom, ni votre adresse IP, ni témoin. Chaque visite reçoit un code au hasard, qui ne permet pas de vous reconnaître d'une visite à l'autre. Pour repérer une visite qui s'est mal terminée, le visualiseur garde ce code dans le stockage de l'onglet le temps de la visite. Le journal est conservé quelques jours chez Cloudflare, puis effacé. Il ne sert à rien d'autre.
+
+## Ouverture du modèle dans Google Earth
+
+Le fichier Google Earth (KMZ) ne contient qu'un lien vers le modèle, sur ce site. Chaque fois que vous l'ouvrez, Google Earth demande au site la liste des parties du modèle, et le site compte cette ouverture dans Google Analytics, avec la version de Google Earth, sa langue, et le pays, la région et la ville approximatifs déduits par l'hébergeur. Votre adresse IP n'est pas transmise : un code calculé à partir d'elle, qui change chaque jour, permet seulement de compter une même personne une fois par jour. Aucun témoin n'est déposé. Le bouton de refus plus haut ne s'applique pas ici, puisque Google Earth ne passe pas par votre navigateur : pour ne pas être compté, n'ouvrez pas le fichier KMZ, ou écrivez-moi.
 
 ## Hébergement
 

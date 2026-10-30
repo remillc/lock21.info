@@ -5,6 +5,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Google Earth: each opening of the downloaded KMZ (its list asked for by Google Earth) counted in Google Analytics as a
+  `kmz_open` event, by the site's Worker; the privacy page says so (French and English).
 - 3D viewer: the settings (the ⚙ panel and the « Équilibre » slider) hidden on the live site, shown in development or
   with `?settings=1` in a link; without them, the settings kept by the browser no longer apply. On touch screens the « ? » (the gestures' help) takes the
   settings' place, top right.

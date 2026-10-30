@@ -11,15 +11,30 @@
 //   the R2 bucket's downloads/ (binding DOWNLOADS), where tools/publish-model/upload_downloads.mjs puts them with their
 //   type and cache. Too large for the static assets (25 MiB at most a file; the GLB is 130 MB). A file that isn't in R2
 //   is the site's own (public/downloads/lock-21.kmz), or the 404 page. Ranges (a resumed download) and ETags kept.
+//   The Google Earth list (google-earth/lock-21.kml), which Google Earth asks for each time the downloaded KMZ is opened
+//   (its <NetworkLink>): each request counted as a « kmz_open » event in the site's Google Analytics (Measurement
+//   Protocol; Christian, 2026-10-30: how often the KMZ is opened, not only downloaded). Only with the secret
+//   GA_API_SECRET (`npx wrangler secret put GA_API_SECRET`). No IP sent: a daily code hashed from it, the place from
+//   Cloudflare; described on the privacy page.
 
 // Largest message accepted (the viewer cuts its own at about 3.9 KB)
 const MAX_LOG_BYTES = 4096
+// The site's Google Analytics property (src/data/site.js, ga4) and the list Google Earth opens
+const GA_MEASUREMENT_ID = 'G-796S6VL5P8'
+const KMZ_LIST = '/downloads/google-earth/lock-21.kml'
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url)
     if (url.pathname === '/api/log') return log(request, url)
-    if (url.pathname.startsWith('/downloads/')) return download(request, env, url)
+    if (url.pathname.startsWith('/downloads/')) {
+      const response = await download(request, env, url)
+      if (url.pathname === KMZ_LIST && request.method === 'GET' && response.status < 400 && env.GA_API_SECRET
+          && !url.searchParams.has('no-analytics')) {
+        ctx.waitUntil(kmzOpened(request, env).catch(() => {}))
+      }
+      return response
+    }
     if (url.pathname.startsWith('/api/')) return new Response('Not found', { status: 404 })
     if (url.pathname.endsWith('/') && url.pathname !== '/' && url.pathname !== '/en/') {
       url.pathname = url.pathname.replace(/\/+$/, '') || '/'
@@ -95,4 +110,37 @@ async function log(request, url) {
   // One structured line per message (Workers Logs indexes its fields); the country comes from Cloudflare, no IP is kept
   console.log({ source: 'viewer', country: request.cf?.country ?? null, ...message })
   return new Response(null, { status: 204 })
+}
+
+/** The KMZ opened in Google Earth: one « kmz_open » event (GA4 Measurement Protocol). The visitor's code (client_id)
+ *  is hashed from the IP, the user agent, the day and the secret: the same person counted once a day, never the IP
+ *  itself; the place is Cloudflare's (country, region, city), the language Google Earth's own */
+async function kmzOpened(request, env) {
+  const ip = request.headers.get('CF-Connecting-IP') ?? ''
+  const agent = request.headers.get('User-Agent') ?? ''
+  const day = new Date().toISOString().slice(0, 10)
+  const hash = new Uint32Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${env.GA_API_SECRET}|${ip}|${agent}|${day}`)))
+  const cf = request.cf ?? {}
+  const location = {}
+  if (cf.country) location.country_id = cf.country
+  if (cf.country && cf.regionCode) location.region_id = `${cf.country}-${cf.regionCode}`
+  if (cf.city) location.city = cf.city
+  const body = {
+    client_id: `${hash[0]}.${hash[1]}`,
+    user_location: location,
+    events: [{
+      name: 'kmz_open',
+      params: {
+        // Google Earth Pro's user agent: « GoogleEarth/7.3.6.10201(Windows;Microsoft Windows (6.2.9200.0);en;kml:2.2;client:Pro;type:default) »
+        client: (/GoogleEarth\/[\d.]+/.exec(agent)?.[0] ?? agent.slice(0, 100)) || 'unknown',
+        language: (request.headers.get('Accept-Language') ?? '').split(',')[0].slice(0, 20),
+        session_id: String(hash[2]),
+        engagement_time_msec: 1,
+      },
+    }],
+  }
+  await fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${GA_MEASUREMENT_ID}&api_secret=${env.GA_API_SECRET}`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
 }
