@@ -3,34 +3,37 @@
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
 public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
-## Unreleased
+## 1.0.0-beta.5 - 2026-10-30
 
-- About page: Lock 23 3D described as it is, measured underwater and redrawn in 3D piece by piece (it was « the same
-  work », photogrammetry).
-- « Installer l'app » / “Install the app” on the About page (TODO #110): what the app gives (offline reading by the
-  water, the home screen) and a button, always shown: it opens the browser's install where it offers one (Chrome,
-  Edge, Android; their own bar at arrival stopped), else shows the steps (Safari on iPhone and iPad, or the browser's
-  menu); « installed » once it is. Also a « Installer l'app » link in the footer bar and at the end of the ☰ menu on
-  phones (its icon orange), and, once only, an MD3 snackbar at the bottom (« Lire le site hors ligne, au bord de
-  l'eau ? Installer ✕ »): from the 3rd visit or the 5th page read, where the browser offers the install, never at
-  arrival nor on /modele. Analytics: app_install_offer, app_install (accepted, dismissed, steps; source about or snackbar)
-  and app_installed.
-- Google Analytics, the guided tour: `tour_step` says whether the visitor went forward or back (`direction`), and
-  `tour_step`, `tour_return`, `tour_stop` and `tour_complete` the time spent on the step left (`step_seconds`).
 - The site is a web app (TODO #81): installable on a phone or a computer (its manifest in French or English, icons
   from the logo), and readable offline. A service worker fetches pages from the network first and keeps each page read
   on the device (with its images and styles); without network, the kept copy, or an offline page listing the kept
   pages. The 3D model is not kept offline.
-- Google Analytics: the theme as user properties, `theme_setting` (auto, dark, light: the footer's choice) and
-  `theme_color_scheme` (the theme shown, dark or light, the system's when the choice is auto), set before each page
-  view and at each change; the privacy page says so.
+- « Installer l'app » / “Install the app” (TODO #110): a section of the About page saying what the app gives (offline
+  reading by the water, the home screen), with a button, always shown: it opens the browser's install where it offers
+  one (Chrome, Edge, Android; their own bar at arrival stopped), else shows the steps (Safari on iPhone and iPad, or
+  the browser's menu); « installed » once it is. A link to it in the footer bar and at the end of the ☰ menu on phones
+  (its icon orange), and, once only, an MD3 snackbar at the bottom (« Lire le site hors ligne, au bord de l'eau ?
+  Installer ✕ »): from the 3rd visit or the 5th page read, where the browser offers the install, never at arrival nor
+  on /modele.
 - The language select moved from the footer to the header bar, between the search and « Modèle 3D » (wide screens),
   and to the end of the ☰ menu on phones; the theme select stays in the footer.
-- Google Earth: each opening of the downloaded KMZ (its list asked for by Google Earth) counted in Google Analytics as a
-  `kmz_open` event, by the site's Worker; the privacy page says so (French and English).
 - 3D viewer: the settings (the ⚙ panel and the « Équilibre » slider) hidden on the live site, shown in development or
-  with `?settings=1` in a link; without them, the settings kept by the browser no longer apply. On touch screens the « ? » (the gestures' help) takes the
-  settings' place, top right.
+  with `?settings=1` in a link; without them, the settings kept by the browser no longer apply. On touch screens the
+  « ? » (the gestures' help) takes the settings' place, top right.
+- About page: Lock 23 3D described as it is, measured underwater and redrawn in 3D piece by piece (it was « the same
+  work », photogrammetry).
+- Google Analytics (the privacy page says so, in French and English):
+  - each opening of the downloaded KMZ in Google Earth (its list asked for) counted as `kmz_open`, by the site's
+    Worker (Measurement Protocol, secret `GA_API_SECRET`);
+  - the theme as user properties: `theme_setting` (auto, dark, light: the footer's choice) and `theme_color_scheme`
+    (the theme shown, the system's when the choice is auto);
+  - the guided tour: `tour_step` with `direction` (next, back), and the time spent on the step left (`step_seconds`)
+    with `tour_step`, `tour_return`, `tour_stop` and `tour_complete`;
+  - the app's install: `app_install_offer` (the snackbar shown), `app_install` (accepted, dismissed, steps; source
+    about or snackbar) and `app_installed`.
+- Development: no 404 on `/viewer/files.json` in the dev server's console (the viewer's file list is written by the
+  build only).
 
 ## 1.0.0-beta.4 - 2026-10-29
 
