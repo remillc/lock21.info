@@ -5,7 +5,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
-- 3D viewer: the mockups of the zones not yet online in a light grey, a little see-through (opacity 0.6), instead of
+- 3D viewer: the mockups of the zones not yet online in a light grey, a little see-through (opacity 0.65), instead of
   their textures from the .blend (the 1988 drawing through colour ramps); still lit as the context. The zone map's
   « not surveyed yet » in the same grey (it was violet, the mockups' former colour).
 - Styles: a rule's variants (a class or an attribute of the same element) nested inside it, as its states already
