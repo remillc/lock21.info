@@ -5,6 +5,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- About page: Lock 23 3D described as it is, measured underwater and redrawn in 3D piece by piece (it was « the same
+  work », photogrammetry).
 - « Installer l'app » / “Install the app” on the About page (TODO #110): what the app gives (offline reading by the
   water, the home screen) and a button, always shown: it opens the browser's install where it offers one (Chrome,
   Edge, Android; their own bar at arrival stopped), else shows the steps (Safari on iPhone and iPad, or the browser's
