@@ -554,10 +554,14 @@ l21-loading.error .loading-label {
 .compass svg {
   display: block;
 }
-/* Touch screens (touch-nav.js): the gestures' card again, left of the settings */
+/* Touch screens (touch-nav.js): the gestures' card again, left of the settings; in their place when they are hidden
+   (production, main.js showSettings; Christian, 2026-10-30) */
 .touch-help-button {
   top: max(16px, env(safe-area-inset-top));
   right: calc(max(16px, env(safe-area-inset-right)) + 56px);
+}
+.settings-button[hidden] ~ .touch-help-button {
+  right: max(16px, env(safe-area-inset-right));
 }
 /* The gestures' card or the frame's one line (touch-nav.js): over the view, top centre, below the buttons; never in
    the way of a touch */
