@@ -6,7 +6,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 ## Unreleased
 
 - 3D viewer: the settings (the ⚙ panel and the « Équilibre » slider) hidden on the live site, shown in development or
-  with `?settings=1` in a link; without them, the settings kept by the browser no longer apply.
+  with `?settings=1` in a link; without them, the settings kept by the browser no longer apply. On touch screens the « ? » (the gestures' help) takes the
+  settings' place, top right.
 
 ## 1.0.0-beta.4 - 2026-10-29
 
