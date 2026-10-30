@@ -42,13 +42,13 @@ Une fois la texture d'une zone refaite avec ces images, des taches jaunes sont a
 <figcaption><time datetime="2024-08-18">2024-08-18</time> La même image, la couleur égalisée dans l'image.</figcaption>
 </figure>
 
-</div>
-
-Comme les lampes bougent avec la caméra, ce motif est le même d'une image à l'autre. Pour chaque plongée, ou chaque groupe de passages éclairés de la même façon, la couleur moyenne de chaque endroit de l'image est mesurée sur 400 images, puis lissée. Chaque endroit reçoit ensuite la correction qui ramène sa couleur à celle de l'image entière, sans changer sa luminosité. Seule la teinte est égalisée : le centre, plus éclairé, reste plus clair. Cette carte de correction est appliquée à toutes les images de la plongée avant de refaire la texture (zone 4, octobre 2026).
-
-<figure id="carte-correction" class="figure-center">
+<figure id="carte-correction">
 
 ![Un rectangle gris aux nuances lentes : jaunâtre à gauche, bleuté en bas à droite](./etalonnage-couleurs/assets/lampes-carte.webp)
 
 <figcaption>La carte de correction des passages sous les lampes de la plongée du 18 août 2024 : un gris neutre multiplié par la correction de chaque endroit de l'image. Bleutée là où elle ajoute du bleu (sous les lampes), jaunâtre là où elle en retire (les bords que l'eau éclaire).</figcaption>
 </figure>
+
+</div>
+
+Comme les lampes bougent avec la caméra, ce motif est le même d'une image à l'autre. Pour chaque plongée, ou chaque groupe de passages éclairés de la même façon, la couleur moyenne de chaque endroit de l'image est mesurée sur 400 images, puis lissée. Chaque endroit reçoit ensuite la correction qui ramène sa couleur à celle de l'image entière, sans changer sa luminosité. Seule la teinte est égalisée : le centre, plus éclairé, reste plus clair. Cette carte de correction est appliquée à toutes les images de la plongée avant de refaire la texture (zone 4, octobre 2026).
