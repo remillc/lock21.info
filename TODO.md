@@ -29,7 +29,18 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ### Pipeline
 
-- [ ] #10 `model:post-modified` and others only run on Windows (PowerShell); fine for now
+- [ ] #10 `model:post-modified` and others only run on Windows (PowerShell); fine for now. Port to Node evaluated
+  (2026-10-30): feasible, medium effort. Five `.ps1` (about 460 lines, orchestration only; the work is already in Node,
+  Python and Blender scripts): serve-tiles and model-analysis/run (small), relief_zones (small to medium), publish_zones
+  and tile_zone (medium, the core). Plan: a shared module `tools/publish-model/lib/pipeline.mjs` (paths overridable by
+  environment variables or `.env.local`: data root, Blender, Obj2Tiles, Python; Blender found per OS; spawn with a log;
+  `node:util` parseArgs with -h), then serve-tiles, run, tile_zone, publish_zones, relief_zones (folded into
+  publish_zones: TODO #21); `fix_tileset.py` and `update_manifest.py` rewritten in Node (JSON edits only). Same
+  `npm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, `relief_zones -High @{...}` a
+  repeated `--high "zone 1=<glb>"` (docs/processing-the-blend-file.md updated with it). Keep the `.ps1` until one zone's
+  output matches (tile count, manifest). Fix on the way: `-TilesRoot` not passed to tile_zone, unchecked exit codes of
+  fix_tileset and update_manifest. Still tied to this PC after a port: the `O:\` defaults (and the `.blend` zones'
+  `source` paths), Obj2Tiles' per-OS builds (Mac and Linux untested), the relief bake on an NVIDIA GPU (OptiX)
 - [ ] #94 Zone 3's wooden floor lacks detail in the viewer (Christian, 2026-10-26): find whether it is the texture
   (texels on the floor, `tools/model-analysis/`), the mesh, or the tile level the viewer picks, and fix it
 
