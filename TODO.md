@@ -59,11 +59,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ## Site
 
-- [ ] #110 Tell visitors they can install the site as an app, and why (Christian, 2026-10-30; the web app of TODO #81):
-  reads offline at the dive site, opens from the home screen without the browser's bars, the pages read kept on the
-  device. Where and how: a line on the home page or the « À propos » page, an install button where the browser offers
-  one (`beforeinstallprompt`: Chrome, Edge, Android), and the steps for iPhone and iPad (Safari: Share › Add to Home
-  Screen), never a popup at arrival
 - [ ] #109 Figure captions badly aligned (Christian, 2026-10-30, the /modele page's « Réalité augmentée » QR codes on a
   phone): « FIG. 01 Sur une table 1:100 » centred and wrapped under a narrow image (the label broken over two lines,
   the second line of the caption offset). Look at the captions of figures narrower than the column (`figure-center`,
