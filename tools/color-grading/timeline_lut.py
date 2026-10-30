@@ -2,7 +2,9 @@
 written as a 33-point LUT (on the timeline's Rec.709 gamma 2.4 values a gain is a slope, gain^(1/2.4)), with an
 optional contrast around a pivot (--contrast, --pivot: the dives' contrast matched, exposure_stats.mjs), set on the
 timeline's node graph, after the clips' own grades (the scripting API can't add a node to a clip, but sets a LUT on
-the timeline's). Optionally exports one frame as a still, to check it (--still, --frame).
+the timeline's). With --clips, set instead on the node of those clips only (their own grade's node: a dive whose clips
+fall into groups lit differently, zone 4's 2024-08-18: green water, then the lamps; Christian 2026-10-30). Optionally
+exports one frame as a still, to check it (--still, --frame).
 
 The LUT goes to O:\\_davinci-resolve-library\\luts, through Resolve's LUT folder « lock21 » (a junction to it,
 README.md). Only on a project whose name ends with « - graded »: the original projects are never changed.
@@ -12,6 +14,8 @@ Resolve must be open (External scripting: Local), on the graded project (or --fo
 Example (dive 21, its median gains at 75 %, clip_gains.mjs):
     python tools/color-grading/timeline_lut.py -f data/2024-07-12 -p "zone 3 - lens corrected - graded" \\
         -g 0.732 0.962 2.195 -n "zone-3 dive-21 2024-07-12 (75 %)" -s O:/temp/still.png --frame GX035501:25
+Two groups of clips (zone 4, 2024-08-18), each its own LUT on its clips' node:
+    python tools/color-grading/timeline_lut.py -g 0.886 0.813 1.673 -n "zone-4 2024-08-18 green (75 %)"         -k GX0521 GX0522 GX0523 GX0524 GX0525 GX0526 GX0527 GX0528 GX0529 GX0530
 """
 import argparse
 import os
@@ -22,6 +26,8 @@ p = argparse.ArgumentParser(prog="timeline_lut.py", description=__doc__, formatt
 p.add_argument("-g", "--gain", nargs=3, type=float, required=True, metavar=("R", "G", "B"), help="gains in linear light")
 p.add_argument("-n", "--name", required=True, help="the LUT's name (file name without .cube)")
 p.add_argument("-c", "--contrast", type=float, default=1.0, help="contrast around --pivot after the gains (1: none; 1.1: +10 %%)")
+p.add_argument("-k", "--clips", nargs="+", metavar="PREFIX",
+               help="set the LUT on these clips' node 1 (clip names starting with a prefix) instead of the timeline's")
 p.add_argument("--pivot", type=float, default=110, help="the contrast's pivot, an 8-bit value (default 110, the dives' median)")
 p.add_argument("-f", "--folder", help="project folder from the root, e.g. data/2024-07-12 (with --project)")
 p.add_argument("-p", "--project", help="project name (default: the current project)")
@@ -51,10 +57,17 @@ if not project.GetName().endswith(" - graded"):
 project.RefreshLUTList()
 resolve.OpenPage("color")
 timeline = project.GetCurrentTimeline() or project.GetTimelineByIndex(1)
-graph = timeline.GetNodeGraph()
-print("timeline grade:", graph.GetNumNodes(), "node(s)")
-print("LUT set on the timeline's node 1:", graph.SetLUT(1, lut), graph.GetLUT(1))
-graph.SetNodeLabel(1, a.name[:30])
+if a.clips:
+    items = [i for i in timeline.GetItemListInTrack("video", 1) if i.GetName().startswith(tuple(a.clips))]
+    for item in items:
+        graph = item.GetNodeGraph()
+        print(f"{item.GetName()}: LUT set on node 1 ({graph.GetNodeLabel(1)}):", graph.SetLUT(1, lut))
+    print(len(items), "clip(s)")
+else:
+    graph = timeline.GetNodeGraph()
+    print("timeline grade:", graph.GetNumNodes(), "node(s)")
+    print("LUT set on the timeline's node 1:", graph.SetLUT(1, lut), graph.GetLUT(1))
+    graph.SetNodeLabel(1, a.name[:30])
 
 if a.still:
     clip, _, n = (a.frame or "").partition(":")

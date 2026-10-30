@@ -15,6 +15,16 @@ par plongée (`frames-lens-corrected-n10`).
 - Plongée 21 (2024-07-12, les trois vannes): un seul étalonnage, fait sur le plancher, pour toute la hauteur du mur:
   les vannes sortent jaune-olive (bleu très bas). D'où le #75.
 
+## Zone 4 (2026-10-30)
+
+Le *chunk* publié (« zone 4 - lens corrected - Align=highest - DepthMapQuality=low;FaceCount=custom ») vient d'une
+seule plongée, le 2024-08-18 (`frames-lens-corrected-n18`, une image sur dix-huit, 10 018 images). Ses clips forment
+deux groupes éclairés différemment (`clip_gains.mjs`, 75 % du neutre): GX0527 à GX0530 dans l'eau verte (médiane
+0,886, 0,813, 1,673), GX0533 à GX0541 sous les lampes, jaunes (0,766, 0,94, 1,9). Une correction par groupe
+(Christian, 2026-10-30, plutôt qu'une seule pour la plongée): `timeline_lut.py -k`, la LUT de chaque groupe sur le
+nœud de ses clips (« zone-4 2024-08-18 green (75 %) », GX0521 à GX0530; « zone-4 2024-08-18 lamps (75 %) », GX0531
+à GX0541), sans LUT sur la timeline. Resolve applique la LUT d'un nœud après sa balance.
+
 ## Les outils
 
 Resolve doit être ouvert, avec **Préférences › System › General › External scripting using: Local**. Chaque script
@@ -26,7 +36,7 @@ répond à `-h`.
 | `duplicate_projects.py` | copie les projets d'une zone avant tout changement: chaque projet exporté en `.drp` (sa sauvegarde, `O:\_davinci-resolve-library\backups`) puis réimporté dans le même dossier sous le nom `<nom> - graded`, la copie où se font les corrections |
 | `clip_gains.mjs` | la couleur moyenne de chaque clip (une vingtaine d'images réparties), ramenée aux trois quarts du neutre, et la médiane des clips: la correction commune de la plongée |
 | `grade_preview.mjs` | avant et après sur quelques images, côte à côte, pour choisir un dosage |
-| `timeline_lut.py` | écrit la correction commune en LUT et la pose sur le nœud de la timeline de la copie `- graded` (après les nœuds des clips); refuse un projet qui n'est pas une copie |
+| `timeline_lut.py` | écrit la correction commune en LUT et la pose sur le nœud de la timeline de la copie `- graded` (après les nœuds des clips), ou avec `-k` sur le nœud de certains clips seulement (un groupe de clips éclairés autrement); refuse un projet qui n'est pas une copie |
 | `retexture_chunk.py` | dans Metashape 1.7 ou 2.x (*Tools › Run Script*; les constantes et l'import des masques suivent la version): les photos d'un *chunk* « graded » pointées vers les images étalonnées (tout vérifié avant), avec `-k` les masques de chaque plongée (`_masks`, make_masks.mjs) importés sur ses seules photos, la texture refaite sur les coordonnées existantes, l'export nommé d'après le *chunk* et son nombre de faces (`<nom du chunk> (24.3M faces).glb`, Christian 2026-10-28) (avec `-d`, seulement à partir des photos prises à moins de tant de mètres: distance médiane aux points de liaison qu'elles voient), l'export `.glb`. Côté de la texture calculé par la taille réelle: surface du modèle et part de la texture couverte, pour le texel cible de `tools/model-analysis/thresholds.json` (pixel d'écran à 2 m: 1,73 mm) |
 | `relink_frame.py` | Metashape fermé: écrit dans le fichier du *chunk* « graded » (`<projet>.files/<chunk>/0/frame.zip`) les chemins des images étalonnées. Metashape n'enregistre pas un chemin changé par script: sans cette étape, le projet rouvert pointe de nouveau vers les images d'origine. Fichier d'origine gardé (`.bak`), `-n` pour vérifier. Avec `-a`, un *chunk* d'origine aussi, avant de supprimer ses images non étalonnées (zone 3, 2026-10-29) |
 | `glb_to_feet.py` | met en pieds un export `.glb` de Metashape écrit en mètres (positions × 3,28084), l'unité des exports et des zones du `.blend`: sans cela, `prepare_zone.py` refuse le recalage (zone 3, 2026-10-27: échelle 0,31). Python avec numpy (`tools/google-earth/.venv`) |
