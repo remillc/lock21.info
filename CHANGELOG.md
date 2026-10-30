@@ -5,6 +5,10 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- The site is a web app (TODO #81): installable on a phone or a computer (its manifest in French or English, icons
+  from the logo), and readable offline. A service worker fetches pages from the network first and keeps each page read
+  on the device (with its images and styles); without network, the kept copy, or an offline page listing the kept
+  pages. The 3D model is not kept offline.
 - Google Analytics: the theme as user properties, `theme_setting` (auto, dark, light: the footer's choice) and
   `theme_color_scheme` (the theme shown, dark or light, the system's when the choice is auto), set before each page
   view and at each change; the privacy page says so.
