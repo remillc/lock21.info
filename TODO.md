@@ -41,8 +41,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   output matches (tile count, manifest). Fix on the way: `-TilesRoot` not passed to tile_zone, unchecked exit codes of
   fix_tileset and update_manifest. Still tied to this PC after a port: the `O:\` defaults (and the `.blend` zones'
   `source` paths), Obj2Tiles' per-OS builds (Mac and Linux untested), the relief bake on an NVIDIA GPU (OptiX)
-- [ ] #94 Zone 3's wooden floor lacks detail in the viewer (Christian, 2026-10-26): find whether it is the texture
-  (texels on the floor, `tools/model-analysis/`), the mesh, or the tile level the viewer picks, and fix it
 
 ### Hosting and downloads
 
