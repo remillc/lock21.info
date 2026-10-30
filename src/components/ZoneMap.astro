@@ -64,19 +64,20 @@ const counts = Object.fromEntries(Object.keys(words).map((s) => [s, zones.filter
 
       rect {
         stroke-width: 4;
-      }
-      rect.online {
-        fill: var(--md-sys-color-secondary);
-        stroke: var(--md-sys-color-secondary);
-      }
-      rect.surveyed {
-        fill: var(--md-sys-color-surface-container);
-        stroke: var(--md-sys-color-on-surface-variant);
-      }
-      rect.unsurveyed {
-        fill: color-mix(in srgb, var(--unsurveyed) 14%, transparent);
-        stroke: var(--unsurveyed);
-        stroke-dasharray: 10 6;
+
+        &.online {
+          fill: var(--md-sys-color-secondary);
+          stroke: var(--md-sys-color-secondary);
+        }
+        &.surveyed {
+          fill: var(--md-sys-color-surface-container);
+          stroke: var(--md-sys-color-on-surface-variant);
+        }
+        &.unsurveyed {
+          fill: color-mix(in srgb, var(--unsurveyed) 14%, transparent);
+          stroke: var(--unsurveyed);
+          stroke-dasharray: 10 6;
+        }
       }
 
       text {
@@ -84,22 +85,23 @@ const counts = Object.fromEntries(Object.keys(words).map((s) => [s, zones.filter
         text-anchor: middle;
         dominant-baseline: central;
         pointer-events: none;
-      }
-      /* A narrow zone's number: smaller, beside it when it doesn't fit (17 to 19), in the page's colours then */
-      text.small {
-        font-size: 22px;
-      }
-      text.online {
-        fill: var(--md-sys-color-on-secondary);
-      }
-      text.surveyed {
-        fill: var(--md-sys-color-on-surface);
-      }
-      text.unsurveyed {
-        fill: var(--unsurveyed);
-      }
-      text.outside {
-        fill: var(--md-sys-color-on-surface-variant);
+
+        /* A narrow zone's number: smaller, beside it when it doesn't fit (17 to 19), in the page's colours then */
+        &.small {
+          font-size: 22px;
+        }
+        &.online {
+          fill: var(--md-sys-color-on-secondary);
+        }
+        &.surveyed {
+          fill: var(--md-sys-color-on-surface);
+        }
+        &.unsurveyed {
+          fill: var(--unsurveyed);
+        }
+        &.outside {
+          fill: var(--md-sys-color-on-surface-variant);
+        }
       }
 
       /* A zone's link: MD3's hover state layer, its outline thicker on the keyboard's focus */
@@ -139,16 +141,17 @@ const counts = Object.fromEntries(Object.keys(words).map((s) => [s, zones.filter
           height: 0.9rem;
           border-radius: 3px;
           box-sizing: border-box;
-        }
-        i.online {
-          background: var(--md-sys-color-secondary);
-        }
-        i.surveyed {
-          border: 2px solid var(--md-sys-color-on-surface-variant);
-        }
-        i.unsurveyed {
-          border: 2px dashed var(--unsurveyed);
-          background: color-mix(in srgb, var(--unsurveyed) 14%, transparent);
+
+          &.online {
+            background: var(--md-sys-color-secondary);
+          }
+          &.surveyed {
+            border: 2px solid var(--md-sys-color-on-surface-variant);
+          }
+          &.unsurveyed {
+            border: 2px dashed var(--unsurveyed);
+            background: color-mix(in srgb, var(--unsurveyed) 14%, transparent);
+          }
         }
       }
     }
