@@ -1,11 +1,14 @@
 ---
-// Right side of the header (replaces Starlight's social icons, which the site doesn't use): the "Modèle 3D" pill
+// Right side of the header (replaces Starlight's social icons, which the site doesn't use): the language select
+// (Starlight's, between the search and the pill: Christian, 2026-10-30; in the footer before), the "Modèle 3D" pill
 // (ModelPill.astro), and the viewer's files prefetched once a /modele/ link is hovered (ViewerWarmup). Starlight shows
 // this slot in the header on wide screens only; on small ones the pill sits at the top of the mobile menu instead
-// (Sidebar.astro), and the menu's footer is empty (MobileMenuFooter.astro).
+// (Sidebar.astro), and the language select in the menu's footer (MobileMenuFooter.astro).
+import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro'
 import ModelPill from './ModelPill.astro'
 import ViewerWarmup from './ViewerWarmup.astro'
 ---
 
+<div class="l21-select print:hidden"><LanguageSelect /></div>
 <ModelPill />
 <ViewerWarmup />
