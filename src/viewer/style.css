@@ -554,6 +554,18 @@ l21-loading.error .loading-label {
 .compass svg {
   display: block;
 }
+/* A narrow frame (a phone): the compass 40 dp, the viewer's buttons' size (Christian, 2026-10-30), its drawing scaled */
+@container viewer (max-width: 600px) {
+  .compass {
+    width: 40px;
+    height: 40px;
+
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
 /* Touch screens (touch-nav.js): the gestures' card again, left of the settings; in their place when they are hidden
    (production, main.js showSettings; Christian, 2026-10-30) */
 .touch-help-button {
@@ -1025,6 +1037,13 @@ l21-tooltip {
 
 /* The swim mode's help (main.js): MD3 basic dialog. Surface container high, 28 dp corners, 24 dp padding,
    headline-small title, body-medium text, a text button bottom right; a scrim behind it */
+/* The help's close button, top right (MD3 standard icon button, as .tour-close) */
+.swim-help-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
 /* The scrim under the help dialog, over the whole frame (the view and its buttons) */
 .viewer-frame:has(> .swim-help[open])::before {
   content: '';
@@ -1061,6 +1080,8 @@ l21-tooltip {
 
   h2 {
     margin: 0 0 16px;
+    /* Clear of the close button */
+    padding-right: 40px;
     font: 800 24px/32px var(--l21-font-text);
   }
 
@@ -1177,6 +1198,14 @@ l21-tooltip {
   stroke: var(--md-sys-color-tertiary);
   stroke-width: 1.5;
 }
+/* The fingers' movement in their sketch (nav-help.js, fingers) */
+.mouse-arrow {
+  fill: none;
+  stroke: var(--md-sys-color-on-surface-variant);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .swim-help .nav-buttons {
   display: grid;
   gap: 8px;
@@ -1201,6 +1230,60 @@ l21-tooltip {
   border-radius: 999px;
   background: var(--md-sys-color-surface-container-highest);
   color: var(--md-sys-color-on-surface);
+}
+
+/* A low frame (a phone: about 316 px high): the help tighter, to fit without scrolling (Christian, 2026-10-30): 8 px
+   from the frame's edges instead of 16 or 24 (wider: « S'approcher d'un point » on one line), smaller margins inside,
+   the title in headline-small's 20 px, the rows closer */
+@container viewer (max-height: 480px) {
+  .swim-help,
+  .swim-help:has(.nav-groups) {
+    max-height: calc(100% - 16px);
+    max-width: calc(100cqw - 16px);
+    padding: 16px 20px 12px;
+    border-radius: 20px;
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      line-height: 28px;
+    }
+  }
+  .nav-groups h3 {
+    margin-bottom: 4px;
+  }
+  .nav-gestures {
+    margin-bottom: 8px;
+
+    th,
+    td {
+      padding-block: 2px;
+    }
+
+    /* The gesture and its words on one line each (« S'approcher d'un point », « double-toucher »), the sketch closer
+       to its words */
+    th {
+      padding-right: 12px;
+    }
+
+    th,
+    td {
+      white-space: nowrap;
+    }
+
+    .mouse-how {
+      gap: 8px;
+    }
+
+    /* The mouse and the fingers' sketches smaller */
+    .mouse {
+      width: 24px;
+      height: 24px;
+    }
+  }
+  .swim-help-actions {
+    margin-top: 4px;
+  }
 }
 
 /* The underwater button's icon in the help's text: a small filled round, as the button while on */
@@ -1369,7 +1452,8 @@ l21-tooltip {
   letter-spacing: 0.5px;
 }
 /* MD3 standard icon button: 40 dp in a 48 dp touch target */
-.tour-close {
+.tour-close,
+.swim-help-close {
   display: grid;
   place-items: center;
   box-sizing: border-box;

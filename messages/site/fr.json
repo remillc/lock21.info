@@ -259,5 +259,6 @@
   "install_other": "Dans le menu du navigateur, choisissez « Installer » ou « Ajouter à l’écran d’accueil ». Sur Mac, dans Safari : Fichier › Ajouter au Dock.",
   "install_snackbar": "Lire le site hors ligne, au bord de l’eau ?",
   "install_action": "Installer",
-  "install_close": "Fermer"
+  "install_close": "Fermer",
+  "viewer_helpClose": "Fermer"
 }

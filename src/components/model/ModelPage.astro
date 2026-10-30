@@ -295,6 +295,14 @@ const updated = zones.updated
       overflow: hidden;
       background: var(--l21-panel);
     }
+    /* A phone held upright: 4:5 instead of 16:9 (Christian, 2026-10-30: 358 x 316 px on a 390 px phone, the 3D view
+       squeezed between the buttons, the navigation's help not fitting), the page's title still in sight below */
+    @media (orientation: portrait) and (max-width: 37.5rem) {
+      .frame {
+        aspect-ratio: 4 / 5;
+        max-height: calc(100svh - var(--sl-nav-height) - 10rem);
+      }
+    }
     /* Its entrance as the page loads (Christian, 2026-10-26): from lower up to its place, growing from 88 % and fading in,
        all at once (a little more apparent than first: 3rem and 92 % over 400 ms); MD3 entering motion (long1, 450 ms,
        emphasized decelerate). Reduced motion: none */

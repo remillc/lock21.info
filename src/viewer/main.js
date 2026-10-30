@@ -1232,6 +1232,10 @@ export function mountViewer() {
     swimHelp.scrollTop = 0
   }
   swimHelp.querySelector('.swim-help-ok').addEventListener('click', () => swimHelp.close())
+  const helpClose = swimHelp.querySelector('.swim-help-close')
+  helpClose.setAttribute('aria-label', m.viewer_helpClose())
+  helpClose.dataset.tooltip = m.viewer_helpClose()
+  helpClose.addEventListener('click', () => swimHelp.close())
   // A non-modal dialog in the viewer's frame (TODO #108, Christian 2026-10-30: it stays over the viewer when the page
   // scrolls; style.css): Escape closes it, as a modal one would
   swimHelp.addEventListener('keydown', (event) => {

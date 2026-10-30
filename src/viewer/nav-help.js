@@ -6,13 +6,35 @@
 import { m } from './i18n.js'
 import { icon } from './icons.js'
 
-// The mouse's part each gesture uses (as ModelPage.astro)
+// The mouse's part each gesture uses (as ModelPage.astro), and its fingers' sketch on a touch screen
 const GESTURES = [
-  [() => m.model_gestureTurn(), 'left', () => m.model_gestureTurnMouse(), () => m.model_gestureTurnFingers()],
-  [() => m.model_gesturePan(), 'right', () => m.model_gesturePanMouse(), () => m.model_gesturePanFingers()],
-  [() => m.model_gestureZoom(), 'wheel', () => m.model_gestureZoomMouse(), () => m.model_gestureZoomFingers()],
-  [() => m.model_gestureFly(), 'left', () => m.model_gestureFlyMouse(), () => m.model_gestureFlyFingers()],
+  [() => m.model_gestureTurn(), 'left', () => m.model_gestureTurnMouse(), () => m.model_gestureTurnFingers(), 'one'],
+  [() => m.model_gesturePan(), 'right', () => m.model_gesturePanMouse(), () => m.model_gesturePanFingers(), 'two'],
+  [() => m.model_gestureZoom(), 'wheel', () => m.model_gestureZoomMouse(), () => m.model_gestureZoomFingers(), 'pinch'],
+  [() => m.model_gestureFly(), 'left', () => m.model_gestureFlyMouse(), () => m.model_gestureFlyFingers(), 'double'],
 ]
+
+/**
+ * The fingers' sketch of a gesture (Christian, 2026-10-30), as the small mouse on a computer: the fingertips in the
+ * signal colour (mouse-used), the movement as arrows (mouse-arrow)
+ * @param {string} kind - one (one finger drags), two (two fingers drag), pinch (two fingers apart), double (double tap)
+ */
+function fingers(kind) {
+  const tip = (x, y) => `<circle class="mouse-used" cx="${x}" cy="${y}" r="4" />`
+  /** An arrow from (x1, y1) to (x2, y2), its head at the end */
+  const arrow = (x1, y1, x2, y2) => {
+    const a = Math.atan2(y2 - y1, x2 - x1)
+    const head = (d) => `${(x2 - 5 * Math.cos(a + d)).toFixed(1)} ${(y2 - 5 * Math.sin(a + d)).toFixed(1)}`
+    return `<path class="mouse-arrow" d="M${x1} ${y1} L${x2} ${y2} M${head(0.5)} L${x2} ${y2} L${head(-0.5)}" />`
+  }
+  const parts = {
+    one: tip(10, 18) + arrow(17, 18, 28, 18),
+    two: tip(8, 13) + tip(8, 23) + arrow(15, 18, 28, 18),
+    pinch: tip(13, 19) + tip(19, 13) + arrow(10, 22, 4, 28) + arrow(22, 10, 28, 4),
+    double: tip(16, 16) + '<circle class="mouse-arrow" cx="16" cy="16" r="8" /><circle class="mouse-arrow" cx="16" cy="16" r="12" />',
+  }
+  return `<svg class="mouse" aria-hidden="true" width="32" height="32" viewBox="0 0 32 32">${parts[kind]}</svg>`
+}
 
 /** The small mouse (ModelPage.astro's drawing) @param {string} part - left, right or wheel */
 function mouse(part) {
@@ -40,7 +62,7 @@ export function navHelp({ touch, keys, ar }) {
       ...(ar ? [['view-in-ar-outline-rounded', m.model_buttonAr()]] : []),
       ['help-outline-rounded', m.model_buttonHelp()],
     ]
-    return `<div class="nav-groups">${table(m.model_fingers(), GESTURES.map(([action, , , byFingers]) => [action(), byFingers()]))}</div>
+    return `<div class="nav-groups">${table(m.model_fingers(), GESTURES.map(([action, , , byFingers, kind]) => [action(), `<span class="mouse-how">${fingers(kind)}${byFingers()}</span>`]))}</div>
       <ul class="nav-buttons">${buttons.map(([name, label]) => `<li><span class="icon">${icon(name)}</span>${label}</li>`).join('')}</ul>`
   }
   const or = ` ${m.model_keysOr()} `
