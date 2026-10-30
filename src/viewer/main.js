@@ -1789,7 +1789,7 @@ export function mountViewer() {
   // drawing through each mockup's colour ramp, export_mockups.py; before that, the south wall's texture tinted purple)
   // are set aside
   const MOCKUP_GREY = 0xc9ccc4
-  const MOCKUP_OPACITY = 0.85
+  const MOCKUP_OPACITY = 0.6
   /**
    * @param {THREE.Object3D} model - the mockups' GLB
    * @param {{ tilesets: { id: string }[] }} manifest
