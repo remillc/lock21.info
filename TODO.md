@@ -59,9 +59,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ## Site
 
-- [ ] #43 Accessibility (WCAG 2.2 AA): audited on 2026-10-26 (axe-core on every page, both themes, desktop and phone;
-  keyboard, 320 px reflow, text spacing) and the code issues fixed. Left, for Christian: a check with a real screen
-  reader (NVDA, VoiceOver) and Windows' high contrast mode
 
 - [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): what is left of the small
   fixes, each needing Christian's call. V23 the ☰ on the desktop home; V26 one name for the dive mode; V14
