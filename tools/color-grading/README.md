@@ -25,6 +25,8 @@ deux groupes éclairés différemment (`clip_gains.mjs`, 75 % du neutre): GX0527
 nœud de ses clips (« zone-4 2024-08-18 green (75 %) », GX0521 à GX0530; « zone-4 2024-08-18 lamps (75 %) », GX0531
 à GX0541), sans LUT sur la timeline. Resolve applique la LUT d'un nœud après sa balance.
 
+Les lampes du rig éclairent le centre de l'image en chaud et l'eau ses bords en vert, de la même façon sur chaque image: un gain pour toute l'image laisse le centre jaune et vire les bords au magenta. `flat_color.py` mesure, par groupe, la couleur moyenne à chaque endroit de l'image (400 images, lissée) et ramène le rapport R/V et B/V de chaque endroit à celui de l'image entière, luminance gardée; appliqué aux images étalonnées, dans `frames-lens-corrected-graded-flat-n18` (Christian, 2026-10-30: « c'est concluant »; net sous les lampes, faible dans l'eau verte, où l'eau libre entre dans la mesure). C'est ce dossier que la texture utilise.
+
 ## Les outils
 
 Resolve doit être ouvert, avec **Préférences › System › General › External scripting using: Local**. Chaque script
@@ -39,6 +41,7 @@ répond à `-h`.
 | `timeline_lut.py` | écrit la correction commune en LUT et la pose sur le nœud de la timeline de la copie `- graded` (après les nœuds des clips), ou avec `-k` sur le nœud de certains clips seulement (un groupe de clips éclairés autrement); refuse un projet qui n'est pas une copie |
 | `retexture_chunk.py` | dans Metashape 1.7 ou 2.x (*Tools › Run Script*; les constantes et l'import des masques suivent la version): les photos d'un *chunk* « graded » pointées vers les images étalonnées (tout vérifié avant), avec `-k` les masques de chaque plongée (`_masks`, make_masks.mjs) importés sur ses seules photos, la texture refaite sur les coordonnées existantes, l'export nommé d'après le *chunk* et son nombre de faces (`<nom du chunk> (24.3M faces).glb`, Christian 2026-10-28) (avec `-d`, seulement à partir des photos prises à moins de tant de mètres: distance médiane aux points de liaison qu'elles voient), l'export `.glb`. Côté de la texture calculé par la taille réelle: surface du modèle et part de la texture couverte, pour le texel cible de `tools/model-analysis/thresholds.json` (pixel d'écran à 2 m: 1,73 mm) |
 | `relink_frame.py` | Metashape fermé: écrit dans le fichier du *chunk* « graded » (`<projet>.files/<chunk>/0/frame.zip`) les chemins des images étalonnées. Metashape n'enregistre pas un chemin changé par script: sans cette étape, le projet rouvert pointe de nouveau vers les images d'origine. Fichier d'origine gardé (`.bak`), `-n` pour vérifier. Avec `-a`, un *chunk* d'origine aussi, avant de supprimer ses images non étalonnées (zone 3, 2026-10-29) |
+| `flat_color.py` | la couleur égalisée dans l'image: par groupe de clips, la couleur moyenne à chaque endroit de l'image (l'éclairage du rig, qui suit la caméra), puis chaque endroit ramené aux rapports R/V et B/V de l'image entière, luminance gardée; `--preview` (avec `--original`, trois colonnes), `-o` pour toutes les images |
 | `glb_to_feet.py` | met en pieds un export `.glb` de Metashape écrit en mètres (positions × 3,28084), l'unité des exports et des zones du `.blend`: sans cela, `prepare_zone.py` refuse le recalage (zone 3, 2026-10-27: échelle 0,31). Python avec numpy (`tools/google-earth/.venv`) |
 
 ## Le déroulement
