@@ -3,6 +3,12 @@
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
 public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
+## Unreleased
+
+- /modele, « Réalité augmentée »: the QR codes' captions on one line, centred under each code, without the
+  notebook's « FIG. NN » (it broke them over two lines; TODO #109), and some room before the first code and after the
+  second.
+
 ## 1.0.0-beta.5 - 2026-10-30
 
 - The site is a web app (TODO #81): installable on a phone or a computer (its manifest in French or English, icons
