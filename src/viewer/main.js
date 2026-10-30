@@ -1783,10 +1783,11 @@ export function mountViewer() {
     if ('metalness' in material) material.metalness = 0
     return withShadowCascades(material)
   }
-  // The mockups of the zones not yet online: a light grey, a little see-through (Christian, 2026-10-30), lit as the
-  // context (sky, sun, shadows, water): they complete the lock's shape without passing for surveyed surfaces. Their own
-  // textures in the GLB (the 1988 drawing through each mockup's colour ramp, export_mockups.py; before, the south
-  // wall's texture tinted purple) are set aside
+  // The mockups of the zones not yet online: a light grey, a little see-through (Christian, 2026-10-30; then tried as
+  // ghosts, unlit, with and without a Fresnel term, and kept as first), lit as the context (sky, sun, shadows, water):
+  // they complete the lock's shape without passing for surveyed surfaces. Their own textures in the GLB (the 1988
+  // drawing through each mockup's colour ramp, export_mockups.py; before that, the south wall's texture tinted purple)
+  // are set aside
   const MOCKUP_GREY = 0xc9ccc4
   const MOCKUP_OPACITY = 0.85
   /**
