@@ -680,6 +680,12 @@ export function mountViewer() {
 
   function surfaceMaterial(mesh) {
     const surface = mesh.userData.surface
+    const material = surfaceLook(surface, mesh)
+    // See-through (the mockups: showMockups), its own back faces still hidden by the depth it writes
+    if (surface.opacity) Object.assign(material, { transparent: true, opacity: surface.opacity })
+    return material
+  }
+  function surfaceLook(surface, mesh) {
     if (look.mesh) return meshMaterial(surface)
     const normalMap = look.relief !== '0' ? surface.normalMap : null
     if (normalMap && look.relief === 'debug') return new THREE.MeshBasicMaterial({ map: normalMap, side: THREE.DoubleSide })
@@ -1777,9 +1783,12 @@ export function mountViewer() {
     if ('metalness' in material) material.metalness = 0
     return withShadowCascades(material)
   }
-  // The mockups of the zones not yet online: their own textures from the .blend (Christian, 2026-10-24: the 1988 drawing
-  // through each mockup's colour ramp, computed by export_mockups.py), lit as the context (sky, sun, shadows, water);
-  // they were the south wall's texture tinted purple
+  // The mockups of the zones not yet online: a light grey, a little see-through (Christian, 2026-10-30), lit as the
+  // context (sky, sun, shadows, water): they complete the lock's shape without passing for surveyed surfaces. Their own
+  // textures in the GLB (the 1988 drawing through each mockup's colour ramp, export_mockups.py; before, the south
+  // wall's texture tinted purple) are set aside
+  const MOCKUP_GREY = 0xc9ccc4
+  const MOCKUP_OPACITY = 0.85
   /**
    * @param {THREE.Object3D} model - the mockups' GLB
    * @param {{ tilesets: { id: string }[] }} manifest
@@ -1814,6 +1823,11 @@ export function mountViewer() {
       const zone = child.name.match(/(\d+)$/)?.[1]
       child.visible = Boolean(zone) && !online.has(`zone-${zone}`)
       initSurface(child, null)
+      const surface = child.userData.surface
+      surface.map?.dispose()
+      Object.assign(surface, { map: null, normalMap: null, color: new THREE.Color(MOCKUP_GREY), opacity: MOCKUP_OPACITY })
+      child.material.dispose()
+      child.material = surfaceMaterial(child)
     })
     scene.add(model)
     mockupModels.push(model)
