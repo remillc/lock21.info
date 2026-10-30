@@ -63,7 +63,7 @@ if (args.help || !args.dir || !['1', '8'].includes(args.bits)) {
     '  [--grow 28] [--water 0.02] [-m <regex>] [-e <n>] [-s sheet.jpg] [--sheet-of all|rod|none|several|scan|extended]\n' +
     '  [--sheet-max 15] [--log 200] [-n]\n' +
     'A Metashape mask per frame (<frame>_guide.png): the measuring rod (and, with --water, the open water) found in the frame itself.\n' +
-    '  -d, --dir        the frames (TIFF)\n' +
+    '  -d, --dir        the frames (TIFF or JPEG)\n' +
     '  -a, --alt        another folder where some frames may be instead (a folder being renamed): read from either\n' +
     '  -o, --out        the masks folder (default: _masks beside the frames folder)\n' +
     '  -b, --bits       1 (default: 1-bit PNG, black and white palette) or 8 (8-bit grey, 8 times larger)\n' +
