@@ -72,8 +72,8 @@
     background: var(--l21-bar);
     border-bottom: 1px solid var(--l21-bar-outline);
 
-    // The divider Starlight draws after the social-icons slot (the "Modèle 3D" pill) separated it from the theme and
-    // language selects, now in the footer
+    // The divider Starlight draws after the social-icons slot (the language select and the "Modèle 3D" pill) separated
+    // it from the theme and language selects, which it no longer holds
     .social-icons::after {
       display: none;
     }
@@ -799,6 +799,81 @@
 
     &:hover {
       box-shadow: inset 0 0 0 100px color-mix(in srgb, currentColor 8%, transparent);
+    }
+  }
+
+  // The theme select (footer) and the language select (header, HeaderActions.astro; the mobile menu,
+  // MobileMenuFooter.astro): Starlight's, in a .l21-select wrapper
+  /* Starlight gives each select a fixed width, made for the header, which cut « Sombre » and « Français » short in
+     the bars' font (usability audit V21): sized to their longest option instead */
+  .l21-select select {
+    width: auto;
+  }
+  /* The list a select opens: an MD3 menu (docs/system-design.md) where the browser lets CSS draw it (appearance:
+     base-select: Chrome and Edge 135+); elsewhere the system's own list, as before. Surface container, 4 dp corners,
+     elevation 2, items 48 dp high in label-large, a state layer on the item under the pointer or the focus, the
+     chosen one tinted and checked; MD3 motion (enter 400 ms decelerate, exit 200 ms accelerate) */
+  @supports (appearance: base-select) {
+    .l21-select select,
+    .l21-select select::picker(select) {
+      appearance: base-select;
+    }
+    /* The closed select keeps Starlight's look and its own caret */
+    .l21-select select::picker-icon {
+      display: none;
+    }
+    .l21-select select::picker(select) {
+      min-inline-size: 7rem;
+      margin-block: 4px;
+      padding-block: 8px;
+      border: 0;
+      border-radius: var(--md-sys-shape-extra-small);
+      background: var(--md-sys-color-surface-container);
+      color: var(--md-sys-color-on-surface);
+      box-shadow: var(--md-sys-elevation-level2);
+      font: 500 0.875rem / 1.25rem var(--l21-font-text);
+      letter-spacing: 0.1px;
+      transform-origin: top;
+      opacity: 0;
+      transform: scaleY(0.8);
+      transition:
+        opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-emphasized-accelerate),
+        transform var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-emphasized-accelerate),
+        display var(--md-sys-motion-duration-short4) allow-discrete,
+        overlay var(--md-sys-motion-duration-short4) allow-discrete;
+    }
+    .l21-select select:open::picker(select) {
+      opacity: 1;
+      transform: none;
+      transition-duration: var(--md-sys-motion-duration-medium4);
+      transition-timing-function: var(--md-sys-motion-easing-emphasized-decelerate);
+    }
+    @starting-style {
+      .l21-select select:open::picker(select) {
+        opacity: 0;
+        transform: scaleY(0.8);
+      }
+    }
+    .l21-select option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-block-size: 48px;
+      padding-inline: 12px;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+    }
+    .l21-select option:hover,
+    .l21-select option:focus-visible {
+      background: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-hover), transparent);
+      outline: none;
+    }
+    .l21-select option:checked {
+      background: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
+    }
+    .l21-select option::checkmark {
+      inline-size: 1.25rem;
     }
   }
 
