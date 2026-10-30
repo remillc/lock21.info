@@ -1,5 +1,18 @@
 ---
-// Footer of the mobile menu: empty. Starlight puts the social-icons slot there (the "Modèle 3D" pill, which on small
-// screens sits at the top of the menu instead: Sidebar.astro) and the theme and language selects (in the page footer
-// instead: Footer.astro).
+// Footer of the mobile menu: the language select (Starlight's; in the header on wide screens, HeaderActions.astro).
+// Starlight also puts the social-icons slot there (the "Modèle 3D" pill, which on small screens sits at the top of the
+// menu instead: Sidebar.astro) and the theme select (in the page footer instead: Footer.astro).
+import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro'
 ---
+
+<div class="l21-select print:hidden"><LanguageSelect /></div>
+
+<style>
+  @layer l21.layout {
+    /* Starlight's select pulls itself 0.5rem out to the left (its negative margin, made for the header): lined up
+       with the menu's entries */
+    .l21-select {
+      margin-inline-start: 0.5rem;
+    }
+  }
+</style>

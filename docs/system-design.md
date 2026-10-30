@@ -210,7 +210,7 @@ The 3D viewer has its own stylesheet in its shadow root, with no theme to fight;
 - **No breadcrumb** (Christian, 2026-10-26) while the site has two levels (a menu group, then its pages): the
   eyebrow above the title already names the group, and the left menu shows where the page is. With a third level, a
   breadcrumb would help, the eyebrow becoming its first link.
-- **Selects** (the footer's theme and language): the list they open is an MD3 menu (surface container, 4 dp corners,
+- **Selects** (the theme in the footer, the language in the header bar and at the end of the mobile menu): the list they open is an MD3 menu (surface container, 4 dp corners,
   elevation 2, 48 dp items in label-large, state layers, the chosen item tinted and checked, MD3 motion), drawn with
   `appearance: base-select` where the browser allows it (Chrome and Edge 135+); other browsers show their own list.
   Styles in `Footer.astro`.

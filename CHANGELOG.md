@@ -5,6 +5,11 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Google Analytics: the theme as user properties, `theme_setting` (auto, dark, light: the footer's choice) and
+  `theme_color_scheme` (the theme shown, dark or light, the system's when the choice is auto), set before each page
+  view and at each change; the privacy page says so.
+- The language select moved from the footer to the header bar, between the search and « Modèle 3D » (wide screens),
+  and to the end of the ☰ menu on phones; the theme select stays in the footer.
 - Google Earth: each opening of the downloaded KMZ (its list asked for by Google Earth) counted in Google Analytics as a
   `kmz_open` event, by the site's Worker; the privacy page says so (French and English).
 - 3D viewer: the settings (the ⚙ panel and the « Équilibre » slider) hidden on the live site, shown in development or
