@@ -2,13 +2,17 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#108**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#109**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
 
 ### Viewer
 
+- [ ] #108 The navigation's help dialog, opened once at the first visit (src/viewer/nav-help.js, main.js openSwimHelp; a
+  `<dialog>` in the viewer's shadow root): it should stay over the 3D viewer when the /modele page scrolls (Christian,
+  2026-10-30). As a modal dialog it sits in the window's top layer, centred on the window, not on the viewer's frame
+  (to check: in the frame, the page scrolled)
 - [ ] #75 Colour grading at the source, zone by zone (DaVinci Resolve, at frame extraction; the corrections after the
   fact only invent the lost blue and red). Zone 3 done and online (2026-10-29, Christian: « peu de différence, mais je
   préfère après »): the chunk « zone 3 - lens corrected - graded - clean RU=30, PA=5, RE=0.4 » of
