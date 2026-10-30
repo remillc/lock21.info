@@ -91,6 +91,22 @@ l21-loading {
   justify-content: center;
   pointer-events: none;
   font-variant-numeric: tabular-nums;
+
+  /* The second phase (.refining, below): the card gone, the bar along the top */
+  &.refine {
+    align-items: flex-start;
+    justify-content: stretch;
+
+    .loading-card {
+      display: none;
+    }
+
+    .refining {
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+  }
 }
 
 /* Its own dark card (as the viewer's buttons): readable over the light terrain as over the background */
@@ -140,22 +156,6 @@ l21-loading {
   display: none;
 }
 
-l21-loading.refine {
-  align-items: flex-start;
-  justify-content: stretch;
-
-  
-  .loading-card {
-    display: none;
-  }
-
-  
-  .refining {
-    display: block;
-    width: 100%;
-    text-align: center;
-  }
-}
 
 .refining-bar {
   height: 3px;
@@ -326,8 +326,9 @@ l21-loading.error .loading-label {
     display: block;
   }
 
-  /* Selected (toggle): the settings button while its panel is open */
-  &[aria-expanded='true'] {
+  /* Selected (toggle): the settings button while its panel is open, the underwater button while on */
+  &[aria-expanded='true'],
+  &[aria-pressed='true'] {
     background: var(--md-sys-color-secondary);
     color: var(--md-sys-color-surface);
   }
@@ -356,10 +357,6 @@ l21-loading.error .loading-label {
 .underwater-button {
   right: calc(max(16px, env(safe-area-inset-right)) + 112px);
   bottom: max(16px, env(safe-area-inset-bottom));
-}
-.icon-button[aria-pressed='true'] {
-  background: var(--md-sys-color-secondary);
-  color: var(--md-sys-color-surface);
 }
 /* While underwater (main.js), left of the underwater button: one strip with the season slider (a pill like the
    other controls over the 3D view, an MD3 discrete slider with four stops, and its value) and the dive light's icon
@@ -1330,6 +1327,20 @@ l21-tooltip {
   white-space: nowrap;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+
+  &:hover {
+    background: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-hover), var(--l21-control));
+  }
+
+  &:focus-visible,
+  &:active {
+    background: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-pressed), var(--l21-control));
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: 0;
+  }
 }
 .ar-button:not([hidden]) ~ .tour-button {
   right: calc(max(16px, env(safe-area-inset-right)) + 220px);
@@ -1348,17 +1359,6 @@ l21-tooltip {
 .underwater-tools:not([hidden]) ~ .tour-button {
   right: calc(max(16px, env(safe-area-inset-right)) - 4px);
   bottom: calc(max(16px, env(safe-area-inset-bottom)) + 52px);
-}
-.tour-button:hover {
-  background: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-hover), var(--l21-control));
-}
-.tour-button:focus-visible,
-.tour-button:active {
-  background: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-pressed), var(--l21-control));
-}
-.tour-button:focus-visible {
-  outline: 2px solid var(--md-sys-color-secondary);
-  outline-offset: 0;
 }
 .tour-button svg {
   flex: none;
@@ -1515,12 +1515,21 @@ l21-tooltip {
   border-radius: 999px;
   background-clip: padding-box;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-secondary);
+    outline-offset: 0;
+  }
 }
 /* Back: a filled tonal icon button (Christian, 2026-10-26: circled too, as next), the viewer's buttons' tone, its
    state layers on top of it */
 .tour-prev {
   background-color: var(--l21-control);
   color: var(--md-sys-color-on-surface);
+
+  &[hidden] {
+    display: none;
+  }
 
   &:hover {
     background-color: color-mix(in srgb, var(--md-sys-color-on-surface) var(--md-sys-state-hover), var(--l21-control));
@@ -1543,14 +1552,6 @@ l21-tooltip {
   &:active {
     background-color: color-mix(in srgb, var(--md-sys-color-on-secondary) var(--md-sys-state-pressed), var(--md-sys-color-secondary));
   }
-}
-.tour-prev:focus-visible,
-.tour-next:focus-visible {
-  outline: 2px solid var(--md-sys-color-secondary);
-  outline-offset: 0;
-}
-.tour-prev[hidden] {
-  display: none;
 }
 /* « Revenir à la vue » (tour.js, usability audit V24): an MD3 text button with a leading icon, 40 dp in a 48 dp touch
    target (the transparent border), 12 dp before the 18 dp icon, 8 dp to the label, 16 dp after; label-large in the
