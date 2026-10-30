@@ -42,6 +42,7 @@ p.add_argument("--limit", type=float, default=2.0, help="largest gain on a chann
 p.add_argument("--strength", type=float, default=1.0, help="share of the correction applied (default 1)")
 p.add_argument("-o", "--out", help="write the corrected frames there, same names")
 p.add_argument("--preview", nargs="+", metavar=("OUT.jpg", "FRAME"), help="before and after, side by side: the output, then frames")
+p.add_argument("--original", metavar="DIR", help="with --preview: first the frame of the same name in DIR (before any grade)")
 p.add_argument("-j", "--jobs", type=int, default=max(1, (os.cpu_count() or 2) - 2), help="processes (default: cores - 2)")
 
 
@@ -137,11 +138,14 @@ if __name__ == "__main__":
             key = group_of(os.path.basename(f), groups)
             before = Image.open(f).convert("RGB")
             after = correct(f, maps[key]) if key else before
+            columns = [before, after]
+            if a.original:
+                columns.insert(0, Image.open(os.path.join(a.original, os.path.basename(f))).convert("RGB"))
             w = 700
             h = round(before.height * w / before.width)
-            row = Image.new("RGB", (2 * w + 8, h))
-            row.paste(before.resize((w, h)), (0, 0))
-            row.paste(after.resize((w, h)), (w + 8, 0))
+            row = Image.new("RGB", (len(columns) * (w + 8) - 8, h))
+            for i, image in enumerate(columns):
+                row.paste(image.resize((w, h)), (i * (w + 8), 0))
             rows.append(row)
             print(os.path.basename(f), key or "no group: unchanged")
         sheet = Image.new("RGB", (rows[0].width, sum(r.height + 8 for r in rows)))
