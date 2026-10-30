@@ -30,7 +30,7 @@ Plus besoin d'une version basse résolution : la texture de l'export est publi�
 
 La baguette de mesure orange et blanche que je tiens devant la caméra se voit dans beaucoup d'images. Sans masque, Metashape la peindrait sur la texture, comme une rayure orange sur les moules. Pour chaque image, un masque en noir et blanc lui dit quoi laisser de côté : la baguette en noir, le reste en blanc. Metashape ne prend alors rien de la baguette quand il construit la texture.
 
-Les masques sont faits par un script écrit à l'aide de l'outil d'intelligence artificielle Claude, en octobre 2026. Dans chaque image, il cherche le segment orange de la baguette, une barre droite et mince qui entre par le haut de l'image, puis il suit la même ligne vers le bas, sur le segment blanc et jusqu'au bout orange. Je les ai faits seulement pour les plongées qui servent aux zones en ligne, plus de 130 000 images.
+Les masques sont faits par un script écrit à l'aide de l'outil d'intelligence artificielle Claude, en octobre 2026. Dans chaque image, il cherche le segment orange de la baguette, une barre droite et mince qui entre par le haut de l'image, puis il suit la même ligne vers le bas, sur le segment blanc et jusqu'au bout orange. Je les ai faits seulement pour les plongées qui servent aux zones en ligne, plus de 130 000 images. Ils servent quand je refais la texture d'une zone : la zone 3 est la première refaite avec eux, en octobre 2026.
 
 ## Génération de la texture
 

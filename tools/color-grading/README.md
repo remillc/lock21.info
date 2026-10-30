@@ -119,6 +119,8 @@ Les zones 3 et 4 sont données à part (`-f`) et retirées de la liste de `used_
 
 **Dans Metashape.** `retexture_chunk.py -k` importe les masques de chaque plongée sur ses seules photos. À la main: *File › Import › Import Masks*, *Method: From File*, *Operation: Replacement*, *Filename template*: `{filename}_guide.png`, dans le dossier `_masks`. Metashape ne prend rien des parties noires pour la texture.
 
+**Avant de refaire une texture, charger les masques.** Les masques ne sont pas dans les projets Metashape: ils sont sur `O:`, à côté des images, et n'entrent dans un *chunk* qu'au moment où on refait sa texture avec `retexture_chunk.py -k` (ou à la main, ci-dessus). Refaire la texture d'une zone sans `-k` remettrait la baguette dans la texture. Ils ne servent qu'à la texture: l'alignement et le maillage sont faits. État au 2026-10-30: masques faits pour toutes les plongées des zones publiées (27 dossiers, plus la zone 10 en JPEG; `O:\temp\rod-masks.log`); la zone 3 est la première texture refaite avec ces masques (2026-10-30, *chunk* « zone 3 - lens corrected - graded - clean RU=30, PA=5, RE=0.4 »); la zone 4 a été refaite avec les anciens masques (le segment orange seulement); les autres zones n'en ont pas. Refaire les autres textures reste à décider (Christian, 2026-10-30): d'abord comparer la zone 3 avant et après; la baguette se voit le plus dans les zones 11, 8 et 18 (trouvée dans 80 à 98 % des images).
+
 Les images peuvent être des TIFF ou des JPEG (la zone 10, 2024-06-29, n'a que des JPEG: ajouté le 2026-10-30).
 
 ## Les LUT

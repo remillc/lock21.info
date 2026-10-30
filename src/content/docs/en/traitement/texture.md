@@ -30,7 +30,7 @@ No more need for a low-resolution version: the export's texture is published as 
 
 The orange and white measuring rod I hold in front of the camera shows in many frames. Without a mask, Metashape would paint it onto the texture, like an orange scratch across the mussels. For each frame, a black-and-white mask tells it what to leave out: the rod in black, the rest in white. Metashape then takes nothing from the rod when it builds the texture.
 
-The masks are made by a script written with the help of the AI tool Claude, in October 2026. In each frame, it looks for the rod's orange segment, a thin straight bar coming in from the top of the frame, then follows the same line down, over the white segment and to the orange tip. I made them only for the dives used by the zones online, over 130,000 frames.
+The masks are made by a script written with the help of the AI tool Claude, in October 2026. In each frame, it looks for the rod's orange segment, a thin straight bar coming in from the top of the frame, then follows the same line down, over the white segment and to the orange tip. I made them only for the dives used by the zones online, over 130,000 frames. They come into play when I redo a zone's texture: zone 3 is the first one redone with them, in October 2026.
 
 ## Building the texture
 
