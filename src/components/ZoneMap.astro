@@ -4,7 +4,8 @@
 // (a live legend beside the drawing) and on « Suivi du travail par zone ».
 // - online: the 3D model's manifest at build (src/lib/manifest.js, as the home page's count), the secondary colour;
 // - surveyed, to come: named in the dive log (src/lib/diveLog.js, the « Zones » column), outlined;
-// - not surveyed yet: dashed, the viewer's violet for the zones not yet digitised (as its mockups).
+// - not surveyed yet: dashed grey, as the 3D viewer's mockups of the zones not yet digitised (Christian, 2026-10-30:
+//   the same grey on these pages; violet before, the mockups' former colour).
 import { dives } from '../lib/diveLog'
 import { localPath, pageLang } from '../lib/i18n'
 import { zonesOnline } from '../lib/manifest'
@@ -52,7 +53,8 @@ const counts = Object.fromEntries(Object.keys(words).map((s) => [s, zones.filter
     /* Not a notebook figure (custom.scss: FIG. NN, the image's frame): its own legend. Descendants flat, states nested
        (docs/system-design.md, Styles: Astro scopes only the selectors it sees at the top) */
     .zone-map {
-      --unsurveyed: #8d7bd6;
+      /* The viewer's mockups' grey (main.js, MOCKUP_GREY), a little darker to read on the light theme too */
+      --unsurveyed: #9a9e95;
       margin: 1.5rem auto;
       max-width: 22rem;
       counter-increment: none;
@@ -99,7 +101,7 @@ const counts = Object.fromEntries(Object.keys(words).map((s) => [s, zones.filter
         fill: var(--md-sys-color-on-surface);
       }
       &.unsurveyed {
-        fill: var(--unsurveyed);
+        fill: var(--md-sys-color-on-surface-variant);
       }
       &.outside {
         fill: var(--md-sys-color-on-surface-variant);

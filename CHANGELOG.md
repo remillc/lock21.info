@@ -6,7 +6,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 ## Unreleased
 
 - 3D viewer: the mockups of the zones not yet online in a light grey, a little see-through (opacity 0.85), instead of
-  their textures from the .blend (the 1988 drawing through colour ramps); still lit as the context.
+  their textures from the .blend (the 1988 drawing through colour ramps); still lit as the context. The zone map's
+  « not surveyed yet » in the same grey (it was violet, the mockups' former colour).
 - Styles: a rule's variants (a class or an attribute of the same element) nested inside it, as its states already
   were (`rect { &.online {} }`), across the components, `custom.scss` and the viewer's `style.css`; the zone map and the
   install snackbar no longer nest descendants in `.astro` files (Astro wouldn't scope them). docs/system-design.md says so.
