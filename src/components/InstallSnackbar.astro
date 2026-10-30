@@ -4,7 +4,7 @@
 // or the 5th page read in a visit; only where the browser offers the install (Chrome, Edge, Android: Head.astro keeps
 // its beforeinstallprompt), not in the installed app, not on /modele (the 3D view). Shown once: closed, ignored or
 // used, it never comes back (localStorage l21-install-offer). In the footer (Footer.astro), so on every page.
-// Analytics: install_offer (shown), app_install (source: snackbar; its outcome, or dismissed when closed).
+// Analytics: app_install_offer (shown), app_install (source: snackbar; its outcome, or dismissed when closed).
 import { Icon } from 'astro-icon/components'
 import { pageLang } from '../lib/i18n'
 import { m } from '../paraglide/messages.js'
@@ -78,7 +78,7 @@ const o = { locale: pageLang(Astro.locals) }
       const due = visits >= 3 || (w.lock21Pages ?? 0) >= 5
       if (!w.lock21Install || standalone || read(KEY) || !due || /^(\/en)?\/modele$/.test(location.pathname)) return
       write(KEY, 'shown')
-      track('install_offer')
+      track('app_install_offer')
       // A popover: in the window's top layer, over the navigation column and the bars
       this.showPopover()
       requestAnimationFrame(() => this.classList.add('open'))
