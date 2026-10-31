@@ -93,14 +93,14 @@ const updated = zones.updated
   </ul>
 
   <div class="columns">
-    <!-- First column: the model, then its licence -->
+    <!-- First column: the model, then its licence (in one column, after the downloads: .licence, below) -->
     <div class="stack">
       <section>
         <h2>{m.model_modelTitle({}, o)}</h2>
         <p>{m.model_model1({}, o)}</p>
         <p>{m.model_model2({}, o)}</p>
       </section>
-      <section>
+      <section class="licence">
         <h2>{m.model_licenceTitle({}, o)}</h2>
         <p>
           {m.model_licenceText({}, o)} <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>:{' '}
@@ -246,7 +246,7 @@ const updated = zones.updated
         </ul>
       </section>
 
-      <section>
+      <section class="ar">
         <h2>{m.model_arTitle({}, o)}</h2>
         <p>
           {m.model_arText({}, o)}
@@ -372,6 +372,7 @@ const updated = zones.updated
     }
 
     .columns {
+      container-type: inline-size;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
       gap: 2rem;
@@ -381,6 +382,19 @@ const updated = zones.updated
       display: flex;
       flex-direction: column;
       gap: 2rem;
+    }
+    /* One column (narrower than two 18rem columns and their gap: a phone): the licence after the downloads, before
+       augmented reality (Christian, 2026-10-31); the stacks let their sections into the grid to be ordered */
+    @container (width < 38rem) {
+      .stack {
+        display: contents;
+      }
+      .licence {
+        order: 1;
+      }
+      .ar {
+        order: 2;
+      }
     }
     h2 {
       margin: 0 0 0.75rem;

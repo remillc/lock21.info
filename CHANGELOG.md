@@ -3,6 +3,11 @@
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
 public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
+## Unreleased
+
+- /modele on a phone (one column): the « Licence » section after « Téléchargements », before « Réalité augmentée »
+  (it came right after « Le modèle »); unchanged on wider screens.
+
 ## 1.0.0-beta.7 - 2026-10-31
 
 - 3D model: zone 3 retextured (2026-10-30) from its frames with the colour evened out across the frame (the yellow
