@@ -35,12 +35,13 @@ const ICONS = {
 // Quotation marks in the page's language: “…” in English, « … » in French
 const [open, close] = en ? ['“', '”'] : ['« ', ' »']
 const pagePath = localPath(site.viewer, lang)
-// The navigation table and the buttons' list: the texts are messages (model_…), the mouse part and the keys data
+// The navigation's groups and the buttons' list: the texts are messages (model_…), the mouse part, the touch gesture's
+// icon (as src/viewer/nav-help.js) and the keys data
 const gestures = [
-  [m.model_gestureTurn({}, o), 'left', m.model_gestureTurnMouse({}, o), m.model_gestureTurnFingers({}, o)],
-  [m.model_gesturePan({}, o), 'right', m.model_gesturePanMouse({}, o), m.model_gesturePanFingers({}, o)],
-  [m.model_gestureZoom({}, o), 'wheel', m.model_gestureZoomMouse({}, o), m.model_gestureZoomFingers({}, o)],
-  [m.model_gestureFly({}, o), 'left', m.model_gestureFlyMouse({}, o), m.model_gestureFlyFingers({}, o)],
+  [m.model_gestureTurn({}, o), 'left', m.model_gestureTurnMouse({}, o), m.model_gestureTurnFingers({}, o), 'swipe-outline-rounded'],
+  [m.model_gesturePan({}, o), 'right', m.model_gesturePanMouse({}, o), m.model_gesturePanFingers({}, o), 'swipe-right-2-outline-rounded'],
+  [m.model_gestureZoom({}, o), 'wheel', m.model_gestureZoomMouse({}, o), m.model_gestureZoomFingers({}, o), 'pinch-zoom-out-outline-rounded'],
+  [m.model_gestureFly({}, o), 'left', m.model_gestureFlyMouse({}, o), m.model_gestureFlyFingers({}, o), 'touch-double-outline-rounded'],
 ]
 const moveKeys = [
   [m.model_keyForward({}, o), ['W', '↑']],
@@ -93,14 +94,14 @@ const updated = zones.updated
   </ul>
 
   <div class="columns">
-    <!-- First column: the model, then its licence -->
+    <!-- First column: the model, then its licence (in one column, after the downloads: .licence, below) -->
     <div class="stack">
       <section>
         <h2>{m.model_modelTitle({}, o)}</h2>
         <p>{m.model_model1({}, o)}</p>
         <p>{m.model_model2({}, o)}</p>
       </section>
-      <section>
+      <section class="licence">
         <h2>{m.model_licenceTitle({}, o)}</h2>
         <p>
           {m.model_licenceText({}, o)} <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>:{' '}
@@ -138,50 +139,80 @@ const updated = zones.updated
 
     <section>
       <h2>{m.model_navigate({}, o)}</h2>
-      <!-- Short, and only the visitor's own controls (Christian, 2026-10-26: too much text): the mouse column on a
-           computer, the fingers on a phone or tablet (the pointer: .fine / .coarse); the keys as key caps; the
-           viewer's buttons by their icons. The swimming's details are in the viewer's swim help -->
-      <table class="gestures">
-        <thead>
-          <tr><th scope="col"><span class="sr-only">{m.model_action({}, o)}</span></th><th scope="col" class="fine">{m.model_mouse({}, o)}</th><th scope="col" class="coarse">{m.model_fingers({}, o)}</th></tr>
-        </thead>
-        <tbody>
-          {gestures.map(([action, part, mouse, fingers]) => (
-            <tr>
-              <th scope="row">{action}</th>
-              <td class="fine">
-                <!-- A small mouse, the part used in the signal colour (Christian, 2026-10-26: draft B) -->
-                <span class="mouse-how">
-                  <svg class="mouse" aria-hidden="true" width="28" height="40" viewBox="0 0 28 40">
-                    <path class="mouse-body" d="M2 10 Q2 2 14 2 Q26 2 26 10 L26 28 Q26 38 14 38 Q2 38 2 28 Z" />
-                    <path class={part === 'left' ? 'mouse-used' : 'mouse-idle'} d="M2 10 Q2 2 13 2 L13 18 L2 18 Z" />
-                    <path class={part === 'right' ? 'mouse-used' : 'mouse-idle'} d="M15 2 Q26 2 26 10 L26 18 L15 18 Z" />
-                    <rect class={part === 'wheel' ? 'mouse-used' : 'mouse-body'} x="11" y="5" width="6" height="10" rx="3" />
-                  </svg>
-                  {mouse}
-                </span>
-              </td>
-              <td class="coarse">{fingers}</td>
-            </tr>
+      <!-- Short, and only the visitor's own controls (Christian, 2026-10-26: too much text): the mouse and the keyboard
+           on a computer, the fingers on a phone or tablet (the pointer: .fine / .coarse); the viewer's buttons by
+           their icons. The same look as the viewer's navigation help (src/viewer/nav-help.js, style.css; Christian,
+           2026-10-31): a filled card, each group under its small title, the keys as key caps. The swimming's details
+           are in the viewer's swim help -->
+      <div class="nav-card">
+        <div class="nav-groups">
+          <div class="fine">
+            <h3>{m.model_mouse({}, o)}</h3>
+            <table class="nav-gestures">
+              <tbody>
+                {gestures.map(([action, part, mouse]) => (
+                  <tr>
+                    <th scope="row">{action}</th>
+                    <td>
+                      <!-- A small mouse, the part used in the signal colour (Christian, 2026-10-26: draft B) -->
+                      <span class="mouse-how">
+                        <svg class="mouse" aria-hidden="true" width="28" height="40" viewBox="0 0 28 40">
+                          <path class="mouse-body" d="M2 10 Q2 2 14 2 Q26 2 26 10 L26 28 Q26 38 14 38 Q2 38 2 28 Z" />
+                          <path class={part === 'left' ? 'mouse-used' : 'mouse-idle'} d="M2 10 Q2 2 13 2 L13 18 L2 18 Z" />
+                          <path class={part === 'right' ? 'mouse-used' : 'mouse-idle'} d="M15 2 Q26 2 26 10 L26 18 L15 18 Z" />
+                          <rect class={part === 'wheel' ? 'mouse-used' : 'mouse-body'} x="11" y="5" width="6" height="10" rx="3" />
+                        </svg>
+                        {mouse}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <!-- The keys, one move a row, its letter and its arrow (Christian, 2026-10-26) -->
+          <div class="fine">
+            <h3>{m.viewer_keyboard({}, o)}</h3>
+            <table class="nav-gestures">
+              <tbody>
+                {moveKeys.map(([action, keys]) => (
+                  <tr>
+                    <th scope="row">{action}</th>
+                    <td>{keys.map((key, i) => (<>{i > 0 && ` ${m.model_keysOr({}, o)} `}<kbd>{key}</kbd></>))}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <!-- Each gesture with Material Symbols' gesture icon (a finger pressed and its movement), in the signal colour -->
+          <div class="coarse">
+            <h3>{m.model_fingers({}, o)}</h3>
+            <table class="nav-gestures">
+              <tbody>
+                {gestures.map(([action, , , fingers, gesture]) => (
+                  <tr>
+                    <th scope="row">{action}</th>
+                    <td>
+                      <span class="mouse-how">
+                        <span class="finger-gesture"><Icon name={`material-symbols:${gesture}`} aria-hidden="true" width="32" height="32" /></span>
+                        {fingers}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <ul class="nav-buttons">
+          {buttons.map(([icon, label, only]) => (
+            <li class={only}>
+              <span class="icon"><Icon name={`material-symbols:${ICONS[icon]}`} aria-hidden="true" width="24" height="24" /></span>
+              {label}
+            </li>
           ))}
-          <!-- The keys, in the table, one move a row, its letter and its arrow (Christian, 2026-10-26): the mouse's
-               column, a computer only -->
-          {moveKeys.map(([action, keys]) => (
-            <tr class="fine">
-              <th scope="row">{action}</th>
-              <td>{keys.map((key, i) => (<>{i > 0 && ` ${m.model_keysOr({}, o)} `}<kbd>{key}</kbd></>))}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <ul class="buttons">
-        {buttons.map(([icon, label, only]) => (
-          <li class={only}>
-            <span class="icon"><Icon name={`material-symbols:${ICONS[icon]}`} aria-hidden="true" width="24" height="24" /></span>
-            {label}
-          </li>
-        ))}
-      </ul>
+        </ul>
+      </div>
     </section>
 
     <div class="stack">
@@ -246,7 +277,7 @@ const updated = zones.updated
         </ul>
       </section>
 
-      <section>
+      <section class="ar">
         <h2>{m.model_arTitle({}, o)}</h2>
         <p>
           {m.model_arText({}, o)}
@@ -372,6 +403,7 @@ const updated = zones.updated
     }
 
     .columns {
+      container-type: inline-size;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
       gap: 2rem;
@@ -381,6 +413,26 @@ const updated = zones.updated
       display: flex;
       flex-direction: column;
       gap: 2rem;
+    }
+    /* One column (narrower than two 18rem columns and their gap: a phone): the licence after the downloads, before
+       augmented reality (Christian, 2026-10-31); the stacks let their sections into the grid to be ordered */
+    @container (width < 38rem) {
+      .stack {
+        display: contents;
+      }
+      .licence {
+        order: 1;
+      }
+      .ar {
+        order: 2;
+      }
+      /* The credit as plain text, without its box (Christian, 2026-10-31) */
+      .licence .credit {
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: none;
+      }
     }
     h2 {
       margin: 0 0 0.75rem;
@@ -395,49 +447,61 @@ const updated = zones.updated
     section a {
       color: var(--md-sys-color-secondary);
     }
-    /* Navigating: a short table (the action, then the visitor's column), key caps, the buttons by their icons */
-    .gestures {
-      border-collapse: collapse;
-      margin: 0 0 1.25rem;
-      font-size: 0.9375rem;
+    /* Navigating: as the viewer's navigation help (src/viewer/style.css, .swim-help and .nav-groups; Christian,
+       2026-10-31): a filled card (MD3 surface container high, extra-large corners), each group under its small
+       title, the mouse and the keyboard side by side where there is room, the keys as key caps, the buttons by their
+       icons */
+    .nav-card {
+      padding: 24px;
+      border-radius: var(--md-sys-shape-extra-large);
+      background: var(--md-sys-color-surface-container-high);
+      color: var(--md-sys-color-on-surface);
+      font: 400 0.875rem/1.25rem var(--l21-font-text);
+      letter-spacing: 0.25px;
     }
-    .gestures th,
-    .gestures td {
-      padding: 0.375rem 1.5rem 0.375rem 0;
+    .nav-groups {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 32px;
+    }
+    .nav-groups h3 {
+      margin: 0 0 8px;
+      font: 500 0.75rem/1rem var(--l21-font-data);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+    /* (more specific than the site's tables, custom.scss: no outline, no dark header, the text's own font) */
+    table.nav-gestures {
+      display: table;
+      width: auto;
+      margin: 0 0 16px;
+      overflow: visible;
+      border: 0;
+      border-radius: 0;
+      border-collapse: collapse;
+      background: none;
+    }
+    table.nav-gestures th,
+    table.nav-gestures td {
+      padding: 4px 16px 4px 0;
       border: 0;
       background: none;
-      /* The site's table headers are light text on the dark bar (custom.scss): here, no bar, the page's text */
-      color: var(--md-sys-color-on-surface);
+      font: inherit;
       text-align: left;
       vertical-align: middle;
     }
-    .gestures thead th {
-      font-family: var(--l21-font-data);
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.03rem;
-      text-transform: uppercase;
-    }
-    /* The first column away from the table's outline, as every column of the site's tables (docs/system-design.md) */
-    .gestures tr > :first-child {
-      padding-left: 1rem;
-    }
-    .gestures tbody th {
+    table.nav-gestures th {
       font-weight: 600;
+      color: var(--md-sys-color-on-surface);
     }
-    .gestures tbody td {
+    table.nav-gestures td {
       color: var(--md-sys-color-on-surface-variant);
     }
-    /* (more specific than the site's table cells, custom.scss) */
-    table.gestures th,
-    table.gestures td {
-      vertical-align: middle;
-    }
     .mouse-how {
-      vertical-align: middle;
       display: inline-flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 12px;
     }
     .mouse {
       flex: none;
@@ -457,55 +521,59 @@ const updated = zones.updated
       stroke: var(--md-sys-color-tertiary);
       stroke-width: 1.5;
     }
-    .gestures kbd {
-      display: inline-block;
-      min-width: 1.5rem;
-      padding: 0.125rem 0.375rem;
-      border: 1px solid var(--md-sys-color-outline-variant);
-      border-radius: var(--md-sys-shape-extra-small, 4px);
-      background: var(--md-sys-color-surface-container-high);
-      color: var(--md-sys-color-on-surface);
-      font-family: var(--l21-font-data);
-      font-size: 0.75rem;
-      text-align: center;
+    /* A touch gesture's icon: 32 px, in the signal colour as the small mouse's part used */
+    .finger-gesture {
+      display: inline-grid;
+      flex: none;
+      color: var(--md-sys-color-tertiary);
     }
-    .buttons {
+    .nav-gestures kbd {
+      display: inline-block;
+      min-width: 22px;
+      padding: 0 6px;
+      border: 1px solid color-mix(in srgb, var(--md-sys-color-on-surface-variant) 60%, transparent);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      background: none;
+      font: 700 0.75rem/18px var(--l21-font-data);
+      text-align: center;
+      color: var(--md-sys-color-on-surface);
+    }
+    .nav-buttons {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-      gap: 0.75rem 1.5rem;
+      gap: 8px;
       margin: 0;
       padding: 0;
       list-style: none;
-      font-size: 0.9375rem;
     }
-    .buttons li {
+    .nav-buttons li {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 12px;
       margin: 0;
     }
     /* The icon as the viewer's icon button shows it: 40 dp, full corners, tonal */
-    .buttons .icon {
+    .nav-buttons .icon {
       display: inline-grid;
       flex: none;
       place-items: center;
       width: 40px;
       height: 40px;
       border-radius: var(--md-sys-shape-full);
-      background: var(--md-sys-color-surface-container-high);
+      background: var(--md-sys-color-surface-container-highest);
       color: var(--md-sys-color-on-surface);
     }
     /* The visitor's own controls: the mouse and keys with a fine pointer, the fingers with a coarse one */
     /* (also on the buttons' list items: their own display rule is more specific than the class alone) */
     @media (pointer: coarse) {
       .fine,
-      .buttons li.fine {
+      .nav-buttons li.fine {
         display: none;
       }
     }
     @media not (pointer: coarse) {
       .coarse,
-      .buttons li.coarse {
+      .nav-buttons li.coarse {
         display: none;
       }
     }

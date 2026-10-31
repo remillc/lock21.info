@@ -49,6 +49,8 @@ Starlight's (`--sl-color-…`) in `src/styles/`.
 | `on-surface-variant` | `#4f5444` | `#c9cdbb` | secondary text |
 | `surface-container-lowest` | `#ffffff` | `#0d0f0a` | cards (light) |
 | `surface-container` | `#e7e8dc` | `#1f231a` | chips (light); cards, timeline items (dark) |
+| `surface-container-high` | `#e1e3d5` | `#292d23` | the /modele « Naviguer » card (as the viewer's help dialog) |
+| `surface-container-highest` | `#d8dacb` | `#34382d` | tonal icon rounds (the « Naviguer » buttons' icons) |
 | `outline` | `#2e3322` | `#3c4232` | 2 px outlines |
 | `outline-variant` | `#e1e2d6` | `#2a2f22` | dividers, table rows |
 | bars and panel (`--l21-bar`, `--l21-panel`) | `#2e3322` | `#1b1e15` | header, footer, instrument panel: dark olive in both themes (MD3 inverse surface in light) |

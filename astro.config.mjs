@@ -77,7 +77,9 @@ export default defineConfig({
       include: {
         'material-symbols': ['deployed-code-outline-rounded', 'public-outline-rounded', 'download-rounded', 'expand-more-rounded',
           'home-outline-rounded', 'scuba-diving-rounded', 'tour-outline-rounded', 'help-outline-rounded', 'view-in-ar-outline-rounded',
-          'install-mobile-outline-rounded', 'close-rounded'],
+          'install-mobile-outline-rounded', 'close-rounded',
+          // The touch gestures (ModelPage.astro, as src/viewer/nav-help.js)
+          'swipe-outline-rounded', 'swipe-right-2-outline-rounded', 'pinch-zoom-out-outline-rounded', 'touch-double-outline-rounded'],
       },
     }),
     // Footnotes headed « Notes » on the French pages, « Footnotes » on the English ones (usability audit V19)
