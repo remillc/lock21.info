@@ -74,10 +74,10 @@ export function settingsSchema({ mobile }) {
     {
       title: m.viewer_lighting(),
       items: [
-        { key: 'hdriIntensity', label: m.viewer_skyStrength(), hint: m.viewer_skyStrengthHint(), type: 'range', min: 0, max: 2, step: 0.05, def: '0.35' },
-        { key: 'sunIntensity', label: m.viewer_sunStrength(), hint: m.viewer_sunStrengthHint(), type: 'range', min: 0, max: 3, step: 0.05, def: '1' },
+        { key: 'hdriIntensity', label: m.viewer_skyStrength(), hint: m.viewer_skyStrengthHint(), type: 'range', min: 0, max: 2, step: 0.05, def: '0.3' },
+        { key: 'sunIntensity', label: m.viewer_sunStrength(), hint: m.viewer_sunStrengthHint(), type: 'range', min: 0, max: 3, step: 0.05, def: '0.6' },
         { key: 'light', label: m.viewer_sun(), hint: m.viewer_sunHint(), type: 'angles', def: '320,65', ranges: [[0, 360, 1], [0, 90, 1]], unit: '°' },
-        { key: 'exposure', label: m.viewer_exposure(), type: 'range', min: 0.25, max: 3, step: 0.05, def: '1.2' },
+        { key: 'exposure', label: m.viewer_exposure(), type: 'range', min: 0.25, max: 3, step: 0.05, def: '1' },
         { key: 'contrast', label: m.viewer_contrast(), hint: m.viewer_contrastHint(), type: 'range', min: 0.5, max: 2, step: 0.05, def: '1.3' },
         { key: 'saturation', label: m.viewer_saturation(), hint: m.viewer_saturationHint(), type: 'range', min: 0, max: 2, step: 0.05, def: '1.3' },
         // Bump map from the photo (Christian, 2026-10-25: to try strengths), 0 to 5 times its default 2.4 cm

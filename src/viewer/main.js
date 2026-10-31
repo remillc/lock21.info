@@ -601,12 +601,12 @@ export function mountViewer() {
     // Lighting (default; ?hdri=0 = the unlit display used before): the sky (diffuse, ?hdriIntensity=) and the sun
     // (direct, ?sunIntensity=, from ?light=azimuth,elevation), each with its slider. Realistic defaults, as on a clear
     // day (direct sun about 75-85 % of the light, the sky the rest): sun 1 (a surface facing it shows its texture's own
-    // brightness), sky 0.35; the sun from the southwest (azimuth 320: 40 degrees west of south), 65 degrees up
+    // brightness), sky 0.35; since 2026-10-31 (Christian), sun 0.6 and sky 0.3, softer; the sun from the southwest (azimuth 320: 40 degrees west of south), 65 degrees up
     // (Christian's choice, 2026-10-23; the .blend's frame is aligned on north). The sky photo's own sun stays 48 degrees up (HDRI_SUN): only
     // its azimuth follows ours
     sky: params.get('hdri') !== '0',
-    skyIntensity: params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : 0.35,
-    sunIntensity: params.has('sunIntensity') ? Number(params.get('sunIntensity')) : 1,
+    skyIntensity: params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : 0.3,
+    sunIntensity: params.has('sunIntensity') ? Number(params.get('sunIntensity')) : 0.6,
     // The sky as background: on by default (?sky=0: the plain backdrop)
     skyBackground: (params.get('sky') ?? '1') === '1',
     // Colour balance between zones (?neutral=0..1), see colorBalance
@@ -625,13 +625,13 @@ export function mountViewer() {
     light: (params.get('light') || '320,65').split(',').map(Number),
     // The sun's shadows (?shadows=0|1; default on computers, off on phones: one more render of the scene per frame)
     shadows: params.has('shadows') ? params.get('shadows') !== '0' : !mobile,
-    // Tone mapping of the lit display (?tone=agx|aces|neutral|none) and its exposure (?exposure=). Default AgX at 1.2,
-    // Christian's choice (2026-10-23): soft highlights that never clip to flat white. AgX greys the colours, so the
+    // Tone mapping of the lit display (?tone=agx|aces|neutral|none) and its exposure (?exposure=). Default AgX at 1 (1.2 until
+    // 2026-10-31, with the stronger sun), Christian's choice (2026-10-23): soft highlights that never clip to flat white. AgX greys the colours, so the
     // saturation below makes up for it (1.5: on zone 3, brightness 0.61 and saturation 0.32, the unlit textures 0.53
     // and 0.31). Khronos neutral was the default for a day (it keeps the hues, but harder highlights). The unlit display
     // (?hdri=0) keeps none: the textures as they are
     tone: ['neutral', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'agx',
-    exposure: params.has('exposure') ? Number(params.get('exposure')) : 1.2,
+    exposure: params.has('exposure') ? Number(params.get('exposure')) : 1,
     // Bump map from the photo's brightness (?bump=0..5, see litMaterial)
     bump: params.has('bump') ? Number(params.get('bump')) : 0.45,
     // « Ambiance sous-marine » (?underwater=1) and its season (?season=0..3: winter, spring, summer, autumn; default

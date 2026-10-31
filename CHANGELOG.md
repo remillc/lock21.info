@@ -12,6 +12,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
   keyboard and the fingers each under its small title (side by side where there is room), the action in bold, the keys
   as key caps, on a touch screen each gesture with its icon in orange, the buttons' icons in tonal rounds. The site's
   tokens gain MD3's `surface-container-high` and `-highest` (both themes), used by the page without being defined.
+- 3D viewer: softer default light (Christian, 2026-10-31): sun 0.6 (was 1), sky 0.3 (was 0.35), exposure 1 (was 1.2).
 - 3D viewer: the mouse wheel zooms twice as fast (OrbitControls' own speed, 1, instead of 0.5).
 
 ## 1.0.0-beta.7 - 2026-10-31
