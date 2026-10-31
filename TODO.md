@@ -72,8 +72,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): what is left of the small
   fixes, each needing Christian's call. V23 the ☰ on the desktop home; V26 one name for the dive mode; V14
   coordinates as a map link on phones
-- [ ] #83 Usability audit: the viewer on phones (V12; V2 and V11 fixed 2026-10-26): a touch version of the swim help.
-  Check on a real phone
 - [ ] #84 Usability audit: content, for Christian. V16 a « voir
   dans le modèle 3D » link per zone; V30 a caption under the viewer (underwater, violet = not yet scanned); V32 a
   description per page; V33 labels (« Zones de l'écluse »; « Effet de banane » and « Nuage de points dense » done); V34
