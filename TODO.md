@@ -48,7 +48,7 @@ pm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, 
 
 - [ ] #117 Document the TIFF compression step, briefly (Christian, 2026-11-01): the frames Resolve renders are TIFF
   without compression (34 MB a frame), then compressed in LZW, lossless (about 14 MB): formerly
-  `O:\scripts\compressTifFiles.ps1`, since 2026-11-01 `tools/color-grading/compress_tiffs.mjs` (and `flat_color.py`
+  `O:\scripts\compressTifFiles.ps1` (deleted on 2026-11-01), since then `tools/color-grading/compress_tiffs.mjs` (and `flat_color.py`
   writes LZW). On the site (« Extraction des images », `traitement/extraction-photos.md`, and its English page) and in
   the colour grading README's steps (« Le déroulement »)
 - [ ] #17 Add a workflow page to the site (`6. publication.md`) once the pipeline is stable
