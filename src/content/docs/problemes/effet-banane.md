@@ -39,6 +39,8 @@ On présume que l'effet banane vient de la déformation des images par la lentil
 
 Des tests effectuées sur un même jeu d'images - les fichiers `data/2024-05-18/raw-frames-n8/échelle-1` - en utilisant 2 fichiers de calibration de caméra différents, soit celui obtenu à partir du rendu par Metashape du jeu `data/2024-05-18/raw-frames-n8/pilier-3`, `configs/camera-calibration/camera-calibration from 2024-05-18 pillier 3.xml` et le fichier utilisé pour le projet Robert Gaskin `configs/camera-calibration/GoPro HERO6 4k wide frame camera calibration.xml` donnent des courbures différentes : le rendu fait avec la calibration provenant du projet Robert Gaskin a une courbure plus atténuée. On peut donc jouer avec la calibration de la caméra pour corriger l'effet banane.
 
+Les mesures faites ensuite sur le segment de 300 pieds le confirment (voir les conclusions, plus bas).
+
 ## Solutions envisagées
 
 1. Effectuer une calibration de la caméra
@@ -71,6 +73,8 @@ Afin de s'assurer une bonne collecte de données, et éviter que les images obte
 <figcaption>Image utilisée pour calculer la calibration de la lentille</figcaption>
 </figure>
 
+Ce test n'a pas permis d'établir une méthode pour corriger la distorsion des images.
+
 ## Traitement dans Metashape
 
 3 échantillons de données ont été créés en filmant un segment de 100 pieds de long du plancher de bois situé derrière les évacuateurs. La distance de 100 pieds a été mesurée à l'aide d'un ruban à mesurer. Les positions 0' et 100' ont été identifiées à l'aide de 2 cibles.
@@ -88,4 +92,21 @@ Vidéo effectuée à la palme en utilisant le format 4K 16:9.
 
 ## Conclusions
 
-*(à compléter)*
+Le segment de 300 pieds du 26 juillet 2024 a été aligné dans Metashape avec différentes calibrations de la caméra. Pour comparer leurs courbures, j'ai mesuré en novembre 2026 la trajectoire des 2 138 caméras de chaque essai : son plus grand écart à la ligne droite qui relie ses deux bouts (la flèche), en pourcentage de sa longueur. Une ligne droite donne 0 %, un demi-cercle 50 %.
+
+| Calibration de la caméra | Flèche |
+| --- | --- |
+| Calculée par Metashape pendant l'alignement (auto-calibration) | 17 à 20 % |
+| Calculée sur une autre zone (zones 3, 10, 11 et 12), fixée | 7 à 13 % |
+| Fichier `Z18-v2-4x`, fixée | 8 % |
+| Calculée sur la zone 2, fixée | 4 % |
+| Calculée sur le pilier de la zone 18, avec 16 cibles et des barres d'échelle, fixée (selon la version) | 2 à 16 % |
+| Images corrigées de leur distorsion avant Metashape (novembre 2024) | 13 % |
+
+La calibration que Metashape calcule lui-même pendant l'alignement laisse l'effet banane presque entier. Une calibration calculée d'avance puis fixée, que Metashape ne modifie plus, le réduit, mais le résultat dépend beaucoup de la calibration choisie. La meilleure vient du pilier de la zone 18, filmé avec ses cibles et ses barres d'échelle : la flèche passe de 20 % à 2 %. D'autres versions calculées sur ce même pilier donnent 4, 7 et 16 %. Corriger la distorsion des images avant Metashape ne suffit pas à elle seule.
+
+Une calibration ne se juge donc pas d'avance : il faut l'essayer sur une longue surface droite, comme ce segment, avant de s'en servir.
+
+La trajectoire des caméras suit le mur, qui est droit. Elle montre bien la courbure du modèle, sans en être une mesure exacte.
+
+Avec une nouvelle caméra (GoPro HERO13 Black), la calibration est à refaire : sous l'eau, sur une scène avec des cibles et des barres d'échelle, puis vérifiée sur une longue surface droite comme ce segment.

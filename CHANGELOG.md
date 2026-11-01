@@ -27,6 +27,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 - Every page: `<meta charset>` within the first 1024 bytes again (the language script, 4 KB, came before it; performance audit 2026-11-01).
 - Performance audit (`docs/audits/performance-2026-11-01.md`, TODO #97): Cloudflare's Speed Brain turned off (it refused every prefetch with a 503: the router's and the viewer's warm-up never worked live); findings in TODO #111 and #112.
 - Metashape 2.3.2 (was 2.3.1): `retexture_chunk.py --check` runs unchanged on zone 3's graded chunk; the installation guide said 1.7.1.
+- « Effet de banane » page: its conclusions written (2026-11-01), from the 300 ft segment's chunks measured (the cameras' track bend): Metashape's own calibration leaves the banana (17 to 20 %), a precalibrated fixed one reduces it (2 to 16 % depending on the calibration; best, the zone 18 pillar with its targets and scale bars), lens correction alone not enough (13 %); the Bédard quarry test didn't give a method.
+- Sidebar: a « Tests effectués » group (« Tests performed »), the last one, with the test write-ups (colour calibration, reference colours by depth, minimum ISO); they stay out of the search and the sitemap.
 - Claude Code skill `release` (`.claude/skills/release/`): the steps of a release, from the version bump to the live
   site checked.
 
