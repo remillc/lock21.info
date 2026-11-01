@@ -73,11 +73,6 @@ pm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, 
   Mars page (https://nasa-ammos.github.io/3DTilesRendererJS/three/mars.html; Christian, 2026-11-01). The library has
   one (`PivotPointMesh`, used by its `EnvironmentControls`, not on touch screens), probably what that page shows; our
   left button (src/viewer/pointer-orbit.js) has no mark yet
-- [ ] #118 The web app (PWA): every page of the site kept for offline use, not only those already read (Christian,
-  2026-11-01). Today public/sw.js keeps a page once it has been read (network first) and the offline page from the
-  start: precache the others (the sitemap's or a list written at build, both languages, with their images?), in the
-  background after the install, within a size to decide (the photos: 14 MB of WebP; /modele's viewer and tiles
-  stay online); the offline page lists what is kept
 - [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): what is left of the small
   fixes, each needing Christian's call. V23 the ☰ on the desktop home; V26 one name for the dive mode; V14
   coordinates as a map link on phones

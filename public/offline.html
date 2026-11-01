@@ -1,6 +1,6 @@
 <!doctype html>
-<!-- The page the service worker (public/sw.js) shows when the network is out and the page asked for was never read on
-     this device (TODO #81). Served at the address asked for: French, or English under /en/ (the script below). It lists
+<!-- The page the service worker (public/sw.js) shows when the network is out and the page asked for isn't kept on
+     this device yet (TODO #81). Served at the address asked for: French, or English under /en/ (the script below). It lists
      the pages kept on the device, read from the service worker's cache. Self-contained: no hashed file of the site,
      which may not be kept either. -->
 <html lang="fr">
@@ -117,7 +117,7 @@
     <header><img src="/favicon.svg" alt="" />ÉCLUSE/21</header>
     <main>
       <h1 data-fr="Hors ligne" data-en="Offline">Hors ligne</h1>
-      <p data-fr="Pas de réseau, et cette page n'a pas encore été lue sur cet appareil. Les pages déjà lues restent disponibles." data-en="No network, and this page hasn't been read on this device yet. The pages already read are still available.">Pas de réseau, et cette page n'a pas encore été lue sur cet appareil. Les pages déjà lues restent disponibles.</p>
+      <p data-fr="Pas de réseau, et cette page n'est pas encore gardée sur cet appareil. Les pages déjà gardées restent disponibles." data-en="No network, and this page isn't kept on this device yet. The pages already kept are still available.">Pas de réseau, et cette page n'est pas encore gardée sur cet appareil. Les pages déjà gardées restent disponibles.</p>
       <button type="button" data-fr="Réessayer" data-en="Try again" onclick="location.reload()">Réessayer</button>
       <h2 data-fr="Pages sur cet appareil" data-en="Pages on this device" hidden>Pages sur cet appareil</h2>
       <ul hidden></ul>

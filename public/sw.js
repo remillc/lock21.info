@@ -6,10 +6,16 @@
 //   the next time (at the dive site, the signal comes and goes);
 // - Astro's built files (/_astro/: scripts, styles, fonts, images, their names hashed from their content, never
 //   stale): the kept copy first, else the network;
-// - the site's other files (favicon, the image zoom, the search index): the network first, then the kept copy;
+// - the site's other files (favicon, the image zoom, the search index): the network first, then the kept copy (also
+//   on a slow network, after SLOW ms);
 // - left to the network, never kept: other sites (Google Analytics, the 3D tiles on tiles.lock21.info: the 3D model is
 //   not kept offline), /api/ (the viewer's telemetry), /downloads/ (hundreds of MB), /viewer/ (the 3D viewer's sky,
 //   animals and flow), requests other than GET, and ranges.
+// Every page kept, not only those read (TODO #118, Christian 2026-11-01): the list written at build
+// (src/integrations/offline-list.mjs: dist/offline.json, every page, the files they load, each figure image at one
+// size, the search index; about 7.5 MB) is downloaded in the background when a page asks for it (Head.astro, once the
+// page has loaded and the browser is idle, never with the data saver on), again only when the list's version changes.
+// Offline, a figure image asked at another size than the one kept is answered with the kept one.
 // A new version of this file replaces the old one at the next visit (skipWaiting, clients.claim): bump VERSION when the
 // caches' content must start over.
 
@@ -23,6 +29,11 @@ const MAX_FILES = 800
 // A page's answer awaited this long before a kept copy is shown instead
 const SLOW = 4000
 const NETWORK_ONLY = ['/api/', '/downloads/', '/viewer/']
+// The list of what to keep (offline-list.mjs), and the version of it already downloaded (an entry of FILES)
+const LIST = '/offline.json'
+const LIST_DONE = '/offline-done'
+// Downloads at a time while keeping the list
+const PRECACHE_JOBS = 4
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -52,6 +63,43 @@ self.addEventListener('activate', (event) => {
   )
 })
 
+// A page asks for every page to be kept (Head.astro)
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'precache') event.waitUntil(precache().catch(() => {}))
+})
+
+/** Every page and file of the list kept: when the list's version changed, the pages and the files whose names don't
+ *  change with their content fetched again; the /_astro/ files (hashed) only if missing. The version noted once
+ *  everything came, so that an interrupted download goes on at the next page */
+async function precache() {
+  const response = await fetch(LIST, { cache: 'no-cache' })
+  if (!response.ok) return
+  const list = await response.json()
+  const files = await caches.open(FILES)
+  const done = await files.match(LIST_DONE)
+  if (done && (await done.text()) === list.version) return
+  const pages = await caches.open(PAGES)
+  const jobs = [
+    ...list.pages.map((path) => async () => {
+      const page = await fetch(path, { cache: 'no-cache' })
+      if (page.ok && !page.redirected && (page.headers.get('Content-Type') ?? '').includes('text/html')) await pages.put(self.location.origin + path, page)
+      else throw new Error(path)
+    }),
+    ...list.files.map((path) => async () => {
+      if (path.startsWith('/_astro/') && (await files.match(path))) return
+      const file = await fetch(path, { cache: path.startsWith('/_astro/') ? 'default' : 'no-cache' })
+      if (file.ok && file.type === 'basic') await files.put(path, file)
+      else throw new Error(path)
+    }),
+  ]
+  let failed = 0
+  const next = async () => {
+    for (let job = jobs.shift(); job; job = jobs.shift()) await job().catch(() => failed++)
+  }
+  await Promise.all(Array.from({ length: PRECACHE_JOBS }, next))
+  if (!failed) await files.put(LIST_DONE, new Response(list.version))
+}
+
 self.addEventListener('fetch', (event) => {
   const request = event.request
   const url = new URL(request.url)
@@ -66,13 +114,13 @@ self.addEventListener('fetch', (event) => {
     // loads the page in full (a navigation, which then shows the offline page)
     event.respondWith(page(event, url, false))
   } else {
-    event.respondWith(networkFirst(request))
+    event.respondWith(networkFirst(event))
   }
 })
 
 /** A page's address: no file extension (the site's pages are /path, the home pages / and /en/) */
 function isPagePath(path) {
-  return !/\.[a-z0-9]+$/i.test(path.split('/').pop())
+  return !/\.[a-z0-9_]+$/i.test(path.split('/').pop())
 }
 
 async function page(event, url, navigation) {
@@ -105,7 +153,16 @@ async function keptFirst(request) {
   const cache = await caches.open(FILES)
   const kept = await cache.match(request)
   if (kept) return kept
-  const response = await fetch(request)
+  let response
+  try {
+    response = await fetch(request)
+  } catch (error) {
+    // Offline: a figure image at another size than the one kept (offline-list.mjs keeps one per image) answered with
+    // the kept one. Astro's names: <image>.<hash>_<size hash>.<ext>, the same before the last « _ »
+    const other = await otherSize(cache, request.url)
+    if (other) return other
+    throw error
+  }
   if (response.ok && response.type === 'basic') {
     await cache.put(request, response.clone())
     await trim(cache, MAX_FILES)
@@ -113,26 +170,42 @@ async function keptFirst(request) {
   return response
 }
 
-async function networkFirst(request) {
+async function networkFirst(event) {
+  const request = event.request
   const cache = await caches.open(FILES)
-  try {
+  // Without the query: the search asks for its index as pagefind-entry.json?ts=…
+  const kept = await cache.match(request, { ignoreSearch: true })
+  const fromNetwork = (async () => {
     const response = await fetch(request)
     if (response.ok && response.type === 'basic') {
       await cache.put(request, response.clone())
       await trim(cache, MAX_FILES)
     }
     return response
-  } catch (error) {
-    const kept = await cache.match(request)
-    if (kept) return kept
-    throw error
+  })()
+  event.waitUntil(fromNetwork.catch(() => {}))
+  if (!kept) return fromNetwork
+  // A kept copy: the network's answer if it comes within SLOW, else the copy (as for the pages)
+  try {
+    return await Promise.race([fromNetwork, new Promise((resolve) => setTimeout(() => resolve(kept), SLOW))])
+  } catch {
+    return kept
   }
 }
 
-/** The oldest entries dropped beyond `max` (the offline page always kept) */
+/** A kept copy of the same image at another size, or undefined */
+async function otherSize(cache, url) {
+  const match = /^(.*\/_astro\/[^/]+)_[^_/]+\.(webp|avif|jpe?g|png)$/i.exec(url)
+  if (!match) return undefined
+  const [, stem, extension] = match
+  const request = (await cache.keys()).find((key) => key.url.startsWith(`${stem}_`) && key.url.endsWith(`.${extension}`))
+  return request ? cache.match(request) : undefined
+}
+
+/** The oldest entries dropped beyond `max` (the offline page and the list's version always kept) */
 async function trim(cache, max) {
   const keys = await cache.keys()
   for (const request of keys.slice(0, Math.max(0, keys.length - max))) {
-    if (!request.url.endsWith(OFFLINE)) await cache.delete(request)
+    if (!request.url.endsWith(OFFLINE) && !request.url.endsWith(LIST_DONE)) await cache.delete(request)
   }
 }

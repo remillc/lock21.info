@@ -1648,8 +1648,15 @@ export function mountViewer() {
     const manifestUrl = `${tilesUrl}/manifest.json`
     const early = /** @type {any} */ (window).lock21Manifest
     ;/** @type {any} */ (window).lock21Manifest = undefined
-    const earlyResponse = early?.url === manifestUrl ? await early.response : null
-    const response = earlyResponse?.ok ? earlyResponse : await fetch(manifestUrl, { cache: 'no-cache' })
+    let response
+    try {
+      const earlyResponse = early?.url === manifestUrl ? await early.response : null
+      response = earlyResponse?.ok ? earlyResponse : await fetch(manifestUrl, { cache: 'no-cache' })
+    } catch (error) {
+      // No answer at all: showError says the model needs a connection
+      error.noNetwork = true
+      throw error
+    }
     const manifest = await response.json()
     if (load !== loadCount) return
     unloadModel()
@@ -1889,7 +1896,9 @@ export function mountViewer() {
 
   function showError(error) {
     log('load-failed', errorText(error))
-    status.showError(error.message, retryLoad)
+    // Offline (the viewer's code kept from an earlier visit, TODO #118): said plainly
+    if (error.noNetwork || !navigator.onLine) status.showMessage(m.viewer_offline(), retryLoad)
+    else status.showError(error.message, retryLoad)
     console.error(error)
   }
 
