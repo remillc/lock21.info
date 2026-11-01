@@ -109,9 +109,10 @@ def work(args):
         with Image.open(path) as image:
             _full[key] = full_size(_maps[key], (image.height, image.width))
     temporary = out + ".tmp"
-    # LZW, as the frames Resolve rendered were compressed (O:\scripts\compressTifFiles.ps1): about 15 MB a frame instead
-    # of 34 MB, lossless, and Metashape reads it (Christian, 2026-11-01; zones 3 and 4 were written uncompressed)
-    correct(path, _full[key]).save(temporary, format="TIFF", compression="tiff_lzw")
+    # LZW, as the frames Resolve rendered were compressed (O:\scripts\compressTifFiles.ps1): about 17 MB a frame instead
+    # of 34 MB, lossless, and Metashape reads it (Christian, 2026-11-01; zones 3 and 4 were written uncompressed). With
+    # the horizontal predictor (TIFF tag 317 = 2, as ImageMagick writes it): without it, LZW kept 37 of the 34 MB
+    correct(path, _full[key]).save(temporary, format="TIFF", compression="tiff_lzw", tiffinfo={317: 2})
     os.replace(temporary, out)
     return os.path.basename(path)
 

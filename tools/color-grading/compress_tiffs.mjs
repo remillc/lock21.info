@@ -33,8 +33,8 @@ if (args.help || !folders.length) {
 }
 sharp.concurrency(1)
 
-/** A TIFF's compression tag (259) from its first IFD: 1 none, 5 LZW */
-function compression(path) {
+/** A TIFF's compression (tag 259: 1 none, 5 LZW) and predictor (tag 317: 1 none, 2 horizontal), from its first IFD */
+function tags(path) {
   const fd = openSync(path, 'r')
   try {
     const head = Buffer.alloc(8)
@@ -47,11 +47,21 @@ function compression(path) {
     const n = u16(count, 0)
     const entries = Buffer.alloc(n * 12)
     readSync(fd, entries, 0, n * 12, ifd + 2)
-    for (let i = 0; i < n; i++) if (u16(entries, i * 12) === 259) return u16(entries, i * 12 + 8)
-    return 1
+    const tag = (id, otherwise) => {
+      for (let i = 0; i < n; i++) if (u16(entries, i * 12) === id) return u16(entries, i * 12 + 8)
+      return otherwise
+    }
+    return { compression: tag(259, 1), predictor: tag(317, 1) }
   } finally {
     closeSync(fd)
   }
+}
+
+/** Done: LZW with the horizontal predictor. LZW without it hardly compresses a photo (37 of 34 MB: flat_color.py
+ *  before 2026-11-01), so such a frame is compressed again */
+const isDone = (path) => {
+  const t = tags(path)
+  return t.compression === 5 && t.predictor === 2
 }
 
 /** The decoded pixels of a TIFF */
@@ -60,7 +70,7 @@ const pixels = (path) => sharp(path, { limitInputPixels: false }).raw().toBuffer
 for (const folder of folders) {
   const names = readdirSync(folder)
   for (const stale of names.filter((n) => n.endsWith('.lzw.tmp'))) rmSync(join(folder, stale))
-  const todo = names.filter((n) => /\.tiff?$/i.test(n) && compression(join(folder, n)) !== 5)
+  const todo = names.filter((n) => /\.tiff?$/i.test(n) && !isDone(join(folder, n)))
   const before = todo.reduce((sum, n) => sum + statSync(join(folder, n)).size, 0)
   console.log(`${folder}: ${todo.length} of ${names.filter((n) => /\.tiff?$/i.test(n)).length} frames to compress, ${(before / 1e9).toFixed(1)} GB`)
   if (args['dry-run'] || !todo.length) continue
