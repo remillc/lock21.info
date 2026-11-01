@@ -12,7 +12,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
   keyboard and the fingers each under its small title (side by side where there is room), the action in bold, the keys
   as key caps, on a touch screen each gesture with its icon in orange, the buttons' icons in tonal rounds. The site's
   tokens gain MD3's `surface-container-high` and `-highest` (both themes), used by the page without being defined.
-- 3D viewer: softer default light (Christian, 2026-10-31): sun 0.6 (was 1), sky 0.3 (was 0.35), exposure 1 (was 1.2).
+- 3D viewer: softer default light (Christian, 2026-10-31): sun 0.6 (was 1), sky 0.45 (was 0.35; 0.3 on 2026-10-31, raised on 2026-11-01), exposure 1 (was 1.2). The viewer's defaults are now set in one place, the settings panel's list (`config-panel.js`).
 - 3D viewer: the mouse wheel zooms twice as fast (OrbitControls' own speed, 1, instead of 0.5).
 - 3D viewer: the crayfish dances longer, 12 to 18 s (was 6 to 10).
 - 3D viewer on a strong Android phone (8 GB, 8 cores, a « 4g » line): the light tiles first, then the full ones zone by

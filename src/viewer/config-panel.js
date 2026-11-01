@@ -74,7 +74,7 @@ export function settingsSchema({ mobile }) {
     {
       title: m.viewer_lighting(),
       items: [
-        { key: 'hdriIntensity', label: m.viewer_skyStrength(), hint: m.viewer_skyStrengthHint(), type: 'range', min: 0, max: 2, step: 0.05, def: '0.3' },
+        { key: 'hdriIntensity', label: m.viewer_skyStrength(), hint: m.viewer_skyStrengthHint(), type: 'range', min: 0, max: 2, step: 0.05, def: '0.45' },
         { key: 'sunIntensity', label: m.viewer_sunStrength(), hint: m.viewer_sunStrengthHint(), type: 'range', min: 0, max: 3, step: 0.05, def: '0.6' },
         { key: 'light', label: m.viewer_sun(), hint: m.viewer_sunHint(), type: 'angles', def: '320,65', ranges: [[0, 360, 1], [0, 90, 1]], unit: '°' },
         { key: 'exposure', label: m.viewer_exposure(), type: 'range', min: 0.25, max: 3, step: 0.05, def: '1' },
@@ -104,6 +104,18 @@ export function settingsSchema({ mobile }) {
       ],
     },
   ]
+}
+
+/**
+ * A setting's default value, its `def` above: the one place where the viewer's defaults are set (main.js reads them
+ * here; they were written in both files until 2026-11-01)
+ * @param {string} key
+ * @returns {string}
+ */
+export function settingDefault(key) {
+  const item = settingsSchema({ mobile: false }).flatMap((section) => section.items).find((entry) => entry.key === key)
+  if (!item) throw new Error(`settingDefault: no setting ${key}`)
+  return item.def
 }
 
 class SettingsPanel extends HTMLElement {
