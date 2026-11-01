@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#119**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#120**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -69,6 +69,10 @@ pm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, 
 ## Site
 
 
+- [ ] #119 The viewer: a small circle on the model marking the point the mouse moves around, as on 3DTilesRendererJS's
+  Mars page (https://nasa-ammos.github.io/3DTilesRendererJS/three/mars.html; Christian, 2026-11-01). The library has
+  one (`PivotPointMesh`, used by its `EnvironmentControls`, not on touch screens), probably what that page shows; our
+  left button (src/viewer/pointer-orbit.js) has no mark yet
 - [ ] #118 The web app (PWA): every page of the site kept for offline use, not only those already read (Christian,
   2026-11-01). Today public/sw.js keeps a page once it has been read (network first) and the offline page from the
   start: precache the others (the sitemap's or a list written at build, both languages, with their images?), in the
