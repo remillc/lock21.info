@@ -42,13 +42,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   fix_tileset and update_manifest. Still tied to this PC after a port: the `O:\` defaults (and the `.blend` zones'
   `source` paths), Obj2Tiles' per-OS builds (Mac and Linux untested), the relief bake on an NVIDIA GPU (OptiX)
 
-### Hosting and downloads
-
-- [ ] #72 Other download formats worth adding? Candidates: the OBJ (+ .mtl, .jpg; already built beside the GLB) as a
-  zip, for Blender, MeshLab and CloudCompare; STL for 3D printing (a closed, simplified model at 1:200); the AR USDZ
-  as a download; a point cloud (PLY or LAZ) for archaeology and GIS tools; an orthophoto and a height map of the floor
-  (GeoTIFF) for QGIS; the public address of the 3D Tiles (Cesium and other viewers); a Sketchfab upload
-
 ### Documentation
 
 - [ ] #17 Add a workflow page to the site (`6. publication.md`) once the pipeline is stable
