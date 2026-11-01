@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#114**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#115**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -86,6 +86,10 @@ pm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, 
 avigator.connection.downlink` as well, or a lighter root level. P4: the
   desktop start view loads 72 MB (finest tiles of zones 2–4): first view 6.5 s and the last tiles 13.7 s on a
   50 Mbit/s line. Then the viewer on real phones (GPU, memory, Safari: BrowserStack or Christian's Pixel and an iPhone)
+- [ ] #114 The 3D viewer too laggy on old tablets (Christian, 2026-11-01, told by a visitor): which ones (model, iOS or
+  Android version), standard or underwater view; then a lighter profile for weak devices (pixel ratio, shadows, ambient
+  occlusion, particles, creatures, detail), chosen from the device's GPU and memory or from a slow frame rate measured
+  in the first seconds; tried on an old iPad (BrowserStack or a real one)
 - [ ] #113 Real visitors' page speed (performance audit, 2026-11-01): send each visit's Core Web Vitals (LCP, INP, CLS; the
   `web-vitals` library) to Google Analytics as an event, unless refused, to see how many pages take more than a second on
   a phone (the audit's figures are simulations: under 0.75 s on a realistic 4G phone, 1.8–3.0 s on Lighthouse's slow
