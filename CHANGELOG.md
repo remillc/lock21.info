@@ -3,6 +3,10 @@
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
 public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
+## Unreleased
+
+- « Suivi du travail par zone »: the table brought up to date from the Metashape projects and the data folders (transfers, frames, targets, alignment, optimization, cleaning, colour grading).
+
 ## 1.0.0-beta.8 - 2026-11-01
 
 Every page kept for offline use, zone 2 with its colour-graded texture, a lighter site (images, phones) and softer light in the viewer.
