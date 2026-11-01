@@ -33,6 +33,13 @@ def open_folder(manager, path):
 def load(resolve, folder, name):
     """Loads a project (and returns it) from its folder, e.g. load(resolve, "data/2024-07-12", "zone 3 - graded")"""
     manager = resolve.GetProjectManager()
+    # A project of the same name already open (another dive's: « zone 2 - lens corrected - graded » is in several
+    # folders) is what LoadProject returns, whatever the folder: saved and closed first (2026-11-01: three dives' LUTs
+    # went to the same project)
+    current = manager.GetCurrentProject()
+    if current and current.GetName() == name:
+        manager.SaveProject()
+        manager.CloseProject(current)
     if not open_folder(manager, folder):
         sys.exit(f"No project folder {folder}")
     project = manager.LoadProject(name)
