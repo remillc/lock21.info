@@ -55,7 +55,8 @@ const DANCE_STILL = [8, 12]
 // Not every time (Christian, 2026-10-25: « once in 3 or 4 »): one draw for each time the diver stops in front of it,
 // once the wait is over; drawn or not, no other dance until the diver moves on
 const DANCE_CHANCE = 1 / 3.5
-const DANCE = [6, 10]
+// 12 to 18 s since 2026-11-01 (Christian; 6 to 10 s until then)
+const DANCE = [12, 18]
 const STAND = 1.25
 const STAND_SPRING = 4
 const GROOVE_SPRING = 10
