@@ -31,7 +31,6 @@ import { navHelp } from './nav-help.js'
 import { errorText, log, session, setEndFacts, startTelemetry } from './telemetry.js'
 import { insertAt } from './shader-patch.js'
 import { firstMove, reportMode, sendViewerTime, startViewerClock, track } from './analytics.js'
-import { preloadArModel, startWebXrAr, webxrArSupported } from './android-ar.js'
 import { N8AOPass } from 'n8ao'
 import { m, readLang } from './i18n.js'
 import { createTour } from './tour.js'
@@ -202,28 +201,31 @@ export function mountViewer() {
     arLink.href = sceneViewer
       arLink.hidden = false
     // WebXR in Chrome (android-ar.js): one tap opens the camera, the 1:100 model loads meanwhile; its size slider goes
-    // up to 1:1 (?ar=full starts there)
+    // up to 1:1 (?ar=full starts there). Its code loaded on Android only (performance audit, 2026-11-01)
+    const androidAr = import('./android-ar.js')
     let webxr = false
     const arSrc = `${AR_URL}/lock-21-ar.glb?v=${AR_VERSION}`
     // With WebXR, the AR model downloads in the background once the 3D view has finished loading (about 30 MB, kept in
     // memory by android-ar.js): a tap on AR then only waits for its preparation
     let viewLoaded = false
     const preloadWhenReady = () => {
-      if (webxr && viewLoaded) preloadArModel(arSrc)
+      if (webxr && viewLoaded) ar.preloadArModel(arSrc)
     }
     afterFirstLoad.push(() => {
       viewLoaded = true
       preloadWhenReady()
     })
-    webxrArSupported().then((supported) => {
+    // The module once loaded: the tap calls it at once, within the tap's user activation (WebXR's requestSession)
+    let ar = null
+    androidAr.then((module) => (ar = module).webxrArSupported()).then((supported) => {
       webxr = supported
       arLink.dataset.mode = supported ? 'webxr' : 'sceneviewer'
       preloadWhenReady()
     })
     arLink.addEventListener('click', (event) => {
-      if (!webxr) return
+      if (!webxr || !ar) return
       event.preventDefault()
-      startWebXrAr({
+      ar.startWebXrAr({
         src: arSrc,
         title: m.viewer_name(),
         scale: arFull ? 100 : 1,

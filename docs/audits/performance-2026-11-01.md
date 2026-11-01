@@ -1,8 +1,8 @@
 # lock21.info performance audit
 
 > The record of the performance audit of 2026-11-01 (TODO #97). The site's pages and the 3D viewer, on a computer and a
-> phone, measured on the live site (1.0.0-beta.7), every address with `?no-analytics=1`. Findings to act on: TODO #111
-> and #112.
+> phone, measured on the live site (1.0.0-beta.7), every address with `?no-analytics=1`. Fixed the same day:
+> P1, P2, P3, most of P5, and real visitors' speed measured (TODO #113). Left: TODO #111.
 
 **Date**: 2026-11-01. **Sources**:
 
@@ -71,7 +71,7 @@ language script of `Head.astro` (TODO #107, with its 4 KB list of address pairs)
 `<meta charset>` was at byte 3850 on every page (Lighthouse « Charset declaration is missing or occurs too late », 18
 of 18). Moved after it: byte 124.
 
-### P3. The viewer's first view on a phone with the full tiles: 30 s at 10 Mbit/s (fact) → TODO #111
+### P3. The viewer's first view on a phone with the full tiles: 30 s at 10 Mbit/s (fact; fixed 2026-11-01)
 
 A phone or tablet that reports 8 GB and 8 cores on a « 4g » connection gets the full tile set (`lightTextures()`,
 `main.js`). Chrome calls any decent line « 4g », 10 Mbit/s LTE included, and only Chrome on Android reports memory and
@@ -79,7 +79,10 @@ cores: so it is high-end Android phones that wait. The first view waits for 29 M
 view, with full textures); the light set's first view needs 10 MB, 11 s. The coarsest level alone (each zone's root)
 is about 14 MB full and 5 MB light (`O:\publishing\tiles`). Options, for Christian: the light set first on every
 phone, the full one only once the first view is drawn (or on a measured fast download); `navigator.connection.downlink`
-as well as the class; a lighter root level in the full set.
+as well as the class; a lighter root level in the full set. Done (Christian, 2026-11-01): every phone starts with the
+light set, and a strong one (the full set's former rule) takes the full set zone by zone once the view is loaded, each
+full tileset loading hidden and swapped in when nothing in view is left to load (`upgradeTiles` in `main.js`; tried on
+an emulated phone: the view never empties, every zone full 32 s after the light load at 10 Mbit/s).
 
 ### P4. Desktop: 72 MB at the start view (fact; inference on what to do) → TODO #111
 
@@ -88,7 +91,7 @@ doesn't show (4.7 s), on 50 Mbit/s the first view takes 6.5 s and the last tiles
 judgement: it decides how sharp the start view is. Lighthouse counts the viewer's 8 s of main-thread work on the
 simulated phone (mostly decoding tiles in `main.js`, 6.4 s), hence the 48.
 
-### P5. Small things (fact) → TODO #112
+### P5. Small things (fact; mostly fixed 2026-11-01)
 
 - `/collecte/rig`: its first photo (`rig-scooter-2024-06-14`, 146 KB as served to a phone, loaded at once with high
   priority as it should) is the page's LCP, 3.0 s on the simulated phone; Lighthouse estimates 128 KB less with
@@ -96,6 +99,13 @@ simulated phone (mostly decoding tiles in `main.js`, 6.4 s), hence the 48.
 - `/modele`: the AR button is an `<a>` without `href` until it is set up (Lighthouse « Links are not crawlable »);
   WebXR keeps the page out of the back/forward cache (expected, nothing to do); 141 KB of the viewer's script unused
   at load (inference: the tour, AR, settings, which could load on demand).
+
+Done on 2026-11-01: every WebP image at quality 72 with sharp's tightest encoding (`astro.config.mjs`; all images
+18.4 → 14.3 MB, that photo 143 → 117 KB for a phone, no visible change on the photos nor on the 1988 drawing's fine
+lines); the figure grids' images sized for half the column (`content-images.mjs`); the AR button's `href` the page's
+AR section (`#ar`) until the viewer sets the device's own; the Android AR code (`android-ar.js`, 9 KB) loaded on
+Android only. The tour, the underwater view and the creatures stay in the viewer's main script: they are wired into
+its render loop from the start, for a few tens of KB compressed.
 
 ### What is fine (fact)
 

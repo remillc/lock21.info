@@ -2,7 +2,8 @@
 // browser needs to load them well (Lighthouse, 2026-10-26: the opening photo of « Le rig » was the page's largest
 // element and was loaded last):
 // - sizes: the content column's width (about 48rem on a wide screen, the screen's width on a phone) instead of Astro's
-//   « the image's own width or the whole screen », so the browser picks a smaller file from the srcset;
+//   « the image's own width or the whole screen », so the browser picks a smaller file from the srcset; half of it in a
+//   figure grid;
 // - the first image of the content: loaded at once and first (loading="eager", fetchpriority="high"), not lazily.
 // The dev server keeps Astro's own attributes.
 import { readdir, readFile, writeFile } from 'node:fs/promises'
@@ -10,6 +11,9 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const SIZES = '(min-width: 50rem) 48rem, 100vw'
+// In a figure grid (custom.scss: two to a row on a wide column, one under the other on a phone): half the column
+// (performance audit, 2026-11-01: they were loaded at the column's width)
+const GRID_SIZES = '(min-width: 50rem) 24rem, 100vw'
 
 async function* pages(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -25,8 +29,12 @@ function fix(html) {
   const start = html.indexOf('class="sl-markdown-content')
   if (start < 0) return html
   let first = true
-  const content = html.slice(start).replace(/<img\b[^>]*\bdata-astro-image="[^"]*"[^>]*>/g, (tag) => {
-    let out = tag.replace(/\ssizes="[^"]*"/, ` sizes="${SIZES}"`)
+  const rest = html.slice(start)
+  // The figure grids' spans (a grid holds figures only: it ends at the first </div>)
+  const grids = [...rest.matchAll(/<div class="figure-grid"/g)].map((m) => [m.index, rest.indexOf('</div>', m.index)])
+  const content = rest.replace(/<img\b[^>]*\bdata-astro-image="[^"]*"[^>]*>/g, (tag, at) => {
+    const inGrid = grids.some(([from, to]) => at > from && at < to)
+    let out = tag.replace(/\ssizes="[^"]*"/, ` sizes="${inGrid ? GRID_SIZES : SIZES}"`)
     if (first) {
       out = out.replace(/\sloading="lazy"/, ' loading="eager" fetchpriority="high"')
       first = false
