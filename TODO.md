@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#114**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#116**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -29,6 +29,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ### Pipeline
 
+- [ ] #115 Metashape 2.3.2 (Christian, 2026-11-01): install it in place of 2.3.1, check that the scripts still run
+  (`tools/color-grading/retexture_chunk.py`, `relink_frame.py`, `used_frames.py`) and update the version where the docs
+  name it (docs/installation.md, the READMEs)
 - [ ] #10 `model:post-modified` and others only run on Windows (PowerShell); fine for now. Port to Node evaluated
   (2026-10-30): feasible, medium effort. Five `.ps1` (about 460 lines, orchestration only; the work is already in Node,
   Python and Blender scripts): serve-tiles and model-analysis/run (small), relief_zones (small to medium), publish_zones
@@ -84,6 +87,10 @@ pm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, 
   50 Mbit/s line; a higher `errorTarget` (8 → 10 or 12) is faster and a little less sharp: a before/after to judge.
   Then the viewer on real phones (GPU, memory, Safari: BrowserStack or Christian's Pixel and an iPhone), the light-then-
   full switch on a strong Android phone included (P3, done 2026-11-01)
+- [ ] #114 The 3D viewer too laggy on old tablets (Christian, 2026-11-01, told by a visitor): which ones (model, iOS or
+  Android version), standard or underwater view; then a lighter profile for weak devices (pixel ratio, shadows, ambient
+  occlusion, particles, creatures, detail), chosen from the device's GPU and memory or from a slow frame rate measured
+  in the first seconds; tried on an old iPad (BrowserStack or a real one)
 - [ ] #105 Google Analytics, with Christian, from 2026-10-31 (two or three days after the custom definitions were
   registered on 2026-10-29): explore the new values in Explore: sessions with viewer_end, the time standard and
   underwater (standard_seconds, underwater_seconds), dives (dive_end, seconds), the tour's steps (step), the viewer's
