@@ -50,6 +50,7 @@ répond à `-h`.
 | `make_masks.mjs` | un masque Metashape par image, la baguette de mesure trouvée dans l'image même (voir « Les masques de la baguette »); `-s` une planche contact pour vérifier |
 | `used_frames.py` | lecture seule: pour chaque zone publiée, le ou les *chunks* d'où vient son export et leurs dossiers d'images, avec le nombre de photos et les dossiers disparus; `--json`, `-z`, `-x` |
 | `masks_queue.mjs` | `make_masks.mjs --resume` sur une liste de dossiers (`-f`, puis ceux de `used_frames.py`), `-j` à la fois, un journal par dossier |
+| `compress_tiffs.mjs` | compresse en LZW (sans perte) les TIFF d'un ou de plusieurs dossiers, sur place: la même commande ImageMagick que `O:\scripts\compressTifFiles.ps1`, mais chaque image écrite à part, ses pixels comparés à l'original, puis mise à sa place; les images déjà en LZW sont sautées (on peut relancer). Resolve rend en TIFF non compressé (34 Mo l'image, environ 14 Mo en LZW); `flat_color.py` écrit en LZW depuis le 2026-11-01 |
 | `glb_to_feet.py` | met en pieds un export `.glb` de Metashape écrit en mètres (positions × 3,28084), l'unité des exports et des zones du `.blend`: sans cela, `prepare_zone.py` refuse le recalage (zone 3, 2026-10-27: échelle 0,31). Python avec numpy (`tools/google-earth/.venv`) |
 
 ## Les dossiers d'images
