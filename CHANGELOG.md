@@ -3,8 +3,11 @@
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
 public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
-## Unreleased
+## 1.0.0-beta.8 - 2026-11-01
 
+Every page kept for offline use, zone 2 with its colour-graded texture, a lighter site (images, phones) and softer light in the viewer.
+
+- English pages brought up to date: the new « Colour grading » page, the banana effect's conclusions, and the changes to About, The rig, Photo extraction and the problems' page.
 - 3D model: zone 2 retextured from colour-graded frames (TODO #75): the colour evened out across the frame, the measuring
   rod masked, 12 944 px, registration 2.8 mm.
 - Tools: `tools/color-grading/compress_tiffs.mjs` compresses the frames in LZW, in place, each frame compared with its original
