@@ -5,6 +5,10 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- 3D model: zone 2 retextured from colour-graded frames (TODO #75): the colour evened out across the frame, the measuring
+  rod masked, 12 944 px, registration 2.8 mm.
+- Tools: `tools/color-grading/compress_tiffs.mjs` compresses the frames in LZW, in place, each frame compared with its original
+  before it replaces it (about 34 MB a frame down to 15 MB); `flat_color.py` writes LZW with the horizontal predictor.
 - The web app keeps every page for offline use, not only those read (TODO #118): the list written at build
   (`offline-list.mjs`, 58 pages with their files and the search index, about 7.5 MB) is downloaded in the background
   once the page has loaded, never with the data saver on. The search now works offline (the service worker took its index

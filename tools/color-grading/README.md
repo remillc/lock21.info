@@ -15,6 +15,10 @@ par plongée (`frames-lens-corrected-n10`).
 - Plongée 21 (2024-07-12, les trois vannes): un seul étalonnage, fait sur le plancher, pour toute la hauteur du mur:
   les vannes sortent jaune-olive (bleu très bas). D'où le #75.
 
+## Zone 2 (2026-11-01)
+
+Le *chunk* publié, dupliqué en « zone 2 - lens corrected - graded » (id 16 de `zone-2.psx`), a 15 893 photos, de cinq dossiers: le pilier et le plancher du 2024-06-28, le 2024-07-07, le 2024-07-12 et le 2024-07-14. Images égalisées par `flat_color.py`, dans les dossiers `…-graded-flat-…`, puis recompressées (`compress_tiffs.mjs`). Texture refaite le 2026-11-01 (`retexture_chunk.py -k`, Metashape 2.3.2, les `-m` des cinq dossiers: 12 944 px, 1,73 mm, environ 50 min de mélange), publiée et adoptée le même jour (Christian: « c'est bon, on garde la nouvelle texture »). Comme pour la zone 4, le *chunk* avait déjà ses nouveaux chemins enregistrés: `relink_frame.py` n'a rien eu à changer. Recalage: 2,8 mm (l'export étalonné tourné de 90°). Dans le `.blend`, seule la propriété `source` de la zone a changé: même maillage, donc pas de `swap_zone_source.py`.
+
 ## Zone 4 (2026-10-30)
 
 Le *chunk* publié (« zone 4 - lens corrected - Align=highest - DepthMapQuality=low;FaceCount=custom ») vient d'une
