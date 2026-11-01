@@ -285,26 +285,32 @@ export function mountViewer() {
     renderer.setPixelRatio(profile.pixelRatio)
     log('light-profile', LIGHT)
   }
-  // The tiles' textures (tile_zone.ps1 -Light; « Textures » setting, ?textures=light|full; Christian, 2026-10-24: his
-  // Pixel 10 Pro handled the full set well): the full set on a computer, and on a phone or tablet that reports at least
-  // STRONG_MEMORY GB and STRONG_CORES cores on a fast connection (Chrome's class « 4g », Wi-Fi included, no data saver:
-  // its speed estimate, downlink, started at 1.6 Mbit/s on a fast line); the light one otherwise. Only
-  // Chrome reports memory and connection: every iPhone and iPad takes the light set, unless chosen otherwise. After a
-  // reload for lack of memory, always the light one
+  // The tiles' textures (tile_zone.ps1 -Light; « Textures » setting, ?textures=light|full): the full set on a computer,
+  // the light one on a phone or tablet. A phone or tablet that reports at least STRONG_MEMORY GB and STRONG_CORES cores
+  // on a fast connection (Chrome's class « 4g », Wi-Fi included, no data saver; Christian, 2026-10-24: his Pixel 10 Pro
+  // handled the full set well) gets the full set too, but only once the light one has drawn the view and has nothing
+  // left to load (upgradeTiles): the full set's first view took 30 s at 10 Mbit/s, the light one's 11 s (performance
+  // audit, 2026-11-01, docs/audits/performance-2026-11-01.md). Only Chrome reports memory and connection: every iPhone
+  // and iPad keeps the light set, unless chosen otherwise. After a reload for lack of memory, always the light one
   const STRONG_MEMORY = 8
   const STRONG_CORES = 8
   let texturesChoice = params.get('textures') || ''
   function lightTextures() {
     if (light || texturesChoice === 'light') return true
-    if (texturesChoice === 'full' || !mobile) return false
+    return texturesChoice !== 'full' && mobile
+  }
+  /** A phone or tablet that takes the full set after the light one's first load (no choice made in the settings) */
+  function fullAfterLight() {
+    if (light || texturesChoice || !mobile) return false
     const net = navigator.connection
     const strong = navigator.deviceMemory >= STRONG_MEMORY && navigator.hardwareConcurrency >= STRONG_CORES
     const fast = !net || (!net.saveData && (!net.effectiveType || net.effectiveType === '4g'))
-    return !(strong && fast)
+    return strong && fast
   }
   let lightSet = lightTextures()
   log('tile-set', {
-    set: lightSet ? 'light' : 'full', choice: texturesChoice || 'auto', memory: navigator.deviceMemory ?? null,
+    set: lightSet ? 'light' : 'full', then: lightSet && fullAfterLight() ? 'full' : null, choice: texturesChoice || 'auto',
+    memory: navigator.deviceMemory ?? null,
     cores: navigator.hardwareConcurrency ?? null, downlink: navigator.connection?.downlink ?? null,
     net: navigator.connection?.effectiveType ?? null, saveData: navigator.connection?.saveData ?? null,
   })
@@ -358,7 +364,7 @@ export function mountViewer() {
   }
   const controls = new OrbitControls(camera, renderer.domElement)
   // Development builds only: the viewer's parts for tests in the browser console (window.l21)
-  if (import.meta.env.DEV) window.l21 = { THREE, renderer, scene, camera, controls, underwater, get tilesets() { return tilesets } }
+  if (import.meta.env.DEV) window.l21 = { THREE, renderer, scene, camera, controls, underwater, get tilesets() { return tilesets }, get upgrades() { return upgrades } }
   controls.enableDamping = true
   // Turning with the left button (Christian, 2026-10-24: too fast): half OrbitControls' speed, half a turn for a drag
   // across the view's height
@@ -726,7 +732,7 @@ export function mountViewer() {
   // tiles with their texture)
   function rebuildMaterials() {
     const roots = [scene]
-    for (const tiles of tilesets) tiles.forEachLoadedModel((model) => { if (!model.parent) roots.push(model) })
+    for (const tiles of [...tilesets, ...upgrades.map((u) => u.to)]) tiles.forEachLoadedModel((model) => { if (!model.parent) roots.push(model) })
     for (const root of roots) root.traverse((child) => {
       if (!child.isMesh || !child.userData.surface) return
       const old = child.material
@@ -1531,6 +1537,100 @@ export function mountViewer() {
       })
     },
   })
+  // One memory budget shared by all zones: a per-zone share (budget / zone count) filled up after 2 or 3
+  // large textures and stopped loading, leaving zones missing on phones.
+  let sharedCache = null
+  /** A zone's tileset: its light set where it has one and `light` asks for it (tile_zone.ps1 -Light: textures halved,
+   *  no relief; the finest tiles about five times lighter), the same tiling */
+  function makeTiles(entry, light) {
+    const tiles = new TilesRenderer(`${tilesUrl}/${light && entry.light ? entry.light : entry.url}`)
+    tiles.zoneId = entry.id
+    tiles.registerPlugin(coarseWithoutRelief())
+    if (sharedCache) {
+      tiles.lruCache = sharedCache
+    } else {
+      sharedCache = tiles.lruCache
+      sharedCache.maxBytesSize = profile.maxBytes
+      sharedCache.minBytesSize = profile.maxBytes * 0.6
+    }
+    const gltfLoader = new GLTFLoader(tiles.manager)
+    gltfLoader.setKTX2Loader(ktx2Loader)
+    gltfLoader.setMeshoptDecoder(MeshoptDecoder) // geometry compressed by tools/publish-model/compress_tiles.mjs
+    tiles.manager.addHandler(/\.(gltf|glb)$/g, gltfLoader)
+    setDetail(tiles)
+    coarseFirst(tiles)
+    tiles.setCamera(tilesCamera)
+    tiles.setResolutionFromRenderer(tilesCamera, renderer)
+
+    // Counted (the loading card, LOAD_ERRORS); only the first TILE_ERRORS_LOGGED of a visit are sent
+    tiles.addEventListener('load-error', ({ error, url }) => {
+      loadWatch.errors++
+      if (++tileErrors <= TILE_ERRORS_LOGGED) log('tile-error', { zone: entry.id, url: String(url ?? '').slice(-200), ...errorText(error) })
+    })
+    tiles.addEventListener('load-model', ({ scene: model, tile }) => {
+      // Memory (the iPad Air, 2026-10-24: Safari closed the page): the library keeps each tile's whole glTF result,
+      // its parser holding the downloaded file (a second copy of the tile); nothing reads it once the tile is in
+      tile.engineData.metadata = null
+      loadWatch.arrived++
+      // Smaller textures (capTileTextures), before the surfaces are set up; its memory counted again
+      // (the library keeps its first count of each tile: forgotten first)
+      if (capTileTextures(model, !tile.children?.length)) {
+        tiles._bytesUsed?.delete(tile)
+        tiles.recalculateBytesUsed(tile)
+      }
+      model.traverse((child) => {
+        if (child.isMesh) initSurface(child, entry.id)
+        if (child.isMesh) releaseAfterUpload(child.userData.surface)
+      })
+    })
+    tiles.addEventListener('dispose-model', ({ scene: model }) => {
+      model.traverse((child) => child.material?.dispose())
+      requestRender()
+    })
+    tiles.addEventListener('load-model', requestRender)
+    // Another pass wanted: a tile's children prepared a few at a time (maxTilesProcessed), then the traversal goes on.
+    // Unheard, it stopped until the camera moved: far zones stayed missing at a still view (Christian, 2026-10-24)
+    tiles.addEventListener('needs-update', requestRender)
+    tiles.addEventListener('tile-visibility-change', requestRender)
+    tiles.addEventListener('load-tile-set', requestRender)
+    world.add(tiles.group)
+    return tiles
+  }
+
+  // The full set after the light one (fullAfterLight, performance audit 2026-11-01): each zone's full tileset loads
+  // hidden beside its light one, and takes its place once it has the view drawn and nothing in view left to load, so
+  // the view never empties nor flickers. upgrades: { from: the light tileset, to: the full one, started }
+  let upgradeDue = false
+  let upgrades = []
+  function upgradeTiles() {
+    const started = performance.now()
+    for (const from of tilesets) {
+      const entry = zoneEntries.find((e) => e.id === from.zoneId)
+      if (!entry?.light) continue
+      const to = makeTiles(entry, false)
+      to.group.visible = false
+      upgrades.push({ from, to, started })
+    }
+    requestRender()
+  }
+  /** Swaps in each full tileset that is ready: its root in, something drawn if the light one draws something (a zone
+   *  out of view swaps at once), no tile in view still loading */
+  function finishUpgrades() {
+    for (const u of [...upgrades]) {
+      const { to } = u
+      if (!to.root || (to.visibleTiles.size === 0 && u.from.visibleTiles.size > 0)) continue
+      let busy = false
+      for (const tile of to.loadingTiles) if (tile.traversal.inFrustum) { busy = true; break }
+      if (busy) continue
+      to.group.visible = true
+      tilesets[tilesets.indexOf(u.from)] = to
+      world.remove(u.from.group)
+      u.from.dispose()
+      upgrades.splice(upgrades.indexOf(u), 1)
+      if (!upgrades.length) log('tile-set', { set: 'full', after: 'light', ms: Math.round(performance.now() - u.started) })
+      requestRender()
+    }
+  }
   let contextModels = []
   let loadCount = 0
   // Every zone's root tileset is in: from then on, the loading indicator ends as soon as no tile is pending
@@ -1551,65 +1651,10 @@ export function mountViewer() {
     unloadModel()
     zoneEntries = manifest.tilesets
     colorBalance()
-    // One memory budget shared by all zones: a per-zone share (budget / zone count) filled up after 2 or 3
-    // large textures and stopped loading, leaving zones missing on phones.
-    let sharedCache = null
-    tilesets = manifest.tilesets.map((entry) => {
-      // Phones and tablets: the zone's light set where it has one (tile_zone.ps1 -Light: textures halved, no relief;
-      // the finest tiles about five times lighter), the same tiling
-      const tiles = new TilesRenderer(`${tilesUrl}/${lightSet && entry.light ? entry.light : entry.url}`)
-      tiles.zoneId = entry.id
-      tiles.registerPlugin(coarseWithoutRelief())
-      if (sharedCache) {
-        tiles.lruCache = sharedCache
-      } else {
-        sharedCache = tiles.lruCache
-        sharedCache.maxBytesSize = profile.maxBytes
-        sharedCache.minBytesSize = profile.maxBytes * 0.6
-      }
-      const gltfLoader = new GLTFLoader(tiles.manager)
-      gltfLoader.setKTX2Loader(ktx2Loader)
-      gltfLoader.setMeshoptDecoder(MeshoptDecoder) // geometry compressed by tools/publish-model/compress_tiles.mjs
-      tiles.manager.addHandler(/\.(gltf|glb)$/g, gltfLoader)
-      setDetail(tiles)
-      coarseFirst(tiles)
-      tiles.setCamera(tilesCamera)
-      tiles.setResolutionFromRenderer(tilesCamera, renderer)
-
-      // Counted (the loading card, LOAD_ERRORS); only the first TILE_ERRORS_LOGGED of a visit are sent
-      tiles.addEventListener('load-error', ({ error, url }) => {
-        loadWatch.errors++
-        if (++tileErrors <= TILE_ERRORS_LOGGED) log('tile-error', { zone: entry.id, url: String(url ?? '').slice(-200), ...errorText(error) })
-      })
-      tiles.addEventListener('load-model', ({ scene: model, tile }) => {
-        // Memory (the iPad Air, 2026-10-24: Safari closed the page): the library keeps each tile's whole glTF result,
-        // its parser holding the downloaded file (a second copy of the tile); nothing reads it once the tile is in
-        tile.engineData.metadata = null
-        loadWatch.arrived++
-        // Smaller textures (capTileTextures), before the surfaces are set up; its memory counted again
-        // (the library keeps its first count of each tile: forgotten first)
-        if (capTileTextures(model, !tile.children?.length)) {
-          tiles._bytesUsed?.delete(tile)
-          tiles.recalculateBytesUsed(tile)
-        }
-        model.traverse((child) => {
-          if (child.isMesh) initSurface(child, entry.id)
-          if (child.isMesh) releaseAfterUpload(child.userData.surface)
-        })
-      })
-      tiles.addEventListener('dispose-model', ({ scene: model }) => {
-        model.traverse((child) => child.material?.dispose())
-        requestRender()
-      })
-      tiles.addEventListener('load-model', requestRender)
-      // Another pass wanted: a tile's children prepared a few at a time (maxTilesProcessed), then the traversal goes on.
-      // Unheard, it stopped until the camera moved: far zones stayed missing at a still view (Christian, 2026-10-24)
-      tiles.addEventListener('needs-update', requestRender)
-      tiles.addEventListener('tile-visibility-change', requestRender)
-      tiles.addEventListener('load-tile-set', requestRender)
-      world.add(tiles.group)
-      return tiles
-    })
+    sharedCache = null
+    tilesets = manifest.tilesets.map((entry) => makeTiles(entry, lightSet))
+    // The full set after the light one, on a strong phone (fullAfterLight): once this load is done
+    upgradeDue = lightSet && fullAfterLight() && zoneEntries.some((entry) => entry.light)
 
     // Non-tiled models (context: fillers, terrain), glTF is already Y-up
     const contextLoader = new GLTFLoader()
@@ -1653,10 +1698,12 @@ export function mountViewer() {
   }
 
   function unloadModel() {
-    for (const tiles of tilesets) {
+    for (const tiles of [...tilesets, ...upgrades.map((u) => u.to)]) {
       world.remove(tiles.group)
       tiles.dispose()
     }
+    upgrades = []
+    upgradeDue = false
     for (const model of contextModels) {
       scene.remove(model)
       model.traverse((child) => {
@@ -1879,8 +1926,10 @@ export function mountViewer() {
     renderer.setSize(container.clientWidth, container.clientHeight)
     composer?.setSize(container.clientWidth, container.clientHeight)
     syncTilesCamera()
-    tilesets.forEach((tiles) => tiles.setResolutionFromRenderer(tilesCamera, renderer))
-    tilesets.forEach(setDetail)
+    for (const tiles of [...tilesets, ...upgrades.map((u) => u.to)]) {
+      tiles.setResolutionFromRenderer(tilesCamera, renderer)
+      setDetail(tiles)
+    }
     requestRender()
   }
   window.addEventListener('resize', resize, { signal: life.signal })
@@ -2169,6 +2218,10 @@ export function mountViewer() {
       }
       status.done()
       firstViewReached()
+      if (upgradeDue) {
+        upgradeDue = false
+        upgradeTiles()
+      }
       // Telemetry: the first full load of the visit (time since the page started, tiles, memory)
       if (!loadLogged) {
         loadLogged = true
@@ -2409,7 +2462,8 @@ export function mountViewer() {
     if (perch.update(camera, dt, underwater.on)) needsRender = true
     // The dive goes on while underwater (its time, depth, gas), the computer's screen redrawn once a second
     if (underwater.on) diveComputer.update(camera, dt)
-    const loading = tilesets.some((t) => t.stats.queued + t.stats.downloading + t.stats.parsing > 0)
+    // The full set loading hidden (upgradeTiles) counts too: each frame then looks whether it can take the light one's place
+    const loading = upgrades.length > 0 || tilesets.some((t) => t.stats.queued + t.stats.downloading + t.stats.parsing > 0)
     updateLoading()
     adaptDetail()
     if (!needsRender && !loading) return
@@ -2417,6 +2471,10 @@ export function mountViewer() {
     camera.updateMatrixWorld()
     syncTilesCamera()
     tilesets.forEach((tiles) => tiles.update())
+    if (upgrades.length) {
+      for (const u of upgrades) u.to.update()
+      finishUpgrades()
+    }
     drawScene()
   }
   // The compass (below the settings): its red tip toward magnetic north, as a diver's compass (Christian, 2026-10-25),
