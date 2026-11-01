@@ -13,7 +13,7 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   fact only invent the lost blue and red). Zone 3 done and online (2026-10-29, Christian: « peu de différence, mais je
   préfère après »): the chunk « zone 3 - lens corrected - graded - clean RU=30, PA=5, RE=0.4 » of
   `O:\photogrammetry\zone-3.psx` retextured from the graded frames with the masks, 16 206 px, Mosaic, holes filled
-  (`tools/color-grading/retexture_chunk.py`, Metashape 2.3.1: about 26 h of blending), registration as before (14.4 mm).
+  (`tools/color-grading/retexture_chunk.py`, Metashape 2.3.1: about 3 h of blending), registration as before (14.4 mm).
   Its non-graded frames deleted the same day (the original chunks relinked to the graded ones, `relink_frame.py -a`;
   tools/color-grading/README.md). Downloads rebuilt with it the same day. Zone 4 done (2026-10-30, Christian: « c'est
   bon, on conserve »): one dive (2024-08-18), two corrections by group of clips (green water, lamps;
@@ -29,9 +29,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 ### Pipeline
 
-- [ ] #115 Metashape 2.3.2 (Christian, 2026-11-01): install it in place of 2.3.1, check that the scripts still run
-  (`tools/color-grading/retexture_chunk.py`, `relink_frame.py`, `used_frames.py`) and update the version where the docs
-  name it (docs/installation.md, the READMEs)
 - [ ] #10 `model:post-modified` and others only run on Windows (PowerShell); fine for now. Port to Node evaluated
   (2026-10-30): feasible, medium effort. Five `.ps1` (about 460 lines, orchestration only; the work is already in Node,
   Python and Blender scripts): serve-tiles and model-analysis/run (small), relief_zones (small to medium), publish_zones
