@@ -153,6 +153,7 @@
   "viewer_refining": "Refining the details",
   "viewer_error": "Error: {message}",
   "viewer_retry": "Try again",
+  "viewer_offline": "The 3D model needs an Internet connection. The rest of the site can be read offline.",
   "viewer_loadSlow": "This is taking longer than usual ({n} pieces received). The connection may be slow, or the model heavy for this device.",
   "viewer_loadStalled": "Loading has stopped making progress. Check the Internet connection, then try again.",
   "viewer_loadErrors": "{n} pieces of the model could not be downloaded. Check the Internet connection, then try again.",

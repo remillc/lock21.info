@@ -153,6 +153,7 @@
   "viewer_refining": "Affinage des détails",
   "viewer_error": "Erreur : {message}",
   "viewer_retry": "Réessayer",
+  "viewer_offline": "Le modèle 3D demande une connexion Internet. Le reste du site se lit sans réseau.",
   "viewer_loadSlow": "C’est plus long que d’habitude ({n} morceaux reçus). La connexion est peut-être lente, ou le modèle lourd pour cet appareil.",
   "viewer_loadStalled": "Le chargement ne progresse plus. Vérifiez la connexion Internet, puis réessayez.",
   "viewer_loadErrors": "{n} morceaux du modèle n’ont pas pu être téléchargés. Vérifiez la connexion Internet, puis réessayez.",

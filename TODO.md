@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#119**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#120**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -48,7 +48,7 @@ pm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, 
 
 - [ ] #117 Document the TIFF compression step, briefly (Christian, 2026-11-01): the frames Resolve renders are TIFF
   without compression (34 MB a frame), then compressed in LZW, lossless (about 14 MB): formerly
-  `O:\scripts\compressTifFiles.ps1`, since 2026-11-01 `tools/color-grading/compress_tiffs.mjs` (and `flat_color.py`
+  `O:\scripts\compressTifFiles.ps1` (deleted on 2026-11-01), since then `tools/color-grading/compress_tiffs.mjs` (and `flat_color.py`
   writes LZW). On the site (« Extraction des images », `traitement/extraction-photos.md`, and its English page) and in
   the colour grading README's steps (« Le déroulement »)
 - [ ] #17 Add a workflow page to the site (`6. publication.md`) once the pipeline is stable
@@ -69,11 +69,10 @@ pm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, 
 ## Site
 
 
-- [ ] #118 The web app (PWA): every page of the site kept for offline use, not only those already read (Christian,
-  2026-11-01). Today public/sw.js keeps a page once it has been read (network first) and the offline page from the
-  start: precache the others (the sitemap's or a list written at build, both languages, with their images?), in the
-  background after the install, within a size to decide (the photos: 14 MB of WebP; /modele's viewer and tiles
-  stay online); the offline page lists what is kept
+- [ ] #119 The viewer: a small circle on the model marking the point the mouse moves around, as on 3DTilesRendererJS's
+  Mars page (https://nasa-ammos.github.io/3DTilesRendererJS/three/mars.html; Christian, 2026-11-01). The library has
+  one (`PivotPointMesh`, used by its `EnvironmentControls`, not on touch screens), probably what that page shows; our
+  left button (src/viewer/pointer-orbit.js) has no mark yet
 - [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): what is left of the small
   fixes, each needing Christian's call. V23 the ☰ on the desktop home; V26 one name for the dive mode; V14
   coordinates as a map link on phones
