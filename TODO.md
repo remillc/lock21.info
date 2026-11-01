@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#111**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#113**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -77,9 +77,15 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   GoPro's product photo (« Matériel utilisé », Caméra); « Le rig » (`collecte/rig.md`, since 2026-10-26: photos of
   2024-05-16 and 2024-06-14, Sylvain Marcotte's 3D model) still has one « à compléter »: the rig's construction
   (fittings, how it attaches to the scooter; the 2020 aluminium profiles and the lights written)
-- [ ] #97 Performance audit (Christian, 2026-10-27): the site's pages and /modele, on a computer and a phone (Lighthouse,
-  Core Web Vitals; the 3D viewer's load time and frame rate, its memory), with findings to act on, as the usability and
-  SEO audits (docs/audits/)
+- [ ] #111 The 3D viewer's first view on slower lines (performance audit, `docs/audits/performance-2026-11-01.md`, P3
+  and P4), each needing Christian's call. P3: a high-end Android phone gets the full tiles on any « 4g » line, and at
+  10 Mbit/s its first view takes 30 s (29 MB; the light tiles 11 s, 10 MB): the light set first on every phone and the
+  full one once the first view is drawn, or `navigator.connection.downlink` as well, or a lighter root level. P4: the
+  desktop start view loads 72 MB (finest tiles of zones 2–4): first view 6.5 s and the last tiles 13.7 s on a
+  50 Mbit/s line. Then the viewer on real phones (GPU, memory, Safari: BrowserStack or Christian's Pixel and an iPhone)
+- [ ] #112 Performance audit, small things (P5): the rig page's first photo compressed further (its LCP, 3.0 s on a
+  simulated phone; about 128 KB less) and its figures served nearer their shown size; the AR button an `<a>` with an
+  `href` from the start; the viewer's unused script at load (141 KB: the tour, AR, settings on demand?)
 - [ ] #105 Google Analytics, with Christian, from 2026-10-31 (two or three days after the custom definitions were
   registered on 2026-10-29): explore the new values in Explore: sessions with viewer_end, the time standard and
   underwater (standard_seconds, underwater_seconds), dives (dive_end, seconds), the tour's steps (step), the viewer's

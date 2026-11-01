@@ -16,6 +16,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 - 3D viewer: the mouse wheel zooms twice as fast (OrbitControls' own speed, 1, instead of 0.5).
 - 3D viewer: the crayfish dances longer, 12 to 18 s (was 6 to 10).
 - Every page: `<meta charset>` within the first 1024 bytes again (the language script, 4 KB, came before it; performance audit 2026-11-01).
+- Performance audit (`docs/audits/performance-2026-11-01.md`, TODO #97): Cloudflare's Speed Brain turned off (it refused every prefetch with a 503: the router's and the viewer's warm-up never worked live); findings in TODO #111 and #112.
 - Claude Code skill `release` (`.claude/skills/release/`): the steps of a release, from the version bump to the live
   site checked.
 
