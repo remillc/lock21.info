@@ -33,7 +33,10 @@ const manifest = pageLang(Astro.locals) === 'en' ? '/manifest-en.webmanifest' : 
 const pairs = [['/', '/en/'], ...Object.entries(englishPaths).map(([fr, en]) => [`/${fr}`, `/en/${en}`])]
 ---
 
+<Default />
 <script is:inline define:vars={{ pairs }}>
+  // After Starlight's head (<Default />): its <meta charset> must come within the page's first 1024 bytes, and the
+  // pairs are about 4 KB (performance audit, 2026-11-01).
   // The page in the visitor's language, at the first page of a visit (TODO #107, Christian 2026-10-30):
   // - the language chosen in the language menu (kept: localStorage l21-lang) prevails;
   // - else the first of French and English in the browser's languages; neither of them: English;
@@ -67,8 +70,6 @@ const pairs = [['/', '/en/'], ...Object.entries(englishPaths).map(([fr, en]) => 
     }
   } catch {}
 </script>
-
-<Default />
 {fonts.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
 <link rel="manifest" href={manifest} />
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
