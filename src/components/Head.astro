@@ -27,7 +27,7 @@ import mono800 from '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-800-n
 const fonts = [archivo400, archivo700, archivo800, mono700, mono800]
 // The web app (TODO #81): its manifest in the page's language (installed from an English page, the app opens on /en/),
 // the icon iOS shows on the home screen (public/icons/, tools/pwa/make_icons.mjs), and the service worker
-// (public/sw.js: the network first, the pages read kept for offline), in production only
+// (public/sw.js: the network first, every page kept for offline), in production only
 const manifest = pageLang(Astro.locals) === 'en' ? '/manifest-en.webmanifest' : '/manifest.webmanifest'
 // The language a visitor lands in (TODO #107, Christian 2026-10-30): each French page's address and its English one
 const pairs = [['/', '/en/'], ...Object.entries(englishPaths).map(([fr, en]) => [`/${fr}`, `/en/${en}`])]
@@ -100,6 +100,15 @@ const pairs = [['/', '/en/'], ...Object.entries(englishPaths).map(([fr, en]) => 
       if ('serviceWorker' in navigator && !window.lock21Worker) {
         window.lock21Worker = true
         navigator.serviceWorker.register('/sw.js').catch(() => {})
+        // Every page kept for offline (TODO #118): asked once per full load, the page loaded and the browser idle, never
+        // with the data saver on; the service worker downloads only what the list says it doesn't have yet
+        const keepPages = () => {
+          if (navigator.connection?.saveData) return
+          navigator.serviceWorker.ready.then((worker) => worker.active?.postMessage({ type: 'precache' }))
+        }
+        const whenIdle = () => (window.requestIdleCallback ? requestIdleCallback(keepPages, { timeout: 10000 }) : setTimeout(keepPages, 3000))
+        if (document.readyState === 'complete') whenIdle()
+        else addEventListener('load', whenIdle, { once: true })
       }
     </script>
   )

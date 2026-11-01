@@ -5,6 +5,10 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- The web app keeps every page for offline use, not only those read (TODO #118): the list written at build
+  (`offline-list.mjs`, 58 pages with their files and the search index, about 7.5 MB) is downloaded in the background
+  once the page has loaded, never with the data saver on. The search now works offline (the service worker took its index
+  files for pages), and on a slow network the site's other files fall back on their kept copy after 4 s, as the pages do.
 - /modele on a phone (one column): the « Licence » section after « Téléchargements », before « Réalité augmentée »
   (it came right after « Le modèle »); unchanged on wider screens.
 - /modele on a phone: the licence's credit as plain text, without its box (the green edge and the tinted background).

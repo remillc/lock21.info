@@ -14,6 +14,7 @@ import placeholderMarks from './src/integrations/placeholder-marks.mjs'
 import contentImages from './src/integrations/content-images.mjs'
 import viewerFiles from './src/integrations/viewer-files.mjs'
 import shareImages from './src/integrations/share-images.mjs'
+import offlineList from './src/integrations/offline-list.mjs'
 
 export default defineConfig({
   site: 'https://lock21.info',
@@ -168,5 +169,7 @@ export default defineConfig({
     homeSlash(),
     // Then the English pages at their English addresses, and the search index rebuilt (TODO #63)
     englishPaths(),
+    // Last: what the web app keeps for reading offline, every page and its files (offline-list.mjs, TODO #118)
+    offlineList(),
   ],
 })
