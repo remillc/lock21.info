@@ -18,4 +18,4 @@ The problems met along the way, from filming underwater to the 3D model, and the
 ## In processing
 
 - [Banana effect](/en/problemes/effet-banane): a flat 100-foot floor came out curved like a banana after alignment in Metashape. The likely cause: the GoPro's wide-angle lens distortion. The leads: calibrate the camera, crop the images' edges, a less wide lens.
-- [Aligning chunks](/en/problemes/alignement-chunks): each zone's model comes out slightly distorted, which makes them hard to line up with each other. Targets give each one its real size; the distortion isn't fully solved yet.
+- [Aligning chunks](/en/problemes/alignement-chunks): each zone's model comes out slightly distorted, which makes them hard to line up with each other. Targets give each one its real size, but the distortion isn't fully solved yet.

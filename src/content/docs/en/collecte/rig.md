@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-The rig (the camera frame) is an assembly of 20 × 20 mm T-slot aluminium extrusions (the 2020 series). It carries the GoPro and the lights in front of the Seacraft Future 1000 scooter; Sylvain Marcotte designed it.
+The rig (the camera frame) is an assembly of 20 × 20 mm T-slot aluminium extrusions (the 2020 series). It carries the GoPro and the lights in front of the Seacraft Future 1000 scooter. Sylvain Marcotte designed it.
 
 <div class="facts">
 <p class="fact"><span>Scooter</span><b>Seacraft Future 1000</b></p>
@@ -82,7 +82,7 @@ Four SecurityIng dive lights, one at each corner of the frame: 10 white LEDs (60
 
 ## The scooter
 
-A Seacraft Future 1000. At speed 1 it moves at 1.2 feet per second (0.37 m/s), measured in the videos of the [sharpness test](/en/problemes/nettete-images); its speeds are programmable.
+A Seacraft Future 1000. At speed 1 it moves at 1.2 feet per second (0.37 m/s), measured in the videos of the [sharpness test](/en/problemes/nettete-images). Its speeds are programmable.
 
 ## The brushes
 

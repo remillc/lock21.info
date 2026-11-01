@@ -17,6 +17,7 @@ export const englishPaths = {
   'collecte/materiel-utilise': 'data-collection/gear',
   'collecte/mise-echelle': 'data-collection/scaling',
   'collecte/rig': 'data-collection/rig',
+  'traitement/etalonnage-couleurs': 'processing/colour-grading',
   'traitement/extraction-photos': 'processing/photo-extraction',
   'traitement/alignement-photos': 'processing/photo-alignment',
   'traitement/nuage-points-dense': 'processing/dense-point-cloud',
