@@ -155,7 +155,7 @@ export default defineConfig({
         { label: 'Le traitement', translations: { en: 'Processing' }, collapsed: true, items: [{ autogenerate: { directory: 'traitement' } }] },
         { label: 'Problèmes rencontrés', translations: { en: 'Problems encountered' }, collapsed: true, items: [{ autogenerate: { directory: 'problemes' } }] },
         // The test write-ups (Christian, 2026-11-01; out of the sidebar until then)
-        { label: 'Tests', translations: { en: 'Tests' }, collapsed: true, items: [{ autogenerate: { directory: 'tests' } }] },
+        { label: 'Tests effectués', translations: { en: 'Tests performed' }, collapsed: true, items: [{ autogenerate: { directory: 'tests' } }] },
       ],
     }),
     // The notebook's images: sizes for the content column, the first one loaded first (content-images.mjs)
