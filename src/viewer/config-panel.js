@@ -106,6 +106,18 @@ export function settingsSchema({ mobile }) {
   ]
 }
 
+/**
+ * A setting's default value, its `def` above: the one place where the viewer's defaults are set (main.js reads them
+ * here; they were written in both files until 2026-11-01)
+ * @param {string} key
+ * @returns {string}
+ */
+export function settingDefault(key) {
+  const item = settingsSchema({ mobile: false }).flatMap((section) => section.items).find((entry) => entry.key === key)
+  if (!item) throw new Error(`settingDefault: no setting ${key}`)
+  return item.def
+}
+
 class SettingsPanel extends HTMLElement {
   /** @type {Map<string, number>} The pending setting_change of each setting (set) */
   trackTimers = new Map()

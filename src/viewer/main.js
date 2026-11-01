@@ -14,7 +14,7 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js'
 import { CSM } from 'three/examples/jsm/csm/CSM.js'
 import { TilesRenderer } from '3d-tiles-renderer'
-import { forgetSettings, rememberedKeys, savedSettings, seasonOfDate, settingsSchema } from './config-panel.js'
+import { forgetSettings, rememberedKeys, savedSettings, seasonOfDate, settingDefault, settingsSchema } from './config-panel.js'
 import './loading.js'
 import './tooltip.js'
 import { createUnderwater, FIELD_CELLS, FIELD_RANGE, FIELD_SIZE, SURFACE_Y } from './underwater.js'
@@ -604,7 +604,9 @@ export function mountViewer() {
     texture.magFilter = THREE.LinearFilter
   }
 
-  // How the surfaces look. Each setting below rebuilds or updates the materials in place.
+  // How the surfaces look. Each setting below rebuilds or updates the materials in place. The defaults of the settings
+  // panel's sliders are its own (config-panel.js, settingDefault): changed there only; the values the comments give are
+  // their history
   const look = {
     // Lighting (default; ?hdri=0 = the unlit display used before): the sky (diffuse, ?hdriIntensity=) and the sun
     // (direct, ?sunIntensity=, from ?light=azimuth,elevation), each with its slider. Realistic defaults, as on a clear
@@ -613,8 +615,8 @@ export function mountViewer() {
     // (Christian's choice, 2026-10-23; the .blend's frame is aligned on north). The sky photo's own sun stays 48 degrees up (HDRI_SUN): only
     // its azimuth follows ours
     sky: params.get('hdri') !== '0',
-    skyIntensity: params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : 0.45,
-    sunIntensity: params.has('sunIntensity') ? Number(params.get('sunIntensity')) : 0.6,
+    skyIntensity: params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : Number(settingDefault('hdriIntensity')),
+    sunIntensity: params.has('sunIntensity') ? Number(params.get('sunIntensity')) : Number(settingDefault('sunIntensity')),
     // The sky as background: on by default (?sky=0: the plain backdrop)
     skyBackground: (params.get('sky') ?? '1') === '1',
     // Colour balance between zones (?neutral=0..1), see colorBalance
@@ -630,7 +632,7 @@ export function mountViewer() {
     mesh: params.get('mesh') === '1',
     // The crayfish dancing all through its threat posture (?dance=1, settings « Écrevisse qui danse »; crawfish.js)
     dance: params.get('dance') === '1',
-    light: (params.get('light') || '320,65').split(',').map(Number),
+    light: (params.get('light') || settingDefault('light')).split(',').map(Number),
     // The sun's shadows (?shadows=0|1; default on computers, off on phones: one more render of the scene per frame)
     shadows: params.has('shadows') ? params.get('shadows') !== '0' : !mobile,
     // Tone mapping of the lit display (?tone=agx|aces|neutral|none) and its exposure (?exposure=). Default AgX at 1 (1.2 until
@@ -638,10 +640,10 @@ export function mountViewer() {
     // saturation below makes up for it (1.5: on zone 3, brightness 0.61 and saturation 0.32, the unlit textures 0.53
     // and 0.31). Khronos neutral was the default for a day (it keeps the hues, but harder highlights). The unlit display
     // (?hdri=0) keeps none: the textures as they are
-    tone: ['neutral', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : 'agx',
-    exposure: params.has('exposure') ? Number(params.get('exposure')) : 1,
+    tone: ['neutral', 'aces', 'none'].includes(params.get('tone')) ? params.get('tone') : settingDefault('tone'),
+    exposure: params.has('exposure') ? Number(params.get('exposure')) : Number(settingDefault('exposure')),
     // Bump map from the photo's brightness (?bump=0..5, see litMaterial)
-    bump: params.has('bump') ? Number(params.get('bump')) : 0.45,
+    bump: params.has('bump') ? Number(params.get('bump')) : Number(settingDefault('bump')),
     // « Ambiance sous-marine » (?underwater=1) and its season (?season=0..3: winter, spring, summer, autumn; default
     // summer, the diving season), see underwater.js
     underwater: params.get('underwater') === '1',
@@ -651,11 +653,11 @@ export function mountViewer() {
     lamp: params.get('lamp') !== '0',
     // Saturation of the lit surfaces (?saturation=0..2, 1 = the textures' own; default 1.3, Christian's choice (2026-10-25, was 1.2): AgX greys the
     // colours, 1.5 matched the unlit textures' saturation on zone 3, see tone)
-    saturation: saturationOf(params.has('saturation') ? params.get('saturation') : 1.3),
+    saturation: saturationOf(params.has('saturation') ? params.get('saturation') : settingDefault('saturation')),
     // Contrast of the lit surfaces' colours (?contrast=0.5..2, 1 = the textures' own): their brightness stretched around a
     // mid-grey (0.18 in linear light), the hue kept; above 1, darks darker and lights lighter. Default 1.3 (Christian,
     // 2026-10-29; was 1)
-    contrast: contrastOf(params.has('contrast') ? params.get('contrast') : 1.3),
+    contrast: contrastOf(params.has('contrast') ? params.get('contrast') : settingDefault('contrast')),
   }
   function contrastOf(v) {
     return Math.min(Math.max(Number(v) || 1, 0.5), 2)
