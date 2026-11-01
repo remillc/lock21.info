@@ -15,6 +15,10 @@ par plongée (`frames-lens-corrected-n10`).
 - Plongée 21 (2024-07-12, les trois vannes): un seul étalonnage, fait sur le plancher, pour toute la hauteur du mur:
   les vannes sortent jaune-olive (bleu très bas). D'où le #75.
 
+## Zone 2 (2026-11-01)
+
+Le *chunk* publié, dupliqué en « zone 2 - lens corrected - graded » (id 16 de `zone-2.psx`), a 15 893 photos, de cinq dossiers: le pilier et le plancher du 2024-06-28, le 2024-07-07, le 2024-07-12 et le 2024-07-14. Images égalisées par `flat_color.py`, dans les dossiers `…-graded-flat-…`, puis recompressées (`compress_tiffs.mjs`). Texture refaite le 2026-11-01 (`retexture_chunk.py -k`, Metashape 2.3.2, les `-m` des cinq dossiers: 12 944 px, 1,73 mm, environ 50 min de mélange), publiée et adoptée le même jour (Christian: « c'est bon, on garde la nouvelle texture »). Comme pour la zone 4, le *chunk* avait déjà ses nouveaux chemins enregistrés: `relink_frame.py` n'a rien eu à changer. Recalage: 2,8 mm (l'export étalonné tourné de 90°). Dans le `.blend`, seule la propriété `source` de la zone a changé: même maillage, donc pas de `swap_zone_source.py`.
+
 ## Zone 4 (2026-10-30)
 
 Le *chunk* publié (« zone 4 - lens corrected - Align=highest - DepthMapQuality=low;FaceCount=custom ») vient d'une
@@ -50,6 +54,7 @@ répond à `-h`.
 | `make_masks.mjs` | un masque Metashape par image, la baguette de mesure trouvée dans l'image même (voir « Les masques de la baguette »); `-s` une planche contact pour vérifier |
 | `used_frames.py` | lecture seule: pour chaque zone publiée, le ou les *chunks* d'où vient son export et leurs dossiers d'images, avec le nombre de photos et les dossiers disparus; `--json`, `-z`, `-x` |
 | `masks_queue.mjs` | `make_masks.mjs --resume` sur une liste de dossiers (`-f`, puis ceux de `used_frames.py`), `-j` à la fois, un journal par dossier |
+| `compress_tiffs.mjs` | compresse en LZW (sans perte) les TIFF d'un ou de plusieurs dossiers, sur place: la même commande ImageMagick que `O:\scripts\compressTifFiles.ps1` (supprimé le 2026-11-01), mais chaque image écrite à part, ses pixels comparés à l'original, puis mise à sa place; les images déjà en LZW avec le prédicteur horizontal sont sautées (on peut relancer). Resolve rend en TIFF non compressé (34 Mo l'image, environ 14 Mo en LZW); `flat_color.py` écrit en LZW avec ce prédicteur depuis le 2026-11-01 (sans lui, le LZW gardait 37 Mo sur 34: le cas de ses premières images de la zone 2, recompressées) |
 | `glb_to_feet.py` | met en pieds un export `.glb` de Metashape écrit en mètres (positions × 3,28084), l'unité des exports et des zones du `.blend`: sans cela, `prepare_zone.py` refuse le recalage (zone 3, 2026-10-27: échelle 0,31). Python avec numpy (`tools/google-earth/.venv`) |
 
 ## Les dossiers d'images
