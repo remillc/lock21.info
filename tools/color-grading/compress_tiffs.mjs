@@ -1,6 +1,6 @@
 // The TIFF frames of one or more folders compressed in LZW (lossless), in place (TODO #75, Christian 2026-11-01): Resolve
 // renders and flat_color.py (before 2026-11-01) wrote them uncompressed, about 34 MB a frame against 15 MB in LZW;
-// the frames rendered earlier were compressed by O:\scripts\compressTifFiles.ps1 (ImageMagick, in place). The same
+// the frames rendered earlier were compressed by O:\scripts\compressTifFiles.ps1, deleted on 2026-11-01 (ImageMagick, in place). The same
 // ImageMagick command (magick <in> -compress lzw <out>), but each frame written to a temporary file, its pixels
 // compared with the original's (identical, or the original is kept), then moved over it: a frame is never left half
 // written. Frames already compressed are skipped, so a run can be started again after a stop; stale .tmp files of an
