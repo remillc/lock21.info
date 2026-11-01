@@ -609,11 +609,11 @@ export function mountViewer() {
     // Lighting (default; ?hdri=0 = the unlit display used before): the sky (diffuse, ?hdriIntensity=) and the sun
     // (direct, ?sunIntensity=, from ?light=azimuth,elevation), each with its slider. Realistic defaults, as on a clear
     // day (direct sun about 75-85 % of the light, the sky the rest): sun 1 (a surface facing it shows its texture's own
-    // brightness), sky 0.35; since 2026-10-31 (Christian), sun 0.6 and sky 0.3, softer; the sun from the southwest (azimuth 320: 40 degrees west of south), 65 degrees up
+    // brightness), sky 0.35; since 2026-10-31 (Christian), sun 0.6 and sky 0.3, softer, and sky 0.45 since 2026-11-01; the sun from the southwest (azimuth 320: 40 degrees west of south), 65 degrees up
     // (Christian's choice, 2026-10-23; the .blend's frame is aligned on north). The sky photo's own sun stays 48 degrees up (HDRI_SUN): only
     // its azimuth follows ours
     sky: params.get('hdri') !== '0',
-    skyIntensity: params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : 0.3,
+    skyIntensity: params.has('hdriIntensity') ? Number(params.get('hdriIntensity')) : 0.45,
     sunIntensity: params.has('sunIntensity') ? Number(params.get('sunIntensity')) : 0.6,
     // The sky as background: on by default (?sky=0: the plain backdrop)
     skyBackground: (params.get('sky') ?? '1') === '1',
@@ -793,7 +793,7 @@ export function mountViewer() {
   // public/hdri/sky.hdr) lights the zones and the context through lit materials: each surface gets the sky's light
   // by its orientation (tops brighter than sides). The tiles carry no normals: they are computed on demand
   // (double-sided rendering turns them outward even where the photogrammetry winding is inconsistent).
-  // ?hdriIntensity= sets its strength (default 0.35, the sun bringing the rest: updateLights), ?sky=0 hides it as the
+  // ?hdriIntensity= sets its strength (default 0.45, the sun bringing the rest: updateLights), ?sky=0 hides it as the
   // background.
   //
   // Relief: zones whose tiles carry a normal map (tools/publish-model/bake_relief.py: object-space normals of the
