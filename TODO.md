@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#116**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#117**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -103,4 +103,16 @@ pm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, 
   https://www.canadiantire.ca/en/pdp/rust-oleum-specialty-all-surface-aerosol-spray-paint-fluorescent-312-g-0482513p.0482515.html)
   and repaint the measuring rods, then cover them with a protective matte clear coat (the orange rod blends with the
   mussels and rust: tools/color-grading/make_masks.mjs, TODO #75)
+- [ ] #116 Calibrate the GoPro HERO13 Black before the next dives (Christian, 2026-11-01: it replaces the HERO6): its lens
+  must not bring back the banana effect (`problemes/effet-banane.md`: the 300 ft segment of 2024-07-26 curled up; the
+  HERO6's fix, Resolve's lens correction before Metashape, the « lens-corrected » frames). Underwater only (the flat
+  port changes the focal length), as at the Bédard quarry on 2024-05-26: the checkerboard filmed from every angle,
+  covering the whole frame, then a long flat surface with targets at known distances (the 100 ft wooden floor, or the
+  300 ft south wall). Three variants compared, the one that stays straightest kept: Wide with no correction and
+  Metashape modelling the distortion (Fisheye camera, its own calibration group, from the checkerboard); Wide corrected
+  in Resolve with the HERO13's lens profile; Linear (the camera's own narrower, straightened view). The same dive: the
+  white balance on the colour chart under the lamps at about 70 cm, at 6500, 5500 and 4800 K (fixed, never Auto; the
+  HERO6's 6500 K left the frames yellow: zone 2 needed 1.6 to 2.7 times the blue, `clip_gains.mjs`), and whether to
+  film in 10 bits and GP-Log. Then: Resolve's projects for the HERO13 (lens, Log conversion), « Matériel utilisé »
+  updated, and the « Conclusions » of the banana effect page written
 - [ ] #35 lock21.ca: owner contacted on 2026-10-18 through CIRA; reminder in Google Calendar on 2027-03-14 (expiry)
