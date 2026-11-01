@@ -97,12 +97,17 @@ class Loading extends HTMLElement {
    * @param {() => void} [retry] - offers « Réessayer »
    */
   showError(message, retry) {
+    this.showMessage(m.viewer_error({ message }), retry)
+  }
+
+  /** A message of its own on the card, without « Erreur : » (no connection) */
+  showMessage(text, retry) {
     this.getAnimations({ subtree: true }).forEach((a) => a.cancel())
     this.leaving = false
     this.hidden = false
     this.classList.remove('refine')
     this.classList.add('error')
-    this.label.firstChild.textContent = m.viewer_error({ message })
+    this.label.firstChild.textContent = text
     this.note(null, retry)
   }
 }

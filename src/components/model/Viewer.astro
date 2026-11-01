@@ -7,14 +7,20 @@
 // below are the French fallback: main.js sets them in the page's language.
 // Full screen on the element; where an element can't go full screen (iPhone), it fills the window instead (l21-fill).
 // It takes the keys only while it has the focus (a press on the model gives it): the page's arrows still scroll it.
+// Offline (TODO #118), this script is kept but not main.js: its import fails, and the frame says the model needs a
+// connection, with a button to load the page again.
+import { pageLang } from '../../lib/i18n'
+import { m } from '../../paraglide/messages.js'
+
 interface Props {
   /** Its accessible name */
   label: string
 }
 const { label } = Astro.props
+const lang = pageLang(Astro.locals)
 ---
 
-<l21-viewer tabindex="0">
+<l21-viewer tabindex="0" data-offline={m.viewer_offline({}, { locale: lang })} data-retry={m.viewer_retry({}, { locale: lang })}>
   <template>
     <div class="viewer-frame" role="region" aria-label={label}>
       <div id="viewer"></div>
@@ -175,10 +181,37 @@ const { label } = Astro.props
       const template = /** @type {HTMLTemplateElement} */ (this.querySelector('template'))
       shadow.replaceChildren(style, template.content.cloneNode(true))
       attach(shadow, this, { reset: !reload })
-      const { mountViewer } = await import('../../viewer/main.js')
+      let mountViewer
+      try {
+        ;({ mountViewer } = await import('../../viewer/main.js'))
+      } catch (error) {
+        console.error(error)
+        if (!this.gone) this.showOffline(shadow)
+        return
+      }
       // (left again before its code arrived)
       if (this.gone) return
       this.dispose = mountViewer()
+    }
+
+    /** Its code didn't come: the loading card's look (style.css), the element itself is defined by main.js
+     *  @param {ShadowRoot} shadow */
+    showOffline(shadow) {
+      const label = document.createElement('div')
+      label.className = 'loading-label'
+      label.textContent = this.dataset.offline ?? ''
+      const retry = document.createElement('button')
+      retry.className = 'loading-retry'
+      retry.type = 'button'
+      retry.textContent = this.dataset.retry ?? ''
+      retry.addEventListener('click', () => location.reload())
+      const card = document.createElement('div')
+      card.className = 'loading-card'
+      card.append(label, retry)
+      const status = shadow.querySelector('#status')
+      status?.setAttribute('role', 'status')
+      status?.classList.add('error')
+      status?.replaceChildren(card)
     }
 
     // Leaving /modele by the site's navigation: the viewer taken down (its listeners, loop, tiles and WebGL)

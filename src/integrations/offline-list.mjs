@@ -5,8 +5,8 @@
 //   start, nor the redirects of former addresses);
 // - files: the scripts, styles, fonts and icons the pages load (/_astro/, /scripts/, /favicon.svg…), each figure image at one size (the srcset's
 //   width nearest PHONE_WIDTH px, what a phone loads for the column; offline, sw.js answers a request for another
-//   size of the same image with this one), and the search index (/pagefind/). Not the 3D viewer's own files
-//   (dist/viewer/files.json): the model needs the network anyway.
+//   size of the same image with this one), and the search index (/pagefind/). Not the 3D viewer's code
+//   (main.js in dist/viewer/files.json): the model needs the network anyway.
 // version: a hash of the list, so that the service worker downloads again only when the site has changed.
 // About 7.5 MB on 2026-11-01 (58 pages: 3.8 MB of HTML; 1 MB of scripts, styles and fonts; 1.8 MB of images; 0.9 MB
 // of search index).
@@ -36,7 +36,8 @@ export default function offlineList() {
         try {
           viewer = JSON.parse(await readFile(join(root, 'viewer', 'files.json'), 'utf8'))
         } catch {}
-        const skip = new Set(viewer)
+        // The 3D viewer's code (1.3 MB) is left out; its small script stays, which says offline that the model needs a connection
+        const skip = new Set(viewer.filter((file) => /\/main\.[^/]+\.js$/.test(file)))
         const pages = []
         const kept = new Set()
         const search = []
@@ -65,8 +66,7 @@ export default function offlineList() {
           }
         }
         // What those files load in turn: the scripts' imports, the styles' fonts (the Latin ones in WOFF2, as every browser
-        // reads it and the site's text is French and English) and images. The 3D viewer's own scripts are never reached (only its
-        // page loads them), and what they share with the other scripts is kept (preload-helper)
+        // reads it and the site's text is French and English) and images
         for (const file of kept) {
           if (!/\.(?:js|css)$/.test(file)) continue
           const text = await readFile(join(root, file), 'utf8')
@@ -75,7 +75,7 @@ export default function offlineList() {
             : [...text.matchAll(/(?:from\s*|import\s*\(?\s*)["'](\.{0,2}\/[^"']+\.js)["']/g)].map((m) => m[1])
           for (const url of found) {
             const path = new URL(url, `http://site${file}`).pathname
-            if (!path.startsWith('/viewer/')) kept.add(path)
+            if (!skip.has(path) && !path.startsWith('/viewer/')) kept.add(path)
           }
         }
         pages.sort()
