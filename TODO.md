@@ -34,9 +34,11 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   Python and Blender scripts): serve-tiles and model-analysis/run (small), relief_zones (small to medium), publish_zones
   and tile_zone (medium, the core). Plan: a shared module `tools/publish-model/lib/pipeline.mjs` (paths overridable by
   environment variables or `.env.local`: data root, Blender, Obj2Tiles, Python; Blender found per OS; spawn with a log;
-  `node:util` parseArgs with -h), then serve-tiles, run, tile_zone, publish_zones, relief_zones (folded into
+  
+ode:util` parseArgs with -h), then serve-tiles, run, tile_zone, publish_zones, relief_zones (folded into
   publish_zones: TODO #21); `fix_tileset.py` and `update_manifest.py` rewritten in Node (JSON edits only). Same
-  `npm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, `relief_zones -High @{...}` a
+  
+pm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, `relief_zones -High @{...}` a
   repeated `--high "zone 1=<glb>"` (docs/processing-the-blend-file.md updated with it). Keep the `.ps1` until one zone's
   output matches (tile count, manifest). Fix on the way: `-TilesRoot` not passed to tile_zone, unchecked exit codes of
   fix_tileset and update_manifest. Still tied to this PC after a port: the `O:\` defaults (and the `.blend` zones'
@@ -80,10 +82,15 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 - [ ] #111 The 3D viewer's first view on slower lines (performance audit, `docs/audits/performance-2026-11-01.md`, P3
   and P4), each needing Christian's call. P3: a high-end Android phone gets the full tiles on any « 4g » line, and at
   10 Mbit/s its first view takes 30 s (29 MB; the light tiles 11 s, 10 MB): the light set first on every phone and the
-  full one once the first view is drawn, or `navigator.connection.downlink` as well, or a lighter root level. P4: the
+  full one once the first view is drawn, or 
+avigator.connection.downlink` as well, or a lighter root level. P4: the
   desktop start view loads 72 MB (finest tiles of zones 2–4): first view 6.5 s and the last tiles 13.7 s on a
   50 Mbit/s line. Then the viewer on real phones (GPU, memory, Safari: BrowserStack or Christian's Pixel and an iPhone)
-- [ ] #113 Real visitors' page speed (performance audit, 2026-11-01): send each visit's Core Web Vitals (LCP, INP, CLS; the`n  `web-vitals` library) to Google Analytics as an event, unless refused, to see how many pages take more than a second on`n  a phone (the audit's figures are simulations: under 0.75 s on a realistic 4G phone, 1.8–3.0 s on Lighthouse's slow`n  4G); listed on the privacy page; explored with #105`n- [ ] #112 Performance audit, small things (P5): the rig page's first photo compressed further (its LCP, 3.0 s on a
+- [ ] #113 Real visitors' page speed (performance audit, 2026-11-01): send each visit's Core Web Vitals (LCP, INP, CLS; the
+  `web-vitals` library) to Google Analytics as an event, unless refused, to see how many pages take more than a second on
+  a phone (the audit's figures are simulations: under 0.75 s on a realistic 4G phone, 1.8–3.0 s on Lighthouse's slow
+  4G); listed on the privacy page; explored with #105
+- [ ] #112 Performance audit, small things (P5): the rig page's first photo compressed further (its LCP, 3.0 s on a
   simulated phone; about 128 KB less) and its figures served nearer their shown size; the AR button an `<a>` with an
   `href` from the start; the viewer's unused script at load (141 KB: the tour, AR, settings on demand?)
 - [ ] #105 Google Analytics, with Christian, from 2026-10-31 (two or three days after the custom definitions were
