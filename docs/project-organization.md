@@ -52,7 +52,7 @@ traitement). Le détail: le guide **Installation**, section 5.
 - **Avant une release** :
   1. `npm run model:check` : les zones et le contexte changés dans le `.blend` depuis leur publication (le `.blend`
      enregistré). Le modèle se publie à part (`npm run model:upload`), sans release.
-  2. `npm run i18n:status` : les pages anglaises en retard.
+  2. `npm run i18n:status` : les pages anglaises en retard, mises à jour dans la release (Christian, 2026-11-01).
   3. `CHANGELOG.md` : tout ce qui a changé sous la version et sa date, un court résumé en tête ; `package.json`.
   4. `npm run build` : sans erreur.
 - **Après la publication** : les anciennes adresses redirigent, `/modele`, la lightbox et la page 404 en ligne, la
