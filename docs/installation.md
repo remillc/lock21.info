@@ -112,11 +112,12 @@ R2_ACCESS_KEY_ID=<clé>
 R2_SECRET_ACCESS_KEY=<clé secrète>
 R2_BUCKET=lock21-tiles
 BING_WEBMASTER_API_KEY=<clé>
+CLOUDFLARE_ZONE_TOKEN=<jeton>
 ```
 
 Les valeurs viennent du tableau de bord Cloudflare: **R2** › **Manage API tokens** (un jeton avec les droits de lecture
 et d'écriture sur le bucket `lock21-tiles`). La dernière, facultative, sert à envoyer les adresses du site à Bing (`npm run bing:submit`) : Bing Webmaster
-Tools › **Paramètres** › **Accès à l'API**. Ce fichier est **secret**: il est exclu de Git, et il ne faut jamais le
+Tools › **Paramètres** › **Accès à l'API**. `CLOUDFLARE_ZONE_TOKEN`, facultatif aussi, lit les réglages de la zone `lock21.info` (Speed Brain, cache, compression) : **My Profile** › **API Tokens**, un jeton personnalisé en lecture seule, **Zone · Zone** et **Zone · Zone Settings** en **Read**, limité à la zone `lock21.info`. Ce fichier est **secret**: il est exclu de Git, et il ne faut jamais le
 copier dans un message, un courriel ou une capture.
 
 ## 5. Le disque `O:`

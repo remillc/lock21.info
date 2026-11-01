@@ -63,7 +63,9 @@ content. Scripts must survive that:
   tap with data saver or a slow connection). Links to the likely next step also get `data-astro-prefetch="viewport"`
   (prefetched once on screen): home buttons and cards, the "Modèle 3D" pill, previous / next page. Not every link:
   the sidebar alone would fetch about 600 kB per page. The 3D viewer's own files (about 3 MB) are warmed up on
-  intent only, by `<l21-viewer-warmup>` (`src/components/ViewerWarmup.astro`).
+  intent only, by `<l21-viewer-warmup>` (`src/components/ViewerWarmup.astro`). Cloudflare's **Speed Brain** (the
+  zone's Speed settings) must stay off: on, it answers every prefetch of a Worker-served site with an empty 503
+  (`Cf-Speculation-Refused`), so none of these worked live until 2026-11-01 (docs/audits/performance-2026-11-01.md).
 - Starlight doesn't support the router officially: `Head.astro` (theme, sidebar scroll) and `Search.astro` (search
   kept across pages) fill the gaps. Check them after a Starlight upgrade. A link to the other language (French ↔
   `/en/`) loads the page in full, so that the search starts again in that language.
