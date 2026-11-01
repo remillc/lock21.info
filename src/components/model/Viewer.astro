@@ -56,9 +56,11 @@ const { label } = Astro.props
       <div class="touch-hint" role="status" hidden></div>
       <!-- Augmented reality (main.js): the lock on a table at 1:100. Shown only where a phone can display it: iPhone and
            iPad (AR Quick Look, rel="ar", which requires an image as the link's first child: hence an <img>) and Android
-           (WebXR in Chrome, android-ar.js; Scene Viewer otherwise) -->
-      <a class="ar-button icon-button" rel="ar" aria-label="Voir en réalité augmentée" data-tooltip="Voir en réalité augmentée" hidden>
-        <img data-icon="view-in-ar-outline-rounded" data-color="#ebede3" width="24" height="24" alt="" width="24" height="24" alt="" />
+           (WebXR in Chrome, android-ar.js; Scene Viewer otherwise). Its href: the page's « Réalité augmentée » section
+           until main.js sets the device's own link (a link without one isn't a link for search engines: performance
+           audit, 2026-11-01) -->
+      <a class="ar-button icon-button" rel="ar" href="#ar" aria-label="Voir en réalité augmentée" data-tooltip="Voir en réalité augmentée" hidden>
+        <img data-icon="view-in-ar-outline-rounded" data-color="#ebede3" width="24" height="24" alt="" />
       </a>
       <!-- Full screen (main.js: the element, <l21-viewer>, or the whole window where it can't be); main.js sets
            data-full while full screen, which shows the exit icon -->

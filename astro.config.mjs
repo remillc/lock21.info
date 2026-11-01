@@ -64,10 +64,13 @@ export default defineConfig({
     ],
   },
   // Images in several widths (srcset): the page loads the one its column needs, the lightbox (public/scripts/image-zoom.js)
-  // the widest; no extra styles from Astro (custom.scss sizes the figures)
+  // the widest; no extra styles from Astro (custom.scss sizes the figures). WebP at quality 72 (sharp's default 80) and
+  // its slowest, tightest encoding: about 20 % lighter, no visible change on the photos nor on Nick Baets' drawing's fine
+  // lines (performance audit, 2026-11-01, P5)
   image: {
     layout: 'constrained',
     responsiveStyles: false,
+    service: { entrypoint: 'astro/assets/services/sharp', config: { webp: { quality: 72, effort: 6 } } },
   },
   integrations: [
     // Icons by name (src/components: <Icon name="material-symbols:…-rounded" />), from Iconify's Material Symbols set

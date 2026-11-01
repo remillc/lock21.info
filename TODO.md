@@ -82,28 +82,21 @@ pm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, 
   GoPro's product photo (« Matériel utilisé », Caméra); « Le rig » (`collecte/rig.md`, since 2026-10-26: photos of
   2024-05-16 and 2024-06-14, Sylvain Marcotte's 3D model) still has one « à compléter »: the rig's construction
   (fittings, how it attaches to the scooter; the 2020 aluminium profiles and the lights written)
-- [ ] #111 The 3D viewer's first view on slower lines (performance audit, `docs/audits/performance-2026-11-01.md`, P3
-  and P4), each needing Christian's call. P3: a high-end Android phone gets the full tiles on any « 4g » line, and at
-  10 Mbit/s its first view takes 30 s (29 MB; the light tiles 11 s, 10 MB): the light set first on every phone and the
-  full one once the first view is drawn, or 
-avigator.connection.downlink` as well, or a lighter root level. P4: the
-  desktop start view loads 72 MB (finest tiles of zones 2–4): first view 6.5 s and the last tiles 13.7 s on a
-  50 Mbit/s line. Then the viewer on real phones (GPU, memory, Safari: BrowserStack or Christian's Pixel and an iPhone)
+- [ ] #111 The 3D viewer's start view on a computer (performance audit, `docs/audits/performance-2026-11-01.md`, P4),
+  Christian's call: it loads 72 MB (finest tiles of zones 2–4), first view 6.5 s and the last tiles 13.7 s on a
+  50 Mbit/s line; a higher `errorTarget` (8 → 10 or 12) is faster and a little less sharp: a before/after to judge.
+  Then the viewer on real phones (GPU, memory, Safari: BrowserStack or Christian's Pixel and an iPhone), the light-then-
+  full switch on a strong Android phone included (P3, done 2026-11-01)
 - [ ] #114 The 3D viewer too laggy on old tablets (Christian, 2026-11-01, told by a visitor): which ones (model, iOS or
   Android version), standard or underwater view; then a lighter profile for weak devices (pixel ratio, shadows, ambient
   occlusion, particles, creatures, detail), chosen from the device's GPU and memory or from a slow frame rate measured
   in the first seconds; tried on an old iPad (BrowserStack or a real one)
-- [ ] #113 Real visitors' page speed (performance audit, 2026-11-01): send each visit's Core Web Vitals (LCP, INP, CLS; the
-  `web-vitals` library) to Google Analytics as an event, unless refused, to see how many pages take more than a second on
-  a phone (the audit's figures are simulations: under 0.75 s on a realistic 4G phone, 1.8–3.0 s on Lighthouse's slow
-  4G); listed on the privacy page; explored with #105
-- [ ] #112 Performance audit, small things (P5): the rig page's first photo compressed further (its LCP, 3.0 s on a
-  simulated phone; about 128 KB less) and its figures served nearer their shown size; the AR button an `<a>` with an
-  `href` from the start; the viewer's unused script at load (141 KB: the tour, AR, settings on demand?)
 - [ ] #105 Google Analytics, with Christian, from 2026-10-31 (two or three days after the custom definitions were
   registered on 2026-10-29): explore the new values in Explore: sessions with viewer_end, the time standard and
   underwater (standard_seconds, underwater_seconds), dives (dive_end, seconds), the tour's steps (step), the viewer's
-  buttons (button), the first move (move), the settings, season, lamp, theme, language and AR size. A setting's new
+  buttons (button), the first move (move), the settings, season, lamp, theme, language and AR size. The pages' speed
+  (web_vitals, since the release after 1.0.0-beta.7: metric_name and metric_rating as event-scoped dimensions,
+  metric_value as a metric, to register): how many first pages take more than a second on a phone. A setting's new
   value is sent as `setting_value` since 2026-10-29 (was `value`, a name GA keeps for money): once deployed, register it
   as a tenth dimension (event scope)
 - [ ] #91 SEO audit: outside the site, for Christian.  S9 links: the Sketchfab profile, DECOSTOP, the Wikipedia « Lost

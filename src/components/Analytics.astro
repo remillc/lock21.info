@@ -211,5 +211,27 @@ const id = import.meta.env.PROD ? site.analytics.ga4 : ''
       if (event.origin !== location.origin || event.data?.type !== 'lock21:track' || typeof event.data.name !== 'string') return
       track(event.data.name, event.data.params ?? {})
     })
+    // web_vitals (TODO #113, performance audit 2026-11-01): how fast the visit's first page was in the visitor's own
+    // browser, Google's Core Web Vitals (the web-vitals library): LCP (ms), INP (ms), CLS (thousandths), each with
+    // Google's rating (good, needs-improvement, poor). Each comes once, when it is final (the page hidden, or a
+    // tap for LCP); the pages reached by the client-side router aren't measured (a library limit). Loaded after the page,
+    // when the browser is idle, and only for visitors who didn't refuse the measurement
+    if (choice() !== 'denied') {
+      const vitals = () => import('web-vitals').then(({ onLCP, onINP, onCLS }) => {
+        /** @param {{ name: string, value: number, rating: string, navigationType: string }} metric */
+        const send = (metric) => track('web_vitals', {
+          metric_name: metric.name,
+          metric_value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
+          metric_rating: metric.rating,
+          navigation_type: metric.navigationType,
+        })
+        onLCP(send)
+        onINP(send)
+        onCLS(send)
+      }).catch(() => {})
+      const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(vitals, { timeout: 3000 }) : setTimeout(vitals, 1000))
+      if (document.readyState === 'complete') idle()
+      else window.addEventListener('load', idle, { once: true })
+    }
   }
 </script>

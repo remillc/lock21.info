@@ -15,6 +15,15 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 - 3D viewer: softer default light (Christian, 2026-10-31): sun 0.6 (was 1), sky 0.3 (was 0.35), exposure 1 (was 1.2).
 - 3D viewer: the mouse wheel zooms twice as fast (OrbitControls' own speed, 1, instead of 0.5).
 - 3D viewer: the crayfish dances longer, 12 to 18 s (was 6 to 10).
+- 3D viewer on a strong Android phone (8 GB, 8 cores, a « 4g » line): the light tiles first, then the full ones zone by
+  zone once the view is loaded, swapped without emptying the view (performance audit 2026-11-01: the full set's first
+  view took 30 s at 10 Mbit/s, the light one's 11 s). Other phones and tablets keep the light set, computers the full one.
+- 3D viewer: the Android augmented reality's code loaded on Android only; the AR button's link points to the page's
+  « Réalité augmentée » section until the viewer sets the device's own (a link without one isn't a link for search engines).
+- Images: WebP at quality 72 instead of 80, with sharp's tightest encoding: all the site's images 22 % lighter (18.4 to
+  14.3 MB), no visible change. The figures side by side (figure grids) load at half the column's width on a wide screen.
+- Google Analytics: each visit's Core Web Vitals (LCP, INP, CLS, the `web-vitals` library) as a `web_vitals` event,
+  unless the measurement is refused (TODO #113); listed on the privacy page.
 - Every page: `<meta charset>` within the first 1024 bytes again (the language script, 4 KB, came before it; performance audit 2026-11-01).
 - Performance audit (`docs/audits/performance-2026-11-01.md`, TODO #97): Cloudflare's Speed Brain turned off (it refused every prefetch with a 503: the router's and the viewer's warm-up never worked live); findings in TODO #111 and #112.
 - Claude Code skill `release` (`.claude/skills/release/`): the steps of a release, from the version bump to the live
