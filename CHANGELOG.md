@@ -3,6 +3,10 @@
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
 public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
+## Unreleased
+
+- 3D viewer: a small circle marks the point pressed, with any mouse button, from the press to the release (TODO #119).
+
 ## 1.0.0-beta.9 - 2026-11-02
 
 Zones 3 and 4 redone (zone 3 fully colour-graded, zone 4 brighter on its vertical surfaces), in the viewer and the downloads, softer contrast in the viewer, and an offline download that resumes when it stops.
