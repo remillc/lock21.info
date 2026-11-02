@@ -110,11 +110,6 @@ pm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, 
   as a tenth dimension (event scope)
 - [ ] #91 SEO audit: outside the site, for Christian.  S9 links: the Sketchfab profile, DECOSTOP, the Wikipedia « Lost
   Villages » talk page (dead source for Lock 21), Lost Villages Historical Society, Save Ontario Shipwrecks
-- [ ] #99 For the next dives, for Christian: buy a magenta fluorescent spray paint at Canadian Tire (Rust-Oleum
-  Specialty All-Surface, fluorescent,
-  https://www.canadiantire.ca/en/pdp/rust-oleum-specialty-all-surface-aerosol-spray-paint-fluorescent-312-g-0482513p.0482515.html)
-  and repaint the measuring rods, then cover them with a protective matte clear coat (the orange rod blends with the
-  mussels and rust: tools/color-grading/make_masks.mjs, TODO #75)
 - [ ] #116 Calibrate the GoPro HERO13 Black before the next dives (Christian, 2026-11-01: it replaces the HERO6): its lens
   must not bring back the banana effect (`problemes/effet-banane.md`: the 300 ft segment of 2024-07-26 curled up; the
   HERO6's fix, Resolve's lens correction before Metashape, the « lens-corrected » frames). Underwater only (the flat
