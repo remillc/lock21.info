@@ -10,6 +10,18 @@ Les vidéos ont été tournées avec une GoPro Hero6 Black. La caméra, son boî
 
 Les clips sont d'abord étalonnés dans DaVinci Resolve ([Étalonnage des couleurs](/traitement/etalonnage-couleurs)), puis rendus en images.
 
+## Le renommage des vidéos
+
+Avant l'étalonnage, je renomme les vidéos dans leur dossier `raw-4k` avec l'utilitaire Bulk Rename Utility (préréglage `O:\scripts\renameFiles.bru`). La GoPro met le numéro du chapitre avant celui de la vidéo : `GX020333.MP4` est le chapitre 02 de la vidéo 0333. Le renommage inverse les deux, ce qui garde les chapitres d'une même vidéo ensemble quand les fichiers sont triés par nom :
+
+| Motif | Remplacement | Avant | Après |
+| --- | --- | --- | --- |
+| `GX(\d{2})(\d+)(.*)` | `GX\2\1\3` | `GX020333.MP4` | `GX033302.MP4` |
+
+Les images extraites reprennent ensuite le nom de leur vidéo, suivi de leur numéro : `GX033001.0001.tif`.
+
+Ce préréglage date de juillet 2024. Les vidéos d'avant ont d'autres formes de noms (`GX0019201`, `GX002071`), et celles de la zone 7 du 24 juin 2024 ont gardé leur nom d'origine (`GX010247`).
+
 ## Le chevauchement des images
 
 La documentation de Metashape recommande un chevauchement de 80% frontal et 60% latéral, et 90% frontal et 80% latéral pour un relevé au-dessus d'une forêt. J'ai choisi de viser un chevauchement frontal et latéral de 85%.

@@ -6,6 +6,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 ## Unreleased
 
 - Web app: the download of every page resumes when the browser stops the service worker halfway (seen in 2 of 7 first visits, headless Chrome): the page asks again every 15 s until the service worker answers, for at most 15 minutes (TODO #120).
+- « Suivi du travail par zone »: the table brought up to date from the Metashape projects and the data folders (transfers, frames, targets, alignment, optimization, cleaning, colour grading).
+- « Extraction des photos »: the renaming of the videos with Bulk Rename Utility, before the colour grading and the export.
 
 ## 1.0.0-beta.8 - 2026-11-01
 
