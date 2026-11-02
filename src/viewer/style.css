@@ -1804,7 +1804,7 @@ l21-tooltip {
 }
 }
 
-/* The point the left button turns around (pointer-orbit.js, TODO #119): a thin white ring, as on 3DTilesRendererJS's Mars
+/* The point pressed, with any mouse button (pointer-orbit.js, TODO #119): a thin white ring, as on 3DTilesRendererJS's Mars
    page. MD3 motion: enters in 400 ms, leaves in 200 ms */
 .pivot-mark {
   position: absolute;

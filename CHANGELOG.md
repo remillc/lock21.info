@@ -5,7 +5,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
-- 3D viewer: a small circle marks the point the left button turns around, from the press to the release (TODO #119).
+- 3D viewer: a small circle marks the point pressed, with any mouse button, from the press to the release (TODO #119).
 
 ## 1.0.0-beta.9 - 2026-11-02
 

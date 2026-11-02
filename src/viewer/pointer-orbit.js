@@ -5,9 +5,9 @@
 // there would make). Over the sky (no point), the orbit's centre is the pivot. A pixel dragged turns by the angle a
 // pixel covers (the view's height over its angle: Christian, 2026-10-24, the pointer moved faster than the background),
 // so the background moves with the pointer; the same limit looking up (maxPolar), and a short glide after the button is
-// released, as OrbitControls' damping. From the press to the release, a small circle marks the pivot (TODO #119, Christian,
-// 2026-11-01, as on 3DTilesRendererJS's Mars page): an element over the canvas, as the pivot stays where it is on the
-// screen. Touch is left to OrbitControls and touch-nav.js.
+// released, as OrbitControls' damping. From the press to the release of any mouse button, a small circle marks the point
+// pressed (TODO #119, Christian, 2026-11-01 and 2026-11-02, as on 3DTilesRendererJS's Mars page): an element over the
+// canvas, placed again each frame, as panning and zooming move that point on the screen. Touch is left to OrbitControls and touch-nav.js.
 import * as THREE from 'three'
 
 const UP = new THREE.Vector3(0, 1, 0)
@@ -33,12 +33,19 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
   controls.mouseButtons.LEFT = null
   surface.addEventListener('pointerdown', (event) => {
     controls.mouseButtons.LEFT = event.ctrlKey || event.shiftKey || event.metaKey ? THREE.MOUSE.ROTATE : null
+    // The model's point under the pointer, for the circle and the pivot below; over the sky, the orbit's centre
+    if (event.pointerType === 'mouse' && controls.enabled) {
+      pressed = pick(event.clientX, event.clientY)
+      markPoint.copy(pressed ?? controls.target)
+      markPointer = event.pointerId
+      placeMark()
+    }
     // Panning (right button, or left with a modifier) drags the point pressed with the pointer (Christian, 2026-10-25:
     // too slow): OrbitControls moves the plane of its centre with the pointer, often a metre ahead (the start view),
     // so a wall 10 m away crept. Its speed is the depth of the point pressed over the centre's; over the sky, as before
     const panning = event.button === 2 || (event.button === 0 && controls.mouseButtons.LEFT !== null)
     if (event.pointerType !== 'mouse' || !panning) return
-    const point = pick(event.clientX, event.clientY)
+    const point = pressed
     const centre = camera.position.distanceTo(controls.target)
     camera.getWorldDirection(offset)
     const depth = point ? point.clone().sub(camera.position).dot(offset) : 0
@@ -47,22 +54,33 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
     controls.panSpeed = PAN * (depth > 0 && centre > 0 ? THREE.MathUtils.clamp(depth / centre, 0.2, 100) : 1)
   }, { capture: true })
   const pivot = new THREE.Vector3()
+  const markPoint = new THREE.Vector3()
+  const markPosition = new THREE.Vector3()
+  let markPointer = null
+  let pressed = null
   const right = new THREE.Vector3()
   const offset = new THREE.Vector3()
   const turn = new THREE.Quaternion()
   let drag = null
   let speed = { yaw: 0, pitch: 0 }
 
-  /** The circle on the pivot; none if the pivot is behind the camera (a press over the sky, the orbit's centre) */
-  function showMark() {
-    const point = offset.copy(pivot).project(camera)
-    if (point.z > 1) return
+  /** The circle on the point pressed; none while it is behind the camera */
+  function placeMark() {
+    markPosition.copy(markPoint).project(camera)
     const box = surface.getBoundingClientRect()
     const frame = mark.parentElement.getBoundingClientRect()
-    mark.style.left = `${box.left - frame.left + ((point.x + 1) / 2) * box.width}px`
-    mark.style.top = `${box.top - frame.top + ((1 - point.y) / 2) * box.height}px`
-    mark.classList.add('on')
+    mark.style.left = `${box.left - frame.left + ((markPosition.x + 1) / 2) * box.width}px`
+    mark.style.top = `${box.top - frame.top + ((1 - markPosition.y) / 2) * box.height}px`
+    mark.classList.toggle('on', markPosition.z <= 1)
   }
+  /** The press is over: the circle leaves */
+  function hideMark(event) {
+    if (event.pointerId !== markPointer) return
+    markPointer = null
+    mark.classList.remove('on')
+  }
+  surface.addEventListener('pointerup', hideMark)
+  surface.addEventListener('pointercancel', hideMark)
 
   /** Turns the camera and the orbit's centre around the pivot: yaw around the vertical, pitch around the view's right */
   function rotate(yaw, pitch) {
@@ -84,17 +102,15 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
     if (event.pointerType !== 'mouse' || event.button !== 0 || !controls.enabled) return
     // Ctrl, Shift or Meta with the left button: OrbitControls pans
     if (event.ctrlKey || event.shiftKey || event.metaKey) return
-    pivot.copy(pick(event.clientX, event.clientY) ?? controls.target)
+    pivot.copy(pressed ?? controls.target)
     drag = { id: event.pointerId, x: event.clientX, y: event.clientY, time: event.timeStamp }
     speed = { yaw: 0, pitch: 0 }
     surface.setPointerCapture(event.pointerId)
-    showMark()
   })
   surface.addEventListener('pointermove', (event) => {
     if (!drag || event.pointerId !== drag.id) return
     if (!controls.enabled) {
       drag = null
-      mark.classList.remove('on')
       return
     }
     // The angle a pixel covers
@@ -116,7 +132,6 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
     // Still for a moment before release: no glide
     if (event.timeStamp - drag.time > 80) speed = { yaw: 0, pitch: 0 }
     drag = null
-    mark.classList.remove('on')
   }
   surface.addEventListener('pointerup', end)
   surface.addEventListener('pointercancel', end)
@@ -124,6 +139,7 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
   return {
     /** Each frame: the glide after a drag; true while it moves the camera */
     update() {
+      if (markPointer !== null) placeMark()
       if (drag || !controls.enabled) return false
       if (Math.abs(speed.yaw) < GLIDE_STOP && Math.abs(speed.pitch) < GLIDE_STOP) return false
       speed = { yaw: speed.yaw * GLIDE, pitch: speed.pitch * GLIDE }
