@@ -108,8 +108,6 @@ pm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, 
   metric_value as a metric, to register): how many first pages take more than a second on a phone. A setting's new
   value is sent as `setting_value` since 2026-10-29 (was `value`, a name GA keeps for money): once deployed, register it
   as a tenth dimension (event scope)
-- [ ] #91 SEO audit: outside the site, for Christian.  S9 links: the Sketchfab profile, DECOSTOP, the Wikipedia « Lost
-  Villages » talk page (dead source for Lock 21), Lost Villages Historical Society, Save Ontario Shipwrecks
 - [ ] #116 Calibrate the GoPro HERO13 Black before the next dives (Christian, 2026-11-01: it replaces the HERO6): its lens
   must not bring back the banana effect (`problemes/effet-banane.md`: the 300 ft segment of 2024-07-26 curled up; the
   HERO6's fix, Resolve's lens correction before Metashape, the « lens-corrected » frames). Underwater only (the flat
