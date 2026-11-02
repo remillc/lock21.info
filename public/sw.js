@@ -14,7 +14,8 @@
 // Every page kept, not only those read (TODO #118, Christian 2026-11-01): the list written at build
 // (src/integrations/offline-list.mjs: dist/offline.json, every page, the files they load, each figure image at one
 // size, the search index; about 7.5 MB) is downloaded in the background when a page asks for it (Head.astro, once the
-// page has loaded and the browser is idle, never with the data saver on), again only when the list's version changes.
+// page has loaded and the browser is idle, never with the data saver on, and again while the service worker hasn't
+// answered: the browser may stop it halfway, TODO #120), again only when the list's version changes.
 // Offline, a figure image asked at another size than the one kept is answered with the kept one.
 // A new version of this file replaces the old one at the next visit (skipWaiting, clients.claim): bump VERSION when the
 // caches' content must start over.
@@ -63,14 +64,25 @@ self.addEventListener('activate', (event) => {
   )
 })
 
-// A page asks for every page to be kept (Head.astro)
+// The download under way: gone with the service worker if the browser stops it, so that the page's next request starts
+// it again
+let keeping = null
+
+// A page asks for every page to be kept (Head.astro), and asks again until it gets the answer: while a download is
+// under way, a request only waits for its end
 self.addEventListener('message', (event) => {
-  if (event.data?.type === 'precache') event.waitUntil(precache().catch(() => {}))
+  if (event.data?.type !== 'precache') return
+  keeping ??= precache()
+    .catch(() => {})
+    .finally(() => {
+      keeping = null
+    })
+  event.waitUntil(keeping.then(() => event.source?.postMessage({ type: 'precache-end' })))
 })
 
 /** Every page and file of the list kept: when the list's version changed, the pages and the files whose names don't
  *  change with their content fetched again; the /_astro/ files (hashed) only if missing. The version noted once
- *  everything came, so that an interrupted download goes on at the next page */
+ *  everything came, so that an interrupted download goes on at the page's next request */
 async function precache() {
   const response = await fetch(LIST, { cache: 'no-cache' })
   if (!response.ok) return
