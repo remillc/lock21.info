@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- 3D viewer: contrast 1.2 by default (Christian, 2026-11-02; was 1.3), saturation unchanged at 1.3.
 - Viewer: the « Avant | Après » buttons (`?compare=`, a test tool) stay after a reload, the address now keeps that parameter.
 
 ## 1.0.0-beta.9 - 2026-11-02
