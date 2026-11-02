@@ -61,4 +61,4 @@ Rule of thumb:
 
 ## File compression
 
-This step shrinks the images considerably without losing any data.
+This step shrinks the images considerably without losing any data. DaVinci Resolve renders the frames as uncompressed TIFF, about 34 MB each. I then compress them in LZW, a lossless format Metashape reads directly, which brings them down to about 14 MB. The script `compress_tiffs.mjs` (with ImageMagick) does it in place: a frame is only replaced once its pixels have been compared with the original's.

@@ -90,7 +90,7 @@ aucun `.tmp`), une plongée à la fois. `flat_color.py` sait aussi corriger sur 
 4. Dans Resolve, sur la copie `- graded`: page **Color**, menu de l'éditeur de nœuds sur **Timeline**, un nœud
    (**Alt+S**; l'interface Python ne sait pas en créer). Puis `timeline_lut.py`, qui y pose la LUT et exporte une
    image de test (`-s`, `--frame`); vérification à l'œil dans Resolve.
-5. Rendu de la copie dans un nouveau dossier, `frames-lens-corrected-graded-n10`, sous les mêmes noms: les images actuelles restent.
+5. Rendu de la copie dans un nouveau dossier, `frames-lens-corrected-graded-n10`, sous les mêmes noms: les images actuelles restent. Resolve écrit des TIFF sans compression (environ 34 Mo par image): `compress_tiffs.mjs` sur ce dossier les ramène à environ 14 Mo, en LZW, sans perte. `flat_color.py` écrit déjà en LZW.
 6. Dans le projet Metashape de la zone (`O:\photogrammetry\`, Christian 2026-10-27), le *chunk* du modèle publié
    dupliqué (*Duplicate Chunk*: caméras, masques et le seul modèle à texturer, sans nuage de points ni cartes de
    profondeur) et nommé avec « graded »; les *chunks* d'origine restent tels quels. Dans Metashape, *Tools › Run
