@@ -77,8 +77,8 @@ The site is a progressive web app (TODO #81, Christian 2026-10-30: the network f
 
 - **Every page kept (TODO #118):** at build, `src/integrations/offline-list.mjs` writes `dist/offline.json`: every page,
   the files they load (imports and CSS fonts followed; each figure image at one size, about 1080 px wide), the search
-  index, about 7.5 MB; not the 3D viewer's code (`main.js`: offline, its frame says the model needs a connection). `Head.astro` asks the service worker for it once per full load, the page
-  loaded and the browser idle, never with the data saver on; it downloads again only when the list's version changes.
+  index, about 7.5 MB; not the 3D viewer's code (`main.js`: offline, its frame says the model needs a connection). `Head.astro` asks the service worker for it at each full load, the page
+  loaded and the browser idle, never with the data saver on, and again every 15 s until the worker answers, for at most 15 minutes (the browser may stop a service worker halfway, TODO #120; a file that fails ends the download until the next full load); it downloads again only when the list's version changes.
 - **Pages:** the network first, each page read kept on the device (200 at most); without network, the kept copy, else
   `public/offline.html` (self-contained, French or English by the address, it lists the kept pages). On a slow network
   (no answer in 4 s) a kept copy is shown and the network's answer kept for next time. Pages prefetched by the router

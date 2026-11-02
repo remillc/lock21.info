@@ -3,6 +3,10 @@
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
 public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
+## Unreleased
+
+- Web app: the download of every page resumes when the browser stops the service worker halfway (seen in 2 of 7 first visits, headless Chrome): the page asks again every 15 s until the service worker answers, for at most 15 minutes (TODO #120).
+
 ## 1.0.0-beta.8 - 2026-11-01
 
 Every page kept for offline use, zone 2 with its colour-graded texture, a lighter site (images, phones) and softer light in the viewer.

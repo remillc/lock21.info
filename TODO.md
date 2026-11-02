@@ -72,10 +72,6 @@ pm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, 
 ## Site
 
 
-- [ ] #120 The web app's download of every page (TODO #118, public/sw.js) sometimes stops halfway: seen once in about five first
-  visits on the live site in headless Chrome (2026-11-01), the service worker gone before the end (132 of 146 files, all
-  the pages kept). The next full page load finishes it in seconds, but a client-side navigation doesn't ask again
-  (Head.astro, once per full load): ask at astro:page-load too, a worker already downloading ignoring the request
 - [ ] #119 The viewer: a small circle on the model marking the point the mouse moves around, as on 3DTilesRendererJS's
   Mars page (https://nasa-ammos.github.io/3DTilesRendererJS/three/mars.html; Christian, 2026-11-01). The library has
   one (`PivotPointMesh`, used by its `EnvironmentControls`, not on touch screens), probably what that page shows; our

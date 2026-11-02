@@ -100,11 +100,20 @@ const pairs = [['/', '/en/'], ...Object.entries(englishPaths).map(([fr, en]) => 
       if ('serviceWorker' in navigator && !window.lock21Worker) {
         window.lock21Worker = true
         navigator.serviceWorker.register('/sw.js').catch(() => {})
-        // Every page kept for offline (TODO #118): asked once per full load, the page loaded and the browser idle, never
-        // with the data saver on; the service worker downloads only what the list says it doesn't have yet
+        // Every page kept for offline (TODO #118): asked once the page is loaded and the browser idle, never with the
+        // data saver on; the service worker downloads only what the list says it doesn't have yet. The browser may stop
+        // it halfway, without a word (TODO #120): asked again every 15 s until it answers, for at most 15 minutes
         const keepPages = () => {
           if (navigator.connection?.saveData) return
-          navigator.serviceWorker.ready.then((worker) => worker.active?.postMessage({ type: 'precache' }))
+          const ask = () => {
+            if (navigator.onLine) navigator.serviceWorker.ready.then((worker) => worker.active?.postMessage({ type: 'precache' }))
+          }
+          const again = setInterval(ask, 15000)
+          setTimeout(() => clearInterval(again), 900000)
+          navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data?.type === 'precache-end') clearInterval(again)
+          })
+          ask()
         }
         const whenIdle = () => (window.requestIdleCallback ? requestIdleCallback(keepPages, { timeout: 10000 }) : setTimeout(keepPages, 3000))
         if (document.readyState === 'complete') whenIdle()
