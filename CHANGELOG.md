@@ -3,6 +3,10 @@
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
 public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
+## Unreleased
+
+- Viewer: the « Avant | Après » buttons (`?compare=`, a test tool) stay after a reload, the address now keeps that parameter.
+
 ## 1.0.0-beta.9 - 2026-11-02
 
 Zone 3 fully colour-graded, in the viewer and the downloads, and an offline download that resumes when it stops.

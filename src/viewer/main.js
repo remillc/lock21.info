@@ -102,9 +102,10 @@ export function mountViewer() {
   // Without the panel (production), none: they would apply with no control to change them back
   if (showSettings) for (const [key, value] of savedSettings()) if (!params.has(key) && panelKeys.has(key)) params.set(key, value)
   const live = {}
-  // The address keeps only what makes the view shareable (viewUrl): the camera, and underwater with its season and lamp
-  const SHARED_KEYS = ['cam', 'underwater', 'season', 'lamp']
-  const shared = new URLSearchParams([...params].filter(([key]) => SHARED_KEYS.includes(key) && (key === 'cam' || params.get('underwater') === '1')))
+  // The address keeps only what makes the view shareable (viewUrl): the camera, underwater with its season and lamp, and
+  // the comparison (?compare=: its buttons stay after a reload, Christian, 2026-11-02)
+  const SHARED_KEYS = ['cam', 'compare', 'underwater', 'season', 'lamp']
+  const shared = new URLSearchParams([...params].filter(([key]) => SHARED_KEYS.includes(key) && (key === 'cam' || key === 'compare' || params.get('underwater') === '1')))
   // (the tour's step, #tour-3, kept: a reload keeps it, Christian, 2026-10-24)
   const startHash = /^#tour-\d+$/.test(location.hash) ? location.hash : ''
   history.replaceState(history.state, '', location.pathname + (shared.size ? `?${shared}` : '').replaceAll('%2C', ',') + startHash)
@@ -1956,7 +1957,8 @@ export function mountViewer() {
   const viewUrl = () => {
     const v = [...camera.position.toArray(), ...controls.target.toArray()].map((n) => n.toFixed(2)).join(',')
     const water = look.underwater ? `&underwater=1&season=${look.season}${look.lamp ? '' : '&lamp=0'}` : ''
-    return `${location.origin}${location.pathname}?cam=${v}${water}`
+    const compare = params.has('compare') ? `&compare=${encodeURIComponent(params.get('compare'))}` : ''
+    return `${location.origin}${location.pathname}?cam=${v}${compare}${water}`
   }
   /** The camera, kept for a reload (CAM_KEY) */
   function keepCamera() {
