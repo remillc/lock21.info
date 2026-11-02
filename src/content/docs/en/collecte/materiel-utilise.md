@@ -44,13 +44,18 @@ Capture mode: **4k 4:3 video** (4000 pixels x 3000 pixels). I picked this resolu
 | Video stabilization                        | off                   |
 | _Auto low light_                           | _not available_       |
 | _Protune_                                  | on                    |
-| Color (color profile)[^1]                  | _GoPro Color_         |
-| White balance[^1]                          | 6500K[^2]             |
-| ISO Min[^1]                                | *(to be completed)*   |
-| ISO Max[^1]                                | 1600 (default value)  |
-| Shutter speed[^1]                          | auto (default value)  |
-| Exposure value compensation (EV Comp)[^1]  | 0 (default value)     |
-| Sharpness[^1]                              | High (default value)  |
+| Color (color profile)<sup>1</sup>                  | _GoPro Color_         |
+| White balance<sup>1</sup>                          | 6500K<sup>2</sup>             |
+| ISO Min<sup>1</sup>                                | *(to be completed)*   |
+| ISO Max<sup>1</sup>                                | 1600 (default value)  |
+| Shutter speed<sup>1</sup>                          | auto (default value)  |
+| Exposure value compensation (EV Comp)<sup>1</sup>  | 0 (default value)     |
+| Sharpness<sup>1</sup>                              | High (default value)  |
+
+<div class="table-notes">
+<p><sup>1</sup> Available when the Protune setting is on</p>
+<p><sup>2</sup> Chosen to match the colour temperature of the lights,</p>
+</div>
 
 ## Software
 
@@ -69,6 +74,3 @@ Capture mode: **4k 4:3 video** (4000 pixels x 3000 pixels). I picked this resolu
 PowerShell scripts
 
 [Claude Code](https://claude.com/claude-code) (Anthropic, Claude Opus model): programming assistant, for the site, the 3D viewer and the model's publishing pipeline
-
-[^1]: Available when the Protune setting is on
-[^2]: Chosen to match the colour temperature of the lights,

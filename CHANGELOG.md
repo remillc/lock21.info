@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- « Matériel utilisé »: the two notes of the video settings table, under the table instead of at the end of the page.
 - « Matériel utilisé »: ImageMagick added to the software list.
 - « Extraction des photos »: the TIFF compression step, from about 34 MB to about 14 MB a frame, in LZW, lossless (TODO #117).
 - 3D viewer: a small circle marks the point pressed, with any mouse button, from the press to the release (TODO #119).
