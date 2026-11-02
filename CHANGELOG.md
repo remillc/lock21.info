@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- 3D model: zone 3 retextured again (TODO #75): 4 952 of its 30 814 photos, from dives filed under zone 2, were not colour-graded; 15 008 px, registration 14.4 mm.
 - Web app: the download of every page resumes when the browser stops the service worker halfway (seen in 2 of 7 first visits, headless Chrome): the page asks again every 15 s until the service worker answers, for at most 15 minutes (TODO #120).
 - « Suivi du travail par zone »: the table brought up to date from the Metashape projects and the data folders (transfers, frames, targets, alignment, optimization, cleaning, colour grading).
 - « Extraction des photos »: the renaming of the videos with Bulk Rename Utility, before the colour grading and the export.
