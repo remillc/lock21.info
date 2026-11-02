@@ -45,7 +45,7 @@ Mode de capture : **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution
 | Faible luminosité automatique (_Auto low light_)       | _non disponible_                |
 | _Protune_                                              | activé                          |
 | Couleur (profil colorimétrique)<sup>1</sup>                    | _Couleur GoPro_                 |
-| Équilibre des blancs<sup>1</sup>                               | 6500K<sup>2</sup>                       |
+| Équilibre des blancs<sup>1</sup>                               | 6500K                       |
 | ISO Minimum<sup>1</sup>                                        | *(à compléter)*                 |
 | ISO Maximum<sup>1</sup>                                        | 1600 (valeur par défaut)        |
 | Vitesse d'obturateur<sup>1</sup>                               | automatique (valeur par défaut) |
@@ -54,7 +54,6 @@ Mode de capture : **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution
 
 <div class="table-notes">
 <p><sup>1</sup> Disponible lorsque le paramètre Protune est activé</p>
-<p><sup>2</sup> Choisi en fonction de la température de couleur des lampes,</p>
 </div>
 
 ## Logiciels
