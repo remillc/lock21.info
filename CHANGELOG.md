@@ -11,7 +11,7 @@ Zones 3 and 4 redone (zone 3 fully colour-graded, zone 4 brighter on its vertica
 - 3D viewer: contrast 1.2 by default (Christian, 2026-11-02; was 1.3), saturation unchanged at 1.3.
 - Viewer: the « Avant | Après » buttons (`?compare=`, a test tool) stay after a reload, the address now keeps that parameter.
 - 3D model: zone 3's cut redone in the `.blend` (2026-11-02).
-- Downloads and augmented reality models rebuilt with the new textures of zones 2 and 3.
+- Downloads and augmented reality models rebuilt with the new textures of zones 2, 3 and 4.
 - English pages brought up to date: the renaming of the videos in « Photo extraction », and the tracking table.
 - 3D model: zone 3 retextured again (TODO #75): 4 952 of its 30 814 photos, from dives filed under zone 2, were not colour-graded; 15 008 px, registration 14.4 mm.
 - Web app: the download of every page resumes when the browser stops the service worker halfway (seen in 2 of 7 first visits, headless Chrome): the page asks again every 15 s until the service worker answers, for at most 15 minutes (TODO #120).
