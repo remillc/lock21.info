@@ -62,4 +62,4 @@ Règle du pouce :
 
 ## Compression des fichiers
 
-Cette étape permet de réduire considérablement la taille des images sans aucune perte de données.
+Cette étape permet de réduire considérablement la taille des images sans aucune perte de données. DaVinci Resolve rend les images en TIFF sans compression, environ 34 Mo chacune. Je les compresse ensuite en LZW, un format sans perte que Metashape lit directement, ce qui les ramène à environ 14 Mo. Le script `compress_tiffs.mjs` (avec ImageMagick) le fait sur place : chaque image n'est remplacée qu'une fois ses pixels comparés à ceux de l'originale.
