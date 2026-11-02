@@ -15,6 +15,16 @@ par plongée (`frames-lens-corrected-n10`).
 - Plongée 21 (2024-07-12, les trois vannes): un seul étalonnage, fait sur le plancher, pour toute la hauteur du mur:
   les vannes sortent jaune-olive (bleu très bas). D'où le #75.
 
+## Zone 3, reprise (2026-11-02)
+
+Le *chunk* publié de la zone 3 (« zone 3 - lens corrected - graded - clean RU=30, PA=5, RE=0.4 ») utilise aussi des images de plongées classées en zone 2: 4 952 photos sur 30 814 (le plancher du 2024-06-28, le 2024-07-12, le 2024-07-14, et une du pilier du 2024-06-28). La liste de `retexture_chunk.py` ne couvrait que les trois dossiers `zone-3`: ces photos étaient restées non étalonnées dans la texture du 2026-10-30. Mesuré sur les deux textures: 17 % de l'image change de plus de 10 sur 255, des morceaux jaunes qui se rapprochent du neutre (bleu moyen de 82 à 100).
+
+Texture refaite le 2026-11-01 (`retexture_chunk.py -k -d 2`, les `-m` des sept dossiers, en reprenant les `…-graded-flat-…` faits pour la zone 2: 15 008 px, environ 2 h 40), publiée le 2026-11-02 et adoptée par Christian. Les chemins et les 30 814 masques sont enregistrés dans le *chunk*: `relink_frame.py` n'a rien eu à changer. Recalage: 14,4 mm, le même maillage. Dans le `.blend`, seule la propriété `source` de la zone a changé.
+
+**À chaque texture refaite:** avec `--check`, la ligne « autres dossiers (gardés) » doit donner 0. Une plongée peut servir à plusieurs zones: une photo gardée ici est une photo non étalonnée dans la texture.
+
+Les *chunks* d'origine de la zone 3 (5, 6, 11, 14) pointent encore sur les dossiers `*-lens-corrected-n*` de la zone 2: à relier (`relink_frame.py -a`) avant de supprimer ces dossiers.
+
 ## Zone 2 (2026-11-01)
 
 Le *chunk* publié, dupliqué en « zone 2 - lens corrected - graded » (id 16 de `zone-2.psx`), a 15 893 photos, de cinq dossiers: le pilier et le plancher du 2024-06-28, le 2024-07-07, le 2024-07-12 et le 2024-07-14. Images égalisées par `flat_color.py`, dans les dossiers `…-graded-flat-…`, puis recompressées (`compress_tiffs.mjs`). Texture refaite le 2026-11-01 (`retexture_chunk.py -k`, Metashape 2.3.2, les `-m` des cinq dossiers: 12 944 px, 1,73 mm, environ 50 min de mélange), publiée et adoptée le même jour (Christian: « c'est bon, on garde la nouvelle texture »). Comme pour la zone 4, le *chunk* avait déjà ses nouveaux chemins enregistrés: `relink_frame.py` n'a rien eu à changer. Recalage: 2,8 mm (l'export étalonné tourné de 90°). Dans le `.blend`, seule la propriété `source` de la zone a changé: même maillage, donc pas de `swap_zone_source.py`.

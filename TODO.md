@@ -20,9 +20,10 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   `timeline_lut.py -k`), then the colour evened out across the frame (`flat_color.py`, the rig's lamps), retextured
   13 872 px in about 1 h 30, registration 13.5 mm (the graded export turned 90°, as zone 3's). Zone 2 done (2026-11-01, Christian: « c'est bon, on garde la
   nouvelle texture »): five dive folders, the colour evened out by `flat_color.py`, 15 893 photos, retextured 12 944 px
-  with the masks, registration 2.8 mm. Its earlier frames folders are still on `O:` (`*-lens-corrected-n*`,
-  `*-graded-n*`): to delete once the original chunks are relinked (`relink_frame.py -a`), with Christian's OK. Left: the
-  other zones, zone 12 first
+  with the masks, registration 2.8 mm. Zone 3 redone (2026-11-02): 4 952 of its 30 814 photos, from dives filed under
+  zone 2, had stayed ungraded; 15 008 px (tools/color-grading/README.md). Zone 2's earlier frames folders are still on
+  `O:` (`*-lens-corrected-n*`, also used by zone 3's and zone 2's original chunks; `*-graded-n*`, used by no chunk): to
+  delete once those chunks are relinked (`relink_frame.py -a`), with Christian's OK. Left: the other zones, zone 12 first
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
   - Tried and dropped (2026-10-25): a whole-texture balance before tiling (`color_correct.py`) turned the model mauve
     and flat in the viewer, whose own corrections then applied twice; the blue and red the water took are not in the
