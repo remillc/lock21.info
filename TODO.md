@@ -72,10 +72,6 @@ pm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, 
 ## Site
 
 
-- [ ] #119 The viewer: a small circle on the model marking the point the mouse moves around, as on 3DTilesRendererJS's
-  Mars page (https://nasa-ammos.github.io/3DTilesRendererJS/three/mars.html; Christian, 2026-11-01). The library has
-  one (`PivotPointMesh`, used by its `EnvironmentControls`, not on touch screens), probably what that page shows; our
-  left button (src/viewer/pointer-orbit.js) has no mark yet
 - [ ] #82 Usability audit (2026-10-26, `docs/audits/usability-2026-10-26.md`): what is left of the small
   fixes, each needing Christian's call. V23 the ☰ on the desktop home; V26 one name for the dive mode; V14
   coordinates as a map link on phones

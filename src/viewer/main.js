@@ -420,6 +420,7 @@ export function mountViewer() {
     surface: renderer.domElement,
     maxPolar: ORBIT_UP,
     requestRender: () => requestRender(),
+    mark: Object.assign(root.querySelector('.viewer-frame').appendChild(document.createElement('div')), { className: 'pivot-mark' }),
     pick: (x, y) => {
       const box = renderer.domElement.getBoundingClientRect()
       pickPointer.set(((x - box.left) / box.width) * 2 - 1, -((y - box.top) / box.height) * 2 + 1)

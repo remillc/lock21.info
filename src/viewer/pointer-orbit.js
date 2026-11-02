@@ -5,7 +5,9 @@
 // there would make). Over the sky (no point), the orbit's centre is the pivot. A pixel dragged turns by the angle a
 // pixel covers (the view's height over its angle: Christian, 2026-10-24, the pointer moved faster than the background),
 // so the background moves with the pointer; the same limit looking up (maxPolar), and a short glide after the button is
-// released, as OrbitControls' damping. Touch is left to OrbitControls and touch-nav.js.
+// released, as OrbitControls' damping. From the press to the release, a small circle marks the pivot (TODO #119, Christian,
+// 2026-11-01, as on 3DTilesRendererJS's Mars page): an element over the canvas, as the pivot stays where it is on the
+// screen. Touch is left to OrbitControls and touch-nav.js.
 import * as THREE from 'three'
 
 const UP = new THREE.Vector3(0, 1, 0)
@@ -23,8 +25,9 @@ const GLIDE_STOP = 1e-4
  * @param {(x: number, y: number) => THREE.Vector3 | null} options.pick - the model's point under a client position
  * @param {number} options.maxPolar - the most the camera may turn up (rad from straight above its orbit's centre)
  * @param {() => void} options.requestRender
+ * @param {HTMLElement} options.mark - the circle, in the canvas's frame
  */
-export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, requestRender }) {
+export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, requestRender, mark }) {
   // OrbitControls: no action for the left button; with Ctrl, Shift or Meta, panning, as before: its ROTATE pans with a
   // modifier (and its PAN rotates). Set before its own pointer-down reads it (capture phase)
   controls.mouseButtons.LEFT = null
@@ -50,6 +53,17 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
   let drag = null
   let speed = { yaw: 0, pitch: 0 }
 
+  /** The circle on the pivot; none if the pivot is behind the camera (a press over the sky, the orbit's centre) */
+  function showMark() {
+    const point = offset.copy(pivot).project(camera)
+    if (point.z > 1) return
+    const box = surface.getBoundingClientRect()
+    const frame = mark.parentElement.getBoundingClientRect()
+    mark.style.left = `${box.left - frame.left + ((point.x + 1) / 2) * box.width}px`
+    mark.style.top = `${box.top - frame.top + ((1 - point.y) / 2) * box.height}px`
+    mark.classList.add('on')
+  }
+
   /** Turns the camera and the orbit's centre around the pivot: yaw around the vertical, pitch around the view's right */
   function rotate(yaw, pitch) {
     turn.setFromAxisAngle(UP, yaw)
@@ -74,11 +88,13 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
     drag = { id: event.pointerId, x: event.clientX, y: event.clientY, time: event.timeStamp }
     speed = { yaw: 0, pitch: 0 }
     surface.setPointerCapture(event.pointerId)
+    showMark()
   })
   surface.addEventListener('pointermove', (event) => {
     if (!drag || event.pointerId !== drag.id) return
     if (!controls.enabled) {
       drag = null
+      mark.classList.remove('on')
       return
     }
     // The angle a pixel covers
@@ -100,6 +116,7 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
     // Still for a moment before release: no glide
     if (event.timeStamp - drag.time > 80) speed = { yaw: 0, pitch: 0 }
     drag = null
+    mark.classList.remove('on')
   }
   surface.addEventListener('pointerup', end)
   surface.addEventListener('pointercancel', end)

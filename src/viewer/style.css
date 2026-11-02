@@ -1803,3 +1803,31 @@ l21-tooltip {
   }
 }
 }
+
+/* The point the left button turns around (pointer-orbit.js, TODO #119): a thin white ring, as on 3DTilesRendererJS's Mars
+   page. MD3 motion: enters in 400 ms, leaves in 200 ms */
+.pivot-mark {
+  position: absolute;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+  transition: opacity 200ms cubic-bezier(0.3, 0, 0.8, 0.15), transform 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
+
+  &.on {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    transition: opacity 400ms cubic-bezier(0.05, 0.7, 0.1, 1), transform 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pivot-mark,
+  .pivot-mark.on {
+    transform: translate(-50%, -50%);
+    transition: opacity 1ms;
+  }
+}
