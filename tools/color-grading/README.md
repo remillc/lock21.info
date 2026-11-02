@@ -23,7 +23,7 @@ Texture refaite le 2026-11-01 (`retexture_chunk.py -k -d 2`, les `-m` des sept d
 
 **À chaque texture refaite:** avec `--check`, la ligne « autres dossiers (gardés) » doit donner 0. Une plongée peut servir à plusieurs zones: une photo gardée ici est une photo non étalonnée dans la texture.
 
-Les *chunks* d'origine de la zone 3 (5, 6, 11, 14) pointent encore sur les dossiers `*-lens-corrected-n*` de la zone 2: à relier (`relink_frame.py -a`) avant de supprimer ces dossiers.
+Le 2026-11-02, les *chunks* d'origine des zones 2 et 3 reliés (`relink_frame.py -a`: zone 2, 14 et 15; zone 3, 5, 6, 11 et 14), puis les dossiers `*-lens-corrected-n*` et `*-graded-n*` de la zone 2 supprimés (environ 840 Go), avec les masques plus anciens qu'ils contenaient. Ces *chunks* gardent leur modèle et leur texture; une prochaine texture prendrait les couleurs étalonnées.
 
 ## Zone 2 (2026-11-01)
 
