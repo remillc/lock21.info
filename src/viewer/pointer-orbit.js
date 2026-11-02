@@ -7,7 +7,8 @@
 // so the background moves with the pointer; the same limit looking up (maxPolar), and a short glide after the button is
 // released, as OrbitControls' damping. From the press to the release of any mouse button, a small circle marks the point
 // pressed (TODO #119, Christian, 2026-11-01 and 2026-11-02, as on 3DTilesRendererJS's Mars page): an element over the
-// canvas, placed again each frame, as panning and zooming move that point on the screen. Touch is left to OrbitControls and touch-nav.js.
+// canvas. Turning around that point leaves it where it is on the screen, so the circle stays still (placed again each
+// frame, it shook); panning and zooming move it, so the circle is placed again each frame. Touch is left to OrbitControls and touch-nav.js.
 import * as THREE from 'three'
 
 const UP = new THREE.Vector3(0, 1, 0)
@@ -38,6 +39,7 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
       pressed = pick(event.clientX, event.clientY)
       markPoint.copy(pressed ?? controls.target)
       markPointer = event.pointerId
+      markFollows = event.button !== 0 || controls.mouseButtons.LEFT !== null
       placeMark()
     }
     // Panning (right button, or left with a modifier) drags the point pressed with the pointer (Christian, 2026-10-25:
@@ -57,6 +59,7 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
   const markPoint = new THREE.Vector3()
   const markPosition = new THREE.Vector3()
   let markPointer = null
+  let markFollows = false
   let pressed = null
   const right = new THREE.Vector3()
   const offset = new THREE.Vector3()
@@ -66,6 +69,7 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
 
   /** The circle on the point pressed; none while it is behind the camera */
   function placeMark() {
+    camera.updateMatrixWorld()
     markPosition.copy(markPoint).project(camera)
     const box = surface.getBoundingClientRect()
     const frame = mark.parentElement.getBoundingClientRect()
@@ -139,7 +143,7 @@ export function createPointerOrbit({ controls, camera, surface, pick, maxPolar, 
   return {
     /** Each frame: the glide after a drag; true while it moves the camera */
     update() {
-      if (markPointer !== null) placeMark()
+      if (markPointer !== null && markFollows) placeMark()
       if (drag || !controls.enabled) return false
       if (Math.abs(speed.yaw) < GLIDE_STOP && Math.abs(speed.pitch) < GLIDE_STOP) return false
       speed = { yaw: speed.yaw * GLIDE, pitch: speed.pitch * GLIDE }
