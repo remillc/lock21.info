@@ -102,9 +102,10 @@ export function mountViewer() {
   // Without the panel (production), none: they would apply with no control to change them back
   if (showSettings) for (const [key, value] of savedSettings()) if (!params.has(key) && panelKeys.has(key)) params.set(key, value)
   const live = {}
-  // The address keeps only what makes the view shareable (viewUrl): the camera, and underwater with its season and lamp
-  const SHARED_KEYS = ['cam', 'underwater', 'season', 'lamp']
-  const shared = new URLSearchParams([...params].filter(([key]) => SHARED_KEYS.includes(key) && (key === 'cam' || params.get('underwater') === '1')))
+  // The address keeps only what makes the view shareable (viewUrl): the camera, underwater with its season and lamp, and
+  // the comparison (?compare=: its buttons stay after a reload, Christian, 2026-11-02)
+  const SHARED_KEYS = ['cam', 'compare', 'underwater', 'season', 'lamp']
+  const shared = new URLSearchParams([...params].filter(([key]) => SHARED_KEYS.includes(key) && (key === 'cam' || key === 'compare' || params.get('underwater') === '1')))
   // (the tour's step, #tour-3, kept: a reload keeps it, Christian, 2026-10-24)
   const startHash = /^#tour-\d+$/.test(location.hash) ? location.hash : ''
   history.replaceState(history.state, '', location.pathname + (shared.size ? `?${shared}` : '').replaceAll('%2C', ',') + startHash)
@@ -169,7 +170,7 @@ export function mountViewer() {
   const AR_URL = import.meta.env.PUBLIC_AR_URL || 'https://lock21.info/downloads/ar'
   // Version of the AR files, in their address: the server and the phones keep them an hour, so a rebuild (same names)
   // would otherwise show up late. Change it after each upload of rebuilt AR files (docs/augmented-reality.md)
-  const AR_VERSION = '2026-11-02'
+  const AR_VERSION = '2026-11-02-2'
   // ?ar=full: the lock at its real size (70 m) instead of on a table (the /modele/ page's "Taille réelle" QR code and link)
   const arFull = params.get('ar') === 'full'
   const arName = arFull ? 'lock-21-ar-full' : 'lock-21-ar'
@@ -655,8 +656,8 @@ export function mountViewer() {
     // colours, 1.5 matched the unlit textures' saturation on zone 3, see tone)
     saturation: saturationOf(params.has('saturation') ? params.get('saturation') : settingDefault('saturation')),
     // Contrast of the lit surfaces' colours (?contrast=0.5..2, 1 = the textures' own): their brightness stretched around a
-    // mid-grey (0.18 in linear light), the hue kept; above 1, darks darker and lights lighter. Default 1.3 (Christian,
-    // 2026-10-29; was 1)
+    // mid-grey (0.18 in linear light), the hue kept; above 1, darks darker and lights lighter. Default 1.2 (Christian,
+    // 2026-11-02; 1.3 from 2026-10-29, was 1)
     contrast: contrastOf(params.has('contrast') ? params.get('contrast') : settingDefault('contrast')),
   }
   function contrastOf(v) {
@@ -1435,8 +1436,17 @@ export function mountViewer() {
     const target = average.map((c) => c + (luminance - c) * look.neutral)
     // Clamped: a very dark or very tinted texture would otherwise get extreme gains (noise, compression blocks)
     // (?balance= of the way from no change, 1, to the full gain)
-    const gain = (t, m) => 1 + (Math.min(Math.max(t / m, 0.4), 3) - 1) * look.balance
-    for (const e of measured) gains.set(e.id, new THREE.Color(...target.map((t, c) => gain(t, e.color[c]))))
+    const luma = (rgb) => 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]
+    for (const e of measured) {
+      let ratios = target.map((t, c) => Math.min(Math.max(t / e.color[c], 0.4), 3))
+      // Zone 4: its texture brightened on purpose (tools/color-grading/orient_gain.py): only its hue is balanced, the
+      // balance would otherwise take the brightness back (Christian, 2026-11-02)
+      if (e.id === 'zone-4') {
+        const brightness = luma(ratios.map((r, c) => r * e.color[c])) / luma(e.color)
+        ratios = ratios.map((r) => r / brightness)
+      }
+      gains.set(e.id, new THREE.Color(...ratios.map((r) => 1 + (r - 1) * look.balance)))
+    }
   }
   // New gains: only the zones' material colours change
   function updateZoneColors() {
@@ -1956,7 +1966,8 @@ export function mountViewer() {
   const viewUrl = () => {
     const v = [...camera.position.toArray(), ...controls.target.toArray()].map((n) => n.toFixed(2)).join(',')
     const water = look.underwater ? `&underwater=1&season=${look.season}${look.lamp ? '' : '&lamp=0'}` : ''
-    return `${location.origin}${location.pathname}?cam=${v}${water}`
+    const compare = params.has('compare') ? `&compare=${encodeURIComponent(params.get('compare'))}` : ''
+    return `${location.origin}${location.pathname}?cam=${v}${compare}${water}`
   }
   /** The camera, kept for a reload (CAM_KEY) */
   function keepCamera() {

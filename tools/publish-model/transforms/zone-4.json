@@ -1,7 +1,7 @@
 {
   "zone": "zone 4",
-  "source": "O:/modeles/zone-4/zone 4 - lens corrected - graded - DepthMapQuality=low;FaceCount=custom (36.1M faces).glb",
-  "source_mtime": 1793363051.2360947,
+  "source": "O:\\modeles\\zone-4\\zone 4 - lens corrected - graded - DepthMapQuality=low;FaceCount=custom - orient gain (36.1M faces).glb",
+  "source_mtime": 1793628396.337131,
   "blender_vertices": 788087,
   "scale": 0.9999908133434559,
   "rotation_deg_from_identity": 90.00580453028581,

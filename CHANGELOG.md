@@ -5,8 +5,12 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## 1.0.0-beta.9 - 2026-11-02
 
-Zone 3 fully colour-graded, in the viewer and the downloads, and an offline download that resumes when it stops.
+Zones 3 and 4 redone (zone 3 fully colour-graded, zone 4 brighter on its vertical surfaces), in the viewer and the downloads, softer contrast in the viewer, and an offline download that resumes when it stops.
 
+- 3D model: zone 4 brightened by the surface's orientation (Christian, 2026-11-02, TODO #121): its texture was the darkest, and the light from above darkens what is vertical; gains 3 on what is vertical and 1.05 on what is horizontal, in the texture (`tools/color-grading/orient_gain.py`), so the downloads have them too; the colour balance now only sets this zone's hue.
+- 3D viewer: contrast 1.2 by default (Christian, 2026-11-02; was 1.3), saturation unchanged at 1.3.
+- Viewer: the « Avant | Après » buttons (`?compare=`, a test tool) stay after a reload, the address now keeps that parameter.
+- 3D model: zone 3's cut redone in the `.blend` (2026-11-02).
 - Downloads and augmented reality models rebuilt with the new textures of zones 2 and 3.
 - English pages brought up to date: the renaming of the videos in « Photo extraction », and the tracking table.
 - 3D model: zone 3 retextured again (TODO #75): 4 952 of its 30 814 photos, from dives filed under zone 2, were not colour-graded; 15 008 px, registration 14.4 mm.
