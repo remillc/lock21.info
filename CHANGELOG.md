@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- 3D model: zone 4 brightened by the surface's orientation (Christian, 2026-11-02, TODO #121): its texture was the darkest, and the light from above darkens what is vertical; gains 2.25 on what is vertical and 1.05 on what is horizontal, in the texture (`tools/color-grading/orient_gain.py`), so the downloads have them too.
 - 3D viewer: contrast 1.2 by default (Christian, 2026-11-02; was 1.3), saturation unchanged at 1.3.
 - Viewer: the « Avant | Après » buttons (`?compare=`, a test tool) stay after a reload, the address now keeps that parameter.
 
