@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#121**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#122**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -21,9 +21,13 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   13 872 px in about 1 h 30, registration 13.5 mm (the graded export turned 90°, as zone 3's). Zone 2 done (2026-11-01, Christian: « c'est bon, on garde la
   nouvelle texture »): five dive folders, the colour evened out by `flat_color.py`, 15 893 photos, retextured 12 944 px
   with the masks, registration 2.8 mm. Zone 3 redone (2026-11-02): 4 952 of its 30 814 photos, from dives filed under
-  zone 2, had stayed ungraded; 15 008 px (tools/color-grading/README.md). Zone 2's earlier frames folders are still on
-  `O:` (`*-lens-corrected-n*`, also used by zone 3's and zone 2's original chunks; `*-graded-n*`, used by no chunk): to
-  delete once those chunks are relinked (`relink_frame.py -a`), with Christian's OK. Left: the other zones, zone 12 first
+  zone 2, had stayed ungraded; 15 008 px (tools/color-grading/README.md). Zone 2's earlier frames folders deleted (2026-11-02, about 840 GB): the
+  original chunks of zones 2 and 3 relinked. Left: the other zones, zone 12 first
+- [ ] #121 Zone 4 looks too dark, too contrasted beside zones 2 and 3 (Christian, 2026-11-02). Measured on the textures: mean
+  luma 86 against 109 and 111, 5th percentile 43 against 72 and 75, spread 30 against 21 and 22. Already so before the grading
+  (84 to 86), so it comes from the dive (2024-08-18) and neither `timeline_lut.py` nor `flat_color.py` corrected it. To
+  try and judge: a tone step on its frames (new folder, then retexture), or first on the published texture for a quick
+  before/after. The downloads would then be redone
 - [ ] #5 Colour balance and green removal: bake them into the downloadable model
   - Tried and dropped (2026-10-25): a whole-texture balance before tiling (`color_correct.py`) turned the model mauve
     and flat in the viewer, whose own corrections then applied twice; the blue and red the water took are not in the
