@@ -62,6 +62,8 @@ Mode de capture : **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution
 
 [Blender v4.2](https://www.blender.org/)
 
+[ImageMagick v7.1](https://imagemagick.org/) : compression des images TIFF, sans perte
+
 [Navionics Boating](https://www.navionics.com/) (Garmin) : carte des profondeurs des abords de l'écluse, d'où vient le terrain qui entoure le modèle 3D
 
 Scripts PowerShell

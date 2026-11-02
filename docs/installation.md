@@ -57,6 +57,7 @@ autre dossier, remplacer ce chemin partout.
 | **Blender** | 5.2 | [blender.org](https://www.blender.org/download/) | une carte graphique NVIDIA accélère les cuissons (OptiX) |
 | **Python** | 3.12 | Microsoft Store, ou [python.org](https://www.python.org/) | seulement pour les outils; pas de bibliothèque à installer, sauf pour Google Earth (étape 3) |
 | **Obj2Tiles** | 1.8.0 | [github.com/OpenDroneMap/Obj2Tiles/releases](https://github.com/OpenDroneMap/Obj2Tiles/releases) | décompresser dans `O:\publishing\bin\obj2tiles-1.8.0\` (l'exécutable et `ktx.dll`) |
+| **ImageMagick** | 7.1 | [imagemagick.org](https://imagemagick.org/) | la commande `magick`, pour compresser les TIFF (`tools/color-grading/compress_tiffs.mjs`) |
 | **GitHub CLI** (`gh`) | récente | [cli.github.com](https://cli.github.com/) | facultatif: publier le site en ligne de commande. Se connecter une fois: `gh auth login` |
 | **Agisoft Metashape Professional** | 2.3.2 | licence du projet | ses scripts (`tools/color-grading/`) se lancent dans Metashape: *Tools › Run Script* |
 

@@ -62,6 +62,8 @@ Capture mode: **4k 4:3 video** (4000 pixels x 3000 pixels). I picked this resolu
 
 [Blender v4.2](https://www.blender.org/)
 
+[ImageMagick v7.1](https://imagemagick.org/): lossless compression of the TIFF frames
+
 [Navionics Boating](https://www.navionics.com/) (Garmin): depth chart of the area around the lock, where the terrain around the 3D model comes from
 
 PowerShell scripts
