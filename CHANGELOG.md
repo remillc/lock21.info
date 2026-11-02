@@ -3,8 +3,12 @@
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
 public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
-## Unreleased
+## 1.0.0-beta.9 - 2026-11-02
 
+Zone 3 fully colour-graded, in the viewer and the downloads, and an offline download that resumes when it stops.
+
+- Downloads and augmented reality models rebuilt with the new textures of zones 2 and 3.
+- English pages brought up to date: the renaming of the videos in « Photo extraction », and the tracking table.
 - 3D model: zone 3 retextured again (TODO #75): 4 952 of its 30 814 photos, from dives filed under zone 2, were not colour-graded; 15 008 px, registration 14.4 mm.
 - Web app: the download of every page resumes when the browser stops the service worker halfway (seen in 2 of 7 first visits, headless Chrome): the page asks again every 15 s until the service worker answers, for at most 15 minutes (TODO #120).
 - « Suivi du travail par zone »: the table brought up to date from the Metashape projects and the data folders (transfers, frames, targets, alignment, optimization, cleaning, colour grading).
