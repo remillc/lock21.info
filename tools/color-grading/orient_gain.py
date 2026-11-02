@@ -12,7 +12,7 @@ de la zone (`O:/publishing/prepared/<zone>/<zone>.obj`, mêmes coordonnées de t
 3. Un nouveau .glb: le même maillage, la nouvelle texture, les gains notés dans `asset.extras.orientGain`. Le .glb
    d'origine n'est pas touché, rien n'est écrasé, et un .glb déjà corrigé est refusé (les gains se multiplieraient).
 
-Usage: python -I orient_gain.py -z zone-4 -s <export.glb> -o <nouvel export.glb> [-V 2.25] [-F 1.05] [-g <carte.png>]
+Usage: python -I orient_gain.py -z zone-4 -s <export.glb> -o <nouvel export.glb> [-V 3] [-F 1.05] [-g <carte.png>]
 """
 import argparse
 import io
@@ -25,7 +25,7 @@ p = argparse.ArgumentParser(prog="orient_gain.py", description=__doc__, formatte
 p.add_argument("-z", "--zone", required=True, help="dossier préparé de la zone, ex. zone-4")
 p.add_argument("-s", "--source", required=True, help="export .glb de la zone (celui de la propriété source du .blend)")
 p.add_argument("-o", "--out", required=True, help="nouvel export .glb")
-p.add_argument("-V", "--vertical", type=float, default=2.25, help="gain sur ce qui est vertical (défaut 2,25)")
+p.add_argument("-V", "--vertical", type=float, default=3.0, help="gain sur ce qui est vertical (défaut 3)")
 p.add_argument("-F", "--floor", type=float, default=1.05, help="gain sur ce qui est horizontal (défaut 1,05)")
 p.add_argument("-g", "--gain-map", help="écrit la carte du gain en PNG, pour la regarder")
 p.add_argument("--prepared", default="O:/publishing/prepared", help="dossier des zones préparées")
