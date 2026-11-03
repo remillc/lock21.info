@@ -1,5 +1,6 @@
 ---
 title: Dense point cloud
+description: "The dense point cloud in Agisoft Metashape: run by a workflow, filtered by confidence and by colour, point spacing."
 sidebar:
   order: 3
 ---

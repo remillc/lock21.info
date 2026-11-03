@@ -33,10 +33,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 ## Site
 
 
-- [ ] #84 Usability audit: content, for Christian. V16 a « voir
-  dans le modèle 3D » link per zone; V30 a caption under the viewer (underwater, violet = not yet scanned); V32 a
-  description per page; V33 labels (« Zones de l'écluse »; « Effet de banane » and « Nuage de points dense » done); V34
-  About and Thanks last in the sidebar
 - [ ] #85 Usability audit: what agents can't settle. V31 wheel zoom from the start view on a desktop with a GPU; a
   20-minute test with three to five people, in French and English (the eight tasks in the report's « A test with real
   people »)

@@ -146,10 +146,8 @@ export default defineConfig({
       },
       sidebar: [
         { label: 'Modèle 3D', translations: { en: '3D model' }, link: '/modele' },
-        { label: 'À propos', translations: { en: 'About' }, link: '/a-propos' },
-        { label: 'Remerciements', translations: { en: 'Thanks' }, link: '/remerciements' },
         { label: "L'écluse 21", translations: { en: 'Lock 21' }, link: '/ecluse-21' },
-        { label: 'Découpage du site', translations: { en: 'Site zones' }, link: '/decoupage-site' },
+        { label: "Zones de l'écluse", translations: { en: 'Site zones' }, link: '/decoupage-site' },
         // collapsed: each group closed in the page's HTML, except the current page's (Starlight opens that one), so that
         // nothing opens then closes as the page loads (TODO #87; the memory of the open groups: Head.astro)
         { label: 'La collecte des données', translations: { en: 'Data collection' }, collapsed: true, items: [{ autogenerate: { directory: 'collecte' } }] },
@@ -157,6 +155,9 @@ export default defineConfig({
         { label: 'Problèmes rencontrés', translations: { en: 'Problems encountered' }, collapsed: true, items: [{ autogenerate: { directory: 'problemes' } }] },
         // The test write-ups (Christian, 2026-11-01; out of the sidebar until then)
         { label: 'Tests effectués', translations: { en: 'Tests performed' }, collapsed: true, items: [{ autogenerate: { directory: 'tests' } }] },
+        // Last (usability audit V34): the next page after the notebook's, not before it
+        { label: 'À propos', translations: { en: 'About' }, link: '/a-propos' },
+        { label: 'Remerciements', translations: { en: 'Thanks' }, link: '/remerciements' },
       ],
     }),
     // The notebook's images: sizes for the content column, the first one loaded first (content-images.mjs)

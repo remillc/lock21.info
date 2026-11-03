@@ -118,7 +118,7 @@
   "notfound_text": "Cette page n'existe pas ou a changé d'adresse. On remonte ?",
   "notfound_home": "Accueil",
   "notfound_model": "Modèle 3D",
-  "notfound_zones": "Découpage du site",
+  "notfound_zones": "Zones de l'écluse",
   "notfound_dive": "PLONGÉE EN COURS",
   "notfound_alarm": "HORS LIMITE",
   "notfound_bottom": "fond de l'écluse : {ft} pi ({m} m)",

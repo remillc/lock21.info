@@ -1,5 +1,6 @@
 ---
 title: Building the models
+description: "Each zone's models generated in Metashape: face density, texture resolution and the detailed export the zebra mussels' relief needs."
 sidebar:
   order: 4
 ---
