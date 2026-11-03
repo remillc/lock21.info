@@ -7,7 +7,7 @@ head:
 description: "Lock 21 of the Cornwall Canal: its depth, the current, its size, its history up to the 1958 flooding, and links to learn more."
 ---
 
-Lock 21 lies under 60 feet (18.3 m) of water in the St. Lawrence, near Long Sault, Ontario. The tops of the piers are at 40 feet (12 m). The current is strong: in the lock I [measured](/en/problemes/fort-courant-canal) about 35 feet per minute (10.7 m/min) in June 2024; it is stronger over the spillway.
+Lock 21 lies under 60 feet (18.3 m) of water in the St. Lawrence, near Long Sault, Ontario. The tops of the piers are at 40 feet (12 m). The current is strong: in the lock it was [measured](/en/problemes/fort-courant-canal) at about 35 feet per minute (10.7 m/min) in June 2024. It is stronger over the spillway.
 
 <div class="facts">
 <p class="fact"><span>Depth</span><b>60 ft (18.3 m)</b></p>

@@ -21,7 +21,7 @@ The face size for the high-resolution models was set to 2mm `<sup>`2 `</sup>, th
 
 ## Resolution for web publishing
 
-Publishing on [lock21.info/modele](/en/modele) starts from the most detailed export of each zone. The publishing pipeline (`tools/publish-model/`) simplifies it on its own: I no longer have to export a separate "web" model.
+Publishing on [lock21.info/modele](/en/modele) starts from the most detailed export of each zone. The publishing pipeline (`tools/publish-model/`) simplifies it on its own: there is no longer a separate “web” model to export.
 
 ### Faces / area ratio
 
@@ -34,4 +34,4 @@ The distant levels are lightened even more: about 40,000 faces per zone for the 
 
 ### Relief (zebra mussels)
 
-For the relief of the mussels (1 to 3 cm) to stand out in the viewer, you need a fine geometry export, with edges of about 1 cm or less (e.g. zone 12: 13 M faces, about 7 mm). This export doesn't need a texture and must come from the same chunk as the published export. With *depth maps* in `low` quality, the model stays too coarse, even with lots of faces: that's why I'm redoing zone 4 in `medium` quality.
+For the relief of the mussels (1 to 3 cm) to stand out in the viewer, you need a fine geometry export, with edges of about 1 cm or less (e.g. zone 12: 13 M faces, about 7 mm). This export doesn't need a texture and must come from the same chunk as the published export. With *depth maps* in `low` quality, the model stays too coarse, even with lots of faces: that's why zone 4 was redone in `medium` quality.

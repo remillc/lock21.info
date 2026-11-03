@@ -5,7 +5,7 @@ sidebar:
   order: 0
 ---
 
-Underwater, two lights fall on what I film: daylight, coming down from the surface, and the four lights of the [rig](/en/collecte/rig#the-lights), white LEDs at 6000 K. Water doesn't let every colour through the same way: it absorbs red first and, in the canal's murky water, a good part of the blue too. The more water the light goes through, the more the image turns green-yellow. So daylight changes with depth, and the lights' colour with the distance between the rig and what it films.
+Underwater, two lights fall on what is filmed: daylight, coming down from the surface, and the four lights of the [rig](/en/collecte/rig#the-lights), white LEDs at 6000 K. Water doesn't let every colour through the same way: it absorbs red first and, in the canal's murky water, a good part of the blue too. The more water the light goes through, the more the image turns green-yellow. So daylight changes with depth, and the lights' colour with the distance between the rig and what it films.
 
 <figure id="absorption">
 
@@ -14,7 +14,7 @@ Underwater, two lights fall on what I film: daylight, coming down from the surfa
 <figcaption>Water absorbs the colours of light, red first. Daylight, which goes through the whole depth, arrives green-yellow. The lights, a short distance from the subject, keep almost all their colours, which makes it possible to restore the colours the ambient light has lost.</figcaption>
 </figure>
 
-In the camera, the white balance stays fixed at 6500 K ([Gear used](/en/collecte/materiel-utilise)). The correction comes afterward in DaVinci Resolve, based on the colour chart filmed at the start of each dive, underexposed by one stop ([The colour chart is overexposed](/en/problemes/charte-couleurs-surexposee)). On some dives I filmed the chart at two heights, on the floor and halfway up, and made a grade for each ([Colour calibration](/en/problemes/calibration-couleurs)).
+In the camera, the white balance stays fixed at 6500 K ([Gear used](/en/collecte/materiel-utilise)). The correction comes afterward in DaVinci Resolve, based on the colour chart filmed at the start of each dive, underexposed by one stop ([The colour chart is overexposed](/en/problemes/charte-couleurs-surexposee)). On some dives the chart was filmed at two heights, on the floor and halfway up, with a grade for each ([Colour calibration](/en/problemes/calibration-couleurs)).
 
 ## The added correction
 
