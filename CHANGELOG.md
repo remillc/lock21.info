@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Publishing: `publish_zones.mjs` bakes each zone's relief too, so `model:post-modified` is enough and a zone can't go online without it; each zone tiled once instead of twice; the detailed exports in `zone-high.json`; `--no-relief` to skip it, `relief_zones.mjs` for the relief alone (TODO #21).
 - Home page: a new image, the 3D viewer's start view instead of zone 12 alone, and its link opens the viewer on that view (TODO #122).
 - The menu on wide screens on the home and 404 pages too (usability audit V23): a ☰ as on the model's page, and on large screens the home pages have the navigation column itself, always visible, without the ☰; their bar as wide as on the notebook pages.
 - 3D viewer: the dive mode has one name, « Plonger » / “Dive”, on its button, its help and the model page (usability audit V26).

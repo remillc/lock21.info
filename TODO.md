@@ -34,11 +34,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
 
 - [ ] #17 Add a workflow page to the site (`6. publication.md`) once the pipeline is stable
 
-### Relief and lamp bands (relief on every zone since 2026-10-19; the wet look removed on 2026-10-25)
-
-- [ ] #21 Relief: fold the relief steps (`relief_zones.mjs`) into `publish_zones.mjs`, so that one command republishes a
-  zone with its relief
-
 ### Virtual reality (idea)
 
 - [ ] #27 VR option on lock21.info (WebXR, three.js): view the model in a headset, either

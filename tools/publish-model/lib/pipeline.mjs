@@ -104,6 +104,46 @@ export const logLines = (log, pattern) => readFileSync(log, 'utf8').split(/\r?\n
 /** Prints the log's lines that match, indented under their zone. */
 export const showLog = (log, pattern) => logLines(log, pattern).forEach((l) => console.log(`   ${l}`))
 
+/**
+ * The zones' detailed exports (zone-high.json), full paths by zone name, for the zones whose source is a low-resolution one.
+ * @returns {Map<string, string>}
+ */
+export function highExports() {
+  const entries = Object.entries(readJson(join(PUBLISH_DIR, 'zone-high.json'))).filter(([zone]) => !zone.startsWith('_'))
+  return new Map(entries.map(([zone, path]) => [zone, join(data, path)]))
+}
+
+/**
+ * Bakes a zone's normal map (bake_relief.py) from its detailed export onto its prepared mesh, into `relief`, with a copy
+ * of the prepared zone that references the map, ready for tile_zone.mjs. A map already baked (newer than the prepared
+ * mesh, from the same export, noted beside it) is used again, unless `rebake`.
+ * @param {{ zone: string, prepared: string, relief: string, high?: string, blend?: string, blender: string, log: string, rebake?: boolean }} o
+ * @returns {boolean} the map is there
+ */
+export function bakeRelief({ zone, prepared, relief, high, blend, blender, log, rebake = false }) {
+  const slug = zone.replaceAll(' ', '-')
+  const normal = join(relief, `${slug}-normal.png`)
+  const from = join(relief, `${slug}-normal-from.txt`)
+  const highPath = high ?? 'source'
+  const obj = join(prepared, `${slug}.obj`)
+  const fresh = existsSync(normal) && existsSync(from) && statSync(normal).mtimeMs > statSync(obj).mtimeMs && readText(from).trim() === highPath
+  if (fresh && !rebake) {
+    console.log(`   carte existante réutilisée: ${normal}`)
+    return true
+  }
+  // What an earlier bake left must not pass for this one's
+  const before = logLines(log, /^\[relief\] done/i).length
+  const args = ['-z', zone, '-p', prepared, '-o', relief, ...(high ? ['--high', high] : []), ...(blend ? ['-b', blend] : [])]
+  run(blender, ['-b', '--factory-startup', '--python', join(PUBLISH_DIR, 'bake_relief.py'), '--', ...args], { log, check: false })
+  showLog(log, /^\[relief\]|^Traceback|^\w*Error|assert/i)
+  if (logLines(log, /^\[relief\] done/i).length <= before) {
+    console.log(`   ÉCHEC de la cuisson, voir ${log}`)
+    return false
+  }
+  writeFileSync(from, highPath)
+  return true
+}
+
 /** The name of a new version: the local date and time, yyyy-MM-dd-HHmm. */
 export function newVersion() {
   const d = new Date()
