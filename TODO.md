@@ -37,9 +37,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   20-minute test with three to five people, in French and English (the eight tasks in the report's « A test with real
   people »)
 
-- [ ] #125 Heading anchors as plain slugs, no escaped characters in the address (Christian, 2026-11-03): `#état-des-zones` shows as
-  `#%C3%A9tat-des-zones`, to become `#etat-des-zones`; the links that use them updated (`/collecte/materiel-utilise#caméra`…), the
-  former anchors still working where other sites may point to them
 - [ ] #93 Document the gear (Christian, 2026-10-26): his own photo of the GoPro Hero6 Black in its housing, to replace
   GoPro's product photo (« Matériel utilisé », Caméra); « Le rig » (`collecte/rig.md`, since 2026-10-26: photos of
   2024-05-16 and 2024-06-14, Sylvain Marcotte's 3D model) still has one « à compléter »: the rig's construction
