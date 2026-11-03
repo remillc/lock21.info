@@ -92,7 +92,7 @@ commandes et rédige des textes à la demande de Christian, qui décide, vérifi
 **Fait par l'IA, à la demande et sous le contrôle de Christian:**
 
 - le code: le visualiseur 3D (`src\viewer\`), les composants et les styles du site (`src\`), les outils de publication
-  (`tools\`, scripts Blender, Node et PowerShell), la configuration (Cloudflare, GitHub Actions);
+  (`tools\`, scripts Blender et Node), la configuration (Cloudflare, GitHub Actions);
 - l'exécution des étapes de publication sur l'ordinateur de Christian (guide **Traiter le fichier .blend**: vérifier,
   tuiles, relief, contrôle, téléchargements); la mise en ligne (envoi vers R2, publication du site, versions) et toute
   fusion dans `main` seulement après l'accord de Christian;

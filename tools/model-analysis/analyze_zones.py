@@ -7,7 +7,7 @@ une recommandation par zone.
 
 Lecture seule: le fichier .blend n'est jamais sauvegardé.
 
-Usage (voir run.ps1):
+Usage (voir run.mjs):
     blender -b <fichier.blend> --factory-startup --python analyze_zones.py -- <thresholds.json> <dossier de sortie>
 """
 import bpy

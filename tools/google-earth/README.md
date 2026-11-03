@@ -84,7 +84,7 @@ npm run downloads:upload
 
 Le KMZ du site (`t700k\network\lock-21.kmz`, copié dans `public/downloads/`) ne change que si l'adresse de la liste
 change. Essai local du réseau: `make_kmz.py ... --network http://localhost:8083`, puis
-`serve-tiles.ps1 -TilesRoot O:\publishing\downloads\google-earth\t700k\network -Port 8083`.
+`node tools\publish-model\serve_tiles.mjs -T O:\publishing\downloads\google-earth\t700k\network -p 8083`.
 
 `make_model.py`: `-t/--triangles` (budget total), `-s/--size` (côté maximal des textures), `--zone-size zone-3=4096`
 (texture d'une zone), `-c/--context-share` (part du budget pour le contexte, 0,1 par défaut), `--zones` (par défaut

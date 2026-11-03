@@ -21,7 +21,7 @@ export async function zonesOnline() {
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     /** @type {{ tilesets: { id: string, url: string, added?: string }[], updated?: string }} */
     const manifest = await response.json()
-    // The zone added last: the latest "added" date (first publication, update_manifest.py); zones without one were
+    // The zone added last: the latest "added" date (first publication, updateManifest in tools/publish-model/lib/pipeline.mjs); zones without one were
     // published before it was recorded. A republished zone (new version in its url) doesn't count as added. With no
     // date at all (manifest from before), the highest version ("<zone>/<yyyy-MM-dd-HHmm>/tileset.json") decides.
     const latest = manifest.tilesets

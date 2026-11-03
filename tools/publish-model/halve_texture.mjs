@@ -1,4 +1,4 @@
-// Halves a zone's texture for its light tile set (tile_zone.ps1 -Light): phones and tablets, whose frames are far
+// Halves a zone's texture for its light tile set (tile_zone.mjs --light): phones and tablets, whose frames are far
 // smaller than a computer's, load tiles with textures four times lighter (Christian, 2026-10-24: an old iPad and an
 // iPhone 14 waited one to two minutes). The size stays a multiple of 32 px: Obj2Tiles halves the texture at each
 // coarser level (3 times for a long zone, 4 levels), and a KTX2 texture whose size is not a multiple of 4 can show
