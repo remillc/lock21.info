@@ -142,7 +142,7 @@ filled at start, and scripts call `icon(name, size)`. Outline icons take `-outli
 native nesting; SCSS (`lang="scss"`, `.scss` files) only where Sass is needed (a loop, a mixin: `DiveLog.astro`;
 `tokens.scss`, `custom.scss`). Rules are nested by default: a rule's states and parts inside it (`&:hover`,
 `&::before`, `&[open]`, `.child`), and its variants too, a class or an attribute on the same element (`rect { &.online
-{} &.surveyed {} }`, `.button { &.signal {} }`, `&[hidden]`), never a separate `rect.online {}` beside `rect {}`
+{} &.unsurveyed {} }`, `.button { &.signal {} }`, `&[hidden]`), never a separate `rect.online {}` beside `rect {}`
 (Christian, 2026-10-30: the same element's look in one place). Left flat: a rule in another context than its base (a
 media or container query, `@starting-style`, which stays flat with its whole selector), and code copied from
 Starlight (`PageFrame.astro`). One exception, in `.astro` files: only the same element's states are nested, never a

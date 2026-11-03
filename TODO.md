@@ -37,10 +37,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   20-minute test with three to five people, in French and English (the eight tasks in the report's « A test with real
   people »)
 
-- [ ] #123 Bug (Christian, 2026-11-03): on `/decoupage-site#fig-01`, clicking the image to enlarge it shows it shifted to the left
-  (the lightbox, `public/scripts/image-zoom.js`)
-- [ ] #124 Zone map (`/decoupage-site#état-des-zones`, Christian, 2026-11-03): remove the state « relevée, à venir », its zones
-  shown as « pas encore relevée » (`ZoneMap.astro`)
 - [ ] #125 Heading anchors as plain slugs, no escaped characters in the address (Christian, 2026-11-03): `#état-des-zones` shows as
   `#%C3%A9tat-des-zones`, to become `#etat-des-zones`; the links that use them updated (`/collecte/materiel-utilise#caméra`…), the
   former anchors still working where other sites may point to them

@@ -264,7 +264,6 @@
   "viewer_helpClose": "Fermer",
   "zonemap_label": "Plan des zones de l’écluse et leur état",
   "zonemap_online": "en ligne",
-  "zonemap_surveyed": "relevée, à venir",
   "zonemap_unsurveyed": "pas encore relevée",
   "zonemap_zone": "Zone {n} : {state}"
 }

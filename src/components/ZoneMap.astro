@@ -3,10 +3,8 @@
 // (src/data/zoneMap.js), each in its state, a link to its description on the « Zones de l'écluse » page. On that page
 // (a live legend beside the drawing) and on « Suivi du travail par zone ».
 // - online: the 3D model's manifest at build (src/lib/manifest.js, as the home page's count), the secondary colour;
-// - surveyed, to come: named in the dive log (src/lib/diveLog.js, the « Zones » column), outlined;
-// - not surveyed yet: dashed grey, as the 3D viewer's mockups of the zones not yet digitised (Christian, 2026-10-30:
+// - else not surveyed yet: dashed grey, as the 3D viewer's mockups of the zones not yet digitised (Christian, 2026-10-30:
 //   the same grey on these pages; violet before, the mockups' former colour).
-import { dives } from '../lib/diveLog'
 import { localPath, pageLang } from '../lib/i18n'
 import { zonesOnline } from '../lib/manifest'
 import { viewBox, zones } from '../data/zoneMap'
@@ -15,10 +13,9 @@ import { m } from '../paraglide/messages.js'
 const lang = pageLang(Astro.locals)
 const o = { locale: lang }
 const online = new Set((await zonesOnline()).ids)
-const surveyed = new Set(dives.flatMap((dive) => dive.zones.split(/[,\s]+/).map(Number).filter(Number.isFinite)))
 /** @param {number} zone */
-const state = (zone) => (online.has(zone) ? 'online' : surveyed.has(zone) ? 'surveyed' : 'unsurveyed')
-const words = { online: m.zonemap_online({}, o), surveyed: m.zonemap_surveyed({}, o), unsurveyed: m.zonemap_unsurveyed({}, o) }
+const state = (zone) => (online.has(zone) ? 'online' : 'unsurveyed')
+const words = { online: m.zonemap_online({}, o), unsurveyed: m.zonemap_unsurveyed({}, o) }
 // The zones described on « Zones de l'écluse » (1 to 25), their headings' anchors
 const page = localPath('/decoupage-site', lang)
 const counts = Object.fromEntries(Object.keys(words).map((s) => [s, zones.filter((z) => state(z.zone) === s).length]))
@@ -73,10 +70,6 @@ const counts = Object.fromEntries(Object.keys(words).map((s) => [s, zones.filter
         fill: var(--md-sys-color-secondary);
         stroke: var(--md-sys-color-secondary);
       }
-      &.surveyed {
-        fill: var(--md-sys-color-surface-container);
-        stroke: var(--md-sys-color-on-surface-variant);
-      }
       &.unsurveyed {
         fill: color-mix(in srgb, var(--unsurveyed) 14%, transparent);
         stroke: var(--unsurveyed);
@@ -96,9 +89,6 @@ const counts = Object.fromEntries(Object.keys(words).map((s) => [s, zones.filter
       }
       &.online {
         fill: var(--md-sys-color-on-secondary);
-      }
-      &.surveyed {
-        fill: var(--md-sys-color-on-surface);
       }
       &.unsurveyed {
         fill: var(--md-sys-color-on-surface-variant);
@@ -149,9 +139,6 @@ const counts = Object.fromEntries(Object.keys(words).map((s) => [s, zones.filter
 
       &.online {
         background: var(--md-sys-color-secondary);
-      }
-      &.surveyed {
-        border: 2px solid var(--md-sys-color-on-surface-variant);
       }
       &.unsurveyed {
         border: 2px dashed var(--unsurveyed);

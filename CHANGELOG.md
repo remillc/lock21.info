@@ -5,6 +5,8 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Lightbox: a zoomed image narrower than the screen stays centred, no longer against the left edge (zone drawing).
+- Zone map: two states, online and not surveyed yet; « relevée, à venir » removed, its zones (5, 14, 15, 19) now shown as not surveyed yet.
 - Zones page: a link to the 3D model under each online zone (usability audit V16); renamed « Zones de l'écluse » in French (V33). About and Thanks last in the menu (V34). Six processing pages get a description (V32; TODO #84).
 - The site's pages in the impersonal voice of Christian's own: 14 sentences no longer in the first person (`.claude/skills/natural-writing/style-guide.md`).
 - 3D viewer: the left button turns the view faster (1.5 times the pointer's move), and the right button pans a little faster.
