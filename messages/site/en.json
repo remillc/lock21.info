@@ -264,7 +264,6 @@
   "viewer_helpClose": "Close",
   "zonemap_label": "Map of the lock’s zones and their state",
   "zonemap_online": "online",
-  "zonemap_surveyed": "surveyed, to come",
   "zonemap_unsurveyed": "not surveyed yet",
   "zonemap_zone": "Zone {n}: {state}"
 }

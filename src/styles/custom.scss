@@ -445,14 +445,17 @@
     }
 
     // Zoom (image-zoom.js): a magnifier where the image has more pixels than shown; zoomed, the image at its own size
-    // in the figure, which scrolls; the caption hidden meanwhile
+    // in the figure, which scrolls; the caption hidden meanwhile. Centred on the side where it fits in the figure (a
+    // tall image is often narrower than the screen): auto margins, which give way to scrolling on the side where it
+    // doesn't, where centring would put its start out of reach
     &.zoomable img {
       cursor: zoom-in;
     }
 
     &.zoomed {
       .lightbox-figure {
-        display: block;
+        align-items: flex-start;
+        justify-content: flex-start;
         height: 100%;
         overflow: auto;
         overscroll-behavior: contain;
@@ -460,6 +463,8 @@
       }
 
       img {
+        flex: none;
+        margin: auto;
         max-width: none;
         max-height: none;
         border-radius: 0;
