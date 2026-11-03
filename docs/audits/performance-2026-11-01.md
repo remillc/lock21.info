@@ -2,7 +2,7 @@
 
 > The record of the performance audit of 2026-11-01 (TODO #97). The site's pages and the 3D viewer, on a computer and a
 > phone, measured on the live site (1.0.0-beta.7), every address with `?no-analytics=1`. Fixed the same day:
-> P1, P2, P3, most of P5, and real visitors' speed measured (TODO #113). Left: TODO #111.
+> P1, P2, P3, most of P5, and real visitors' speed measured (TODO #113). TODO #111 (the viewer on real phones) was dropped on 2026-11-03 without being done.
 
 **Date**: 2026-11-01. **Sources**:
 
