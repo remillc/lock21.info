@@ -13,7 +13,7 @@ import * as THREE from 'three'
 
 const UP = new THREE.Vector3(0, 1, 0)
 // The left button's turn against the pointer (1: the background follows it exactly; a little more, Christian, 2026-11-03)
-const TURN = 1.25
+const TURN = 1.5
 // Panning's pace against the pointer (1: the point pressed follows it exactly)
 const PAN = 0.5
 // The glide: the share of its speed kept each 60th of a second, and the speed below which it stops (rad per frame)
