@@ -1,4 +1,4 @@
-// « Ambiance sous-marine » (TODO #46): the lock as a diver sees it, turned on by the 🤿 button (main.js). Ported from
+// « Plonger » (TODO #46): the lock as a diver sees it, turned on by the 🤿 button (main.js). Ported from
 // the first attempt on the old viewer (branch feature/underwater-look, 2026-10-18), on top of today's lit materials:
 //  - applied before the tone mapping, so the same with and without the ambient occlusion pass (main.js, patchShader);
 //  - distances are the true distance from the camera to each point (not the depth along its axis): facing a wall, its

@@ -353,7 +353,7 @@ l21-loading.error .loading-label {
   right: calc(max(16px, env(safe-area-inset-right)) + 56px);
   bottom: max(16px, env(safe-area-inset-bottom));
 }
-/* « Ambiance sous-marine » (main.js): left of the home button; filled while on (selected) */
+/* « Plonger » (main.js): left of the home button; filled while on (selected) */
 .underwater-button {
   right: calc(max(16px, env(safe-area-inset-right)) + 112px);
   bottom: max(16px, env(safe-area-inset-bottom));

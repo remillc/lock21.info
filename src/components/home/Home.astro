@@ -154,7 +154,8 @@ const entries = [
       color: var(--md-sys-color-tertiary-text);
       font-weight: 700;
     }
-    @media (max-width: 50rem) {
+    /* Hidden on phones, and where the navigation column carries its own (PageFrame.astro, Sidebar.astro) */
+    @media (max-width: 50rem), (min-width: 98.75rem) {
       .gauge {
         display: none;
       }

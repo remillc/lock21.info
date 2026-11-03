@@ -196,7 +196,7 @@ class SettingsPanel extends HTMLElement {
     }
   }
 
-  // A value changed elsewhere (the 🤿 button for « Ambiance sous-marine »): kept, saved and shown, without applying
+  // A value changed elsewhere (the 🤿 button for « Plonger »): kept, saved and shown, without applying
   // it again
   reflect(key, value) {
     const item = this.item(key)
