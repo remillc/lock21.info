@@ -135,7 +135,8 @@ export function bakeRelief({ zone, prepared, relief, high, blend, blender, log, 
   const before = logLines(log, /^\[relief\] done/i).length
   const args = ['-z', zone, '-p', prepared, '-o', relief, ...(high ? ['--high', high] : []), ...(blend ? ['-b', blend] : [])]
   run(blender, ['-b', '--factory-startup', '--python', join(PUBLISH_DIR, 'bake_relief.py'), '--', ...args], { log, check: false })
-  showLog(log, /^\[relief\]|^Traceback|^\w*Error|assert/i)
+  // (case-sensitive: Blender's « ERROR: Image "" not available », from the prepared zone's export, is harmless)
+  showLog(log, /^\[relief\]|^Traceback|^\w*Error\b|assert/)
   if (logLines(log, /^\[relief\] done/i).length <= before) {
     console.log(`   ÉCHEC de la cuisson, voir ${log}`)
     return false
