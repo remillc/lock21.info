@@ -216,6 +216,10 @@ const model = splash && /^(en\/)?modele$/.test(entry.id)
             clip-path: inset(-100vh 100% -100vh -100vw);
           }
         }
+        /* The home and 404 pages: where the notebook pages have their navigation column */
+        :global(.l21-menu-overlay) .drawer-menu:not(.model-menu) .sidebar-pane {
+          inset-inline-start: var(--lock21-margin, 0px);
+        }
         @media (prefers-reduced-motion: reduce) {
           .drawer-menu .sidebar-pane {
             transition: none;
@@ -231,6 +235,12 @@ const model = splash && /^(en\/)?modele$/.test(entry.id)
           padding-inline-start: calc(var(--l21-bar-inset) + var(--sl-menu-button-size) + var(--sl-nav-gap));
           padding-inline-end: var(--l21-bar-inset);
         }
+        /* The home and 404 pages: the bar's content as wide as on the notebook pages (Christian, 2026-11-03; custom.scss,
+           --lock21-margin), its button left of the logo: the logo only moves where there is no room for the button */
+        .drawer-menu:not(.model-menu) .header {
+          padding-inline-start: var(--l21-logo-left);
+          padding-inline-end: calc(var(--sl-nav-pad-x) + var(--lock21-margin, 0px));
+        }
       }
     }
   }
@@ -245,6 +255,9 @@ const model = splash && /^(en\/)?modele$/.test(entry.id)
         display: flex;
         inset-inline-start: max(var(--sl-nav-pad-x), var(--l21-frame-left, 0px) - 6rem);
         inset-inline-end: auto;
+      }
+      .drawer-menu:not(.model-menu) .sl-menu-button {
+        inset-inline-start: calc(var(--l21-logo-left) - var(--sl-menu-button-size) - var(--sl-nav-gap));
       }
     }
     /* Every page: the menu button's three bars turn into an X and back (Christian, 2026-10-23): the outer bars rotate,

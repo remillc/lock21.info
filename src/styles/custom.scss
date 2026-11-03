@@ -999,6 +999,13 @@
     --lock21-margin: max(0px, (100vw - var(--lock21-layout-width)) / 2);
     --sl-content-inline-start: calc(var(--sl-sidebar-width) + var(--lock21-margin));
   }
+  // The home and 404 pages have no columns, but their bar lines up with the other pages' (PageFrame.astro)
+  .drawer-menu:not(.model-menu) {
+    --lock21-margin: max(0px, (100vw - var(--sl-sidebar-width) - var(--lock21-content-width) - var(--lock21-toc-width)) / 2);
+  }
+}
+.drawer-menu:not(.model-menu) {
+  --l21-logo-left: max(var(--sl-nav-pad-x) + var(--sl-menu-button-size) + var(--sl-nav-gap), var(--lock21-margin, 0px) - 4rem);
 }
 
 /* Notes that belong to one table, right under it (« Matériel utilisé »): smaller than the text */
