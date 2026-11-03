@@ -1,11 +1,12 @@
 // Prépare et tuile des zones depuis le .blend de travail, puis supprime les versions de tuiles remplacées. Pour chaque
-// zone: prepare_zone.py (Blender), puis tile_zone.mjs (Obj2Tiles, simplification, compression, manifeste). Une zone en
-// échec n'arrête pas les suivantes; le code de sortie le dit à la fin.
+// zone: prepare_zone.py (Blender), bake_relief.py (Blender, la carte des normales, TODO #21), puis tile_zone.mjs
+// (Obj2Tiles, simplification, compression, manifeste). Une zone en échec n'arrête pas les suivantes; le code de sortie
+// le dit à la fin.
 import { existsSync, rmSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import { capture, cli, logLines, newVersion, node, paths, PUBLISH_DIR, readJson, removeFoldersExcept, removeOldVersions, run, showDuration, showLog, startLog, updateManifest } from './lib/pipeline.mjs'
+import { bakeRelief, capture, cli, highExports, logLines, newVersion, node, paths, PUBLISH_DIR, readJson, removeFoldersExcept, removeOldVersions, run, showDuration, showLog, startLog, updateManifest } from './lib/pipeline.mjs'
 
-const HELP = `Prépare et tuile des zones depuis le .blend de travail, puis supprime les versions remplacées.
+const HELP = `Prépare une zone depuis le .blend de travail, cuit son relief, la tuile, puis supprime les versions remplacées.
 
 Le contexte (fillers + terrain) se publie avec la zone spéciale « context ».
 
@@ -19,9 +20,11 @@ Usage: node tools/publish-model/publish_zones.mjs -z "zone 2" -z context
   -V, --version <nom>       dossier de la nouvelle version (défaut: date et heure, yyyy-MM-dd-HHmm)
   -d, --density <n>         triangles visés par m² après décimation, pour toutes les zones de l'appel. Sans elle: la
                             densité de la zone dans zone-density.json, sinon 3000
+      --no-relief           sans la cuisson du relief: tuiles sans carte des normales, plus vite (essais; à ne pas
+                            mettre en ligne, les zones perdraient leur relief)
   -b, --blend <fichier>     .blend de travail (défaut ${paths.blend})
   -B, --blender <exe>       exécutable Blender (défaut ${paths.blender})
-  -t, --temp-root <dir>     dossier des journaux (défaut ${paths.temp})
+  -t, --temp-root <dir>     dossier des journaux et des cartes de relief (défaut ${paths.temp})
   -p, --prepared-root <dir> zones préparées (défaut ${paths.prepared})
   -T, --tiles-root <dir>    racine des tuiles (défaut ${paths.tiles})
   -h, --help                afficher cette aide`
@@ -32,6 +35,7 @@ const o = cli(HELP, {
   'dry-run': { type: 'boolean', short: 'n' },
   version: { type: 'string', short: 'V' },
   density: { type: 'string', short: 'd' },
+  'no-relief': { type: 'boolean' },
   blend: { type: 'string', short: 'b', default: paths.blend },
   blender: { type: 'string', short: 'B', default: paths.blender },
   'temp-root': { type: 'string', short: 't', default: paths.temp },
@@ -67,6 +71,8 @@ if (!zones.length) {
 
 // Les densités propres à certaines zones (zone-density.json: "zone 16": 15000)
 const densities = readJson(join(PUBLISH_DIR, 'zone-density.json'))
+// Les exports détaillés d'où cuire le relief (zone-high.json: zones 1 et 10)
+const high = highExports()
 const failed = []
 
 function publishContext() {
@@ -107,8 +113,17 @@ function publishZone(zone) {
   }
   showLog(log, /^\[.*(register|deform|proximity|decimate|deviation)/i)
 
+  // Relief: la carte des normales, avec une copie de la zone préparée qui la référence, d'où le tuilage
+  let tileFrom = prepared
+  if (o['no-relief']) {
+    console.log('   sans relief (--no-relief)')
+  } else {
+    tileFrom = join(o['temp-root'], slug, 'relief')
+    if (!bakeRelief({ zone, prepared, relief: tileFrom, high: high.get(zone), blend, blender: o.blender, log })) return false
+  }
+
   // Tuilage, compression, manifeste
-  const code = node('tile_zone.mjs', ['-z', slug, '-p', prepared, '-V', version, '-T', tilesRoot], { log, check: false })
+  const code = node('tile_zone.mjs', ['-z', slug, '-p', tileFrom, '-V', version, '-T', tilesRoot], { log, check: false })
   showLog(log, /compression:|manifeste/i)
   if (code !== 0) {
     logLines(log, /Error|Traceback/i).slice(-5).forEach((l) => console.log(`   ${l}`))

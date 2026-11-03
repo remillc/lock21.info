@@ -1,0 +1,5 @@
+{
+  "_comment": "Les exports détaillés d'où cuire le relief, pour les zones dont la source (.blend) est une version basse résolution; relatifs à la racine des données (LOCK21_DATA). Même chunk Metashape que la source (même repère): bake_relief.py s'arrête si les deux ne concordent pas.",
+  "zone 1": "modeles/zone-1/zone 1 - lens corrected - mesh - 8.6M faces.glb",
+  "zone 10": "modeles/zone-10/zone 10 - lens corrected - mesh - 22.6M faces.glb"
+}

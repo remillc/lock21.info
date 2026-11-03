@@ -13,8 +13,8 @@ L'ordinateur doit être prêt: voir le guide **Installation** (`docs/installatio
 | Étape                       | Ce qu'elle fait                                            | Durée               | En ligne?         |
 | --------------------------- | ---------------------------------------------------------- | ------------------- | ----------------- |
 | 1. Vérifier                 | liste les zones modifiées                                  | 1 min               | non               |
-| 2. Tuiles                   | refait les zones modifiées pour le visualiseur             | 5 à 15 min par zone | non               |
-| 3. Relief                   | refait la carte des normales des zones refaites            | 2 à 8 min par zone  | non               |
+| 2. Tuiles et relief         | refait les zones modifiées pour le visualiseur, avec leur relief | 5 à 20 min par zone | non         |
+| 3. Refaire le relief seul   | au besoin: la carte des normales, sans refaire la zone     | 2 à 8 min par zone  | non               |
 | 4. Contrôle                 | regarder le résultat dans le visualiseur, sur l'ordinateur | quelques minutes    | non               |
 | 5. Mise en ligne des tuiles | envoie les zones refaites sur le serveur                   | quelques minutes    | **oui**, aussitôt |
 | 6. Téléchargements          | refait le KMZ de Google Earth et le GLB, puis les envoie   | 25 min              | **oui**           |
@@ -57,13 +57,13 @@ zone 8   modifiée: matrix_world, modifiers
 
 Rien n'est modifié à cette étape.
 
-## Étape 2 · Refaire les tuiles
+## Étape 2 · Refaire les tuiles et le relief
 
 ```powershell
 npm run model:post-modified
 ```
 
-Refait **seulement** les zones listées à l'étape 1, et le contexte s'il a changé. Pour chaque zone: recalage de l'export haute résolution sur la zone du `.blend`, application du Lattice, rognage, simplification, texture, tuilage. Le résultat va dans `O:\publishing\tiles\` (sur l'ordinateur seulement).
+Refait **seulement** les zones listées à l'étape 1, et le contexte s'il a changé. Pour chaque zone: recalage de l'export haute résolution sur la zone du `.blend`, application du Lattice, rognage, simplification, texture, relief (la carte des normales: moules, joints, pierres), tuilage. Le résultat va dans `O:\publishing\tiles\` (sur l'ordinateur seulement).
 
 Ce qu'il faut regarder dans le résultat, pour chaque zone:
 
@@ -78,19 +78,15 @@ Si une zone affiche **`ÉCHEC`**, le journal détaillé est dans `O:\temp\<zone>
 
 Pour refaire des zones précises, même sans changement: `npm run model:publish -- -z "zone 2" -z "zone 3"`.
 
-## Étape 3 · Refaire le relief
+## Étape 3 · Refaire le relief seul
 
-Le relief (la carte des normales: moules, joints, pierres) est cuit à part, pour chaque zone refaite à l'étape 2:
-
-```powershell
-node tools\publish-model\relief_zones.mjs -z "zone 8"
-```
-
-Plusieurs zones: `-z "zone 2" -z "zone 8"`. Les zones dont la `source` est une version basse résolution prennent leur export haute résolution avec `-H` (aujourd'hui, les zones 1 et 10):
+L'étape 2 cuit le relief de chaque zone refaite, depuis l'export haute résolution noté dans `tools\publish-model\zone-high.json` (aujourd'hui, les zones 1 et 10, dont la `source` est une version basse résolution), sinon depuis la `source`. Cette étape-ci ne sert que pour refaire le relief sans refaire la zone:
 
 ```powershell
-node tools\publish-model\relief_zones.mjs -z "zone 1" -z "zone 10" -H "zone 1=O:\modeles\zone-1\zone 1 - lens corrected - mesh - 8.6M faces.glb" -H "zone 10=O:\modeles\zone-10\zone 10 - lens corrected - mesh - 22.6M faces.glb"
+node tools\publish-model\relief_zones.mjs -z "zone 8" -r
 ```
+
+Plusieurs zones: `-z "zone 2" -z "zone 8"`. `-r` cuit de nouveau même si une carte récente existe; `-H "zone 8=<export>.glb"` prend un autre export pour cette fois.
 
 Chaque zone affiche son écart (`gap ... median`, normalement autour de 1 mm) et sa cage (`cage 0.030 m`). Un écart médian au-dessus de 2 cm arrête la cuisson: l'export haute résolution ne correspond pas à la zone.
 
