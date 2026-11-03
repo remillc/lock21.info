@@ -32,7 +32,7 @@ Author: Christian Rémillard (GitHub `remillc`).
 | `  remerciements.md` | Thanks: dive buddies, the sponsor (DECOSTOP Outdoor Centre, its logo in `public/images/`, one per theme), the rig's designer, the 1988 drawings |
 | `  decoupage-site.mdx` | Zone map and description of zones 1–25 |
 | `  collecte/` | Dive log (`journal-plongees.mdx`, a large table wrapped in `<DiveLog>`), gear (`materiel-utilise.md`), the rig on the scooter (`rig.md`: photos, Sylvain Marcotte's 3D model, lights, brushes) and scaling (`mise-echelle.md`), ordered by `sidebar.order` |
-| `  traitement/` | Processing steps (`extraction-photos.md` … `texture.md`, ordered by `sidebar.order` in their frontmatter) and per-zone progress tracking (`suivi.mdx`, with the zone map) |
+| `  traitement/` | Processing steps (`extraction-photos.md` … `texture.md`, `publication.md`, ordered by `sidebar.order` in their frontmatter) and per-zone progress tracking (`suivi.mdx`, with the zone map) |
 | `  problemes/` | One page per problem (`<name>.md`), its images in `<name>/assets/`, and `index.md`, the group's page (each problem in a line, with its link; add a new problem there too); shown as « Problèmes rencontrés » |
 | `  tests/` | Test write-ups, same layout. In the sidebar since 2026-11-01 (« Tests effectués », the last group), but not in the search (`pagefind: false` in each page's frontmatter: give a new test page that line too) nor the sitemap (the `sitemap` filter in `astro.config.mjs`). |
 | `  rig/modele/` | Rig Blender files and drawings |

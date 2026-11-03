@@ -30,10 +30,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
     saturation) into the downloadable model. `color_patch.py` (a part of a zone brought to its neighbours' colour) stays
     for local cases. The real fix is upstream: #75.
 
-### Documentation
-
-- [ ] #17 Add a workflow page to the site (`6. publication.md`) once the pipeline is stable
-
 ### Virtual reality (idea)
 
 - [ ] #27 VR option on lock21.info (WebXR, three.js): view the model in a headset, either
