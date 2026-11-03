@@ -44,29 +44,32 @@ Mode de capture : **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution
 | Stabilisation vidéo                                    | désactivé                       |
 | Faible luminosité automatique (_Auto low light_)       | _non disponible_                |
 | _Protune_                                              | activé                          |
-| Couleur (profil colorimétrique)[^1]                    | _Couleur GoPro_                 |
-| Équilibre des blancs[^1]                               | 6500K[^2]                       |
-| ISO Minimum[^1]                                        | *(à compléter)*                 |
-| ISO Maximum[^1]                                        | 1600 (valeur par défaut)        |
-| Vitesse d'obturateur[^1]                               | automatique (valeur par défaut) |
-| Compensation de la valeur d’exposition (Comp V.E.)[^1] | 0 (valeur par défaut)           |
-| Netteté[^1]                                            | Élevée (valeur par défaut)      |
+| Couleur (profil colorimétrique)<sup>1</sup>                    | _Couleur GoPro_                 |
+| Équilibre des blancs<sup>1</sup>                               | 6500K                       |
+| ISO Minimum<sup>1</sup>                                        | *(à compléter)*                 |
+| ISO Maximum<sup>1</sup>                                        | 1600 (valeur par défaut)        |
+| Vitesse d'obturateur<sup>1</sup>                               | automatique (valeur par défaut) |
+| Compensation de la valeur d’exposition (Comp V.E.)<sup>1</sup> | 0 (valeur par défaut)           |
+| Netteté<sup>1</sup>                                            | Élevée (valeur par défaut)      |
+
+<div class="table-notes">
+<p><sup>1</sup> Disponible lorsque le paramètre Protune est activé</p>
+</div>
 
 ## Logiciels
 
-[DaVinci Resolve Studio 19](https://www.blackmagicdesign.com/ca/products/davinciresolve)
+[DaVinci Resolve Studio 21.1](https://www.blackmagicdesign.com/ca/products/davinciresolve)
 
 [Metashape](https://www.agisoft.com/)
 
 [Inkscape v1.3.2](https://inkscape.org/)
 
-[Blender v4.2](https://www.blender.org/)
+[Blender v5.2](https://www.blender.org/)
+
+[ImageMagick v7.1](https://imagemagick.org/) : compression des images TIFF, sans perte
 
 [Navionics Boating](https://www.navionics.com/) (Garmin) : carte des profondeurs des abords de l'écluse, d'où vient le terrain qui entoure le modèle 3D
 
-Scripts PowerShell
+Scripts Node.js, Python et PowerShell
 
 [Claude Code](https://claude.com/claude-code) (Anthropic, modèle Claude Opus) : assistant de programmation, pour le site, le visualiseur 3D et la chaîne de publication du modèle
-
-[^1]: Disponible lorsque le paramètre Protune est activé
-[^2]: Choisi en fonction de la température de couleur des lampes,

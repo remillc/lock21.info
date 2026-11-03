@@ -1000,3 +1000,14 @@
     --sl-content-inline-start: calc(var(--sl-sidebar-width) + var(--lock21-margin));
   }
 }
+
+/* Notes that belong to one table, right under it (« Matériel utilisé »): smaller than the text */
+.sl-markdown-content .table-notes {
+  margin-top: 0.75rem;
+  color: var(--sl-color-gray-2);
+  font-size: var(--sl-text-sm);
+
+  p {
+    margin: 0.25rem 0 0;
+  }
+}
