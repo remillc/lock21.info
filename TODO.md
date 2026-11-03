@@ -30,30 +30,13 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
     saturation) into the downloadable model. `color_patch.py` (a part of a zone brought to its neighbours' colour) stays
     for local cases. The real fix is upstream: #75.
 
-### Pipeline
-
-- [ ] #10 `model:post-modified` and others only run on Windows (PowerShell); fine for now. Port to Node evaluated
-  (2026-10-30): feasible, medium effort. Five `.ps1` (about 460 lines, orchestration only; the work is already in Node,
-  Python and Blender scripts): serve-tiles and model-analysis/run (small), relief_zones (small to medium), publish_zones
-  and tile_zone (medium, the core). Plan: a shared module `tools/publish-model/lib/pipeline.mjs` (paths overridable by
-  environment variables or `.env.local`: data root, Blender, Obj2Tiles, Python; Blender found per OS; spawn with a log;
-  
-ode:util` parseArgs with -h), then serve-tiles, run, tile_zone, publish_zones, relief_zones (folded into
-  publish_zones: TODO #21); `fix_tileset.py` and `update_manifest.py` rewritten in Node (JSON edits only). Same
-  
-pm run model:*` names; `-Zones "zone 2","zone 3"` becomes `-z/--zone` repeated, `relief_zones -High @{...}` a
-  repeated `--high "zone 1=<glb>"` (docs/processing-the-blend-file.md updated with it). Keep the `.ps1` until one zone's
-  output matches (tile count, manifest). Fix on the way: `-TilesRoot` not passed to tile_zone, unchecked exit codes of
-  fix_tileset and update_manifest. Still tied to this PC after a port: the `O:\` defaults (and the `.blend` zones'
-  `source` paths), Obj2Tiles' per-OS builds (Mac and Linux untested), the relief bake on an NVIDIA GPU (OptiX)
-
 ### Documentation
 
 - [ ] #17 Add a workflow page to the site (`6. publication.md`) once the pipeline is stable
 
 ### Relief and lamp bands (relief on every zone since 2026-10-19; the wet look removed on 2026-10-25)
 
-- [ ] #21 Relief: fold the relief steps (`relief_zones.ps1`) into `publish_zones.ps1`, so that one command republishes a
+- [ ] #21 Relief: fold the relief steps (`relief_zones.mjs`) into `publish_zones.mjs`, so that one command republishes a
   zone with its relief
 
 ### Virtual reality (idea)

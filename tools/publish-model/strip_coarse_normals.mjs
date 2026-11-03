@@ -2,7 +2,7 @@
 // only the finest level's tiles (LOD-0) keep them, as merge_normal_maps.mjs now grafts them (TODO #55,
 // 2026-10-23). For the versions published before that change, without baking the relief again. A version is
 // never modified once written: the copy is a new dated folder; the manifest is then pointed at it
-// (update_manifest.py, done by the caller).
+// (update_manifest.mjs, done by the caller).
 //
 // Usage: node strip_coarse_normals.mjs <version folder> <new version folder>
 //        node strip_coarse_normals.mjs -h | --help

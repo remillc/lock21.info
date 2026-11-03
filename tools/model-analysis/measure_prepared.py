@@ -1,6 +1,6 @@
 """Taille des texels des zones préparées (ce qui est publié), lecture seule.
 
-L'analyse de run.ps1 mesure les maillages du .blend, dont certaines zones n'ont qu'une texture 4k d'aperçu; les zones
+L'analyse de run.mjs mesure les maillages du .blend, dont certaines zones n'ont qu'une texture 4k d'aperçu; les zones
 publiées viennent des exports haute résolution (prepare_zone.py), avec leurs propres UV et une texture de 8k à 16k px.
 Ce script lit les OBJ de O:\\publishing\\prepared\\<zone>\\ et donne, pondérés par la surface, la médiane et les
 percentiles 10 et 90 de la taille d'un texel en mm, et la distance à laquelle un texel couvre un pixel d'écran

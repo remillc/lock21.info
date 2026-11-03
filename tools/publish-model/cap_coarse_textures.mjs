@@ -1,5 +1,5 @@
 // Caps the textures of a tile set's coarser levels (every level but the finest, LOD-0) at a maximum size, in place,
-// on a version being made (tile_zone.ps1, before publication: a published version is never rewritten). Obj2Tiles
+// on a version being made (tile_zone.mjs, before publication: a published version is never rewritten). Obj2Tiles
 // halves the zone's photo at each level, so the coarsest tile's texture followed the photo's size, 1,004 to 4,096 px
 // from one zone to another (Christian, 2026-10-24: they should be standardized), for a tile only seen from afar while
 // the finer ones arrive: 0.4 to 3.6 MB. The KTX2 textures carry their whole chain of mip levels: the largest levels

@@ -106,7 +106,7 @@ depuis l'ordinateur.
 3. Lancer le site visible sur le réseau (`npm run dev -- --host`) et un serveur de tuiles visible sur le réseau aussi:
 
    ```powershell
-   .\tools\publish-model\serve-tiles.ps1 -TilesRoot O:\publishing\tiles -Port 8086 -Lan
+   node tools\publish-model\serve_tiles.mjs -T O:\publishing\tiles -p 8086 -l
    ```
 
 4. Sur le téléphone, ouvrir `http://<adresse de l'ordinateur>:4321/modele?tiles=http://<adresse de l'ordinateur>:8086`

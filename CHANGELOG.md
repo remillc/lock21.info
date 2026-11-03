@@ -5,8 +5,9 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Publishing: the PowerShell scripts ported to Node.js (`publish_zones.mjs`, `tile_zone.mjs`, `relief_zones.mjs`, `serve_tiles.mjs`, `model-analysis/run.mjs`, shared `lib/pipeline.mjs`), with `fix_tileset.py` and `update_manifest.py`. Options now `-z "zone 2" -z "zone 3"` and `-H "zone 1=<glb>"`; a failed step reported in the exit code; `--tiles-root` reaches the tiling; paths overridable with `LOCK21_DATA`, `LOCK21_BLENDER`, `LOCK21_OBJ2TILES` (TODO #10).
 - « Matériel utilisé »: the note of the video settings table, under the table instead of at the end of the page; its unfinished second note removed.
-- « Matériel utilisé »: ImageMagick added to the software list; DaVinci Resolve (21.1), Blender (5.2) and the scripts (Node.js, Python, PowerShell) brought up to date.
+- « Matériel utilisé »: ImageMagick added to the software list; DaVinci Resolve (21.1), Blender (5.2) and the scripts (Node.js, Python) brought up to date.
 - « Extraction des photos »: the TIFF compression step, from about 34 MB to about 14 MB a frame, in LZW, lossless (TODO #117).
 - 3D viewer: a small circle marks the point pressed, with any mouse button, from the press to the release (TODO #119).
 

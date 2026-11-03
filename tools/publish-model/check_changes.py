@@ -2,7 +2,7 @@
 
 Compare l'empreinte actuelle de chaque zone (blend_state.py) avec celle enregistrée dans la version
 active de ses tuiles (O:\\publishing\\tiles\\<zone>\\<version>\\fingerprint.json). Affiche une ligne
-`A_PUBLIER: zone 2, zone 10` utilisable par publish_zones.ps1.
+`A_PUBLIER: zone 2, zone 10` utilisable par publish_zones.mjs.
 
 Lecture seule: le .blend n'est jamais sauvegardé.
 

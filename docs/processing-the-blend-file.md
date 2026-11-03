@@ -76,23 +76,20 @@ Ce qu'il faut regarder dans le résultat, pour chaque zone:
 
 Si une zone affiche **`ÉCHEC`**, le journal détaillé est dans `O:\temp\<zone>-publish.log`. La cause la plus fréquente: `recalage ... trop imprécis`, l'export `source` ne vient pas de la même reconstruction que le maillage de la zone dans le `.blend`.
 
-Pour refaire des zones précises, même sans changement: `npm run model:publish -- -Zones "zone 2","zone 3"`.
+Pour refaire des zones précises, même sans changement: `npm run model:publish -- -z "zone 2" -z "zone 3"`.
 
 ## Étape 3 · Refaire le relief
 
 Le relief (la carte des normales: moules, joints, pierres) est cuit à part, pour chaque zone refaite à l'étape 2:
 
 ```powershell
-.\tools\publish-model\relief_zones.ps1 -Zones "zone 8"
+node tools\publish-model\relief_zones.mjs -z "zone 8"
 ```
 
-Plusieurs zones: `-Zones "zone 2","zone 8"`. Les zones dont la `source` est une version basse résolution prennent leur export haute résolution avec `-High` (aujourd'hui, les zones 1 et 10):
+Plusieurs zones: `-z "zone 2" -z "zone 8"`. Les zones dont la `source` est une version basse résolution prennent leur export haute résolution avec `-H` (aujourd'hui, les zones 1 et 10):
 
 ```powershell
-.\tools\publish-model\relief_zones.ps1 -Zones "zone 1","zone 10" -High @{
-    "zone 1"  = "O:\modeles\zone-1\zone 1 - lens corrected - mesh - 8.6M faces.glb"
-    "zone 10" = "O:\modeles\zone-10\zone 10 - lens corrected - mesh - 22.6M faces.glb"
-}
+node tools\publish-model\relief_zones.mjs -z "zone 1" -z "zone 10" -H "zone 1=O:\modeles\zone-1\zone 1 - lens corrected - mesh - 8.6M faces.glb" -H "zone 10=O:\modeles\zone-10\zone 10 - lens corrected - mesh - 22.6M faces.glb"
 ```
 
 Chaque zone affiche son écart (`gap ... median`, normalement autour de 1 mm) et sa cage (`cage 0.030 m`). Un écart médian au-dessus de 2 cm arrête la cuisson: l'export haute résolution ne correspond pas à la zone.

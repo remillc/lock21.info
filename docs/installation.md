@@ -8,8 +8,9 @@ joint au projet. Il n'est pas nécessaire de tout installer: le tableau ci-desso
 
 ## Prérequis
 
-**Système:** Windows 10 ou 11. Les scripts de publication sont écrits pour PowerShell (inclus dans Windows). Le site
-et le visualiseur fonctionnent aussi sur macOS ou Linux, mais pas la publication du modèle 3D.
+**Système:** Windows 10 ou 11. Les scripts de publication sont en Node.js, essayés seulement sous Windows. Le site
+et le visualiseur fonctionnent aussi sur macOS ou Linux. La publication du modèle 3D y reste à essayer: chemins à
+indiquer (`LOCK21_DATA`, étape 4), Obj2Tiles pour ce système, et la cuisson du relief demande une carte NVIDIA.
 
 **Matériel**, selon le travail:
 
@@ -41,7 +42,7 @@ envoie de quelques centaines de mégaoctets à plus d'un gigaoctet.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Modifier les textes et les pages du site | oui | oui | | | | | | |
 | Travailler sur le visualiseur 3D | oui | oui | | | | | | |
-| Publier le modèle 3D (le guide *Traiter le fichier .blend*) | oui | oui | oui | oui | oui | oui | oui | |
+| Publier le modèle 3D (le guide *Traiter le fichier .blend*) | oui | oui | oui | | oui | oui | oui | |
 | Refaire les téléchargements (Google Earth, GLB) | oui | oui | oui | oui | | oui | oui | |
 | Produire les exports des zones | | | | | | oui | | oui |
 
@@ -55,7 +56,7 @@ autre dossier, remplacer ce chemin partout.
 | **Git** et **Git LFS** | récente | [git-scm.com](https://git-scm.com/), Git LFS est inclus | les fichiers `.blend` sont stockés avec Git LFS |
 | **Node.js** | 22.12 ou plus (24 en usage) | [nodejs.org](https://nodejs.org/) | installe aussi `npm` |
 | **Blender** | 5.2 | [blender.org](https://www.blender.org/download/) | une carte graphique NVIDIA accélère les cuissons (OptiX) |
-| **Python** | 3.12 | Microsoft Store, ou [python.org](https://www.python.org/) | seulement pour les outils; pas de bibliothèque à installer, sauf pour Google Earth (étape 3) |
+| **Python** | 3.12 | Microsoft Store, ou [python.org](https://www.python.org/) | seulement pour certains outils (`tools/flow/`, `tools/chart-terrain/`, `tools/google-earth/`); pas de bibliothèque à installer, sauf pour Google Earth (étape 3) |
 | **Obj2Tiles** | 1.8.0 | [github.com/OpenDroneMap/Obj2Tiles/releases](https://github.com/OpenDroneMap/Obj2Tiles/releases) | décompresser dans `O:\publishing\bin\obj2tiles-1.8.0\` (l'exécutable et `ktx.dll`) |
 | **ImageMagick** | 7.1 | [imagemagick.org](https://imagemagick.org/) | la commande `magick`, pour compresser les TIFF (`tools/color-grading/compress_tiffs.mjs`) |
 | **GitHub CLI** (`gh`) | récente | [cli.github.com](https://cli.github.com/) | facultatif: publier le site en ligne de commande. Se connecter une fois: `gh auth login` |
@@ -227,6 +228,6 @@ Si tout cela fonctionne, l'ordinateur est prêt. La suite: le guide **Traiter le
   l'arrêter (Ctrl+C) avant de le relancer.
 - **Le fichier `.blend` fait quelques centaines d'octets**: Git LFS n'était pas installé au moment du clone. Lancer
   `git lfs install`, puis `git lfs pull`.
-- **Blender est installé ailleurs**: les scripts prennent l'option `-Blender "<chemin vers blender.exe>"`.
+- **Blender est installé ailleurs**: les scripts prennent l'option `--blender "<chemin vers blender.exe>"`; ou, pour tous, `LOCK21_BLENDER=<chemin>` dans `.env.local` (de même `LOCK21_OBJ2TILES`, et `LOCK21_DATA` pour un autre disque que `O:`).
 - **Le modèle de la page `/modele` ne s'affiche pas en développement**: le serveur des tuiles (`npm run model:serve-tiles`)
   ne tourne pas; ou ajouter `?tiles=https://tiles.lock21.info` à l'adresse.

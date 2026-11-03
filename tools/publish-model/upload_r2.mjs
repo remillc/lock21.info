@@ -86,7 +86,7 @@ async function put(path, cacheControl) {
   return (await stat(path)).size
 }
 
-// The sets a manifest points to: each entry's url, and a zone's light set (phones and tablets, tile_zone.ps1 -Light)
+// The sets a manifest points to: each entry's url, and a zone's light set (phones and tablets, tile_zone.mjs --light)
 const setsOf = (manifest) => [...(manifest?.tilesets || []), ...(manifest?.models || [])]
   .flatMap((entry) => [{ id: entry.id, url: entry.url }, ...(entry.light ? [{ id: `${entry.id} (léger)`, url: entry.light }] : [])])
 // Version folders referenced by a manifest: "zone-12/2026-10-18-1332/tileset.json" -> "zone-12/2026-10-18-1332/"

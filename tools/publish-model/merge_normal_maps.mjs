@@ -2,7 +2,7 @@
 //
 // Obj2Tiles mishandles normal maps: it repacks them per tile in a layout that doesn't match the texture
 // coordinates (black areas and streaks, about a quarter of zone 12), and encodes them in ETC1S tagged sRGB
-// like a photo (blocks, bent normals). tile_zone.ps1 therefore tiles the zone twice: once with the photo
+// like a photo (blocks, bent normals). tile_zone.mjs therefore tiles the zone twice: once with the photo
 // (normal map ignored), once with the normal map given as the photo (map_Kd), in UASTC. The packing only depends
 // on the geometry and texture coordinates, so both runs give the same tiles with the same layout; this script
 // checks that, then puts the second run's texture into each tile of the first as its normalTexture, tagged

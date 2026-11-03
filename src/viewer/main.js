@@ -288,7 +288,7 @@ export function mountViewer() {
     renderer.setPixelRatio(profile.pixelRatio)
     log('light-profile', LIGHT)
   }
-  // The tiles' textures (tile_zone.ps1 -Light; « Textures » setting, ?textures=light|full): the full set on a computer,
+  // The tiles' textures (tile_zone.mjs --light; « Textures » setting, ?textures=light|full): the full set on a computer,
   // the light one on a phone or tablet. A phone or tablet that reports at least STRONG_MEMORY GB and STRONG_CORES cores
   // on a fast connection (Chrome's class « 4g », Wi-Fi included, no data saver; Christian, 2026-10-24: his Pixel 10 Pro
   // handled the full set well) gets the full set too, but only once the light one has drawn the view and has nothing
@@ -1555,7 +1555,7 @@ export function mountViewer() {
   // One memory budget shared by all zones: a per-zone share (budget / zone count) filled up after 2 or 3
   // large textures and stopped loading, leaving zones missing on phones.
   let sharedCache = null
-  /** A zone's tileset: its light set where it has one and `light` asks for it (tile_zone.ps1 -Light: textures halved,
+  /** A zone's tileset: its light set where it has one and `light` asks for it (tile_zone.mjs --light: textures halved,
    *  no relief; the finest tiles about five times lighter), the same tiling */
   function makeTiles(entry, light) {
     const tiles = new TilesRenderer(`${tilesUrl}/${light && entry.light ? entry.light : entry.url}`)
