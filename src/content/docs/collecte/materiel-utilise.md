@@ -58,18 +58,18 @@ Mode de capture : **vidéo 4k 4:3** (4000 pixels x 3000 pixels). La résolution
 
 ## Logiciels
 
-[DaVinci Resolve Studio 19](https://www.blackmagicdesign.com/ca/products/davinciresolve)
+[DaVinci Resolve Studio 21.1](https://www.blackmagicdesign.com/ca/products/davinciresolve)
 
 [Metashape](https://www.agisoft.com/)
 
 [Inkscape v1.3.2](https://inkscape.org/)
 
-[Blender v4.2](https://www.blender.org/)
+[Blender v5.2](https://www.blender.org/)
 
 [ImageMagick v7.1](https://imagemagick.org/) : compression des images TIFF, sans perte
 
 [Navionics Boating](https://www.navionics.com/) (Garmin) : carte des profondeurs des abords de l'écluse, d'où vient le terrain qui entoure le modèle 3D
 
-Scripts PowerShell
+Scripts Node.js, Python et PowerShell
 
 [Claude Code](https://claude.com/claude-code) (Anthropic, modèle Claude Opus) : assistant de programmation, pour le site, le visualiseur 3D et la chaîne de publication du modèle

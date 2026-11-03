@@ -58,18 +58,18 @@ Capture mode: **4k 4:3 video** (4000 pixels x 3000 pixels). I picked this resolu
 
 ## Software
 
-[DaVinci Resolve Studio 19](https://www.blackmagicdesign.com/ca/products/davinciresolve)
+[DaVinci Resolve Studio 21.1](https://www.blackmagicdesign.com/ca/products/davinciresolve)
 
 [Metashape](https://www.agisoft.com/)
 
 [Inkscape v1.3.2](https://inkscape.org/)
 
-[Blender v4.2](https://www.blender.org/)
+[Blender v5.2](https://www.blender.org/)
 
 [ImageMagick v7.1](https://imagemagick.org/): lossless compression of the TIFF frames
 
 [Navionics Boating](https://www.navionics.com/) (Garmin): depth chart of the area around the lock, where the terrain around the 3D model comes from
 
-PowerShell scripts
+Node.js, Python and PowerShell scripts
 
 [Claude Code](https://claude.com/claude-code) (Anthropic, Claude Opus model): programming assistant, for the site, the 3D viewer and the model's publishing pipeline
