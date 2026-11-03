@@ -1007,6 +1007,12 @@
 .drawer-menu:not(.model-menu) {
   --l21-logo-left: max(var(--sl-nav-pad-x) + var(--sl-menu-button-size) + var(--sl-nav-gap), var(--lock21-margin, 0px) - 4rem);
 }
+// The home pages on large screens: no menu button (PageFrame.astro), the logo where the notebook pages have it
+@media (min-width: 98.75rem) {
+  .drawer-menu.home-menu {
+    --l21-logo-left: max(var(--sl-nav-pad-x), var(--lock21-margin, 0px) - 4rem);
+  }
+}
 
 /* Notes that belong to one table, right under it (« Matériel utilisé »): smaller than the text */
 .sl-markdown-content .table-notes {

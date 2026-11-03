@@ -3,7 +3,8 @@
 // have no navigation column, so Starlight draws neither the menu button (☰) nor the menu. Here the button and the same
 // menu (Sidebar.astro) are drawn at every width, the menu a panel over the page's left side on wide screens (a popover:
 // a click outside or Esc closes it), so the page keeps its full width (Christian, 2026-10-23 for /modele; 2026-11-03 for
-// the others, usability audit V23).
+// the others, usability audit V23). On large screens (98.75rem, the notebook pages' three columns) the home pages have
+// the navigation column itself, always visible, without the button (Christian, 2026-11-03).
 // When updating Starlight, compare with node_modules/@astrojs/starlight/dist/components/PageFrame.astro.
 import MobileMenuToggle from 'virtual:starlight/components/MobileMenuToggle'
 import Sidebar from 'virtual:starlight/components/Sidebar'
@@ -12,9 +13,10 @@ const { hasSidebar, entry } = Astro.locals.starlightRoute
 const splash = !hasSidebar && entry.data.template === 'splash'
 // The 3D model's page: against the viewer's frame on wide screens, a panel on narrow ones (below)
 const model = splash && /^(en\/)?modele$/.test(entry.id)
+const home = splash && /^(en|index)?$/.test(entry.id)
 ---
 
-<div class:list={['page sl-flex', { 'splash-menu': splash, 'drawer-menu': splash, 'model-menu': model }]}>
+<div class:list={['page sl-flex', { 'splash-menu': splash, 'drawer-menu': splash, 'model-menu': model, 'home-menu': home }]}>
   <header class="header"><slot name="header" /></header>
   {
     (hasSidebar || splash) && (
@@ -52,11 +54,15 @@ const model = splash && /^(en\/)?modele$/.test(entry.id)
                 requestAnimationFrame(align)
                 addEventListener('resize', align)
               }
+              // The home pages: no popover where the menu is always visible (large screens)
+              const home = Boolean(this.closest('.home-menu'))
+              const largeMediaQuery = matchMedia('(min-width: 98.75rem)')
               const resetPopoverAttribute = () => {
-                this.popover = desktopMediaQuery.matches && !drawer ? null : 'auto'
+                this.popover = (desktopMediaQuery.matches && !drawer) || (home && largeMediaQuery.matches) ? null : 'auto'
               }
               resetPopoverAttribute()
               desktopMediaQuery.addEventListener('change', () => resetPopoverAttribute())
+              largeMediaQuery.addEventListener('change', () => resetPopoverAttribute())
 
               // Update the menu state when the sidebar popover is toggled.
               this.addEventListener('toggle', ({ newState }) => this.trapFocus(newState === 'open'))
@@ -220,6 +226,19 @@ const model = splash && /^(en\/)?modele$/.test(entry.id)
         :global(.l21-menu-overlay) .drawer-menu:not(.model-menu) .sidebar-pane {
           inset-inline-start: var(--lock21-margin, 0px);
         }
+        /* The home pages on large screens: the notebook pages' navigation column, always visible, the content beside it */
+        @media (min-width: 98.75rem) {
+          .page.drawer-menu.home-menu .sidebar-pane {
+            display: block;
+            inset-inline-start: var(--lock21-margin, 0px);
+            clip-path: none;
+            box-shadow: none;
+            transition: none;
+          }
+          .home-menu .main-frame {
+            padding-inline: calc(var(--lock21-margin, 0px) + var(--sl-sidebar-width)) var(--lock21-margin, 0px);
+          }
+        }
         @media (prefers-reduced-motion: reduce) {
           .drawer-menu .sidebar-pane {
             transition: none;
@@ -258,6 +277,11 @@ const model = splash && /^(en\/)?modele$/.test(entry.id)
       }
       .drawer-menu:not(.model-menu) .sl-menu-button {
         inset-inline-start: calc(var(--l21-logo-left) - var(--sl-menu-button-size) - var(--sl-nav-gap));
+      }
+    }
+    @media (min-width: 98.75rem) {
+      .drawer-menu.home-menu .sl-menu-button {
+        display: none;
       }
     }
     /* Every page: the menu button's three bars turn into an X and back (Christian, 2026-10-23): the outer bars rotate,
@@ -362,6 +386,13 @@ const model = splash && /^(en\/)?modele$/.test(entry.id)
       .drawer-menu .sidebar-pane .depth-ruler .bottom {
         color: var(--md-sys-color-tertiary-text);
         font-weight: 700;
+      }
+    }
+    /* The home pages' always visible column: its depth gauge as on the notebook pages (Sidebar.astro, same width) */
+    @media (min-width: 106.75rem) {
+      .l21-menu-overlay .drawer-menu.home-menu .sidebar-pane .depth-ruler {
+        display: block !important;
+        left: calc(var(--lock21-margin, 0px) - 1px);
       }
     }
   }

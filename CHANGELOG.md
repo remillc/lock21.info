@@ -5,7 +5,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
-- The menu (☰) on wide screens on the home and 404 pages too, as on the model's page (usability audit V23); their bar as wide as on the notebook pages.
+- The menu on wide screens on the home and 404 pages too (usability audit V23): a ☰ as on the model's page, and on large screens the home pages have the navigation column itself, always visible, without the ☰; their bar as wide as on the notebook pages.
 - 3D viewer: the dive mode has one name, « Plonger » / “Dive”, on its button, its help and the model page (usability audit V26).
 - Publishing: the PowerShell scripts ported to Node.js (`publish_zones.mjs`, `tile_zone.mjs`, `relief_zones.mjs`, `serve_tiles.mjs`, `model-analysis/run.mjs`, shared `lib/pipeline.mjs`), with `fix_tileset.py` and `update_manifest.py`. Options now `-z "zone 2" -z "zone 3"` and `-H "zone 1=<glb>"`; a failed step reported in the exit code; `--tiles-root` reaches the tiling; paths overridable with `LOCK21_DATA`, `LOCK21_BLENDER`, `LOCK21_OBJ2TILES` (TODO #10).
 - « Matériel utilisé »: the note of the video settings table, under the table instead of at the end of the page; its unfinished second note removed.
