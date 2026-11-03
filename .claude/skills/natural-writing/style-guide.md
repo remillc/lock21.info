@@ -92,7 +92,7 @@ Ses commentaires du 2026-11-03 sur « Publication du modèle » : à compléter 
 | Avant | Après (Christian) | Ce que ça dit |
 | --- | --- | --- |
 | Un paragraphe qui commence sans annoncer son sujet | Un titre : « La problématique » | Une section nomme son rôle |
-| « … un navigateur : la zone 12 compte… » | « … un navigateur. Par exemple, la zone 12 compte… » | Pas de deux-points élégant : deux phrases, et l'exemple s'annonce |
+| « … un navigateur : la zone 12 compte… » | « … un navigateur. Par exemple, la zone 12 compte… » | Un exemple ne suit pas un deux-points : deux phrases, « Par exemple, » (il l'a corrigé deux fois) |
 | « La publication en fait des tuiles » | « Afin de contourner ce problème, la publication en fait des tuiles » | Le lien logique est écrit |
 | « plus ou moins détaillées selon la distance » | Expliquer : plus de détails de près, moins de loin, ce qui économise les ressources du navigateur et garde la navigation fluide | Dire le mécanisme et sa raison, pas seulement le fait |
 | « garde une empreinte de son état […] et la commande compare » | « trop vague, abstrait » | Pas d'image ni de terme non présenté : dire ce qui se passe concrètement |

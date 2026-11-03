@@ -12,7 +12,7 @@ Un export de Metashape est beaucoup trop lourd pour un navigateur. Par exemple, 
 
 Toutes les zones sont assemblées dans un seul fichier Blender, avec le terrain et les maquettes des zones pas encore relevées. C'est là que chaque zone est placée et que ses découpes sont dessinées. Dans ce fichier, une zone peut rester en basse résolution : elle garde seulement le chemin de son export haute résolution, et c'est cet export qui sera publié. Les deux doivent venir du même modèle Metashape, sinon ils ne se superposent pas.
 
-À chaque publication, une empreinte de la zone est enregistrée avec ses tuiles : sa position, son maillage, ses découpes et l'export haute résolution utilisé. À la publication suivante, cette empreinte est comparée à l'état du fichier Blender : si on a seulement retouché une découpe de la zone 12, seule la zone 12 repasse par les étapes ci-dessous, et les autres zones gardent leurs tuiles déjà en ligne.
+À chaque publication, une empreinte de la zone est enregistrée avec ses tuiles : sa position, son maillage, ses découpes et l'export haute résolution utilisé. À la publication suivante, cette empreinte est comparée à l'état du fichier Blender. Par exemple, si on a seulement retouché une découpe de la zone 12, seule la zone 12 repasse par les étapes ci-dessous, et les autres zones gardent leurs tuiles déjà en ligne.
 
 ## Les étapes d'une zone
 
