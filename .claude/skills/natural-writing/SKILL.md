@@ -28,8 +28,14 @@ the ones marked *weak alone* need company).
 
 ## The voice of this project
 
-- **French first.** The site's pages are French, informal, first person, field notes (« J'ai plongé… », « on a
-  constaté »); English pages are translations in the same plain voice. Docs and code comments are plain and neutral.
+**Before writing or editing a site page, read [style-guide.md](style-guide.md)** (Christian approved it on 2026-11-03: the voice, the structure of each kind of page, precision, vocabulary, length, what his corrections show, drawn from his own pages). When he corrects a text, add the before and after to its table.
+
+- **French first, impersonal.** The site's pages are French, plain field notes, in the voice of Christian's own pages
+  (Christian, 2026-11-03: he doesn't like writing in the first person; his 20 French pages before the AI work, about
+  4,300 words, have 6 « je » and 17 « on »): the passive (« La caméra a été réglée… »), « on » (« on peut… »), infinitives
+  for steps (« Mesurer… »). « Je » only rarely, for a choice or a test he told about (« J'ai fait un test (2024-06-08)… »).
+  Never make up his experience or feelings. English pages are translations in the same plain voice. Docs and code
+  comments are plain and neutral.
 - **Concrete over general.** Depths in feet with metres in parentheses, dates, zone numbers, the gear's names, what
   went wrong. Specific, even odd details are the voice: keep them.
 - **Keep the site's marks**: “curly quotes” in English pages, the apostrophe the page already uses, `→` on links that
