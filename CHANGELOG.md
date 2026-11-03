@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- 3D viewer: the left button turns the view faster (1.5 times the pointer's move), and the right button pans a little faster.
 - 3D viewer: the start view on a computer loads 63 MB instead of 75 (`errorTarget` 10 instead of 8), no difference to the eye (TODO #111).
 - Publishing: `publish_zones.mjs` bakes each zone's relief too, so `model:post-modified` is enough and a zone can't go online without it; each zone tiled once instead of twice; the detailed exports in `zone-high.json`; `--no-relief` to skip it, `relief_zones.mjs` for the relief alone (TODO #21).
 - Home page: a new image, the 3D viewer's start view instead of zone 12 alone, and its link opens the viewer on that view (TODO #122).
