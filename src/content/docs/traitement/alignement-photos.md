@@ -1,5 +1,6 @@
 ---
 title: Alignement des photos
+description: "L'alignement des images dans Agisoft Metashape, zone par zone : réglages du chunk, workflow d'alignement, correction des aberrations et optimisation."
 sidebar:
   order: 2
 ---

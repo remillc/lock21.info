@@ -211,6 +211,7 @@ Reporter codes: **D** diver, **H** heritage, **P** photogrammetrist, **N** niels
 
 ### V30 · What am I looking at? · Sev 2 · hypothesis
 - Desktop start view: blue sky, pale sand, flat violet volumes (`verify2\v13-model-desktop.png`, `verify\v33-tour8.png`); only tour step 8 explains violet = not yet scanned. Dive view starts murky green with two wall outlines (`verify2\v17-dive-esc.png`). **Hypothesis**: first-time visitors may not read it as underwater nor understand violet. **Fix**: a one-line caption near the frame: « L'écluse 21, à 60 pi sous le Saint-Laurent. En violet : zones pas encore numérisées. »
+- **Decision (Christian, 2026-11-03)**: no caption, tried and removed.
 
 ### V31 · Wheel zoom distance · to check on a real device
 - H measured ≈ 13 cm of camera move for 10 notches at ~1 fps; I did not re-measure (no GPU). If true, sev 3 (the most natural "get closer" action). **Check** on a desktop with a GPU; if confirmed, zoom toward the surface under the cursor.

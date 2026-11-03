@@ -1,5 +1,6 @@
 ---
 title: Génération des modèles
+description: "Les modèles de chaque zone générés dans Metashape : densité des faces, résolution des textures et export détaillé nécessaire au relief des moules zébrées."
 sidebar:
   order: 4
 ---

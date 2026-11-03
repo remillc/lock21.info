@@ -1,6 +1,6 @@
 ---
 // The small zone map (TODO #106, Christian 2026-10-30): the lock's zones at their place on Nick Baets' drawing
-// (src/data/zoneMap.js), each in its state, a link to its description on the « Découpage du site » page. On that page
+// (src/data/zoneMap.js), each in its state, a link to its description on the « Zones de l'écluse » page. On that page
 // (a live legend beside the drawing) and on « Suivi du travail par zone ».
 // - online: the 3D model's manifest at build (src/lib/manifest.js, as the home page's count), the secondary colour;
 // - surveyed, to come: named in the dive log (src/lib/diveLog.js, the « Zones » column), outlined;
@@ -19,7 +19,7 @@ const surveyed = new Set(dives.flatMap((dive) => dive.zones.split(/[,\s]+/).map(
 /** @param {number} zone */
 const state = (zone) => (online.has(zone) ? 'online' : surveyed.has(zone) ? 'surveyed' : 'unsurveyed')
 const words = { online: m.zonemap_online({}, o), surveyed: m.zonemap_surveyed({}, o), unsurveyed: m.zonemap_unsurveyed({}, o) }
-// The zones described on « Découpage du site » (1 to 25), their headings' anchors
+// The zones described on « Zones de l'écluse » (1 to 25), their headings' anchors
 const page = localPath('/decoupage-site', lang)
 const counts = Object.fromEntries(Object.keys(words).map((s) => [s, zones.filter((z) => state(z.zone) === s).length]))
 ---

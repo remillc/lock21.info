@@ -1,5 +1,6 @@
 ---
 title: Photo extraction
+description: "From the GoPro videos to the images for Metashape, with DaVinci Resolve: renaming the files, image overlap and lossless compression of the TIFFs."
 sidebar:
   order: 1
 ---

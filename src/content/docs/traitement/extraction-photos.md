@@ -1,5 +1,6 @@
 ---
 title: Extraction des photos
+description: "Des vidéos de la GoPro aux images pour Metashape avec Resolve : renommage des fichiers, chevauchement des images et compression sans perte des TIFF."
 sidebar:
   order: 1
 ---

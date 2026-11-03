@@ -1,5 +1,6 @@
 ---
 title: Nuage de points dense
+description: "Le nuage de points dense dans Agisoft Metashape : lancement par workflow, filtrage par niveau de confiance et par couleur, espacement des points."
 sidebar:
   order: 3
 ---

@@ -1,5 +1,6 @@
 ---
 title: Texture
+description: "La texture de chaque zone dans Agisoft Metashape : calibration des couleurs, résolution pour le web et masques qui retirent la baguette de mesure."
 sidebar:
   order: 5
 ---

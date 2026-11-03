@@ -1,5 +1,5 @@
 // The zones' shapes for the small zone map (src/components/ZoneMap.astro, TODO #106), traced as rectangles on Nick Baets'
-// 1988 drawing as the « Découpage du site » page shows it (src/content/docs/decoupage-site.webp, 1181 x 1564 px): the same
+// 1988 drawing as the « Zones de l'écluse » page shows it (src/content/docs/decoupage-site.webp, 1181 x 1564 px): the same
 // places and orientation, in that image's pixels. A schematic of the real layout, not a survey.
 
 /**

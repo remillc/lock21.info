@@ -1,5 +1,6 @@
 ---
 title: Texture
+description: "Each zone's texture in Agisoft Metashape: colour calibration, resolution for web publishing and the masks that leave out the measuring rod."
 sidebar:
   order: 5
 ---
