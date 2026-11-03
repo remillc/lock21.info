@@ -1,7 +1,7 @@
 // Starlight route middleware (astro.config.mjs, routeMiddleware): what the <head> says to search engines and to the
 // sites a link is shared on (SEO audit, docs/audits/seo-2026-10-26.md):
 // - og:locale as a region code (fr_CA, en_CA), with the other language as og:locale:alternate;
-// - a share image (public/images/og-lock21.jpg, 1200 x 630, cropped from the home page's render of zone 12), replaced
+// - a share image (public/images/og-lock21.jpg, 1200 x 630, cropped from a render of zone 12), replaced
 //   after the build by the page's first photo where it has one (src/integrations/share-images.mjs); on /modele, the
 //   3D viewer's start view (public/images/og-modele.jpg, tools/share-image/capture_model.mjs);
 // - structured data (JSON-LD): the site and its author on the two home pages, the 3D model on the model page;

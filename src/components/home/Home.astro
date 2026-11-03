@@ -4,7 +4,7 @@
 // next steps (buttons, render, cards, journal) are prefetched as soon as they are on screen (Astro prefetch, "viewport").
 // French at /, English at /en/ (src/lib/i18n.js): the texts are messages (messages/site/, home_…).
 import { Image } from 'astro:assets'
-import render from '../../assets/home/render-zone12.webp'
+import render from '../../assets/home/lock-21.webp'
 import { site } from '../../data/site'
 import { dives, totalMinutes, formatDuration, latestWithNotes } from '../../lib/diveLog'
 import { pageLang, localPath, locale } from '../../lib/i18n'
@@ -19,9 +19,9 @@ const excerpts = latestWithNotes(3, lang)
 const journal = localPath('/collecte/journal-plongees', lang)
 const about = localPath('/a-propos', lang)
 const viewer = localPath(site.viewer, lang)
-// The render's point of view in the viewer (?cam=x,y,z,tx,ty,tz: metres, y up; Blender's x, z, -y): zone 12 from the
-// west, 10 ft above the floor, as in the image
-const renderView = `${viewer}?cam=-53,3.64,-16.8,-37,5.09,-16.8`
+// The image's point of view in the viewer (?cam=x,y,z,tx,ty,tz: metres, y up; Blender's x, z, -y): the viewer's start
+// view (Christian, 2026-11-03; captured by tools/share-image/capture_model.mjs -W 2400 -H 800)
+const renderView = `${viewer}?cam=-19.06,4.02,-16.60,-20.06,3.96,-16.63`
 const ft = m.site_feet({}, o)
 
 // The three entry cards: their texts are messages (home_entry1Title…)
@@ -73,7 +73,7 @@ const entries = [
 
     <a class="render" href={renderView} data-astro-prefetch="viewport" data-track-content="home_render">
       <Image src={render} alt={m.home_alt({}, o)} widths={[640, 960, 1280]} sizes="(min-width: 75rem) 1100px, 100vw" />
-      <span class="chip">ZONE 12 · 13 M FACES · TEX 12 464 PX</span>
+      <span class="chip">{zones.count} {m.home_online({}, o)}</span>
     </a>
 
     <section class="block">
