@@ -2,7 +2,7 @@
 
 Working list for the lock21.info project. Each item has a **stable number** (`#12`): it keeps it until it is
 removed, and numbers are never reused, so "todo 12" always means the same item. New items take the next free number:
-**#123**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
+**#126**. Remove items once they are done (the history is in git and CHANGELOG.md), and add new ones at the right
 place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS.md`.
 
 ## 3D model publishing
@@ -37,6 +37,13 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   20-minute test with three to five people, in French and English (the eight tasks in the report's « A test with real
   people »)
 
+- [ ] #123 Bug (Christian, 2026-11-03): on `/decoupage-site#fig-01`, clicking the image to enlarge it shows it shifted to the left
+  (the lightbox, `public/scripts/image-zoom.js`)
+- [ ] #124 Zone map (`/decoupage-site#état-des-zones`, Christian, 2026-11-03): remove the state « relevée, à venir », its zones
+  shown as « pas encore relevée » (`ZoneMap.astro`)
+- [ ] #125 Heading anchors as plain slugs, no escaped characters in the address (Christian, 2026-11-03): `#état-des-zones` shows as
+  `#%C3%A9tat-des-zones`, to become `#etat-des-zones`; the links that use them updated (`/collecte/materiel-utilise#caméra`…), the
+  former anchors still working where other sites may point to them
 - [ ] #93 Document the gear (Christian, 2026-10-26): his own photo of the GoPro Hero6 Black in its housing, to replace
   GoPro's product photo (« Matériel utilisé », Caméra); « Le rig » (`collecte/rig.md`, since 2026-10-26: photos of
   2024-05-16 and 2024-06-14, Sylvain Marcotte's 3D model) still has one « à compléter »: the rig's construction
