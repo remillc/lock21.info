@@ -5,7 +5,7 @@ sidebar:
   order: 0
 ---
 
-Sous l'eau, deux lumières éclairent ce que je filme : celle du jour, qui descend de la surface, et celle des quatre lampes du [rig](/collecte/rig#les-lampes), des DEL blanches à 6000 K. L'eau ne laisse pas passer toutes les couleurs de la même façon : elle absorbe d'abord le rouge, et dans l'eau chargée du canal, une bonne partie du bleu aussi. Plus la lumière traverse d'eau, plus l'image tire sur le vert-jaune. La lumière du jour change donc avec la profondeur, et celle des lampes avec la distance entre le rig et ce qu'il filme.
+Sous l'eau, deux lumières éclairent ce qui est filmé : celle du jour, qui descend de la surface, et celle des quatre lampes du [rig](/collecte/rig#les-lampes), des DEL blanches à 6000 K. L'eau ne laisse pas passer toutes les couleurs de la même façon : elle absorbe d'abord le rouge, et dans l'eau chargée du canal, une bonne partie du bleu aussi. Plus la lumière traverse d'eau, plus l'image tire sur le vert-jaune. La lumière du jour change donc avec la profondeur, et celle des lampes avec la distance entre le rig et ce qu'il filme.
 
 <figure id="absorption">
 
@@ -14,7 +14,7 @@ Sous l'eau, deux lumières éclairent ce que je filme : celle du jour, qui desc
 <figcaption>L'eau absorbe les couleurs de la lumière, le rouge en premier. Le jour, qui traverse toute la profondeur, arrive vert-jaune. Les lampes, situées à courte distance du sujet, gardent presque toutes les couleurs, ce qui permet de restaurer les couleurs perdues par l'éclairage ambiant.</figcaption>
 </figure>
 
-Dans la caméra, la balance des blancs reste fixe, à 6500 K ([Matériel utilisé](/collecte/materiel-utilise)). La correction se fait ensuite dans DaVinci Resolve, d'après la charte de couleurs filmée au début de chaque plongée, sous-exposée d'un stop ([La charte de couleurs est surexposée](/problemes/charte-couleurs-surexposee)). Pour certaines plongées, j'ai filmé la charte à deux hauteurs, sur le plancher et à mi-hauteur, et fait un étalonnage pour chacune ([Calibration des couleurs](/problemes/calibration-couleurs)).
+Dans la caméra, la balance des blancs reste fixe, à 6500 K ([Matériel utilisé](/collecte/materiel-utilise)). La correction se fait ensuite dans DaVinci Resolve, d'après la charte de couleurs filmée au début de chaque plongée, sous-exposée d'un stop ([La charte de couleurs est surexposée](/problemes/charte-couleurs-surexposee)). Pour certaines plongées, la charte a été filmée à deux hauteurs, sur le plancher et à mi-hauteur, avec un étalonnage pour chacune ([Calibration des couleurs](/problemes/calibration-couleurs)).
 
 ## La correction ajoutée
 

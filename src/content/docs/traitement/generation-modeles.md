@@ -20,7 +20,7 @@ La taille d'une face pour les modèles haute résolution a été définie 2mm `<
 
 ## Résolution pour publication Web
 
-La publication sur [lock21.info/modele](/modele) part de l'export le plus détaillé de chaque zone. La chaîne de publication (`tools/publish-model/`) le simplifie elle-même : je n'ai plus à exporter un modèle « web » à part.
+La publication sur [lock21.info/modele](/modele) part de l'export le plus détaillé de chaque zone. La chaîne de publication (`tools/publish-model/`) le simplifie elle-même : il n'y a plus de modèle « web » à exporter à part.
 
 ### Ratio faces / surface
 
@@ -33,4 +33,4 @@ Les niveaux éloignés sont allégés encore plus : environ 40 000 faces par z
 
 ### Relief (moules zébrées)
 
-Pour que le relief des moules (1 à 3 cm) ressorte dans le visualiseur, il faut un export géométrique fin, avec des arêtes d'environ 1 cm ou moins (ex. zone 12 : 13 M faces, environ 7 mm). Cet export n'a pas besoin de texture et doit venir du même chunk que l'export publié. Avec des *depth maps* en qualité `low`, le modèle reste trop grossier, même avec beaucoup de faces : c'est pourquoi je refais la zone 4 en qualité `medium`.
+Pour que le relief des moules (1 à 3 cm) ressorte dans le visualiseur, il faut un export géométrique fin, avec des arêtes d'environ 1 cm ou moins (ex. zone 12 : 13 M faces, environ 7 mm). Cet export n'a pas besoin de texture et doit venir du même chunk que l'export publié. Avec des *depth maps* en qualité `low`, le modèle reste trop grossier, même avec beaucoup de faces : c'est pourquoi la zone 4 a été refaite en qualité `medium`.

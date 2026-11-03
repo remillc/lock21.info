@@ -92,7 +92,7 @@ Vidéo effectuée à la palme en utilisant le format 4K 16:9.
 
 ## Conclusions
 
-Le segment de 300 pieds du 26 juillet 2024 a été aligné dans Metashape avec différentes calibrations de la caméra. Pour comparer leurs courbures, j'ai mesuré en novembre 2026 la trajectoire des 2 138 caméras de chaque essai : son plus grand écart à la ligne droite qui relie ses deux bouts (la flèche), en pourcentage de sa longueur. Une ligne droite donne 0 %, un demi-cercle 50 %.
+Le segment de 300 pieds du 26 juillet 2024 a été aligné dans Metashape avec différentes calibrations de la caméra. Pour comparer leurs courbures, la trajectoire des 2 138 caméras de chaque essai a été mesurée en novembre 2026 : son plus grand écart à la ligne droite qui relie ses deux bouts (la flèche), en pourcentage de sa longueur. Une ligne droite donne 0 %, un demi-cercle 50 %.
 
 | Calibration de la caméra | Flèche |
 | --- | --- |

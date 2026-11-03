@@ -12,7 +12,7 @@ Les clips sont d'abord étalonnés dans DaVinci Resolve ([Étalonnage des couleu
 
 ## Le renommage des vidéos
 
-Avant l'étalonnage, je renomme les vidéos dans leur dossier `raw-4k` avec l'utilitaire Bulk Rename Utility (préréglage `O:\scripts\renameFiles.bru`). La GoPro met le numéro du chapitre avant celui de la vidéo : `GX020333.MP4` est le chapitre 02 de la vidéo 0333. Le renommage inverse les deux, ce qui garde les chapitres d'une même vidéo ensemble quand les fichiers sont triés par nom :
+Avant l'étalonnage, les vidéos sont renommées dans leur dossier `raw-4k` avec l'utilitaire Bulk Rename Utility (préréglage `O:\scripts\renameFiles.bru`). La GoPro met le numéro du chapitre avant celui de la vidéo : `GX020333.MP4` est le chapitre 02 de la vidéo 0333. Le renommage inverse les deux, ce qui garde les chapitres d'une même vidéo ensemble quand les fichiers sont triés par nom :
 
 | Motif | Remplacement | Avant | Après |
 | --- | --- | --- | --- |
@@ -62,4 +62,4 @@ Règle du pouce :
 
 ## Compression des fichiers
 
-Cette étape permet de réduire considérablement la taille des images sans aucune perte de données. DaVinci Resolve rend les images en TIFF sans compression, environ 34 Mo chacune. Je les compresse ensuite en LZW, un format sans perte que Metashape lit directement, ce qui les ramène à environ 14 Mo. Le script `compress_tiffs.mjs` (avec ImageMagick) le fait sur place : chaque image n'est remplacée qu'une fois ses pixels comparés à ceux de l'originale.
+Cette étape permet de réduire considérablement la taille des images sans aucune perte de données. DaVinci Resolve rend les images en TIFF sans compression, environ 34 Mo chacune. Elles sont ensuite compressées en LZW, un format sans perte que Metashape lit directement, ce qui les ramène à environ 14 Mo. Le script `compress_tiffs.mjs` (avec ImageMagick) le fait sur place : chaque image n'est remplacée qu'une fois ses pixels comparés à ceux de l'originale.

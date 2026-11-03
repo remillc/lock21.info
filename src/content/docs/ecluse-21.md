@@ -7,7 +7,7 @@ head:
 description: "L'écluse 21 du canal de Cornwall : sa profondeur, le courant, ses dimensions, son histoire jusqu'à l'ennoiement de 1958, et des liens pour en savoir plus."
 ---
 
-L'écluse 21 est sous 60 pieds (18,3 m) d'eau dans le Saint-Laurent, près de Long Sault (Ontario). Le dessus des piliers est à 40 pieds (12 m). Le courant y est soutenu : dans le canal de l'écluse, je l'ai [mesuré](/problemes/fort-courant-canal) à environ 35 pieds par minute (10,7 m/min) en juin 2024. Il est plus fort au-dessus du déversoir.
+L'écluse 21 est sous 60 pieds (18,3 m) d'eau dans le Saint-Laurent, près de Long Sault (Ontario). Le dessus des piliers est à 40 pieds (12 m). Le courant y est soutenu : dans le canal de l'écluse, il a été [mesuré](/problemes/fort-courant-canal) à environ 35 pieds par minute (10,7 m/min) en juin 2024. Il est plus fort au-dessus du déversoir.
 
 <div class="facts">
 <p class="fact"><span>Profondeur</span><b>60 pi (18,3 m)</b></p>

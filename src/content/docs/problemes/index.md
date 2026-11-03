@@ -5,7 +5,7 @@ sidebar:
   order: 0
 ---
 
-Les problèmes rencontrés en chemin, de la prise de vue sous l'eau au modèle 3D, et les tests que j'ai faits pour les régler. Certaines pages sont encore des notes de travail.
+Les problèmes rencontrés en chemin, de la prise de vue sous l'eau au modèle 3D, et les tests faits pour les régler. Certaines pages sont encore des notes de travail.
 
 ## À la prise de vue
 
