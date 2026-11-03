@@ -41,10 +41,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   GoPro's product photo (« Matériel utilisé », Caméra); « Le rig » (`collecte/rig.md`, since 2026-10-26: photos of
   2024-05-16 and 2024-06-14, Sylvain Marcotte's 3D model) still has one « à compléter »: the rig's construction
   (fittings, how it attaches to the scooter; the 2020 aluminium profiles and the lights written)
-- [ ] #111 The 3D viewer on real phones (GPU, memory, Safari: BrowserStack or Christian's Pixel and an iPhone), the
-  light-then-full switch on a strong Android phone included (performance audit, `docs/audits/performance-2026-11-01.md`, P3, done
-  2026-11-01). The start view's time on a real connection to read on the live site: its `errorTarget` went from 8 to 10 on
-  2026-11-03 (75 to 63 MB)
 - [ ] #114 The 3D viewer too laggy on old tablets (Christian, 2026-11-01, told by a visitor): which ones (model, iOS or
   Android version), standard or underwater view; then a lighter profile for weak devices (pixel ratio, shadows, ambient
   occlusion, particles, creatures, detail), chosen from the device's GPU and memory or from a slow frame rate measured
