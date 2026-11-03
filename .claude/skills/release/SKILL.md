@@ -3,7 +3,7 @@ name: release
 description: |
   Make a release of lock21.info (1.0.1, 1.1.0…): bring the English pages up to date, bump the version,
   date the CHANGELOG, build, merge a release branch into main, push an annotated tag (which deploys to Cloudflare), check the live site. Use only when
-  Christian asks for a release, a version or a deploy by tag ("fais une release", "sors la beta.8"); a merge into main
+  Christian asks for a release, a version or a deploy by tag ("fais une release", "sors la 1.0.1"); a merge into main
   is not a release.
 ---
 
