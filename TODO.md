@@ -30,14 +30,6 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
     saturation) into the downloadable model. `color_patch.py` (a part of a zone brought to its neighbours' colour) stays
     for local cases. The real fix is upstream: #75.
 
-### Virtual reality (idea)
-
-- [ ] #27 VR option on lock21.info (WebXR, three.js): view the model in a headset, either
-  - at human scale, as if standing alongside the structures (immersive VR), or
-  - placed at its real GPS position (needs the site's georeferencing, same as the KMZ: GPS coordinates of at least
-    two points)
-  - check headset memory and frame rate (stereo rendering doubles the GPU load; render on demand does not apply in VR)
-
 ## Site
 
 
