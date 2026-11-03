@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- Heading anchors without accents: `#etat-des-zones`, no more `#%C3%A9tat-des-zones` in the address; the former anchors still lead to their heading.
 - Lightbox: a zoomed image narrower than the screen stays centred, no longer against the left edge (zone drawing).
 - Zone map: two states, online and not surveyed yet; « relevée, à venir » removed, its zones (5, 14, 15, 19) now shown as not surveyed yet.
 - Zones page: a link to the 3D model under each online zone (usability audit V16); renamed « Zones de l'écluse » in French (V33). About and Thanks last in the menu (V34). Six processing pages get a description (V32; TODO #84).

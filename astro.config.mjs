@@ -11,6 +11,7 @@ import homeSlash from './src/integrations/home-slash.mjs'
 import englishPaths from './src/integrations/english-paths.mjs'
 import footnoteLabels from './src/integrations/footnote-labels.mjs'
 import placeholderMarks from './src/integrations/placeholder-marks.mjs'
+import headingSlugs from './src/integrations/heading-slugs.mjs'
 import contentImages from './src/integrations/content-images.mjs'
 import viewerFiles from './src/integrations/viewer-files.mjs'
 import shareImages from './src/integrations/share-images.mjs'
@@ -90,6 +91,8 @@ export default defineConfig({
     footnoteLabels(),
     // The « (à compléter) » placeholders drawn as a dashed note (class l21-todo, custom.scss)
     placeholderMarks(),
+    // Heading anchors without accents (#etat-des-zones): before Starlight, whose heading links read them
+    headingSlugs(),
     // The sitemap, as Starlight would add it (same i18n), without the test pages (in no menu: usability audit V9) and the 404 pages
     sitemap({
       i18n: { defaultLocale: 'root', locales: { root: 'fr', en: 'en' } },
