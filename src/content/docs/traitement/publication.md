@@ -4,13 +4,15 @@ description: "Comment chaque zone passe de Metashape au visualiseur 3D du site 
 sidebar:
   order: 6
 ---
-Un export de Metashape est beaucoup trop lourd pour un navigateur : la zone 12 compte plus de 12 millions de faces. La publication en fait des tuiles, et le [visualiseur](/modele) ne charge que celles qu'on regarde, plus ou moins détaillées selon la distance.
+## La problématique
+
+Un export de Metashape est beaucoup trop lourd pour un navigateur. Par exemple, la zone 12 compte plus de 12 millions de faces. Afin de contourner ce problème, la publication en fait des tuiles, et le [visualiseur](/modele) ne charge que celles qu'on regarde. Les tuiles proches de la caméra sont chargées avec beaucoup de détails, celles plus éloignées avec moins. Le navigateur économise ainsi sa mémoire et ses calculs, et la navigation reste fluide.
 
 ## Le fichier Blender
 
 Toutes les zones sont assemblées dans un seul fichier Blender, avec le terrain et les maquettes des zones pas encore relevées. C'est là que chaque zone est placée et que ses découpes sont dessinées. Dans ce fichier, une zone peut rester en basse résolution : elle garde seulement le chemin de son export haute résolution, et c'est cet export qui sera publié. Les deux doivent venir du même modèle Metashape, sinon ils ne se superposent pas.
 
-Chaque zone publiée garde une empreinte de son état dans le fichier, et la commande compare : seules les zones modifiées sont refaites.
+À chaque publication, une empreinte de la zone est enregistrée avec ses tuiles : sa position, son maillage, ses découpes et l'export haute résolution utilisé. À la publication suivante, cette empreinte est comparée à l'état du fichier Blender : si on a seulement retouché une découpe de la zone 12, seule la zone 12 repasse par les étapes ci-dessous, et les autres zones gardent leurs tuiles déjà en ligne.
 
 ## Les étapes d'une zone
 
@@ -24,6 +26,6 @@ Chaque zone a aussi un jeu léger pour les téléphones et les tablettes, avec u
 
 ## La mise en ligne
 
-Le résultat se contrôle d'abord dans le visualiseur, sur l'ordinateur. Les tuiles partent ensuite sur le serveur, et les visiteurs voient la nouvelle version dans la minute, sans que le site lui-même soit republié.
+Après une étape de validation locale dans le visualiseur, les tuiles sont téléchargées sur le serveur, et les visiteurs voient la nouvelle version dans la minute, sans que le site lui-même soit republié.
 
-Les téléchargements de la [page du modèle](/modele) et les modèles de réalité augmentée sont refaits à part, parce qu'ils contiennent tout le modèle, chaque zone simplifiée davantage.
+Les fichiers à télédécharger situés sur la [page du modèle](/modele) et les modèles de réalité augmentée sont refaits à part, parce qu'ils contiennent tout le modèle, chaque zone simplifiée davantage.
