@@ -1,11 +1,11 @@
 ---
 title: Problems encountered
-description: The problems met along the way, from filming underwater to the 3D model, and the tests I ran to solve them.
+description: The problems met along the way, from filming underwater to the 3D model, and the tests run to solve them.
 sidebar:
   order: 0
 ---
 
-The problems met along the way, from filming underwater to the 3D model, and the tests I ran to solve them. Some pages are still working notes.
+The problems met along the way, from filming underwater to the 3D model, and the tests run to solve them. Some pages are still working notes.
 
 ## While filming
 

@@ -47,7 +47,7 @@ traitement). Le détail: le guide **Installation**, section 5.
 - **`main`**: la version de référence du code et des pages. La pousser ne publie rien.
 - **Une branche par travail** (`feature/…`, `docs/…`), fusionnée dans `main` une fois terminée, puis supprimée.
 - **Les versions** : `0.x.y` jusqu'au 26 octobre 2026, puis `1.0.0-beta.N` pendant l'essai public (la première,
-  `1.0.0-beta.1`), et `1.0.0` au lancement. Une version (« release ») a sa section datée dans `CHANGELOG.md` et une
+  `1.0.0-beta.1`), et `1.0.0` au lancement (3 novembre 2026). Une version (« release ») a sa section datée dans `CHANGELOG.md` et une
   étiquette Git `vX.Y.Z` ; l'étiquette déclenche la publication du site.
 - **Avant une release** :
   1. `npm run model:check` : les zones et le contexte changés dans le `.blend` depuis leur publication (le `.blend`

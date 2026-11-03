@@ -16,9 +16,9 @@
       "recorded": "2026-11-03"
     },
     "collecte/mise-echelle.md": {
-      "source": "eb058f850151fe2f07575e3dc4a02974a6f939a9",
-      "commit": "e594395",
-      "recorded": "2026-11-01"
+      "source": "7b088a01f59441d942fa3b1f688b6ee2175fbc72",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
     },
     "collecte/rig.md": {
       "source": "ae010ca8f5ad823b32a1d00120a271d2a27e128c",
@@ -31,14 +31,14 @@
       "recorded": "2026-11-01"
     },
     "decoupage-site.mdx": {
-      "source": "ce6335536b710c312be772e33abdab9407d5e24b",
-      "commit": "abadf21",
-      "recorded": "2026-10-30"
+      "source": "e6d534cec70ccc1beea0317431f85835cd6026ac",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
     },
     "ecluse-21.md": {
-      "source": "cc48478f0e136d1143a54efb6d35994445644bf0",
-      "commit": "769b5b9",
-      "recorded": "2026-10-29"
+      "source": "4e3615cfbd34d4fa03f6f989cb0a8b6cd96bcf82",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
     },
     "index.mdx": {
       "source": "8939a492e523c4b731fe0efb540b51d648492756",
@@ -51,9 +51,9 @@
       "recorded": "2026-10-26"
     },
     "problemes/alignement-chunks.md": {
-      "source": "c822f80bd22f05bc6d2bbfc1b4dee1ef8be3795d",
-      "commit": "e594395",
-      "recorded": "2026-11-01"
+      "source": "dc2eedfbb303248774d0857b4274912e58a67c8d",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
     },
     "problemes/calibration-couleurs.md": {
       "source": "3538cb662e432a6f82ee02b696656b6faa1690db",
@@ -66,14 +66,14 @@
       "recorded": "2026-10-26"
     },
     "problemes/dimensions-rig.md": {
-      "source": "ef43a0e0e4f984d11918deb34f4293631d8a349a",
-      "commit": "e594395",
-      "recorded": "2026-11-01"
+      "source": "a3c47c0aba3040fe61d6dd9bce9a7d3d367f216a",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
     },
     "problemes/effet-banane.md": {
-      "source": "8268a5d2c98d399d9adbf01a05e0a38564b45f46",
-      "commit": "e594395",
-      "recorded": "2026-11-01"
+      "source": "093be458155e5d5607f4a75672cf9c7935362d10",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
     },
     "problemes/fort-courant-canal.md": {
       "source": "c2f6bb2338efdc99b6e208c527b0874ebfa86445",
@@ -81,14 +81,14 @@
       "recorded": "2026-11-01"
     },
     "problemes/index.md": {
-      "source": "34dd1f11d6746d0d314820cc4ee4c79b6a51c1ce",
-      "commit": "e594395",
-      "recorded": "2026-11-01"
+      "source": "bcf13da713b3caf8d1ab95bdf2912863f56ab0fa",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
     },
     "problemes/nettete-images.md": {
-      "source": "012903db32c77c63fc8a85710db26a1e0bc25daf",
-      "commit": "27ab564",
-      "recorded": "2026-10-26"
+      "source": "5680e902f9eff4b0d1bf3c560491ed46f9217f07",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
     },
     "remerciements.md": {
       "source": "9e570f879ac0618b340d51246172e4bde04048da",
@@ -111,29 +111,34 @@
       "recorded": "2026-11-01"
     },
     "traitement/alignement-photos.md": {
-      "source": "f2875bb8b23e55ac539928907b6fcf1282a1c596",
-      "commit": "1f6c484",
-      "recorded": "2026-10-26"
+      "source": "a8c3ac071ecbb32b6c7f2f67f6123efb12deac61",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
     },
     "traitement/etalonnage-couleurs.md": {
-      "source": "964809b2fe5cce6787173c5abdd3b87e199bb494",
-      "commit": "e594395",
-      "recorded": "2026-11-01"
+      "source": "4fe0429f209d50982c19acc5e2edb8b98c8467e1",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
     },
     "traitement/extraction-photos.md": {
-      "source": "318a961d7d77efc77218f35849d4db58c3732ae3",
-      "commit": "f78f9de",
-      "recorded": "2026-11-02"
+      "source": "9999c3e9ee654c433ca0acaffdbed5d5eb574a19",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
     },
     "traitement/generation-modeles.md": {
-      "source": "bfedbf9e539b42e68789f63cb1c0a545a7fcd56b",
-      "commit": "e594395",
-      "recorded": "2026-11-01"
+      "source": "ab185f1793f6ad149427d7b8353928adea15d233",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
     },
     "traitement/nuage-points-dense.md": {
-      "source": "591f6ac9f8a636d26344bd7c84611b31547d252c",
-      "commit": "ba3b567",
-      "recorded": "2026-10-26"
+      "source": "5c2b0dfc0c1dc33527d7c47182f727d63df565d4",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
+    },
+    "traitement/publication.md": {
+      "source": "e68a8379ef26235e33fcc23256ad050599e47798",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
     },
     "traitement/suivi.md": {
       "source": "f52d59df06317c468f1efe509e4805a2147f2c79",
@@ -141,14 +146,14 @@
       "recorded": "2026-10-26"
     },
     "traitement/suivi.mdx": {
-      "source": "d27b3057966aa67b6b83711d22af245d122988e7",
-      "commit": "612c325",
-      "recorded": "2026-11-02"
+      "source": "bf291c1f91f947b9b086f7e0cf441ccd41236858",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
     },
     "traitement/texture.md": {
-      "source": "d100be90526b127502286a5a5a743f90151b1950",
-      "commit": "d9402f6",
-      "recorded": "2026-10-30"
+      "source": "8fde4429e911e696364f1c6dd85b2a2ca645edf0",
+      "commit": "7efb193",
+      "recorded": "2026-11-03"
     }
   }
 }

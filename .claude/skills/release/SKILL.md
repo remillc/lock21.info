@@ -1,9 +1,9 @@
 ---
 name: release
 description: |
-  Make a release of lock21.info (1.0.0-beta.N, later 1.0.0): bring the English pages up to date, bump the version,
+  Make a release of lock21.info (1.0.1, 1.1.0…): bring the English pages up to date, bump the version,
   date the CHANGELOG, build, merge a release branch into main, push an annotated tag (which deploys to Cloudflare), check the live site. Use only when
-  Christian asks for a release, a version or a deploy by tag ("fais une release", "sors la beta.8"); a merge into main
+  Christian asks for a release, a version or a deploy by tag ("fais une release", "sors la 1.0.1"); a merge into main
   is not a release.
 ---
 
@@ -21,8 +21,8 @@ earlier release's OK doesn't carry over.
 - `npm run model:check` (the `.blend` saved): zones or context changed since their publication. The model is
   published on its own (`model:upload`, with its OK), not by the release: tell Christian if something is waiting.
 - Read `## Unreleased` in `CHANGELOG.md`. If it is empty, there is nothing to release: say so and stop.
-- The new version: the next `1.0.0-beta.N` (`git tag --sort=-creatordate | head -1`, `package.json`), unless Christian
-  names another. `1.0.0` only when he says it is the launch.
+- The new version, from the last one (`git tag --sort=-creatordate | head -1`, `package.json`), unless Christian names
+  another: patch for fixes, minor for features.
 
 ## 2. The release branch
 

@@ -5,7 +5,7 @@ sidebar:
 description: The targets placed on the bottom and the distances measured between them, which give the models their real size.
 ---
 
-So that each model has its real size and the zones line up with each other (see [Aligning chunks](/en/problemes/alignement-chunks)), I measure distances on the site during the dives: two targets placed on the bottom, the distance between them measured, and both targets filmed with the rest of the zone. The distance between two targets makes a scale.
+So that each model has its real size and the zones line up with each other (see [Aligning chunks](/en/problemes/alignement-chunks)), distances are measured on the site during the dives: two targets placed on the bottom, the distance between them measured, and both targets filmed with the rest of the zone. The distance between two targets makes a scale.
 
 <div class="facts">
 <p class="fact"><span>Targets</span><b>7.5 and 15 cm</b></p>

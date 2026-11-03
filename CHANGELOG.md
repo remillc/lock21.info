@@ -1,17 +1,21 @@
 # Changelog
 
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
-public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
+public, 1.0.0-beta.N while it was tried out in public, 1.0.0 at its launch (2026-11-03).
 
-## Unreleased
+## 1.0.0 - 2026-11-03
 
+The site's launch, after its public beta. Zones 4, 8 and 10 to 13 and the context republished with the downloads, a new page on how the model is published, the menu on the home page on wide screens, links from the zones page to the 3D model, and the pages in the impersonal voice.
+
+- English pages brought up to date: « Publishing the model » (new, `/en/processing/publishing`), the zones page and its links to the 3D model, the sentences no longer in the first person.
+- 3D model: zones 4, 8 and 10 to 13 and the context republished from the Blender file, online since 2026-11-03 with the downloads and the augmented reality models; `AR_VERSION` changed so that phones fetch these again.
 - Heading anchors without accents: `#etat-des-zones`, no more `#%C3%A9tat-des-zones` in the address; the former anchors still lead to their heading.
 - Lightbox: a zoomed image narrower than the screen stays centred, no longer against the left edge (zone drawing).
 - Zone map: two states, online and not surveyed yet; « relevée, à venir » removed, its zones (5, 14, 15, 19) now shown as not surveyed yet.
 - Zones page: a link to the 3D model under each online zone (usability audit V16); renamed « Zones de l'écluse » in French (V33). About and Thanks last in the menu (V34). Six processing pages get a description (V32; TODO #84).
 - The site's pages in the impersonal voice of Christian's own: 14 sentences no longer in the first person (`.claude/skills/natural-writing/style-guide.md`).
 - 3D viewer: the left button turns the view faster (1.5 times the pointer's move), and the right button pans a little faster.
-- New page « Publication du modèle » in the processing steps: how a zone goes from Metashape to the 3D viewer (TODO #17; English at the release).
+- New page « Publication du modèle » in the processing steps: how a zone goes from Metashape to the 3D viewer (TODO #17).
 - 3D viewer: the start view on a computer loads 63 MB instead of 75 (`errorTarget` 10 instead of 8), no difference to the eye (TODO #111).
 - Publishing: `publish_zones.mjs` bakes each zone's relief too, so `model:post-modified` is enough and a zone can't go online without it; each zone tiled once instead of twice; the detailed exports in `zone-high.json`; `--no-relief` to skip it, `relief_zones.mjs` for the relief alone (TODO #21).
 - Home page: a new image, the 3D viewer's start view instead of zone 12 alone, and its link opens the viewer on that view (TODO #122).

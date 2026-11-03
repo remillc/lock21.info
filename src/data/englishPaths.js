@@ -23,6 +23,7 @@ export const englishPaths = {
   'traitement/nuage-points-dense': 'processing/dense-point-cloud',
   'traitement/generation-modeles': 'processing/building-models',
   'traitement/texture': 'processing/texture',
+  'traitement/publication': 'processing/publishing',
   'traitement/suivi': 'processing/progress',
   problemes: 'problems',
   'problemes/alignement-chunks': 'problems/aligning-chunks',

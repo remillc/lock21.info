@@ -92,7 +92,7 @@ Video shot finning, in 4K 16:9.
 
 ## Conclusions
 
-The 300-foot segment of July 26, 2024 was aligned in Metashape with different camera calibrations. To compare how much they curve, in November 2026 I measured the track of the 2,138 cameras in each trial: its greatest distance from the straight line joining its two ends (the sagitta), as a percentage of its length. A straight line gives 0%, a half circle 50%.
+The 300-foot segment of July 26, 2024 was aligned in Metashape with different camera calibrations. To compare how much they curve, the track of the 2,138 cameras in each trial was measured in November 2026: its greatest distance from the straight line joining its two ends (the sagitta), as a percentage of its length. A straight line gives 0%, a half circle 50%.
 
 | Camera calibration | Sagitta |
 | --- | --- |

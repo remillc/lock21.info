@@ -12,7 +12,7 @@ The clips are first colour-graded in DaVinci Resolve ([Colour grading](/en/trait
 
 ## Renaming the videos
 
-Before colour grading, I rename the videos in their `raw-4k` folder with Bulk Rename Utility (preset `O:\scripts\renameFiles.bru`). The GoPro puts the chapter number before the video's: `GX020333.MP4` is chapter 02 of video 0333. The renaming swaps the two, which keeps the chapters of a video together when the files are sorted by name:
+Before colour grading, the videos are renamed in their `raw-4k` folder with Bulk Rename Utility (preset `O:\scripts\renameFiles.bru`). The GoPro puts the chapter number before the video's: `GX020333.MP4` is chapter 02 of video 0333. The renaming swaps the two, which keeps the chapters of a video together when the files are sorted by name:
 
 | Pattern | Replacement | Before | After |
 | --- | --- | --- | --- |
@@ -62,4 +62,4 @@ Rule of thumb:
 
 ## File compression
 
-This step shrinks the images considerably without losing any data. DaVinci Resolve renders the frames as uncompressed TIFF, about 34 MB each. I then compress them in LZW, a lossless format Metashape reads directly, which brings them down to about 14 MB. The script `compress_tiffs.mjs` (with ImageMagick) does it in place: a frame is only replaced once its pixels have been compared with the original's.
+This step shrinks the images considerably without losing any data. DaVinci Resolve renders the frames as uncompressed TIFF, about 34 MB each. They are then compressed in LZW, a lossless format Metashape reads directly, which brings them down to about 14 MB. The script `compress_tiffs.mjs` (with ImageMagick) does it in place: a frame is only replaced once its pixels have been compared with the original's.
