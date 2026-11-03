@@ -1,22 +1,20 @@
 ---
-// Page frame: Starlight's (0.42), plus the mobile menu on splash pages (the home page, /modele/). Those pages have no
-// navigation column, so Starlight draws neither the menu button (☰) nor the menu, and on small screens the bar looked
-// different from the rest of the site, without access to the navigation or the "Modèle 3D" button. Here, on splash
-// pages, the button and the same menu (Sidebar.astro) are drawn on small screens only; wide screens are unchanged,
-// except /modele: there the button and the menu are on wide screens too, the menu a panel over the page's left side
-// (a popover at every width: a click outside or Esc closes it), so the viewer keeps its full width (Christian,
-// 2026-10-23).
+// Page frame: Starlight's (0.42), plus the menu on splash pages (the home pages, /modele, the 404 pages). Those pages
+// have no navigation column, so Starlight draws neither the menu button (☰) nor the menu. Here the button and the same
+// menu (Sidebar.astro) are drawn at every width, the menu a panel over the page's left side on wide screens (a popover:
+// a click outside or Esc closes it), so the page keeps its full width (Christian, 2026-10-23 for /modele; 2026-11-03 for
+// the others, usability audit V23).
 // When updating Starlight, compare with node_modules/@astrojs/starlight/dist/components/PageFrame.astro.
 import MobileMenuToggle from 'virtual:starlight/components/MobileMenuToggle'
 import Sidebar from 'virtual:starlight/components/Sidebar'
 
 const { hasSidebar, entry } = Astro.locals.starlightRoute
 const splash = !hasSidebar && entry.data.template === 'splash'
-// The 3D model's page: its menu at every width (see above)
-const drawer = splash && /^(en\/)?modele$/.test(entry.id)
+// The 3D model's page: against the viewer's frame on wide screens, a panel on narrow ones (below)
+const model = splash && /^(en\/)?modele$/.test(entry.id)
 ---
 
-<div class:list={['page sl-flex', { 'splash-menu': splash, 'drawer-menu': drawer }]}>
+<div class:list={['page sl-flex', { 'splash-menu': splash, 'drawer-menu': splash, 'model-menu': model }]}>
   <header class="header"><slot name="header" /></header>
   {
     (hasSidebar || splash) && (
@@ -31,8 +29,8 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
 
               const desktopMediaQuery = matchMedia('(min-width: 50em)')
 
-              // Remove the popover attribute on desktop viewports. It's only needed for the mobile menu; on /modele the
-              // menu stays a popover at every width (a panel over the page)
+              // Remove the popover attribute on desktop viewports. It's only needed for the mobile menu; on splash pages
+              // the menu stays a popover at every width (a panel over the page)
               const drawer = Boolean(this.closest('.drawer-menu'))
               // The bar 6rem wider than the viewer's frame on each side (--l21-frame-left: the frame's left edge, measured)
               if (drawer) {
@@ -40,9 +38,14 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
                 // 24.75rem): it opens from the window's left edge over the frame instead (l21-menu-overlay)
                 const align = () => {
                   const frame = document.querySelector('.model-page .frame')
-                  if (!frame) return
-                  const left = frame.getBoundingClientRect().left
                   const root = document.documentElement
+                  // No viewer's frame (the home pages, the 404 pages): from the window's edge, over the page
+                  if (!frame) {
+                    root.style.removeProperty('--l21-frame-left')
+                    root.classList.add('l21-menu-overlay')
+                    return
+                  }
+                  const left = frame.getBoundingClientRect().left
                   root.style.setProperty('--l21-frame-left', `${left}px`)
                   root.classList.toggle('l21-menu-overlay', left < 24.75 * parseFloat(getComputedStyle(root).fontSize))
                 }
@@ -133,7 +136,7 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
       /* /modele on narrow screens: the menu a panel on the right, under its button, over the 3D display (Christian,
          2026-10-23), not the whole width */
       @media (max-width: 49.99rem) {
-        .drawer-menu .sidebar-pane {
+        .model-menu .sidebar-pane {
           inset-inline-start: auto;
           inset-inline-end: 0;
           width: min(var(--sl-sidebar-width), 85vw);
@@ -165,11 +168,8 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
           background-color: var(--sl-color-bg-sidebar);
           border-inline-end: 1px solid var(--sl-color-hairline-shade);
         }
-        /* Splash pages keep their full width on wide screens: no navigation column there */
-        .splash-menu .sidebar {
-          display: none;
-        }
-        /* /modele: the menu on wide screens too, a panel over the page's left side while open; room for its button */
+        /* Splash pages keep their full width: no navigation column, the menu a panel over the page's left side while
+           open; room for its button */
         .drawer-menu .sidebar {
           display: block;
         }
@@ -238,7 +238,7 @@ const drawer = splash && /^(en\/)?modele$/.test(entry.id)
 
 <style is:global>
   @layer l21.layout {
-    /* /modele: Starlight's menu button (md:sl-hidden) shown on wide screens too, left of the logo, beside the panel it
+    /* Splash pages: Starlight's menu button (md:sl-hidden) shown on wide screens too, left of the logo, beside the panel it
        opens; outside the layers, to win */
     @media (min-width: 50rem) {
       .drawer-menu .sl-menu-button {

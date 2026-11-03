@@ -339,7 +339,7 @@ export function mountViewer() {
   // Plain background when the sky is off: the site's darkest surface (Moss palette, src/styles/tokens.scss)
   const backdrop = new THREE.Color(0x12140e)
   scene.background = backdrop
-  // « Ambiance sous-marine » (underwater.js): its water column, surface and particles, and the absorption every lit
+  // « Plonger » (underwater.js): its water column, surface and particles, and the absorption every lit
   // material carries (litMaterial); off until the 🤿 button or the setting turns it on (setUnderwater)
   const underwater = createUnderwater(scene, renderer, { mobile })
   // Vertical field of view (degrees): 60 (Christian, 2026-10-27; was 50: zone 18's wall, 24 ft away, looked about 8 ft)
@@ -646,7 +646,7 @@ export function mountViewer() {
     exposure: params.has('exposure') ? Number(params.get('exposure')) : Number(settingDefault('exposure')),
     // Bump map from the photo's brightness (?bump=0..5, see litMaterial)
     bump: params.has('bump') ? Number(params.get('bump')) : Number(settingDefault('bump')),
-    // « Ambiance sous-marine » (?underwater=1) and its season (?season=0..3: winter, spring, summer, autumn; default
+    // « Plonger » (?underwater=1) and its season (?season=0..3: winter, spring, summer, autumn; default
     // summer, the diving season), see underwater.js
     underwater: params.get('underwater') === '1',
     // Until a season is chosen (the slider, a link, kept settings): today's (seasonOfDate)

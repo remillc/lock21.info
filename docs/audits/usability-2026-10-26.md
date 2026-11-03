@@ -160,6 +160,7 @@ Reporter codes: **D** diver, **H** heritage, **P** photogrammetrist, **N** niels
 - **Evidence**: `verify5\v21-phone-home.png`, `verify5\v22-phone-menu.png`.
 - **Why 2 (D said 3)**: a diver planning a visit can still find Dickinson Landing on a map; precision is the gap.
 - **Fix**: show the coordinates in the phone menu or home panel, as a map link (`geo:` / Google Maps).
+- **Decision (Christian, 2026-11-03)**: dropped. The site is the digitization project's, not a guide to visiting the site.
 
 ### V15 · Wall-top depth inconsistent · Sev 2
 - « Le dessus situé à - 35 pieds » (zones 7–8, `/decoupage-du-site`) vs « Ses murs sont à 40 pieds (12,2 m) » (`/a-propos`) and tour step 2 (40 ft). Evidence: `verify\v03-zones-full.png`, `/a-propos` text. **Fix** (author): reconcile or say why (different walls, water level).

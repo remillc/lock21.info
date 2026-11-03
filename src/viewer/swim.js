@@ -1,4 +1,4 @@
-// Swim mode (the « Ambiance sous-marine », computers): first-person navigation instead of orbiting. The keys move the
+// Swim mode (the « Plonger », computers): first-person navigation instead of orbiting. The keys move the
 // diver where they look (W forward, S back, A and D sideways; the arrows too; Shift faster), dragging turns the head
 // (up, down, left, right). Keys by position (event.code): on an AZERTY keyboard they are Z, Q, S, D, and the keycaps
 // drawn at the bottom left (main.js) show the keyboard's own letters where the browser can tell
