@@ -78,10 +78,9 @@ place. Details and decisions live in `tools/publish-model/README.md` and `AGENTS
   registered on 2026-10-29): explore the new values in Explore: sessions with viewer_end, the time standard and
   underwater (standard_seconds, underwater_seconds), dives (dive_end, seconds), the tour's steps (step), the viewer's
   buttons (button), the first move (move), the settings, season, lamp, theme, language and AR size. The pages' speed
-  (web_vitals, since the release after 1.0.0-beta.7: metric_name and metric_rating as event-scoped dimensions,
-  metric_value as a metric, to register): how many first pages take more than a second on a phone. A setting's new
-  value is sent as `setting_value` since 2026-10-29 (was `value`, a name GA keeps for money): once deployed, register it
-  as a tenth dimension (event scope)
+  (web_vitals: metric_name, metric_rating, metric_value): how many first pages take more than a second on a phone.
+  A setting's new value is setting_value. These four were registered on 2026-11-03 (Christian): nothing before that
+  date, so read them from about 2026-11-05. Access still to settle: the Data API (gcloud, read-only) or CSV exports
 - [ ] #116 Calibrate the GoPro HERO13 Black before the next dives (Christian, 2026-11-01: it replaces the HERO6): its lens
   must not bring back the banana effect (`problemes/effet-banane.md`: the 300 ft segment of 2024-07-26 curled up; the
   HERO6's fix, Resolve's lens correction before Metashape, the « lens-corrected » frames). Underwater only (the flat
