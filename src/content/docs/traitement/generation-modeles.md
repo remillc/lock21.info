@@ -33,4 +33,4 @@ Les niveaux éloignés sont allégés encore plus : environ 40 000 faces par z
 
 ### Relief (moules zébrées)
 
-Pour que le relief des moules (1 à 3 cm) ressorte dans le visualiseur, il faut un export géométrique fin, avec des arêtes d'environ 1 cm ou moins (ex. zone 12 : 13 M faces, environ 7 mm). Cet export n'a pas besoin de texture et doit venir du même chunk que l'export publié. Avec des *depth maps* en qualité `low`, le modèle reste trop grossier, même avec beaucoup de faces : c'est pourquoi la zone 4 est refaite en qualité `medium`.
+Pour que le relief des moules (1 à 3 cm) ressorte dans le visualiseur, il faut un export géométrique fin, avec des arêtes d'environ 1 cm ou moins (ex. zone 12 : 13 M faces, environ 7 mm). Cet export n'a pas besoin de texture et doit venir du même chunk que l'export publié. Avec des *depth maps* en qualité `low`, le modèle reste trop grossier, même avec beaucoup de faces : c'est pourquoi la zone 4 a été refaite en qualité `medium`.
