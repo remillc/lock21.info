@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it is tried out in public, 1.0.0 at its launch.
 
 ## Unreleased
 
+- The site's pages in the impersonal voice of Christian's own: 14 sentences no longer in the first person (`.claude/skills/natural-writing/style-guide.md`).
 - 3D viewer: the left button turns the view faster (1.5 times the pointer's move), and the right button pans a little faster.
 - New page « Publication du modèle » in the processing steps: how a zone goes from Metashape to the 3D viewer (TODO #17; English at the release).
 - 3D viewer: the start view on a computer loads 63 MB instead of 75 (`errorTarget` 10 instead of 8), no difference to the eye (TODO #111).

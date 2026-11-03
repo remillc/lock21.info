@@ -5,7 +5,7 @@ sidebar:
 description: Les cibles posées au fond et les distances mesurées entre elles, qui donnent aux modèles leur taille réelle.
 ---
 
-Pour que chaque modèle ait sa taille réelle et que les zones s'alignent entre elles (voir [Alignement de chunks](/problemes/alignement-chunks)), je mesure des distances sur le site pendant les plongées : deux cibles posées au fond, la distance entre elles mesurée, et les deux cibles filmées avec le reste de la zone. La distance entre deux cibles forme une échelle.
+Pour que chaque modèle ait sa taille réelle et que les zones s'alignent entre elles (voir [Alignement de chunks](/problemes/alignement-chunks)), des distances sont mesurées sur le site pendant les plongées : deux cibles posées au fond, la distance entre elles mesurée, et les deux cibles filmées avec le reste de la zone. La distance entre deux cibles forme une échelle.
 
 <div class="facts">
 <p class="fact"><span>Cibles</span><b>7,5 et 15 cm</b></p>
