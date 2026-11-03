@@ -8,9 +8,9 @@ Un export de Metashape est beaucoup trop lourd pour un navigateur : la zone 12 
 
 ## Le fichier Blender
 
-Toutes les zones sont assemblées dans un seul fichier Blender, avec le terrain et les maquettes des zones pas encore relevées. C'est là que je place chaque zone et que je dessine ses découpes. Dans ce fichier, une zone peut rester en basse résolution : elle garde seulement le chemin de son export haute résolution, et c'est cet export qui sera publié. Les deux doivent venir du même modèle Metashape, sinon ils ne se superposent pas.
+Toutes les zones sont assemblées dans un seul fichier Blender, avec le terrain et les maquettes des zones pas encore relevées. C'est là que chaque zone est placée et que ses découpes sont dessinées. Dans ce fichier, une zone peut rester en basse résolution : elle garde seulement le chemin de son export haute résolution, et c'est cet export qui sera publié. Les deux doivent venir du même modèle Metashape, sinon ils ne se superposent pas.
 
-Après une retouche, je n'ai pas à me rappeler quoi refaire. Chaque zone publiée garde une empreinte de son état dans le fichier, et la commande compare : seules les zones modifiées sont refaites.
+Chaque zone publiée garde une empreinte de son état dans le fichier, et la commande compare : seules les zones modifiées sont refaites.
 
 ## Les étapes d'une zone
 
@@ -24,6 +24,6 @@ Chaque zone a aussi un jeu léger pour les téléphones et les tablettes, avec u
 
 ## La mise en ligne
 
-Je regarde d'abord le résultat dans le visualiseur, sur mon ordinateur. Les tuiles partent ensuite sur le serveur, et les visiteurs voient la nouvelle version dans la minute, sans que le site lui-même soit republié.
+Le résultat se contrôle d'abord dans le visualiseur, sur l'ordinateur. Les tuiles partent ensuite sur le serveur, et les visiteurs voient la nouvelle version dans la minute, sans que le site lui-même soit republié.
 
 Les téléchargements de la [page du modèle](/modele) et les modèles de réalité augmentée sont refaits à part, parce qu'ils contiennent tout le modèle, chaque zone simplifiée davantage.
