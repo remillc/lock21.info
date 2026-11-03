@@ -266,8 +266,9 @@ export function mountViewer() {
     mobile: { errorTarget: 16, maxBytes: 300e6, pixelRatio: Math.min(window.devicePixelRatio, 1.5) },
     // Computers (Christian, 2026-10-24): 1 GB (was 1.2: most visitors' graphics cards have far less memory than a
     // high-end one), lean loading (setDetail); errorTarget 8 (2026-10-26, was 6: the start view alone took 960 MB of the
-    // 1 GB on a 1600 x 1000 canvas, 600 MB at 8, no difference to the eye there)
-    desktop: { errorTarget: 8, maxBytes: 1000e6, pixelRatio: Math.min(window.devicePixelRatio, 2), lean: true },
+    // 1 GB on a 1600 x 1000 canvas, 600 MB at 8, no difference to the eye there); 10 (2026-11-03, TODO #111: the start view's
+    // download 63 MB instead of 75, no difference to the eye; the same up to 16, softer from 24)
+    desktop: { errorTarget: 10, maxBytes: 1000e6, pixelRatio: Math.min(window.devicePixelRatio, 2), lean: true },
   }
   const isMobile = (forced) => (forced ? forced === 'mobile' : window.matchMedia('(pointer: coarse)').matches)
   let mobile = isMobile(params.get('profile'))
