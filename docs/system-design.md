@@ -258,11 +258,11 @@ clichés, decoration that competes with the 3D viewer on a phone.
 
 - **Name**: **Écluse 21** in French (the site's language), **Lock 21** in English. The wordmark in the mockups,
   `LOCK/21`, becomes `ÉCLUSE/21`.
-- **Logo**: **S4 · "21 en écho"** (chosen 2026-10-19 on the design canvas): the 21 in JetBrains Mono ExtraBold on a
-  rounded dark olive square (14/64 corners), with two moss echoes below it (30 % and 60 %) and the orange point top right,
-  like a sonar reading. Files: `src/assets/logo.svg` (light), `src/assets/logo-dark.svg` (dark: deeper olive, outline),
-  `public/favicon.svg` (tab icon: one echo, larger figures for 16 px). The figures are outlines, so no font is needed;
-  the generator is described in `src/assets/README.md`.
+- **Logo**: **"21 en écho"** (S4, chosen 2026-10-19; its echo made solid on 2026-11-05, Christian: the two outlined echoes
+  were a smudge at 32 px): the 21 on a rounded dark olive square (14/64 corners), one solid moss echo under it and the
+  orange point top right, like a sonar reading. Files: `src/assets/logo.svg` (light), `src/assets/logo-dark.svg` (dark:
+  deeper olive, outline), `public/favicon.svg` (tab icon: larger figures, no point; the app's icons come from it,
+  `tools/pwa/make_icons.mjs`). The figures are outlines, so no font is needed.
 - **Coordinates in the header**: Lock 21 is at **44°59.814′ N, 74°53.983′ W** (degrees and decimal minutes;
   decimal 44.996900, −74.899721; since 2026-10-25). The header shows them in that form: `44°59.814′ N · 74°53.983′ O`
   (W in English).
