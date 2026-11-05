@@ -26,10 +26,10 @@ const ft = m.site_feet({}, o)
 
 // The three entry cards: their texts are messages (home_entry1Title…)
 const entries = [
-  { no: '01', title: m.home_entry1Title({}, o), text: m.home_entry1Text({}, o), label: m.home_entry1Label({}, o), href: '/decoupage-site' },
-  { no: '02', title: m.home_entry2Title({}, o), text: m.home_entry2Text({}, o), label: m.home_entry2Label({}, o), href: '/traitement/extraction-photos' },
+  { no: '01', title: m.home_entry1Title({}, o), text: m.home_entry1Text({}, o), href: '/decoupage-site' },
+  { no: '02', title: m.home_entry2Title({}, o), text: m.home_entry2Text({}, o), href: '/traitement/extraction-photos' },
   // The problems section's index page (Christian, 2026-10-26; it was the empty « Alignement de chunks »)
-  { no: '03', title: m.home_entry3Title({}, o), text: m.home_entry3Text({}, o), label: m.home_entry3Label({}, o), href: '/problemes' },
+  { no: '03', title: m.home_entry3Title({}, o), text: m.home_entry3Text({}, o), href: '/problemes' },
 ].map((e) => ({ ...e, href: localPath(e.href, lang) }))
 ---
 
@@ -45,7 +45,6 @@ const entries = [
   <div class="main">
     <section class="hero">
       <div class="intro">
-        <p class="eyebrow">{m.home_eyebrow({}, o)}</p>
         <h1 id="_top">{m.home_title1({}, o)}<br />{m.home_title2({}, o)}</h1>
         <p class="lead">{m.home_lead({}, o)}</p>
         <div class="actions">
@@ -91,10 +90,8 @@ const entries = [
       <div class="cards" data-pagefind-ignore>
         {entries.map((e) => (
           <a class="card" href={e.href} data-astro-prefetch="viewport" data-track-content="home_card" data-track-id={e.no}>
-            <span class="card-no">{e.no}</span>
             <span class="card-title">{e.title}</span>
             <span class="card-text">{e.text}</span>
-            <span class="card-path">{e.label} →</span>
           </a>
         ))}
       </div>
@@ -177,13 +174,6 @@ const entries = [
       flex: 999 1 26rem;
       min-width: 0;
     }
-    .eyebrow {
-      margin: 0 0 0.75rem;
-      font-family: var(--l21-font-data);
-      font-size: 0.75rem;
-      letter-spacing: 0.04em;
-      color: var(--md-sys-color-secondary);
-    }
     h1 {
       margin: 0;
       font-size: clamp(2.5rem, 6vw, 3.5625rem);
@@ -208,7 +198,6 @@ const entries = [
       min-height: 48px;
       padding: 0 1.5rem;
       border-radius: var(--md-sys-shape-medium);
-      font-family: var(--l21-font-data);
       font-size: 0.875rem;
       font-weight: 700;
       text-decoration: none;
@@ -365,25 +354,15 @@ const entries = [
     :global(:root:not([data-theme='light'])) .card {
       background-color: var(--md-sys-color-surface-container);
     }
-    .card-no {
-      font-family: var(--l21-font-data);
-      font-size: 2.25rem;
-      line-height: 1;
-      font-weight: 700;
-      color: var(--md-sys-color-secondary);
-    }
+    /* The whole card is a link: its title in the links' colour */
     .card-title {
       font-size: 1.375rem;
       font-weight: 800;
+      color: var(--md-sys-color-secondary);
     }
     .card-text {
       font-size: 0.9375rem;
       color: var(--md-sys-color-on-surface-variant);
-    }
-    .card-path {
-      font-family: var(--l21-font-data);
-      font-size: 0.8125rem;
-      color: var(--md-sys-color-secondary);
     }
 
     .block-head {

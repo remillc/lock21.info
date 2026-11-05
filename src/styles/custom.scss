@@ -193,7 +193,7 @@
   // the caption in the instrument panel's mono, numbered FIG. 01, 02… down the page, its <time> in the signal colour
 
   .sl-markdown-content {
-    counter-reset: l21-fig l21-section;
+    counter-reset: l21-fig;
   }
 
   .sl-markdown-content figure {
@@ -219,18 +219,21 @@
 
     figcaption {
       padding-inline: var(--l21-figure-radius);
-      font: 400 0.8rem/1.5 var(--l21-font-data);
+      font-size: 0.875rem;
+      line-height: 1.5;
       color: var(--md-sys-color-on-surface-variant);
 
+      // The text in the page's font, its number and date in the data's
       &::before {
         content: 'FIG. ' counter(l21-fig, decimal-leading-zero);
         margin-inline-end: 0.6rem;
-        font-weight: 700;
+        font: 700 0.8rem/1.5 var(--l21-font-data);
         color: var(--md-sys-color-on-surface);
       }
 
       time {
         margin-inline-end: 0.6rem;
+        font: 400 0.8rem/1.5 var(--l21-font-data);
         color: var(--md-sys-color-secondary);
         font-variant-numeric: tabular-nums;
       }
@@ -307,14 +310,19 @@
     }
   }
 
-  // The notebook's pages (PageTitle.astro writes the group's eyebrow on them): the group's name above the title, the
-  // first paragraph as a lead, the section headings numbered 01, 02…
+  // The notebook's pages (PageTitle.astro writes the group's name on them, which also marks them for these rules): the
+  // first paragraph as a lead. The name shows only where the left menu doesn't (the same width as Starlight's menu),
+  // to say where the page is
   .l21-eyebrow {
     margin: 0 0 0.6rem;
-    font: 700 0.75rem/1 var(--l21-font-data);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.2;
     color: var(--md-sys-color-on-surface-variant);
+
+    @media (min-width: 50rem) {
+      display: none;
+    }
   }
 
   // As in the mock-up: the text, headings, chips and paired photos in a column set in from both sides (up to 6rem,
@@ -401,21 +409,6 @@
       object-fit: cover;
     }
 
-    // The number in front, the heading staying inline (Starlight puts its anchor link in the line's end padding)
-    h2:not(#footnote-label) {
-      &::before {
-        display: inline-block;
-        margin-inline-end: 0.8rem;
-        vertical-align: 0.3em;
-        counter-increment: l21-section;
-        content: counter(l21-section, decimal-leading-zero);
-        padding-top: 0.35rem;
-        border-top: 2px solid var(--md-sys-color-outline);
-        font: 700 0.8rem/1 var(--l21-font-data);
-        letter-spacing: 0.08em;
-        color: var(--md-sys-color-on-surface-variant);
-      }
-    }
   }
 }
 
@@ -521,17 +514,19 @@
       justify-content: center;
       gap: 0.2rem 0.6rem;
       max-width: 46rem;
-      font: 400 0.8rem/1.5 var(--l21-font-data);
+      font-size: 0.875rem;
+      line-height: 1.5;
       text-align: center;
       color: #c9cdbb;
 
       .lightbox-fig {
-        font-weight: 700;
+        font: 700 0.8rem/1.5 var(--l21-font-data);
         color: #f2f3ea;
       }
 
       time {
-        color: #f28c28;
+        font: 400 0.8rem/1.5 var(--l21-font-data);
+        color: #b8c97a;
       }
 
       a {
