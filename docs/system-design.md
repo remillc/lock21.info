@@ -69,8 +69,8 @@ Archivo for text and titles, JetBrains Mono for data (numbers, dates, depths, la
 | title-large | 22 / 28 | Archivo 800 | card titles |
 | body-large | 16 / 24 | Archivo 400 | text |
 | body-medium | 14 / 20 | Archivo 400 | card descriptions |
-| label-large | 14 / 20 | JetBrains Mono 500 | buttons, navigation |
-| label-medium | 12 / 16 | JetBrains Mono 500 | labels, chips, gauge, metadata |
+| label-large | 14 / 20 | Archivo 700 | buttons |
+| label-medium | 12 / 16 | JetBrains Mono 500 | data: chips, gauge, dates, figure numbers |
 | instrument | 45 / 52 and 28 / 36 | JetBrains Mono 700 | panel readings |
 
 Tabular figures in tables and data.
@@ -194,7 +194,7 @@ The 3D viewer has its own stylesheet in its shadow root, with no theme to fight;
 - **Instrument panel**: bottom depth (ft and m), dives, time underwater, zones online, latest zone; values from the
   dive log and the 3D manifest, not typed by hand.
 - **Render frame**: a render of the model, 28 px corners, label chip with zone and numbers.
-- **Entry cards** ("Par où commencer"): number 01 to 03, title, one line, path `/plongeurs →`.
+- **Entry cards** ("Par où commencer"): title in the links' colour, one line; the whole card is a link.
 - **Journal excerpts**: timeline with outlined items (number, date, zone, duration chip, note), link to all dives, total.
 - **Footer**: previous / next page, then the dark olive bar: `ÉCLUSE/21 · carnet de terrain`, `© 2024–<year> Christian
   Rémillard · Licence CC BY 4.0` (link to the licence). At the bottom of the window on short pages (flex columns in
@@ -204,10 +204,10 @@ The 3D viewer has its own stylesheet in its shadow root, with no theme to fight;
     sides (up to 6rem, none on a phone), the wide photos (`figure-wide`) across the whole column; the title tight above
     the lead (no line between Starlight's panels); text 1rem/1.65, 1.5rem between blocks, 3rem above a heading,
     headings 1.7rem; captions on two lines (`FIG. NN` and the date, then the text); paired photos the same shape (4:3).
-  - the system, on every one: the group's name as an eyebrow above the title (`PageTitle.astro`, mono, secondary text);
-    the first paragraph as a lead; the section headings numbered 01, 02… (mono, secondary text, a short rule above);
+  - the system, on every one: the group's name above the title where the left menu isn't shown (`PageTitle.astro`);
+    the first paragraph as a lead; no numbers on the section headings, which aren't a sequence;
     figures the column's width (tall images capped at 36rem high), a thin outline and 16 dp corners, captions in the
-    mono, numbered `FIG. 01`… down the page, a date in `<time>` in `secondary`; the « (à compléter) »
+    text's font, numbered in the mono `FIG. 01`… down the page, a date in `<time>` in `secondary`; the « (à compléter) »
     placeholders as a dashed note (`placeholder-marks.mjs`). All automatic, in `custom.scss`.
   - the accents, only where a page has them to give, so that they keep their weight: data chips for its key facts
     (`<div class="facts">`, a few, real measured or named facts, once per page), an opening photo the column's width
