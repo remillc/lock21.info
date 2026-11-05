@@ -24,7 +24,7 @@ The content stays a first-person field notebook.
 - **Underwater instrument**: the page reads like a dive computer and a survey log. Dark olive bars (header, footer),
   monospace data, a **depth gauge** (0 to 60 ft) down the left side of the content, an **instrument panel** with the key
   numbers (bottom depth, dives, time underwater, zones online, latest zone).
-- **Strong outlines**: 2 px outlines on cards, frames and tables; rounded corners throughout.
+- **Outlines where they mean something**: 2 px on the cards, the render and the tables, plain rows elsewhere; rounded corners.
 - **One signal colour**, orange, used sparingly: the way to the 3D model (the header's pill, the home page's main button), the bottom depth (60 ft), the 404 page's alarm.
 - **The 3D model is the centrepiece**: a framed render under the hero, labelled with its numbers.
 - Readable first: the instrument feel lives in the frame and the data, never at the expense of long text.
@@ -83,11 +83,11 @@ The 3D viewer uses the same fonts (`src/viewer/main.js` imports them) and the da
 | MD3 token | Radius | Used for |
 | --- | --- | --- |
 | small | 8 px | chips |
-| medium | 12 px | buttons |
+| medium | 12 px | code, the lightbox's image |
 | large | 16 px | timeline items, tables |
 | large-increased | 20 px | cards |
 | extra-large | 28 px | instrument panel, render frame |
-| full | pill | 3D model button, render label, status dot |
+| full | pill | every button, render label, status dot |
 
 ### Spacing and interaction
 
@@ -195,11 +195,11 @@ The 3D viewer has its own stylesheet in its shadow root, with no theme to fight;
   dive log and the 3D manifest, not typed by hand.
 - **Render frame**: a render of the model, 28 px corners, label chip with zone and numbers.
 - **Entry cards** ("Par où commencer"): title in the links' colour, one line; the whole card is a link.
-- **Journal excerpts**: timeline with outlined items (number, date, zone, duration chip, note), link to all dives, total.
-- **Footer**: previous / next page, then the dark olive bar: `ÉCLUSE/21 · carnet de terrain`, `© 2024–<year> Christian
+- **Journal excerpts**: timeline of plain rows with a rule between them (number, date, zone, duration chip, note), link to all dives, total.
+- **Footer**: previous / next page, then a line under a thin rule, in the page's colours: `ÉCLUSE/21 · carnet de terrain`, `© 2024–<year> Christian
   Rémillard · Licence CC BY 4.0` (link to the licence). At the bottom of the window on short pages (flex columns in
   `custom.scss`), right after the content on long ones. The Baets drawings are credited in their figure captions.
-- **Notebook pages** (Christian, 2026-10-26, from « Le rig »'s mock-up; the pages in a group of the left menu):
+- **Notebook pages** (Christian, 2026-10-26, from « Le rig »'s mock-up; every text page since 2026-11-05, all but the home and model pages):
   - the layout, as in the mock-up: the title, text, headings, chips and paired photos in a column set in from both
     sides (up to 6rem, none on a phone), the wide photos (`figure-wide`) across the whole column; the title tight above
     the lead (no line between Starlight's panels); text 1rem/1.65, 1.5rem between blocks, 3rem above a heading,
