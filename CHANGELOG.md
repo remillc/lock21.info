@@ -5,8 +5,9 @@ public, 1.0.0-beta.N while it was tried out in public, 1.0.0 at its launch (2026
 
 ## 1.0.1 - 2026-11-05
 
-The dive log readable on laptops and phones, and the site's design simplified after a review: less orange, fewer template marks, one layout for the text pages, a simpler logo.
+The dive log readable on laptops and phones, and the site's design simplified after a review: less orange, fewer template marks, one layout for the text pages, a simpler logo. In the 3D model, the relief on the level above the finest too.
 
+- 3D model: the relief also on the level above the finest, in every zone (`merge_normal_maps.mjs`, the viewer's `coarseWithoutRelief`): a wall could be smooth on one side of a sharp line and rough on the other, where a coarser tile stood beside a finer one. All 12 zones republished, zone 4 at its new place; downloads and AR models rebuilt.
 - Dive log on phones: the table's 8 px at the sides, with smaller text. Padding check: follows the zone map's SVG links, and accepts the 404 page's joined search field.
 - « Installer l'app »: the About page's button and the mobile menu's icon in olive, as the downloads; orange stays on the way to the 3D model.
 - Home page: the journal's excerpts are three dives chosen by hand (8, 20, 34) instead of the latest three, all cleaning.

@@ -6,9 +6,9 @@
 // (normal map ignored), once with the normal map given as the photo (map_Kd), in UASTC. The packing only depends
 // on the geometry and texture coordinates, so both runs give the same tiles with the same layout; this script
 // checks that, then puts the second run's texture into each tile of the first as its normalTexture, tagged
-// linear (data, not colour). Only in the finest level's tiles (LOD-0): from the distance a coarser level is seen at,
-// the relief hardly shows, and its normal maps weighed more than its photo (TODO #55, 2026-10-23): downloaded for
-// nothing, the viewer dropping them (main.js, coarseWithoutRelief).
+// linear (data, not colour). Only in the tiles of the two finest levels (LOD-0, LOD-1): LOD-1 can stand 7 m from the
+// camera beside a LOD-0 tile, one smooth and its neighbour rough (Christian, 2026-11-05). From the distance the coarser
+// levels are seen at, the relief hardly shows, and their normal maps weighed more than their photo (TODO #55, 2026-10-23).
 //
 // Usage: node merge_normal_maps.mjs <tileset folder> <tileset folder of the normal-map run>
 //        node merge_normal_maps.mjs -h | --help
@@ -55,8 +55,8 @@ let count = 0
 let skipped = 0
 for await (const path of glbFiles(root)) {
   const rel = relative(root, path)
-  // The finest level only (see the header)
-  if (!/^LOD-0[\\/]/.test(rel)) {
+  // The two finest levels only (see the header)
+  if (!/^LOD-[01][\\/]/.test(rel)) {
     skipped++
     continue
   }
@@ -81,4 +81,4 @@ for await (const path of glbFiles(root)) {
   await io.write(path, document)
   count++
 }
-console.log(`normal maps: ${count} tiles of the finest level (${skipped} coarser tiles left without)`)
+console.log(`normal maps: ${count} tiles of the two finest levels (${skipped} coarser tiles left without)`)

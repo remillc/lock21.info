@@ -1,8 +1,8 @@
 // Copies a published tileset version into a new version without the normal maps (relief) of its coarser levels:
-// only the finest level's tiles (LOD-0) keep them, as merge_normal_maps.mjs now grafts them (TODO #55,
-// 2026-10-23). For the versions published before that change, without baking the relief again. A version is
-// never modified once written: the copy is a new dated folder; the manifest is then pointed at it
-// (update_manifest.mjs, done by the caller).
+// only the finest level's tiles (LOD-0) keep them, as merge_normal_maps.mjs grafted them from 2026-10-23 (TODO #55)
+// to 2026-11-05 (since then LOD-1 keeps its own too: don't use this on a recent version). For the versions published
+// before 2026-10-23, without baking the relief again. A version is never modified once written: the copy is a new
+// dated folder; the manifest is then pointed at it (update_manifest.mjs, done by the caller).
 //
 // Usage: node strip_coarse_normals.mjs <version folder> <new version folder>
 //        node strip_coarse_normals.mjs -h | --help
