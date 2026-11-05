@@ -193,7 +193,7 @@ The 3D viewer has its own stylesheet in its shadow root, with no theme to fight;
   wide enough for its labels.
 - **Instrument panel**: bottom depth (ft and m), dives, time underwater, zones online, latest zone; values from the
   dive log and the 3D manifest, not typed by hand.
-- **Render frame**: a render of the model, 28 px corners, label chip with zone and numbers.
+- **Render frame**: a render of the model, 28 px corners.
 - **Entry cards** ("Par où commencer"): title in the links' colour, one line; the whole card is a link.
 - **Journal excerpts**: timeline of plain rows with a rule between them (number, date, zone, duration chip, note), link to all dives, total.
 - **Footer**: previous / next page, then a line under a thin rule, in the page's colours: `ÉCLUSE/21 · carnet de terrain`, `© 2024–<year> Christian
