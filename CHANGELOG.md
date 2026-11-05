@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it was tried out in public, 1.0.0 at its launch (2026
 
 ## Unreleased
 
+- Design, after a review of the site: orange kept for the way to the 3D model and the bottom depth (the home page's main button is now orange; the notebook's eyebrows, section numbers and dates, the downloads and the navigation's icons no longer are). The menu's current page is quieter. A little more space between words, the chips' labels 11 px instead of 10.4.
 - Wide tables on the notebook pages stay in their column and scroll inside it, no longer running under « Sur cette page » (« Suivi du travail par zone »). Footer: the missing space before « · Confidentialité ».
 - Dive log: readable at every window size (the Notes column was 12 px wide on a laptop and out of reach on a phone). Five short columns, the participants and notes on a line of their own under each dive; Christian Rémillard no longer named on every row, « Avec » names the other divers and « Par » those of a dive he wasn't on.
 

@@ -17,6 +17,20 @@
     letter-spacing: -0.01em;
   }
 
+  // Archivo's space is narrow (0.21 em): a little more between the words, more in the tightened headings; never in
+  // code, whose columns must stay aligned
+  body {
+    word-spacing: 0.04em;
+  }
+
+  :is(h1, h2, h3, h4) {
+    word-spacing: 0.08em;
+  }
+
+  :is(pre, code, kbd, samp) {
+    word-spacing: normal;
+  }
+
   .sl-markdown-content :is(table, code, kbd) {
     font-variant-numeric: tabular-nums;
   }
@@ -217,7 +231,7 @@
 
       time {
         margin-inline-end: 0.6rem;
-        color: var(--md-sys-color-tertiary-text);
+        color: var(--md-sys-color-secondary);
         font-variant-numeric: tabular-nums;
       }
     }
@@ -266,7 +280,7 @@
     color: var(--l21-bar-text);
 
     span {
-      font: 500 0.65rem/1 var(--l21-font-data);
+      font: 500 0.6875rem/1 var(--l21-font-data);
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--l21-bar-muted);
@@ -300,7 +314,7 @@
     font: 700 0.75rem/1 var(--l21-font-data);
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--md-sys-color-tertiary-text);
+    color: var(--md-sys-color-on-surface-variant);
   }
 
   // As in the mock-up: the text, headings, chips and paired photos in a column set in from both sides (up to 6rem,
@@ -396,11 +410,24 @@
         counter-increment: l21-section;
         content: counter(l21-section, decimal-leading-zero);
         padding-top: 0.35rem;
-        border-top: 2px solid var(--md-sys-color-tertiary-text);
+        border-top: 2px solid var(--md-sys-color-outline);
         font: 700 0.8rem/1 var(--l21-font-data);
         letter-spacing: 0.08em;
-        color: var(--md-sys-color-tertiary-text);
+        color: var(--md-sys-color-on-surface-variant);
       }
+    }
+  }
+}
+
+@layer l21.layout {
+  // The menu's current page: a quiet MD3 active indicator, not the brightest thing on the page (Starlight fills it with
+  // the accent colour); its bold says the rest
+  .sidebar-content a[aria-current='page'] {
+    &,
+    &:hover,
+    &:focus {
+      background-color: var(--sl-color-accent-low);
+      color: var(--md-sys-color-on-surface);
     }
   }
 }

@@ -1138,7 +1138,7 @@ l21-tooltip {
   }
 }
 /* The navigation's help (nav-help.js), as the /modele page's « Naviguer » box (ModelPage.astro): the gestures with the
-   small mouse (its part used in the tertiary colour), the keys as key caps, the buttons by their icons */
+   small mouse (its part used in the secondary colour), the keys as key caps, the buttons by their icons */
 .nav-groups {
   display: flex;
   flex-wrap: wrap;
@@ -1191,15 +1191,15 @@ l21-tooltip {
   stroke-width: 1.5;
 }
 .mouse-used {
-  fill: var(--md-sys-color-tertiary);
-  stroke: var(--md-sys-color-tertiary);
+  fill: var(--md-sys-color-secondary);
+  stroke: var(--md-sys-color-secondary);
   stroke-width: 1.5;
 }
-/* A touch gesture's icon (nav-help.js, fingers): 32 px, in the signal colour as the small mouse's part used */
+/* A touch gesture's icon (nav-help.js, fingers): 32 px, in the colour of the small mouse's part used */
 .finger-gesture {
   display: inline-grid;
   flex: none;
-  color: var(--md-sys-color-tertiary);
+  color: var(--md-sys-color-secondary);
 
   svg {
     width: 32px;

@@ -25,7 +25,7 @@ The content stays a first-person field notebook.
   monospace data, a **depth gauge** (0 to 60 ft) down the left side of the content, an **instrument panel** with the key
   numbers (bottom depth, dives, time underwater, zones online, latest zone).
 - **Strong outlines**: 2 px outlines on cards, frames and tables; rounded corners throughout.
-- **One signal colour**, orange, used sparingly: the 3D model button, the bottom depth (60 ft).
+- **One signal colour**, orange, used sparingly: the way to the 3D model (the header's pill, the home page's main button), the bottom depth (60 ft), the 404 page's alarm.
 - **The 3D model is the centrepiece**: a framed render under the hero, labelled with its numbers.
 - Readable first: the instrument feel lives in the frame and the data, never at the expense of long text.
 - Light and dark follow the visitor's device, with a switch. The instrument panel stays dark in both (MD3 inverse
@@ -204,10 +204,10 @@ The 3D viewer has its own stylesheet in its shadow root, with no theme to fight;
     sides (up to 6rem, none on a phone), the wide photos (`figure-wide`) across the whole column; the title tight above
     the lead (no line between Starlight's panels); text 1rem/1.65, 1.5rem between blocks, 3rem above a heading,
     headings 1.7rem; captions on two lines (`FIG. NN` and the date, then the text); paired photos the same shape (4:3).
-  - the system, on every one: the group's name as an eyebrow above the title (`PageTitle.astro`, mono, signal colour);
-    the first paragraph as a lead; the section headings numbered 01, 02… (mono, signal colour, a short rule above);
+  - the system, on every one: the group's name as an eyebrow above the title (`PageTitle.astro`, mono, secondary text);
+    the first paragraph as a lead; the section headings numbered 01, 02… (mono, secondary text, a short rule above);
     figures the column's width (tall images capped at 36rem high), a thin outline and 16 dp corners, captions in the
-    mono, numbered `FIG. 01`… down the page, a date in `<time>` in the signal colour; the « (à compléter) »
+    mono, numbered `FIG. 01`… down the page, a date in `<time>` in `secondary`; the « (à compléter) »
     placeholders as a dashed note (`placeholder-marks.mjs`). All automatic, in `custom.scss`.
   - the accents, only where a page has them to give, so that they keep their weight: data chips for its key facts
     (`<div class="facts">`, a few, real measured or named facts, once per page), an opening photo the column's width
