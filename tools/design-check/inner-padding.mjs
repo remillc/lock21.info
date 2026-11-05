@@ -82,7 +82,7 @@ if (!pages) {
   const queue = ['/', '/en']
   while (queue.length && seen.size < MAX) {
     await open(queue.shift())
-    const links = await ev(`[...document.querySelectorAll('a[href]')].map((a) => new URL(a.href, location.href)).filter((u) => u.origin === location.origin && !/\\.[a-z0-9]+$/i.test(u.pathname)).map((u) => u.pathname.replace(/\\/$/, '') || '/')`)
+    const links = await ev(`[...document.querySelectorAll('a[href]')].map((a) => new URL(a.getAttribute('href'), location.href)).filter((u) => u.origin === location.origin && !/\\.[a-z0-9]+$/i.test(u.pathname)).map((u) => u.pathname.replace(/\\/$/, '') || '/')`)
     for (const link of links ?? []) {
       if (!seen.has(link)) {
         seen.add(link)
@@ -107,8 +107,9 @@ const MEASURE = `(() => {
     if (bg && bg !== effectiveBg(e)) return ['top', 'right', 'bottom', 'left']
     return ['Top', 'Right', 'Bottom', 'Left'].filter((side) => px(s['border' + side + 'Width']) >= 1 && s['border' + side + 'Style'] !== 'none' && !/rgba\\(.*,\\s*0\\)$|transparent/.test(s['border' + side + 'Color'])).map((side) => side.toLowerCase())
   }
-  // The dev server's breakpoint label (DevBreakpoints.astro) is never published
-  const isBox = (e, s) => drawn(e, s).length > 0 && !e.closest('l21-dev-breakpoints')
+  // The dev server's breakpoint label (DevBreakpoints.astro) is never published; the 404 page's search is a field and its
+  // button joined in one outline, its parts touching its edge on purpose
+  const isBox = (e, s) => drawn(e, s).length > 0 && !e.closest('l21-dev-breakpoints') && !e.matches('form.search')
   const name = (e) => e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + (typeof e.className === 'string' && e.className.trim() ? '.' + e.className.trim().split(/\\s+/).filter((c) => !c.startsWith('astro-')).slice(0, 2).join('.') : '')
   const path = (e) => { const parts = []; for (let p = e; p && p !== document.body && parts.length < 4; p = p.parentElement) parts.unshift(name(p)); return parts.join(' > ') }
   const boxes = [...document.querySelectorAll('body *')].filter((e) => { const s = getComputedStyle(e); const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0 && visible(e, s) && isBox(e, s) && !['IMG', 'SVG', 'CANVAS', 'VIDEO', 'IFRAME', 'HR', 'INPUT', 'TEXTAREA', 'svg', 'path', 'rect', 'circle'].includes(e.tagName) && !(e instanceof SVGElement) })

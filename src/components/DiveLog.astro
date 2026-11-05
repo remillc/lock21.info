@@ -119,20 +119,29 @@ const table = `<table><thead><tr>${headCells}</tr></thead><tbody>${body}</tbody>
       top: calc(var(--sl-nav-height) + var(--sl-mobile-toc-height));
       z-index: 1;
     }
-    // Phones: narrower short columns, so that the five fit
+    // Phones: the five columns fit with their 8 px at the sides (docs/system-design.md, « Content never touches an edge »):
+    // smaller text, the header in the text's narrower font, narrower short columns
     @media (max-width: 30rem) {
-      .dive-log :global(th),
-      .dive-log :global(td) {
-        padding-inline: 0.3rem;
+      .dive-log :global(table) {
+        font-size: 0.75rem;
       }
-      $phone: 2rem, 4.9rem, auto, 3.25rem, 5rem;
+      .dive-log :global(th) {
+        font-family: var(--l21-font-text);
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+      .dive-log :global(tbody td) {
+        overflow-wrap: anywhere;
+      }
+      $phone: 2rem, 4.95rem, auto, 3.5rem, 4.75rem;
       @for $i from 1 through length($phone) {
         .dive-log :global(th:nth-child(#{$i})) {
           width: nth($phone, $i);
         }
       }
       .dive-log :global(.dive-details td) {
-        padding-inline-start: 2.3rem;
+        padding-inline-start: 2.5rem;
+        overflow-wrap: normal;
       }
     }
   }

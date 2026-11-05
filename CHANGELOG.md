@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it was tried out in public, 1.0.0 at its launch (2026
 
 ## Unreleased
 
+- Dive log on phones: the table's 8 px at the sides, with smaller text. Padding check: follows the zone map's SVG links, and accepts the 404 page's joined search field.
 - « Installer l'app »: the About page's button and the mobile menu's icon in olive, as the downloads; orange stays on the way to the 3D model.
 - Home page: the journal's excerpts are three dives chosen by hand (8, 20, 34) instead of the latest three, all cleaning.
 - Home page: « Dernière zone » instead of « Dernière » in the panel, which read as the latest dive; the line under « Par où commencer » removed.
