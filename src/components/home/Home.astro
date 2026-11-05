@@ -6,7 +6,7 @@
 import { Image } from 'astro:assets'
 import render from '../../assets/home/lock-21.webp'
 import { site } from '../../data/site'
-import { dives, totalMinutes, formatDuration, latestWithNotes } from '../../lib/diveLog'
+import { dives, totalMinutes, formatDuration, divesNumbered } from '../../lib/diveLog'
 import { pageLang, localPath, locale } from '../../lib/i18n'
 import { m } from '../../paraglide/messages.js'
 import { zonesOnline } from '../../lib/manifest'
@@ -15,7 +15,9 @@ const lang = pageLang(Astro.locals)
 // Every message in the page's language (messages/site/)
 const o = { locale: lang }
 const zones = await zonesOnline()
-const excerpts = latestWithNotes(3, lang)
+// Three dives chosen for the home page (Christian, 2026-11-05; the latest three were all cleaning): the first scan, the
+// guard gates' passages, the zone 18 pillar's targets
+const excerpts = divesNumbered([8, 20, 34], lang)
 const journal = localPath('/collecte/journal-plongees', lang)
 const about = localPath('/a-propos', lang)
 const viewer = localPath(site.viewer, lang)
@@ -82,7 +84,6 @@ const entries = [
 
     <section class="block">
       <h2>{m.home_start({}, o)}</h2>
-      <p class="sub">{m.home_startSub({}, o)}</p>
       {/* data-pagefind-ignore: the cards, the panel and the excerpts' dates and numbers stay out of the search index.
            Their texts sit in spans with no space between them, and ran together in the search's excerpts (« courant du
            canal.plongeurs →02La méthode… », usability audit V28); the pages they lead to are indexed */}
@@ -339,10 +340,6 @@ const entries = [
       font-weight: 800;
       color: var(--md-sys-color-on-surface);
     }
-    .sub {
-      margin: 0.25rem 0 1.25rem;
-      color: var(--md-sys-color-on-surface-variant);
-    }
     .about {
       max-width: 48rem;
       margin: 0.75rem 0 0.75rem;
@@ -351,6 +348,7 @@ const entries = [
     }
 
     .cards {
+      margin-top: 1.25rem;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
       gap: 1rem;

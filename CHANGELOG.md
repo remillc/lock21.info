@@ -5,6 +5,8 @@ public, 1.0.0-beta.N while it was tried out in public, 1.0.0 at its launch (2026
 
 ## Unreleased
 
+- Home page: the journal's excerpts are three dives chosen by hand (8, 20, 34) instead of the latest three, all cleaning.
+- Home page: « Dernière zone » instead of « Dernière » in the panel, which read as the latest dive; the line under « Par où commencer » removed.
 - Fewer repeated numbers: on the home page, no more chip on the image nor total under the excerpts (the panel has them); on the model page, the zones and dates only (depth and licence dropped from the chips, the licence has its section). The model page's credits in a section of their own under its columns.
 - Logo: one solid echo under the 21 instead of two outlined ones, which blurred at the header's size; the tab icon and the app's icons follow.
 - Design, still after the review: every text page (About, the zones, Thanks…) on the notebook's layout, the same column and titles. All buttons with full corners, 40 px high in a 48 px target. The footer a line under a thin rule. The journal's excerpts on the home page as plain rows. On phones, the home page's image before its numbers.
