@@ -72,7 +72,6 @@ const entries = [
 
     <a class="render" href={renderView} data-astro-prefetch="viewport" data-track-content="home_render">
       <Image src={render} alt={m.home_alt({}, o)} widths={[640, 960, 1280]} sizes="(min-width: 75rem) 1100px, 100vw" />
-      <span class="chip">{zones.count} {m.home_online({}, o)}</span>
     </a>
 
     <section class="block">
@@ -115,7 +114,6 @@ const entries = [
           </li>
         ))}
       </ol>
-      <p class="total">{m.home_total({ n: dives.length, d: formatDuration(totalMinutes, true, lang) }, o)}</p>
     </section>
   </div>
 </div>
@@ -303,17 +301,6 @@ const entries = [
       height: clamp(14rem, 32vw, 25rem);
       object-fit: cover;
     }
-    .chip {
-      position: absolute;
-      top: 0.875rem;
-      left: 0.875rem;
-      padding: 0.375rem 0.75rem;
-      border-radius: var(--md-sys-shape-full);
-      background: var(--l21-bar);
-      color: var(--l21-bar-text);
-      font-family: var(--l21-font-data);
-      font-size: 0.75rem;
-    }
 
     /* Sections */
     .block {
@@ -454,12 +441,6 @@ const entries = [
     }
     .timeline p {
       margin: 0.5rem 0 0;
-    }
-    .total {
-      margin: 1rem 0 0;
-      font-family: var(--l21-font-data);
-      font-size: 0.875rem;
-      font-weight: 700;
     }
   }
 </style>

@@ -89,8 +89,6 @@ const updated = zones.updated
     <li><span>{m.model_online({}, o)}</span>{zones.count} / {site.zonesTotal}</li>
     <li><span>{m.model_latest({}, o)}</span>Z{zones.latest}</li>
     {updated && <li><span>{m.model_updated({}, o)}</span>{updated}</li>}
-    <li><span>{m.model_depth({}, o)}</span>{site.bottomDepthFt} {m.site_feet({}, o)} ({site.bottomDepthM.toLocaleString(locale(lang))} m)</li>
-    <li><span>{m.model_licence({}, o)}</span>CC BY 4.0</li>
   </ul>
 
   <div class="columns">
@@ -99,7 +97,6 @@ const updated = zones.updated
       <section>
         <h2>{m.model_modelTitle({}, o)}</h2>
         <p>{m.model_model1({}, o)}</p>
-        <p>{m.model_model2({}, o)}</p>
       </section>
       <section class="licence">
         <h2>{m.model_licenceTitle({}, o)}</h2>
@@ -108,32 +105,6 @@ const updated = zones.updated
           {m.model_licenceRest({}, o)}
         </p>
         <p class="credit">{m.model_credit({}, o)}</p>
-        <!-- The crayfish model (src/viewer/crawfish.js): CC BY 4.0, its author credited -->
-        <p class="note">
-          {m.model_crayfish({}, o)} {open}<a href="https://sketchfab.com/3d-models/crayfish-cdc4cfc6203443a490f6b5103e7eac18">Crayfish</a>{close}{' '}
-          {m.model_crayfishBy({}, o)} <a href="https://sketchfab.com/ucdavisterc">ucdavisterc</a>,{' '}
-          <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
-        </p>
-        <!-- The bass (src/viewer/bass.js): CC BY 4.0, its author credited -->
-        <p class="note">
-          {m.model_bass({}, o)} {open}<a href="https://sketchfab.com/3d-models/smallmouth-bass-015389aed3414793b3e9e4a0c25169d1">Smallmouth bass</a>{close}{' '}
-          {m.model_crayfishBy({}, o)} <a href="https://sketchfab.com/faerbogdan99">faerbogdan99</a>,{' '}
-          <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
-        </p>
-        <!-- The yellow perch (src/viewer/perch.js): a public-domain photo, its author credited all the same -->
-        <p class="note">
-          {m.model_perch({}, o)} Sam Stukel, {open}<a href="https://commons.wikimedia.org/wiki/File:Yellow_Perch_(Perca_flavescens)_white_background.jpg">U.S. Fish and Wildlife Service</a>{close}.
-        </p>
-        <!-- The diver's arm (src/viewer/diver-arm.js): its shape from a CC BY 4.0 model, its author credited -->
-        <p class="note">
-          {m.model_arm({}, o)} {open}<a href="https://sketchfab.com/3d-models/first-person-hands-rigged-547a45535f0c4fe787948f7a7a6a88db">First Person hands rigged</a>{close}{' '}
-          {m.model_crayfishBy({}, o)} <a href="https://sketchfab.com/davidfischer">DavidFischer</a>,{' '}
-          <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
-        </p>
-        <p class="note">
-          {m.model_drawings({}, o)}{' '}
-          <a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks</a>.
-        </p>
       </section>
     </div>
 
@@ -302,6 +273,38 @@ const updated = zones.updated
       </section>
     </div>
   </div>
+
+  <section class="credits">
+    <h2>{m.model_creditsTitle({}, o)}</h2>
+    <div class="credits-list">
+      <!-- The crayfish model (src/viewer/crawfish.js): CC BY 4.0, its author credited -->
+      <p class="note">
+        {m.model_crayfish({}, o)} {open}<a href="https://sketchfab.com/3d-models/crayfish-cdc4cfc6203443a490f6b5103e7eac18">Crayfish</a>{close}{' '}
+        {m.model_crayfishBy({}, o)} <a href="https://sketchfab.com/ucdavisterc">ucdavisterc</a>,{' '}
+        <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
+      </p>
+      <!-- The bass (src/viewer/bass.js): CC BY 4.0, its author credited -->
+      <p class="note">
+        {m.model_bass({}, o)} {open}<a href="https://sketchfab.com/3d-models/smallmouth-bass-015389aed3414793b3e9e4a0c25169d1">Smallmouth bass</a>{close}{' '}
+        {m.model_crayfishBy({}, o)} <a href="https://sketchfab.com/faerbogdan99">faerbogdan99</a>,{' '}
+        <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
+      </p>
+      <!-- The yellow perch (src/viewer/perch.js): a public-domain photo, its author credited all the same -->
+      <p class="note">
+        {m.model_perch({}, o)} Sam Stukel, {open}<a href="https://commons.wikimedia.org/wiki/File:Yellow_Perch_(Perca_flavescens)_white_background.jpg">U.S. Fish and Wildlife Service</a>{close}.
+      </p>
+      <!-- The diver's arm (src/viewer/diver-arm.js): its shape from a CC BY 4.0 model, its author credited -->
+      <p class="note">
+        {m.model_arm({}, o)} {open}<a href="https://sketchfab.com/3d-models/first-person-hands-rigged-547a45535f0c4fe787948f7a7a6a88db">First Person hands rigged</a>{close}{' '}
+        {m.model_crayfishBy({}, o)} <a href="https://sketchfab.com/davidfischer">DavidFischer</a>,{' '}
+        <a href={`https://creativecommons.org/licenses/by/4.0/deed.${lang}`}>CC BY 4.0</a>.
+      </p>
+      <p class="note">
+        {m.model_drawings({}, o)}{' '}
+        <a href="https://saveontarioshipwrecks.ca/chapter-ottawa/">Save Ontario Shipwrecks</a>.
+      </p>
+    </div>
+  </section>
 </div>
 
 <style>
@@ -585,7 +588,7 @@ const updated = zones.updated
     .downloads li {
       margin: 0 0 0.75rem;
     }
-    /* MD3 filled tonal button with a leading icon (Material Symbols, 18 px): the signal colour stays on the way to the
+    /* MD3 filled button with a leading icon (Material Symbols, 18 px), in the secondary colour: orange stays on the way to the
        3D model (docs/system-design.md); 40 px high, full corners, in a 48 px touch target (the transparent border, its colour inside
        it; TODO #59, 2026-10-24: it was 48 px high with 12 px corners) */
     /* Space above and below each button (Christian, 2026-10-23) */
@@ -599,9 +602,9 @@ const updated = zones.updated
       padding: 0 1.5rem 0 1rem;
       border: 4px solid transparent;
       border-radius: var(--md-sys-shape-full);
-      background: var(--md-sys-color-surface-container-highest);
+      background: var(--md-sys-color-secondary);
       background-clip: padding-box;
-      color: var(--md-sys-color-on-surface);
+      color: var(--md-sys-color-on-secondary);
       font-size: 0.875rem;
       font-weight: 700;
       text-decoration: none;
@@ -732,8 +735,22 @@ const updated = zones.updated
       font-family: var(--l21-font-data);
       user-select: all;
     }
-    /* Secondary credit: body-medium (14 / 20) */
+    /* The sources of what isn't Christian's, under the columns, across the page: body-medium (14 / 20) */
+    .credits {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--md-sys-color-outline-variant);
+
+      h2 {
+        font-size: 1rem;
+      }
+    }
+    .credits-list {
+      columns: 2 20rem;
+      column-gap: 2rem;
+    }
     .note {
+      break-inside: avoid;
       font-size: 0.875rem;
       line-height: 1.25rem;
     }
@@ -799,8 +816,7 @@ const updated = zones.updated
     }
     .credit {
       padding: 0.75rem 1rem;
-      border-left: 3px solid var(--md-sys-color-secondary);
-      border-radius: 0 var(--md-sys-shape-small) var(--md-sys-shape-small) 0;
+      border-radius: var(--md-sys-shape-small);
       background: var(--md-sys-color-surface-container);
       font-family: var(--l21-font-data);
       font-size: 0.8125rem;
