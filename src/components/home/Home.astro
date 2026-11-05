@@ -82,7 +82,6 @@ const entries = [
 
     <section class="block">
       <h2>{m.home_start({}, o)}</h2>
-      <p class="sub">{m.home_startSub({}, o)}</p>
       {/* data-pagefind-ignore: the cards, the panel and the excerpts' dates and numbers stay out of the search index.
            Their texts sit in spans with no space between them, and ran together in the search's excerpts (« courant du
            canal.plongeurs →02La méthode… », usability audit V28); the pages they lead to are indexed */}
@@ -339,10 +338,6 @@ const entries = [
       font-weight: 800;
       color: var(--md-sys-color-on-surface);
     }
-    .sub {
-      margin: 0.25rem 0 1.25rem;
-      color: var(--md-sys-color-on-surface-variant);
-    }
     .about {
       max-width: 48rem;
       margin: 0.75rem 0 0.75rem;
@@ -351,6 +346,7 @@ const entries = [
     }
 
     .cards {
+      margin-top: 1.25rem;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
       gap: 1rem;
