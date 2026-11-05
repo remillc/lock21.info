@@ -228,13 +228,21 @@ const links = [
     .button {
       display: inline-flex;
       align-items: center;
-      min-height: 48px;
+      position: relative;
+      min-height: 40px;
       padding: 0 1.25rem;
       border: 2px solid var(--md-sys-color-primary);
-      border-radius: var(--md-sys-shape-medium);
+      border-radius: var(--md-sys-shape-full);
       color: var(--md-sys-color-primary);
       font: 700 0.875rem/1 var(--l21-font-text);
       text-decoration: none;
+
+      /* MD3: 40 dp high in a 48 dp touch target */
+      &::before {
+        content: '';
+        position: absolute;
+        inset: -6px 0;
+      }
 
       &.signal {
         border-color: var(--md-sys-color-tertiary);

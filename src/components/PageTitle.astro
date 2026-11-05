@@ -1,7 +1,7 @@
 ---
 // Page title: Starlight's own, except on splash pages (the home page), whose layout carries its own <h1>.
-// Above it, on the notebook's pages (those in a group of the left menu), the group's name (docs/system-design.md,
-// Notebook pages), shown only where the left menu isn't; custom.scss enlarges the lead on those pages only.
+// On the text pages, a mark for custom.scss's layout (docs/system-design.md, Notebook pages: the column, the lead); above
+// the title of those in a group of the left menu, the group's name, shown only where the left menu isn't.
 import Default from '@astrojs/starlight/components/PageTitle.astro'
 
 const route = Astro.locals.starlightRoute
@@ -23,5 +23,6 @@ function groupOf(entries) {
 const group = splash ? undefined : groupOf(route.sidebar)
 ---
 
+{!splash && <span class="l21-notebook" hidden></span>}
 {group && <p class="l21-eyebrow">{group}</p>}
 {!splash && <Default />}

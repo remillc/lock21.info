@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it was tried out in public, 1.0.0 at its launch (2026
 
 ## Unreleased
 
+- Design, still after the review: every text page (About, the zones, Thanks…) on the notebook's layout, the same column and titles. All buttons with full corners, 40 px high in a 48 px target. The footer a line under a thin rule. The journal's excerpts on the home page as plain rows. On phones, the home page's image before its numbers.
 - Design, after the same review: less template. The home page's eyebrow, the entry cards' numbers and false paths (`plongeurs →`) removed, the cards' titles in the links' colour; no more numbers on the notebook's section headings; the group's name above a page's title only where the left menu isn't shown. JetBrains Mono kept for data: buttons, captions and the footer in Archivo.
 - Design, after a review of the site: orange kept for the way to the 3D model and the bottom depth (the home page's main button is now orange; the notebook's eyebrows, section numbers and dates, the downloads and the navigation's icons no longer are). The menu's current page is quieter. A little more space between words, the chips' labels 11 px instead of 10.4.
 - Wide tables on the notebook pages stay in their column and scroll inside it, no longer running under « Sur cette page » (« Suivi du travail par zone »). Footer: the missing space before « · Confidentialité ».
