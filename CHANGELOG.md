@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it was tried out in public, 1.0.0 at its launch (2026
 
 ## Unreleased
 
+- « Installer l'app »: the About page's button and the mobile menu's icon in olive, as the downloads; orange stays on the way to the 3D model.
 - Home page: the journal's excerpts are three dives chosen by hand (8, 20, 34) instead of the latest three, all cleaning.
 - Home page: « Dernière zone » instead of « Dernière » in the panel, which read as the latest dive; the line under « Par où commencer » removed.
 - Fewer repeated numbers: on the home page, no more chip on the image nor total under the excerpts (the panel has them); on the model page, the zones and dates only (depth and licence dropped from the chips, the licence has its section). The model page's credits in a section of their own under its columns.
