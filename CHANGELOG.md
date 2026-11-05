@@ -3,6 +3,10 @@
 Versions follow [semantic versioning](https://semver.org/) (major.minor.patch): below 1.0.0 while the site was not
 public, 1.0.0-beta.N while it was tried out in public, 1.0.0 at its launch (2026-11-03).
 
+## Unreleased
+
+- Dive log: readable at every window size (the Notes column was 12 px wide on a laptop and out of reach on a phone). Five short columns, the participants and notes on a line of their own under each dive; Christian Rémillard no longer named on every row, « Avec » names the other divers and « Par » those of a dive he wasn't on.
+
 ## 1.0.0 - 2026-11-03
 
 The site's launch, after its public beta. Zones 4, 8 and 10 to 13 and the context republished with the downloads, a new page on how the model is published, the menu on the home page on wide screens, links from the zones page to the 3D model, and the pages in the impersonal voice.

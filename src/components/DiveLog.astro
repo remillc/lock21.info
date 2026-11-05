@@ -1,83 +1,138 @@
 ---
-// Dive log table: adds a footer row with the number of dives and the total dive time (sum of column 5, "Durée
-// (minutes)"), computed at build time, so no JavaScript is shipped. Column 5 must stay a plain number of minutes.
+// Dive log table: from the Markdown table's seven columns (AGENTS.md, « Dive log rows »), computed at build time so no
+// JavaScript is shipped, a table that fits any column:
+// - five short columns (No, Date, Activité, Zones, Durée); the participants and notes on a line of their own under
+//   the dive, the whole width, only when it has something to show (Christian, 2026-11-05: seven columns left Notes
+//   12 px wide on a laptop);
+// - Christian Rémillard, who made most of the dives, isn't named: « Avec » names the others, « Par » the divers of a
+//   dive he wasn't on (the page's first sentence says so);
+// - a footer row with the number of dives and the total dive time (sum of column 5, "Durée (minutes)", which must stay
+//   a plain number of minutes).
 // Usage in MDX: <DiveLog> + the Markdown table + </DiveLog>
 import { locale, pageLang } from '../lib/i18n'
 import { m } from '../paraglide/messages.js'
 
+const AUTHOR = 'Christian Rémillard'
+const COLUMNS = 5
+
 const html = await Astro.slots.render('default')
+const lang = pageLang(Astro.locals)
+const o = { locale: lang }
+
+/** @param {string} row @returns {string[]} The row's cells, tags included */
+const cellsOf = (row) => row.match(/<t[dh][\s>][\s\S]*?<\/t[dh]>/g) ?? []
+/** @param {string} cell @returns {string} What a cell holds */
+const inside = (cell) => cell.replace(/^<t[dh][^>]*>|<\/t[dh]>$/g, '').trim()
+
+/** @param {string} people The Participants cell: names separated by commas and line breaks */
+const participants = (people) => {
+  const names = people.split(/,?\s*<br\s*\/?>\s*/).map((name) => name.trim()).filter(Boolean)
+  const others = names.filter((name) => name !== AUTHOR).join(', ')
+  if (!others) return ''
+  return names.includes(AUTHOR) ? m.divelog_with({ names: others }, o) : m.divelog_by({ names: others }, o)
+}
+
 const rows = html.match(/<tbody>[\s\S]*?<\/tbody>/)?.[0].match(/<tr>[\s\S]*?<\/tr>/g) ?? []
 const minutes = rows
-  .map((row) => row.match(/<td[^>]*>([\s\S]*?)<\/td>/g)?.[4] ?? '')
+  .map((row) => cellsOf(row)[4] ?? '')
   .map((cell) => parseFloat(cell.replace(/<[^>]+>/g, '')))
   .filter(Number.isFinite)
   .reduce((sum, m) => sum + m, 0)
 
-const lang = pageLang(Astro.locals)
+const body = rows.map((row) => {
+  const cells = cellsOf(row)
+  const people = participants(inside(cells[5] ?? ''))
+  const notes = inside(cells[6] ?? '')
+  const main = `<tr>${cells.slice(0, COLUMNS).join('')}</tr>`
+  if (!people && !notes) return main
+  const details = `${people ? `<span class="dive-people">${people}</span>` : ''}${notes}`
+  return `${main}<tr class="dive-details"><td colspan="${COLUMNS}">${details}</td></tr>`
+}).join('')
+
+const head = html.match(/<thead>[\s\S]*?<\/thead>/)?.[0] ?? ''
+const headCells = cellsOf(head).slice(0, COLUMNS).join('')
+
 const duration = { days: Math.floor(minutes / 1440), hours: Math.floor((minutes % 1440) / 60), minutes: Math.round(minutes % 60) }
 const total = 'DurationFormat' in Intl
   ? new Intl.DurationFormat(locale(lang), { style: 'long' }).format(duration)
-  : `${duration.days} ${m.site_days({}, { locale: lang })} ${duration.hours} h ${duration.minutes} min`
-// One row per dive (as the home page counts them, src/lib/diveLog.js). The label takes the four columns before the
-// duration, the duration the rest (Durée, Participants, Notes), so it stays on one line
-const columns = (html.match(/<thead>[\s\S]*?<\/thead>/)?.[0].match(/<th[\s>]/g) ?? []).length
-const label = m.divelog_total({ n: rows.length }, { locale: lang })
-const footer = `<tfoot><tr><td colspan="4">${label}</td><td colspan="${columns - 4}">${total}</td></tr></tfoot>`
-const withFooter = html.replace('</table>', `${footer}</table>`)
+  : `${duration.days} ${m.site_days({}, o)} ${duration.hours} h ${duration.minutes} min`
+const label = m.divelog_total({ n: rows.length }, o)
+const table = `<table><thead><tr>${headCells}</tr></thead><tbody>${body}</tbody><tfoot><tr><td colspan="${COLUMNS}">${label} · ${total}</td></tr></tfoot></table>`
 ---
 
-<div class="dive-log" set:html={withFooter} />
+<div class="dive-log" set:html={table} />
 
 <style lang="scss">
   @layer l21.components {
-    // The table fits the content column: fixed widths for the short columns, Notes takes the rest and wraps
+    // Half the notebook column's inset (custom.scss, --l21-inset): the table is wider than the text
+    .dive-log {
+      margin-inline: calc(var(--l21-inset) / 2);
+    }
+    // The table fits the content column: fixed widths for the short columns, Activité takes the rest
     .dive-log :global(table) {
       display: table; // the global rule makes tables scrollable blocks; this one must fit instead
       width: 100%;
       table-layout: fixed;
       font-size: 0.8125rem;
     }
+    // Not a block, so nothing clips the header row's colour at the table's rounded corners: its first and last cells
+    // follow them (the outline's radius less its 2 px)
+    .dive-log :global(th:first-child) {
+      border-start-start-radius: calc(var(--md-sys-shape-large) - 2px);
+    }
+    .dive-log :global(th:last-child) {
+      border-start-end-radius: calc(var(--md-sys-shape-large) - 2px);
+    }
     .dive-log :global(th),
     .dive-log :global(td) {
       padding: 0.4rem 0.5rem;
     }
-    .dive-log :global(td) {
-      overflow-wrap: anywhere;
-    }
-    // No, Date, Activité, Zones, Durée, Participants; Notes (7th) gets the remaining width
-    $widths: 3rem, 6.5rem, 6rem, 4.5rem, 6rem, 9rem;
+    // No, Date, Activité (the rest), Zones, Durée
+    $widths: 3rem, 6.5rem, auto, 6rem, 6rem;
     @for $i from 1 through length($widths) {
       .dive-log :global(th:nth-child(#{$i})) {
         width: nth($widths, $i);
       }
     }
-    .dive-log :global(td:nth-child(2)) {
+    .dive-log :global(tbody td:nth-child(2)) {
       white-space: nowrap;
+    }
+    // The dive and its line of details read as one: no rule between them, the details set in under the date
+    .dive-log :global(tbody tr:has(+ .dive-details) td) {
+      border-bottom: 0;
+    }
+    .dive-log :global(.dive-details td) {
+      padding-block-start: 0;
+      padding-inline-start: 3.5rem;
+    }
+    .dive-log :global(.dive-people) {
+      display: block;
+      font-weight: 600;
     }
     .dive-log :global(tfoot td) {
       font-weight: 600;
     }
     // The header row stays in view under the header bar (and the phone's « Sur cette page » bar) while the long table
-    // scrolls with the page. Not on phones: there the table scrolls sideways in its own box, and a header can only
-    // stick inside that box
-    @media (min-width: 50rem) {
-      .dive-log :global(thead th) {
-        position: sticky;
-        top: calc(var(--sl-nav-height) + var(--sl-mobile-toc-height));
-        z-index: 1;
-      }
+    // scrolls with the page
+    .dive-log :global(thead th) {
+      position: sticky;
+      top: calc(var(--sl-nav-height) + var(--sl-mobile-toc-height));
+      z-index: 1;
     }
-    // Phones: the columns can't fit, the table scrolls sideways with Notes at a readable width
-    @media (max-width: 50rem) {
-      .dive-log {
-        overflow-x: auto;
-      }
-      .dive-log :global(table) {
-        width: 52rem;
-      }
+    // Phones: narrower short columns, so that the five fit
+    @media (max-width: 30rem) {
       .dive-log :global(th),
       .dive-log :global(td) {
-        overflow-wrap: normal;
+        padding-inline: 0.3rem;
+      }
+      $phone: 2rem, 4.9rem, auto, 3.25rem, 5rem;
+      @for $i from 1 through length($phone) {
+        .dive-log :global(th:nth-child(#{$i})) {
+          width: nth($phone, $i);
+        }
+      }
+      .dive-log :global(.dive-details td) {
+        padding-inline-start: 2.3rem;
       }
     }
   }
