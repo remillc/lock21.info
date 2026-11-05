@@ -170,7 +170,7 @@ export function mountViewer() {
   const AR_URL = import.meta.env.PUBLIC_AR_URL || 'https://lock21.info/downloads/ar'
   // Version of the AR files, in their address: the server and the phones keep them an hour, so a rebuild (same names)
   // would otherwise show up late. Change it after each upload of rebuilt AR files (docs/augmented-reality.md)
-  const AR_VERSION = '2026-11-03'
+  const AR_VERSION = '2026-11-05'
   // ?ar=full: the lock at its real size (70 m) instead of on a table (the /modele/ page's "Taille réelle" QR code and link)
   const arFull = params.get('ar') === 'full'
   const arName = arFull ? 'lock-21-ar-full' : 'lock-21-ar'
@@ -1536,16 +1536,18 @@ export function mountViewer() {
   // The model: one tileset per zone plus the non-tiled context. Loaded again (camera kept) when the tiles' source
   // changes; a load started later wins over one still running.
   let tilesets = []
-  // The relief's normal maps only on the finest level (TODO #55): they weigh as much as the colour maps, and from the
-  // distance a coarser level is seen at, their relief hardly shows. Dropped as a coarser tile is parsed, before the
-  // tiles' cache counts its memory (3d-tiles-renderer's processTileModel): at the start view the coarser levels held
-  // about 550 MB of normal maps, enough to fill the budget (PROFILES) and keep the finest level from loading
+  // The relief's normal maps only on the finest level and the one above it (TODO #55; merge_normal_maps.mjs): they weigh
+  // as much as the colour maps, and from the distance the coarsest levels are seen at, their relief hardly shows. Tile
+  // sets published before 2026-11-05 still carry them on every level: dropped as a coarser tile is parsed, before the
+  // tiles' cache counts its memory (3d-tiles-renderer's processTileModel); at the start view they held about 550 MB,
+  // enough to fill the budget (PROFILES) and keep the finest level from loading. The level above the finest keeps its
+  // own (Christian, 2026-11-05): it can stand 7 m from the camera beside a finest tile, one smooth and the other rough
   // One plugin per tileset (a plugin can be registered to one tileset only)
   const coarseWithoutRelief = () => ({
     name: 'CoarseWithoutRelief',
     processTileModel(scene, tile) {
       // Phones: no relief at all (TODO #22): at the finest level the normal maps weigh as much as the photo
-      if (!mobile && !tile.children?.length) return
+      if (!mobile && (tile.children ?? []).every((child) => !child.children?.length)) return
       scene.traverse((object) => {
         if (!object.isMesh || !object.material.normalMap) return
         object.material.normalMap.dispose()
