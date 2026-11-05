@@ -5,6 +5,7 @@ public, 1.0.0-beta.N while it was tried out in public, 1.0.0 at its launch (2026
 
 ## Unreleased
 
+- Wide tables on the notebook pages stay in their column and scroll inside it, no longer running under « Sur cette page » (« Suivi du travail par zone »). Footer: the missing space before « · Confidentialité ».
 - Dive log: readable at every window size (the Notes column was 12 px wide on a laptop and out of reach on a phone). Five short columns, the participants and notes on a line of their own under each dive; Christian Rémillard no longer named on every row, « Avec » names the other divers and « Par » those of a dive he wasn't on.
 
 ## 1.0.0 - 2026-11-03

@@ -341,6 +341,16 @@
       margin-inline: var(--l21-inset);
     }
 
+    // « Suivi du travail par zone »: a wide table, half the inset (Christian, 2026-11-05)
+    > .progress-table {
+      margin-inline: calc(var(--l21-inset) / 2);
+    }
+
+    // A table wider than the column scrolls inside it: its 100 % less the inset, which otherwise pushes it out on the right
+    > table {
+      max-width: calc(100% - 2 * var(--l21-inset));
+    }
+
     > * + * {
       margin-top: 1.5rem;
     }
