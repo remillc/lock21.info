@@ -81,11 +81,16 @@ export function formatDuration(minutes, withMinutes = false, lang = 'fr') {
 }
 
 /**
- * The latest dives that have a note, newest first
- * @param {number} count
+ * The dives with these numbers, in that order
+ * @param {number[]} numbers
  * @param {Lang} [lang]
  * @returns {Dive[]}
  */
-export function latestWithNotes(count, lang = 'fr') {
-  return divesIn(lang).filter((d) => d.notes).slice(-count).reverse()
+export function divesNumbered(numbers, lang = 'fr') {
+  const all = divesIn(lang)
+  return numbers.map((no) => {
+    const dive = all.find((d) => d.no === no)
+    if (!dive) throw new Error(`No dive ${no} in the log (${lang})`)
+    return dive
+  })
 }

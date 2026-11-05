@@ -6,7 +6,7 @@
 import { Image } from 'astro:assets'
 import render from '../../assets/home/lock-21.webp'
 import { site } from '../../data/site'
-import { dives, totalMinutes, formatDuration, latestWithNotes } from '../../lib/diveLog'
+import { dives, totalMinutes, formatDuration, divesNumbered } from '../../lib/diveLog'
 import { pageLang, localPath, locale } from '../../lib/i18n'
 import { m } from '../../paraglide/messages.js'
 import { zonesOnline } from '../../lib/manifest'
@@ -15,7 +15,9 @@ const lang = pageLang(Astro.locals)
 // Every message in the page's language (messages/site/)
 const o = { locale: lang }
 const zones = await zonesOnline()
-const excerpts = latestWithNotes(3, lang)
+// Three dives chosen for the home page (Christian, 2026-11-05; the latest three were all cleaning): the first scan, the
+// guard gates' passages, the zone 18 pillar's targets
+const excerpts = divesNumbered([8, 20, 34], lang)
 const journal = localPath('/collecte/journal-plongees', lang)
 const about = localPath('/a-propos', lang)
 const viewer = localPath(site.viewer, lang)
