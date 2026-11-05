@@ -5,7 +5,7 @@
 //   the dive, the whole width, only when it has something to show (Christian, 2026-11-05: seven columns left Notes
 //   12 px wide on a laptop);
 // - Christian Rémillard, who made most of the dives, isn't named: « Avec » names the others, « Par » the divers of a
-//   dive he wasn't on (the page's first sentence says so);
+//   dive he wasn't on;
 // - a footer row with the number of dives and the total dive time (sum of column 5, "Durée (minutes)", which must stay
 //   a plain number of minutes).
 // Usage in MDX: <DiveLog> + the Markdown table + </DiveLog>
@@ -76,12 +76,12 @@ const table = `<table><thead><tr>${headCells}</tr></thead><tbody>${body}</tbody>
       font-size: 0.8125rem;
     }
     // Not a block, so nothing clips the header row's colour at the table's rounded corners: its first and last cells
-    // follow them (the outline's radius less its 2 px)
+    // follow them (the outline's radius less its 2 px, and half a pixel so that the table's light background doesn't show between them)
     .dive-log :global(th:first-child) {
-      border-start-start-radius: calc(var(--md-sys-shape-large) - 2px);
+      border-start-start-radius: calc(var(--md-sys-shape-large) - 2.5px);
     }
     .dive-log :global(th:last-child) {
-      border-start-end-radius: calc(var(--md-sys-shape-large) - 2px);
+      border-start-end-radius: calc(var(--md-sys-shape-large) - 2.5px);
     }
     .dive-log :global(th),
     .dive-log :global(td) {
