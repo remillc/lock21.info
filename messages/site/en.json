@@ -23,6 +23,8 @@
   "home_excerptsTitle": "From the dive log",
   "home_all": "All {n} dives →",
   "home_total": "Total: {n} dives · {d}",
+  "divelog_with": "With {names}",
+  "divelog_by": "By {names}",
   "divelog_total": "Total: {n} dives",
   "model_frame": "3D viewer of Lock 21",
   "model_title": "3D model of Lock 21",

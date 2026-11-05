@@ -23,6 +23,8 @@
   "home_excerptsTitle": "Extraits du journal",
   "home_all": "Les {n} plongées →",
   "home_total": "Total : {n} plongées · {d}",
+  "divelog_with": "Avec {names}",
+  "divelog_by": "Par {names}",
   "divelog_total": "Total : {n} plongées",
   "model_frame": "Visualiseur 3D de l'écluse 21",
   "model_title": "Modèle 3D de l'écluse 21",

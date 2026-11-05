@@ -3,8 +3,7 @@
 // (custom.scss), and a keyboard must reach it to scroll it (WCAG 2.1.1, axe scrollable-region-focusable). The tables
 // that overflow get tabindex="0" (and the focus ring); the others stay out of the tab order. Each overflowing box also
 // says on which sides there is more to see, data-more="start", "end" or both (usability audit V36): custom.scss fades
-// those edges, so the table shows that it scrolls. The dive log on phones scrolls in its own box (DiveLog.astro), which
-// gets the same. Kept up to date as the window changes size and the box scrolls. A Custom Element: set up again on
+// those edges, so the table shows that it scrolls. Kept up to date as the window changes size and the box scrolls. A Custom Element: set up again on
 // every page under client-side routing (docs/guidelines.md).
 ---
 
@@ -37,7 +36,7 @@
     listeners = null
 
     connectedCallback() {
-      const boxes = document.querySelectorAll('.sl-markdown-content :is(table, .dive-log)')
+      const boxes = document.querySelectorAll('.sl-markdown-content table')
       if (!boxes.length) return
       this.observer = new ResizeObserver((entries) => {
         for (const { target } of entries) mark(target)
